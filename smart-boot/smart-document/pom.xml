@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.smart</groupId>
+		<artifactId>smart-boot</artifactId>
+		<version>2.0.0-SNAPSHOT</version>
+	</parent>
+	<artifactId>smart-document</artifactId>
+	<version>2.0.0-SNAPSHOT</version>
+	<name>smart-document</name>
+	<description>文档处理模块</description>
+	<packaging>pom</packaging>
+
+	<modules>
+		<module>smart-document-code-zxing</module>
+		<module>smart-document-converter-jod</module>
+		<module>smart-document-converter-office</module>
+		<module>smart-document-core</module>
+		<module>smart-document-excel-jxls</module>
+	</modules>
+
+	<properties>
+	</properties>
+
+	<dependencies>
+
+	</dependencies>
+
+
+</project>

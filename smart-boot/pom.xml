@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.smart</groupId>
+    <artifactId>smart-boot</artifactId>
+    <version>2.0.0-SNAPSHOT</version>
+    <name>smart-boot</name>
+    <description>Smart boot 通用开发框架</description>
+    <properties>
+        <java.version>1.8</java.version>
+        <resource.delimiter>@</resource.delimiter>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <spring-boot.version>2.6.2</spring-boot.version>
+
+        <guava.version>30.0-jre</guava.version>
+        <jjwt.version>0.9.1</jjwt.version>
+        <opensaml.version>2.6.4</opensaml.version>
+        <commons-collections4.version>4.4</commons-collections4.version>
+        <commons-beanutils.version>1.9.4</commons-beanutils.version>
+        <spring-security-saml2.version>1.0.10.RELEASE</spring-security-saml2.version>
+        <swagger-annotations.version>1.6.2</swagger-annotations.version>
+        <commons-io.version>2.6</commons-io.version>
+        <jsch.version>0.1.55</jsch.version>
+        <pagehelper.version>1.4.1</pagehelper.version>
+        <mybatis-plus-boot-starter.version>3.4.3</mybatis-plus-boot-starter.version>
+        <jodconverter.version>4.4.2</jodconverter.version>
+        <google.zxing.version>3.4.1</google.zxing.version>
+        <jxls.version>2.10.0</jxls.version>
+        <jacob.version>1.20</jacob.version>
+        <kettle.version>9.1.0.0</kettle.version>
+        <xxl-job.version>2.3.0</xxl-job.version>
+        <druid.version>1.2.5</druid.version>
+    </properties>
+
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>smart-auth</module>
+        <module>smart-commons</module>
+        <module>smart-database</module>
+        <module>smart-document</module>
+        <module>smart-file</module>
+        <module>smart-kettle</module>
+        <module>smart-modules</module>
+        <module>smart-starter</module>
+
+        <module>smart-samples</module>
+    </modules>
+
+    <developers>
+        <developer>
+            <id>zhongming4762</id>
+            <name>zhongming4762</name>
+            <email>zhongming4762@hotmail.com</email>
+        </developer>
+    </developers>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <!--	  springboot		-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.opensaml</groupId>
+                <artifactId>opensaml</artifactId>
+                <version>${opensaml.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-collections4</artifactId>
+                <version>${commons-collections4.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-beanutils</groupId>
+                <artifactId>commons-beanutils</artifactId>
+                <version>${commons-beanutils.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.security.extensions</groupId>
+                <artifactId>spring-security-saml2-core</artifactId>
+                <version>${spring-security-saml2.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>${swagger-annotations.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.jcraft</groupId>
+                <artifactId>jsch</artifactId>
+                <version>${jsch.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper-spring-boot-starter</artifactId>
+                <version>${pagehelper.version}</version>
+            </dependency>
+
+            <!--mybatis-plus支持-->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus-boot-starter.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jodconverter</groupId>
+                <artifactId>jodconverter-spring-boot-starter</artifactId>
+                <version>${jodconverter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jodconverter</groupId>
+                <artifactId>jodconverter-local</artifactId>
+                <version>${jodconverter.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.zxing</groupId>
+                <artifactId>core</artifactId>
+                <version>${google.zxing.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.zxing</groupId>
+                <artifactId>javase</artifactId>
+                <version>${google.zxing.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jxls</groupId>
+                <artifactId>jxls-poi</artifactId>
+                <version>${jxls.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.jacob</groupId>
+                <artifactId>jacob</artifactId>
+                <version>${jacob.version}</version>
+            </dependency>
+
+            <!--  kettle版本号	-->
+            <dependency>
+                <groupId>org.pentaho</groupId>
+                <artifactId>kettle-core</artifactId>
+                <version>${kettle.version}</version>
+            </dependency>
+            <!--引入kettle支持-->
+            <dependency>
+                <groupId>org.pentaho</groupId>
+                <artifactId>kettle-engine</artifactId>
+                <version>${kettle.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.pentaho</groupId>
+                <artifactId>pentaho-encryption-support</artifactId>
+                <version>${kettle.version}</version>
+            </dependency>
+            <!--引入kettle支持-->
+            <dependency>
+                <groupId>org.pentaho</groupId>
+                <artifactId>metastore</artifactId>
+                <version>${kettle.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.pentaho</groupId>
+                <artifactId>commons-xul-core</artifactId>
+                <version>${kettle.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.xuxueli</groupId>
+                <artifactId>xxl-job-core</artifactId>
+                <version>${xxl-job.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>2.3</version>
+                <configuration>
+                    <generateBackupPoms>false</generateBackupPoms>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <attach>true</attach>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+<!--                        <goals>-->
+<!--                            <goal>jar</goal>-->
+<!--                        </goals>-->
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>gc</id>
+            <url>http://109.116.6.139:8081/repository/maven-public/</url>
+        </repository>
+    </repositories>
+
+</project>

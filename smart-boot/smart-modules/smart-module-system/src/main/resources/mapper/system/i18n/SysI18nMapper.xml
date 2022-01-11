@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smart.system.mapper.SysI18nMapper">
+
+    <select id="listI18nByLocale" resultType="com.smart.system.pojo.dbo.I18nCodeValueBO">
+        SELECT A.i18n_code as i18nCode, B.value as value
+        FROM sys_i18n A
+        JOIN sys_i18n_item B on A.i18n_id = B.i18n_id
+        WHERE B.locale = #{locale}
+          AND A.delete_yn = 0
+          AND A.use_yn = 1
+    </select>
+
+    <!--  查询所有语言信息  -->
+    <select id="listLocale" resultType="java.util.Locale">
+        SELECT DISTINCT locale FROM sys_i18n_item
+    </select>
+</mapper>
