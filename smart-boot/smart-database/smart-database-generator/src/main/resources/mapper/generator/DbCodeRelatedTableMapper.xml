@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smart.db.generator.mapper.DbCodeRelatedTableMapper">
+
+    <!--   删除表关联信息   -->
+    <delete id="deleteByMainIdList" parameterType="com.smart.db.generator.pojo.query.RelatedTableDeleteByMainConfigQuery">
+        DELETE
+        FROM db_code_related_table
+        WHERE main_id IN (
+            SELECT B.ID FROM ${tableName} B WHERE B.main_id IN
+                <foreach collection="mainIdList" item="mainId" separator="," open="(" close=")">
+                    #{mainId}
+                </foreach>
+            )
+    </delete>
+</mapper>

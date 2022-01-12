@@ -1,0 +1,4 @@
+#配置自定义Starter的自动化配置
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.smart.db.generator.DatabaseGeneratorAutoConfiguration,\
+  com.smart.db.generator.SmartFreemarkerAutoConfiguration
