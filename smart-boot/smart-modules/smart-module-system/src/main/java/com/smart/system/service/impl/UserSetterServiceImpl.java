@@ -88,12 +88,12 @@ public class UserSetterServiceImpl implements UserSetterService {
         // 获取用户ID
         Set<Long> userIds = Sets.newHashSet();
         modelList.forEach(item -> userIds.addAll(userIdHandler.apply(item)));
-
-        if (userIds.isEmpty()) {
+        Set<Long> nonNullIdList = userIds.stream().filter(Objects::nonNull).collect(Collectors.toSet());
+        if (nonNullIdList.isEmpty()) {
             return;
         }
         // 查询用户信息
-        List<SysUserPO> sysUserList = this.sysUserMapper.selectBatchIds(userIds.stream().filter(Objects::nonNull).collect(Collectors.toSet()));
+        List<SysUserPO> sysUserList = this.sysUserMapper.selectBatchIds(nonNullIdList);
         if (sysUserList.isEmpty()) {
             return;
         }
