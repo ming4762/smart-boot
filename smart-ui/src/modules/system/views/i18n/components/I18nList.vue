@@ -24,8 +24,15 @@
       </template>
       <template #table-tools>
         <div style="margin-right: 5px">
-          <a-button v-permission="permissions.add" type="primary" :size="buttonSizeConfig" @click="() => handleShowModal(true, null)">{{ $t('common.button.add') }}</a-button>
-          <a-button v-permission="permissions.delete" type="primary" danger class="button-margin" :size="buttonSizeConfig">{{ $t('common.button.delete') }}</a-button>
+          <a-button v-permission="permissions.reload" type="primary" :size="buttonSizeConfig" @click="handleReload">
+            {{ $t('system.views.i18n.i18n.button.reload') }}
+          </a-button>
+          <a-button v-permission="permissions.add" type="primary" class="button-margin" :size="buttonSizeConfig" @click="() => handleShowModal(true, null)">
+            {{ $t('common.button.add') }}
+          </a-button>
+          <a-button v-permission="permissions.delete" type="primary" danger class="button-margin" :size="buttonSizeConfig">
+            {{ $t('common.button.delete') }}
+          </a-button>
         </div>
       </template>
       <template #table-operation="{row}">
@@ -82,10 +89,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, Ref, ref, toRefs, onMounted, watch, reactive } from 'vue'
+import {defineComponent, PropType, Ref, ref, toRefs, onMounted, watch, reactive, createVNode} from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import { message } from 'ant-design-vue'
+import { message, Modal } from 'ant-design-vue'
+import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
 import dayjs from 'dayjs'
 
 import ApiService from '@/common/utils/ApiService'
@@ -207,6 +215,24 @@ const addEditVueSupport = (loadData: Function, groupId: Ref<number | undefined>)
     }
   }
   /**
+   * 刷新国际化信息
+   */
+  const handleReload = async () => {
+    Modal.confirm({
+      title: i18n('system.views.i18n.i18n.message.reloadConfirm'),
+      content: i18n('system.views.i18n.i18n.message.reloadContent'),
+      icon: createVNode(ExclamationCircleOutlined),
+      onOk: async () => {
+        try {
+          await ApiService.postAjax('sys/i18n/reload')
+          message.success(i18n('system.views.i18n.i18n.message.reloadSuccess'))
+        } catch (e) {
+          errorMessage(e)
+        }
+      }
+    })
+  }
+  /**
    * 执行保存操作
    */
   const handleSave = async () => {
@@ -238,7 +264,8 @@ const addEditVueSupport = (loadData: Function, groupId: Ref<number | undefined>)
     handleSave,
     isAdd,
     formRef,
-    platformList: reactive(platformListV)
+    platformList: reactive(platformListV),
+    handleReload
   }
 }
 

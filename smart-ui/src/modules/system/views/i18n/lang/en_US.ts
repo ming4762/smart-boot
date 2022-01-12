@@ -17,6 +17,14 @@ export default {
           groupIdValidate: 'Please click Group first, and then add',
           platform: {
             backstage: 'Backstage'
+          },
+          button: {
+            reload: 'Reload'
+          },
+          message: {
+            reloadConfirm: 'Are you sure you want to reload I18N？',
+            reloadContent: 'You need to log in again after reloading',
+            reloadSuccess: 'Reload success'
           }
         },
         i18nItem: {

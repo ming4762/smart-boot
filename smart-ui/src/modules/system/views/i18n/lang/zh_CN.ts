@@ -17,6 +17,14 @@ export default {
           groupIdValidate: '请先点击分组，再执行添加操作',
           platform: {
             backstage: '后台'
+          },
+          button: {
+            reload: '刷新'
+          },
+          message: {
+            reloadConfirm: '确定要刷新国际化信息吗？',
+            reloadContent: '刷新后需要重新登陆',
+            reloadSuccess: '重新加载成功'
           }
         },
         i18nItem: {

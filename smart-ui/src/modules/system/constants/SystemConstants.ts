@@ -30,6 +30,7 @@ export const SystemPermissions = {
   i18n: {
     add: 'sys:i18n:save',
     delete: 'sys:i18n:delete',
-    update: 'sys:i18n:update'
+    update: 'sys:i18n:update',
+    reload: 'sys:i18n:reload'
   }
 }

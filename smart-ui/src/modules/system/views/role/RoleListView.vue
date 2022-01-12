@@ -32,7 +32,7 @@
                 <a-input v-model:value="searchModel.roleName" :size="formSizeConfig" :placeholder="$t('system.views.role.table.roleName')" />
               </a-form-item>
               <a-form-item>
-                <a-input v-model:value="searchModel.roleCode" :size="formSizeConfig" :placeholder="$t('system.views.role.table.roleName')" />
+                <a-input v-model:value="searchModel.roleCode" :size="formSizeConfig" :placeholder="$t('system.views.role.table.roleCode')" />
               </a-form-item>
               <a-form-item>
                 <a-button type="primary" :size="buttonSizeConfig" @click="resetSearch">{{ $t('common.button.reset') }}</a-button>

@@ -8,6 +8,7 @@ import com.smart.commons.core.log.LogOperationTypeEnum;
 import com.smart.commons.core.message.Result;
 import com.smart.crud.controller.BaseController;
 import com.smart.crud.query.PageSortQuery;
+import com.smart.i18n.source.ReloadableMessageSource;
 import com.smart.system.i18n.SystemI18nMessage;
 import com.smart.system.model.SysI18nGroupPO;
 import com.smart.system.model.SysI18nPO;
@@ -18,6 +19,7 @@ import com.smart.system.service.SysI18nService;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,8 +44,11 @@ public class SysI18nController extends BaseController<SysI18nService, SysI18nPO>
 
     private final SysI18nGroupService sysI18nGroupService;
 
-    public SysI18nController(SysI18nGroupService sysI18nGroupService) {
+    private final ReloadableMessageSource messageSource;
+
+    public SysI18nController(SysI18nGroupService sysI18nGroupService, ReloadableMessageSource messageSource) {
         this.sysI18nGroupService = sysI18nGroupService;
+        this.messageSource = messageSource;
     }
 
     @PostMapping("listGroup")
@@ -52,8 +57,7 @@ public class SysI18nController extends BaseController<SysI18nService, SysI18nPO>
         return Result.success(
                 this.sysI18nGroupService.list(
                         new QueryWrapper<SysI18nGroupPO>().lambda()
-                        .orderByAsc(SysI18nGroupPO :: getSeq)
-                        .orderByAsc(SysI18nGroupPO :: getCreateTime)
+                        .orderByAsc(SysI18nGroupPO :: getSeq, SysI18nGroupPO :: getCreateTime)
                 )
         );
     }
@@ -118,5 +122,13 @@ public class SysI18nController extends BaseController<SysI18nService, SysI18nPO>
     @Override
     public Result<Boolean> batchDeleteById(@RequestBody List<Serializable> idList) {
         return super.batchDeleteById(idList);
+    }
+
+    @PostMapping("reload")
+    @ApiOperation("刷新国际化信息")
+    @PreAuthorize("hasPermission('sys:i18n', 'reload')")
+    public Result<Boolean> reload() {
+        this.messageSource.reload();
+        return Result.success(true);
     }
 }
