@@ -29,7 +29,7 @@ export default {
       updateUser: 'Update user',
       useYn: 'Enabled',
       deleteYn: 'Delete',
-      operation: '操作',
+      operation: 'Operation',
       remark: 'Remark',
       seq: 'Seq'
     },

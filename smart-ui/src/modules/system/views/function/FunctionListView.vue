@@ -209,16 +209,16 @@ export default defineComponent({
           fixed: 'left'
         },
         {
-          title: this.$t('system.views.function.table.functionName'),
+          title: 'system.views.function.table.functionName',
           field: 'functionName',
           width: 220,
           fixed: 'left',
           treeNode: true
         },
         {
-          title: this.$t('system.views.function.table.functionType'),
+          title: 'system.views.function.table.functionType',
           field: 'functionType',
-          width: 80,
+          width: 110,
           align: 'center',
           headerAlign: 'left',
           slots: {
@@ -226,7 +226,7 @@ export default defineComponent({
           }
         },
         {
-          title: this.$t('system.views.function.table.icon'),
+          title: 'system.views.function.table.icon',
           field: 'icon',
           width: 80,
           align: 'center',
@@ -241,23 +241,23 @@ export default defineComponent({
           minWidth: 200
         },
         {
-          title: this.$t('system.views.function.table.permission'),
+          title: 'system.views.function.table.permission',
           field: 'permission',
           width: 160
         },
         {
-          title: this.$t('system.views.function.table.httpMethod'),
+          title: 'system.views.function.table.httpMethod',
           field: 'httpMethod',
           width: 120
         },
         {
-          title: this.$t('common.table.seq'),
+          title: 'common.table.seq',
           field: 'seq',
           width: 100,
           sortable: true
         },
         {
-          title: this.$t('common.table.createTime'),
+          title: 'common.table.createTime',
           field: 'createTime',
           width: 165,
           formatter: ({ cellValue }: any) => {
@@ -269,7 +269,7 @@ export default defineComponent({
           sortable: true
         },
         {
-          title: this.$t('common.table.createUser'),
+          title: 'common.table.createUser',
           field: 'createUserId',
           width: 120,
           formatter: ({ row }: any) => {
@@ -280,7 +280,7 @@ export default defineComponent({
           }
         },
         {
-          title: this.$t('common.table.updateTime'),
+          title: 'common.table.updateTime',
           field: 'updateTime',
           width: 165,
           formatter: ({ cellValue }: any) => {
@@ -292,7 +292,7 @@ export default defineComponent({
           sortable: true
         },
         {
-          title: this.$t('common.table.updateUser'),
+          title: 'common.table.updateUser',
           field: 'updateUserId',
           width: 120,
           formatter: ({ row }: any) => {
@@ -303,7 +303,7 @@ export default defineComponent({
           }
         },
         {
-          title: this.$t('common.table.operation'),
+          title: 'common.table.operation',
           field: 'operation',
           width: 120,
           fixed: 'right',

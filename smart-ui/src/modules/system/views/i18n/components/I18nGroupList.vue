@@ -48,6 +48,7 @@
           <a-form-item name="seq" :label="$t('system.views.i18n.group.seq')">
             <a-input-number
               v-model:value="editModel.seq"
+              style="width: 120px"
               :placeholder="$t('system.views.i18n.group.seqValidate')" />
           </a-form-item>
         </a-form>
@@ -211,7 +212,7 @@ export default defineComponent({
       permissions: SystemPermissions.i18n,
       columns: [
         {
-          title: this.$t('system.views.i18n.group.groupName'),
+          title: 'system.views.i18n.group.groupName',
           field: 'groupName',
           slots: {
             default: 'table-groupName'

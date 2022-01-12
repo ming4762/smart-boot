@@ -247,7 +247,7 @@ export default defineComponent({
         },
         {
           field: 'name',
-          title: this.$t('generator.views.template.table.name'),
+          title: 'generator.views.template.table.name',
           width: 200,
           fixed: 'left',
           align: 'left',
@@ -255,7 +255,7 @@ export default defineComponent({
         },
         {
           field: 'templateType',
-          title: this.$t('generator.views.template.table.templateType'),
+          title: 'generator.views.template.table.templateType',
           width: 140,
           formatter: ({ row }: any) => {
             const templateType = templateTypeConstants[row.templateType]
@@ -267,18 +267,18 @@ export default defineComponent({
         },
         {
           field: 'language',
-          title: this.$t('generator.views.template.table.language'),
+          title: 'generator.views.template.table.language',
           width: 200
         },
         {
           field: 'remark',
-          title: this.$t('generator.views.template.table.remark'),
+          title: 'generator.views.template.table.remark',
           minWidth: 200,
           align: 'left',
           headerAlign: 'center'
         },
         {
-          title: this.$t('common.table.createTime'),
+          title: 'common.table.createTime',
           field: 'createTime',
           width: 165,
           formatter: ({ cellValue }: any) => {
@@ -290,7 +290,7 @@ export default defineComponent({
           sortable: true
         },
         {
-          title: this.$t('common.table.createUser'),
+          title: 'common.table.createUser',
           field: 'createUserId',
           width: 120,
           formatter: ({ row }: any) => {
@@ -301,7 +301,7 @@ export default defineComponent({
           }
         },
         {
-          title: this.$t('common.table.updateTime'),
+          title: 'common.table.updateTime',
           field: 'updateTime',
           width: 165,
           formatter: ({ cellValue }: any) => {
@@ -313,7 +313,7 @@ export default defineComponent({
           sortable: true
         },
         {
-          title: this.$t('common.table.updateUser'),
+          title: 'common.table.updateUser',
           field: 'updateUserId',
           width: 120,
           formatter: ({ row }: any) => {
@@ -324,7 +324,7 @@ export default defineComponent({
           }
         },
         {
-          title: this.$t('common.table.operation'),
+          title: 'common.table.operation',
           field: 'operation',
           width: 120,
           fixed: 'right',

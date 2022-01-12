@@ -21,8 +21,16 @@ window['umi_plugin_ant_themeVar'] = themePluginConfig.theme
 import VXETable from 'vxe-table'
 import 'vxe-table/lib/style.css'
 
+const i18nStartList = ['generator.', 'system.', 'common.']
+
 VXETable.setup({
-  i18n: (key, args) => i18n.global.t(key, args)
+  i18n: (key, args) => i18n.global.t(key, args),
+  translate(key: string, args?: any): string {
+    if (i18nStartList.some(item => key.startsWith(item))) {
+      return i18n.global.t(key, args)
+    }
+    return key
+  }
 })
 const useVxe = (app: App) => {
   app.use(VXETable)
