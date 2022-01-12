@@ -3,6 +3,8 @@ import { ref, onMounted, reactive } from 'vue'
 import ApiService from '@/common/utils/ApiService'
 import { message } from 'ant-design-vue'
 
+import { errorMessage } from '@/components/notice/SystemNotice'
+
 const defaultSearchModel = {
   roleName: '',
   roleCode: '',
@@ -50,6 +52,8 @@ export const vueLoadRoleData = () => {
       const { rows, total } = await ApiService.postAjax('sys/role/list', allParameter)
       tablePage.total = total
       data.value = rows
+    } catch (e) {
+      errorMessage(e)
     } finally {
       loading.value = false
     }
