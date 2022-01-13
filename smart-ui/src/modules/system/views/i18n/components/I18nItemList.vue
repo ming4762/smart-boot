@@ -184,18 +184,18 @@ export default defineComponent({
           fixed: 'left'
         },
         {
-          title: 'system.views.i18n.i18nItem.titleLocale',
+          title: '{system.views.i18n.i18nItem.titleLocale}',
           field: 'locale',
           width: 120
         },
         {
-          title: 'system.views.i18n.i18nItem.titleValue',
+          title: '{system.views.i18n.i18nItem.titleValue}',
           field: 'value',
           minWidth: 160
         },
         {
           field: 'createTime',
-          title: 'common.table.createTime',
+          title: '{common.table.createTime}',
           width: 160,
           formatter: ({cellValue}: any) => {
             if (cellValue) {
@@ -206,12 +206,12 @@ export default defineComponent({
         },
         {
           field: 'createUser',
-          title: 'common.table.createUser',
+          title: '{common.table.createUser}',
           width: 120
         },
         {
           field: 'i18nItemId',
-          title: 'common.table.operation',
+          title: '{common.table.operation}',
           width: 120,
           fixed: 'right',
           slots: {

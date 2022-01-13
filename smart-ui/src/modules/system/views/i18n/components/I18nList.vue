@@ -313,22 +313,22 @@ export default defineComponent({
         },
         {
           field: 'platform',
-          title: 'system.views.i18n.i18n.titlePlatform',
+          title: '{system.views.i18n.i18n.titlePlatform}',
           width: 120
         },
         {
           field: 'i18nCode',
-          title: 'system.views.i18n.i18n.titleI18nCode',
+          title: '{system.views.i18n.i18n.titleI18nCode}',
           minWidth: 260
         },
         {
           field: 'remark',
-          title: 'common.table.remark',
+          title: '{common.table.remark}',
           width: 200
         },
         {
           field: 'createTime',
-          title: 'common.table.createTime',
+          title: '{common.table.createTime}',
           width: 160,
           formatter: ({cellValue}: any) => {
             if (cellValue) {
@@ -339,12 +339,12 @@ export default defineComponent({
         },
         {
           field: 'createUser',
-          title: 'common.table.createUser',
+          title: '{common.table.createUser}',
           width: 120
         },
         {
           field: 'updateTime',
-          title: 'common.table.updateTime',
+          title: '{common.table.updateTime}',
           width: 160,
           formatter: ({cellValue}: any) => {
             if (cellValue) {
@@ -355,7 +355,7 @@ export default defineComponent({
         },
         {
           field: 'updateUser',
-          title: 'common.table.updateUser',
+          title: '{common.table.updateUser}',
           width: 120
         },
         {
@@ -364,13 +364,13 @@ export default defineComponent({
         },
         {
           field: 'seq',
-          title: 'common.table.seq',
+          title: '{common.table.seq}',
           width: 120,
           sortable: true
         },
         {
           field: 'i18nId',
-          title: 'common.table.operation',
+          title: '{common.table.operation}',
           width: 120,
           fixed: 'right',
           slots: {

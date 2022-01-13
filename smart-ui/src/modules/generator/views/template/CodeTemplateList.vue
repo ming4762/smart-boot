@@ -76,7 +76,7 @@
             <a-form-item :label="$t('generator.views.template.table.templateType')" name="templateType">
               <a-select v-model:value="formModel.templateType" :size="formSizeConfig" :disabled="isShow" :placeholder="$t('generator.views.template.validate.templateType')">
                 <a-select-option v-for="(value, key) in templateType" :key="key" :value="value.value">
-                  {{ value.label }}
+                  {{ $t(value.label) }}
                 </a-select-option>
               </a-select>
             </a-form-item>
@@ -226,10 +226,10 @@ export default defineComponent({
   data () {
     return {
       labelCol: {
-        span: 7
+        span: 9
       },
       wrapperCol: {
-        span: 16
+        span: 14
       },
       modalContainer: () => document.getElementById('codeTemplateContainer'),
       toolbarConfig: {
@@ -247,7 +247,7 @@ export default defineComponent({
         },
         {
           field: 'name',
-          title: 'generator.views.template.table.name',
+          title: '{generator.views.template.table.name}',
           width: 200,
           fixed: 'left',
           align: 'left',
@@ -255,7 +255,7 @@ export default defineComponent({
         },
         {
           field: 'templateType',
-          title: 'generator.views.template.table.templateType',
+          title: '{generator.views.template.table.templateType}',
           width: 140,
           formatter: ({ row }: any) => {
             const templateType = templateTypeConstants[row.templateType]
@@ -267,18 +267,18 @@ export default defineComponent({
         },
         {
           field: 'language',
-          title: 'generator.views.template.table.language',
+          title: '{generator.views.template.table.language}',
           width: 200
         },
         {
           field: 'remark',
-          title: 'generator.views.template.table.remark',
+          title: '{generator.views.template.table.remark}',
           minWidth: 200,
           align: 'left',
           headerAlign: 'center'
         },
         {
-          title: 'common.table.createTime',
+          title: '{common.table.createTime}',
           field: 'createTime',
           width: 165,
           formatter: ({ cellValue }: any) => {
@@ -290,7 +290,7 @@ export default defineComponent({
           sortable: true
         },
         {
-          title: 'common.table.createUser',
+          title: '{common.table.createUser}',
           field: 'createUserId',
           width: 120,
           formatter: ({ row }: any) => {
@@ -301,7 +301,7 @@ export default defineComponent({
           }
         },
         {
-          title: 'common.table.updateTime',
+          title: '{common.table.updateTime}',
           field: 'updateTime',
           width: 165,
           formatter: ({ cellValue }: any) => {
@@ -313,7 +313,7 @@ export default defineComponent({
           sortable: true
         },
         {
-          title: 'common.table.updateUser',
+          title: '{common.table.updateUser}',
           field: 'updateUserId',
           width: 120,
           formatter: ({ row }: any) => {
@@ -324,7 +324,7 @@ export default defineComponent({
           }
         },
         {
-          title: 'common.table.operation',
+          title: '{common.table.operation}',
           field: 'operation',
           width: 120,
           fixed: 'right',
@@ -345,6 +345,9 @@ export default defineComponent({
   }
   ::v-deep(.ant-modal-body) {
     padding: 10px;
+  }
+  ::v-deep(.ant-modal) {
+    max-width: 100%;
   }
 }
 .code-edit-container {

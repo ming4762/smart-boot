@@ -201,13 +201,13 @@ export default defineComponent({
           fixed: 'left'
         },
         {
-          title: 'system.views.userGroup.table.groupCode',
+          title: '{system.views.userGroup.table.groupCode}',
           field: 'groupCode',
           fixed: 'left',
           width: 160
         },
         {
-          title: 'system.views.userGroup.table.groupName',
+          title: '{system.views.userGroup.table.groupName}',
           field: 'groupName',
           fixed: 'left',
           width: 120
@@ -217,18 +217,18 @@ export default defineComponent({
           sortable: true
         },
         {
-          title: 'common.table.remark',
+          title: '{common.table.remark}',
           field: 'remark',
           minWidth: 160
         },
         {
-          title: 'common.table.seq',
+          title: '{common.table.seq}',
           field: 'seq',
           width: 100,
           sortable: true
         },
         {
-          title: 'common.table.createTime',
+          title: '{common.table.createTime}',
           field: 'createTime',
           width: 165,
           formatter: ({ cellValue }: any) => {
@@ -240,7 +240,7 @@ export default defineComponent({
           sortable: true
         },
         {
-          title: 'common.table.createUser',
+          title: '{common.table.createUser}',
           field: 'createUserId',
           width: 120,
           formatter: ({ row }: any) => {
@@ -251,7 +251,7 @@ export default defineComponent({
           }
         },
         {
-          title: 'common.table.updateTime',
+          title: '{common.table.updateTime}',
           field: 'updateTime',
           width: 165,
           formatter: ({ cellValue }: any) => {
@@ -263,7 +263,7 @@ export default defineComponent({
           sortable: true
         },
         {
-          title: 'common.table.updateUser',
+          title: '{common.table.updateUser}',
           field: 'updateUserId',
           width: 120,
           formatter: ({ row }: any) => {
@@ -274,7 +274,7 @@ export default defineComponent({
           }
         },
         {
-          title: 'common.table.operation',
+          title: '{common.table.operation}',
           field: 'operation',
           width: 120,
           fixed: 'right',

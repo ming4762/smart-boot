@@ -12,7 +12,7 @@ const tableDeleteYn = (t: Function) => {
    */
   const createColumn = () => {
     return {
-      title: 'common.table.deleteYn',
+      title: '{common.table.deleteYn}',
       field: 'deleteYn',
       width: 100,
       slots: {
@@ -39,7 +39,7 @@ const tableUseYn = (t: Function) => {
    */
   const createColumn = () => {
     return {
-      title: 'common.table.useYn',
+      title: '{common.table.useYn}',
       field: 'useYn',
       width: 100,
       slots: {

@@ -209,45 +209,45 @@ export default defineComponent({
           fixed: 'left'
         },
         {
-          title: 'generator.views.database.table.connectionName',
+          title: '{generator.views.database.table.connectionName}',
           field: 'connectionName',
           width: 160,
           fixed: 'left'
         },
         {
-          title: 'generator.views.database.table.databaseName',
+          title: '{generator.views.database.table.databaseName}',
           field: 'databaseName',
           width: 160,
           fixed: 'left'
         },
         {
-          title: 'generator.views.database.table.type',
+          title: '{generator.views.database.table.type}',
           field: 'type',
           width: 120
         },
         {
-          title: 'generator.views.database.table.project',
+          title: '{generator.views.database.table.project}',
           field: 'project',
           width: 120
         },
         {
-          title: 'generator.views.database.table.url',
+          title: '{generator.views.database.table.url}',
           field: 'url',
           minWidth: 200,
           showOverflow: 'tooltip'
         },
         {
-          title: 'generator.views.database.table.username',
+          title: '{generator.views.database.table.username}',
           field: 'username',
           width: 120
         },
         {
-          title: 'generator.views.database.table.tableSchema',
+          title: '{generator.views.database.table.tableSchema}',
           field: 'tableSchema',
           width: 120
         },
         {
-          title: 'common.table.createTime',
+          title: '{common.table.createTime}',
           field: 'createTime',
           width: 165,
           formatter: ({ cellValue }: any) => {
@@ -259,7 +259,7 @@ export default defineComponent({
           sortable: true
         },
         {
-          title: 'common.table.createUser',
+          title: '{common.table.createUser}',
           field: 'createUserId',
           width: 120,
           formatter: ({ row }: any) => {
@@ -270,7 +270,7 @@ export default defineComponent({
           }
         },
         {
-          title: 'common.table.updateTime',
+          title: '{common.table.updateTime}',
           field: 'updateTime',
           width: 165,
           formatter: ({ cellValue }: any) => {
@@ -282,7 +282,7 @@ export default defineComponent({
           sortable: true
         },
         {
-          title: 'common.table.updateUser',
+          title: '{common.table.updateUser}',
           field: 'updateUserId',
           width: 120,
           formatter: ({ row }: any) => {
@@ -293,7 +293,7 @@ export default defineComponent({
           }
         },
         {
-          title: 'common.table.operation',
+          title: '{common.table.operation}',
           field: 'operation',
           width: 120,
           fixed: 'right',

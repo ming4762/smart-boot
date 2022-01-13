@@ -161,6 +161,7 @@ export default defineComponent({
      * @returns {Promise<void>}
      */
     const handleSetYn = (ident: string, userId: number, checked: boolean) => {
+      // TODO:国际化
       const content = `确定要${ident === 'use_yn' ? (checked ? '启用' : '停用') : (checked ? '删除' : '启用')}该用户吗`
       Modal.confirm({
         title: '确认',
@@ -208,24 +209,24 @@ export default defineComponent({
           fixed: 'left'
         },
         {
-          title: 'system.views.user.table.username',
+          title: '{system.views.user.table.username}',
           field: 'username',
           width: 120,
           fixed: 'left'
         },
         {
-          title: 'system.views.user.table.fullName',
+          title: '{system.views.user.table.fullName}',
           field: 'fullName',
           width: 120,
           fixed: 'left'
         },
         {
-          title: 'system.views.user.table.email',
+          title: '{system.views.user.table.email}',
           field: 'email',
           minWidth: 160
         },
         {
-          title: 'system.views.user.table.mobile',
+          title: '{system.views.user.table.mobile}',
           field: 'mobile',
           minWidth: 140
         },
@@ -238,13 +239,13 @@ export default defineComponent({
           sortable: true
         },
         {
-          title: 'common.table.seq',
+          title: '{common.table.seq}',
           field: 'seq',
           width: 100,
           sortable: true
         },
         {
-          title: 'common.table.createTime',
+          title: '{common.table.createTime}',
           field: 'createTime',
           width: 165,
           formatter: ({ cellValue }: any) => {
@@ -256,7 +257,7 @@ export default defineComponent({
           sortable: true
         },
         {
-          title: 'common.table.createUser',
+          title: '{common.table.createUser}',
           field: 'createUserId',
           width: 120,
           formatter: ({ row }: any) => {
@@ -267,7 +268,7 @@ export default defineComponent({
           }
         },
         {
-          title: 'common.table.updateTime',
+          title: '{common.table.updateTime}',
           field: 'updateTime',
           width: 165,
           formatter: ({ cellValue }: any) => {
@@ -279,7 +280,7 @@ export default defineComponent({
           sortable: true
         },
         {
-          title: 'common.table.updateUser',
+          title: '{common.table.updateUser}',
           field: 'updateUserId',
           width: 120,
           formatter: ({ row }: any) => {
@@ -290,7 +291,7 @@ export default defineComponent({
           }
         },
         {
-          title: 'common.table.operation',
+          title: '{common.table.operation}',
           field: 'operation',
           width: 120,
           fixed: 'right',

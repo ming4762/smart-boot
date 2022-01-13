@@ -212,7 +212,7 @@ export default defineComponent({
       permissions: SystemPermissions.i18n,
       columns: [
         {
-          title: 'system.views.i18n.group.groupName',
+          title: '{system.views.i18n.group.groupName}',
           field: 'groupName',
           slots: {
             default: 'table-groupName'
