@@ -86,6 +86,8 @@ export const vueLoadData = () => {
       const { rows, total } = await ApiService.postAjax('db/code/template/list', parameter)
       tablePage.total = total
       data.value = rows
+    } catch (e) {
+      errorMessage(e)
     } finally {
       tableDataLoading.value = false
     }

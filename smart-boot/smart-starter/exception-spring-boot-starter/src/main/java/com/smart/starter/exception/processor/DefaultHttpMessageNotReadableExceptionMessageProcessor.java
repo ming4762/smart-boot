@@ -1,5 +1,6 @@
 package com.smart.starter.exception.processor;
 
+import com.smart.commons.core.message.Result;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.Nullable;
 
@@ -13,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 public class DefaultHttpMessageNotReadableExceptionMessageProcessor extends AbstractI18nExceptionMessageProcessor<HttpMessageNotReadableException> {
     @Override
     public Object message(HttpMessageNotReadableException e, @Nullable HttpServletRequest request) {
-        return null;
+        return Result.failure("数据读取失败", e.getMessage());
     }
 
     @Override

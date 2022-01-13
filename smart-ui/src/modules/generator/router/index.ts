@@ -14,6 +14,10 @@ const generatorRouters: Array<RouteRecordRaw> = [
       {
         path: 'code/templateList',
         component: () => import('@/modules/generator/views/template/CodeTemplateList.vue')
+      },
+      {
+        path: 'code/codeList',
+        component: () => import('@/modules/generator/views/codeList/CodeListView.vue')
       }
     ]
   }

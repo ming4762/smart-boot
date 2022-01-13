@@ -7,7 +7,18 @@ import db_en_US from '../views/database/lang/en_US'
 import template_zh_CN from '../views/template/lang/zh_CN'
 import template_en_US from '../views/template/lang/en_US'
 
+import codeList_zh_CN from '../views/codeList/lang/zh_CN'
+import codeList_en_US from '../views/codeList/lang/en_US'
+
 export default {
-  zh_CN: merge({}, db_zh_CN, template_zh_CN),
-  en_US: merge({}, db_en_US, template_en_US)
+  zh_CN: merge({},
+    db_zh_CN,
+    template_zh_CN,
+    codeList_zh_CN
+  ),
+  en_US: merge({},
+    db_en_US,
+    template_en_US,
+    codeList_en_US
+  )
 }

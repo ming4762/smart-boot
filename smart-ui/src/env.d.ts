@@ -7,8 +7,8 @@ declare module '*.vue' {
   export default component
 }
 
-declare module 'store'
-
 declare module 'blueimp-md5'
 
 declare module 'nprogress'
+
+declare module 'sortablejs'

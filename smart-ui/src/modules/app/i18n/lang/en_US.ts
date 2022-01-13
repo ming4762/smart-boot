@@ -35,6 +35,7 @@ export default {
     },
     notice: {
       confirm: 'Confirm',
+      confirmSave: 'Are you sure you want to save?',
       deleteConfirm: 'Are you sure you want to delete?',
       deleteChoose: 'Please select the data to delete'
     },

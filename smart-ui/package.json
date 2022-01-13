@@ -15,6 +15,7 @@
     "lodash": "^4.17.21",
     "nprogress": "^0.2.0",
     "resize-observer-lite": "^0.2.3",
+    "sortablejs": "^1.14.0",
     "vue": "^3.2.16",
     "vue-copy-to-clipboard": "^1.0.3",
     "vue-i18n": "^9.1.9",

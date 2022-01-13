@@ -35,6 +35,7 @@ export default {
     },
     notice: {
       confirm: '确认',
+      saveConfirm: '确定要保存吗？',
       deleteConfirm: '确定要删除吗？',
       deleteChoose: '请选择要删除的数据'
     },
