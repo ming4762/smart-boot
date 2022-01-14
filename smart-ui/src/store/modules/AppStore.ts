@@ -5,7 +5,7 @@ import router from '@/router'
 import StoreUtil from '@/common/utils/StoreUtil'
 
 import defaultSettings from '@/config/defaultSetting'
-import { CONTENT_WIDTH_TYPE, SIDEBAR_TYPE } from '@/modules/system/store/mutation-types'
+import { CONTENT_WIDTH_TYPE } from '@/modules/system/store/mutation-types'
 import { STORE_APP_MUTATION } from '@/common/constants/CommonConstants'
 import defaultSetting from '@/config/defaultSetting'
 
@@ -24,7 +24,9 @@ const STORE_KEYS = {
   APP_TABLE_SIZE: 'smart_app_table_size',
   APP_FORM_SIZE: 'smart_app_form_size',
   APP_HAS_MULTI_TAB: 'smart_app_hasMultiTab',
-  APP_LANGUAGE: 'smart_app_lang'
+  APP_LANGUAGE: 'smart_app_lang',
+  // 侧边栏开启状态
+  APP_SIDEBAR_STATUS: 'smart_app_sidebar_status'
 }
 
 const KEY_STORE_KEY: {[index: string]: string} = {
@@ -78,7 +80,7 @@ const LayoutStore: StoreOptions<any> = {
     // 全局加载状态
     globalLoading: false,
     // 侧边栏关闭状态
-    collapsed: false,
+    collapsed: StoreUtil.getStore(STORE_KEYS.APP_SIDEBAR_STATUS) || false,
     // 是否是移动模式
     isMobile: false
   },
@@ -111,13 +113,6 @@ const LayoutStore: StoreOptions<any> = {
           }
         }
       }
-    },
-    /**
-     * 打开关闭侧边栏
-     * @param state
-     */
-    [STORE_APP_MUTATION.APP_COLLAPSED_SIDEBAR]: (state) => {
-      state.collapsed = !state.collapsed
     },
     /**
      * 设置用户菜单信息
@@ -172,9 +167,13 @@ const LayoutStore: StoreOptions<any> = {
       state.i18n.lang = lang
       StoreUtil.setStore(STORE_KEYS.APP_LANGUAGE, lang)
     },
-    [STORE_APP_MUTATION.APP_SIDEBAR_TYPE]: (state, type) => {
-      state.sideCollapsed = type
-      StoreUtil.setStore(SIDEBAR_TYPE, type)
+    /**
+     * 打开关闭侧边栏
+     * @param state
+     */
+    [STORE_APP_MUTATION.APP_COLLAPSED_SIDEBAR]: (state) => {
+      state.collapsed = !state.collapsed
+      StoreUtil.setStore(STORE_KEYS.APP_SIDEBAR_STATUS, state.collapsed)
     }
   },
   actions: {

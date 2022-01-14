@@ -57,7 +57,7 @@ import { RouteLocationNormalized, Router, useRoute, useRouter } from 'vue-router
 import { ReloadOutlined } from '@ant-design/icons-vue'
 
 import defaultSettings from '@/config/defaultSetting'
-import { SIDEBAR_TYPE, TOGGLE_MOBILE_TYPE } from '@/modules/system/store/mutation-types'
+import { TOGGLE_MOBILE_TYPE } from '@/modules/system/store/mutation-types'
 
 import { STORE_APP_MUTATION } from '@/common/constants/CommonConstants'
 
@@ -96,9 +96,6 @@ const MobileVueSupport = (collapsed: Ref<boolean>) => {
 const collapsedVueSupport = () => {
   const store = useStore()
   const collapsed = computed(() => store.getters['app/appCollapsed'])
-  watch(collapsed, () => {
-    store.commit(SIDEBAR_TYPE, collapsed.value)
-  })
   const handleCollapse = () => {
     store.commit(`app/${STORE_APP_MUTATION.APP_COLLAPSED_SIDEBAR}`)
   }
