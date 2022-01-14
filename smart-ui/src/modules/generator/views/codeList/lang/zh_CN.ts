@@ -92,7 +92,8 @@ export default {
           className: '实体类名',
           packages: '包名',
           extPackages: 'ext包名',
-          controllerBasePath: 'controller路径'
+          controllerBasePath: 'controller路径',
+          choseAddendum: '选择附表'
         },
         message: {
           choseTemplate: '请选择模板'

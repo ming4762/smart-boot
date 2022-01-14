@@ -274,7 +274,7 @@
       @cancel="createModalVisible = false">
       <CodeCreateForm ref="createFormRef" :code-data="codeData" />
     </a-modal>
-    <PageAddendumTableChose v-model:visible="choseAddendumModalVisible" @chose="handleChoseTable" />
+    <PageAddendumTableChose v-model:visible="choseAddendumModalVisible" :z-index="2000" @chose="handleChoseTable" />
   </div>
 </template>
 

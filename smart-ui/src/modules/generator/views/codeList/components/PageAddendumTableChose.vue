@@ -1,8 +1,9 @@
 <template>
   <a-modal
-    title="选择附表"
+    :title="$t('generator.views.codeCreateForm.title.choseAddendum')"
     width="920px"
     :visible="visible"
+    :size="tableSizeConfig"
     v-bind="$attrs"
     @ok="handleOk">
     <vxe-grid
@@ -14,19 +15,19 @@
       :columns="computedColumns">
       <template #toolbarConfigButton>
         <a-form layout="inline">
-          <a-form-item label="配置名称">
-            <a-input v-model:value="searchModel.configName" />
+          <a-form-item :label="$t('generator.views.code.table.configName')">
+            <a-input v-model:value="searchModel.configName" :size="formSizeConfig" />
           </a-form-item>
-          <a-form-item label="表名">
-            <a-input v-model:value="searchModel.tableName" />
+          <a-form-item :label="$t('generator.views.code.table.tableName')">
+            <a-input v-model:value="searchModel.tableName" :size="formSizeConfig" />
           </a-form-item>
           <a-form-item>
-            <a-button type="primary">搜索</a-button>
+            <a-button :size="buttonSizeConfig" type="primary">{{ $t('common.button.search') }}</a-button>
           </a-form-item>
         </a-form>
       </template>
       <template #table-relatedColumn="{ row }">
-        <a-input v-model:value="row.relatedColumn" />
+        <a-input v-model:value="row.relatedColumn" :size="formSizeConfig" />
       </template>
     </vxe-grid>
   </a-modal>
@@ -40,6 +41,7 @@ import { message } from 'ant-design-vue'
 import { errorMessage } from '@/components/notice/SystemNotice'
 
 import ApiService from '@/common/utils/ApiService'
+import SizeConfigHoops from '@/components/config/SizeConfigHoops'
 
 const columns = [
   {
@@ -102,6 +104,7 @@ export default defineComponent({
     const { ctx } = getCurrentInstance() as any
     const data = ref<Array<any>>([])
     const dataLoading = ref(false)
+    const sizeConfigHoops = SizeConfigHoops()
     const tableRef = ref()
     const searchModel = {
       configName: '',
@@ -201,7 +204,8 @@ export default defineComponent({
       searchModel,
       computedColumns,
       dataLoading,
-      tableRef
+      tableRef,
+      ...sizeConfigHoops
     }
   },
   data () {
