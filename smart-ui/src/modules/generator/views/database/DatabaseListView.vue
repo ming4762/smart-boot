@@ -113,6 +113,7 @@
       :title="$t('generator.views.database.common.chooseTemplate')"
       @ok="handleCreate">
       <TemplateSelected
+        ref="templateSelectedRef"
         template-type="template_db_dict"
         @template-change="handleTemplateChange" />
     </a-modal>
@@ -145,6 +146,7 @@ export default defineComponent({
     SetUserGroup
   },
   setup () {
+    const templateSelectedRef = ref()
     const gridRef = ref()
     const formRef = ref()
     const i18n = useI18n()
@@ -175,11 +177,13 @@ export default defineComponent({
         }
         case 'createDic': {
           createDictVue.handleShowCreateDictModal()
+          templateSelectedRef.value.loadData()
           break
         }
       }
     }
     return {
+      templateSelectedRef,
       ...loadDataVue,
       ...addEditVue,
       ...actionVue,

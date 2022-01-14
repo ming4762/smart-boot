@@ -283,18 +283,20 @@ export const vueCreateDict = (row: Ref, t: Function) => {
   /**
    * 创建模板
    */
-  const handleCreate = () => {
+  const handleCreate = async () => {
     if (selectTemplateIdList.length === 0) {
       message.error(t('generator.views.database.validate.template'))
       return false
     }
-    applyTempToken('db:connection:createDic', false)
-      .then(tempToken => {
-        selectTemplateIdList.forEach(templateId => {
-          const url = `${ApiService.getApiUrl()}public/db/createDic?connectionId=${row.value.id}&templateId=${templateId}&token=${tempToken}`
-          window.open(url)
-        })
+    try {
+      const tempToken = await applyTempToken('db:connection:createDic', false)
+      selectTemplateIdList.forEach(templateId => {
+        const url = `${ApiService.getApiUrl()}public/db/createDic?connectionId=${row.value.id}&templateId=${templateId}&token=${tempToken}`
+        window.open(url)
       })
+    } catch (e) {
+      errorMessage(e)
+    }
   }
   return {
     handleTemplateChange,

@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref, toRefs, onMounted } from 'vue'
+import { defineComponent, PropType, ref, toRefs } from 'vue'
 
 import ApiService from '@/common/utils/ApiService'
 import { errorMessage } from '@/components/notice/SystemNotice'
@@ -24,7 +24,7 @@ export default defineComponent({
       type: String as PropType<string>
     }
   },
-emits: ['templateChange'],
+  emits: ['templateChange'],
   setup (props, content) {
     const { templateType } = toRefs(props)
     // 所有模板数据
@@ -34,8 +34,9 @@ emits: ['templateChange'],
     /**
      * 加载模板数据
      */
-    const loadTemplateData = async () => {
+    const loadData = async () => {
       dataLoading.value = true
+      targetKeysModel.value = []
       try {
         const result = await ApiService.postAjax('db/code/template/list', {
           parameter: {
@@ -58,11 +59,11 @@ emits: ['templateChange'],
       content.emit('templateChange', targetKeys)
       targetKeysModel.value = targetKeys
     }
-    onMounted(loadTemplateData)
     return {
       transDataSource,
       targetKeysModel,
-      handleTransChange
+      handleTransChange,
+      loadData
     }
   }
 })
