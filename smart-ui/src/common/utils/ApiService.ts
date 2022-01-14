@@ -17,16 +17,6 @@ export const API_SERVICE = axios.create({
 })
 
 
-// API_SERVICE.interceptors.response.use(
-//   response => {
-//     const data = response.data
-//     if (data.success === false) {
-//       return Promise.reject(data)
-//     }
-//     return Promise.resolve(data.data)
-//   }
-// )
-
 /**
  * API工具类
  */

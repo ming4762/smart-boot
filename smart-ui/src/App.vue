@@ -61,10 +61,14 @@ export default defineComponent({
       return i18n.getLocaleMessage(store.getters['app/lang']).antLocale
     })
     domTitleVueSupport(route, i18n.locale, i18n.t)
-    const computedLang = computed(() => store.getters.lang)
+
+    // 动态设置语言信息
+    const computedLang = computed(() => store.getters['app/lang'])
+    ApiService.setLang(computedLang.value)
     watch(computedLang, () => {
-      ApiService.setLang(store.getters.lang)
+      ApiService.setLang(computedLang.value)
     })
+
     return {
       locale: computedLocale,
       globalLoading: computed(() => store.getters['app/globalLoading'])
