@@ -54,6 +54,11 @@ export default {
       },
       closeOperation: 'Action'
     },
+    title: {
+      '404': 'The page you visited does not exist',
+      '403': 'You do not have permission to access this page',
+      backHome: 'Back Home'
+    },
     common: {
       notice: {
         logout: 'Are you sure you want to log out?'

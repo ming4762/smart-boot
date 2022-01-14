@@ -54,6 +54,11 @@ export default {
       },
       closeOperation: '关闭操作'
     },
+    title: {
+      '404': '您访问的页面不存在',
+      '403': '您无权限访问此页面',
+      backHome: '返回主页'
+    },
     common: {
       notice: {
         logout: '确定要登出吗？'

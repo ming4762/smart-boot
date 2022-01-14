@@ -13,6 +13,13 @@ const appRouters: Array<RouteRecordRaw> = [
     }
   },
   {
+    path: '/error/403',
+    component: () => import('@/modules/app/views/exception/403.vue'),
+    meta: {
+      title: '403'
+    }
+  },
+  {
     path: '/',
     component: BasicLayout,
     children: [

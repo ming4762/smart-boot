@@ -15,7 +15,7 @@ import { useStore } from 'vuex'
 import { domTitle, setDocumentTitle } from '@/common/utils/domUtil'
 import ApiService from '@/common/utils/ApiService'
 
-const domTitleVueSupport = (route, locale, i18nRender) => {
+const domTitleVueSupport = (route: any, locale: any, i18nRender: Function) => {
   watch([route, locale], () => {
     const matchedList = route.matched
     let matchedMeta = null

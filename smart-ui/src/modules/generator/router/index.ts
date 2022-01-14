@@ -20,6 +20,11 @@ const generatorRouters: Array<RouteRecordRaw> = [
         component: () => import('@/modules/generator/views/codeList/CodeListView.vue')
       }
     ]
+  },
+  {
+    path: '/codeCreateView',
+    component: () => import(/* webpackChunkName: "codeCreateView" */ '@/modules/generator/views/codeCreate/CodeCreateView.vue'),
+    props: (route: any) => (route.query)
   }
 ]
 

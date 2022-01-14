@@ -1,5 +1,5 @@
 <template>
-  <a-result status="404" title="404" :sub-title="$t('app.title.404')">
+  <a-result status="403" title="403" :sub-title="$t('app.title.403')">
     <template #extra>
       <a-button type="primary" @click="toHome">
         {{ $t('app.title.backHome') }}
