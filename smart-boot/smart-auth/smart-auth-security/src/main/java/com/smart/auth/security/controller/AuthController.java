@@ -102,7 +102,10 @@ public class AuthController {
             throw new AccessDeniedException(I18nUtils.get(AuthI18nMessage.ERROR_TEMP_TOKEN_APPLY_RESOURCE_NULL));
         }
         // 验证权限
-        boolean hasPermission = user.getPermissions().stream().anyMatch(item -> item.getAuthority().equals(tempTokenData.getResource()));
+        boolean hasPermission = AuthUtils.isSuperAdmin();
+        if (!hasPermission) {
+            hasPermission = user.getPermissions().stream().anyMatch(item -> item.getAuthority().equals(tempTokenData.getResource()));
+        }
         if (!hasPermission) {
             throw new AccessDeniedException(I18nUtils.get(AuthI18nMessage.ERROR_TEMP_TOKEN_APPLY_RESOURCE_FAIL));
         }

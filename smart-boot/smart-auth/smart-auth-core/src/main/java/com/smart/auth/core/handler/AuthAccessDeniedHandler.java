@@ -18,6 +18,6 @@ import java.io.IOException;
 public class AuthAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest httpServletRequest, HttpServletResponse response, AccessDeniedException e) throws IOException {
-        RestJsonWriter.writeJson(response, Result.ofStatus(HttpStatus.FORBIDDEN));
+        RestJsonWriter.writeJson(response, Result.ofStatus(HttpStatus.FORBIDDEN, e.getMessage()));
     }
 }
