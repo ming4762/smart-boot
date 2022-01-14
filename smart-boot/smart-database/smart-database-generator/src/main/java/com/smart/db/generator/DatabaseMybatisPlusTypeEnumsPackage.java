@@ -1,4 +1,4 @@
-package com.smart.system.constants;
+package com.smart.db.generator;
 
 import com.google.common.collect.Lists;
 
@@ -10,9 +10,9 @@ import java.util.List;
  * 2021/12/31
  * @since 1.0.7
  */
-public interface MybatisPlusTypeEnumsPackage {
+public interface DatabaseMybatisPlusTypeEnumsPackage {
 
     List<String> TYPE_ENUMS_PACKAGE = Lists.newArrayList(
-            "com.smart.system.constants"
+            "com.smart.db.generator.constants"
     );
 }
