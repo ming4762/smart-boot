@@ -2,6 +2,7 @@ package com.smart.auth.cache.redis;
 
 import com.smart.auth.core.service.AbstractAuthCache;
 import com.smart.starter.redis.service.RedisService;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -84,5 +85,23 @@ public class RedisAuthCache extends AbstractAuthCache<String, Object> {
         final Set<String> prefixKeys = keys.stream().map(this::getKey).collect(Collectors.toSet());
         List<Object> data = this.cacheService.batchGet(Collections.singleton(prefixKeys));
         return Objects.isNull(data) ? new HashSet<>(0) : new HashSet<>(data);
+    }
+
+    @Override
+    public void matchRemove(@NonNull String matchKey) {
+        this.cacheService.matchDelete(matchKey);
+    }
+
+    @Override
+    public Set<Object> matchGet(@NonNull String matchKey) {
+        List<Object> keys = this.cacheService.matchKeys(matchKey);
+        if (CollectionUtils.isEmpty(keys)) {
+            return new HashSet<>(0);
+        }
+        List<Object> dataList = this.cacheService.batchGet(keys);
+        if (CollectionUtils.isEmpty(dataList)) {
+            return new HashSet<>(0);
+        }
+        return new HashSet<>(dataList);
     }
 }

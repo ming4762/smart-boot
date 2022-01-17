@@ -1,4 +1,4 @@
-package com.smart.auth.security.pojo.dto;
+package com.smart.system.pojo.dto;
 
 import lombok.Getter;
 import lombok.Setter;

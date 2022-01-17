@@ -8,6 +8,8 @@ import com.smart.auth.core.service.AuthCache;
 import com.smart.auth.extensions.jwt.AuthJwtConfigure;
 import com.smart.auth.extensions.jwt.handler.JwtAuthSuccessDataHandler;
 import com.smart.auth.extensions.jwt.service.JwtService;
+import com.smart.auth.extensions.jwt.store.CacheJwtStore;
+import com.smart.auth.extensions.jwt.store.CacheJwtStoreImpl;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -23,16 +25,20 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 @ConditionalOnClass(AuthJwtConfigure.class)
 public class AuthJwtAutoConfiguration {
 
+    @Bean
+    @ConditionalOnMissingBean(CacheJwtStore.class)
+    public CacheJwtStore cacheJwtStore(AuthProperties authProperties, AuthCache<String, Object> authCache) {
+        return new CacheJwtStoreImpl(authProperties, authCache);
+    }
     /**
      * 创建JwtService
      * @param authProperties 参数
-     * @param authCache 缓存工具
      * @return JwtService
      */
     @Bean
     @ConditionalOnMissingBean(JwtService.class)
-    public JwtService jwtService(AuthProperties authProperties, AuthCache<String, Object> authCache) {
-        return new JwtService(authProperties, authCache);
+    public JwtService jwtService(AuthProperties authProperties, CacheJwtStore jwtStore) {
+        return new JwtService(authProperties, jwtStore);
     }
 
     /**

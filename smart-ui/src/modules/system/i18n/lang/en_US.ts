@@ -9,6 +9,19 @@ export default {
     },
     main: {
       account: {
+        changePassword: {
+          title: 'Change password',
+          oldPassword: 'Old password',
+          newPassword: 'New password',
+          newPasswordConfirm: 'New password confirm',
+          validateOldPassword: 'Please enter the old password',
+          validateNewPassword: 'Please enter the new password',
+          validateNewPasswordConfirm: 'Please enter the new password again',
+          validateNewPasswordSame: 'The two new passwords are inconsistent',
+          validateOldNewPasswordSame: 'The old and new passwords cannot be consistent',
+          changeConfirm: 'Are you sure you want to change the password?',
+          editSuccessMessage: 'Modification succeeded, please login again'
+        },
         logout: 'Logout'
       }
     },

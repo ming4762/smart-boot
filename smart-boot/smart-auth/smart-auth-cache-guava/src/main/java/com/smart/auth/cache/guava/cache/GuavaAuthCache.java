@@ -3,6 +3,7 @@ package com.smart.auth.cache.guava.cache;
 import com.smart.auth.core.properties.AuthProperties;
 import com.smart.auth.core.service.AbstractAuthCache;
 import com.smart.starter.cache.guava.GuavaCacheService;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.lang.NonNull;
 
 import java.time.Duration;
@@ -62,5 +63,23 @@ public class GuavaAuthCache extends AbstractAuthCache<String, Object> {
     public Set<Object> batchGet(@NonNull Collection<String> keys) {
         List<Object> cacheList = this.cacheService.batchGet(Collections.singleton(keys));
         return cacheList == null ? new HashSet<>(0) : new HashSet<>(cacheList);
+    }
+
+    @Override
+    public void matchRemove(@NonNull String matchKey) {
+        this.cacheService.matchDelete(matchKey);
+    }
+
+    @Override
+    public Set<Object> matchGet(@NonNull String matchKey) {
+        List<Object> keys = this.cacheService.matchKeys(matchKey);
+        if (CollectionUtils.isEmpty(keys)) {
+            return new HashSet<>(0);
+        }
+        List<Object> dataList = this.cacheService.batchGet(keys);
+        if (CollectionUtils.isEmpty(dataList)) {
+            return new HashSet<>(0);
+        }
+        return new HashSet<>(dataList);
     }
 }

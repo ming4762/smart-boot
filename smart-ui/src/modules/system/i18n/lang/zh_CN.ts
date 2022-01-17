@@ -9,6 +9,19 @@ export default {
     },
     main: {
       account: {
+        changePassword: {
+          title: '修改密码',
+          oldPassword: '原密码',
+          newPassword: '新密码',
+          newPasswordConfirm: '确认新密码',
+          validateOldPassword: '请输入原密码',
+          validateNewPassword: '请输入新密码',
+          validateNewPasswordConfirm: '请再次输入新密码',
+          validateNewPasswordSame: '两次输入新密码不一致',
+          validateOldNewPasswordSame: '新旧密码不能一致',
+          changeConfirm: '确认要修改密码吗？',
+          editSuccessMessage: '修改成功，请重新登录'
+        },
         logout: '退出登录'
       }
     },

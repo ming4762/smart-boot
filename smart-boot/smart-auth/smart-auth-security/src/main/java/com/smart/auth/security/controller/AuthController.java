@@ -8,12 +8,8 @@ import com.smart.auth.core.service.AuthCache;
 import com.smart.auth.core.service.AuthUserService;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.auth.core.utils.AuthUtils;
-import com.smart.auth.security.exception.PasswordChangeException;
-import com.smart.auth.security.pojo.dto.ChangePasswordDTO;
 import com.smart.auth.security.pojo.dto.TempTokenApplyDTO;
 import com.smart.commons.core.i18n.I18nUtils;
-import com.smart.commons.core.log.Log;
-import com.smart.commons.core.log.LogOperationTypeEnum;
 import com.smart.commons.core.message.Result;
 import com.smart.commons.core.utils.Base64Utils;
 import com.smart.commons.core.utils.IpUtils;
@@ -22,7 +18,6 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.lang.NonNull;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,12 +40,9 @@ public class AuthController {
 
     private final AuthCache<String, Object> authCache;
 
-    private final AuthUserService authUserService;
-
     public AuthController(AuthCache<String, Object> authCache, AuthProperties authProperties, AuthUserService authUserService) {
         this.authCache = authCache;
         this.authProperties = authProperties;
-        this.authUserService = authUserService;
     }
 
     /**
@@ -62,26 +54,6 @@ public class AuthController {
     public Result<Boolean> isLogin() {
         RestUserDetails restUserDetails = AuthUtils.getCurrentUser();
         return Result.success(ObjectUtils.isNotEmpty(restUserDetails));
-    }
-
-    /**
-     * 更改用户密码
-     * @param parameter 参数
-     * @return 是否更改成功
-     */
-    @PostMapping("auth/changePassword")
-    @Log(value = "更新密码", type = LogOperationTypeEnum.UPDATE)
-    @ApiOperation(value = "更改密码")
-    public Result<Boolean> changePassword(@NonNull @RequestBody @Valid ChangePasswordDTO parameter) {
-        // 验证密码是否一致
-        if (!StringUtils.equals(parameter.getNewPassword(), parameter.getNewPasswordConfirm())) {
-            throw new PasswordChangeException(AuthI18nMessage.PASSWORD_CHANGE_PASSWORD_INCONSISTENT);
-        }
-        // 判断旧密码是否正确
-        if (!StringUtils.equals(parameter.getOldPassword(), AuthUtils.getNonNullCurrentUser().getPassword())) {
-            throw new PasswordChangeException(AuthI18nMessage.PASSWORD_CHANGE_OLD_PASSWORD_ERROR);
-        }
-        return Result.success(this.authUserService.changePassword(parameter.getNewPassword()));
     }
 
     /**

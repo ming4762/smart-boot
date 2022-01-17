@@ -78,10 +78,8 @@ import { useStore } from 'vuex'
 import { message } from 'ant-design-vue'
 import { UserOutlined, LockOutlined, MobileOutlined, MailOutlined }  from '@ant-design/icons-vue'
 
-import md5 from 'blueimp-md5'
-
 import ApiService from '@/common/utils/ApiService'
-import { saveUser, saveUserPermission, saveUserRole, saveToken, getToken } from '@/common/auth/AuthUtils'
+import { saveUser, saveUserPermission, saveUserRole, saveToken, getToken, createPassword } from '@/common/auth/AuthUtils'
 import defaultSettings from '@/config/defaultSetting'
 
 /**
@@ -182,7 +180,7 @@ export default defineComponent({
       if (customActiveKey.value === 'username') {
         requestParameter = {
           username: loginModel.username,
-          password: md5(md5(`${loginModel.username}${loginModel.password}888888$#@`))
+          password: createPassword(loginModel.username, loginModel.password)
         }
       } else {
         requestParameter = {

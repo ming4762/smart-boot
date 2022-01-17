@@ -12,6 +12,7 @@ import com.smart.auth.extensions.jwt.filter.JwtAuthenticationFilter;
 import com.smart.auth.extensions.jwt.filter.JwtLoginFilter;
 import com.smart.auth.extensions.jwt.filter.JwtLogoutFilter;
 import com.smart.auth.extensions.jwt.service.JwtService;
+import com.smart.auth.extensions.jwt.store.CacheJwtStore;
 import com.smart.auth.extensions.jwt.store.JwtStore;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
@@ -78,7 +79,7 @@ public class AuthJwtSecurityConfigurer extends SecurityConfigurerAdapter<Default
         }
         this.jwtService = this.getBean(JwtService.class, this.jwtService);
         if (Objects.isNull(this.jwtService)) {
-            this.jwtService = new JwtService(this.getAuthProperties(), this.getAuthCache());
+            this.jwtService = new JwtService(this.getAuthProperties(), this.getBean(CacheJwtStore.class, null));
         }
 
     }

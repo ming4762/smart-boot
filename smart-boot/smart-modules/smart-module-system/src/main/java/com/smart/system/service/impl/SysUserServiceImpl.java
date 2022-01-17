@@ -392,5 +392,18 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         this.sysRoleService = sysRoleService;
     }
 
-
+    /**
+     * 更改密码
+     * @param password 密码
+     * @param userId 用户ID
+     * @return 是否修改成功
+     */
+    @Override
+    public boolean changePassword(@NonNull Long userId, @NonNull String password) {
+        return this.update(
+                new UpdateWrapper<SysUserPO>().lambda()
+                .set(SysUserPO :: getPassword, password)
+                .eq(SysUserPO :: getUserId, userId)
+        );
+    }
 }

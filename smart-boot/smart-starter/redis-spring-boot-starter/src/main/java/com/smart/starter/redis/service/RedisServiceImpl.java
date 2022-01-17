@@ -153,7 +153,6 @@ public class RedisServiceImpl implements RedisService {
     @Override
     public List<Object> matchKeys(@NonNull Object patternKey) {
         List<Object> result = new LinkedList<>();
-
         Cursor<byte[]> scan = this.scan(patternKey, null);
         while (scan.hasNext()) {
             String key = new String(scan.next());

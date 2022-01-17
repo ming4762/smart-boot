@@ -1,12 +1,10 @@
 package com.smart.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.google.common.collect.ImmutableList;
 import com.smart.auth.core.model.AuthUser;
 import com.smart.auth.core.model.Permission;
 import com.smart.auth.core.service.AuthUserService;
-import com.smart.auth.core.utils.AuthUtils;
 import com.smart.system.constants.FunctionTypeEnum;
 import com.smart.system.constants.UserStatusEnum;
 import com.smart.system.model.SysAuthUserPO;
@@ -143,12 +141,4 @@ public class AuthUserServiceImpl implements AuthUserService {
                 .collect(Collectors.toSet());
     }
 
-    @Override
-    public boolean changePassword(@NonNull String newPassword) {
-        return this.sysUserService.update(
-                new UpdateWrapper<SysUserPO>().lambda()
-                .set(SysUserPO :: getPassword, newPassword)
-                .eq(SysUserPO :: getUserId, AuthUtils.getNonNullCurrentUserId())
-        );
-    }
 }

@@ -41,6 +41,7 @@ export default {
     },
     message: {
       saveSuccess: 'Saved successfully',
+      editSuccess: 'Edit success',
       deleteSuccess: 'Delete successfully',
       deleteFail: 'Deletion failed'
     }

@@ -5,6 +5,7 @@ import com.google.common.cache.CacheBuilder;
 import com.smart.starter.cache.guava.data.CacheObject;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.lang.Nullable;
 
 import java.time.Duration;
@@ -147,21 +148,28 @@ public class GuavaCacheServiceImpl implements GuavaCacheService {
 
     @Override
     public void batchDelete(@NonNull List<Object> keys) {
-        keys.forEach(this :: delete);
+        this.cache.invalidateAll(keys);
     }
 
     @Override
     public List<Object> matchKeys(@NonNull Object patternKey) {
         this.clearExpire();
-        return this.cache.asMap().entrySet().stream()
-                .filter(item -> item.getKey().toString().startsWith(patternKey.toString()))
-                .map(item -> item.getValue().getData())
+        return this.cache.asMap().keySet().stream()
+                .filter(objectCacheObject -> objectCacheObject.toString().startsWith(patternKey.toString()))
                 .collect(Collectors.toList());
     }
 
     @Override
     public boolean hasKey(@NonNull Object key) {
         return this.get(key) != null;
+    }
+
+    @Override
+    public void matchDelete(@NonNull Object prefixKey) {
+        List<Object> keys = this.matchKeys(prefixKey);
+        if (CollectionUtils.isNotEmpty(keys)) {
+            this.batchDelete(keys);
+        }
     }
 
     @Override

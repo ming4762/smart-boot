@@ -156,4 +156,10 @@ public interface CacheService {
      * @return 结果
      */
     boolean hasKey(@NonNull Object key);
+
+    /**
+     * 匹配删除
+     * @param prefixKey key匹配项
+     */
+    void matchDelete(@NonNull Object prefixKey);
 }

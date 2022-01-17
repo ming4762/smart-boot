@@ -1,6 +1,7 @@
 import StoreUtil from '@/common/utils/StoreUtil'
 
 import ApiService, { API_SERVICE } from '@/common/utils/ApiService'
+import md5 from 'blueimp-md5'
 
 const USER_KEY = 'smart_auth_user'
 const PERMISSION_KEY = 'smart_auth_permission'
@@ -98,4 +99,8 @@ export const hasPermission = (permission: string | null | undefined): boolean =>
  */
 export const applyTempToken = async (resource: string, once = true) => {
   return await ApiService.postAjax('auth/tempToken/apply', { resource, once })
+}
+
+export const createPassword = (username: string, password: string) => {
+  return md5(md5(`${username}${password}888888$#@`))
 }

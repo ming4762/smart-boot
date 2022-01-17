@@ -14,7 +14,7 @@ import java.util.List;
  * @author jackson
  * 2020/1/23 9:25 上午
  */
-@ConfigurationProperties(prefix = "gc.auth")
+@ConfigurationProperties(prefix = "smart.auth")
 @Getter
 @Setter
 public class AuthProperties {
@@ -112,7 +112,7 @@ public class AuthProperties {
         private Duration noncestrTimeout = Duration.ofSeconds(15L * 60L);
 
         /**
-         * 随机串的过期时间 默认5分钟
+         * 时间戳的过期时间 默认5分钟
          */
         private Duration timestampTimeout = Duration.ofSeconds(5L * 60L);
     }

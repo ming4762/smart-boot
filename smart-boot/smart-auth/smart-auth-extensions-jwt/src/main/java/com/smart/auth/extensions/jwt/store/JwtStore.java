@@ -27,4 +27,5 @@ public interface JwtStore extends Ordered {
      * @return 验证结果
      */
     boolean validate(@NonNull String jwt, @NonNull RestUserDetails user);
+
 }

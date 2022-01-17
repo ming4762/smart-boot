@@ -51,7 +51,9 @@ public enum AuthI18nMessage implements I18nMessage {
     // 原密码错误
     PASSWORD_CHANGE_OLD_PASSWORD_ERROR("auth.error.changePassword.oldPasswordError", "old password error"),
     // 密码不一致
-    PASSWORD_CHANGE_PASSWORD_INCONSISTENT("auth.error.changePassword.passwordInconsistent", "The password is inconsistent")
+    PASSWORD_CHANGE_PASSWORD_INCONSISTENT("auth.error.changePassword.passwordInconsistent", "The password is inconsistent"),
+    // 新旧密码一致
+    PASSWORD_CHANGE_OLD_NEW_PASSWORD_SAME("auth.error.changePassword.oldNewPasswordSame", "The old and new passwords cannot be consistent")
     ;
 
 

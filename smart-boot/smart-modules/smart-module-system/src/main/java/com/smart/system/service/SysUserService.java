@@ -86,4 +86,12 @@ public interface SysUserService extends BaseService<SysUserPO> {
      * @return 用户信息
      */
     List<SysUserPO> listUserByRoleId(List<Long> roleIdList);
+
+    /**
+     * 更改密码
+     * @param password 密码
+     * @param userId 用户ID
+     * @return 是否修改成功
+     */
+    boolean changePassword(@NonNull Long userId, @NonNull String password);
 }

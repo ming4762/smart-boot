@@ -45,10 +45,4 @@ public interface AuthUserService {
      */
     Set<Permission> listPermission(@NonNull AuthUser authUser);
 
-    /**
-     * 更改密码
-     * @param newPassword 新密码
-     * @return 是否更改成功
-     */
-    boolean changePassword(@NonNull String newPassword);
 }

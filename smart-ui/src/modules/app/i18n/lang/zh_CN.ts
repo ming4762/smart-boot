@@ -41,6 +41,7 @@ export default {
     },
     message: {
       saveSuccess: '保存成功',
+      editSuccess: '修改成功',
       deleteSuccess: '删除成功',
       deleteFail: '删除失败'
     }

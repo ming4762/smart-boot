@@ -57,4 +57,17 @@ public interface AuthCache<K, V> {
      */
     @NonNull
     Set<V> batchGet(@NonNull Collection<K> keys);
+
+    /**
+     * 匹配删除
+     * @param matchKey 匹配的key
+     */
+    void matchRemove(@NonNull K matchKey);
+
+    /**
+     * 匹配获取
+     * @param matchKey 匹配的key
+     * @return 匹配结果
+     */
+    Set<V> matchGet(@NonNull K matchKey);
 }
