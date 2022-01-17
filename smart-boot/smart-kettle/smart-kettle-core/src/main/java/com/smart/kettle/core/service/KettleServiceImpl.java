@@ -87,11 +87,15 @@ public class KettleServiceImpl implements KettleService, ApplicationContextAware
         KettleActuator.closeConsoleLogging();
         // 获取资源库
         KettleDatabaseRepository repository = this.repositoryProvider.getRepository(properties);
-        // 获取元数据
-        TransMeta transMeta = KettleActuator.getDbTransMeta(repository, transName, directoryName);
-        // 执行
-        Trans trans = this.doExecuteTrans(transMeta, params, variableMap, parameterMap, logLevel, beforeHandler);
-        this.repositoryProvider.returnRepository(properties, repository);
+        Trans trans;
+        try {
+            // 获取元数据
+            TransMeta transMeta = KettleActuator.getDbTransMeta(repository, transName, directoryName);
+            // 执行
+            trans = this.doExecuteTrans(transMeta, params, variableMap, parameterMap, logLevel, beforeHandler);
+        } finally {
+            this.repositoryProvider.returnRepository(properties, repository);
+        }
         return trans;
     }
 
@@ -147,10 +151,14 @@ public class KettleServiceImpl implements KettleService, ApplicationContextAware
     ) {
         // 获取资源库
         KettleDatabaseRepository repository = this.repositoryProvider.getRepository(properties);
-        // 获取元数据
-        JobMeta jobMeta = KettleActuator.getDbJobMate(repository, jobName, directoryName);
-        Job job = this.doExecuteJob(jobMeta, repository, variableMap, parameterMap, logLevel, beforeHandler);
-        this.repositoryProvider.returnRepository(properties, repository);
+        Job job;
+        try {
+            // 获取元数据
+            JobMeta jobMeta = KettleActuator.getDbJobMate(repository, jobName, directoryName);
+            job = this.doExecuteJob(jobMeta, repository, variableMap, parameterMap, logLevel, beforeHandler);
+        } finally {
+            this.repositoryProvider.returnRepository(properties, repository);
+        }
         return job;
     }
 
