@@ -98,7 +98,7 @@ import dayjs from 'dayjs'
 
 import ApiService from '@/common/utils/ApiService'
 import { SystemPermissions } from '@/modules/system/constants/SystemConstants'
-import SizeConfigHoops from '@/components/config/SizeConfigHoops'
+import SizeConfigHoops from '@/components/config/SizeConfigHooks'
 import { tableUseYn } from '@/components/common/TableCommon'
 import { errorMessage } from '@/components/notice/SystemNotice'
 

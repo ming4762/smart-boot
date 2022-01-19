@@ -138,7 +138,7 @@ import { getCurrentUserId, getUserRole, isSuperAdmin } from '@/common/auth/AuthU
 import { TemplateType as templateTypeConstants } from '@/modules/generator/constants/DatabaseConstants'
 import dayjs from 'dayjs'
 
-import SizeConfigHoops from '@/components/config/SizeConfigHoops'
+import SizeConfigHoops from '@/components/config/SizeConfigHooks'
 
 /**
  * 模板管理页面

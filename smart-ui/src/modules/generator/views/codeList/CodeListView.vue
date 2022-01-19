@@ -285,7 +285,7 @@ import { useI18n } from 'vue-i18n'
 
 import { DownOutlined, PlusOutlined } from '@ant-design/icons-vue'
 
-import SizeConfigHoops from '@/components/config/SizeConfigHoops'
+import SizeConfigHoops from '@/components/config/SizeConfigHooks'
 
 import DatabaseSelect from './components/DatabaseSelect.vue'
 import TableFieldTable from './components/TableFieldTable.vue'

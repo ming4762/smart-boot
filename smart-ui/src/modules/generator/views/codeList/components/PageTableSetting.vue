@@ -82,7 +82,7 @@ import { MenuOutlined } from '@ant-design/icons-vue'
 import { vueSupportVxeSortable } from '@/components/vxe-table/VxeTableSortableSupport'
 
 import { vueTableHeaderCheckboxSupport } from './PageSettingSupport'
-import SizeConfigHoops from '@/components/config/SizeConfigHoops'
+import SizeConfigHoops from '@/components/config/SizeConfigHooks'
 
 /**
  * copy列

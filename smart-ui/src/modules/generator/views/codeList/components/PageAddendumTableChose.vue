@@ -41,7 +41,7 @@ import { message } from 'ant-design-vue'
 import { errorMessage } from '@/components/notice/SystemNotice'
 
 import ApiService from '@/common/utils/ApiService'
-import SizeConfigHoops from '@/components/config/SizeConfigHoops'
+import SizeConfigHoops from '@/components/config/SizeConfigHooks'
 
 const columns = [
   {

@@ -126,7 +126,7 @@ import { vueLoadData, vueAddUpdate, vueDelete, vueSetUser } from './UserGroupSup
 import AuthMixins from '@/modules/system/mixins/AuthMixins'
 import { SystemPermissions } from '@/modules/system/constants/SystemConstants'
 
-import SizeConfigHoops from '@/components/config/SizeConfigHoops'
+import SizeConfigHoops from '@/components/config/SizeConfigHooks'
 
 import dayjs from 'dayjs'
 

@@ -23,7 +23,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 
-import SizeConfigHoops from '@/components/config/SizeConfigHoops'
+import SizeConfigHoops from '@/components/config/SizeConfigHooks'
 
 /**
  * 数据库字段信息

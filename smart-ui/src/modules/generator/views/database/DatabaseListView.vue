@@ -132,7 +132,7 @@ import TemplateSelected from './components/TemplateSelected.vue'
 import SetUserGroup from '@/modules/system/components/user/SetUserGroup.vue'
 
 import { hasPermission, isSuperAdmin } from '@/common/auth/AuthUtils'
-import SizeConfigHoops from '@/components/config/SizeConfigHoops'
+import SizeConfigHoops from '@/components/config/SizeConfigHooks'
 import dayjs from 'dayjs'
 
 /**

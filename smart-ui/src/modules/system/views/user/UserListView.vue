@@ -141,7 +141,7 @@ import ApiService from '@/common/utils/ApiService'
 import { SystemPermissions } from '../../constants/SystemConstants'
 import dayjs from 'dayjs'
 import { tableUseYn, tableDeleteYn } from '@/components/common/TableCommon'
-import SizeConfigHoops from '@/components/config/SizeConfigHoops'
+import SizeConfigHoops from '@/components/config/SizeConfigHooks'
 
 
 export default defineComponent({

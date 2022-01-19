@@ -134,7 +134,7 @@ import { vueAddUpdate, vueLoadRoleData, vueSetUser } from './RoleListSupport'
 
 import ApiService from '@/common/utils/ApiService'
 import { tableUseYn } from '@/components/common/TableCommon'
-import SizeConfigHoops from '@/components/config/SizeConfigHoops'
+import SizeConfigHoops from '@/components/config/SizeConfigHooks'
 
 
 

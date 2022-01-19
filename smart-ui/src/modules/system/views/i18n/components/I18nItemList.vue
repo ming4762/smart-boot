@@ -53,7 +53,7 @@ import { message } from 'ant-design-vue'
 
 import ApiService from '@/common/utils/ApiService'
 import { SystemPermissions } from '@/modules/system/constants/SystemConstants'
-import SizeConfigHoops from '@/components/config/SizeConfigHoops'
+import SizeConfigHoops from '@/components/config/SizeConfigHooks'
 
 const loadDataVueSupport = (i18nId: Ref<number | null | undefined>) => {
   const dataLoading = ref(false)

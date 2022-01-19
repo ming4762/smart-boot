@@ -16,7 +16,7 @@ import { defineComponent, ref, onMounted, PropType } from 'vue'
 
 import ApiService from '@/common/utils/ApiService'
 
-import SizeConfigHoops from '@/components/config/SizeConfigHoops'
+import SizeConfigHoops from '@/components/config/SizeConfigHooks'
 /**
  * 数据库连接下拉列
  */

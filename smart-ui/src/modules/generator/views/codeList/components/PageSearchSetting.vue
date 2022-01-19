@@ -109,7 +109,7 @@ import { MenuOutlined, PlusOutlined } from '@ant-design/icons-vue'
 
 import PageAddendumTableChose from './PageAddendumTableChose.vue'
 
-import SizeConfigHoops from '@/components/config/SizeConfigHoops'
+import SizeConfigHoops from '@/components/config/SizeConfigHooks'
 
 import { vueSupportVxeSortable } from '@/components/vxe-table/VxeTableSortableSupport'
 import { controlList, ruleList, searchSymbolList, vueTableHeaderCheckboxSupport, vueChoseSelectTableSupport } from './PageSettingSupport'

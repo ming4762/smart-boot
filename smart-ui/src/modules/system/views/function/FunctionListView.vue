@@ -122,7 +122,7 @@ import AuthMixins from '@/modules/system/mixins/AuthMixins'
 import { SystemPermissions } from '../../constants/SystemConstants'
 import dayjs from 'dayjs'
 
-import SizeConfigHoops from '@/components/config/SizeConfigHoops'
+import SizeConfigHoops from '@/components/config/SizeConfigHooks'
 
 /**
  * 功能管理界面
