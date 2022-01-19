@@ -70,4 +70,11 @@ public interface AuthCache<K, V> {
      * @return 匹配结果
      */
     Set<V> matchGet(@NonNull K matchKey);
+
+    /**
+     * 匹配获取key
+     * @param matchKey 匹配的key
+     * @return 匹配结果
+     */
+    Set<K> matchKeys(@NonNull K matchKey);
 }

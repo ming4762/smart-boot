@@ -39,7 +39,7 @@ public class JwtService implements SecurityLogoutHandler, JwtResolver {
     }
 
     @Override
-    public RestUserDetails resolver(@NonNull String jwt, HttpServletRequest request) {
+    public RestUserDetails resolver(@NonNull String jwt) {
         return JwtUtils.getUser(jwt, this.authProperties.getJwtKey());
     }
 

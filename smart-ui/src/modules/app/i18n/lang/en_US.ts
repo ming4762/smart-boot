@@ -16,7 +16,9 @@ export default {
       use: 'Use',
       noUse: 'No use',
       delete: 'Y',
-      noDelete: 'N'
+      noDelete: 'N',
+      yes: 'Y',
+      no: 'N'
     },
     formValidate: {
       seq: 'Please enter serial number',

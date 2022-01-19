@@ -32,5 +32,8 @@ export const SystemPermissions = {
     delete: 'sys:i18n:delete',
     update: 'sys:i18n:update',
     reload: 'sys:i18n:reload'
+  },
+  auth: {
+    offline: 'sys:auth.offline'
   }
 }

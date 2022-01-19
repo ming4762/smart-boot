@@ -83,9 +83,12 @@ export const isSuperAdmin = () => {
  */
 export const hasPermission = (permission: string | null | undefined): boolean => {
   let hasPermission = true
+  if (isSuperAdmin()) {
+    return true
+  }
   if (permission) {
     const permissions = getUserPermission()
-    if ((!permissions || permissions.length === 0 || !permissions.includes(permission)) && !isSuperAdmin()) {
+    if (!permissions || permissions.length === 0 || !permissions.includes(permission)) {
       hasPermission = false
     }
   }

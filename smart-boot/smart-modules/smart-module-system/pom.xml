@@ -26,6 +26,7 @@
 			<groupId>com.smart</groupId>
 			<artifactId>smart-auth-extensions-jwt</artifactId>
 			<version>${project.parent.version}</version>
+			<optional>true</optional>
 		</dependency>
 
 		<dependency>

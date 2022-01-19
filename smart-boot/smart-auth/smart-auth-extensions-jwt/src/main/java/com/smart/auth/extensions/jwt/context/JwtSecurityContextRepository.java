@@ -36,7 +36,7 @@ public class JwtSecurityContextRepository implements SecurityContextRepository {
         }
         // 解析jwt
         try {
-            RestUserDetails user = jwtResolver.resolver(jwt, request);
+            RestUserDetails user = jwtResolver.resolver(jwt);
             if (user == null) {
                 return generateNewContext();
             }

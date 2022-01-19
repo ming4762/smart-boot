@@ -4,8 +4,6 @@ import com.smart.auth.core.userdetails.RestUserDetails;
 import org.springframework.core.Ordered;
 import org.springframework.lang.NonNull;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * JWT解析器
  * @author ShiZhongMing
@@ -17,10 +15,9 @@ public interface JwtResolver extends Ordered {
     /**
      * 解析JWT
      * @param jwt jwt
-     * @param request 请求体
      * @return 解析结果
      */
-    RestUserDetails resolver(@NonNull String jwt, HttpServletRequest request);
+    RestUserDetails resolver(@NonNull String jwt);
 
     /**
      * 创建JWT

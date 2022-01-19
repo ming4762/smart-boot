@@ -52,6 +52,13 @@ const topRouters: Array<RouteRecordRaw> = [
         name: 'system_userGroupList',
         path: 'sys/userGroupList',
         component: () => import('@/modules/system/views/userGroup/UserGroupListView.vue')
+      },
+      // auth相关
+      // 在线用户
+      {
+        name: 'auth_onlineUser',
+        path: 'monitor/onlineUserList',
+        component: () => import('@/modules/system/views/auth/onlineUser/OnlineUserListView.vue')
       }
     ]
   }

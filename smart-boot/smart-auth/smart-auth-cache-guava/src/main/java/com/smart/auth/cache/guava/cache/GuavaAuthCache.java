@@ -82,4 +82,11 @@ public class GuavaAuthCache extends AbstractAuthCache<String, Object> {
         }
         return new HashSet<>(dataList);
     }
+
+    @Override
+    public Set<String> matchKeys(@NonNull String matchKey) {
+        return this.cacheService.matchKeys(matchKey)
+                .stream().map(Object::toString)
+                .collect(Collectors.toSet());
+    }
 }

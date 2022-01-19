@@ -1,7 +1,9 @@
 package com.smart.system.controller;
 
 import com.smart.auth.core.i18n.AuthI18nMessage;
+import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.auth.core.utils.AuthUtils;
+import com.smart.auth.extensions.jwt.resolver.JwtResolver;
 import com.smart.auth.extensions.jwt.store.CacheJwtStore;
 import com.smart.commons.core.i18n.I18nException;
 import com.smart.commons.core.log.Log;
@@ -9,18 +11,26 @@ import com.smart.commons.core.log.LogOperationTypeEnum;
 import com.smart.commons.core.message.Result;
 import com.smart.system.model.SysUserPO;
 import com.smart.system.pojo.dto.ChangePasswordDTO;
+import com.smart.system.pojo.dto.auth.OfflineDTO;
+import com.smart.system.pojo.dto.auth.OnlineUserQueryDTO;
+import com.smart.system.pojo.vo.SysOnlineUserVO;
+import com.smart.system.service.SysAuthUserService;
 import com.smart.system.service.SysUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author ShiZhongMing
@@ -30,15 +40,22 @@ import java.util.Optional;
 @RestController
 @RequestMapping
 @Api(tags = "系统认证管理")
+@Slf4j
 public class SysAuthController {
 
     private final SysUserService sysUserService;
 
+    private final SysAuthUserService sysAuthUserService;
+
     private final CacheJwtStore cacheJwtStore;
 
-    public SysAuthController(SysUserService sysUserService, CacheJwtStore cacheJwtStore) {
+    private final JwtResolver jwtResolver;
+
+    public SysAuthController(SysUserService sysUserService, CacheJwtStore cacheJwtStore, SysAuthUserService sysAuthUserService, JwtResolver jwtResolver) {
         this.sysUserService = sysUserService;
         this.cacheJwtStore = cacheJwtStore;
+        this.sysAuthUserService = sysAuthUserService;
+        this.jwtResolver = jwtResolver;
     }
 
     /**
@@ -70,5 +87,31 @@ public class SysAuthController {
         // 删除用户登录状态
         this.cacheJwtStore.invalidateByUsername(AuthUtils.getNonNullCurrentUser().getUsername());
         return Result.success(true);
+    }
+
+    /**
+     * 获取所有在线用户
+     * @return 在线用户列表
+     */
+    @PostMapping("auth/listOnlineUser")
+    @ApiOperation(value = "查询所有在线用户")
+    public Result<List<SysOnlineUserVO>> listOnlineUser(@RequestBody OnlineUserQueryDTO parameter) {
+        Set<String> tokens = parameter.getUsername() == null ? this.cacheJwtStore.listAll() : this.cacheJwtStore.listAll(parameter.getUsername());
+        return Result.success(this.sysAuthUserService.listOnlineUser(tokens));
+    }
+
+    @PostMapping("auth/offline")
+    @ApiOperation(value = "用户离线操作")
+    @Log(value = "用户离线操作", type = LogOperationTypeEnum.DELETE)
+    @PreAuthorize("hasPermission('sys:auth', 'offline')")
+    public Result<Boolean> offline(@RequestBody OfflineDTO parameter) {
+        if (StringUtils.isNotBlank(parameter.getToken())) {
+            RestUserDetails userDetails = this.jwtResolver.resolver(parameter.getToken());
+            return Result.success(this.cacheJwtStore.invalidateByToken(userDetails.getUsername(), parameter.getToken()));
+        }
+        if (StringUtils.isNotBlank(parameter.getUsername())) {
+            return Result.success(this.cacheJwtStore.invalidateByUsername(parameter.getUsername()));
+        }
+        return Result.success(false);
     }
 }

@@ -20,6 +20,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.BadCredentialsException;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -117,6 +118,9 @@ public class JwtUtils {
             final Claims claims = parseJwt(jwt, key);
             final RestUserDetailsImpl restUserDetails = new RestUserDetailsImpl();
             BeanUtils.populate(restUserDetails, claims.get(USER_KEY, Map.class));
+            restUserDetails.setLoginTime(claims.getIssuedAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+            // 设置token
+            restUserDetails.setToken(jwt);
             // 设置权限
             final List<Map<String, String>> permissionMap = claims.get(PERMISSION_KEY, List.class);
             final List<Permission> permissions = permissionMap.stream()

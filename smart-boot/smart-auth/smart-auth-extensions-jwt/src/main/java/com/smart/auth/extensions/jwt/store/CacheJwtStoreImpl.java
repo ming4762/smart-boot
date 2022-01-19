@@ -5,12 +5,13 @@ import com.smart.auth.core.constants.LoginTypeEnum;
 import com.smart.auth.core.properties.AuthProperties;
 import com.smart.auth.core.service.AuthCache;
 import com.smart.auth.core.userdetails.RestUserDetails;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.lang.NonNull;
 
 import java.time.Duration;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * jwt存储器 基于缓存实现
@@ -20,6 +21,7 @@ import java.util.Objects;
  */
 public class CacheJwtStoreImpl implements CacheJwtStore {
 
+    private static final String JWT_SPLIT_KEY = "&#";
 
     private static final String TOKE_KEY_PREFIX = "user";
 
@@ -83,7 +85,7 @@ public class CacheJwtStoreImpl implements CacheJwtStore {
         if (jwt != null) {
             list.add(jwt);
         }
-        return String.join(":", list);
+        return String.join(JWT_SPLIT_KEY, list);
     }
 
     protected String getAttributeKey(@NonNull String username, String jwt) {
@@ -91,7 +93,7 @@ public class CacheJwtStoreImpl implements CacheJwtStore {
         if (jwt != null) {
             list.add(jwt);
         }
-        return String.join(":", list);
+        return String.join(JWT_SPLIT_KEY, list);
     }
 
     @Override
@@ -114,5 +116,25 @@ public class CacheJwtStoreImpl implements CacheJwtStore {
         this.authCache.matchRemove(matchTokenKey);
         this.authCache.matchRemove(matchAttributeKey);
         return true;
+    }
+
+    @Override
+    @NonNull
+    public Set<String> listAll() {
+        Set<String> keys = this.authCache.keys();
+        if (CollectionUtils.isEmpty(keys)) {
+            return new HashSet<>(0);
+        }
+        return keys.stream().map(item -> item.split(JWT_SPLIT_KEY)[3]).collect(Collectors.toSet());
+    }
+
+    @Override
+    @NonNull
+    public Set<String> listAll(@NonNull String username) {
+        Set<String> keys = this.authCache.matchKeys(this.getTokenKey(username, null));
+        if (CollectionUtils.isEmpty(keys)) {
+            return new HashSet<>(0);
+        }
+        return keys.stream().map(item -> item.split(JWT_SPLIT_KEY)[3]).collect(Collectors.toSet());
     }
 }

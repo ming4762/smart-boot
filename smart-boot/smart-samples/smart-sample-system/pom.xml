@@ -25,7 +25,7 @@
 			<artifactId>smart-module-system</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
-
+		<!--	引入认证主模块 	-->
 		<dependency>
 			<groupId>com.smart</groupId>
 			<artifactId>smart-auth-security</artifactId>

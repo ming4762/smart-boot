@@ -16,7 +16,9 @@ export default {
       use: '启用',
       noUse: '停用',
       delete: 'Y',
-      noDelete: 'N'
+      noDelete: 'N',
+      yes: 'Y',
+      no: 'N'
     },
     formValidate: {
       seq: '请输入序号',

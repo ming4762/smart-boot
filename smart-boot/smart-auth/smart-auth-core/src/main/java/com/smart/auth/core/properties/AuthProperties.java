@@ -21,7 +21,7 @@ public class AuthProperties {
 
     private String jwtKey = "smart-boot-auth";
 
-    private String prefix = "smart:session";
+    private String prefix = "smart-session";
 
     private boolean jwt = false;
 
