@@ -1,6 +1,6 @@
 package com.smart.system.mybatis.type;
 
-import com.smart.starter.log.constants.LogSourceEnum;
+import com.smart.commons.core.log.LogSourceEnum;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;

@@ -59,6 +59,11 @@ const topRouters: Array<RouteRecordRaw> = [
         name: 'auth_onlineUser',
         path: 'monitor/onlineUserList',
         component: () => import('@/modules/system/views/auth/onlineUser/OnlineUserListView.vue')
+      },
+      {
+        name: 'system_log',
+        path: 'sys/logList',
+        component: () => import('@/modules/system/views/log/LogListView.vue')
       }
     ]
   }

@@ -4,7 +4,7 @@ import com.smart.auth.core.authentication.RestUsernamePasswordAuthenticationToke
 import com.smart.auth.core.event.AuthEventHandler;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.auth.core.utils.AuthUtils;
-import com.smart.starter.log.constants.LogSourceEnum;
+import com.smart.commons.core.log.LogSourceEnum;
 import com.smart.system.model.SysLogPO;
 import com.smart.system.service.SysLogService;
 import org.springframework.http.HttpStatus;

@@ -1,4 +1,4 @@
-package com.smart.starter.log.constants;
+package com.smart.commons.core.log;
 
 import lombok.Getter;
 

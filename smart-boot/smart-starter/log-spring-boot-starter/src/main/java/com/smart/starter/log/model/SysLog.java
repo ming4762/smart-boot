@@ -1,7 +1,7 @@
 package com.smart.starter.log.model;
 
 import com.smart.commons.core.log.LogOperationTypeEnum;
-import com.smart.starter.log.constants.LogSourceEnum;
+import com.smart.commons.core.log.LogSourceEnum;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

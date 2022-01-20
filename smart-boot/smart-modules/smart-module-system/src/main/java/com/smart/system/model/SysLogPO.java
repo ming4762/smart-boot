@@ -5,8 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.smart.commons.core.log.LogOperationTypeEnum;
+import com.smart.commons.core.log.LogSourceEnum;
 import com.smart.crud.model.BaseModelCreateUserTime;
-import com.smart.starter.log.constants.LogSourceEnum;
 import com.smart.system.mybatis.type.LogSourceTypeHandler;
 import lombok.*;
 

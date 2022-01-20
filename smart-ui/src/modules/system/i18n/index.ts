@@ -25,6 +25,9 @@ import userGroup_en_US from '../views/userGroup/lang/en_US'
 // 在线用户国际化
 import onlineUser_zh_CN from '../views/auth/onlineUser/lang/zh_CN'
 import onlineUser_en_US from '../views/auth/onlineUser/lang/en_US'
+// 日志页面国际化
+import log_zh_CN from '../views/log/lang/zh_CN'
+import log_en_US from '../views/log/lang/en_US'
 
 export default {
   zh_CN: merge({},
@@ -35,7 +38,8 @@ export default {
     role_zh_CN,
     user_zh_CN,
     userGroup_zh_CN,
-    onlineUser_zh_CN
+    onlineUser_zh_CN,
+    log_zh_CN
   ),
   en_US: merge({},
     systemEnUS,
@@ -45,6 +49,7 @@ export default {
     role_en_US,
     user_en_US,
     userGroup_en_US,
-    onlineUser_en_US
+    onlineUser_en_US,
+    log_en_US
   )
 }

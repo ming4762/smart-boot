@@ -12,6 +12,10 @@ export default {
       save: 'Save',
       look: 'Look'
     },
+    title: {
+      details: 'Details',
+      close: 'Close'
+    },
     form: {
       use: 'Use',
       noUse: 'No use',
@@ -39,7 +43,8 @@ export default {
       confirm: 'Confirm',
       confirmSave: 'Are you sure you want to save?',
       deleteConfirm: 'Are you sure you want to delete?',
-      deleteChoose: 'Please select the data to delete'
+      deleteChoose: 'Please select the data to delete',
+      select: 'Please select'
     },
     message: {
       saveSuccess: 'Saved successfully',

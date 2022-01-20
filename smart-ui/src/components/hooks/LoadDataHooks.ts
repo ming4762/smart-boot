@@ -69,10 +69,17 @@ export const useVxeTable = (service: (params: Params, searchParameter: any) => P
         data.value = result as Array<any>
       }
     } catch (e) {
-      console.error(e)
+      // do nothing
     } finally {
       loading.value = false
     }
+  }
+  /**
+   * 重置擦欧总
+   */
+  const handleReset = () => {
+    searchModel.value = parameter.defaultParameter || {}
+    loadData()
   }
 
   /**
@@ -103,17 +110,20 @@ export const useVxeTable = (service: (params: Params, searchParameter: any) => P
       return {
         loading: loading.value,
         data: data.value,
-        sortChange,
+        onSortChange: sortChange,
         sortConfig: reactive(sortConfig)
       }
     }),
     loadData,
+    handleReset,
     searchModel,
-    pageProps: {
-      currentPage: tablePage.currentPage,
-      pageSize: tablePage.pageSize,
-      total: tablePage.total,
-      pageChange: handlePageChange
-    }
+    pageProps: computed(() => {
+      return {
+        currentPage: tablePage.currentPage,
+        pageSize: tablePage.pageSize,
+        total: tablePage.total,
+        onPageChange: handlePageChange
+      }
+    })
   }
 }

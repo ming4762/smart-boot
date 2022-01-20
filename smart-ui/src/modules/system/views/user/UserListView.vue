@@ -21,8 +21,7 @@
           :page-sizes="[500, 1000, 2000, 5000]"
           :layouts="['Sizes', 'PrevJump', 'PrevPage', 'Number', 'NextPage', 'NextJump', 'FullJump', 'Total']"
           :total="tablePage.total"
-          @page-change="handlePageChange">
-        </vxe-pager>
+          @page-change="handlePageChange" />
       </template>
       <template #table-operation="{ row }">
         <a-button v-permission="permissions.update" :size="buttonSizeConfig" type="link" @click="() => handleShowUpdate(row.userId)">{{ $t('common.button.edit') }}</a-button>

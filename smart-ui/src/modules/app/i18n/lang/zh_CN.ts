@@ -12,6 +12,10 @@ export default {
       save: '保存',
       look: '查看'
     },
+    title: {
+      details: '详情',
+      close: '关闭'
+    },
     form: {
       use: '启用',
       noUse: '停用',
@@ -39,7 +43,8 @@ export default {
       confirm: '确认',
       saveConfirm: '确定要保存吗？',
       deleteConfirm: '确定要删除吗？',
-      deleteChoose: '请选择要删除的数据'
+      deleteChoose: '请选择要删除的数据',
+      select: '请选择'
     },
     message: {
       saveSuccess: '保存成功',
