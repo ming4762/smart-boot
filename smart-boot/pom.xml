@@ -36,6 +36,7 @@
         <kettle.version>9.1.0.0</kettle.version>
         <xxl-job.version>2.3.0</xxl-job.version>
         <druid.version>1.2.5</druid.version>
+        <easy-captcha.version>1.6.2</easy-captcha.version>
     </properties>
 
     <packaging>pom</packaging>
@@ -144,6 +145,12 @@
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
                 <version>${mybatis-plus-boot-starter.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.whvcse</groupId>
+                <artifactId>easy-captcha</artifactId>
+                <version>${easy-captcha.version}</version>
             </dependency>
 
             <dependency>
