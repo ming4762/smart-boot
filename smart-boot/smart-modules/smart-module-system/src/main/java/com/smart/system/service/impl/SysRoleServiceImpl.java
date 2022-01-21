@@ -46,8 +46,8 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRoleMapper, SysRolePO
     }
 
     @Override
-    public List<SysRolePO> list(@NonNull QueryWrapper<SysRolePO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
-        List<SysRolePO> sysRoleList = super.list(queryWrapper, parameter, paging);
+    public List<? extends SysRolePO> list(@NonNull QueryWrapper<SysRolePO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
+        List<? extends SysRolePO> sysRoleList = super.list(queryWrapper, parameter, paging);
         if (CollectionUtils.isEmpty(sysRoleList)) {
             return new ArrayList<>(0);
         }
@@ -60,7 +60,7 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRoleMapper, SysRolePO
         if (Boolean.TRUE.equals(parameter.getParameter().get(CrudCommonEnum.QUERY_CREATE_UPDATE_USER.name()))) {
             this.userSetterService.setCreateUpdateUser(roleVoList);
         }
-        return roleVoList.stream().map(SysRolePO.class :: cast).collect(Collectors.toList());
+        return roleVoList;
     }
 
     /**

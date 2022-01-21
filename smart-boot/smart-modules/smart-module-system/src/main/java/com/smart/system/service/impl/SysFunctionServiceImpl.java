@@ -45,8 +45,8 @@ public class SysFunctionServiceImpl extends BaseServiceImpl<SysFunctionMapper, S
     }
 
     @Override
-    public List<SysFunctionPO> list(@NonNull QueryWrapper<SysFunctionPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
-        List<SysFunctionPO> functionList = super.list(queryWrapper, parameter, paging);
+    public List<? extends SysFunctionPO> list(@NonNull QueryWrapper<SysFunctionPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
+        List<? extends SysFunctionPO> functionList = super.list(queryWrapper, parameter, paging);
         List<SysFunctionListVO> functionVoList = functionList.stream()
                 .map(item -> {
                     SysFunctionListVO vo = new SysFunctionListVO();
@@ -56,7 +56,7 @@ public class SysFunctionServiceImpl extends BaseServiceImpl<SysFunctionMapper, S
         if (Boolean.TRUE.equals(parameter.getParameter().get(CrudCommonEnum.QUERY_CREATE_UPDATE_USER.name()))) {
             this.userSetterService.setCreateUpdateUser(functionVoList);
         }
-        return functionVoList.stream().map(SysFunctionPO.class :: cast).collect(Collectors.toList());
+        return functionVoList;
     }
 
     @Autowired

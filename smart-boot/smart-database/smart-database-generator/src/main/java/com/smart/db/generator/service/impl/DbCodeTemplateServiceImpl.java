@@ -48,7 +48,7 @@ public class DbCodeTemplateServiceImpl extends BaseServiceImpl<DbCodeTemplateMap
 
     @Override
     @Transactional(rollbackFor = Exception.class, readOnly = true)
-    public List<DbCodeTemplatePO> list(@NonNull QueryWrapper<DbCodeTemplatePO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
+    public List<? extends DbCodeTemplatePO> list(@NonNull QueryWrapper<DbCodeTemplatePO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
         queryWrapper.select(DbCodeTemplatePO.class, field -> !"template".equals(field.getProperty()));
         // 设置查询权限
         // 1、判断是否是超级管理员
@@ -65,7 +65,7 @@ public class DbCodeTemplateServiceImpl extends BaseServiceImpl<DbCodeTemplateMap
                 }
             });
         }
-        List<DbCodeTemplatePO> list = super.list(queryWrapper, parameter, paging);
+        List<? extends DbCodeTemplatePO> list = super.list(queryWrapper, parameter, paging);
         // 转换为VO
         List<DbCodeTemplateListVO> voList = list.stream()
                 .map(item -> {
@@ -77,7 +77,7 @@ public class DbCodeTemplateServiceImpl extends BaseServiceImpl<DbCodeTemplateMap
         if (Boolean.TRUE.equals(parameter.getParameter().get(DbCrudEnum.QUERY_CREATE_UPDATE_USER.name()))) {
             this.userSetterService.setCreateUpdateUser(voList);
         }
-        return voList.stream().map(DbCodeTemplatePO.class :: cast).collect(Collectors.toList());
+        return voList;
     }
 
     /**

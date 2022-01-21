@@ -50,8 +50,8 @@ public class SysUserGroupServiceImpl extends BaseServiceImpl<SysUserGroupMapper,
     }
 
     @Override
-    public List<SysUserGroupPO> list(@NonNull QueryWrapper<SysUserGroupPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
-        List<SysUserGroupPO> userGroupList = super.list(queryWrapper, parameter, paging);
+    public List<? extends SysUserGroupPO> list(@NonNull QueryWrapper<SysUserGroupPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
+        List<? extends SysUserGroupPO> userGroupList = super.list(queryWrapper, parameter, paging);
         if (CollectionUtils.isEmpty(userGroupList)) {
             return new ArrayList<>(0);
         }
@@ -64,7 +64,7 @@ public class SysUserGroupServiceImpl extends BaseServiceImpl<SysUserGroupMapper,
         if (Boolean.TRUE.equals(parameter.getParameter().get(CrudCommonEnum.QUERY_CREATE_UPDATE_USER.name()))) {
             this.userSetterService.setCreateUpdateUser(voList);
         }
-        return voList.stream().map(SysUserGroupPO.class :: cast).collect(Collectors.toList());
+        return voList;
     }
 
     /**

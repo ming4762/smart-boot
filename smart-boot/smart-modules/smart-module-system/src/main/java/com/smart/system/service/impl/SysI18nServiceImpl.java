@@ -43,8 +43,8 @@ public class SysI18nServiceImpl extends BaseServiceImpl<SysI18nMapper, SysI18nPO
     }
 
     @Override
-    public List<SysI18nPO> list(@NonNull QueryWrapper<SysI18nPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
-        List<SysI18nPO> i18nList = super.list(queryWrapper, parameter, paging);
+    public List<? extends SysI18nPO> list(@NonNull QueryWrapper<SysI18nPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
+        List<? extends SysI18nPO> i18nList = super.list(queryWrapper, parameter, paging);
 
         List<SysI18nUserVO> voList = i18nList.stream().map(item -> {
             SysI18nUserVO vo = new SysI18nUserVO();
@@ -54,7 +54,7 @@ public class SysI18nServiceImpl extends BaseServiceImpl<SysI18nMapper, SysI18nPO
         if (Boolean.TRUE.equals(parameter.getParameter().get(CrudCommonEnum.QUERY_CREATE_UPDATE_USER.name()))) {
             this.userSetterService.setCreateUpdateUser(voList);
         }
-        return voList.stream().map(SysI18nPO.class :: cast).collect(Collectors.toList());
+        return voList;
     }
 
     @Override

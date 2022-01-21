@@ -59,11 +59,11 @@ public class DbConnectionServiceImpl extends BaseServiceImpl<DbConnectionMapper,
 
     @SneakyThrows
     @Override
-    public List<DbConnectionPO> list(@NonNull QueryWrapper<DbConnectionPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
+    public List<? extends DbConnectionPO> list(@NonNull QueryWrapper<DbConnectionPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
         if (Objects.equals(parameter.getParameter().get(DbCrudEnum.LIST_BY_AUTH.name()), Boolean.TRUE)) {
             this.setAuthQuery(queryWrapper);
         }
-        List<DbConnectionPO> connectionList = super.list(queryWrapper, parameter, paging);
+        List<? extends DbConnectionPO> connectionList = super.list(queryWrapper, parameter, paging);
         // 创建VO类
         if (connectionList.isEmpty()) {
             return connectionList;
@@ -78,7 +78,7 @@ public class DbConnectionServiceImpl extends BaseServiceImpl<DbConnectionMapper,
         if (Objects.equals(parameter.getParameter().get(DbCrudEnum.QUERY_CREATE_UPDATE_USER.name()), Boolean.TRUE)) {
             this.queryCreateUpdateUser(connectionVoList);
         }
-        return connectionVoList.stream().map(DbConnectionPO.class::cast).collect(Collectors.toList());
+        return connectionVoList;
     }
 
     /**

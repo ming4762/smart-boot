@@ -56,7 +56,7 @@ public abstract class BaseQueryController<K extends BaseService<T>, T extends Ba
         if (org.apache.commons.lang3.StringUtils.isNotBlank(keyword)) {
             this.addKeyword(queryWrapper, keyword);
         }
-        final List<T> data = this.service.list(queryWrapper, parameter, page != null);
+        final List<? extends T> data = this.service.list(queryWrapper, parameter, page != null);
         if (page != null) {
             return Result.success(new PageData<>(data, page.getTotal()));
         }

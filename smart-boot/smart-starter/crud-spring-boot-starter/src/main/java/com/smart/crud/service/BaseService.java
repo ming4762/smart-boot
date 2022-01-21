@@ -63,7 +63,7 @@ public interface BaseService<T extends BaseModel> extends IService<T> {
      * @param paging 是否分页
      * @return 查询结果
      */
-    List<T> list(@NonNull QueryWrapper<T> queryWrapper, @NonNull PageSortQuery parameter, boolean paging);
+    List<? extends T> list(@NonNull QueryWrapper<T> queryWrapper, @NonNull PageSortQuery parameter, boolean paging);
     /**
      * 批量保存带有创建人员信息
      * @param modelList 实体类

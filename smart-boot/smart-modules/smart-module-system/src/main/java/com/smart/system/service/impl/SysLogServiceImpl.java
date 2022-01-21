@@ -35,9 +35,9 @@ public class SysLogServiceImpl extends BaseServiceImpl<SysLogMapper, SysLogPO> i
     }
 
     @Override
-    public List<SysLogPO> list(@NonNull QueryWrapper<SysLogPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
+    public List<? extends SysLogPO> list(@NonNull QueryWrapper<SysLogPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
         queryWrapper.select(SysLogPO.class, field -> !LIST_NO_SELECT_FIELDS.contains(field.getProperty()));
-        List<SysLogPO> sysLogList = super.list(queryWrapper, parameter, paging);
+        List<? extends SysLogPO> sysLogList = super.list(queryWrapper, parameter, paging);
         if (CollectionUtils.isEmpty(sysLogList)) {
             return Lists.newArrayList();
         }
@@ -49,6 +49,6 @@ public class SysLogServiceImpl extends BaseServiceImpl<SysLogMapper, SysLogPO> i
         if (Boolean.TRUE.equals(parameter.getParameter().get(CrudCommonEnum.QUERY_CREATE_UPDATE_USER.name()))) {
             this.userSetterService.setCreateUser(logVoList);
         }
-        return logVoList.stream().map(SysLogPO.class :: cast).collect(Collectors.toList());
+        return logVoList;
     }
 }

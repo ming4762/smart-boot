@@ -169,7 +169,7 @@ public abstract class BaseServiceImpl<K extends CrudBaseMapper<T>, T extends Bas
      * @return 查询结果
      */
     @Override
-    public List<T> list(@NonNull QueryWrapper<T> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
+    public List<? extends T> list(@NonNull QueryWrapper<T> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
         if (!paging && org.apache.commons.lang3.StringUtils.isNotBlank(parameter.getSortName())) {
             this.analysisOrder(queryWrapper, parameter.getSortName(), parameter.getSortOrder());
         }

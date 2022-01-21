@@ -76,14 +76,14 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
     }
 
     @Override
-    public List<DbCodeMainPO> list(@NonNull QueryWrapper<DbCodeMainPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
+    public List<? extends DbCodeMainPO> list(@NonNull QueryWrapper<DbCodeMainPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
         // 设置权限，超级管理员可以查看所有，普通用户只能查看自己的
         if (!AuthUtils.isSuperAdmin()) {
             queryWrapper.lambda()
                     .eq(DbCodeMainPO :: getCreateUserId, AuthUtils.getNonNullCurrentUserId());
         }
         // 执行查询
-        final List<DbCodeMainPO> dbCodeMainList = super.list(queryWrapper, parameter, paging);
+        final List<? extends DbCodeMainPO> dbCodeMainList = super.list(queryWrapper, parameter, paging);
         if (CollectionUtils.isEmpty(dbCodeMainList)) {
             return dbCodeMainList;
         }
