@@ -18,6 +18,10 @@ const generatorRouters: Array<RouteRecordRaw> = [
       {
         path: 'code/codeList',
         component: () => import('@/modules/generator/views/codeList/CodeListView.vue')
+      },
+      {
+        path: 'code/document',
+        component: () => import('@/modules/generator/views/document/TemplateDataDocumentView.vue')
       }
     ]
   },

@@ -3,19 +3,19 @@
     :visible="visible"
     width="1000px"
     v-bind="$attrs"
-    @ok="handleOk"
-    title="配置验证规则">
+    title="配置验证规则"
+    @ok="handleOk">
     <vxe-grid
+      ref="gridRef"
       border
       :edit-rules="editValidRules"
       size="small"
       :data="rules"
-      ref="gridRef"
       :toolbar-config="toolbarConfig"
       :columns="columns"
       :edit-config="editConfig">
       <template #table-buttons>
-        <a-button @click="insertRow" type="primary">添加一行</a-button>
+        <a-button type="primary" @click="insertRow">添加一行</a-button>
       </template>
       <template #table-options="{ row }">
         <a-button @click="() => handleDeleteRow(row)">删除</a-button>
@@ -139,11 +139,11 @@ export default defineComponent({
             name: '$select',
             options: [
               {
-                value: 'blur',
+                value: 'BLUR',
                 label: 'blur'
               },
               {
-                value: 'change',
+                value: 'CHANGE',
                 label: 'change'
               }
             ],

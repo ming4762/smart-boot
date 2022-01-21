@@ -86,7 +86,7 @@ public class MybatisConfig {
     }
 
     private Resource[] matchMapperLocations() throws IOException {
-        return new PathMatchingResourcePatternResolver().getResources("classpath*:mapper/system/**/*.xml");
+        return new PathMatchingResourcePatternResolver().getResources("classpath*:mapper/**/*.xml");
     }
 
     private Interceptor createPageHelperPlugins() {

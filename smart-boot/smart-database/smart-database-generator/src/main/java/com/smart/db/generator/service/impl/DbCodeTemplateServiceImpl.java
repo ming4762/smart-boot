@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import com.smart.auth.core.constants.RoleEnum;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.auth.core.utils.AuthUtils;
+import com.smart.commons.core.utils.BeanUtils;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.crud.service.BaseServiceImpl;
 import com.smart.crud.service.UserSetterService;
@@ -18,7 +19,6 @@ import com.smart.db.generator.service.DbCodeTemplateService;
 import com.smart.db.generator.service.DbCodeTemplateUserGroupService;
 import com.smart.system.service.SysUserGroupUserService;
 import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,12 +67,7 @@ public class DbCodeTemplateServiceImpl extends BaseServiceImpl<DbCodeTemplateMap
         }
         List<? extends DbCodeTemplatePO> list = super.list(queryWrapper, parameter, paging);
         // 转换为VO
-        List<DbCodeTemplateListVO> voList = list.stream()
-                .map(item -> {
-                    DbCodeTemplateListVO vo = new DbCodeTemplateListVO();
-                    BeanUtils.copyProperties(item, vo);
-                    return vo;
-                }).collect(Collectors.toList());
+        List<DbCodeTemplateListVO> voList = BeanUtils.copyProperties(list, DbCodeTemplateListVO.class);
         // 查询关联用户信息
         if (Boolean.TRUE.equals(parameter.getParameter().get(DbCrudEnum.QUERY_CREATE_UPDATE_USER.name()))) {
             this.userSetterService.setCreateUpdateUser(voList);

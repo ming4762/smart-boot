@@ -92,6 +92,9 @@ export default defineComponent({
       }
     }
     const getTitle = (menu: any) => {
+      if (!menu.meta.locales) {
+        return menu.meta.title
+      }
       return  menu.meta.locales[lang.value] || menu.meta.title
     }
     return {

@@ -44,7 +44,7 @@ public class DbCodeFormConfigCommonPO extends BaseModelUserTime {
     private String tableWhere;
 
     /**
-     * 是否存在
+     * 是否渲染
      */
     private Boolean visible;
     /**

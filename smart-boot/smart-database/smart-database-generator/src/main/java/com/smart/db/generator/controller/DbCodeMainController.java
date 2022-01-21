@@ -1,11 +1,13 @@
 package com.smart.db.generator.controller;
 
 import com.google.common.collect.Lists;
+import com.smart.commons.core.document.DocumentVO;
 import com.smart.commons.core.message.Result;
 import com.smart.crud.controller.BaseController;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.db.generator.constants.RuleTypeEnum;
 import com.smart.db.generator.constants.TableTypeEnum;
+import com.smart.db.generator.document.DbGeneratorDocumentCreator;
 import com.smart.db.generator.model.DbCodeFormConfigCommonPO;
 import com.smart.db.generator.model.DbCodeMainPO;
 import com.smart.db.generator.pojo.dto.DbCodeMainSaveParameter;
@@ -61,7 +63,7 @@ public class DbCodeMainController extends BaseController<DbCodeMainService, DbCo
     @PostMapping("getConfigById")
     public Result<DbMainConfigVO> getConfigById(@RequestBody Long id) {
         if (id == null) {
-            return Result.failure(400, "参数错误，配置ID不能未空");
+            return Result.failure(400, "参数错误，配置ID不能为空");
         }
         return Result.success(this.service.getConfigById(id));
     }
@@ -90,6 +92,15 @@ public class DbCodeMainController extends BaseController<DbCodeMainService, DbCo
     @PostMapping("createCode")
     public Result<List<DbCodeVO>> createCode(@RequestBody @Valid DbCreateCodeDTO parameter) {
        return Result.success(this.service.createCode(parameter));
+    }
+
+    /**
+     * 获取模板数据文档
+     * @return 模板数据文档
+     */
+    @PostMapping("getTemplateDataDocument")
+    public Result<List<DocumentVO>> getTemplateDataDocument() {
+        return Result.success(DbGeneratorDocumentCreator.createDocument());
     }
 
     /**

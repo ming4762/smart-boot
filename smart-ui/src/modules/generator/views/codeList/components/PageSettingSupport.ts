@@ -67,24 +67,24 @@ export const controlList = [
  */
 export const ruleList = [
   {
-    value: 'notEmpty',
-    label: 'generator.views.code.title.ruleList.notEmpty'
+    value: 'NOT_EMPTY',
+    label: '{generator.views.code.title.ruleList.notEmpty}'
   },
   {
     value: 'PHONE',
-    label: 'generator.views.code.title.ruleList.PHONE'
+    label: '{generator.views.code.title.ruleList.PHONE}'
   },
   {
     value: 'EMAIL',
-    label: 'generator.views.code.title.ruleList.EMAIL'
+    label: '{generator.views.code.title.ruleList.EMAIL}'
   },
   {
     value: 'NUMBER',
-    label: 'generator.views.code.title.ruleList.NUMBER'
+    label: '{generator.views.code.title.ruleList.NUMBER}'
   },
   {
     value: 'REGEXP',
-    label: 'generator.views.code.title.ruleList.REGEXP'
+    label: '{generator.views.code.title.ruleList.REGEXP}'
   }
 ]
 

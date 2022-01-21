@@ -45,27 +45,27 @@ export default {
             four: 'Four column'
           },
           controlList: {
-            input: 'input',
-            textarea: 'textarea',
-            number: 'number',
-            password: 'password',
-            select: 'select',
-            transfer: 'transfer',
-            selectTable: 'selectTable',
-            radio: 'radio',
-            checkbox: 'checkbox',
-            switch_type: 'switch',
-            date: 'date',
-            time: 'time',
-            datetime: 'datetime',
-            file: 'file'
+            input: 'INPUT',
+            textarea: 'TEXTAREA',
+            number: 'NUMBER',
+            password: 'PASSWORD',
+            select: 'SELECT',
+            transfer: 'TRANSFER',
+            selectTable: 'SELECT_TABLE',
+            radio: 'RADIO',
+            checkbox: 'CHECKBOX',
+            switch_type: 'SWITCH',
+            date: 'DATE',
+            time: 'TIME',
+            datetime: 'DATETIME',
+            file: 'FILE'
           },
           ruleList: {
-            notEmpty: 'notEmpty',
-            PHONE: 'phone',
-            EMAIL: 'email',
-            NUMBER: 'number',
-            REGEXP: 'regexp'
+            notEmpty: 'NOT_EMPTY',
+            PHONE: 'PHONE',
+            EMAIL: 'EMAIL',
+            NUMBER: 'NUMBER',
+            REGEXP: 'REGEXP'
           }
         },
         button: {

@@ -79,7 +79,7 @@ export const vueLoadData = () => {
       page: tablePage.currentPage,
       parameter: {
         'name@like': searchModel.name,
-        queryCreateUpdateUser: true
+        QUERY_CREATE_UPDATE_USER: true
       }
     }
     try {

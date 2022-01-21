@@ -74,8 +74,15 @@ public abstract class AbstractDefaultDatabaseExecutor implements DatabaseExecuto
 
     @Override
     public boolean testConnection(@NonNull DbConnectionConfig connectionConfig) throws SQLException {
-        Connection connection = this.dbConnectionProvider.getConnection(connectionConfig);
-        return this.checkConnection(connection);
+        Connection connection = null;
+        try {
+            connection = this.dbConnectionProvider.getConnection(connectionConfig);
+            return this.checkConnection(connection);
+        } finally {
+            if (connection != null) {
+                this.dbConnectionProvider.returnConnection(connectionConfig, connection);
+            }
+        }
     }
 
     /**
@@ -160,12 +167,12 @@ public abstract class AbstractDefaultDatabaseExecutor implements DatabaseExecuto
     }
 
     /**
-     * 查询主键信息
+     * 查询索引信息
      * @param connectionConfig 数据库连接信息
      * @param tableName 表名
      * @param unique 是否查询唯一索引
-     * @param approximate
-     * @return
+     * @param approximate when true, result is allowed to reflect approximate or out of data values; when false, results are requested to be accurate
+     * @return 主键信息
      */
     @SneakyThrows
     @Override
