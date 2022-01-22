@@ -49,6 +49,11 @@ import java.util.stream.Collectors;
 @Slf4j
 public class AuthJwtSecurityConfigurer extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
 
+    /**
+     * 默认的登录地址
+     */
+    public static final String LOGIN_URL = "/auth/login";
+
     private final ServiceProvider serviceProvider = new ServiceProvider();
 
     private final AuthHandlerBuilder handlerBuilder = new AuthHandlerBuilder();
@@ -90,6 +95,10 @@ public class AuthJwtSecurityConfigurer extends SecurityConfigurerAdapter<Default
 
     private AuthCache<String, Object> getAuthCache() {
         return this.getBean(AuthCache.class, this.serviceProvider.authCache);
+    }
+
+    private String getLoginUrl() {
+        return Optional.ofNullable(this.serviceProvider.loginUrl).orElse(LOGIN_URL);
     }
 
     /**
@@ -137,7 +146,7 @@ public class AuthJwtSecurityConfigurer extends SecurityConfigurerAdapter<Default
         final List<SecurityFilterChain> chains = Lists.newArrayList();
         // 创建登录过滤器
         final JwtLoginFilter jwtLoginFilter = this.jwtLoginFilter();
-        chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher(JwtLoginFilter.getLoginUrl(this.jwtContext)), jwtLoginFilter));
+        chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher(this.getLoginUrl()), jwtLoginFilter));
 
         // 创建logout过滤器
         chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher(this.getLogoutUrl()), this.jwtLogoutFilter()));
@@ -151,7 +160,7 @@ public class AuthJwtSecurityConfigurer extends SecurityConfigurerAdapter<Default
      */
     private JwtLoginFilter jwtLoginFilter() {
         final JwtLoginFilter jwtLoginFilter = new JwtLoginFilter(this.jwtContext, this.serviceProvider.bindIp);
-        jwtLoginFilter.setFilterProcessesUrl(JwtLoginFilter.getLoginUrl(this.jwtContext));
+        jwtLoginFilter.setFilterProcessesUrl(this.getLoginUrl());
         jwtLoginFilter.setAuthenticationManager(this.getBean(AuthenticationManager.class, null));
         // 设置登录成功handler
         jwtLoginFilter.setAuthenticationSuccessHandler(this.getBean(AuthenticationSuccessHandler.class, this.handlerBuilder.getAuthenticationSuccessHandler()));
@@ -207,7 +216,7 @@ public class AuthJwtSecurityConfigurer extends SecurityConfigurerAdapter<Default
      */
     private JwtContext createJwtContext() {
         return JwtContext.builder()
-                .loginUrl(this.serviceProvider.loginUrl)
+                .loginUrl(this.getLoginUrl())
                 .logoutUrl(this.serviceProvider.logoutUrl)
                 .authProperties(this.getBean(AuthProperties.class, this.serviceProvider.authProperties))
                 .build();

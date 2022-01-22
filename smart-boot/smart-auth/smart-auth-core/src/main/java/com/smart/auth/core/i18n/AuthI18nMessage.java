@@ -53,7 +53,12 @@ public enum AuthI18nMessage implements I18nMessage {
     // 密码不一致
     PASSWORD_CHANGE_PASSWORD_INCONSISTENT("auth.error.changePassword.passwordInconsistent", "The password is inconsistent"),
     // 新旧密码一致
-    PASSWORD_CHANGE_OLD_NEW_PASSWORD_SAME("auth.error.changePassword.oldNewPasswordSame", "The old and new passwords cannot be consistent")
+    PASSWORD_CHANGE_OLD_NEW_PASSWORD_SAME("auth.error.changePassword.oldNewPasswordSame", "The old and new passwords cannot be consistent"),
+
+    // ---------- 验证码 ------------------
+    CAPTCHA_EXPIRE_ERROR("auth.error.captcha_expire", "Verification code has expired"),
+    CAPTCHA_ERROR("auth.error.captcha_error", "Verification code error")
+
     ;
 
 

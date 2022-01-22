@@ -91,14 +91,4 @@ public class AuthController {
         return Result.success(key);
     }
 
-    /**
-     * 创建验证码
-     * @param key 验证码的key
-     * @param response HttpServletResponse
-     */
-    @SneakyThrows
-    @GetMapping("public/createCaptcha")
-    public void createCaptcha(String key, HttpServletResponse response) {
-        CaptchaUtils.out(response.getOutputStream(), key, this.authCache);
-    }
 }

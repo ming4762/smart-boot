@@ -9,7 +9,6 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Optional;
 
 /**
  * JWT登录拦截器
@@ -18,15 +17,12 @@ import java.util.Optional;
  */
 public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
 
-    /**
-     * 默认的登录地址
-     */
-    private static final String LOGIN_URL = "/auth/login";
+
 
     private final Boolean bindIp;
 
     public JwtLoginFilter(JwtContext jwtContext, Boolean bindIp) {
-        super(getLoginUrl(jwtContext));
+        super(jwtContext.getLoginUrl());
         this.bindIp = bindIp;
     }
 
@@ -36,14 +32,6 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
         final LoginParameter loginParameter = LoginParameter.create(httpServletRequest);
         final RestUsernamePasswordAuthenticationToken authenticationToken = new RestUsernamePasswordAuthenticationToken(loginParameter.getUsername(), loginParameter.getPassword(), this.bindIp, IpUtils.getIpAddr(httpServletRequest), loginParameter.getLoginType());
         return this.getAuthenticationManager().authenticate(authenticationToken);
-    }
-
-    /**
-     * 获取登录地址
-     * @return 登录URL
-     */
-    public static String getLoginUrl(JwtContext context) {
-        return Optional.of(context).map(JwtContext :: getLoginUrl).orElse(LOGIN_URL);
     }
 
 }

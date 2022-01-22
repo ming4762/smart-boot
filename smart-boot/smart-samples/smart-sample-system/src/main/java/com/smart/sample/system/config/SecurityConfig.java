@@ -2,6 +2,7 @@ package com.smart.sample.system.config;
 
 import com.smart.auth.core.properties.AuthProperties;
 import com.smart.auth.extensions.jwt.AuthJwtSecurityConfigurer;
+import com.smart.auth.security.config.AuthCaptchaSecurityConfigurer;
 import com.smart.auth.security.config.AuthWebSecurityConfigurerAdapter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,8 +38,16 @@ public class SecurityConfig extends AuthWebSecurityConfigurerAdapter {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
+                // jwt配置
                 .apply(AuthJwtSecurityConfigurer.jwt())
                 .serviceProvider()
-                .applicationContext(this.getApplicationContext());
+                .applicationContext(this.getApplicationContext())
+                .and()
+                .and()
+                // 验证码配置
+                .apply(AuthCaptchaSecurityConfigurer.captcha())
+                .serviceProvider()
+                .applicationContext(this.getApplicationContext())
+                .loginUrl(AuthJwtSecurityConfigurer.LOGIN_URL);
     }
 }

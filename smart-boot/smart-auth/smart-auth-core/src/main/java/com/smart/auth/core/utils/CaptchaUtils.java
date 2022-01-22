@@ -1,7 +1,9 @@
 package com.smart.auth.core.utils;
 
-import com.smart.auth.core.exception.CaptchaExpireException;
+import com.smart.auth.core.exception.CaptchaException;
+import com.smart.auth.core.i18n.AuthI18nMessage;
 import com.smart.auth.core.service.AuthCache;
+import com.smart.commons.core.i18n.I18nUtils;
 import com.wf.captcha.SpecCaptcha;
 import com.wf.captcha.base.Captcha;
 import org.apache.commons.lang3.StringUtils;
@@ -81,7 +83,7 @@ public class CaptchaUtils {
         // 判断是否过期
         final String cacheCode = (String) authCache.get(getKey(key));
         if (cacheCode == null) {
-            throw new CaptchaExpireException(key);
+            throw new CaptchaException(I18nUtils.get(AuthI18nMessage.CAPTCHA_EXPIRE_ERROR));
         }
         return StringUtils.equals(code.toLowerCase(), cacheCode);
     }
