@@ -5,7 +5,11 @@ import com.smart.auth.core.i18n.AuthI18nMessage;
 import com.smart.auth.core.service.AuthCache;
 import com.smart.auth.core.utils.CaptchaUtils;
 import com.smart.commons.core.i18n.I18nUtils;
+import com.smart.commons.core.message.Result;
+import com.smart.commons.core.utils.RestJsonWriter;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.util.Assert;
@@ -43,14 +47,15 @@ public class AuthCaptchaFilter extends OncePerRequestFilter {
         String key = request.getParameter("codeKey");
         Assert.notNull(key, "验证码验证发生错误，key为null");
         if (this.isCreate(request)) {
+            response.setContentType("image/png");
             CaptchaUtils.out(response.getOutputStream(), key, authCache);
         }
         if (this.isValidate(request)) {
             // 验证验证码
             String code = request.getParameter("code");
-            boolean validate = CaptchaUtils.validate(key, code, authCache);
-            if (!validate) {
-                throw new CaptchaException(I18nUtils.get(AuthI18nMessage.CAPTCHA_ERROR));
+            if (StringUtils.isBlank(code) || !CaptchaUtils.validate(key, code, authCache)) {
+                RestJsonWriter.writeJson(response, Result.failure(HttpStatus.UNAUTHORIZED.value(), I18nUtils.get(AuthI18nMessage.CAPTCHA_ERROR)));
+                return;
             }
             filterChain.doFilter(request, response);
         }
