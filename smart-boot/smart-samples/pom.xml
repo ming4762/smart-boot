@@ -14,6 +14,7 @@
 	<packaging>pom</packaging>
 
 	<modules>
+		<module>smart-sample-kettle</module>
 		<module>smart-sample-system</module>
 	</modules>
 

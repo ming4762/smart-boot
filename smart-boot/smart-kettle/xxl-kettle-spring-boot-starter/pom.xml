@@ -21,7 +21,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.smart</groupId>
-			<artifactId>smart-kettle-core</artifactId>
+			<artifactId>kettle-spring-boot-starter</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
