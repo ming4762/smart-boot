@@ -16,7 +16,8 @@
                 v-model:value="loginModel.username"
                 type="text"
                 :placeholder="$t('system.login.login-username-validate')"
-                size="large">
+                size="large"
+                @pressEnter="handleLogin">
                 <template #prefix>
                   <user-outlined :style="{ color: 'rgba(0,0,0,.25)' }" />
                 </template>
@@ -26,7 +27,8 @@
               <a-input-password
                 v-model:value="loginModel.password"
                 :placeholder="$t('system.login.login-password-validate')"
-                size="large">
+                size="large"
+                @pressEnter="handleLogin">
                 <template #prefix>
                   <LockOutlined :style="{ color: 'rgba(0,0,0,.25)' }" />
                 </template>
@@ -36,7 +38,7 @@
               <a-row :gutter="16">
                 <a-col :span="16">
                   <a-form-item name="captcha">
-                    <a-input v-model:value="loginModel.captcha" size="large" type="text" :placeholder="$t('system.login.login-captcha')">
+                    <a-input v-model:value="loginModel.captcha" size="large" type="text" :placeholder="$t('system.login.login-captcha')" @pressEnter="handleLogin">
                       <template #prefix>
                         <MailOutlined :style="{ color: 'rgba(0,0,0,.25)' }" />
                       </template>
@@ -205,7 +207,7 @@ export default defineComponent({
      */
     const handleLogin = async (e: Event) => {
       e.preventDefault()
-      const fields = customActiveKey.value === 'username' ? ['username', 'password'] : ['phone', 'phoneCode']
+      const fields = customActiveKey.value === 'username' ? ['username', 'password', 'captcha'] : ['phone', 'phoneCode']
       try {
         await formRef.value.validate(fields)
       } catch (e) {
@@ -305,6 +307,9 @@ export default defineComponent({
         ],
         phoneCode: [
           { required: true, message: this.$t('system.login.login-phone-code-validate'), trigger: 'blur' }
+        ],
+        captcha: [
+          { required: true, message: this.$t('system.login.login-captcha'), trigger: 'blur' }
         ]
       }
     }
