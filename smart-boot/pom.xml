@@ -41,6 +41,7 @@
         <commons-lang.version>2.6</commons-lang.version>
         <commons-vfs2.version>2.8.0</commons-vfs2.version>
         <scannotation.version>1.0.3</scannotation.version>
+        <org.eclipse.jface.version>3.22.0</org.eclipse.jface.version>
     </properties>
 
     <packaging>pom</packaging>
@@ -254,6 +255,17 @@
                 <artifactId>ojdbc8</artifactId>
                 <version>${ojdbc8.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.pentaho</groupId>
+                <artifactId>kettle-ui-swt</artifactId>
+                <version>${kettle.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse</groupId>
+                <artifactId>org.eclipse.jface</artifactId>
+                <version>${org.eclipse.jface.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -292,5 +304,16 @@
             <url>http://109.116.6.139:8081/repository/maven-public/</url>
         </repository>
     </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>releases</id>
+            <url>http://109.116.6.139:8081/repository/maven-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <url>http://109.116.6.139:8081/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
 </project>

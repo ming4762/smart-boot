@@ -82,14 +82,6 @@
 			<artifactId>commons-pool2</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>org.pentaho</groupId>
-			<artifactId>kettle-sap-plugin-core</artifactId>
-			<systemPath>C:/Users/ShiZhong/Documents/soft/data-integration-9.2/plugins/kettle-sap-plugin/kettle-sap-plugin-core-9.2.0.0-290.jar</systemPath>
-			<scope>system</scope>
-			<version>1</version>
-		</dependency>
-
 	</dependencies>
 
 
