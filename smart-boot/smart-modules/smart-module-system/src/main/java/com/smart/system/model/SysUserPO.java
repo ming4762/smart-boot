@@ -6,12 +6,9 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.smart.crud.model.BaseModelUserTime;
 import com.smart.crud.model.BaseUser;
-import com.smart.system.constants.UserStatusEnum;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.io.Serializable;
 
 /**
  * 用户实体类
@@ -73,13 +70,4 @@ public class SysUserPO extends BaseModelUserTime implements BaseUser {
 
     private Boolean useYn;
 
-    /**
-     * 是否是初始密码
-     */
-    private Boolean initialPasswordYn;
-
-    /**
-     * 用户状态
-     */
-    private UserStatusEnum userStatus;
 }

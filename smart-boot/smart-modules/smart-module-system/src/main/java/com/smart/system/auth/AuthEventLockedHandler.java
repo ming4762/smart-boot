@@ -5,10 +5,10 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.smart.auth.core.event.AuthEventHandler;
 import com.smart.auth.core.properties.AuthProperties;
 import com.smart.auth.core.userdetails.RestUserDetails;
-import com.smart.system.constants.UserStatusEnum;
-import com.smart.system.model.SysAuthUserPO;
+import com.smart.system.constants.UserAccountStatusEnum;
+import com.smart.system.model.SysUserAccountPO;
 import com.smart.system.model.SysUserPO;
-import com.smart.system.service.SysAuthUserService;
+import com.smart.system.service.SysUserAccountService;
 import com.smart.system.service.SysUserService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.security.authentication.event.AbstractAuthenticationFailureEvent;
@@ -31,9 +31,9 @@ public class AuthEventLockedHandler implements AuthEventHandler {
 
     private final SysUserService sysUserService;
 
-    private final SysAuthUserService sysAuthUserService;
+    private final SysUserAccountService sysAuthUserService;
 
-    public AuthEventLockedHandler(AuthProperties properties, SysUserService sysUserService, SysAuthUserService sysAuthUserService) {
+    public AuthEventLockedHandler(AuthProperties properties, SysUserService sysUserService, SysUserAccountService sysAuthUserService) {
         this.properties = properties;
         this.sysUserService = sysUserService;
         this.sysAuthUserService = sysAuthUserService;
@@ -54,20 +54,21 @@ public class AuthEventLockedHandler implements AuthEventHandler {
     public void handleLoginSuccess(AuthenticationSuccessEvent event) {
         RestUserDetails user = (RestUserDetails) event.getAuthentication().getPrincipal();
         // 查询用户账户信息
-        SysAuthUserPO authUser = this.sysAuthUserService.getById(user.getUserId());
+        SysUserAccountPO authUser = this.sysAuthUserService.getById(user.getUserId());
         if (authUser != null) {
             if ( authUser.getLoginFailTime() > 0) {
                 this.sysAuthUserService.update(
-                        new UpdateWrapper<SysAuthUserPO>().lambda()
-                                .set(SysAuthUserPO :: getUpdateTime, LocalDateTime.now())
-                                .set(SysAuthUserPO :: getLoginFailTime, 0)
-                                .eq(SysAuthUserPO :: getUserId, user.getUserId())
+                        new UpdateWrapper<SysUserAccountPO>().lambda()
+                                .set(SysUserAccountPO:: getLoginFailTime, 0)
+                                .set(SysUserAccountPO :: getLastLoginTime, LocalDateTime.now())
+                                .eq(SysUserAccountPO:: getUserId, user.getUserId())
                 );
             }
         } else {
-            authUser = new SysAuthUserPO();
+            authUser = new SysUserAccountPO();
             authUser.setUserId(user.getUserId());
             authUser.setCreateTime(LocalDateTime.now());
+            authUser.setLastLoginTime(LocalDateTime.now());
             authUser.setLoginFailTime(0);
             this.sysAuthUserService.save(authUser);
         }
@@ -99,23 +100,17 @@ public class AuthEventLockedHandler implements AuthEventHandler {
         }
         SysUserPO user = userList.get(0);
         // 查询用户锁定次数
-        SysAuthUserPO authUser = this.sysAuthUserService.getById(user.getUserId());
+        SysUserAccountPO authUser = this.sysAuthUserService.getById(user.getUserId());
         if (authUser == null) {
-            authUser = new SysAuthUserPO();
+            authUser = new SysUserAccountPO();
             authUser.setUserId(user.getUserId());
             authUser.setLoginFailTime(0);
             authUser.setCreateTime(LocalDateTime.now());
-        } else {
-            authUser.setUpdateTime(LocalDateTime.now());
         }
         int time = authUser.getLoginFailTime() + 1;
         if (time >= this.properties.getStatus().getLoginFailLockTime()) {
             // 锁定用户
-            this.sysUserService.update(
-                    new UpdateWrapper<SysUserPO>().lambda()
-                    .set(SysUserPO :: getUserStatus, UserStatusEnum.LOCKED)
-                    .eq(SysUserPO :: getUserId, user.getUserId())
-            );
+            authUser.setAccountStatus(UserAccountStatusEnum.LOGIN_FAIL_LOCKED);
         }
         authUser.setLoginFailTime(time);
         // 更新次数

@@ -18,6 +18,7 @@ import com.smart.crud.query.PageSortQuery;
 import com.smart.system.model.SysFunctionPO;
 import com.smart.system.model.SysUserPO;
 import com.smart.system.model.SysUserRolePO;
+import com.smart.system.pojo.dbo.SysUserWthAccountBO;
 import com.smart.system.pojo.dto.common.UseYnSetDTO;
 import com.smart.system.pojo.dto.user.UserSetRoleDTO;
 import com.smart.system.pojo.dto.user.UserUpdateDTO;
@@ -206,9 +207,8 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
     @PostMapping("isInitialPassword")
     @ApiOperation(value = "是否是初始化密码")
     public Result<Boolean> isInitialPassword() {
-        List<SysUserPO> userList = this.service.list(
+        List<SysUserWthAccountBO> userList = this.service.listUserWithAccount(
                 new QueryWrapper<SysUserPO>().lambda()
-                        .select(SysUserPO :: getInitialPasswordYn)
                         .eq(SysUserPO :: getUserId, AuthUtils.getNonNullCurrentUserId())
         );
         if (userList.isEmpty()) {

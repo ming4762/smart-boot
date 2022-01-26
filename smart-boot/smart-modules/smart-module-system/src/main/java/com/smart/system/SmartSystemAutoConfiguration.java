@@ -3,7 +3,7 @@ package com.smart.system;
 import com.smart.auth.core.properties.AuthProperties;
 import com.smart.system.auth.AuthEventLockedHandler;
 import com.smart.system.auth.AuthEventLogHandler;
-import com.smart.system.service.SysAuthUserService;
+import com.smart.system.service.SysUserAccountService;
 import com.smart.system.service.SysLogService;
 import com.smart.system.service.SysUserService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -37,7 +37,7 @@ public class SmartSystemAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean(AuthEventLockedHandler.class)
-    public AuthEventLockedHandler authEventLockedHandler(AuthProperties properties, SysUserService sysUserService, SysAuthUserService sysAuthUserService) {
+    public AuthEventLockedHandler authEventLockedHandler(AuthProperties properties, SysUserService sysUserService, SysUserAccountService sysAuthUserService) {
         return new AuthEventLockedHandler(properties, sysUserService, sysAuthUserService);
     }
 }

@@ -179,12 +179,11 @@ public class KettleActuator {
             Consumer<Job> beforeHandler
     ) {
         Job job = new Job(repository, jobMeta);
-        params.forEach(job :: setVariable);
+        params.forEach(jobMeta :: setVariable);
         // 设置命名参数
         for (Map.Entry<String, String> entry : parameterMap.entrySet()) {
-            job.setParameterValue(entry.getKey(), entry.getValue());
+            jobMeta.setParameterValue(entry.getKey(), entry.getValue());
         }
-
         job.setLogLevel(logLevel);
         if (beforeHandler != null) {
             beforeHandler.accept(job);

@@ -57,11 +57,11 @@ const getThemeList = (i18nRender: Function) => {
   const list = window.umi_plugin_ant_themeVar || [];
   const themeList: Array<any> = [{
     key: 'light',
-    url: 'https://gw.alipayobjects.com/zos/antfincdn/NQ%24zoisaD2/jpRkZQMyYRryryPNtyIC.svg',
+    url: '/src/modules/system/assets/settingDrawer/menu_light.svg',
     title: i18nRender('system.setting.pageStyle.light')
   }, {
     key: 'dark',
-    url: 'https://gw.alipayobjects.com/zos/antfincdn/XwFOFbLkSM/LCkqqYNmvBEbokSDscrm.svg',
+    url: '/src/modules/system/assets/settingDrawer/layout_side.svg',
     title: i18nRender('system.setting.pageStyle.dark')
   }]
   const darkColorList = [{
@@ -82,7 +82,7 @@ const getThemeList = (i18nRender: Function) => {
       // disable click
       disable: true,
       key: 'realDark',
-      url: 'https://gw.alipayobjects.com/zos/antfincdn/hmKaLQvmY2/LCkqqYNmvBEbokSDscrm.svg',
+      url: '/src/modules/system/assets/settingDrawer/real_dark.svg',
       title: i18nRender('system.setting.pageStyle.realdark')
     });
   } // insert  theme color List
