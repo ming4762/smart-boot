@@ -1,10 +1,10 @@
 <template>
-  <div class="content-tabs" :style="{height: navHeight + 'px', 'line-height': `${navHeight - 2}px`}">
+  <div ref="containerRef" class="content-tabs" :style="{height: navHeight + 'px', 'line-height': `${navHeight - 2}px`}">
     <div :style="computedRightButtonStyle" class="roll-nav roll-left direction-button">
       <BackwardOutlined />
     </div>
-    <nav class="page-tabs s-menu-tabs">
-      <div class="page-tabs-content" style="margin-left: 0">
+    <nav ref="tabContainerRef" class="page-tabs s-menu-tabs">
+      <div class="page-tabs-content" :style="computedTabContainerStyle">
         <a
           v-for="(item, i) in dataList"
           :key="'navigation-menu_' + i"
@@ -20,7 +20,7 @@
         </a>
       </div>
     </nav>
-    <div :style="computedRightButtonStyle" class="roll-nav roll-right direction-button s-menu-right">
+    <div :style="computedRightButtonStyle" class="roll-nav roll-right direction-button s-menu-right" @click="handleMoveRight">
       <ForwardOutlined />
     </div>
     <a-dropdown>
@@ -36,9 +36,71 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, toRefs } from 'vue'
+import {computed, defineComponent, PropType, ref, toRefs} from 'vue'
 
 import { BackwardOutlined, CaretDownOutlined, CloseCircleOutlined, ForwardOutlined } from '@ant-design/icons-vue'
+
+import XEUtils from 'xe-utils'
+
+const useTabsMove = () => {
+  // tab margin
+  const marginLeft = ref(0)
+  const containerRef = ref()
+  const tabContainerRef = ref()
+
+  /**
+   * 向右移动事件
+   */
+  const handleMoveRight = () => {
+    const containerMarginLeft = marginLeft.value
+    // 排除中间区域宽度
+    const children = containerRef.value.children
+    const elementList: Array<Element> = []
+    for (let i=0; i<children.length; i++) {
+      elementList.push(children[i])
+    }
+    // 排除中间区域的按钮宽度
+    const buttonsWidth = XEUtils.sum(elementList
+        .filter((item: any) => item !== tabContainerRef.value)
+        .map((item: any) => item.clientWidth))
+    // tab 组 外层宽度
+    const tabContainerOuterWidth = containerRef.value.clientWidth - buttonsWidth
+    // tab 组事件宽度
+    const tabContainerWidth = tabContainerRef.value.children[0].clientWidth
+    if (tabContainerWidth <= tabContainerOuterWidth) {
+      // 如果实际宽度小于容器宽度 不做任何处理
+      return false
+    }
+    if (tabContainerWidth - containerMarginLeft <= tabContainerOuterWidth) {
+      // 减掉缩进的部分 小于容器宽度 不做处理
+      return false
+    }
+    // 获取所有的打开的菜单
+    const menuElementList: HTMLCollection = tabContainerRef.value.children[0].children
+    let sumLength = 0 - containerMarginLeft
+    for (let i=0; i<menuElementList.length; i++) {
+      const element = menuElementList[i]
+      if (sumLength + element.clientWidth > tabContainerOuterWidth) {
+        break
+      }
+      sumLength += element.clientWidth
+    }
+    marginLeft.value = sumLength
+  }
+
+  const computedTabContainerStyle = computed(() => {
+    return {
+      'margin-left': `${0 - marginLeft.value}px`
+    }
+  })
+
+  return {
+    containerRef,
+    tabContainerRef,
+    handleMoveRight,
+    computedTabContainerStyle
+  }
+}
 
 export const NavigationProps = {
   i18nRender: {
@@ -102,7 +164,8 @@ export default defineComponent({
       handleClick,
       contentHeight,
       computedRightButtonStyle,
-      getTitle
+      getTitle,
+      ...useTabsMove()
     }
   }
 })
@@ -156,7 +219,7 @@ export default defineComponent({
     }
   }
   nav.page-tabs {
-    margin-left: 40px;
+    margin-left: 33px;
     //width: 10000px;
     //height: 40px;
     overflow: hidden;
