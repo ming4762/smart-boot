@@ -32,6 +32,25 @@
                 </template>
               </a-input-password>
             </a-form-item>
+            <a-form-item>
+              <a-row :gutter="16">
+                <a-col :span="16">
+                  <a-form-item name="captcha">
+                    <a-input v-model:value="loginModel.captcha" size="large" type="text" :placeholder="$t('system.login.login-captcha')">
+                      <template #prefix>
+                        <MailOutlined :style="{ color: 'rgba(0,0,0,.25)' }" />
+                      </template>
+                    </a-input>
+                  </a-form-item>
+                </a-col>
+                <a-col :span="8">
+                  <a-tooltip>
+                    <template #title>{{ $t('system.login.captchaRefreshTooltip') }}</template>
+                    <img style="height: 40px" :src="computedCaptchaUrl" @click="handleChangeCaptcha" />
+                  </a-tooltip>
+                </a-col>
+              </a-row>
+            </a-form-item>
           </a-tab-pane>
           <a-tab-pane key="phone" :tab="$t('system.login.tab-login-phone')">
             <a-form-item name="phone">
@@ -81,6 +100,7 @@ import { UserOutlined, LockOutlined, MobileOutlined, MailOutlined }  from '@ant-
 import ApiService from '@/common/utils/ApiService'
 import { saveUser, saveUserPermission, saveUserRole, saveToken, getToken, createPassword } from '@/common/auth/AuthUtils'
 import defaultSettings from '@/config/defaultSetting'
+import { generateUUID } from '@/common/utils/KeyGenerator'
 
 /**
  * 设置路由元数据
@@ -104,6 +124,21 @@ const setRouteMeta = (routes: Array<RouteRecord>, menuList: Array<any>) => {
   })
 }
 
+const useCaptcha = () => {
+  const captchaKey = ref<string>(generateUUID())
+  const computedCaptchaUrl = computed(() => {
+    return `${ApiService.getApiUrl()}auth/createCaptcha?codeKey=${captchaKey.value}`
+  })
+  const handleChangeCaptcha = () => {
+    captchaKey.value = generateUUID()
+  }
+  return {
+    captchaKey,
+    computedCaptchaUrl,
+    handleChangeCaptcha
+  }
+}
+
 export default defineComponent({
   name: 'LoginView',
   components: {
@@ -119,6 +154,8 @@ export default defineComponent({
     const router = useRouter()
     const loginLoading = ref(false)
     const customActiveKey = ref('username')
+    const captchaHook = useCaptcha()
+
     // 执行登出操作，防止直接跳转到登录页面未执行登录
     if (getToken()) {
       ApiService.postAjax('auth/logout')
@@ -130,7 +167,8 @@ export default defineComponent({
       username: '',
       password: '',
       phone: '',
-      phoneCode: ''
+      phoneCode: '',
+      captcha: ''
     })
     const state = reactive({
       time: 60,
@@ -180,7 +218,9 @@ export default defineComponent({
       if (customActiveKey.value === 'username') {
         requestParameter = {
           username: loginModel.username,
-          password: createPassword(loginModel.username, loginModel.password)
+          password: createPassword(loginModel.username, loginModel.password),
+          codeKey: captchaHook.captchaKey.value,
+          code: loginModel.captcha
         }
       } else {
         requestParameter = {
@@ -234,11 +274,13 @@ export default defineComponent({
         router.push('/')
       } catch (error: any) {
         error.message && message.error(error.message)
+        captchaHook.handleChangeCaptcha()
       } finally {
         loginLoading.value = false
       }
     }
     return {
+      ...captchaHook,
       formRef,
       customActiveKey,
       state,

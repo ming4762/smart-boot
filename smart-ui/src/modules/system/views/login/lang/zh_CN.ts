@@ -9,7 +9,9 @@ export default {
       'login-phone-validate': '请输入手机号',
       'login-phone-code-validate': '请输入手机验证码',
       'login-button': '登录',
-      'login-phone-getCaptcha': '获取验证码'
+      'login-phone-getCaptcha': '获取验证码',
+      'login-captcha': '请输入验证码',
+      captchaRefreshTooltip: '点击刷新验证码'
     }
   }
 }

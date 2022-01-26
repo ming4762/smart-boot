@@ -9,7 +9,9 @@ export default {
       'login-phone-validate': 'Please enter phone',
       'login-phone-code-validate': 'Please enter phone code',
       'login-button': 'Login',
-      'login-phone-getCaptcha': 'Get captcha'
+      'login-phone-getCaptcha': 'Get captcha',
+      'login-captcha': 'Please enter captcha',
+      captchaRefreshTooltip: 'Click refresh verification code'
     }
   }
 }
