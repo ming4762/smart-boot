@@ -20,6 +20,7 @@ import com.smart.system.mapper.SysUserGroupRoleMapper;
 import com.smart.system.mapper.SysUserGroupUserMapper;
 import com.smart.system.mapper.SysUserMapper;
 import com.smart.system.model.*;
+import com.smart.system.pojo.dbo.SysUserWthAccountBO;
 import com.smart.system.pojo.dto.user.UserSetRoleDTO;
 import com.smart.system.pojo.vo.SysFunctionListVO;
 import com.smart.system.pojo.vo.SysUserListVO;
@@ -405,5 +406,10 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
                 .set(SysUserPO :: getPassword, password)
                 .eq(SysUserPO :: getUserId, userId)
         );
+    }
+
+    @Override
+    public List<SysUserWthAccountBO> listUserWithAccount(LambdaQueryWrapper<SysUserPO> parameter) {
+        return this.baseMapper.listUserWithAccount(parameter);
     }
 }

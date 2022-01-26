@@ -1,10 +1,12 @@
 package com.smart.system.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.smart.crud.service.BaseService;
 import com.smart.system.constants.FunctionTypeEnum;
 import com.smart.system.model.SysFunctionPO;
 import com.smart.system.model.SysRolePO;
 import com.smart.system.model.SysUserPO;
+import com.smart.system.pojo.dbo.SysUserWthAccountBO;
 import com.smart.system.pojo.dto.user.UserSetRoleDTO;
 import com.smart.system.pojo.vo.SysFunctionListVO;
 import org.springframework.lang.NonNull;
@@ -94,4 +96,12 @@ public interface SysUserService extends BaseService<SysUserPO> {
      * @return 是否修改成功
      */
     boolean changePassword(@NonNull Long userId, @NonNull String password);
+
+
+    /**
+     * 查询用户列表带账号信息
+     * @param parameter 参数
+     * @return 用户列表
+     */
+    List<SysUserWthAccountBO> listUserWithAccount(LambdaQueryWrapper<SysUserPO> parameter);
 }

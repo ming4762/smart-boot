@@ -11,20 +11,27 @@ import lombok.Getter;
  * @since 1.0.7
  */
 @Getter
-public enum UserStatusEnum implements IEnum<String> {
+public enum UserAccountStatusEnum implements IEnum<String> {
 
     /**
      * 10:正常
      * 20:锁定
      */
     NORMAL("10"),
-    LOCKED("20")
+    /**
+     * 多次登录失败锁定
+     */
+    LOGIN_FAIL_LOCKED("20"),
+    /**
+     * 超出指定时间未登录锁定
+     */
+    LONG_TIME_LOCKED("30")
     ;
 
     @EnumValue
     private final String value;
 
-    UserStatusEnum(String value) {
+    UserAccountStatusEnum(String value) {
         this.value = value;
     }
 }

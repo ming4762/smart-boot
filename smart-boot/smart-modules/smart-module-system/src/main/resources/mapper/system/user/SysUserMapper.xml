@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smart.system.mapper.SysUserMapper">
+
+    <!--  查询用户列表带账号信息  -->
+    <select id="listUserWithAccount" resultType="com.smart.system.pojo.dbo.SysUserWthAccountBO">
+        SELECT A.USER_ID,
+               A.USERNAME,
+               A.FULL_NAME,
+               A.PASSWORD,
+               A.EMAIL,
+               A.MOBILE,
+               A.USER_TYPE,
+               A.CREATE_USER_ID,
+               A.CREATE_TIME,
+               A.UPDATE_USER_ID,
+               A.UPDATE_TIME,
+               A.SEQ,
+               A.DELETE_YN,
+               A.USE_YN,
+               B.account_status,
+               B.login_fail_time,
+               B.account_status,
+               B.last_login_time,
+               B.initial_password_yn
+        FROM sys_user A
+        LEFT OUTER JOIN sys_user_account B ON A.user_id = B.user_id
+        ${ew.customSqlSegment}
+    </select>
+</mapper>

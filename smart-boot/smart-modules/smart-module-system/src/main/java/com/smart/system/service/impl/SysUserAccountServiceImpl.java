@@ -3,12 +3,12 @@ package com.smart.system.service.impl;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.auth.extensions.jwt.resolver.JwtResolver;
 import com.smart.crud.service.BaseServiceImpl;
-import com.smart.system.mapper.SysAuthUserMapper;
+import com.smart.system.mapper.SysUserAccountMapper;
 import com.smart.system.mapper.SysUserMapper;
-import com.smart.system.model.SysAuthUserPO;
+import com.smart.system.model.SysUserAccountPO;
 import com.smart.system.model.SysUserPO;
 import com.smart.system.pojo.vo.SysOnlineUserVO;
-import com.smart.system.service.SysAuthUserService;
+import com.smart.system.service.SysUserAccountService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -25,13 +25,13 @@ import java.util.stream.Collectors;
  * @since 1.0.7
  */
 @Service
-public class SysAuthUserServiceImpl extends BaseServiceImpl<SysAuthUserMapper, SysAuthUserPO> implements SysAuthUserService {
+public class SysUserAccountServiceImpl extends BaseServiceImpl<SysUserAccountMapper, SysUserAccountPO> implements SysUserAccountService {
 
     private final JwtResolver jwtResolver;
 
     private final SysUserMapper sysUserMapper;
 
-    public SysAuthUserServiceImpl(JwtResolver jwtResolver, SysUserMapper sysUserMapper) {
+    public SysUserAccountServiceImpl(JwtResolver jwtResolver, SysUserMapper sysUserMapper) {
         this.jwtResolver = jwtResolver;
         this.sysUserMapper = sysUserMapper;
     }

@@ -6,11 +6,11 @@ import com.smart.auth.core.model.AuthUser;
 import com.smart.auth.core.model.Permission;
 import com.smart.auth.core.service.AuthUserService;
 import com.smart.system.constants.FunctionTypeEnum;
-import com.smart.system.constants.UserStatusEnum;
-import com.smart.system.model.SysAuthUserPO;
+import com.smart.system.constants.UserAccountStatusEnum;
 import com.smart.system.model.SysRolePO;
+import com.smart.system.model.SysUserAccountPO;
 import com.smart.system.model.SysUserPO;
-import com.smart.system.service.SysAuthUserService;
+import com.smart.system.service.SysUserAccountService;
 import com.smart.system.service.SysUserService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.lang.NonNull;
@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -34,11 +33,11 @@ public class AuthUserServiceImpl implements AuthUserService {
 
     private final SysUserService sysUserService;
 
-    private final SysAuthUserService sysAuthUserService;
+    private final SysUserAccountService sysUserAccountService;
 
-    public AuthUserServiceImpl(SysUserService sysUserService, SysAuthUserService sysAuthUserService) {
+    public AuthUserServiceImpl(SysUserService sysUserService, SysUserAccountService sysAuthUserService) {
         this.sysUserService = sysUserService;
-        this.sysAuthUserService = sysAuthUserService;
+        this.sysUserAccountService = sysAuthUserService;
     }
 
 
@@ -56,8 +55,7 @@ public class AuthUserServiceImpl implements AuthUserService {
                                 SysUserPO :: getUsername,
                                 SysUserPO :: getFullName,
                                 SysUserPO :: getPassword,
-                                SysUserPO :: getMobile,
-                                SysUserPO :: getUserStatus
+                                SysUserPO :: getMobile
                         )
                         .eq(SysUserPO :: getUsername, username)
         );
@@ -73,16 +71,21 @@ public class AuthUserServiceImpl implements AuthUserService {
                 .username(user.getUsername())
                 .password(user.getPassword())
                 .fullName(user.getFullName())
+                .loginFailTime(0)
                 .build();
-        if (UserStatusEnum.LOCKED.equals(user.getUserStatus())) {
-            authUser.setLocked(true);
+        // 查询用户账户状态
+        SysUserAccountPO userAccount = this.sysUserAccountService.getById(user.getUserId());
+
+        if (userAccount != null) {
+            if (UserAccountStatusEnum.LOGIN_FAIL_LOCKED.equals(userAccount.getAccountStatus()) || UserAccountStatusEnum.LONG_TIME_LOCKED.equals(userAccount.getAccountStatus())) {
+                authUser.setLocked(true);
+            }
+            // 验证是否长时间未登录锁定
+            // TODO: 未开发
+            // 设置登录失败次数
+            authUser.setLoginFailTime(userAccount.getLoginFailTime());
         }
-        // 查询用户登录失败次数
-        authUser.setLoginFailTime(
-                Optional.ofNullable(this.sysAuthUserService.getById(authUser.getUserId()))
-                        .map(SysAuthUserPO::getLoginFailTime)
-                        .orElse(0)
-        );
+
         return authUser;
     }
 
@@ -96,8 +99,7 @@ public class AuthUserServiceImpl implements AuthUserService {
                                 SysUserPO :: getUsername,
                                 SysUserPO :: getFullName,
                                 SysUserPO :: getPassword,
-                                SysUserPO :: getMobile,
-                                SysUserPO :: getUserStatus
+                                SysUserPO :: getMobile
                         )
                         .eq(SysUserPO :: getMobile, phone)
         );

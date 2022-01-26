@@ -14,7 +14,7 @@ import com.smart.system.pojo.dto.ChangePasswordDTO;
 import com.smart.system.pojo.dto.auth.OfflineDTO;
 import com.smart.system.pojo.dto.auth.OnlineUserQueryDTO;
 import com.smart.system.pojo.vo.SysOnlineUserVO;
-import com.smart.system.service.SysAuthUserService;
+import com.smart.system.service.SysUserAccountService;
 import com.smart.system.service.SysUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -45,13 +45,13 @@ public class SysAuthController {
 
     private final SysUserService sysUserService;
 
-    private final SysAuthUserService sysAuthUserService;
+    private final SysUserAccountService sysAuthUserService;
 
     private final CacheJwtStore cacheJwtStore;
 
     private final JwtResolver jwtResolver;
 
-    public SysAuthController(SysUserService sysUserService, CacheJwtStore cacheJwtStore, SysAuthUserService sysAuthUserService, JwtResolver jwtResolver) {
+    public SysAuthController(SysUserService sysUserService, CacheJwtStore cacheJwtStore, SysUserAccountService sysAuthUserService, JwtResolver jwtResolver) {
         this.sysUserService = sysUserService;
         this.cacheJwtStore = cacheJwtStore;
         this.sysAuthUserService = sysAuthUserService;
