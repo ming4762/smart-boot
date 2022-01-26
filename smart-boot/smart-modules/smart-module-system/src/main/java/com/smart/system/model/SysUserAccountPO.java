@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
-@TableName("sys_auth_user")
+@TableName("sys_user_account")
 public class SysUserAccountPO extends BaseModel {
     private static final long serialVersionUID = -8246582845593471040L;
 
