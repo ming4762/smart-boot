@@ -23,11 +23,11 @@ export default defineComponent({
     const computedItems = computed(() => {
       return list.value || [{
         key: 'sidemenu',
-        url: 'https://gw.alipayobjects.com/zos/antfincdn/XwFOFbLkSM/LCkqqYNmvBEbokSDscrm.svg',
+        url: '/src/modules/system/assets/settingDrawer/layout_side.svg',
         title: i18n('system.setting.sidemenu')
       }, {
         key: 'topmenu',
-        url: 'https://gw.alipayobjects.com/zos/antfincdn/URETY8%24STp/KDNDBbriJhLwuqMoxcAr.svg',
+        url: 'src/modules/system/assets/settingDrawer/layout_top.svg',
         title: i18n('system.setting.topmenu')
       }]
     })
