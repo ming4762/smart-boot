@@ -1,4 +1,4 @@
-import { useVxeTable } from './LoadDataHooks'
+import { useVxeTable } from './CrudHooks'
 
 export {
   useVxeTable

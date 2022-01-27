@@ -43,4 +43,6 @@ public class DbCodeTemplatePO extends BaseModelUserTime {
 
     @TableLogic
     private Boolean deleteYn;
+
+    private Long groupId;
 }

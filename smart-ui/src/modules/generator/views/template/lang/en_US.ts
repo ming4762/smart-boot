@@ -10,7 +10,9 @@ export default {
           }
         },
         title: {
-          userGroup: 'User group'
+          userGroup: 'User group',
+          templateGroup: 'Template group',
+          seq: 'Seq'
         },
         table: {
           name: 'Name',
@@ -20,12 +22,15 @@ export default {
           filenameSuffix: 'Filename Suffix'
         },
         notice: {
-          onlyDeleteMy: 'Only self created templates can be deleted'
+          onlyDeleteMy: 'Only self created templates can be deleted',
+          choseGroup: 'Please select a template group first'
         },
         validate: {
           templateType: 'Please enter template type',
           name: 'Please enter name',
-          remark: 'Please enter remark'
+          remark: 'Please enter remark',
+          seq: 'Please enter seq',
+          templateGroup: 'Please enter template group'
         }
       }
     }

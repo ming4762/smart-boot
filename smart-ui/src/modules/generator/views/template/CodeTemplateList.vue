@@ -1,6 +1,9 @@
 <template>
   <div id="codeTemplateContainer" class="code-container full-height">
     <a-layout class="full-height">
+      <a-layout-sider theme="light" style="margin-right: 5px" width="200px">
+        <TemplateGroup @change="handleGroupChange" />
+      </a-layout-sider>
       <a-layout-content class="full-height">
         <div class="full-height" style="padding: 5px; background: white">
           <vxe-grid
@@ -134,6 +137,7 @@ import ApiService from '@/common/utils/ApiService'
 import { vueRelateUserGroup, vueLoadData, vueAddEdit } from './CodeTemplateSupport'
 
 import TemplateSetUserGroup from './components/TemplateSetUserGroup.vue'
+import TemplateGroup from './components/TemplateGroup.vue'
 import { getCurrentUserId, getUserRole, isSuperAdmin } from '@/common/auth/AuthUtils'
 import { TemplateType as templateTypeConstants } from '@/modules/generator/constants/DatabaseConstants'
 import dayjs from 'dayjs'
@@ -148,7 +152,8 @@ export default defineComponent({
   components: {
     Codemirror,
     DownOutlined,
-    TemplateSetUserGroup
+    TemplateSetUserGroup,
+    TemplateGroup
   },
   setup () {
     const gridRef = ref({} as VxeTableInstance)
@@ -157,8 +162,9 @@ export default defineComponent({
     const relateUserGroupVue = vueRelateUserGroup()
     // 数据加载支持
     const loadDataVue = vueLoadData()
-    const addEditVue = vueAddEdit(loadDataVue.loadData, t)
+    const addEditVue = vueAddEdit(loadDataVue.loadData, t, loadDataVue.groupIdRef)
     const sizeConfigHoops = SizeConfigHoops()
+
     /**
      * 操作点击
      */
@@ -340,6 +346,7 @@ export default defineComponent({
 
 <style lang="less" scoped>
 .code-container {
+  padding: 10px;
   ::v-deep(.ant-modal-content) {
     height: 100%;
   }

@@ -46,6 +46,11 @@ const initialize = (props) => {
       coder.setOption('mode', mode.value)
     }
   })
+  watch(readOnly, () => {
+    if (coder) {
+      coder.setOption('readOnly', readOnly.value)
+    }
+  })
   return {
     textareaRef,
     getCode: () => {

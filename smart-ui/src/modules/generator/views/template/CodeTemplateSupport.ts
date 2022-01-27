@@ -1,7 +1,8 @@
-import { onMounted, reactive, ref } from 'vue'
+import {onMounted, reactive, Ref, ref} from 'vue'
 import ApiService from '@/common/utils/ApiService'
 import { extensionLanguageMap } from '@/modules/generator/views/codeCreate/CodeCreateSupport'
 import { errorMessage } from '@/components/notice/SystemNotice'
+import {message} from "ant-design-vue";
 
 /**
  * 关联用户组
@@ -63,12 +64,14 @@ export const vueLoadData = () => {
   const searchModel = reactive({
     name: ''
   })
+  const groupIdRef = ref<any>('')
   // 分页信息
   const tablePage = reactive({
     total: 0,
     currentPage: 1,
     pageSize: 500
   })
+
   /**
    * 加载表格数据函数
    */
@@ -79,7 +82,8 @@ export const vueLoadData = () => {
       page: tablePage.currentPage,
       parameter: {
         'name@like': searchModel.name,
-        QUERY_CREATE_UPDATE_USER: true
+        QUERY_CREATE_UPDATE_USER: true,
+        'groupId@=': groupIdRef.value
       }
     }
     try {
@@ -91,6 +95,14 @@ export const vueLoadData = () => {
     } finally {
       tableDataLoading.value = false
     }
+  }
+  /**
+   * 分组变更触发函数
+   * @param id
+   */
+  const handleGroupChange = (id: any) => {
+    groupIdRef.value = id
+    loadData()
   }
   /**
    * 分页触发事件
@@ -107,7 +119,9 @@ export const vueLoadData = () => {
     searchModel,
     loadData,
     tablePage,
-    handlePageChange
+    handlePageChange,
+    handleGroupChange,
+    groupIdRef
   }
 }
 
@@ -117,7 +131,7 @@ const defaultSaveModel = {
   filenameSuffix: ''
 }
 
-export const vueAddEdit = (loadData: any, t: Function) => {
+export const vueAddEdit = (loadData: any, t: Function, groudIdRef: Ref) => {
   const addEditModalVisible = ref(false)
   const currentRow = ref<any>({})
   const isAdd = ref(true)
@@ -188,6 +202,10 @@ export const vueAddEdit = (loadData: any, t: Function) => {
     isAdd,
     isShow,
     handleShowAdd () {
+      if ((!groudIdRef.value) || groudIdRef.value === '') {
+        message.warn(t('generator.views.template.notice.choseGroup'))
+        return false
+      }
       isShow.value = false
       isAdd.value = true
       addEditModalVisible.value = true

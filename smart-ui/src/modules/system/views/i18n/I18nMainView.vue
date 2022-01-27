@@ -45,6 +45,7 @@ export default defineComponent({
 <style lang="less" scoped>
 .i18n-main-container {
   .i18n-group-container {
+    margin-right: 5px;
   }
   .i18n-container {
     height: 60%;

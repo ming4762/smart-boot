@@ -10,7 +10,9 @@ export default {
           }
         },
         title: {
-          userGroup: '用户组'
+          userGroup: '用户组',
+          templateGroup: '模板分组',
+          seq: '序号'
         },
         table: {
           name: '名称',
@@ -20,12 +22,15 @@ export default {
           filenameSuffix: '文件名后缀'
         },
         notice: {
-          onlyDeleteMy: '只能删除自己创建的模板'
+          onlyDeleteMy: '只能删除自己创建的模板',
+          choseGroup: '请先选择模板分组'
         },
         validate: {
           templateType: '请输入模板类型',
           name: '请输入模板名称',
-          remark: '请输入备注'
+          remark: '请输入备注',
+          seq: '请输入序号',
+          templateGroup: '请输入模板分组'
         }
       }
     }

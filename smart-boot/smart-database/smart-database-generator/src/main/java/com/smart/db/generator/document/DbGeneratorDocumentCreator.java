@@ -55,8 +55,8 @@ public class DbGeneratorDocumentCreator {
                 new DocumentVO("relatedColumn", "关联字段（用户select-table等）", "String", null, null, true),
                 new DocumentVO("modelClassImportList", "引入的类型", "List<String>", null, null, false),
                 new DocumentVO("codePageConfigList", "页面配置信息", "List<Object>", null, null, false, createPageConfigDocument()),
-                new DocumentVO("codeFormConfigList", "表单配置信息", "List<Object>", null, null, false),
-                new DocumentVO("codeSearchConfigList", "搜索form配置信息", "List<Object>", null, null, false),
+                new DocumentVO("codeFormConfigList", "表单配置信息", "List<Object>", null, null, false, createFormConfigDocument()),
+                new DocumentVO("codeSearchConfigList", "搜索form配置信息", "List<Object>", null, null, false, createSearchConfigDocument()),
                 new DocumentVO("leftButtonList", "左侧按钮配置信息", "List<String>", null, null, false),
                 new DocumentVO("rightButtonList", "右侧按钮配置信息", "List<String>", null, null, false),
                 new DocumentVO("rowButtonList", "行按钮配置信息", "List<String>", null, null, false)
@@ -70,12 +70,18 @@ public class DbGeneratorDocumentCreator {
     private static List<DocumentVO> createPageConfigDocument() {
         List<DocumentVO> documentList = Lists.newArrayList(
                 new DocumentVO("idAnnotation", "是否使用ID注解（mybatis）", "Boolean", null, "false", false),
-                new DocumentVO("typeName", "类型", "String", null, null, false),
-                new DocumentVO("columnSize", "宽度", "number", null, null, false),
-                new DocumentVO("typeName", "类型", "String", null, null, false),
-                new DocumentVO("typeName", "类型", "String", null, null, false),
-                new DocumentVO("typeName", "类型", "String", null, null, false),
-                new DocumentVO("typeName", "类型", "String", null, null, false)
+                new DocumentVO("remarks", "表备注", "String", null, null, true),
+                new DocumentVO("title", "标题", "String", null, null, false),
+                new DocumentVO("sortable", "是否可排序", "Boolean", null, "false", false),
+                new DocumentVO("fixed", "冻结列", "String", Lists.newArrayList("right", "left"), null, true),
+                new DocumentVO("width", "列宽度", "number", null, null, false),
+                new DocumentVO("align", "列对齐方式", "String", Lists.newArrayList("left", "center", "right"), null, false),
+
+                new DocumentVO("resizable", "列宽度是否可调", "Boolean", null, "false", false),
+                new DocumentVO("visible", "是否渲染到页面", "Boolean", null, null, false),
+                new DocumentVO("hidden", "是否隐藏", "Boolean", null, null, false),
+                new DocumentVO("editable", "是否可编辑", "Boolean", null, null, false),
+                new DocumentVO("format", "格式化", "String", null, null, true)
         );
         documentList.addAll(createConfigCommonDocument());
         return documentList;
@@ -93,6 +99,19 @@ public class DbGeneratorDocumentCreator {
         documentList.addAll(createFormConfigCommonDocument());
         return documentList;
     }
+
+    /**
+     * 创建搜索配置
+     * @return 搜索配置
+     */
+    private static List<DocumentVO> createSearchConfigDocument() {
+        List<DocumentVO> documentList = Lists.newArrayList(
+                new DocumentVO("selectTable", "下拉表格配置，参考表格配置信息", "Object", null, null, true)
+        );
+        documentList.addAll(createFormConfigCommonDocument());
+        return documentList;
+    }
+
 
     /**
      * 创建表单配置文件（添加修改表单、搜索表单 通用）

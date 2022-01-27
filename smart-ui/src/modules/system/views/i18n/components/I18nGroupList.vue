@@ -187,7 +187,7 @@ export default defineComponent({
       emit('change', id)
     }
 
-    const handleMenuClick = (ident: string, groupId: number, event) => {
+    const handleMenuClick = (ident: string, groupId: number, event: Event) => {
       event.preventDefault()
       switch (ident) {
         case 'edit': {
