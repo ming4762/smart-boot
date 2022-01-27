@@ -9,6 +9,13 @@ export default {
     },
     main: {
       account: {
+        userAccount: {
+          title: 'User account'
+        },
+        initPassword: {
+          noticeTitle: 'Please change the password!',
+          noticeDesc: 'The password is the initialization password. Please change the password as soon as possible'
+        },
         changePassword: {
           title: 'Change password',
           oldPassword: 'Old password',

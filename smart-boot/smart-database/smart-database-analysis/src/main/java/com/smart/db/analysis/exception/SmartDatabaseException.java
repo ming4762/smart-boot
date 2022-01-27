@@ -3,7 +3,6 @@ package com.smart.db.analysis.exception;
 import com.smart.db.analysis.constants.ExceptionConstant;
 
 /**
- * TODO：支持I18N
  * @author shizhongming
  * 2020/1/19 8:21 下午
  */

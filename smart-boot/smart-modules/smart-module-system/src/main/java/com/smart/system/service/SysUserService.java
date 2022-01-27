@@ -1,6 +1,6 @@
 package com.smart.system.service;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.smart.crud.service.BaseService;
 import com.smart.system.constants.FunctionTypeEnum;
 import com.smart.system.model.SysFunctionPO;
@@ -89,19 +89,11 @@ public interface SysUserService extends BaseService<SysUserPO> {
      */
     List<SysUserPO> listUserByRoleId(List<Long> roleIdList);
 
-    /**
-     * 更改密码
-     * @param password 密码
-     * @param userId 用户ID
-     * @return 是否修改成功
-     */
-    boolean changePassword(@NonNull Long userId, @NonNull String password);
-
 
     /**
      * 查询用户列表带账号信息
      * @param parameter 参数
      * @return 用户列表
      */
-    List<SysUserWthAccountBO> listUserWithAccount(LambdaQueryWrapper<SysUserPO> parameter);
+    List<SysUserWthAccountBO> listUserWithAccount(QueryWrapper<SysUserPO> parameter);
 }

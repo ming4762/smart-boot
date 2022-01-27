@@ -1,15 +1,18 @@
 package com.smart.system.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.smart.auth.core.i18n.AuthI18nMessage;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.auth.core.utils.AuthUtils;
 import com.smart.auth.extensions.jwt.resolver.JwtResolver;
 import com.smart.auth.extensions.jwt.store.CacheJwtStore;
+import com.smart.commons.core.exception.SystemException;
 import com.smart.commons.core.i18n.I18nException;
 import com.smart.commons.core.log.Log;
 import com.smart.commons.core.log.LogOperationTypeEnum;
 import com.smart.commons.core.message.Result;
 import com.smart.system.model.SysUserPO;
+import com.smart.system.pojo.dbo.SysUserWthAccountBO;
 import com.smart.system.pojo.dto.ChangePasswordDTO;
 import com.smart.system.pojo.dto.auth.OfflineDTO;
 import com.smart.system.pojo.dto.auth.OnlineUserQueryDTO;
@@ -45,7 +48,7 @@ public class SysAuthController {
 
     private final SysUserService sysUserService;
 
-    private final SysUserAccountService sysAuthUserService;
+    private final SysUserAccountService sysUserAccountService;
 
     private final CacheJwtStore cacheJwtStore;
 
@@ -54,7 +57,7 @@ public class SysAuthController {
     public SysAuthController(SysUserService sysUserService, CacheJwtStore cacheJwtStore, SysUserAccountService sysAuthUserService, JwtResolver jwtResolver) {
         this.sysUserService = sysUserService;
         this.cacheJwtStore = cacheJwtStore;
-        this.sysAuthUserService = sysAuthUserService;
+        this.sysUserAccountService = sysAuthUserService;
         this.jwtResolver = jwtResolver;
     }
 
@@ -83,7 +86,7 @@ public class SysAuthController {
         if (!StringUtils.equals(parameter.getOldPassword(), oldPassword)) {
             throw new I18nException(AuthI18nMessage.PASSWORD_CHANGE_OLD_PASSWORD_ERROR);
         }
-        this.sysUserService.changePassword(AuthUtils.getNonNullCurrentUserId(), parameter.getNewPassword());
+        this.sysUserAccountService.changePassword(AuthUtils.getNonNullCurrentUserId(), parameter.getNewPassword());
         // 删除用户登录状态
         this.cacheJwtStore.invalidateByUsername(AuthUtils.getNonNullCurrentUser().getUsername());
         return Result.success(true);
@@ -97,7 +100,7 @@ public class SysAuthController {
     @ApiOperation(value = "查询所有在线用户")
     public Result<List<SysOnlineUserVO>> listOnlineUser(@RequestBody OnlineUserQueryDTO parameter) {
         Set<String> tokens = parameter.getUsername() == null ? this.cacheJwtStore.listAll() : this.cacheJwtStore.listAll(parameter.getUsername());
-        return Result.success(this.sysAuthUserService.listOnlineUser(tokens));
+        return Result.success(this.sysUserAccountService.listOnlineUser(tokens));
     }
 
     @PostMapping("auth/offline")
@@ -113,5 +116,24 @@ public class SysAuthController {
             return Result.success(this.cacheJwtStore.invalidateByUsername(parameter.getUsername()));
         }
         return Result.success(false);
+    }
+
+    /**
+     * 是否是初始化密码
+     * @return 是否是初始化密码
+     */
+    @PostMapping("auth/isInitialPassword")
+    @ApiOperation(value = "是否是初始化密码")
+    public Result<Boolean> isInitialPassword() {
+        List<SysUserWthAccountBO> userList = this.sysUserService.listUserWithAccount(
+                new QueryWrapper<SysUserPO>()
+                        .eq("A.user_id", AuthUtils.getNonNullCurrentUserId())
+        );
+        if (userList.isEmpty()) {
+            // todo:国际化
+            throw new SystemException("系统发生未知错误，未找到人员信息");
+        }
+        Boolean initPassword = userList.get(0).getInitialPasswordYn();
+        return Result.success(initPassword == null || Boolean.TRUE.equals(initPassword));
     }
 }

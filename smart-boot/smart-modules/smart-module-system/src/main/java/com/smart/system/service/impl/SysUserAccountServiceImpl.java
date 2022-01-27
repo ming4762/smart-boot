@@ -1,8 +1,11 @@
 package com.smart.system.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.auth.extensions.jwt.resolver.JwtResolver;
 import com.smart.crud.service.BaseServiceImpl;
+import com.smart.system.constants.UserAccountStatusEnum;
 import com.smart.system.mapper.SysUserAccountMapper;
 import com.smart.system.mapper.SysUserMapper;
 import com.smart.system.model.SysUserAccountPO;
@@ -11,8 +14,11 @@ import com.smart.system.pojo.vo.SysOnlineUserVO;
 import com.smart.system.service.SysUserAccountService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -66,5 +72,47 @@ public class SysUserAccountServiceImpl extends BaseServiceImpl<SysUserAccountMap
             }
             return onlineUser;
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public SysUserAccountPO createInitUserAccount(@NonNull Long userId) {
+        SysUserAccountPO userAccount = new SysUserAccountPO();
+        userAccount.setUserId(userId);
+        userAccount.setLoginFailTime(0);
+        userAccount.setAccountStatus(UserAccountStatusEnum.NORMAL);
+        userAccount.setInitialPasswordYn(true);
+        userAccount.setCreateTime(LocalDateTime.now());
+        return userAccount;
+    }
+
+    /**
+     * 更改密码
+     * @param password 密码
+     * @param userId 用户ID
+     * @return 是否修改成功
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean changePassword(@NonNull Long userId, @NonNull String password) {
+        // 获取账户信息
+        SysUserAccountPO userAccount = this.getById(userId);
+        if (userAccount == null) {
+            userAccount = this.createInitUserAccount(userId);
+            userAccount.setInitialPasswordYn(false);
+            this.save(userAccount);
+        }
+        if (Boolean.TRUE.equals(userAccount.getInitialPasswordYn())) {
+            this.update(
+                    new UpdateWrapper<SysUserAccountPO>().lambda()
+                    .set(SysUserAccountPO :: getInitialPasswordYn, Boolean.FALSE)
+                    .eq(SysUserAccountPO :: getUserId, userId)
+            );
+        }
+        // 更新密码
+        return SqlHelper.retBool(this.sysUserMapper.update(null,
+                new UpdateWrapper<SysUserPO>().lambda()
+                        .set(SysUserPO :: getPassword, password)
+                        .eq(SysUserPO :: getUserId, userId)
+        ));
     }
 }

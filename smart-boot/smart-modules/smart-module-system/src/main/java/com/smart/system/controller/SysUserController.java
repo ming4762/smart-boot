@@ -200,23 +200,7 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
         return Result.success(this.service.listUserByRoleId(roleIdList));
     }
 
-    /**
-     * 是否是初始化密码
-     * @return 是否是初始化密码
-     */
-    @PostMapping("isInitialPassword")
-    @ApiOperation(value = "是否是初始化密码")
-    public Result<Boolean> isInitialPassword() {
-        List<SysUserWthAccountBO> userList = this.service.listUserWithAccount(
-                new QueryWrapper<SysUserPO>().lambda()
-                        .eq(SysUserPO :: getUserId, AuthUtils.getNonNullCurrentUserId())
-        );
-        if (userList.isEmpty()) {
-            // todo:国际化
-            throw new SystemException("未找到登录用户");
-        }
-        return Result.success(userList.get(0).getInitialPasswordYn());
-    }
+
 
     /**
      * 设置启用状态

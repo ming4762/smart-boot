@@ -55,6 +55,7 @@ import { useI18n } from 'vue-i18n'
 import { RouteLocationNormalized, Router, useRoute, useRouter } from 'vue-router'
 
 import { ReloadOutlined } from '@ant-design/icons-vue'
+import { notification } from 'ant-design-vue'
 
 import defaultSettings from '@/config/defaultSetting'
 import { TOGGLE_MOBILE_TYPE } from '@/modules/system/store/mutation-types'
@@ -67,6 +68,8 @@ import SettingDrawer from './SettingDrawer/SettingDrawer'
 
 import './BasicLayout.less'
 import TreeUtils from '@/common/utils/TreeUtils'
+
+import ApiService from '@/common/utils/ApiService'
 
 const MobileVueSupport = (collapsed: Ref<boolean>) => {
   const store = useStore()
@@ -198,6 +201,19 @@ export default defineComponent({
     // TODO:不显示tab，以下代码无意义，如何优化？
     const tabsVue = tabsVueSupport(store, route, router)
 
+    onMounted(async () => {
+      try {
+        const result = await ApiService.postAjax('auth/isInitialPassword')
+        if (result === true) {
+          notification.warning({
+            message: i18nRender('system.main.account.initPassword.noticeTitle'),
+            description: i18nRender('system.main.account.initPassword.noticeDesc')
+          })
+        }
+      } catch (e) {
+        console.error(e)
+      }
+    })
     return {
       ...mobileVue,
       ...collapsedVue,

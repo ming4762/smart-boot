@@ -28,7 +28,6 @@ public class CorsFilter implements Filter {
         response.setHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, HttpHeaders.CONTENT_DISPOSITION);
         //许跨域携带cookie
         response.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, Boolean.TRUE.toString());
-//        response.setHeader("XDomainRequestAllowed", "1");
         chain.doFilter(request, response);
     }
 

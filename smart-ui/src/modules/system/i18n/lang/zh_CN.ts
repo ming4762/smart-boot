@@ -9,6 +9,13 @@ export default {
     },
     main: {
       account: {
+        userAccount: {
+          title: '账号信息'
+        },
+        initPassword: {
+          noticeTitle: '请修改密码！',
+          noticeDesc: '密码为初始化密码，请尽快修改密码'
+        },
         changePassword: {
           title: '修改密码',
           oldPassword: '原密码',

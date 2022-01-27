@@ -7,8 +7,9 @@
       </span>
       <template #overlay>
         <a-menu class="ant-pro-drop-down menu" :selected-keys="[]" @click="handleAction">
-          <a-menu-item v-if="menu" key="center">
-            用户
+          <a-menu-item v-if="menu" key="userAccount">
+            <UserOutlined />
+            {{ $t('system.main.account.userAccount.title') }}
           </a-menu-item>
           <a-menu-item key="changePassword">
             <LockOutlined />
@@ -49,7 +50,7 @@ import {defineComponent, PropType, createVNode, ref, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { Modal, message } from 'ant-design-vue'
-import { LogoutOutlined, ExclamationCircleOutlined, LockOutlined } from '@ant-design/icons-vue'
+import { LogoutOutlined, ExclamationCircleOutlined, LockOutlined, UserOutlined } from '@ant-design/icons-vue'
 
 import ApiService from '@/common/utils/ApiService'
 import { createPassword, getCurrentUser } from '@/common/auth/AuthUtils'
@@ -162,7 +163,8 @@ export default defineComponent({
   name: 'AvatarDropdown',
   components: {
     LogoutOutlined,
-    LockOutlined
+    LockOutlined,
+    UserOutlined
   },
   props: {
     currentUser: {
@@ -190,6 +192,10 @@ export default defineComponent({
         }
         case 'changePassword': {
           this.handleShowPasswordModal()
+          break
+        }
+        case 'userAccount': {
+          message.warn('开发中')
           break
         }
       }
