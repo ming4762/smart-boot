@@ -215,7 +215,7 @@ export const vueAddEdit = (loadData: any) => {
           modalVisible.value = false
         } catch (e) {
           // TODO:待处理
-          console.error(e)
+          errorMessage(e)
         } finally {
           saveLoading.value = false
         }

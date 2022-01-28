@@ -18,7 +18,7 @@ public class MobileValidator implements ConstraintValidator<Mobile, String> {
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        if (StringUtils.hasText(value)) {
+        if (!StringUtils.hasText(value)) {
             return true;
         }
         return ValidatorUtils.checkMobile(value);
