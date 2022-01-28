@@ -110,9 +110,13 @@ public class KettleActuator {
             ) {
         Trans trans = new Trans(transMeta);
         // 设置变量
-        variableMap.forEach(trans::setVariable);
+        variableMap.forEach((key, value) -> {
+            trans.setVariable(key, value);
+            transMeta.setVariable(key, value);
+        });
         // 设置命名参数
         for (Map.Entry<String, String> entry : parameter.entrySet()) {
+            transMeta.setParameterValue(entry.getKey(), entry.getValue());
             trans.setParameterValue(entry.getKey(), entry.getValue());
         }
 
@@ -179,10 +183,14 @@ public class KettleActuator {
             Consumer<Job> beforeHandler
     ) {
         Job job = new Job(repository, jobMeta);
-        params.forEach(jobMeta :: setVariable);
+        params.forEach((key, value) -> {
+            jobMeta.setVariable(key, value);
+            job.setVariable(key, value);
+        });
         // 设置命名参数
         for (Map.Entry<String, String> entry : parameterMap.entrySet()) {
             jobMeta.setParameterValue(entry.getKey(), entry.getValue());
+            job.setParameterValue(entry.getKey(), entry.getValue());
         }
         job.setLogLevel(logLevel);
         if (beforeHandler != null) {
