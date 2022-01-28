@@ -31,4 +31,10 @@ public @interface Log {
      * @return 是否保存返回值
      */
     boolean saveResult() default false;
+
+    /**
+     * 是否保存参数
+     * @return 是否保存参数
+     */
+    boolean saveParameter() default true;
 }

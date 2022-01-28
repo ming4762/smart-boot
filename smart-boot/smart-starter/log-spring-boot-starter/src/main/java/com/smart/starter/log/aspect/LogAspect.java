@@ -189,14 +189,12 @@ public final class LogAspect {
         // 请求的方法名
         final String className = point.getTarget().getClass().getName();
         final String methodName = signature.getName();
-        // 设置请求参数
-        String parameter = JsonUtils.toJsonString(this.getParameter(point));
+
         final SysLog sysLog = SysLog.builder()
                 .operation(logAnnotation.value())
                 .useTime(time)
                 .method(String.join(".", className, methodName))
                 .ip(IpUtils.getIpAddress())
-                .params(parameter)
                 .requestPath(((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest().getServletPath())
                 .statusCode(code)
                 .errorMessage(errorMessage)
@@ -206,6 +204,11 @@ public final class LogAspect {
                 // todo：待处理
                 .platform(null)
                 .build();
+        if (logAnnotation.saveParameter()) {
+            // 设置请求参数
+            String parameter = JsonUtils.toJsonString(this.getParameter(point));
+            sysLog.setParams(parameter);
+        }
         if (logAnnotation.saveResult() && Objects.nonNull(result)) {
             sysLog.setResult(JsonUtils.toJsonString(result));
         }

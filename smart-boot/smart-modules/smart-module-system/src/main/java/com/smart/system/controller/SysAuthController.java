@@ -67,7 +67,7 @@ public class SysAuthController {
      * @return 是否更改成功
      */
     @PostMapping("auth/changePassword")
-    @Log(value = "更新密码", type = LogOperationTypeEnum.UPDATE)
+    @Log(value = "更新密码", type = LogOperationTypeEnum.UPDATE, saveParameter = false, saveResult = true)
     @ApiOperation(value = "更改密码")
     public Result<Boolean> changePassword(@NonNull @RequestBody @Valid ChangePasswordDTO parameter) {
         // 验证密码是否一致
