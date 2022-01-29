@@ -416,19 +416,19 @@ export default defineComponent({
       rowButtonTypeList: [
         {
           label: this.$t('generator.views.code.title.rowButtonType.none'),
-          value: 'none'
+          value: 'NONE'
         },
         {
           label: this.$t('generator.views.code.title.rowButtonType.single'),
-          value: 'single'
+          value: 'SINGLE'
         },
         {
           label: this.$t('generator.views.code.title.rowButtonType.more'),
-          value: 'more'
+          value: 'MORE'
         },
         {
           label: this.$t('generator.views.code.title.rowButtonType.text'),
-          value: 'text'
+          value: 'TEXT'
         }
       ],
       tableAttrs: {

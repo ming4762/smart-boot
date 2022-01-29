@@ -55,7 +55,7 @@ public class DbCodePageConfigPO extends BaseModelUserTime {
 
     private Boolean sortable;
 
-    private Boolean fixed;
+    private String fixed;
 
     private String width;
 

@@ -38,6 +38,8 @@ public class DbGeneratorDocumentCreator {
         return Lists.newArrayList(
                 new DocumentVO("configName", "配置名称", "String", null, null, false),
 
+                new DocumentVO("idField", "主键字段配置信息", "Object", null, null, true, createPageConfigDocument()),
+
                 new DocumentVO("className", "类名", "String", null, null, false),
                 new DocumentVO("tableName", "数据库表名称", "String", null, null, false),
                 new DocumentVO("type", "数据库类型", "String", null, null, false),

@@ -5,5 +5,7 @@ export const extensionLanguageMap: any = {
   'text/x-java': 'java',
   xml: 'xml',
   javascript: 'js',
-  html: 'html'
+  html: 'html',
+  'text/x-vue': 'vue',
+  typescript: 'ts'
 }

@@ -44,7 +44,8 @@ export default {
       confirmSave: 'Are you sure you want to save?',
       deleteConfirm: 'Are you sure you want to delete?',
       deleteChoose: 'Please select the data to delete',
-      select: 'Please select'
+      select: 'Please select',
+      choseOne: 'Please select a row of data'
     },
     message: {
       saveSuccess: 'Saved successfully',

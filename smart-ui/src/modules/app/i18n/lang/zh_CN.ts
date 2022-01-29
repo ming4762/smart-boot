@@ -44,7 +44,8 @@ export default {
       saveConfirm: '确定要保存吗？',
       deleteConfirm: '确定要删除吗？',
       deleteChoose: '请选择要删除的数据',
-      select: '请选择'
+      select: '请选择',
+      choseOne: '请选择一行数据'
     },
     message: {
       saveSuccess: '保存成功',

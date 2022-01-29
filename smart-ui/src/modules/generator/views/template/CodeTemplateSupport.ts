@@ -2,7 +2,7 @@ import {onMounted, reactive, Ref, ref} from 'vue'
 import ApiService from '@/common/utils/ApiService'
 import { extensionLanguageMap } from '@/modules/generator/views/codeCreate/CodeCreateSupport'
 import { errorMessage } from '@/components/notice/SystemNotice'
-import {message} from "ant-design-vue";
+import { message } from 'ant-design-vue'
 
 /**
  * 关联用户组
@@ -156,13 +156,15 @@ export const vueAddEdit = (loadData: any, t: Function, groudIdRef: Ref) => {
         // 获取代码内容
         const template = codemirror.value.getCode()
         const saveModel = Object.assign({}, formModel.value, {
-          template
+          template,
+          groupId: groudIdRef.value
         })
         saveLoading.value = true
         try {
           await ApiService.postAjax('db/code/template/saveUpdate', saveModel)
         } catch (e) {
           errorMessage(e)
+          return false
         } finally {
           saveLoading.value = false
         }

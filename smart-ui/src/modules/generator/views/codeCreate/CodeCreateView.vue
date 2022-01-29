@@ -1,17 +1,17 @@
 <template>
   <div class="full-height" style="padding: 10px; height: 100%">
     <div style="padding-bottom: 6px">
-      <a-button @click="handleDownloadAll" type="primary">下载全部</a-button>
+      <a-button type="primary" @click="handleDownloadAll">下载全部</a-button>
     </div>
     <a-tabs class="code-container">
       <a-tab-pane
         v-for="item in data"
-        :tab="item.templateName"
-        :key="item.templateId">
+        :key="item.templateId"
+        :tab="item.templateName">
         <Codemirror
           read-only
           :mode="item.language"
-          :code="item.code"/>
+          :code="item.code" />
       </a-tab-pane>
     </a-tabs>
   </div>
@@ -26,6 +26,8 @@ import ApiService from '@/common/utils/ApiService'
 import FileUtils from '@/common/utils/FileUtils'
 
 import { extensionLanguageMap } from './CodeCreateSupport'
+
+import { errorMessage } from '@/components/notice/SystemNotice'
 
 /**
  * 代码生成页面
@@ -47,6 +49,8 @@ export default defineComponent({
         data.value = await ApiService.postAjax('db/code/main/createCode', Object.assign({}, attrs, {
           templateIdList: attrs.templateIdList.split(',')
         }))
+      } catch (e) {
+        errorMessage(e)
       } finally {
         dataLoading.value = false
       }

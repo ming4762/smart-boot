@@ -41,6 +41,11 @@ public class DbTemplateCodeTableDTO extends DbCodeMainPO {
     private Boolean hasId;
 
     /**
+     * ID字段信息
+     */
+    private DbCodePageConfigTemplateVO idField;
+
+    /**
      * 关联字段（用户select-table等）
      */
     private String relatedColumn;

@@ -120,7 +120,7 @@ export default {
       tableSetting: {
         title: {
           title: 'Title',
-          sortable: 'Fortable',
+          sortable: 'Sortable',
           fixed: 'Fixed',
           width: 'Width',
           align: 'Align',

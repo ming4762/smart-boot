@@ -634,6 +634,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
             primaryKeyList.get(0).setIdAnnotation(true);
             // 设置有主键
             dbTemplateCodeTable.setHasId(true);
+            dbTemplateCodeTable.setIdField(primaryKeyList.get(0));
         }
         // 2、处理实体类引入列表，部分实体类属性类型对应的CLASS需要单独引入
         dbTemplateCodeTable.setModelClassImportList(

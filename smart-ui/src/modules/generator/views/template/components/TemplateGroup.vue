@@ -70,7 +70,7 @@ const handleLoadData = async () => {
     return result.concat(await ApiService.postAjax('db/code/template/listGroup') || [])
   } catch (e) {
     errorMessage(e)
-    return false
+    throw e
   }
 }
 
@@ -118,7 +118,7 @@ export default defineComponent({
       paging: false
     })
     // 编辑
-    const { modalProps, handleAddEdit, spinning, formProps, formRef } = useAddEdit(handleGet, loadData, handleSaveUpdate, t, {
+    const { modalProps, handleAddEdit, spinning, formProps, formRef } = useAddEdit(gridRef, handleGet, loadData, handleSaveUpdate, t, {
       defaultModel: {
         seq: 1
       }
@@ -178,7 +178,7 @@ export default defineComponent({
     }
   },
   methods: {
-    handleChange ({ row }) {
+    handleChange ({ row }: any) {
       this.$emit('change', row.groupId)
     }
   }

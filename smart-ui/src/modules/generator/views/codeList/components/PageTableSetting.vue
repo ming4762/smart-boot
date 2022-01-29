@@ -14,7 +14,10 @@
         <a-checkbox v-model:checked="row.sortable" :size="formSizeConfig" />
       </template>
       <template #table-fixed="{ row }">
-        <a-checkbox v-model:checked="row.fixed" :size="formSizeConfig" />
+        <a-select v-model:value="row.fixed" :size="formSizeConfig" style="width: 100px">
+          <a-select-option value="left">left</a-select-option>
+          <a-select-option value="right">right</a-select-option>
+        </a-select>
       </template>
       <template #table-resizable="{ row }">
         <a-checkbox v-model:checked="row.resizable" :size="formSizeConfig" />
@@ -233,7 +236,7 @@ export default defineComponent({
         {
           title: '{generator.views.tableSetting.title.fixed}',
           field: 'fixed',
-          width: 80,
+          width: 120,
           slots: {
             default: 'table-fixed'
           }
@@ -289,15 +292,15 @@ export default defineComponent({
             default: 'table-editable',
             header: 'table-editable-header'
           }
-        },
-        {
-          title: '{generator.views.tableSetting.title.format}',
-          field: 'format',
-          width: 120,
-          slots: {
-            default: 'table-format'
-          }
         }
+        // {
+        //   title: '{generator.views.tableSetting.title.format}',
+        //   field: 'format',
+        //   width: 120,
+        //   slots: {
+        //     default: 'table-format'
+        //   }
+        // }
       ]
     }
   }
