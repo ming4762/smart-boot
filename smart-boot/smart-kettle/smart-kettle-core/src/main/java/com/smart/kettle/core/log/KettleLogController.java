@@ -226,7 +226,6 @@ public class KettleLogController {
      * @return DatabaseMeta
      */
     private DatabaseMeta createLogDbMeta() {
-        Assert.notNull(this.logDatabaseProperties.getDb(), "请配置kettle日志数据库信息");
         DatabaseMeta databaseMeta = new DatabaseMeta();
         databaseMeta.setName(StringUtils.isBlank(this.logDatabaseProperties.getName()) ? LogDatabaseProperties.DEFAULT_DB_NAME : this.logDatabaseProperties.getName());
         databaseMeta.setDatabaseType(this.logDatabaseProperties.getType());
