@@ -7,6 +7,7 @@ import com.smart.auth.core.service.AuthCache;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 
 import java.time.Duration;
@@ -23,9 +24,9 @@ public class CacheJwtStoreImpl implements CacheJwtStore {
 
     private static final String JWT_SPLIT_KEY = "&#";
 
-    private static final String TOKE_KEY_PREFIX = "user";
+    private static final String TOKE_KEY_PREFIX = "jwt-token";
 
-    private static final String DATA_KEY_PREFIX = "attribute";
+    private static final String DATA_KEY_PREFIX = "jwt-attribute";
 
     private final AuthProperties authProperties;
 
@@ -80,19 +81,18 @@ public class CacheJwtStoreImpl implements CacheJwtStore {
      * @return jst
      */
     @NonNull
-    protected String getTokenKey(@NonNull String username, String jwt) {
-        List<String> list = Lists.newArrayList(this.authProperties.getPrefix(), TOKE_KEY_PREFIX, username);
-        if (jwt != null) {
-            list.add(jwt);
-        }
+    protected String getTokenKey(String username, String jwt) {
+        List<String> list = Lists.newArrayList(TOKE_KEY_PREFIX, username, jwt)
+                .stream().filter(StringUtils::isNotBlank)
+                .collect(Collectors.toList());
         return String.join(JWT_SPLIT_KEY, list);
     }
 
-    protected String getAttributeKey(@NonNull String username, String jwt) {
-        List<String> list = Lists.newArrayList(this.authProperties.getPrefix(), DATA_KEY_PREFIX, username);
-        if (jwt != null) {
-            list.add(jwt);
-        }
+    protected String getAttributeKey(String username, String jwt) {
+        List<String> list = Lists.newArrayList(DATA_KEY_PREFIX, username, jwt)
+                .stream().filter(StringUtils::isNotBlank)
+                .collect(Collectors.toList());
+
         return String.join(JWT_SPLIT_KEY, list);
     }
 
@@ -121,11 +121,11 @@ public class CacheJwtStoreImpl implements CacheJwtStore {
     @Override
     @NonNull
     public Set<String> listAll() {
-        Set<String> keys = this.authCache.keys();
+        Set<String> keys = this.authCache.matchKeys(this.getTokenKey(null, null));
         if (CollectionUtils.isEmpty(keys)) {
             return new HashSet<>(0);
         }
-        return keys.stream().map(item -> item.split(JWT_SPLIT_KEY)[3]).collect(Collectors.toSet());
+        return keys.stream().map(item -> item.split(JWT_SPLIT_KEY)[2]).collect(Collectors.toSet());
     }
 
     @Override
@@ -135,6 +135,6 @@ public class CacheJwtStoreImpl implements CacheJwtStore {
         if (CollectionUtils.isEmpty(keys)) {
             return new HashSet<>(0);
         }
-        return keys.stream().map(item -> item.split(JWT_SPLIT_KEY)[3]).collect(Collectors.toSet());
+        return keys.stream().map(item -> item.split(JWT_SPLIT_KEY)[2]).collect(Collectors.toSet());
     }
 }

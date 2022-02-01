@@ -69,8 +69,7 @@ public class RedisAuthCache extends AbstractAuthCache<String, Object> {
      */
     @Override
     public Set<String> keys() {
-        // TODO: 待开发
-        return new HashSet<>(0);
+        return this.matchKeys("");
     }
 
 
@@ -89,12 +88,12 @@ public class RedisAuthCache extends AbstractAuthCache<String, Object> {
 
     @Override
     public void matchRemove(@NonNull String matchKey) {
-        this.cacheService.matchDelete(matchKey);
+        this.cacheService.matchDelete(this.getKey(matchKey));
     }
 
     @Override
     public Set<Object> matchGet(@NonNull String matchKey) {
-        List<Object> keys = this.cacheService.matchKeys(matchKey);
+        List<Object> keys = this.cacheService.matchKeys(this.getKey(matchKey));
         if (CollectionUtils.isEmpty(keys)) {
             return new HashSet<>(0);
         }
@@ -107,8 +106,9 @@ public class RedisAuthCache extends AbstractAuthCache<String, Object> {
 
     @Override
     public Set<String> matchKeys(@NonNull String matchKey) {
-        return this.cacheService.matchKeys(matchKey)
-                .stream().map(Object::toString)
+        return this.cacheService.matchKeys(this.getKey(matchKey))
+                .stream()
+                .map(item -> this.getRealKey(item.toString()))
                 .collect(Collectors.toSet());
     }
 }

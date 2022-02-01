@@ -27,28 +27,28 @@ public class GuavaAuthCache extends AbstractAuthCache<String, Object> {
 
     @Override
     public void put(@NonNull String key, @NonNull Object value, Duration timeout) {
-        this.cacheService.put(key, value, timeout);
+        this.cacheService.put(this.getKey(key), value, timeout);
     }
 
     @Override
     public void expire(@NonNull String key, Duration timeout) {
-        this.cacheService.expire(key, timeout);
+        this.cacheService.expire(this.getKey(key), timeout);
     }
 
     @Override
     public Object get(@NonNull String key) {
-        return this.cacheService.get(key);
+        return this.cacheService.get(this.getKey(key));
     }
 
     @Override
     public void remove(@NonNull String key) {
-        this.cacheService.delete(key);
+        this.cacheService.delete(this.getKey(key));
     }
 
     @Override
     public Set<String> keys() {
-        return this.cacheService.keys()
-                .stream().map(Object::toString)
+        return this.cacheService.keys().stream()
+                .map(item -> this.getRealKey(item.toString()))
                 .collect(Collectors.toSet());
     }
 
@@ -61,18 +61,18 @@ public class GuavaAuthCache extends AbstractAuthCache<String, Object> {
     @Override
     @NonNull
     public Set<Object> batchGet(@NonNull Collection<String> keys) {
-        List<Object> cacheList = this.cacheService.batchGet(Collections.singleton(keys));
+        List<Object> cacheList = this.cacheService.batchGet(Collections.singleton(keys.stream().map(this::getKey).collect(Collectors.toList())));
         return cacheList == null ? new HashSet<>(0) : new HashSet<>(cacheList);
     }
 
     @Override
     public void matchRemove(@NonNull String matchKey) {
-        this.cacheService.matchDelete(matchKey);
+        this.cacheService.matchDelete(this.getKey(matchKey));
     }
 
     @Override
     public Set<Object> matchGet(@NonNull String matchKey) {
-        List<Object> keys = this.cacheService.matchKeys(matchKey);
+        List<Object> keys = this.cacheService.matchKeys(this.getKey(matchKey));
         if (CollectionUtils.isEmpty(keys)) {
             return new HashSet<>(0);
         }
@@ -85,8 +85,9 @@ public class GuavaAuthCache extends AbstractAuthCache<String, Object> {
 
     @Override
     public Set<String> matchKeys(@NonNull String matchKey) {
-        return this.cacheService.matchKeys(matchKey)
-                .stream().map(Object::toString)
+        return this.cacheService.matchKeys(this.getKey(matchKey))
+                .stream()
+                .map(item -> this.getRealKey(item.toString()))
                 .collect(Collectors.toSet());
     }
 }
