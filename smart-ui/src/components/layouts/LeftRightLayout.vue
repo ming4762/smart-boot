@@ -1,10 +1,10 @@
 <template>
   <a-layout class="full-height">
     <a-layout-content :style="{ width: computedStyle.left }" class="full-height">
-      <slot/>
+      <slot />
     </a-layout-content>
-    <a-layout-sider :style="{ width: computedStyle.right }" theme="light" class="layout-right">
-      <slot name="right"/>
+    <a-layout-sider :width="computedStyle.right" :style="{ width: computedStyle.right }" theme="light">
+      <slot name="right" />
     </a-layout-sider>
   </a-layout>
 </template>
@@ -55,7 +55,5 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
-.layout-right {
-  margin-left: 5px;
-}
+
 </style>

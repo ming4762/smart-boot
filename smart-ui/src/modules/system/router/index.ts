@@ -64,6 +64,11 @@ const topRouters: Array<RouteRecordRaw> = [
         name: 'system_log',
         path: 'sys/logList',
         component: () => import('@/modules/system/views/log/LogListView.vue')
+      },
+      {
+        name: 'data_dict',
+        path: 'sys/dataDict',
+        component: () => import('@/modules/system/views/dict/dataDict/DataDictListView.vue')
       }
     ]
   }

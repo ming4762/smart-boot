@@ -1,6 +1,8 @@
-import { useVxeTable } from './CrudHooks'
+import { useVxeTable, useAddEdit, useVxeDelete } from './CrudHooks'
 
 export {
-  useVxeTable
+  useVxeTable,
+  useAddEdit,
+  useVxeDelete
 }
 

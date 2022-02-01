@@ -131,18 +131,20 @@ export const useVxeTable = (service: (params: Params, searchParameter: any) => P
 }
 
 type AddEditParameter = {
+  idField?: string
   defaultModel?: any
 }
 
 /**
  * 添加编辑操作
+ * @param gridRef grid 引用
  * @param loadHandler 加载数据函数
  * @param listHandler 查询数据函数
  * @param saveHandler 保存函数
  * @param i18nRender 国际化函数
  * @param parameter 参数
  */
-export const useAddEdit = (loadHandler: Function, listHandler: Function | null, saveHandler: Function, i18nRender: Function, parameter: AddEditParameter = {}) => {
+export const useAddEdit = (gridRef: Ref, loadHandler: (id: any) => Promise<any>, listHandler: Function | null, saveHandler: (model: any) => Promise<void>, i18nRender: Function, parameter: AddEditParameter = {}) => {
   const formRef = ref()
   // 是否是加载状态
   const isAdd = ref(false)
@@ -172,7 +174,7 @@ export const useAddEdit = (loadHandler: Function, listHandler: Function | null, 
     } else {
       try {
         getLoading.value = true
-        addEditModel.value = await loadHandler(id)
+        addEditModel.value = (await loadHandler(id)) || {}
       } catch (e) {
         // doNotiong
       } finally {
@@ -180,6 +182,21 @@ export const useAddEdit = (loadHandler: Function, listHandler: Function | null, 
       }
     }
   }
+
+  /**
+   * 通过checkbox 获取需要编辑的数据
+   */
+  const handleEditByCheckbox = () => {
+    // 获取选中行
+    const selectRows = gridRef.value.getCheckboxRecords()
+    if (selectRows.length !== 1) {
+      message.error(i18nRender('common.notice.choseOne'))
+      return false
+    }
+    console.log(selectRows)
+    handleAddEdit(false, selectRows[0][parameter.idField!])
+  }
+
   /**
    * 保存修改操作
    */
@@ -227,6 +244,7 @@ export const useAddEdit = (loadHandler: Function, listHandler: Function | null, 
     }),
     spinning: getLoading,
     handleAddEdit,
+    handleEditByCheckbox,
     formRef
   }
 }
@@ -239,7 +257,7 @@ type DeleteParameter = {
 /**
  * 删除操作
  */
-export const useVxeDelete = (gridRef: Ref, i18nRender: Function, deleteHandler: Function, parameter: DeleteParameter) => {
+export const useVxeDelete = (gridRef: Ref, i18nRender: Function, deleteHandler: (idList: Array<any>) => Promise<void>, parameter: DeleteParameter) => {
 
   const doDelete = (idList: Array<any>) => {
     Modal.confirm({
@@ -265,7 +283,7 @@ export const useVxeDelete = (gridRef: Ref, i18nRender: Function, deleteHandler: 
       message.error(i18nRender('common.notice.deleteChoose'))
       return false
     }
-    doDelete(selectRows.map(item => item[parameter.idField]))
+    doDelete(selectRows.map((item: any) => item[parameter.idField]))
   }
 
   /**
