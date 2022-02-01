@@ -133,6 +133,7 @@ const defaultSaveModel = {
 
 export const vueAddEdit = (loadData: any, t: Function, groudIdRef: Ref) => {
   const addEditModalVisible = ref(false)
+  const getLoading = ref(false)
   const currentRow = ref<any>({})
   const isAdd = ref(true)
   const isShow = ref(false)
@@ -185,8 +186,20 @@ export const vueAddEdit = (loadData: any, t: Function, groudIdRef: Ref) => {
     isAdd.value = false
     isShow.value = false
     addEditModalVisible.value = true
+    formModel.value = Object.assign({}, defaultSaveModel)
+    if (codemirror.value) {
+      codemirror.value.setCode('')
+    }
     // 加载数据 TODO:加载状态
-    formModel.value = await ApiService.postAjax('db/code/template/getById', id)
+    getLoading.value = true
+    try {
+      formModel.value = await ApiService.postAjax('db/code/template/getById', id)
+    } catch (e) {
+      errorMessage(e)
+      return false
+    } finally {
+      getLoading.value = false
+    }
     codemirror.value.setCode(formModel.value.template)
   }
   /**
@@ -226,6 +239,7 @@ export const vueAddEdit = (loadData: any, t: Function, groudIdRef: Ref) => {
     code,
     extensionLanguageMap: reactive(extensionLanguageMap),
     handleCurrentChange,
-    currentRow
+    currentRow,
+    getLoading
   }
 }

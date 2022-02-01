@@ -201,7 +201,7 @@ export const vueSaveConfigSupport = (t: Function, isSync: Ref, doLoadData: any, 
     })
     if (nonNullField.length > 0) {
       Modal.confirm({
-        title: t('common.notice.saveConfirm'),
+        title: t('common.notice.confirmSave'),
         icon: createVNode(ExclamationCircleOutlined),
         content: t('generator.views.code.message.saveConfirmContent', nonNullField.join(',')),
         onCancel () {

@@ -3,6 +3,8 @@ package com.smart.db.generator.document;
 import com.google.common.collect.Lists;
 import com.smart.commons.core.document.DocumentVO;
 import com.smart.db.generator.constants.FromControlTypeEnum;
+import com.smart.db.generator.constants.RuleTriggerEnum;
+import com.smart.db.generator.constants.RuleTypeEnum;
 
 import java.util.Arrays;
 import java.util.List;
@@ -90,13 +92,29 @@ public class DbGeneratorDocumentCreator {
     }
 
     /**
+     * 创建验证规则文档
+     * @return DocumentVO
+     */
+    private static List<DocumentVO> createFormRuleDocument() {
+        return Lists.newArrayList(
+                new DocumentVO("ruleType", "验证类型", "String", Arrays.stream(RuleTypeEnum.values()).map(Enum::toString).collect(Collectors.toList()), null, false),
+                new DocumentVO("ruleTrigger", "验证时机", "List", Arrays.stream(RuleTriggerEnum.values()).map(Enum::toString).collect(Collectors.toList()), null, false),
+                new DocumentVO("len", "长度", "Long", null, null, true),
+                new DocumentVO("max", "最大值", "Long", null, null, true),
+                new DocumentVO("min", "最小值）", "Long", null, null, true),
+                new DocumentVO("message", "验证失败内容", "String", null, null, false),
+                new DocumentVO("pattern", "正则表达式验证", "String", null, null, true)
+        );
+    }
+
+    /**
      * 创建添加修改表单配置文件
      * @return 添加修改表单文档
      */
     private static List<DocumentVO> createFormConfigDocument() {
         List<DocumentVO> documentList = Lists.newArrayList(
                 new DocumentVO("selectTable", "下拉表格配置，参考表格配置信息", "Object", null, null, true),
-                new DocumentVO("ruleList", "验证规则", "List", null, null, true)
+                new DocumentVO("ruleList", "验证规则", "List", null, null, false, createFormRuleDocument())
         );
         documentList.addAll(createFormConfigCommonDocument());
         return documentList;

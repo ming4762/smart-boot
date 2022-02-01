@@ -73,51 +73,53 @@
       :visible="addEditModalVisible"
       @ok="handleSave"
       @cancel="addEditModalVisible = false">
-      <a-form ref="saveFormRef" class="full-height" :wrapper-col="wrapperCol" :label-col="labelCol" :model="formModel" :rules="formRules">
-        <a-row>
-          <a-col :span="6">
-            <a-form-item :label="$t('generator.views.template.table.templateType')" name="templateType">
-              <a-select v-model:value="formModel.templateType" :size="formSizeConfig" :disabled="isShow" :placeholder="$t('generator.views.template.validate.templateType')">
-                <a-select-option v-for="(value, key) in templateType" :key="key" :value="value.value">
-                  {{ $t(value.label) }}
-                </a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-        </a-row>
-        <a-row>
-          <a-col :span="6">
-            <a-form-item :label="$t('generator.views.template.table.name')" name="name">
-              <a-input v-model:value="formModel.name" :size="formSizeConfig" :disabled="isShow" :placeholder="$t('generator.views.template.validate.name')"></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :span="6">
-            <a-form-item :label="$t('generator.views.template.table.remark')" name="remark">
-              <a-input v-model:value="formModel.remark" :size="formSizeConfig" :disabled="isShow" :placeholder="$t('generator.views.template.validate.remark')"></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :span="6">
-            <a-form-item :label="$t('generator.views.template.table.filenameSuffix')" name="filenameSuffix">
-              <a-input v-model:value="formModel.filenameSuffix" :size="formSizeConfig" :disabled="isShow" placeholder="请输入文件名后缀"></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :span="6">
-            <a-form-item :label="$t('generator.views.template.table.language')">
-              <a-select v-model:value="formModel.language" :size="formSizeConfig" :disabled="isShow">
-                <a-select-option
-                  v-for="(value, key) in extensionLanguageMap"
-                  :key="key"
-                  :value="key">
+      <a-spin style="height: 100%" :spinning="getLoading">
+        <a-form ref="saveFormRef" class="full-height" :wrapper-col="wrapperCol" :label-col="labelCol" :model="formModel" :rules="formRules">
+          <a-row>
+            <a-col :span="6">
+              <a-form-item :label="$t('generator.views.template.table.templateType')" name="templateType">
+                <a-select v-model:value="formModel.templateType" :size="formSizeConfig" :disabled="isShow" :placeholder="$t('generator.views.template.validate.templateType')">
+                  <a-select-option v-for="(value, key) in templateType" :key="key" :value="value.value">
+                    {{ $t(value.label) }}
+                  </a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row>
+            <a-col :span="6">
+              <a-form-item :label="$t('generator.views.template.table.name')" name="name">
+                <a-input v-model:value="formModel.name" :size="formSizeConfig" :disabled="isShow" :placeholder="$t('generator.views.template.validate.name')"></a-input>
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
+              <a-form-item :label="$t('generator.views.template.table.remark')" name="remark">
+                <a-input v-model:value="formModel.remark" :size="formSizeConfig" :disabled="isShow" :placeholder="$t('generator.views.template.validate.remark')"></a-input>
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
+              <a-form-item :label="$t('generator.views.template.table.filenameSuffix')" name="filenameSuffix">
+                <a-input v-model:value="formModel.filenameSuffix" :size="formSizeConfig" :disabled="isShow" placeholder="请输入文件名后缀"></a-input>
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
+              <a-form-item :label="$t('generator.views.template.table.language')">
+                <a-select v-model:value="formModel.language" :size="formSizeConfig" :disabled="isShow">
+                  <a-select-option
+                    v-for="(value, key) in extensionLanguageMap"
+                    :key="key"
+                    :value="key">
                   {{ value }}
-                </a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-        </a-row>
-        <div class="code-edit-container">
-          <Codemirror ref="codemirror" :read-only="isShow" :code="code" :mode="formModel.language" />
-        </div>
-      </a-form>
+                  </a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <div class="code-edit-container">
+            <Codemirror ref="codemirror" :read-only="isShow" :code="code" :mode="formModel.language" />
+          </div>
+        </a-form>
+      </a-spin>
     </a-modal>
   </div>
 </template>
@@ -355,6 +357,9 @@ export default defineComponent({
   }
   ::v-deep(.ant-modal) {
     max-width: 100%;
+  }
+  ::v-deep(.ant-spin-nested-loading) {
+    height: 100%;
   }
 }
 .code-edit-container {
