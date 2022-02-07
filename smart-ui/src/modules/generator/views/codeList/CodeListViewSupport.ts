@@ -24,7 +24,8 @@ const formModelI = {
   leftButtonList: ['SEARCH', 'RESET'],
   rightButtonList: ['ADD', 'EDIT', 'DELETE'],
   rowButtonType: 'NONE',
-  rowButtonList: []
+  rowButtonList: [],
+  i18nPrefix: ''
 }
 
 /**

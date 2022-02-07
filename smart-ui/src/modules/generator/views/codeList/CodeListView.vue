@@ -225,8 +225,8 @@
                   </a-form-item>
                 </a-col>
                 <a-col :span="span">
-                  <a-form-item>
-                    <a-button type="primary" :size="buttonSizeConfig" @click="handleSyncTableData">{{ $t('generator.views.code.button.syncTableData') }}</a-button>
+                  <a-form-item name="i18nPrefix" :label="$t('generator.views.code.title.i18nPrefix')">
+                    <a-input v-model:value="formModel.i18nPrefix" :size="formSize" />
                   </a-form-item>
                 </a-col>
               </a-list-item>
@@ -245,6 +245,13 @@
                     <PlusOutlined :style="{ cursor: 'pointer' }" @click="handleShowChoseAddendumModal" />
                   </a-form-item>
                 </a-col>
+                <a-col :span="span">
+                  <a-form-item>
+                    <a-button type="primary" :size="buttonSizeConfig" @click="handleSyncTableData">{{ $t('generator.views.code.button.syncTableData') }}</a-button>
+                  </a-form-item>
+                </a-col>
+                <a-col :span="span" />
+                <a-col :span="span" />
               </a-list-item>
             </a-list>
           </a-form>
@@ -404,7 +411,8 @@ export default defineComponent({
       formRules: {
         connectionId: [{ required: true, message: this.$t('generator.views.code.validate.connectionName'), trigger: 'change' }],
         tableName: [{ required: true, message: this.$t('generator.views.code.validate.tableName'), trigger: 'blur' }],
-        configName: [{ required: true, message: this.$t('generator.views.code.validate.configName'), trigger: 'blur' }]
+        configName: [{ required: true, message: this.$t('generator.views.code.validate.configName'), trigger: 'blur' }],
+        i18nPrefix: [{ required: true, message: this.$t('generator.views.code.validate.i18nPrefix'), trigger: 'blur' }]
       },
       labelCol: {
         span: 8

@@ -63,7 +63,9 @@ public class DbGeneratorDocumentCreator {
                 new DocumentVO("codeSearchConfigList", "搜索form配置信息", "List<Object>", null, null, false, createSearchConfigDocument()),
                 new DocumentVO("leftButtonList", "左侧按钮配置信息", "List<String>", null, null, false),
                 new DocumentVO("rightButtonList", "右侧按钮配置信息", "List<String>", null, null, false),
-                new DocumentVO("rowButtonList", "行按钮配置信息", "List<String>", null, null, false)
+                new DocumentVO("rowButtonList", "行按钮配置信息", "List<String>", null, null, false),
+
+                new DocumentVO("i18nPrefix", "UI国际化前缀", "String", null, null, false)
         );
     }
 

@@ -22,7 +22,6 @@ import { tableBooleanColumn } from '@/components/common/TableCommon'
 const doLoadData = async () => {
   try {
     const data = await ApiService.postAjax('db/code/main/getTemplateDataDocument')
-    console.log(data)
     return data
   } catch (e) {
     errorMessage(e)

@@ -66,7 +66,8 @@ export default {
             EMAIL: '邮箱',
             NUMBER: '数字',
             REGEXP: '正则'
-          }
+          },
+          i18nPrefix: '国际化前缀'
         },
         button: {
           createCode: '生成代码',
@@ -79,7 +80,8 @@ export default {
           syncTable: '请先同步表信息',
           tableSetting: '请进行表格配置',
           formSetting: '请进行表单配置',
-          searchSetting: '请进行搜索配置'
+          searchSetting: '请进行搜索配置',
+          i18nPrefix: '请输入国际化前缀'
         },
         message: {
           saveConfirmContent: '非空字段：【{0}】未设置form'

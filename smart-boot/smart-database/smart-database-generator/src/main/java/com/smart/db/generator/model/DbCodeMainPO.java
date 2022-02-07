@@ -57,6 +57,8 @@ public class DbCodeMainPO extends BaseModelUserTime {
 
     private String remark;
 
+    private String i18nPrefix;
+
     /**
      * 表备注
      */

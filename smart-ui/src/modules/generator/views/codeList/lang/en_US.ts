@@ -66,7 +66,8 @@ export default {
             EMAIL: 'EMAIL',
             NUMBER: 'NUMBER',
             REGEXP: 'REGEXP'
-          }
+          },
+          i18nPrefix: 'I18n prefix'
         },
         button: {
           createCode: 'Generate code',
@@ -79,7 +80,8 @@ export default {
           syncTable: 'Please synchronize table information first',
           tableSetting: 'Please configure the table',
           formSetting: 'Please configure the form',
-          searchSetting: 'Please configure the search'
+          searchSetting: 'Please configure the search',
+          i18nPrefix: 'Please enter the i18n prefix'
         },
         message: {
           saveConfirmContent: 'Non empty field: [{0}] has no form set'
