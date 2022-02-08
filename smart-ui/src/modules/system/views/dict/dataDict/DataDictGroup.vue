@@ -12,6 +12,7 @@
       height="auto"
       stripe
       highlight-hover-row
+      @current-change="handleCurrentChange"
       @filter-change="handleFilterChange">
       <template #pager>
         <vxe-pager
@@ -78,22 +79,22 @@
           v-bind="formProps">
           <a-row>
             <a-col :span="24">
-              <a-form-item label="字典编码" name="dictCode">
-                <a-input v-model:value="formProps.model.dictCode" placeholder="请输入字典编码" />
+              <a-form-item :label="$t('system.views.dictGroup.title.dictName')" name="dictCode">
+                <a-input v-model:value="formProps.model.dictCode" :placeholder="$t('system.views.dictGroup.validate.dictCode')" />
               </a-form-item>
             </a-col>
             <a-col :span="24">
-              <a-form-item label="字典名称" name="dictName">
-                <a-input v-model:value="formProps.model.dictName" placeholder="请输入字典名称" />
+              <a-form-item :label="$t('system.views.dictGroup.title.dictName')" name="dictName">
+                <a-input v-model:value="formProps.model.dictName" :placeholder="$t('system.views.dictGroup.validate.dictName')" />
               </a-form-item>
             </a-col>
             <a-col :span="24">
-              <a-form-item label="序号" name="seq">
-                <a-input-number v-model:value="formProps.model.seq" style="width: 100%" placeholder="请输入序号" />
+              <a-form-item :label="$t('common.table.seq')" name="seq">
+                <a-input-number v-model:value="formProps.model.seq" style="width: 100%" :placeholder="$t('common.formValidate.seq')" />
               </a-form-item>
             </a-col>
             <a-col :span="24">
-              <a-form-item label="启用状态" name="useYn">
+              <a-form-item :label="$t('common.table.useYn')" name="useYn">
                 <a-switch v-model:checked="formProps.model.useYn" />
               </a-form-item>
             </a-col>
@@ -111,15 +112,46 @@ import { useI18n } from 'vue-i18n'
 import { useVxeTable, useAddEdit, useVxeDelete } from '@/components/hooks'
 import SizeConfigHooks from '@/components/config/SizeConfigHooks'
 
-import { handleLoadData, handleGetById, handleSaveUpdate, handleDelete } from './DataDictGroupHook'
+import { handleGetById, handleSaveUpdate, handleDelete } from './DataDictGroupHook'
+import ApiService from '@/common/utils/ApiService'
+import { errorMessage } from '@/components/notice/SystemNotice'
+import { tableUseYn } from '@/components/common/TableCommon'
 
 export default defineComponent({
   name: 'SysDictListView',
   components: {
   },
-  setup () {
+  emits: ['code-change'],
+  setup (props, { emit }) {
     const { t } = useI18n()
     const gridRef = ref()
+
+    /**
+     * 加载数据
+     * @param params 参数
+     * @param searchParameter 查询参数
+     */
+    const handleLoadData = async (params: any, searchParameter: any) => {
+      const parameter: any = {}
+      Object.keys(searchParameter).forEach(key => {
+        let symbol = 'like'
+        if (key === 'useYn') {
+          symbol = '='
+        }
+        parameter[`${key}@${symbol}`] = searchParameter[key]
+      })
+      try {
+        const result = await ApiService.postAjax('sys/dict/list', {
+          ...params,
+          parameter
+        })
+        emit('code-change', null)
+        return result
+      } catch (e) {
+        errorMessage(e)
+        throw e
+      }
+    }
 
     /**
      * 查询数据hook
@@ -132,7 +164,11 @@ export default defineComponent({
      * 添加保存hook
      */
     const addEditHook = useAddEdit(gridRef, handleGetById, loadData, handleSaveUpdate, t, {
-      idField: 'dictCode'
+      idField: 'dictCode',
+      defaultModel: {
+        useYn: true,
+        seq: 1
+      }
     })
     const deleteHook = useVxeDelete(gridRef, t, handleDelete, { idField: 'dictCode', listHandler: loadData })
 
@@ -161,6 +197,13 @@ export default defineComponent({
       searchModel.value[property] = datas[0]
       loadData()
     }
+
+    /**
+     * 当前行发生变化事件
+     */
+    const handleCurrentChange = ({ row }: any) => {
+      emit('code-change', row.dictCode)
+    }
     onMounted(loadData)
     return {
       gridRef,
@@ -173,7 +216,8 @@ export default defineComponent({
       handleActions,
       pageProps,
       searchModel,
-      handleFilterChange
+      handleFilterChange,
+      handleCurrentChange
     }
   },
   data () {
@@ -190,27 +234,27 @@ export default defineComponent({
         dictCode: [
           {
             required: true,
-            message: '请输入字典编码',
+            message: this.$t('system.views.dictGroup.validate.dictCode'),
             trigger: [
-              'BLUR'
+              'blur'
             ]
           }
         ],
         dictName: [
           {
             required: true,
-            message: '请输入字典名称',
+            message: this.$t('system.views.dictGroup.validate.dictName'),
             trigger: [
-              'BLUR'
+              'blur'
             ]
           }
         ],
         seq: [
           {
             required: true,
-            message: '请输入序号',
+            message: this.$t('common.formValidate.seq'),
             trigger: [
-              'BLUR'
+              'blur'
             ]
           }
         ]
@@ -223,7 +267,7 @@ export default defineComponent({
           fixed: 'left'
         },
         {
-          title: '字典编码',
+          title: '{system.views.dictGroup.title.dictCode}',
           field: 'dictCode',
           width: 180,
           filters: [{data: ''}],
@@ -233,7 +277,7 @@ export default defineComponent({
           fixed: 'left'
         },
         {
-          title: '字典名称',
+          title: '{system.views.dictGroup.title.dictName}',
           field: 'dictName',
           minWidth: 180,
           filters: [{data: ''}],
@@ -242,15 +286,15 @@ export default defineComponent({
           }
         },
         {
-          title: '序号',
+          title: '{common.table.seq}',
           field: 'seq',
           sortable: true,
           width: 120
         },
         {
-          title: '启用状态',
-          field: 'useYn',
-          width: 100,
+          ...tableUseYn(this.$t).createColumn(),
+          sortable: true,
+          width: 120,
           filterMultiple: false,
           filters: [{label: 'YES', data: true}, {label: 'NO', data: false}]
         }

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smart.system.mapper.SysDictItemMapper">
+    <sql id="columnList">
+        <!--   字典编码 主键  索引   -->
+        dict_code,
+        <!--   字典项编码 主键  索引   -->
+        dict_item_code,
+        <!--   字典项名称      -->
+        dict_item_name,
+        <!--   序号      -->
+        seq,
+        <!--   描述      -->
+        remark,
+        <!--   启用状态      -->
+        use_yn,
+        <!--   deleteYn      -->
+        delete_yn,
+        <!--   createUserId      -->
+        create_user_id,
+        <!--   createTime      -->
+        create_time,
+        <!--   updateUserId      -->
+        update_user_id,
+        <!--   updateTime      -->
+        update_time,
+    </sql>
+
+    <resultMap id="commonResultMap" type="com.smart.system.model.SysDictItemPO">
+        <!--   字典编码 主键  索引   -->
+        <id column="dict_code" property="dictCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   字典项编码 主键  索引   -->
+        <id column="dict_item_code" property="dictItemCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   字典项名称      -->
+        <result column="dict_item_name" property="dictItemName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   序号      -->
+        <result column="seq" property="seq" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        <!--   描述      -->
+        <result column="remark" property="remark" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   启用状态      -->
+        <result column="use_yn" property="useYn" javaType="java.lang.Boolean" jdbcType="BIT"/>
+        <!--   deleteYn      -->
+        <result column="delete_yn" property="deleteYn" javaType="java.lang.Byte" jdbcType="TINYINT"/>
+        <!--   createUserId      -->
+        <result column="create_user_id" property="createUserId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   createTime      -->
+        <result column="create_time" property="createTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+        <!--   updateUserId      -->
+        <result column="update_user_id" property="updateUserId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   updateTime      -->
+        <result column="update_time" property="updateTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+    </resultMap>
+</mapper>

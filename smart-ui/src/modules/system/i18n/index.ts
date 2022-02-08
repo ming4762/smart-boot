@@ -1,5 +1,7 @@
 import { merge } from 'xe-utils'
 
+import { transferI18n } from '@/i18n/LangVueSupport'
+
 import systemZhCN from './lang/zh_CN'
 import systemEnUS from './lang/en_US'
 
@@ -29,27 +31,35 @@ import onlineUser_en_US from '../views/auth/onlineUser/lang/en_US'
 import log_zh_CN from '../views/log/lang/zh_CN'
 import log_en_US from '../views/log/lang/en_US'
 
+// 数据字典国际化
+import { dictGroupI18n as dictGroupI18n_zh , dictItemI18n as dictItemI18n_zh } from '../views/dict/dataDict/lang/zh_CN'
+import { dictGroupI18n as dictGroupI18n_en , dictItemI18n as dictItemI18n_en } from '../views/dict/dataDict/lang/en_US'
+
 export default {
   zh_CN: merge({},
     systemZhCN,
-    function_zh_CN,
+    transferI18n(function_zh_CN),
     i18n_zh_CN,
     login_zh_CN,
     role_zh_CN,
     user_zh_CN,
     userGroup_zh_CN,
     onlineUser_zh_CN,
-    log_zh_CN
+    log_zh_CN,
+    transferI18n(dictGroupI18n_zh),
+    transferI18n(dictItemI18n_zh)
   ),
   en_US: merge({},
     systemEnUS,
-    function_en_US,
+    transferI18n(function_en_US),
     i18n_en_US,
     login_en_US,
     role_en_US,
     user_en_US,
     userGroup_en_US,
     onlineUser_en_US,
-    log_en_US
+    log_en_US,
+    transferI18n(dictGroupI18n_en),
+    transferI18n(dictItemI18n_en)
   )
 }

@@ -184,6 +184,14 @@ export const useAddEdit = (gridRef: Ref, loadHandler: (id: any) => Promise<any>,
   }
 
   /**
+   * 设置model函数
+   * @param model model
+   */
+  const handleSetModel = (model: any) => {
+    addEditModel.value = model
+  }
+
+  /**
    * 通过checkbox 获取需要编辑的数据
    */
   const handleEditByCheckbox = () => {
@@ -245,7 +253,8 @@ export const useAddEdit = (gridRef: Ref, loadHandler: (id: any) => Promise<any>,
     spinning: getLoading,
     handleAddEdit,
     handleEditByCheckbox,
-    formRef
+    formRef,
+    handleSetModel
   }
 }
 

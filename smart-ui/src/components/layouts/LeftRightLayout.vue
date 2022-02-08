@@ -3,7 +3,7 @@
     <a-layout-content :style="{ width: computedStyle.left }" class="full-height">
       <slot />
     </a-layout-content>
-    <a-layout-sider :width="computedStyle.right" :style="{ width: computedStyle.right }" theme="light">
+    <a-layout-sider :width="computedStyle.right" :style="{ width: computedStyle.right }" style="background: none" theme="light">
       <slot name="right" />
     </a-layout-sider>
   </a-layout>

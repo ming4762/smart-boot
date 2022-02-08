@@ -31,22 +31,6 @@ import java.util.List;
 public class SysDictController extends BaseController<SysDictService, SysDictPO> {
 
     @Override
-    @PostMapping("save")
-    @ApiOperation(value = "添加系统字典表")
-    @Log(value = "添加系统字典表", type = LogOperationTypeEnum.ADD)
-    public Result<Boolean> save(@RequestBody SysDictPO model) {
-        return Result.success(this.service.save(model));
-    }
-
-    @Override
-    @PostMapping("update")
-    @ApiOperation(value = "更新系统字典表")
-    @Log(value = "更新系统字典表", type = LogOperationTypeEnum.UPDATE)
-    public Result<Boolean> update(@RequestBody SysDictPO model) {
-        return super.update(model);
-    }
-
-    @Override
     @PostMapping("list")
     @ApiOperation(value = "查询角色列表（支持分页、实体类属性查询）")
     public Result<Object> list(@RequestBody @NonNull PageSortQuery parameter) {

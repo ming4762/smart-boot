@@ -33,7 +33,7 @@ export default {
       createUser: '创建人',
       updateTime: '更新时间',
       updateUser: '更新人',
-      useYn: '是否启用',
+      useYn: '启用状态',
       deleteYn: '是否删除',
       operation: '操作',
       remark: '备注',
