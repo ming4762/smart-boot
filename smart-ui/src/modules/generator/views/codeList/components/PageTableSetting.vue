@@ -131,7 +131,7 @@ const createDataFromTableData = (tableData: Array<any>, editData: Ref | undefine
     return Object.assign(data, {
       title: (data.remarks && data.remarks.trim() !== '') ? data.remarks : data.javaProperty,
       sortable: false,
-      fixed: false,
+      fixed: null,
       width: 120,
       align: align,
       resizable: false,

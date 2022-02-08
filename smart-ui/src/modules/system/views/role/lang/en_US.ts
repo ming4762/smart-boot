@@ -3,6 +3,9 @@ export default {
   system: {
     views: {
       role: {
+        title: {
+          setFunction: 'Set function'
+        },
         table: {
           roleName: 'Role name',
           roleCode: 'Role code',

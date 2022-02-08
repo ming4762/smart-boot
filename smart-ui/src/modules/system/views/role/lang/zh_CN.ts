@@ -3,6 +3,9 @@ export default {
   system: {
     views: {
       role: {
+        title: {
+          setFunction: '设置功能'
+        },
         table: {
           roleName: '角色名称',
           roleCode: '角色编码',

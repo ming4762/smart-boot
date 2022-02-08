@@ -1,10 +1,10 @@
 <template>
   <a-layout class="full-height">
     <a-layout-header style="height: 48px; background: white; text-align: center; line-height: 48px">
-      <h3>设置功能</h3>
+      <h3>{{ $t('system.views.role.title.setFunction') }}</h3>
     </a-layout-header>
     <a-divider style="margin: 0" />
-    <a-layout-content style="background: white;">
+    <a-layout-content style="background: white; overflow: auto">
       <a-spin :spinning="dataLoading">
         <a-tree
           v-model:checkedKeys="checkedKeysModel"
