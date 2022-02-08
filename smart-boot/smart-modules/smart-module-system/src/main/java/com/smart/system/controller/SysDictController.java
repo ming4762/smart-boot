@@ -12,6 +12,7 @@ import com.smart.system.service.SysDictService;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.lang.NonNull;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,6 +42,7 @@ public class SysDictController extends BaseController<SysDictService, SysDictPO>
     @ApiOperation(value = "添加修改系统字典表")
     @PostMapping("saveUpdate")
     @Log(value = "添加修改系统字典表", type = LogOperationTypeEnum.UPDATE)
+    @PreAuthorize("hasPermission('sys:dict', 'save') or hasPermission('sys:dict', 'update')")
     public Result<Boolean> saveUpdate(@RequestBody SysDictPO model) {
         return Result.success(this.service.saveOrUpdateWithAllUser(model, AuthUtils.getCurrentUserId()));
     }
@@ -49,6 +51,7 @@ public class SysDictController extends BaseController<SysDictService, SysDictPO>
     @ApiOperation(value = "通过ID批量删除系统字典表")
     @PostMapping("batchDeleteById")
     @Log(value = "通过ID批量删除系统字典表", type = LogOperationTypeEnum.DELETE)
+    @PreAuthorize("hasPermission('sys:dict', 'delete')")
     public Result<Boolean> batchDeleteById(@RequestBody List<Serializable> idList) {
         if (CollectionUtils.isEmpty(idList)) {
             return Result.success(false);

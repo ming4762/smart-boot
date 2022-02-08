@@ -20,6 +20,7 @@
         <a-form layout="inline">
           <a-form-item>
             <a-button
+              v-permission="'sys:dictItem:save'"
               :size="buttonSizeConfig"
               type="primary"
               style="margin-left: 5px"
@@ -27,6 +28,7 @@
               {{ $t('common.button.add') }}
             </a-button>
             <a-button
+              v-permission="'sys:dictItem:update'"
               :size="buttonSizeConfig"
               type="primary"
               style="margin-left: 5px"
@@ -34,6 +36,7 @@
               {{ $t('common.button.edit') }}
             </a-button>
             <a-button
+              v-permission="'sys:dictItem:delete'"
               :size="buttonSizeConfig"
               type="primary"
               danger
