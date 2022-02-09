@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.smart</groupId>
+		<artifactId>smart-monitor-server</artifactId>
+		<version>2.0.0-SNAPSHOT</version>
+	</parent>
+	<artifactId>smart-monitor-server-core</artifactId>
+	<version>2.0.0-SNAPSHOT</version>
+	<name>smart-monitor-server-core</name>
+	<description>服务端 core</description>
+	<properties>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>com.smart</groupId>
+			<artifactId>smart-monitor-core</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.smart</groupId>
+			<artifactId>smart-monitor-server-common</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+	</dependencies>
+
+
+</project>

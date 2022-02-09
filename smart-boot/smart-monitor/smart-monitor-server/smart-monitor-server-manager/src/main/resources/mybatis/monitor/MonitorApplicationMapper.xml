@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smart.monitor.server.manager.mapper.MonitorApplicationMapper">
+    <sql id="columnList">
+        <!--   id 主键  索引   -->
+        id,
+        <!--   应用名称   索引   -->
+        name,
+        <!--   应用编码   索引   -->
+        application_code,
+        <!--   备注      -->
+        remark,
+        <!--   序号      -->
+        seq,
+        <!--   是否使用      -->
+        use_yn,
+        <!--   删除标识      -->
+        delete_yn,
+        <!--   客户端状态检测间隔时间      -->
+        status_interval,
+        <!--   客户端离线检测事件间隔      -->
+        offline_interval,
+        <!--   与客户端交互token      -->
+        token,
+        <!--   序列化的事件编码列表      -->
+        serialize_event_code,
+        <!--   createUserId      -->
+        create_user_id,
+        <!--   createTime      -->
+        create_time,
+        <!--   updateUserId      -->
+        update_user_id,
+        <!--   updateTime      -->
+        update_time,
+    </sql>
+
+    <resultMap id="commonResultMap" type="com.smart.monitor.server.manager.model.MonitorApplicationPO">
+        <!--   id 主键  索引   -->
+        <id column="id" property="id" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   应用名称   索引   -->
+        <result column="name" property="name" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   应用编码   索引   -->
+        <result column="application_code" property="applicationCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   备注      -->
+        <result column="remark" property="remark" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   序号      -->
+        <result column="seq" property="seq" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        <!--   是否使用      -->
+        <result column="use_yn" property="useYn" javaType="java.lang.Boolean" jdbcType="BIT"/>
+        <!--   删除标识      -->
+        <result column="delete_yn" property="deleteYn" javaType="java.lang.Boolean" jdbcType="BIT"/>
+        <!--   客户端状态检测间隔时间      -->
+        <result column="status_interval" property="statusInterval" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   客户端离线检测事件间隔      -->
+        <result column="offline_interval" property="offlineInterval" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   与客户端交互token      -->
+        <result column="token" property="token" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   序列化的事件编码列表      -->
+        <result column="serialize_event_code" property="serializeEventCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   createUserId      -->
+        <result column="create_user_id" property="createUserId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   createTime      -->
+        <result column="create_time" property="createTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+        <!--   updateUserId      -->
+        <result column="update_user_id" property="updateUserId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   updateTime      -->
+        <result column="update_time" property="updateTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+    </resultMap>
+</mapper>

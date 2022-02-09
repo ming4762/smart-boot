@@ -1,4 +1,5 @@
 #配置自定义Starter的自动化配置
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.smart.monitor.autoconfigure.RestAutoConfiguration,\
-  com.smart.monitor.autoconfigure.client.SmartMonitorClientAutoConfiguration
+  com.smart.monitor.autoconfigure.client.SmartMonitorClientAutoConfiguration,\
+  com.smart.monitor.autoconfigure.server.MonitorServerAutoConfiguration

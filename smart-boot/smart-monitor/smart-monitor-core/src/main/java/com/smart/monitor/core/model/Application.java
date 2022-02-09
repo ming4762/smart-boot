@@ -24,7 +24,7 @@ public class Application {
     @Builder.Default
     private Set<String> endPoints = new HashSet<>();
 
-    private String applicationCode;
+    private String applicationName;
 
     /**
      * 端点地址

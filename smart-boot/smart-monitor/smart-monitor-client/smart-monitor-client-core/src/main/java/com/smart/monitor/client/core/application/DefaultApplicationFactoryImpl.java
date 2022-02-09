@@ -49,7 +49,7 @@ public class DefaultApplicationFactoryImpl implements ApplicationFactory, Applic
         String clientUrl = clientProperties.getInstance().getApplicationUrl() == null ? this.getClientUrl() : clientProperties.getInstance().getApplicationUrl();
         return Application.builder()
                 .endPoints(this.getEndPointIds())
-                .applicationCode(this.clientProperties.getInstance().getName())
+                .applicationName(this.clientProperties.getInstance().getName())
                 .clientUrl(clientUrl)
                 .startupTime(this.applicationContext.getStartupDate())
                 .metadata(this.clientProperties.getInstance().getMetadata())

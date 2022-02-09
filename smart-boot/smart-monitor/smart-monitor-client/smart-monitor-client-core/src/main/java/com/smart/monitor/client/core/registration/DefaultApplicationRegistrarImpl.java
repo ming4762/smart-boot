@@ -60,7 +60,7 @@ public class DefaultApplicationRegistrarImpl implements ApplicationRegistrar {
      */
     protected boolean register(String url, Application application) {
         try {
-            log.debug("application start register, register url: {}, application code: {}", url, application.getApplicationCode());
+            log.debug("application start register, register url: {}, application code: {}", url, application.getApplicationName());
             final String id = this.registrarClient.register(url, application);
             if (this.registeredId.compareAndSet(null, id)) {
                 log.info("application registered success, server url: {}, id: {}", url, id);

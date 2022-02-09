@@ -32,5 +32,12 @@
 			<optional>true</optional>
 		</dependency>
 
+		<dependency>
+			<groupId>com.smart</groupId>
+			<artifactId>smart-monitor-server-core</artifactId>
+			<version>${project.parent.version}</version>
+			<optional>true</optional>
+		</dependency>
+
 	</dependencies>
 </project>

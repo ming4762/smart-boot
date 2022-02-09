@@ -17,6 +17,8 @@ import generatorI18n from '@/modules/generator/i18n'
 
 // app 模块
 import appI18n from '@/modules/app/i18n'
+// 监控模块
+import monitorI18n from '@/modules/monitor/i18n'
 
 /**
  * 创建I18N
@@ -29,12 +31,14 @@ const i18n = createI18n({
       systemI18n.zh_CN,
       appI18n.zh_CN,
       generatorI18n.zh_CN,
+      monitorI18n.zh_CN,
       vxeTableZhCN,
       { antLocale: zhCN }),
     'en-US': merge({},
       systemI18n.en_US,
       appI18n.en_US,
       generatorI18n.en_US,
+      monitorI18n.en_US,
       vxeTableEnUS,
       { antLocale: enUS })
   }
