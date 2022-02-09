@@ -6,13 +6,13 @@ export default {
   key: 'monitor.views.application',
   data: {
     title: {
-			id: 'id',
 			name: '应用名称',
 			applicationCode: '应用编码',
 			statusInterval: '状态检测间隔(ms)',
 			offlineInterval: '离线检测间隔(ms)',
 			token: 'Token',
-			serializeEventCode: '序列化的事件编码列表'
+			serializeEventCode: '序列化的事件编码列表',
+			setUserGroup: '设置用户组'
     },
 		validate: {
 			name: '请输入应用名称',

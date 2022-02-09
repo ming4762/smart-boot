@@ -6,13 +6,13 @@ export default {
   key: 'monitor.views.application',
   data: {
     title: {
-			id: 'id',
 			name: 'Application name',
 			applicationCode: 'Application code',
 			statusInterval: 'Status interval(ms)',
 			offlineInterval: 'offline interval(ms)',
 			token: 'Token',
-			serializeEventCode: 'Serialize event code'
+			serializeEventCode: 'Serialize event code',
+			setUserGroup: 'Set user group'
     },
 		validate: {
 			name: 'Please enter application name',

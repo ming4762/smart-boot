@@ -10,6 +10,7 @@ import com.smart.monitor.server.manager.mapper.MonitorApplicationMapper;
 import com.smart.monitor.server.manager.model.MonitorApplicationPO;
 import com.smart.monitor.server.manager.pojo.vo.MonitorApplicationUserVO;
 import com.smart.monitor.server.manager.service.MonitorApplicationService;
+import com.smart.monitor.server.manager.service.MonitorUserGroupApplicationService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
@@ -29,8 +30,11 @@ public class MonitorApplicationServiceImpl extends BaseServiceImpl<MonitorApplic
 
     private final UserSetterService userSetterService;
 
-    public MonitorApplicationServiceImpl(UserSetterService userSetterService) {
+    private final MonitorUserGroupApplicationService monitorUserGroupApplicationService;
+
+    public MonitorApplicationServiceImpl(UserSetterService userSetterService, MonitorUserGroupApplicationService monitorUserGroupApplicationService) {
         this.userSetterService = userSetterService;
+        this.monitorUserGroupApplicationService = monitorUserGroupApplicationService;
     }
 
     @NonNull
@@ -39,16 +43,20 @@ public class MonitorApplicationServiceImpl extends BaseServiceImpl<MonitorApplic
         Boolean filterUser = (Boolean) parameter.getParameter().get(CrudCommonEnum.FILTER_BY_USER.name());
         if (Boolean.TRUE.equals(filterUser)) {
             // 绑定当前登录用户
-//            final Long userId = AuthUtils.getCurrentUserId();
-//            if (userId == null) {
-//                return Lists.newArrayList();
-//            }
-//            final List<Long> applicationIdList = this.monitorUserApplicationService.getApplicationIdByUserIds(Lists.newArrayList(userId)).get(userId);
-//            if (CollectionUtils.isEmpty(applicationIdList)) {
-//                return Lists.newArrayList();
-//            }
-//            queryWrapper.lambda()
-//                    .in(MonitorApplicationPO :: getId, applicationIdList);
+            final Long userId = AuthUtils.getCurrentUserId();
+            if (userId == null) {
+                return new ArrayList<>(0);
+            }
+            if (!AuthUtils.isSuperAdmin()) {
+               // 查询用户所在用户组关联的所有应用ID
+                List<Long> applicationIdList = this.monitorUserGroupApplicationService.listApplicationIdByUserId(userId);
+                if (CollectionUtils.isEmpty(applicationIdList)) {
+                    queryWrapper.lambda().eq(MonitorApplicationPO :: getCreateUserId, userId);
+                } else {
+                    queryWrapper.lambda()
+                            .and(wrapper -> wrapper.in(MonitorApplicationPO :: getId, applicationIdList).or(query -> query.eq(MonitorApplicationPO :: getCreateUserId, userId)));
+                }
+            }
         }
         List<? extends MonitorApplicationPO> data = super.list(queryWrapper, parameter, paging);
         if (CollectionUtils.isEmpty(data)) {

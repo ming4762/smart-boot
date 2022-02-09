@@ -1,3 +1,5 @@
+import { ref } from 'vue'
+
 import ApiService from '@/common/utils/ApiService'
 import { errorMessage } from '@/components/notice/SystemNotice'
 
@@ -25,7 +27,8 @@ export const handleLoadData = async (params: any, searchParameter: any) => {
 			...params,
 			parameter: {
 				...parameter,
-				QUERY_CREATE_UPDATE_USER: true
+				QUERY_CREATE_UPDATE_USER: true,
+				FILTER_BY_USER: true
 			}
 		})
   } catch (e) {
@@ -72,5 +75,62 @@ export const handleDelete = async (idList: Array<any>) => {
 	} catch (e) {
 		errorMessage(e)
 		throw e
+	}
+}
+
+/**
+ * 设置用户组hook
+ */
+export const useSetUserGroup = () => {
+	/**
+	 * modal显示状态
+	 */
+	const setUserModalVisible = ref(false)
+
+	let currentRow: any = null
+
+	/**
+	 * 选中的group ID
+	 */
+	const selectGroupIds = ref<Array<string>>([])
+
+	/**
+	 * 显示弹窗
+	 * @param row 当前行
+	 */
+	const handleShowSetUserGroup = async (row: any) => {
+		selectGroupIds.value = []
+		setUserModalVisible.value = true
+		currentRow = row
+		// 加载用户组信息
+		try {
+			const result: Array<number> = await ApiService.postAjax('monitor/manager/application/listUserGroupById', row.id)
+			selectGroupIds.value = result.map(item => item + '')
+		} catch (e) {
+			errorMessage(e)
+		}
+	}
+
+	/**
+	 * 设置菜单信息
+	 */
+	const handleSetUserGroup = async () => {
+		const { id } = currentRow
+		try {
+			await ApiService.postAjax('monitor/manager/application/setUserGroup', {
+				applicationId: id,
+				groupIdList: selectGroupIds.value
+			})
+			setUserModalVisible.value = false
+		} catch (e) {
+			errorMessage(e)
+		}
+	}
+
+	return {
+		setUserModalVisible,
+		selectGroupIds,
+		handleShowSetUserGroup,
+		handleSetUserGroup
 	}
 }

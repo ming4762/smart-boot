@@ -33,7 +33,7 @@ export const useVxeTable = (service: (params: Params, searchParameter: any) => P
     currentPage: 1,
     pageSize: parameter.defaultPageSize || 500
   }) : {}
-  const searchModel = ref<any>(parameter.defaultParameter || {})
+  const searchModel = ref<any>(Object.assign({}, parameter.defaultParameter || {}))
   // 排序数据
   const sortData: any = reactive(parameter.defaultSorter || {})
   const sortConfig: any = {
@@ -80,7 +80,7 @@ export const useVxeTable = (service: (params: Params, searchParameter: any) => P
    * 重置擦欧总
    */
   const handleReset = () => {
-    searchModel.value = parameter.defaultParameter || {}
+    searchModel.value = Object.assign({}, parameter.defaultParameter || {})
     loadData()
   }
 

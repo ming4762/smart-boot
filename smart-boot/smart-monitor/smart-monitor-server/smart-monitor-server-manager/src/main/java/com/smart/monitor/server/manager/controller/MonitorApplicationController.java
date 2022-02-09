@@ -1,13 +1,17 @@
 package com.smart.monitor.server.manager.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.smart.commons.core.log.Log;
 import com.smart.commons.core.log.LogOperationTypeEnum;
 import com.smart.commons.core.message.Result;
 import com.smart.crud.controller.BaseController;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.monitor.server.manager.model.MonitorApplicationPO;
-import com.smart.monitor.server.manager.service.MonitorApplicationService;
+import com.smart.monitor.server.manager.model.MonitorUserGroupApplicationPO;
 import com.smart.monitor.server.manager.pojo.dto.MonitorApplicationSaveUpdateDTO;
+import com.smart.monitor.server.manager.pojo.dto.MonitorApplicationSetUserGroupDTO;
+import com.smart.monitor.server.manager.service.MonitorApplicationService;
+import com.smart.monitor.server.manager.service.MonitorUserGroupApplicationService;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
@@ -20,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.io.Serializable;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
 * monitor_application - 应用管理表 Controller
@@ -27,8 +32,15 @@ import java.util.List;
 * 2022-2-8 16:24:43
 */
 @RestController
-@RequestMapping("monitor/manager/application/")
+@RequestMapping("monitor/manager/application")
 public class MonitorApplicationController extends BaseController<MonitorApplicationService, MonitorApplicationPO> {
+
+    private final MonitorUserGroupApplicationService monitorUserGroupApplicationService;
+
+    public MonitorApplicationController(MonitorUserGroupApplicationService monitorUserGroupApplicationService) {
+        this.monitorUserGroupApplicationService = monitorUserGroupApplicationService;
+    }
+
 
     @Override
     @PostMapping("list")
@@ -62,5 +74,25 @@ public class MonitorApplicationController extends BaseController<MonitorApplicat
     @PostMapping("getById")
     public Result<MonitorApplicationPO> getById(@RequestBody Serializable id) {
         return super.getById(id);
+    }
+
+    @PostMapping("listUserGroupById")
+    @ApiOperation(value = "查询应用关联的用户组ID")
+    public Result<List<Long>> listUserGroupById(@RequestBody Long id) {
+        return Result.success(
+                this.monitorUserGroupApplicationService.list(
+                        new QueryWrapper<MonitorUserGroupApplicationPO>().lambda()
+                                .select(MonitorUserGroupApplicationPO :: getUserGroupId)
+                                .eq(MonitorUserGroupApplicationPO :: getApplicationId, id)
+                ).stream().map(MonitorUserGroupApplicationPO :: getUserGroupId).collect(Collectors.toList())
+        );
+    }
+
+    // TODO: 权限
+    @PostMapping("setUserGroup")
+    @ApiOperation(value = "设置应用关联的用户组")
+    @Log(value = "设置应用关联的用户组", type = LogOperationTypeEnum.UPDATE, saveResult = true)
+    public Result<Boolean> setUserGroup(@RequestBody MonitorApplicationSetUserGroupDTO parameter) {
+        return Result.success(this.monitorUserGroupApplicationService.setUserGroup(parameter));
     }
 }

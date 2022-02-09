@@ -88,6 +88,9 @@
               <a-menu-item key="DELETE">
                 {{ $t('common.button.delete') }}
               </a-menu-item>
+              <a-menu-item key="setUserGroup">
+                {{ $t('monitor.views.application.title.setUserGroup') }}
+              </a-menu-item>
             </a-menu>
           </template>
         </a-dropdown>
@@ -191,6 +194,13 @@
         </a-form>
       </a-spin>
     </a-modal>
+    <a-modal
+      v-model:visible="setUserModalVisible"
+      :title="$t('monitor.views.application.title.setUserGroup')"
+      width="700px"
+      @ok="handleSetUserGroup">
+      <UserGroupTransfer v-model:target-keys="selectGroupIds" show-search height="500px" />
+    </a-modal>
   </div>
 </template>
 
@@ -205,14 +215,17 @@ import dayjs from 'dayjs'
 import { useVxeTable, useAddEdit, useVxeDelete } from '@/components/hooks'
 import SizeConfigHooks from '@/components/config/SizeConfigHooks'
 
-import { handleLoadData, handleGetById, handleSaveUpdate, handleDelete } from './MonitorApplicationHook'
+import { handleLoadData, handleGetById, handleSaveUpdate, handleDelete, useSetUserGroup } from './MonitorApplicationHook'
 
 import { tableUseYn } from '@/components/common/TableCommon'
+
+import UserGroupTransfer from '@/modules/system/components/user/UserGroupTransfer.vue'
 
 export default defineComponent({
   name: 'MonitorApplicationListView',
   components: {
-    DownOutlined
+    DownOutlined,
+    UserGroupTransfer
   },
   setup () {
     const { t } = useI18n()
@@ -248,6 +261,8 @@ export default defineComponent({
      */
     const deleteHook = useVxeDelete(gridRef, t, handleDelete, { idField: 'id', listHandler: loadData })
 
+    const setUserGroupHook = useSetUserGroup()
+
     /**
      * 按钮操作
      * @param row 行数据
@@ -263,9 +278,14 @@ export default defineComponent({
           deleteHook.handleDeleteByRow(row)
           break
         }
+        case 'setUserGroup': {
+          setUserGroupHook.handleShowSetUserGroup(row)
+          break
+        }
       }
     }
     onMounted(loadData)
+
     return {
       gridRef,
       ...SizeConfigHooks(),
@@ -276,7 +296,8 @@ export default defineComponent({
       pageProps,
       handleReset,
       handleActions,
-      loadData
+      loadData,
+      ...setUserGroupHook
     }
   },
   data () {
@@ -418,3 +439,11 @@ export default defineComponent({
   }
 })
 </script>
+
+<style lang="less" scoped>
+.user-group-modal {
+  ::v-deep(.ant-modal-body) {
+    height: 500px;
+  }
+}
+</style>

@@ -31,6 +31,12 @@
             <artifactId>smart-auth-core</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-module-system</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
     </dependencies>
 
 </project>
