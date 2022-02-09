@@ -1,5 +1,6 @@
 package com.smart.monitor.autoconfigure.server;
 
+import com.smart.commons.core.spring.EnableRest;
 import com.smart.monitor.server.common.MonitorServerProperties;
 import com.smart.monitor.server.common.client.ClientManagerProvider;
 import com.smart.monitor.server.core.SmartMonitorServer;
@@ -8,9 +9,13 @@ import com.smart.monitor.server.core.client.ClientProcessor;
 import com.smart.monitor.server.core.client.HashClientIdGenerator;
 import com.smart.monitor.server.core.client.repository.ClientRepository;
 import com.smart.monitor.server.core.client.repository.MemoryClientRepositoryImpl;
+import com.smart.monitor.server.core.client.request.ClientWebProxy;
 import com.smart.monitor.server.core.context.DefaultMonitorContextImpl;
 import com.smart.monitor.server.core.context.MonitorContext;
+import com.smart.monitor.server.core.event.MonitorEventPublisher;
+import com.smart.monitor.server.core.monitor.StatusMonitor;
 import com.smart.monitor.server.core.monitor.StatusMonitorManager;
+import com.smart.monitor.server.core.monitor.status.HealthStatusMonitor;
 import com.smart.monitor.server.core.task.TaskSchedulerProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -30,6 +35,7 @@ import org.springframework.context.annotation.Configuration;
         "com.smart.monitor.server.core.controller"
 })
 @EnableConfigurationProperties(MonitorServerProperties.class)
+@EnableRest
 public class MonitorServerAutoConfiguration {
 
     /**
@@ -92,5 +98,25 @@ public class MonitorServerAutoConfiguration {
     @ConditionalOnMissingBean
     public ClientProcessor clientProcessor() {
         return new ClientProcessor();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ClientWebProxy clientWebProxy(ClientRepository clientRepository) {
+        return new ClientWebProxy(clientRepository);
+    }
+
+    /**
+     * health 状态检测
+     * @param clientWebProxy ClientWebProxy
+     * @param eventPublisher 事件发布器
+     * @param clientRepository 客户端仓库
+     * @param clientProcessor ClientProcessor
+     * @return healthStatusMonitor
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    public StatusMonitor healthStatusMonitor(ClientWebProxy clientWebProxy, MonitorEventPublisher eventPublisher, ClientRepository clientRepository, ClientProcessor clientProcessor) {
+        return new HealthStatusMonitor(clientWebProxy, eventPublisher, clientRepository, clientProcessor);
     }
 }

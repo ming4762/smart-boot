@@ -14,5 +14,6 @@ public enum CrudCommonEnum {
     OFFSET,
     KEYWORD,
     WITH_ALL,
-    QUERY_CREATE_UPDATE_USER
+    QUERY_CREATE_UPDATE_USER,
+    FILTER_BY_USER
 }

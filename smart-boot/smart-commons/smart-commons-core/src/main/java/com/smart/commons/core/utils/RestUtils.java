@@ -28,7 +28,7 @@ public class RestUtils {
         headers.forEach(httpHeaders :: add);
         final HttpEntity<?> httpEntity = new HttpEntity<>(parameter, httpHeaders);
 
-        return  restTemplate.exchange(url, httpMethod, httpEntity, clazz, uriVariables);
+        return restTemplate.exchange(url, httpMethod, httpEntity, clazz, uriVariables);
     }
 
     /**

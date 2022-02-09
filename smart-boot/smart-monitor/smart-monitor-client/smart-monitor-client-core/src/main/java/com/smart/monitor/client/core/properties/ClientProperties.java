@@ -73,7 +73,7 @@ public class ClientProperties implements InitializingBean {
         private Boolean once = Boolean.TRUE;
 
         @NonNull
-        private Duration interval = Duration.ofMillis(10000L);
+        private Duration interval = Duration.ofMillis(30000L);
     }
 
     @Override

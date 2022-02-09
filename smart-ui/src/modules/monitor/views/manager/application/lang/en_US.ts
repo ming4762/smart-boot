@@ -9,8 +9,8 @@ export default {
 			id: 'id',
 			name: 'Application name',
 			applicationCode: 'Application code',
-			statusInterval: 'Status interval',
-			offlineInterval: 'offline interval',
+			statusInterval: 'Status interval(ms)',
+			offlineInterval: 'offline interval(ms)',
 			token: 'Token',
 			serializeEventCode: 'Serialize event code'
     },

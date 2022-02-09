@@ -9,8 +9,8 @@ export default {
 			id: 'id',
 			name: '应用名称',
 			applicationCode: '应用编码',
-			statusInterval: '状态检测间隔时间',
-			offlineInterval: '离线检测事件间隔',
+			statusInterval: '状态检测间隔(ms)',
+			offlineInterval: '离线检测间隔(ms)',
 			token: 'Token',
 			serializeEventCode: '序列化的事件编码列表'
     },

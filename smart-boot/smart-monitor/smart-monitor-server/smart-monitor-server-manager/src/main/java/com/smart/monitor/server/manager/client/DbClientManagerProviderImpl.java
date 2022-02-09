@@ -37,6 +37,7 @@ public class DbClientManagerProviderImpl implements ClientManagerProvider {
         final List<MonitorApplicationPO> applicationList = this.monitorApplicationService.list(
                 new QueryWrapper<MonitorApplicationPO>().lambda()
                         .eq(MonitorApplicationPO :: getApplicationCode, applicationName)
+                        .eq(MonitorApplicationPO :: getUseYn, true)
         );
         if (applicationList.isEmpty()) {
             return null;

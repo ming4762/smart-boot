@@ -14,10 +14,7 @@ import org.springframework.core.Ordered;
 import org.springframework.lang.NonNull;
 
 import java.time.Instant;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 import java.util.stream.Collectors;
@@ -50,8 +47,10 @@ public class StatusMonitorManager implements ApplicationContextAware, Disposable
 
     @Override
     public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
-        final Collection<? extends StatusMonitor> statusMonitors = applicationContext.getBeansOfType(StatusMonitor.class).values();
-        this.statusMonitorList = statusMonitors.stream().sorted(Comparator.comparingInt(Ordered::getOrder)).collect(Collectors.toList());
+        this.statusMonitorList = Arrays.stream(applicationContext.getBeanNamesForType(StatusMonitor.class))
+                .map(item -> applicationContext.getBean(item, StatusMonitor.class))
+                .sorted(Comparator.comparingInt(Ordered::getOrder))
+                .collect(Collectors.toList());
     }
 
     /**

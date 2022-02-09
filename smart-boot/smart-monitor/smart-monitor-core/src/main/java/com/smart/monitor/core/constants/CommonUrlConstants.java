@@ -9,10 +9,10 @@ public class CommonUrlConstants {
     /**
      * 客户端注册地址
      */
-    public static final String REGISTER_URL = "/client/register";
+    public static final String REGISTER_URL = "/public/client/register";
 
     /**
      * 客户端注销地址
      */
-    public static final String DEREGISTER_URL = "/client/deregister";
+    public static final String DEREGISTER_URL = "/public/client/deregister";
 }

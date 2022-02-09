@@ -181,8 +181,9 @@
               <a-form-item
                 :label="$t('monitor.views.application.title.serializeEventCode')"
                 name="serializeEventCode">
-                <a-input
+                <a-textarea
                   v-model:value="formProps.model.serializeEventCode"
+                  :rows="3"
                   :placeholder="$t('monitor.views.application.validate.serializeEventCode')" />
               </a-form-item>
             </a-col>
