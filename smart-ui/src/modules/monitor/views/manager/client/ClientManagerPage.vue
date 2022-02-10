@@ -117,7 +117,7 @@ export default defineComponent({
      */
     const handleShowDetail = (row: any) => {
       const url = router.resolve({
-        path: '/client',
+        path: '/monitor/client',
         query: {
           clientId: row.id.value
         }

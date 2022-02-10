@@ -9,7 +9,7 @@ const getApiUrl = (): string => {
   return import.meta.env.VITE_API_URL as string
 }
 
-axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'
+// axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'
 
 export const API_SERVICE = axios.create({
   baseURL: getApiUrl(),
@@ -52,10 +52,35 @@ export default class ApiService {
    * @param customParameter 自定义参数
    * @private
    */
-  private static ajax (url: string, ajaxType: string, parameter?: {[index: string]: any}, customParameter?: {[index: string]: any}) {
-    // @ts-ignore
+  public static ajax (url: string, ajaxType: string, parameter?: {[index: string]: any}, customParameter?: {[index: string]: any}) {
+    const params = customParameter || {}
+    if (!params.headers) {
+      params.headers = {}
+      if (!params.headers['Content-Type']) {
+        params.headers['Content-Type'] = 'application/json;charset=UTF-8'
+      }
+    }
+    return this.request(url, ajaxType, parameter, params)
+      .then((result: any) => {
+        const data = result.data
+        if (data.success === false) {
+          return Promise.reject(data)
+        }
+        return data.data
+      })
+  }
+
+  /**
+   * 发送ajax请求
+   * @param url 请求地址
+   * @param method 请求类型
+   * @param parameter 参数
+   * @param customParameter 自定义参数
+   * @private
+   */
+  public static request(url: string, method: string, parameter?: {[index: string]: any}, customParameter?: {[index: string]: any}) {
     const serverParameter: any = Object.assign({
-      method: ajaxType,
+      method: method,
       url: url,
       data: parameter || {},
       headers: {},
@@ -67,13 +92,6 @@ export default class ApiService {
       serverParameter.headers[Accept_Language] = lang
     }
     return API_SERVICE(serverParameter)
-      .then((result: any) => {
-        const data = result.data
-        if (data.success === false) {
-          return Promise.reject(data)
-        }
-        return data.data
-      })
   }
 
   /**

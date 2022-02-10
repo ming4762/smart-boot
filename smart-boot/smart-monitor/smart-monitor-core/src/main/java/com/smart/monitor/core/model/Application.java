@@ -28,6 +28,7 @@ public class Application {
 
     /**
      * 端点地址
+     * TODO: 待完成
      */
     private String managementUrl;
 

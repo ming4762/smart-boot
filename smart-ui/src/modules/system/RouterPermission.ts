@@ -19,7 +19,9 @@ const error403Path = '/error/403'
  * 例如访问/codeCreateView，需要查看用户是否拥有/code/codeList权限
  */
 const permissionMappingPaths: any = {
-  '/codeCreateView': '/code/codeList'
+  '/codeCreateView': '/code/codeList',
+  // 客户端监控
+  '/monitor/client/detail': '/monitor/manager/client'
 }
 
 /**

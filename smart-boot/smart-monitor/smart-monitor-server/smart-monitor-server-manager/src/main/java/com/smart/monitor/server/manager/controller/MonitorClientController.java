@@ -1,8 +1,13 @@
 package com.smart.monitor.server.manager.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.smart.auth.core.utils.AuthUtils;
 import com.smart.commons.core.message.Result;
 import com.smart.monitor.server.common.model.ClientData;
+import com.smart.monitor.server.common.model.ClientId;
+import com.smart.monitor.server.core.client.repository.ClientRepository;
+import com.smart.monitor.server.manager.model.MonitorApplicationPO;
+import com.smart.monitor.server.manager.service.MonitorApplicationService;
 import com.smart.monitor.server.manager.service.MonitorClientService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,8 +33,14 @@ public class MonitorClientController {
 
     private final MonitorClientService monitorClientService;
 
-    public MonitorClientController(MonitorClientService monitorClientService) {
+    private final ClientRepository clientRepository;
+
+    private final MonitorApplicationService monitorApplicationService;
+
+    public MonitorClientController(MonitorClientService monitorClientService, ClientRepository clientRepository, MonitorApplicationService monitorApplicationService) {
         this.monitorClientService = monitorClientService;
+        this.clientRepository = clientRepository;
+        this.monitorApplicationService = monitorApplicationService;
     }
 
     /**
@@ -54,5 +65,25 @@ public class MonitorClientController {
     public Result<Collection<ClientData>> listUserClient(@ApiParam(name = "是否只查询激活状态", required = true) @RequestBody Boolean active) {
         boolean isActive = Objects.equals(Boolean.TRUE, active);
         return Result.success(this.monitorClientService.listUserClient(AuthUtils.getNonNullCurrentUserId(), isActive));
+    }
+
+    /**
+     * 通过客户端ID查询
+     * @param clientId 客户端ID
+     * @return 客户端信息
+     */
+    @PostMapping("getApplicationByClientId")
+    @ApiOperation(value = "通过客户端ID查询应用信息", httpMethod = "POST")
+    public Result<MonitorApplicationPO> getApplicationByClientId(@RequestBody String clientId) {
+        ClientData clientData = this.clientRepository.findById(ClientId.create(clientId), false);
+        if (clientData == null) {
+            return Result.success();
+        }
+        return Result.success(
+                this.monitorApplicationService.getOne(
+                        new QueryWrapper<MonitorApplicationPO>().lambda()
+                        .eq(MonitorApplicationPO :: getApplicationCode, clientData.getApplication().getApplicationName())
+                )
+        );
     }
 }

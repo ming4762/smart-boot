@@ -10,6 +10,7 @@ import com.smart.monitor.server.common.constants.ClientStatusEnum;
 import com.smart.monitor.server.common.model.ClientData;
 import com.smart.monitor.server.common.model.ClientId;
 import com.smart.monitor.server.core.client.repository.ClientRepository;
+import com.smart.monitor.server.core.controller.ClientProxyController;
 import com.smart.monitor.server.core.exception.ClientDownException;
 import com.smart.monitor.server.core.exception.ClientNoRegisterException;
 import lombok.Builder;
@@ -126,7 +127,7 @@ public class ClientWebProxy {
     @SneakyThrows
     public ForwardRequest createForwardRequest(@NonNull HttpServletRequest request, @NonNull ClientData clientData) {
         //  TODO:开发中
-        String url = "/actuator/" + UriComponentsBuilder.fromPath(this.pathMatcher.extractPathWithinPattern("/instances/{clientId}/actuator/**", request.getRequestURI())).build(true).toUri();
+        String url = "/actuator/" + UriComponentsBuilder.fromPath(this.pathMatcher.extractPathWithinPattern(ClientProxyController.CLIENT_PROXY_PATH, request.getRequestURI())).build(true).toUri();
         // 添加参数
         Enumeration<String> parameterNames = request.getParameterNames();
         final List<String> parameters = new ArrayList<>();

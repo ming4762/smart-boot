@@ -20,7 +20,7 @@ import java.nio.charset.StandardCharsets;
 @RequestMapping
 public class ClientProxyController {
 
-    private static final String CLIENT_PROXY_PATH = "/monitor/client/{clientId}/actuator/**";
+    public static final String CLIENT_PROXY_PATH = "/monitor/client/{clientId}/actuator/**";
 
 
     private final ClientWebProxy clientWebProxy;
