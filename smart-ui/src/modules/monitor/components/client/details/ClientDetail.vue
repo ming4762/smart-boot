@@ -10,9 +10,13 @@
 
         <a-row class="detail-span">
           <a-col :span="24">
-            <ClientMetadata />
+            <ClientMetadata :data="clientData" />
           </a-col>
         </a-row>
+      </a-col>
+
+      <a-col :span="12">
+        <client-health :client-id="clientId" :time="time" />
       </a-col>
     </a-row>
   </div>
@@ -26,6 +30,7 @@ import ApiService from '@/common/utils/ApiService'
 
 import ClientInfo from './ClientInfo.vue'
 import ClientMetadata from './ClientMetadata.vue'
+import ClientHealth from './ClientHealth.vue'
 
 /**
  * 客户端详情
@@ -34,7 +39,8 @@ export default defineComponent({
   name: 'ClientDetail',
   components: {
     ClientInfo,
-    ClientMetadata
+    ClientMetadata,
+    ClientHealth
   },
   props: {
     // 客户端ID
