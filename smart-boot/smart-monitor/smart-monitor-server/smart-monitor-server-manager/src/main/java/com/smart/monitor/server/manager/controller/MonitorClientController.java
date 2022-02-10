@@ -1,0 +1,58 @@
+package com.smart.monitor.server.manager.controller;
+
+import com.smart.auth.core.utils.AuthUtils;
+import com.smart.commons.core.message.Result;
+import com.smart.monitor.server.common.model.ClientData;
+import com.smart.monitor.server.manager.service.MonitorClientService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Collection;
+import java.util.Objects;
+
+/**
+ * 客户端接口
+ * @author ShiZhongMing
+ * 2022/2/10
+ * @since 2.0.0
+ */
+@RestController
+@RequestMapping("monitor/manager/client")
+@Api("客户端管理接口")
+public class MonitorClientController {
+
+    private final MonitorClientService monitorClientService;
+
+    public MonitorClientController(MonitorClientService monitorClientService) {
+        this.monitorClientService = monitorClientService;
+    }
+
+    /**
+     * 查询注册的客户端
+     * @param active 是否是激活的
+     * @return 注册的客户端
+     */
+    @PostMapping("listClient")
+    @ApiOperation(value = "查询注册客户端列表", httpMethod = "POST")
+    public Result<Collection<ClientData>> listRegisterClient(@ApiParam(name = "是否只查询激活状态", required = true) @RequestBody Boolean active) {
+        boolean isActive = Objects.equals(Boolean.TRUE, active);
+        return Result.success(this.monitorClientService.listRegisterClient(isActive));
+    }
+
+    /**
+     * 查询当前用户有权限的注册的客户端
+     * @param active 是否是激活的
+     * @return 注册的客户端
+     */
+    @PostMapping("listUserClient")
+    @ApiOperation(value = "查询当前用户有权限的注册的客户端", httpMethod = "POST")
+    public Result<Collection<ClientData>> listUserClient(@ApiParam(name = "是否只查询激活状态", required = true) @RequestBody Boolean active) {
+        boolean isActive = Objects.equals(Boolean.TRUE, active);
+        return Result.success(this.monitorClientService.listUserClient(AuthUtils.getNonNullCurrentUserId(), isActive));
+    }
+}

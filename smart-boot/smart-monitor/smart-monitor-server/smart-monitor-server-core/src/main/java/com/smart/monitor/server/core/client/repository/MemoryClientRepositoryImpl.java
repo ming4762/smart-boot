@@ -77,7 +77,7 @@ public class MemoryClientRepositoryImpl extends AbstractClientRepositoryImpl {
 
     @NonNull
     @Override
-    public Collection<ClientData> findByCode(@NonNull String name, boolean active) {
+    public Collection<ClientData> findByName(@NonNull String name, boolean active) {
         return this.findAll(active).stream()
                 .filter(item -> item.getApplication().getApplicationName().equals(name))
                 .collect(Collectors.toList());
@@ -85,7 +85,7 @@ public class MemoryClientRepositoryImpl extends AbstractClientRepositoryImpl {
 
     @NonNull
     @Override
-    public Collection<ClientData> findByCode(@NonNull List<String> codeList, boolean active) {
+    public Collection<ClientData> findByName(@NonNull List<String> codeList, boolean active) {
         if (codeList.isEmpty()) {
             return new ArrayList<>(0);
         }
@@ -116,7 +116,7 @@ public class MemoryClientRepositoryImpl extends AbstractClientRepositoryImpl {
 
     @Override
     public void removeByCode(String name) {
-        final Collection<ClientData> repositoryList = this.findByCode(name, false);
+        final Collection<ClientData> repositoryList = this.findByName(name, false);
         repositoryList.forEach(item -> this.repositoryDataMap.remove(item.getId()));
     }
 

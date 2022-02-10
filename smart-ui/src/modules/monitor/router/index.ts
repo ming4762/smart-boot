@@ -9,6 +9,11 @@ const monitorRouters: Array<RouteRecordRaw> = [
       {
         path: 'monitor/manager/application',
         component: () => import('@/modules/monitor/views/manager/application/MonitorApplicationListView.vue')
+      },
+      // 客户端管理页面
+      {
+        path: 'monitor/manager/client',
+        component: () => import('@/modules/monitor/views/manager/client/ClientManagerPage.vue')
       }
     ]
   }

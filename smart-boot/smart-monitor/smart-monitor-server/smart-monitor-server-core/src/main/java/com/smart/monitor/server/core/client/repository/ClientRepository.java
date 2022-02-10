@@ -68,7 +68,7 @@ public interface ClientRepository {
      * @return 客户端信息
      */
     @NonNull
-    Collection<ClientData> findByCode(@NonNull String name, boolean active);
+    Collection<ClientData> findByName(@NonNull String name, boolean active);
 
     /**
      * 通过编码集合查找
@@ -77,7 +77,7 @@ public interface ClientRepository {
      * @return 客户端信息
      */
     @NonNull
-    Collection<ClientData> findByCode(@NonNull List<String> codeList, boolean active);
+    Collection<ClientData> findByName(@NonNull List<String> codeList, boolean active);
 
     /**
      * 移除客户端
