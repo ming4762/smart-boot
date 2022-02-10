@@ -94,7 +94,8 @@ export default defineComponent({
       }
     }
     .header-left {
-      line-height: 64px;
+      display: flex;
+      align-items: center;
       float: left;
       ::v-deep(h3) {
         color: white !important;

@@ -12,10 +12,7 @@ import com.smart.monitor.server.manager.service.MonitorClientService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 import java.util.Objects;
@@ -85,5 +82,19 @@ public class MonitorClientController {
                         .eq(MonitorApplicationPO :: getApplicationCode, clientData.getApplication().getApplicationName())
                 )
         );
+    }
+
+
+    /**
+     * 通过ID查询注册客户端信息
+     * @param active 释放激活
+     * @param id 客户端ID
+     * @return 客户端信息
+     */
+    @PostMapping("getClientById/{id}")
+    @ApiOperation(value = "通过ID查询注册客户端信息", httpMethod = "POST")
+    public Result<ClientData> getClientById(@ApiParam(name = "是否只查询激活状态", required = true) @RequestBody Boolean active, @PathVariable("id") String id) {
+        boolean isActive = Objects.equals(Boolean.TRUE, active);
+        return Result.success(this.clientRepository.findById(ClientId.create(id), isActive));
     }
 }
