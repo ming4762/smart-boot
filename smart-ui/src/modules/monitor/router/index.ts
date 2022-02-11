@@ -28,6 +28,11 @@ const monitorRouters: Array<RouteRecordRaw> = [
         path: 'detail',
         component: () => import('@/modules/monitor/views/client/detail/ClientDetailPage.vue'),
         props: route => ({ clientId: route.query.clientId })
+      },
+      {
+        path: 'environment',
+        props: route => ({ clientId: route.query.clientId }),
+        component: () => import('@/modules/monitor/views/client/normal/environment/ClientEnvironmentPage.vue')
       }
     ]
   }

@@ -20,7 +20,9 @@
       </div>
     </a-layout-header>
     <a-layout class="full-height">
-      <a-layout-sider style="overflow: auto"></a-layout-sider>
+      <a-layout-sider style="overflow: auto">
+        <LayoutSide :data="menuData" :path-handler="pathHandler" />
+      </a-layout-sider>
       <a-layout>
         <div class="page-container full-height">
           <div class="view full-height">
@@ -37,15 +39,62 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, PropType, reactive } from 'vue'
 
 import { useShutdown, useLoadApplication, useRefreshClient, useLoadActuator } from './ClientMainHook'
+
+import LayoutSide from '@/modules/monitor/components/layout/LayoutSide.vue'
+
+interface Data {
+  icon: string;
+  path?: string;
+}
+
+interface Menu {
+  id: string;
+  data: Data;
+  text: string;
+  children: Array<Menu>;
+}
+
+const menuList: Array<Menu> = [
+  {
+    id: '1',
+    data: {
+      icon: 'BarsOutlined'
+    },
+    text: 'Normal',
+    children: [
+      {
+        id: '1-1',
+        data: {
+          icon: 'RadarChartOutlined',
+          path: '/monitor/client/detail'
+        },
+        text: 'Details',
+        children: []
+      },
+      {
+        id: '1-2',
+        data: {
+          icon: 'ApiOutlined',
+          path: '/monitor/client/environment'
+        },
+        text: 'Environment',
+        children: []
+      }
+    ]
+  }
+]
 
 /**
  * 客户端管理主页
  */
 export default defineComponent({
   name: 'ClientMain',
+  components: {
+    LayoutSide
+  },
   props: {
     clientId: {
       type: String as PropType<string>,
@@ -68,11 +117,21 @@ export default defineComponent({
      */
     const { actuators, loadActuators } = useLoadActuator(props.clientId)
     loadActuators()
+    const pathHandler = (path: string) => {
+      return {
+        path: path,
+        query: {
+          clientId: props.clientId
+        }
+      }
+    }
     return {
       actuators,
       ...shutDownHook,
       ...loadApplicationHook,
-      ...refreshClientHook
+      ...refreshClientHook,
+      menuData: reactive(menuList),
+      pathHandler
     }
   }
 })

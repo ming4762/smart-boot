@@ -1,16 +1,16 @@
 <template>
   <table style="width: 100%">
-    <template :key="data.title + key" v-for="(value, key) in data.details">
+    <template v-for="(value, key) in data.details" :key="data.title + key">
       <tr>
-        <td>{{key}}</td>
-        <td>{{value}}</td>
+        <td>{{ key }}</td>
+        <td>{{ value }}</td>
       </tr>
       <tr>
         <td class="td-divider">
-          <a-divider/>
+          <a-divider />
         </td>
         <td class="td-divider">
-          <a-divider/>
+          <a-divider />
         </td>
       </tr>
     </template>

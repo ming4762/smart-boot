@@ -36,6 +36,12 @@
         <ClientThreads :client-id="clientId" :time="time" />
       </a-col>
     </a-row>
+
+    <a-row class="detail-span large" style="height: 400px" :gutter="gutter">
+      <a-col :span="12">
+        <ClientMemoryHeap :client-id="clientId" :time="time" />
+      </a-col>
+    </a-row>
   </div>
 </template>
 
@@ -51,6 +57,7 @@ import ClientHealth from './ClientHealth.vue'
 import ClientProcess from './ClientProcess'
 import ClientGc from './ClientGc.vue'
 import ClientThreads from './ClientThreads.vue'
+import ClientMemoryHeap from './ClientMemoryHeap.vue'
 
 /**
  * 客户端详情
@@ -63,7 +70,8 @@ export default defineComponent({
     ClientHealth,
     ClientProcess,
     ClientGc,
-    ClientThreads
+    ClientThreads,
+    ClientMemoryHeap
   },
   props: {
     // 客户端ID

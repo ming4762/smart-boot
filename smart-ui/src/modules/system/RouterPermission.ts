@@ -21,7 +21,8 @@ const error403Path = '/error/403'
 const permissionMappingPaths: any = {
   '/codeCreateView': '/code/codeList',
   // 客户端监控
-  '/monitor/client/detail': '/monitor/manager/client'
+  '/monitor/client/detail': '/monitor/manager/client',
+  '/monitor/client/environment': '/monitor/manager/client'
 }
 
 /**
