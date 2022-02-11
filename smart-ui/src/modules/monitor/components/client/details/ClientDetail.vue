@@ -26,6 +26,14 @@
             <ClientProcess :client-id="clientId" :time="time" />
           </a-col>
         </a-row>
+        <a-row :span="24" class="detail-span">
+          <a-col :span="24">
+            <client-gc :client-id="clientId" :time="time" />
+          </a-col>
+        </a-row>
+      </a-col>
+      <a-col :span="12">
+        <ClientThreads :client-id="clientId" :time="time" />
       </a-col>
     </a-row>
   </div>
@@ -41,6 +49,8 @@ import ClientInfo from './ClientInfo.vue'
 import ClientMetadata from './ClientMetadata.vue'
 import ClientHealth from './ClientHealth.vue'
 import ClientProcess from './ClientProcess'
+import ClientGc from './ClientGc.vue'
+import ClientThreads from './ClientThreads.vue'
 
 /**
  * 客户端详情
@@ -51,7 +61,9 @@ export default defineComponent({
     ClientInfo,
     ClientMetadata,
     ClientHealth,
-    ClientProcess
+    ClientProcess,
+    ClientGc,
+    ClientThreads
   },
   props: {
     // 客户端ID

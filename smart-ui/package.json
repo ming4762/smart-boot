@@ -18,6 +18,7 @@
     "sortablejs": "^1.14.0",
     "vue": "^3.2.16",
     "vue-copy-to-clipboard": "^1.0.3",
+    "vue-echart5": "^1.0.1",
     "vue-i18n": "^9.1.9",
     "vue-router": "^4.0.12",
     "vuex": "^4.0.2",

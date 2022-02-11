@@ -1,5 +1,5 @@
 <template>
-  <div class="full-height" style="padding: 10px; background: white; overflow: auto">
+  <div class="full-height" style="padding: 8px; overflow: auto">
     <ClientDetail :client-id="clientId" />
   </div>
 </template>

@@ -12,3 +12,5 @@ declare module 'blueimp-md5'
 declare module 'nprogress'
 
 declare module 'sortablejs'
+
+declare module 'vue-echart5'

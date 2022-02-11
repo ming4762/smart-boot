@@ -28,6 +28,12 @@ public final class ClientData {
     @JsonSerialize(using = InstantJson.InstantSerializer.class)
     private Instant timestamp = Instant.now();
 
+    /**
+     * 刷新时间戳
+     */
+    @JsonSerialize(using = InstantJson.InstantSerializer.class)
+    private Instant refreshTime;
+
     private Application application;
 
     private final ClientId id;
@@ -71,6 +77,7 @@ public final class ClientData {
         this.statusInterval = clientManager.getStatusInterval();
         this.offlineInterval = clientManager.getOfflineInterval();
         this.token = clientManager.getToken();
+        this.refreshTime = Instant.now();
         this.serializeEventCodes = clientManager.getSerializeEventCodes() == null ? new HashSet<>(0) : clientManager.getSerializeEventCodes();
         return this;
     }
