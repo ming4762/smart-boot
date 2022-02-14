@@ -33,6 +33,16 @@ const monitorRouters: Array<RouteRecordRaw> = [
         path: 'environment',
         props: route => ({ clientId: route.query.clientId }),
         component: () => import('@/modules/monitor/views/client/normal/environment/ClientEnvironmentPage.vue')
+      },
+      {
+        path: 'beans',
+        props: route => ({ clientId: route.query.clientId }),
+        component: () => import('@/modules/monitor/views/client/normal/beans/ClientBeansPage.vue')
+      },
+      {
+        path: 'loggerConfig',
+        props: route => ({ clientId: route.query.clientId }),
+        component: () => import('@/modules/monitor/views/client/logger/LoggerConfigPage.vue')
       }
     ]
   }

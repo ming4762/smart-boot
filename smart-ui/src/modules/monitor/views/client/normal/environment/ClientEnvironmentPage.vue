@@ -53,7 +53,7 @@ const createTableData = (properties: any) => {
 const columns = [
   {
     dataIndex: 'key',
-    width: '237px',
+    width: '237px'
     // slots: {
     //   customRender: 'key'
     // }

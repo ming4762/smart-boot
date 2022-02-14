@@ -6,18 +6,21 @@ import ApiService from '@/common/utils/ApiService'
  * @param type 端点类型
  * @param urlHandler URL处理器
  * @param method 请求函数
+ * @param parameter 参数
  */
 export const loadActuator = (
   clientId: string,
   type: string,
   urlHandler: Function | undefined | null = (url: string): string => url,
-  method = 'GET'
+  method = 'GET',
+  parameter?: {[index: string]: any}
 ): Promise<any | void> => {
   let url = `/monitor/client/${clientId}/actuator/${type}`
   url = urlHandler ? urlHandler(url) : url
 
-  return ApiService.ajax(url, method)
+  return ApiService.ajax(url, method, parameter)
 }
+
 
 /**
  * 加载所有端点

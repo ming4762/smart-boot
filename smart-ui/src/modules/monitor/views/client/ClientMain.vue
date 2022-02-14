@@ -82,6 +82,33 @@ const menuList: Array<Menu> = [
         },
         text: 'Environment',
         children: []
+      },
+      {
+        id: '1-3',
+        data: {
+          icon: 'ApartmentOutlined',
+          path: '/monitor/client/beans'
+        },
+        text: 'Beans',
+        children: []
+      }
+    ]
+  },
+  {
+    id: '3',
+    data: {
+      icon: 'ProfileOutlined'
+    },
+    text: 'Loggers',
+    children: [
+      {
+        id: '3-1',
+        data: {
+          icon: 'SettingOutlined',
+          path: '/monitor/client/loggerConfig'
+        },
+        text: 'LoggerConfig',
+        children: []
       }
     ]
   }

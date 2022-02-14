@@ -22,7 +22,9 @@ const permissionMappingPaths: any = {
   '/codeCreateView': '/code/codeList',
   // 客户端监控
   '/monitor/client/detail': '/monitor/manager/client',
-  '/monitor/client/environment': '/monitor/manager/client'
+  '/monitor/client/environment': '/monitor/manager/client',
+  '/monitor/client/beans': '/monitor/manager/client',
+  '/monitor/client/loggerConfig': '/monitor/manager/client'
 }
 
 /**
