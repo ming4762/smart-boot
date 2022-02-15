@@ -43,6 +43,11 @@ const monitorRouters: Array<RouteRecordRaw> = [
         path: 'loggerConfig',
         props: route => ({ clientId: route.query.clientId }),
         component: () => import('@/modules/monitor/views/client/logger/LoggerConfigPage.vue')
+      },
+      {
+        path: 'httpMapping',
+        props: route => ({ clientId: route.query.clientId }),
+        component: () => import('@/modules/monitor/views/client/http/HttpMappingView.vue')
       }
     ]
   }

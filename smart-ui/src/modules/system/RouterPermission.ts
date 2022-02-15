@@ -24,7 +24,8 @@ const permissionMappingPaths: any = {
   '/monitor/client/detail': '/monitor/manager/client',
   '/monitor/client/environment': '/monitor/manager/client',
   '/monitor/client/beans': '/monitor/manager/client',
-  '/monitor/client/loggerConfig': '/monitor/manager/client'
+  '/monitor/client/loggerConfig': '/monitor/manager/client',
+  '/monitor/client/httpMapping': '/monitor/manager/client'
 }
 
 /**

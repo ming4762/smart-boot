@@ -111,6 +111,24 @@ const menuList: Array<Menu> = [
         children: []
       }
     ]
+  },
+  {
+    id: '4',
+    data: {
+      icon: 'IeOutlined'
+    },
+    text: 'Web',
+    children: [
+      {
+        id: '4-1',
+        data: {
+          icon: 'ForkOutlined',
+          path: '/monitor/client/httpMapping'
+        },
+        text: 'Http Mapping',
+        children: []
+      }
+    ]
   }
 ]
 

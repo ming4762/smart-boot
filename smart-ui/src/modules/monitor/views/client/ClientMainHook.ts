@@ -69,7 +69,8 @@ export const useShutdown = (clientId: string) => {
  */
 export const useLoadApplication = (clientId: string) => {
   const applicationData = ref<any>({
-    name: ''
+    name: '',
+    applicationCode: ''
   })
   onMounted(async () => {
     try {
@@ -80,6 +81,10 @@ export const useLoadApplication = (clientId: string) => {
     }
   })
   const computedApplicationName = computed(() => {
+    if (!applicationData.value.name || applicationData.value.name == '') {
+      document.title = ''
+      return  ''
+    }
     const name = `${applicationData.value.name} [${applicationData.value.applicationCode}]`
     document.title = name
     return name
