@@ -48,6 +48,11 @@ const monitorRouters: Array<RouteRecordRaw> = [
         path: 'httpMapping',
         props: route => ({ clientId: route.query.clientId }),
         component: () => import('@/modules/monitor/views/client/http/HttpMappingView.vue')
+      },
+      {
+        path: 'metrics',
+        props: route => ({ clientId: route.query.clientId }),
+        component: () => import('@/modules/monitor/views/client/metrics/MetricsListView.vue')
       }
     ]
   }

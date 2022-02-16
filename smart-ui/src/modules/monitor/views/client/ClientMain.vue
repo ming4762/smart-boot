@@ -91,6 +91,15 @@ const menuList: Array<Menu> = [
         },
         text: 'Beans',
         children: []
+      },
+      {
+        id: '1-4',
+        data: {
+          icon: 'UnorderedListOutlined',
+          path: '/monitor/client/metrics'
+        },
+        text: 'Metrics',
+        children: []
       }
     ]
   },
@@ -206,5 +215,21 @@ export default defineComponent({
       }
     }
   }
+}
+
+.page-container {
+  overflow: hidden;
+}
+
+.page-transition-enter {
+  opacity: 0;
+}
+.page-transition-leave-active {
+  opacity: 0;
+}
+.page-transition-enter .page-transition-container,
+.page-transition-leave-active .page-transition-container {
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
 }
 </style>
