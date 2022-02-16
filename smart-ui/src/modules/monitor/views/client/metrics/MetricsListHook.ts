@@ -4,7 +4,8 @@ import { errorMessage } from '@/components/notice/SystemNotice'
 import { loadActuator } from '@/modules/monitor/utils/ClientApiUtils'
 import StoreUtil from '@/common/utils/StoreUtil'
 
-import { addRefresh } from '@/modules/monitor/utils/ClientRefresh'
+import TimeTaskUtil from '@/common/utils/TimeTaskUtil'
+import { MONITOR_DETAIL_LOOP_GROUP } from '@/modules/monitor/constants/MonitorConstants'
 
 const meter_key = 'smart_monitor_select_metrics'
 const meter_measurements_key = 'smart_monitor_metrics_measurements'
@@ -207,7 +208,7 @@ export const useShowMeterData = (clientId: string, currentMeter: Ref) => {
   onMounted(() => {
     selectMeterList.value = StoreUtil.getStore(meter_key) || []
     loadMeterData()
-    addRefresh('loadMeterData', loadMeterData)
+    TimeTaskUtil.addLoop(MONITOR_DETAIL_LOOP_GROUP, 'loadMeterData', loadMeterData)
   })
 
   return {

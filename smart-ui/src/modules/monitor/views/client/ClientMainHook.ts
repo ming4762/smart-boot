@@ -7,7 +7,8 @@ import { loadActuator, loadActuatorList } from '@/modules/monitor/utils/ClientAp
 import { errorMessage } from '@/components/notice/SystemNotice'
 import ApiService from '@/common/utils/ApiService'
 
-import { changeRefresh, executeHandler } from '@/modules/monitor/utils/ClientRefresh'
+import TimeTaskUtil from '@/common/utils/TimeTaskUtil'
+import { MONITOR_DETAIL_LOOP_GROUP } from '@/modules/monitor/constants/MonitorConstants'
 
 const key = 'shutdownNotify'
 
@@ -27,9 +28,11 @@ export const useShutdown = (clientId: string) => {
       title: '确定要关闭应用实例吗?',
       icon: createVNode(ExclamationCircleOutlined),
       onOk: async () => {
+        // 关闭循环
+        TimeTaskUtil.removeLoopGroup(MONITOR_DETAIL_LOOP_GROUP)
         shutdownLoading.value = true
         try {
-          await loadActuator(clientId, 'shutdown')
+          await loadActuator(clientId, 'shutdown', null, 'POST')
         } catch (e) {
           errorMessage(e)
           return false
@@ -50,7 +53,7 @@ export const useShutdown = (clientId: string) => {
               duration: shutdownCloseTime.value
             })
           } else {
-            // window.close()
+            window.close()
           }
         }, 1000)
       }
@@ -121,14 +124,7 @@ export const useRefreshClient = () => {
    * 刷新时间变更时改变刷新
    */
   watch(refreshTimeModel, () => {
-    changeRefresh(refreshTimeModel.value)
-  })
-  onMounted(() => {
-    changeRefresh(refreshTimeModel.value)
-    /**
-     * 执行刷新函数
-     */
-    executeHandler()
+    TimeTaskUtil.addLoopGroup(MONITOR_DETAIL_LOOP_GROUP, refreshTimeModel.value)
   })
   return {
     refreshTimes: reactive(refreshTimes()),

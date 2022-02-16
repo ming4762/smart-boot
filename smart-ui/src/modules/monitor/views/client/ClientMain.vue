@@ -13,7 +13,7 @@
               </a-select>
             </a-form-item>
             <a-form-item>
-              <a-button v-if="actuators.shutdown" type="primary" danger @click="handleShutdown">Shutdown</a-button>
+              <a-button v-permission="'monitor:client:shoudown'" v-if="actuators.shutdown" type="primary" danger @click="handleShutdown">Shutdown</a-button>
             </a-form-item>
           </a-form>
         </div>
@@ -44,6 +44,8 @@ import { defineComponent, PropType, reactive } from 'vue'
 import { useShutdown, useLoadApplication, useRefreshClient, useLoadActuator } from './ClientMainHook'
 
 import LayoutSide from '@/modules/monitor/components/layout/LayoutSide.vue'
+import TimeTaskUtil from '@/common/utils/TimeTaskUtil'
+import { MONITOR_DETAIL_LOOP_GROUP } from '@/modules/monitor/constants/MonitorConstants'
 
 interface Data {
   icon: string;
@@ -157,6 +159,7 @@ export default defineComponent({
   },
   setup (props) {
 
+
     const shutDownHook = useShutdown(props.clientId)
     /**
      * 加载应用信息
@@ -166,6 +169,7 @@ export default defineComponent({
      * 客户端刷新hook
      */
     const refreshClientHook = useRefreshClient()
+    TimeTaskUtil.addLoopGroup(MONITOR_DETAIL_LOOP_GROUP, refreshClientHook.refreshTimeModel.value)
     /**
      * 加载端点
      */

@@ -48,7 +48,9 @@
 <script lang="ts">
 import { defineComponent, toRefs, ref, onMounted } from 'vue'
 
-import { addRefresh } from '@/modules/monitor/utils/ClientRefresh'
+import TimeTaskUtil from '@/common/utils/TimeTaskUtil'
+import { MONITOR_DETAIL_LOOP_GROUP } from '@/modules/monitor/constants/MonitorConstants'
+
 import ApiService from '@/common/utils/ApiService'
 
 import ClientInfo from './ClientInfo.vue'
@@ -90,8 +92,8 @@ export default defineComponent({
     })
     // 设置定时执行任务
     const time = ref(0)
-    addRefresh('detail', () => {
-      time.value++
+    TimeTaskUtil.addLoop(MONITOR_DETAIL_LOOP_GROUP, 'monitor_detail', () => {
+      time.value ++
     })
     return {
       time,
