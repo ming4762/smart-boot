@@ -13,7 +13,7 @@
               </a-select>
             </a-form-item>
             <a-form-item>
-              <a-button v-permission="'monitor:client:shoudown'" v-if="actuators.shutdown" type="primary" danger @click="handleShutdown">Shutdown</a-button>
+              <a-button v-if="actuators.shutdown" v-permission="'monitor:client:shutdown'" type="primary" danger @click="handleShutdown">Shutdown</a-button>
             </a-form-item>
           </a-form>
         </div>

@@ -17,7 +17,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.lang.NonNull;
 import org.springframework.util.AntPathMatcher;
@@ -28,6 +27,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Consumer;
@@ -59,6 +59,24 @@ public class ClientWebProxy {
                 }
             }
         }, needUp);
+    }
+
+    /**
+     * 下载功能
+     * @param clientId 客户端ID
+     * @param request 请求
+     * @param response 请求响应
+     * @param needUp 是否在线
+     */
+    @SneakyThrows
+    public void forwardDownload(@NonNull ClientId clientId, HttpServletRequest request, HttpServletResponse response, boolean needUp) {
+        // 获取客户端信息
+        final ClientData repositoryData = this.clientRepository.findById(clientId, false);
+        if (repositoryData == null) {
+            throw new ClientNoRegisterException(clientId);
+        }
+
+        this.forwardDownload(repositoryData, (clientData) -> this.createForwardRequest(request, clientData), response.getOutputStream(), needUp);
     }
 
     /**
@@ -114,6 +132,30 @@ public class ClientWebProxy {
         resultHandler.accept(result);
     }
 
+    /**
+     * 下载
+     * @param clientData 客户端信息
+     * @param requestHandler 请求函数
+     * @param outputStream 输出刘
+     * @param needUp 是否在线
+     */
+    public void forwardDownload(@NonNull ClientData clientData, Function<ClientData, ForwardRequest> requestHandler, @NonNull OutputStream outputStream, boolean needUp) {
+        // 获取客户端信息
+        if (needUp && clientData.getStatus().equals(ClientStatusEnum.DOWN)) {
+            throw new ClientDownException(clientData.getId());
+        }
+        ForwardRequest request = requestHandler.apply(clientData);
+        // 添加token
+        this.addTokenHeader(request, clientData);
+        RestUtils.download(
+                this.getUrl(clientData, request.getUri()),
+                request.getHttpMethod(),
+                request.getHttpHeaders(),
+                null,
+                outputStream
+        );
+    }
+
     protected String getUrl(@NonNull ClientData repositoryData, @NonNull String url) {
         return repositoryData.getApplication().getClientUrl() + url;
     }
@@ -153,7 +195,11 @@ public class ClientWebProxy {
      */
     protected Map<String, String> createHttpHeaders(@NonNull HttpServletRequest request, @NonNull ClientData clientData) {
         final Map<String, String> headerMap = Maps.newHashMap();
-        headerMap.put(HttpHeaders.CONTENT_TYPE, request.getHeader(HttpHeaders.CONTENT_TYPE));
+        Enumeration<String> headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String header = headerNames.nextElement();
+            headerMap.put(header, request.getHeader(header));
+        }
         return headerMap;
     }
 

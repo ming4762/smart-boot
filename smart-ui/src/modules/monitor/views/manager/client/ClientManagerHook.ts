@@ -3,6 +3,8 @@ import { ref, reactive, watch, onMounted, onBeforeUnmount } from 'vue'
 import ApiService from '@/common/utils/ApiService'
 import { errorMessage } from '@/components/notice/SystemNotice'
 import TimeTaskUtil from '@/common/utils/TimeTaskUtil'
+import { downActuator } from '@/modules/monitor/utils/ClientApiUtils'
+import fileDownload from 'js-file-download'
 
 /**
  * 加载数据函数
@@ -68,4 +70,16 @@ export const useRefreshData = (loadData: Function) => {
     refreshTimes: reactive(refreshTimes()),
     refreshTimeModel
   }
+}
+
+/**
+ * 下载内存转储
+ */
+export const handlerDownloadThreaddump = async (id: string, applicationName: string) => {
+  downActuator(id, 'threaddump', null, 'GET', {}, {
+    headers: {'Accept': 'text/plain'}
+  }).then(result => {
+    const blob = new Blob([result], {type: 'text/plain;charset=utf-8'})
+    fileDownload(blob, applicationName + '-threaddump.txt')
+  })
 }

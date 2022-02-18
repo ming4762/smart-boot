@@ -21,6 +21,7 @@ import java.nio.charset.StandardCharsets;
 public class ClientProxyController {
 
     public static final String CLIENT_PROXY_PATH = "/monitor/client/{clientId}/actuator/**";
+    public static final String CLIENT_PROXY_PATH_DOWNLOAD = "/monitor/clientDownload/{clientId}/actuator/**";
 
 
     private final ClientWebProxy clientWebProxy;
@@ -41,5 +42,19 @@ public class ClientProxyController {
         response.setContentType("application/json;charset=UTF-8");
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         this.clientWebProxy.forward(ClientId.create(clientId), request, response, true);
+    }
+
+
+    /**
+     * 客户端代理接口
+     * @param clientId 客户端ID
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     */
+    @RequestMapping(path = CLIENT_PROXY_PATH_DOWNLOAD, method = { RequestMethod.GET, RequestMethod.HEAD, RequestMethod.POST,
+            RequestMethod.PUT, RequestMethod.PATCH, RequestMethod.DELETE, RequestMethod.OPTIONS })
+    public void clientProxyDownload(@PathVariable("clientId") String clientId, HttpServletRequest request, HttpServletResponse response) {
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        this.clientWebProxy.forwardDownload(ClientId.create(clientId), request, response, true);
     }
 }

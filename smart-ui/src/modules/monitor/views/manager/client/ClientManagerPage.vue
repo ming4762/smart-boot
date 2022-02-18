@@ -24,6 +24,8 @@
         <a-dropdown>
           <template #overlay>
             <a-menu @click="({ key }) => handleMenuClick(key, row)">
+              <a-menu-item key="heapdump" :disabled="!hasPermission(permissions.heapdump)"><download-outlined />下载内存转储</a-menu-item>
+              <a-menu-item key="threaddump" :disabled="!hasPermission(permissions.threaddump)"><download-outlined />下载线程转储</a-menu-item>
             </a-menu>
           </template>
           <a-button :size="tableButtonSizeConfig" style="margin-left: 5px">
@@ -65,14 +67,21 @@
 import {computed, defineComponent, onMounted} from 'vue'
 import { useRouter } from 'vue-router'
 
-import { WarningTwoTone, CheckCircleTwoTone, DownOutlined } from '@ant-design/icons-vue'
+import { WarningTwoTone, CheckCircleTwoTone, DownOutlined, DownloadOutlined } from '@ant-design/icons-vue'
 
 import SizeConfigHooks from '@/components/config/SizeConfigHooks'
 import dayjs from 'dayjs'
 import TimeUtils from '@/common/utils/TimeUtils'
 import { useVxeTable } from '@/components/hooks/CrudHooks'
+import AuthMixins from '@/modules/system/mixins/AuthMixins'
+import { handleLoadData, useRefreshData, handlerDownloadThreaddump } from './ClientManagerHook'
+import { downActuator } from '@/modules/monitor/utils/ClientApiUtils'
+import fileDownload from 'js-file-download'
 
-import { handleLoadData, useRefreshData } from './ClientManagerHook'
+const permissions = {
+  heapdump: 'monitor:client:heapdump',
+  threaddump: 'monitor:client:threaddump'
+}
 
 /**
  * 客户端管理页面
@@ -82,8 +91,12 @@ export default defineComponent({
   components: {
     WarningTwoTone,
     CheckCircleTwoTone,
-    DownOutlined
+    DownOutlined,
+    DownloadOutlined
   },
+  mixins: [
+    AuthMixins
+  ],
   setup () {
     const router = useRouter()
 
@@ -129,8 +142,16 @@ export default defineComponent({
      * @param key
      * @param row
      */
-    const handleMenuClick = (key: string, row: any) => {
-      console.log(key, row)
+    const handleMenuClick = (key: string, { id, application }: any) => {
+      if (key === 'heapdump') {
+        downActuator(id.value, key)
+            .then(result => {
+              fileDownload(result, 'heapdump' )
+        })
+      } else if (key === 'threaddump') {
+        // 下载内存转储
+        handlerDownloadThreaddump(id.value, application.applicationName)
+      }
     }
     return {
       ...SizeConfigHooks(),
@@ -146,6 +167,7 @@ export default defineComponent({
   },
   data () {
     return {
+      permissions,
       toolbarConfig: {
         slots: {
           buttons: 'toolbar_buttons',
