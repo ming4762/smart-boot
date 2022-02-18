@@ -19,7 +19,7 @@ export default {
             backstage: '后台'
           },
           button: {
-            reload: '刷新'
+            reload: '重新载入'
           },
           message: {
             reloadConfirm: '确定要刷新国际化信息吗？',

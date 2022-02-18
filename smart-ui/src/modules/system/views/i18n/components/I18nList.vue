@@ -80,7 +80,7 @@
             <a-input v-model:value="addEditModel.remark" :placeholder="$t('common.formValidate.remark')" />
           </a-form-item>
           <a-form-item name="seq" :label="$t('common.table.seq')">
-            <a-input-number v-model:value="addEditModel.seq" :placeholder="$t('common.formValidate.seq')" />
+            <a-input-number v-model:value="addEditModel.seq" style="width: 100%;" :placeholder="$t('common.formValidate.seq')" />
           </a-form-item>
         </a-form>
       </a-spin>

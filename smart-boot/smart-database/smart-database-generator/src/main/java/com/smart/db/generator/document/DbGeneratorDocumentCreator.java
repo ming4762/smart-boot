@@ -128,7 +128,8 @@ public class DbGeneratorDocumentCreator {
      */
     private static List<DocumentVO> createSearchConfigDocument() {
         List<DocumentVO> documentList = Lists.newArrayList(
-                new DocumentVO("selectTable", "下拉表格配置，参考表格配置信息", "Object", null, null, true)
+                new DocumentVO("selectTable", "下拉表格配置，参考表格配置信息", "Object", null, null, true),
+                new DocumentVO("searchSymbol", "搜索标识", "String", null, "=", false)
         );
         documentList.addAll(createFormConfigCommonDocument());
         return documentList;
