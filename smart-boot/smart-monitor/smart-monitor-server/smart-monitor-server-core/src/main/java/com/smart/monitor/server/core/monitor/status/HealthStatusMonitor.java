@@ -69,7 +69,7 @@ public class HealthStatusMonitor implements StatusMonitor {
             health = JsonUtils.parse(healthData[0], ClientHealthResult.class);
         }
         if (health != null) {
-            ClientHealthCheckEventData eventData = new ClientHealthCheckEventData(TimeUnit.NANOSECONDS.toMicros(System.nanoTime() - startTimestamp), null, health);
+            ClientHealthCheckEventData eventData = new ClientHealthCheckEventData(TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTimestamp), null, health);
             // 状态检测返回结果
             // 判断是UP还是DOWN
             if (ClientStatusEnum.UP.equals(health.getStatus())) {

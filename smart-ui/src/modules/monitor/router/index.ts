@@ -14,6 +14,11 @@ const monitorRouters: Array<RouteRecordRaw> = [
       {
         path: 'monitor/manager/client',
         component: () => import('@/modules/monitor/views/manager/client/ClientManagerPage.vue')
+      },
+      // 应用事件
+      {
+        path: 'monitor/manager/event',
+        component: () => import('@/modules/monitor/views/manager/event/MonitorEventListView.vue')
       }
     ]
   },

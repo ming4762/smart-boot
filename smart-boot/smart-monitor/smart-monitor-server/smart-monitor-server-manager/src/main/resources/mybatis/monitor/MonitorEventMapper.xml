@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smart.monitor.server.manager.mapper.MonitorEventMapper">
+    <sql id="columnList">
+        <!--   id 主键  索引   -->
+        id,
+        <!--   客户端名称      -->
+        application_code,
+        <!--   客户端ID      -->
+        client_id,
+        <!--   事件编码      -->
+        event_code,
+        <!--   时间戳      -->
+        timestamp,
+        <!--   事件内容      -->
+        event_message,
+        <!--   创建事件      -->
+        create_time,
+    </sql>
+
+    <resultMap id="commonResultMap" type="com.smart.monitor.server.manager.model.MonitorEventPO">
+        <!--   id 主键  索引   -->
+        <id column="id" property="id" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   客户端名称      -->
+        <result column="application_code" property="applicationCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   客户端ID      -->
+        <result column="client_id" property="clientId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   事件编码      -->
+        <result column="event_code" property="eventCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   时间戳      -->
+        <result column="timestamp" property="timestamp" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   事件内容      -->
+        <result column="event_message" property="eventMessage" javaType="java.lang.String" jdbcType="TEXT"/>
+        <!--   创建事件      -->
+        <result column="create_time" property="createTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+    </resultMap>
+</mapper>

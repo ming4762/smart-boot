@@ -13,6 +13,9 @@ import com.smart.monitor.server.core.client.request.ClientWebProxy;
 import com.smart.monitor.server.core.context.DefaultMonitorContextImpl;
 import com.smart.monitor.server.core.context.MonitorContext;
 import com.smart.monitor.server.core.event.MonitorEventPublisher;
+import com.smart.monitor.server.core.event.store.DefaultMemoryMonitorEventStore;
+import com.smart.monitor.server.core.event.store.MonitorEventStore;
+import com.smart.monitor.server.core.event.store.MonitorEventStoreHandler;
 import com.smart.monitor.server.core.monitor.StatusMonitor;
 import com.smart.monitor.server.core.monitor.StatusMonitorManager;
 import com.smart.monitor.server.core.monitor.status.HealthStatusMonitor;
@@ -118,5 +121,25 @@ public class MonitorServerAutoConfiguration {
     @ConditionalOnMissingBean
     public StatusMonitor healthStatusMonitor(ClientWebProxy clientWebProxy, MonitorEventPublisher eventPublisher, ClientRepository clientRepository, ClientProcessor clientProcessor) {
         return new HealthStatusMonitor(clientWebProxy, eventPublisher, clientRepository, clientProcessor);
+    }
+
+    /**
+     * 创建事件存储控制器
+     * @return MonitorEventStoreHandler
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    public MonitorEventStoreHandler monitorEventStoreHandler() {
+        return new MonitorEventStoreHandler();
+    }
+
+    /**
+     * 创建默认的事件存储器：内存事件存储器
+     * @return DefaultMemoryMonitorEventStore
+     */
+    @Bean
+    @ConditionalOnMissingBean(MonitorEventStore.class)
+    public MonitorEventStore memoryMonitorEventStore() {
+        return new DefaultMemoryMonitorEventStore();
     }
 }

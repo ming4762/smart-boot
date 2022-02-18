@@ -35,6 +35,12 @@
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>com.smart</groupId>
+			<artifactId>smart-auth-core</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
 	</dependencies>
 
 
