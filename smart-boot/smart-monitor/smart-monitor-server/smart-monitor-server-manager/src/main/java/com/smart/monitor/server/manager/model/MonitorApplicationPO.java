@@ -49,4 +49,14 @@ public class MonitorApplicationPO extends BaseModelUserTime {
      */
     private String serializeEventCode;
 
+    /**
+     * 通知的事件编码
+     */
+    private String notifyEventCode;
+
+    /**
+     * 通知邮箱
+     */
+    private String notifyMails;
+
 }

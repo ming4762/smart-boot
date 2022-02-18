@@ -15,11 +15,11 @@ public enum BuiltInEventCodeEnum implements EventCode {
      * 下线事件
      */
     DOWN,
-    DEREGISTER,
     REGISTER,
-    OFFLINE,
-    ONLINE,
     REGISTERED_UPDATE,
+    DEREGISTER,
+    ONLINE,
+    OFFLINE,
     /**
      * 健康状态检测
      */

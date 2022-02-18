@@ -12,7 +12,8 @@ export default {
 			offlineInterval: '离线检测间隔(ms)',
 			token: 'Token',
 			serializeEventCode: '序列化的事件编码列表',
-			setUserGroup: '设置用户组'
+			setUserGroup: '设置用户组',
+			notifyEventCode: '通知事件编码'
     },
 		validate: {
 			name: '请输入应用名称',
@@ -20,7 +21,8 @@ export default {
 			statusInterval: '请输入状态检测间隔时间',
 			offlineInterval: '请输入离线检测事件间隔',
 			token: '请输入Token',
-			serializeEventCode: '请输入序列化的事件编码列表'
+			serializeEventCode: '请输入序列化的事件编码列表',
+			notifyEventCode: '请输入通知事件编码'
     },
 		rules: {
 			'name_NOT_EMPTY': '应用名称不能为空',

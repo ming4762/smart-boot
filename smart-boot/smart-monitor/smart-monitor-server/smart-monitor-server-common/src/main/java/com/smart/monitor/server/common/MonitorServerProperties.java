@@ -29,7 +29,7 @@ public class MonitorServerProperties implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         final MailNotify mail = this.notify.getMail();
-        if (Objects.equals(mail.enable, Boolean.TRUE)) {
+        if (Objects.equals(mail.enabled, Boolean.TRUE)) {
             Assert.notNull(mail.from, "from email is null");
         }
     }
@@ -71,6 +71,11 @@ public class MonitorServerProperties implements InitializingBean {
     public static class Notify {
 
         private MailNotify mail = new MailNotify();
+
+        /**
+         * 默认的通知事件
+         */
+        private String defaultEvent = "UP,DOWN,OFFLINE,ONLINE";
     }
 
     /**
@@ -80,7 +85,7 @@ public class MonitorServerProperties implements InitializingBean {
     @Setter
     public static class MailNotify {
 
-        private Boolean enable = Boolean.FALSE;
+        private Boolean enabled = Boolean.FALSE;
 
         /**
          * 发件人
@@ -88,16 +93,9 @@ public class MonitorServerProperties implements InitializingBean {
         private String from;
 
         /**
-         * 默认的通知事件
-         */
-        private String defaultEvent = "UP,DOWN,OFFLINE,ONLINE";
-
-        /**
          * 默认的收件人
          */
         private String defaultTo;
-
-        private String defaultCc;
 
         /**
          * 模板路径

@@ -44,7 +44,19 @@ export const handleLoadData = async (params: any, searchParameter: any) => {
  */
 export const handleGetById = async (id: number) => {
 	try {
-		return await ApiService.postAjax('monitor/manager/application/getById', id)
+		const data = await ApiService.postAjax('monitor/manager/application/getById', id)
+		if (data.serializeEventCode && data.serializeEventCode !== '') {
+			data.serializeEventCode = data.serializeEventCode.split(',').map((item: string) => item.trim())
+		} else {
+			data.serializeEventCode = []
+		}
+		if (data.notifyEventCode && data.notifyEventCode !== '') {
+			data.notifyEventCode = data.notifyEventCode.split(',').map((item: string) => item.trim())
+		} else {
+			data.notifyEventCode = []
+		}
+		console.log(data)
+		return data
 	} catch (e) {
 		errorMessage(e)
 		throw e
@@ -57,7 +69,14 @@ export const handleGetById = async (id: number) => {
  */
 export const handleSaveUpdate = async (model: any) => {
 	try {
-		await ApiService.postAjax('monitor/manager/application/saveUpdate', model)
+		const saveData = Object.assign({}, model)
+		if (saveData.serializeEventCode) {
+			saveData.serializeEventCode = saveData.serializeEventCode.map((item: string) => item.trim()).join(',')
+		}
+		if (saveData.notifyEventCode) {
+			saveData.notifyEventCode = saveData.notifyEventCode.map((item: string) => item.trim()).join(',')
+		}
+		await ApiService.postAjax('monitor/manager/application/saveUpdate', saveData)
 	} catch (e) {
 		errorMessage(e)
 		throw e

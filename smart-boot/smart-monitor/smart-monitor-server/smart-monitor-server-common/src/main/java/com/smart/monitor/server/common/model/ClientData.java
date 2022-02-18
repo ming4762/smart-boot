@@ -49,6 +49,10 @@ public final class ClientData {
     @NonNull
     private Set<String> serializeEventCodes;
 
+    private Set<String> notifyEventCodes;
+
+    private Set<String> notifyMails;
+
     /**
      * 离线时间间隔
      */
@@ -79,6 +83,8 @@ public final class ClientData {
         this.token = clientManager.getToken();
         this.refreshTime = Instant.now();
         this.serializeEventCodes = clientManager.getSerializeEventCodes() == null ? new HashSet<>(0) : clientManager.getSerializeEventCodes();
+        this.notifyEventCodes = clientManager.getNotifyEventCodes() == null ? new HashSet<>(0) : clientManager.getNotifyEventCodes();
+        this.notifyMails = clientManager.getNotifyMails() == null ? new HashSet<>(0) : clientManager.getNotifyMails();
         return this;
     }
 

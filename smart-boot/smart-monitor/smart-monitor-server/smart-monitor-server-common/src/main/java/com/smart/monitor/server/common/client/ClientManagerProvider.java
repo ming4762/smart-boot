@@ -18,4 +18,5 @@ public interface ClientManagerProvider {
      */
     @Nullable
     ClientManagerData getByName(@NonNull String applicationName);
+
 }

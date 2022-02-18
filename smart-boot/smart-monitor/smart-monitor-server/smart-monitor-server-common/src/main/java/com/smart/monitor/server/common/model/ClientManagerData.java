@@ -45,4 +45,14 @@ public class ClientManagerData {
      * 序列化的事件编码
      */
     private Set<String> serializeEventCodes;
+
+    /**
+     * 通知事件列表
+     */
+    private Set<String> notifyEventCodes;
+
+    /**
+     * 通知邮箱列表
+     */
+    private Set<String> notifyMails;
 }

@@ -184,10 +184,14 @@
               <a-form-item
                 :label="$t('monitor.views.application.title.serializeEventCode')"
                 name="serializeEventCode">
-                <a-textarea
-                  v-model:value="formProps.model.serializeEventCode"
-                  :rows="3"
-                  :placeholder="$t('monitor.views.application.validate.serializeEventCode')" />
+                <EventSelect v-model:value="formProps.model.serializeEventCode" :placeholder="$t('monitor.views.application.validate.serializeEventCode')" />
+              </a-form-item>
+            </a-col>
+            <a-col :span="12">
+              <a-form-item
+                :label="$t('monitor.views.application.title.notifyEventCode')"
+                name="notifyEventCode">
+                <EventSelect v-model:value="formProps.model.notifyEventCode" :placeholder="$t('monitor.views.application.validate.notifyEventCode')" />
               </a-form-item>
             </a-col>
           </a-row>
@@ -220,12 +224,14 @@ import { handleLoadData, handleGetById, handleSaveUpdate, handleDelete, useSetUs
 import { tableUseYn } from '@/components/common/TableCommon'
 
 import UserGroupTransfer from '@/modules/system/components/user/UserGroupTransfer.vue'
+import EventSelect from '@/modules/monitor/components/event/EventSelect.vue'
 
 export default defineComponent({
   name: 'MonitorApplicationListView',
   components: {
     DownOutlined,
-    UserGroupTransfer
+    UserGroupTransfer,
+    EventSelect
   },
   setup () {
     const { t } = useI18n()

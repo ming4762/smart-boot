@@ -12,7 +12,8 @@ export default {
 			offlineInterval: 'offline interval(ms)',
 			token: 'Token',
 			serializeEventCode: 'Serialize event code',
-			setUserGroup: 'Set user group'
+			setUserGroup: 'Set user group',
+			notifyEventCode: 'Notify event code'
     },
 		validate: {
 			name: 'Please enter application name',
@@ -20,7 +21,8 @@ export default {
 			statusInterval: 'Please enter status interval',
 			offlineInterval: 'Please enter offline interval',
 			token: 'Please enter token',
-			serializeEventCode: 'Please enter serialize event code'
+			serializeEventCode: 'Please enter serialize event code',
+			notifyEventCode: 'Please enter notify event code'
     },
 		rules: {
 			'name_NOT_EMPTY': 'Application name cannot be empty',

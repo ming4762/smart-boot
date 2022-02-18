@@ -62,4 +62,6 @@ public class MonitorApplicationSaveUpdateDTO implements Serializable {
     */
     private String serializeEventCode;
 
+    private String notifyEventCode;
+
 }

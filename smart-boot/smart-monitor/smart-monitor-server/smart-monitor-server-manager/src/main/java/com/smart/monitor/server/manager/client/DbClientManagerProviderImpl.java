@@ -63,6 +63,31 @@ public class DbClientManagerProviderImpl implements ClientManagerProvider {
                     .collect(Collectors.toSet())
             );
         }
+        // 设置通知的事件编码
+        String notifyEventCodes = application.getNotifyEventCode();
+        if (StringUtils.isBlank(notifyEventCodes)) {
+            notifyEventCodes = this.serverProperties.getNotify().getDefaultEvent();
+        }
+        if (StringUtils.isNotBlank(notifyEventCodes)) {
+            clientManager.setNotifyEventCodes(
+                    Arrays.stream(notifyEventCodes.split(","))
+                            .map(String::trim)
+                            .collect(Collectors.toSet())
+            );
+        }
+        // 设置通知邮箱
+        String notifyMails = application.getNotifyMails();
+        if (StringUtils.isBlank(notifyMails)) {
+            notifyMails = this.serverProperties.getNotify().getMail().getDefaultTo();
+        }
+        if (StringUtils.isNotBlank(notifyMails)) {
+            clientManager.setNotifyMails(
+                    Arrays.stream(notifyMails.split(";"))
+                            .map(String::trim)
+                            .collect(Collectors.toSet())
+            );
+        }
         return clientManager;
     }
+
 }
