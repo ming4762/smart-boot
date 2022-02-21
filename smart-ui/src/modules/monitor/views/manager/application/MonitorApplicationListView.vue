@@ -182,9 +182,9 @@
             </a-col>
             <a-col :span="12">
               <a-form-item
-                :label="$t('monitor.views.application.title.serializeEventCode')"
-                name="serializeEventCode">
-                <EventSelect v-model:value="formProps.model.serializeEventCode" :placeholder="$t('monitor.views.application.validate.serializeEventCode')" />
+                :label="$t('monitor.views.application.title.notifyMails')"
+                name="notifyMails">
+                <a-textarea v-model:value="formProps.model.notifyMails" :row="3" :placeholder="$t('monitor.views.application.validate.notifyMails')" />
               </a-form-item>
             </a-col>
             <a-col :span="12">
@@ -192,6 +192,13 @@
                 :label="$t('monitor.views.application.title.notifyEventCode')"
                 name="notifyEventCode">
                 <EventSelect v-model:value="formProps.model.notifyEventCode" :placeholder="$t('monitor.views.application.validate.notifyEventCode')" />
+              </a-form-item>
+            </a-col>
+            <a-col :span="12">
+              <a-form-item
+                :label="$t('monitor.views.application.title.serializeEventCode')"
+                name="serializeEventCode">
+                <EventSelect v-model:value="formProps.model.serializeEventCode" :placeholder="$t('monitor.views.application.validate.serializeEventCode')" />
               </a-form-item>
             </a-col>
           </a-row>

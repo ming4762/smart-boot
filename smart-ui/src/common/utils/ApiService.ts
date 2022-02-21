@@ -31,7 +31,10 @@ export default class ApiService {
   /**
    * 获取后台地址
    */
-  public static getApiUrl(): string {
+  public static getApiUrl(url?: string): string {
+    if (url) {
+      return getApiUrl() + url
+    }
     return getApiUrl()
   }
 
@@ -50,7 +53,6 @@ export default class ApiService {
    * @param ajaxType 请求类型
    * @param parameter 参数
    * @param customParameter 自定义参数
-   * @private
    */
   public static ajax (url: string, ajaxType: string, parameter?: {[index: string]: any}, customParameter?: {[index: string]: any}) {
     const params = customParameter || {}
@@ -67,6 +69,20 @@ export default class ApiService {
           return Promise.reject(data)
         }
         return data.data
+      })
+  }
+
+  /**
+   * 下载函数
+   * @param url 请求地址
+   * @param ajaxType 请求类型
+   * @param parameter 参数
+   * @param customParameter 自定义参数
+   */
+  public static download (url: string, ajaxType: string, parameter?: {[index: string]: any}, customParameter?: {[index: string]: any}) {
+    return this.request(url, ajaxType, parameter, customParameter)
+      .then((result: any) => {
+        return result.data
       })
   }
 

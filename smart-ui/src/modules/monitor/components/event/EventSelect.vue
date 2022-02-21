@@ -20,6 +20,9 @@ export default defineComponent({
      * 加载数据函数
      */
     const loadData = async () => {
+      if (options.value.length > 0) {
+        return;
+      }
       try {
         const result = await ApiService.postAjax('monitor/manager/event/listBuiltInEventCode')
         options.value = result.map((item: string) => {

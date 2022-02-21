@@ -13,7 +13,8 @@ export default {
 			token: 'Token',
 			serializeEventCode: 'Serialize event code',
 			setUserGroup: 'Set user group',
-			notifyEventCode: 'Notify event code'
+			notifyEventCode: 'Notify event code',
+			notifyMails: 'Notify mails'
     },
 		validate: {
 			name: 'Please enter application name',
@@ -22,7 +23,8 @@ export default {
 			offlineInterval: 'Please enter offline interval',
 			token: 'Please enter token',
 			serializeEventCode: 'Please enter serialize event code',
-			notifyEventCode: 'Please enter notify event code'
+			notifyEventCode: 'Please enter notify event code',
+			notifyMails: 'Split with semicolon'
     },
 		rules: {
 			'name_NOT_EMPTY': 'Application name cannot be empty',

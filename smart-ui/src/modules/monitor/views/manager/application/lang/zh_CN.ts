@@ -13,7 +13,8 @@ export default {
 			token: 'Token',
 			serializeEventCode: '序列化的事件编码列表',
 			setUserGroup: '设置用户组',
-			notifyEventCode: '通知事件编码'
+			notifyEventCode: '通知事件编码',
+			notifyMails: '通知邮箱'
     },
 		validate: {
 			name: '请输入应用名称',
@@ -22,7 +23,8 @@ export default {
 			offlineInterval: '请输入离线检测事件间隔',
 			token: '请输入Token',
 			serializeEventCode: '请输入序列化的事件编码列表',
-			notifyEventCode: '请输入通知事件编码'
+			notifyEventCode: '请输入通知事件编码',
+			notifyMails: '使用分号分割'
     },
 		rules: {
 			'name_NOT_EMPTY': '应用名称不能为空',
