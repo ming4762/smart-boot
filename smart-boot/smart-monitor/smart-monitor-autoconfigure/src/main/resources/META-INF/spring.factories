@@ -2,4 +2,5 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.smart.monitor.autoconfigure.RestAutoConfiguration,\
   com.smart.monitor.autoconfigure.client.SmartMonitorClientAutoConfiguration,\
-  com.smart.monitor.autoconfigure.server.MonitorServerAutoConfiguration
+  com.smart.monitor.autoconfigure.server.MonitorServerAutoConfiguration,\
+  com.smart.monitor.autoconfigure.server.MonitorServerMailNotifyAutoConfiguration
