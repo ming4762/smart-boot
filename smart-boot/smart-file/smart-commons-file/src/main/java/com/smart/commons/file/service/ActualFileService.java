@@ -26,10 +26,11 @@ public interface ActualFileService {
      * 保存文件
      * @param inputStream 文件流
      * @param filename 文件名
+     * @param md5 文件的MD5
      * @return 文件ID
      */
     @NonNull
-    String save(@NonNull InputStream inputStream, String filename);
+    String save(@NonNull InputStream inputStream, String filename, String md5);
 
     /**
      * 删除文件

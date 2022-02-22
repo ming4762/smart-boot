@@ -48,8 +48,12 @@ public class ActualFileServiceNfsImpl implements ActualFileService {
     @Override
     @NonNull
     public String save(@NonNull File file, String filename) throws IOException {
-        try (FileInputStream inputStream = new FileInputStream(file)) {
-            return this.save(inputStream, StringUtils.isEmpty(filename) ? file.getName() : filename);
+        try (
+                FileInputStream inputStream = new FileInputStream(file);
+                FileInputStream md5InputStream = new FileInputStream(file)
+                ) {
+            String md5 = Md5Utils.md5(md5InputStream);
+            return this.save(inputStream, StringUtils.isEmpty(filename) ? file.getName() : filename, md5);
         }
     }
 
@@ -64,33 +68,18 @@ public class ActualFileServiceNfsImpl implements ActualFileService {
     @SneakyThrows
     @Override
     @NonNull
-    public String save(@NonNull InputStream inputStream, String filename) {
-        InputStream md5InputStream = null;
-        InputStream saveInputStream = null;
-        try (final ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            // 获取channel
-            final ChannelSftp channelSftp = this.jcraftChannelProvider.getChannel();
-            IOUtils.copy(inputStream, outputStream);
-            // 计算md5
-            md5InputStream = new ByteArrayInputStream(outputStream.toByteArray());
-            final String md5 = Md5Utils.md5(md5InputStream);
-            final DiskFilePathBO diskFilePath = new DiskFilePathBO(this.basePath, md5, filename);
-            // 创建并进入路径
-            JcraftUtils.createDirectories(channelSftp, diskFilePath.getFolderPath());
-            // 执行保存
-            saveInputStream = new ByteArrayInputStream(outputStream.toByteArray());
-            channelSftp.put(saveInputStream, diskFilePath.getDiskFilename());
-            // 归还连接
-            this.jcraftChannelProvider.returnChannel(channelSftp);
-            return diskFilePath.getFileId();
-        } finally {
-            if (md5InputStream != null) {
-                md5InputStream.close();
-            }
-            if (saveInputStream != null) {
-                saveInputStream.close();
-            }
-        }
+    public String save(@NonNull InputStream inputStream, String filename, String md5) {
+        // 获取channel
+        final ChannelSftp channelSftp = this.jcraftChannelProvider.getChannel();
+        // 计算md5
+        final DiskFilePathBO diskFilePath = new DiskFilePathBO(this.basePath, md5, filename);
+        // 创建并进入路径
+        JcraftUtils.createDirectories(channelSftp, diskFilePath.getFolderPath());
+        // 执行保存
+        channelSftp.put(inputStream, diskFilePath.getDiskFilename());
+        // 归还连接
+        this.jcraftChannelProvider.returnChannel(channelSftp);
+        return diskFilePath.getFileId();
     }
 
     /**

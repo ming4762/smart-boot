@@ -47,7 +47,9 @@ public class ActualFileServiceMongoImpl implements ActualFileService {
     @Override
     public @NonNull
     String save(@NonNull File file, String filename) {
-        return this.gridFsTemplate.store(new FileInputStream(file), filename).toString();
+        try (FileInputStream fileInputStream = new FileInputStream(file)) {
+            return this.gridFsTemplate.store(fileInputStream, filename).toString();
+        }
     }
 
     /**
@@ -59,7 +61,7 @@ public class ActualFileServiceMongoImpl implements ActualFileService {
      */
     @Override
     public @NonNull
-    String save(@NonNull InputStream inputStream, String filename) {
+    String save(@NonNull InputStream inputStream, String filename, String md5) {
         return this.gridFsTemplate.store(inputStream, filename).toString();
     }
 

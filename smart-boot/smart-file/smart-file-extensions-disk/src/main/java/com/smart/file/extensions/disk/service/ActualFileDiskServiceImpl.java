@@ -37,8 +37,12 @@ public class ActualFileDiskServiceImpl implements ActualFileService {
      */
     @Override
     public @NonNull String save(@NonNull File file, String filename) throws IOException {
-        try (FileInputStream inputStream = new FileInputStream(file)) {
-            return this.save(inputStream, !StringUtils.hasText(filename) ? file.getName() : filename);
+        try (
+                FileInputStream inputStream = new FileInputStream(file);
+                FileInputStream md5InputStream = new FileInputStream(file)
+                ) {
+            String md5 = Md5Utils.md5(md5InputStream);
+            return this.save(inputStream, !StringUtils.hasText(filename) ? file.getName() : filename, md5);
         }
     }
 
@@ -50,11 +54,8 @@ public class ActualFileDiskServiceImpl implements ActualFileService {
      */
     @SneakyThrows
     @Override
-    public @NonNull String save(@NonNull InputStream inputStream, String filename) {
-        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        IOUtils.copy(inputStream, outputStream);
+    public @NonNull String save(@NonNull InputStream inputStream, String filename, String md5) {
         // 计算md5
-        final String md5 = Md5Utils.md5(new ByteArrayInputStream(outputStream.toByteArray()));
         final DiskFilePathBO diskFilePath = new DiskFilePathBO(this.basePath, md5, filename);
         // 获取文件路径
         final Path folderPath = Paths.get(diskFilePath.getFolderPath());
@@ -63,7 +64,7 @@ public class ActualFileDiskServiceImpl implements ActualFileService {
         }
         final String filePath = diskFilePath.getFilePath();
         final Path inPath = Paths.get(filePath);
-        Files.copy(new ByteArrayInputStream(outputStream.toByteArray()), inPath);
+        Files.copy(inputStream, inPath);
         return diskFilePath.getFileId();
     }
 

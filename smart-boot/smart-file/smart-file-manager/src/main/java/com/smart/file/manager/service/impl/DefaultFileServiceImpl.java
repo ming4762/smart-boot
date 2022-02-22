@@ -284,7 +284,7 @@ public class DefaultFileServiceImpl extends BaseServiceImpl<SysFileMapper, SysFi
     @SneakyThrows
     private String saveActualFile(SysFileBO file) {
         try (InputStream inputStream = file.getInputStream()) {
-            return this.getActualFileService(file.getFile().getHandlerType()).save(inputStream, file.getFile().getFileName());
+            return this.getActualFileService(file.getFile().getHandlerType()).save(inputStream, file.getFile().getFileName(), file.getFile().getMd5());
         }
 
     }
