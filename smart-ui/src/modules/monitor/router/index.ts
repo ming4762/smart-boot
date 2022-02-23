@@ -58,6 +58,12 @@ const monitorRouters: Array<RouteRecordRaw> = [
         path: 'metrics',
         props: route => ({ clientId: route.query.clientId }),
         component: () => import('@/modules/monitor/views/client/metrics/MetricsListView.vue')
+      },
+      // druid
+      {
+        path: 'druid/dbConnection',
+        props: route => ({ clientId: route.query.clientId }),
+        component: () => import('@/modules/monitor/views/client/druid/connection/DbConnectionListView.vue')
       }
     ]
   }

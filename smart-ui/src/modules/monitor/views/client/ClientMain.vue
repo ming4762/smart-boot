@@ -106,6 +106,24 @@ const menuList: Array<Menu> = [
     ]
   },
   {
+    id: '2',
+    data: {
+      icon: 'DatabaseOutlined'
+    },
+    text: 'Druid',
+    children:[
+      {
+        id: '2-1',
+        data: {
+          icon: 'ApiOutlined',
+          path: '/monitor/client/druid/dbConnection'
+        },
+        text: 'Connection',
+        children: []
+      }
+    ]
+  },
+  {
     id: '3',
     data: {
       icon: 'ProfileOutlined'

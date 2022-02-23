@@ -4,21 +4,18 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.smart</groupId>
-		<artifactId>smart-boot</artifactId>
+		<artifactId>smart-monitor</artifactId>
 		<version>2.0.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>smart-monitor</artifactId>
+	<artifactId>smart-monitor-actuators</artifactId>
 	<version>2.0.0-SNAPSHOT</version>
-	<name>smart-monitor</name>
-	<description>系统监控模块</description>
+	<name>smart-monitor-actuators</name>
+	<description>actuator增强模块</description>
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>smart-monitor-actuators</module>
-		<module>smart-monitor-autoconfigure</module>
-		<module>smart-monitor-client</module>
-		<module>smart-monitor-core</module>
-		<module>smart-monitor-server</module>
+		<module>druid-actuator-spring-boot-starter</module>
+		<module>smart-monitor-actuator-druid</module>
 	</modules>
 
 	<properties>
