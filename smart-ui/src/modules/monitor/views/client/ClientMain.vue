@@ -129,6 +129,15 @@ const menuList: Array<Menu> = [
         },
         text: 'sql',
         children: []
+      },
+      {
+        id: '2-3',
+        data: {
+          icon: 'WalletOutlined',
+          path: '/monitor/client/druid/dbWall'
+        },
+        text: 'Wall',
+        children: []
       }
     ]
   },

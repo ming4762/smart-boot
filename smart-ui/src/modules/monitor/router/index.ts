@@ -69,6 +69,11 @@ const monitorRouters: Array<RouteRecordRaw> = [
         path: 'druid/dbSql',
         props: route => ({ clientId: route.query.clientId }),
         component: () => import('@/modules/monitor/views/client/druid/sql/DbSqlListView.vue')
+      },
+      {
+        path: 'druid/dbWall',
+        props: route => ({ clientId: route.query.clientId }),
+        component: () => import('@/modules/monitor/views/client/druid/wall/DbWallListView.vue')
       }
     ]
   }
