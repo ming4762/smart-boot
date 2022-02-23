@@ -1,4 +1,4 @@
-import { ref, createVNode, onMounted, computed, watch, reactive } from 'vue'
+import { ref, createVNode, onMounted, computed, watch, reactive, onBeforeUnmount } from 'vue'
 
 import { Modal, notification } from 'ant-design-vue'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
@@ -120,6 +120,9 @@ const refreshTimes = () => {
  */
 export const useRefreshClient = () => {
   const refreshTimeModel = ref<number>(10)
+  TimeTaskUtil.addLoopGroup(MONITOR_DETAIL_LOOP_GROUP, refreshTimeModel.value)
+  // 组件销毁时关闭循环组
+  onBeforeUnmount(() => TimeTaskUtil.removeLoopGroup(MONITOR_DETAIL_LOOP_GROUP))
   /**
    * 刷新时间变更时改变刷新
    */

@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, toRefs, ref, onMounted, watch, computed } from 'vue'
+import { defineComponent, PropType, toRefs, ref, onMounted, watch, computed, onBeforeUnmount } from 'vue'
 
 import { loadActuator } from '@/modules/monitor/utils/ClientApiUtils'
 import TimeTaskUtil from '@/common/utils/TimeTaskUtil'
@@ -76,7 +76,9 @@ export default defineComponent({
     const doLoadData = async () => {
       data.value = await loadActuator(clientId.value, `druidWall/${dbName.value}`)
     }
-    TimeTaskUtil.addLoop(MONITOR_DETAIL_LOOP_GROUP, `druid_wall_${clientId.value}_${dbName.value}`, doLoadData)
+    const lookKey = `druid_wall_${clientId.value}_${dbName.value}`
+    onBeforeUnmount(() => TimeTaskUtil.removeLoop(MONITOR_DETAIL_LOOP_GROUP, lookKey))
+    TimeTaskUtil.addLoop(MONITOR_DETAIL_LOOP_GROUP, lookKey, doLoadData)
     onMounted(doLoadData)
     watch([clientId, dbName], doLoadData)
 

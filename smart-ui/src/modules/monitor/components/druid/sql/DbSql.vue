@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, PropType, ref, toRefs } from 'vue'
+import { defineComponent, onMounted, PropType, ref, toRefs, onBeforeUnmount } from 'vue'
 
 import { loadActuator } from '@/modules/monitor/utils/ClientApiUtils'
 import { errorMessage } from '@/components/notice/SystemNotice'
@@ -65,8 +65,10 @@ export default defineComponent({
         errorMessage(e)
       }
     }
+    const lookKey = `druid_sql_${clientId.value}_${dbName.value}`
     // 添加循环
-    TimeTaskUtil.addLoop(MONITOR_DETAIL_LOOP_GROUP, `druid_sql_${clientId.value}_${dbName.value}`, handleLoadData)
+    TimeTaskUtil.addLoop(MONITOR_DETAIL_LOOP_GROUP, lookKey, handleLoadData)
+    onBeforeUnmount(() => TimeTaskUtil.removeLoop(MONITOR_DETAIL_LOOP_GROUP, lookKey))
     onMounted(handleLoadData)
     // SQL弹窗
     const modalVisible = ref(false)

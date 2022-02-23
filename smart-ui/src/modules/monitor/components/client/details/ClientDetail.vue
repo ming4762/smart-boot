@@ -46,7 +46,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, ref, onMounted } from 'vue'
+import { defineComponent, toRefs, ref, onMounted, onBeforeUnmount } from 'vue'
 
 import TimeTaskUtil from '@/common/utils/TimeTaskUtil'
 import { MONITOR_DETAIL_LOOP_GROUP } from '@/modules/monitor/constants/MonitorConstants'
@@ -92,9 +92,11 @@ export default defineComponent({
     })
     // 设置定时执行任务
     const time = ref(0)
-    TimeTaskUtil.addLoop(MONITOR_DETAIL_LOOP_GROUP, 'monitor_detail', () => {
+    const loopKey = 'monitor_detail'
+    TimeTaskUtil.addLoop(MONITOR_DETAIL_LOOP_GROUP, loopKey, () => {
       time.value ++
     })
+    onBeforeUnmount(() => TimeTaskUtil.removeLoop(MONITOR_DETAIL_LOOP_GROUP, loopKey))
     return {
       time,
       clientData

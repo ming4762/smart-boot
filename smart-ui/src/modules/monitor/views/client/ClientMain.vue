@@ -205,7 +205,7 @@ export default defineComponent({
      * 客户端刷新hook
      */
     const refreshClientHook = useRefreshClient()
-    TimeTaskUtil.addLoopGroup(MONITOR_DETAIL_LOOP_GROUP, refreshClientHook.refreshTimeModel.value)
+
     /**
      * 加载端点
      */
