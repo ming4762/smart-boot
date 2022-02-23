@@ -120,6 +120,15 @@ const menuList: Array<Menu> = [
         },
         text: 'Connection',
         children: []
+      },
+      {
+        id: '2-2',
+        data: {
+          icon: 'FileTextOutlined',
+          path: '/monitor/client/druid/dbSql'
+        },
+        text: 'sql',
+        children: []
       }
     ]
   },
