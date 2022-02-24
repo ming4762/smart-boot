@@ -6,6 +6,7 @@ import com.smart.monitor.client.core.application.ApplicationFactory;
 import com.smart.monitor.client.core.application.DefaultApplicationFactoryImpl;
 import com.smart.monitor.client.core.properties.ClientProperties;
 import com.smart.monitor.client.core.registration.*;
+import org.springframework.boot.actuate.autoconfigure.endpoint.web.WebEndpointProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -35,8 +36,8 @@ public class SmartMonitorClientAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    public ApplicationFactory applicationFactory(ClientProperties clientProperties, ServerProperties serverProperties) {
-        return new DefaultApplicationFactoryImpl(clientProperties, serverProperties);
+    public ApplicationFactory applicationFactory(ClientProperties clientProperties, ServerProperties serverProperties, WebEndpointProperties properties) {
+        return new DefaultApplicationFactoryImpl(clientProperties, serverProperties, properties);
     }
 
     /**

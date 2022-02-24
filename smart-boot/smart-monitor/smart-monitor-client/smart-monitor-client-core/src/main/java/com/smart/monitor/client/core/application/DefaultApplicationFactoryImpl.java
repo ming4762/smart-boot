@@ -5,6 +5,7 @@ import com.smart.monitor.core.model.Application;
 import lombok.SneakyThrows;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.autoconfigure.endpoint.web.WebEndpointProperties;
 import org.springframework.boot.actuate.endpoint.ExposableEndpoint;
 import org.springframework.boot.actuate.endpoint.web.WebEndpointsSupplier;
 import org.springframework.boot.actuate.endpoint.web.annotation.ControllerEndpointsSupplier;
@@ -38,9 +39,12 @@ public class DefaultApplicationFactoryImpl implements ApplicationFactory, Applic
 
     private ApplicationContext applicationContext;
 
-    public DefaultApplicationFactoryImpl(ClientProperties clientProperties, ServerProperties serverProperties) {
+    private final WebEndpointProperties webEndpointProperties;
+
+    public DefaultApplicationFactoryImpl(ClientProperties clientProperties, ServerProperties serverProperties, WebEndpointProperties webEndpointProperties) {
         this.clientProperties = clientProperties;
         this.serverProperties = serverProperties;
+        this.webEndpointProperties = webEndpointProperties;
     }
 
     @Override
@@ -49,6 +53,7 @@ public class DefaultApplicationFactoryImpl implements ApplicationFactory, Applic
         String clientUrl = clientProperties.getInstance().getApplicationUrl() == null ? this.getClientUrl() : clientProperties.getInstance().getApplicationUrl();
         return Application.builder()
                 .endPoints(this.getEndPointIds())
+                .managementUrl(this.webEndpointProperties.getBasePath())
                 .applicationName(this.clientProperties.getInstance().getName())
                 .clientUrl(clientUrl)
                 .startupTime(this.applicationContext.getStartupDate())
