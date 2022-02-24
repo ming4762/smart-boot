@@ -19,6 +19,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +40,7 @@ public class DbCodeMainController extends BaseController<DbCodeMainService, DbCo
 
     @Override
     @PostMapping("batchDeleteById")
+    @PreAuthorize("hasPermission('db:codeConfig', 'delete')")
     public Result<Boolean> batchDeleteById(@RequestBody List<Serializable> idList) {
         return super.batchDeleteById(idList);
     }
@@ -69,6 +71,7 @@ public class DbCodeMainController extends BaseController<DbCodeMainService, DbCo
     }
 
     @PostMapping("save")
+    @PreAuthorize("hasPermission('db:codeConfig', 'save')")
     public Result<List<String>> save(@RequestBody @Valid DbCodeMainSaveParameter parameter) {
         final List<String> message = Lists.newArrayList();
         // 验证参数

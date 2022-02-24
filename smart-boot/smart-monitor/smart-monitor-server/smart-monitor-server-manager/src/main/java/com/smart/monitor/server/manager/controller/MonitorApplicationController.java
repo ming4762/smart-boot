@@ -16,6 +16,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,6 +52,7 @@ public class MonitorApplicationController extends BaseController<MonitorApplicat
 
     @ApiOperation(value = "添加修改应用管理表")
     @PostMapping("saveUpdate")
+    @PreAuthorize("hasPermission('monitor:application', 'save') or hasPermission('monitor:application', 'update')")
     @Log(value = "添加修改应用管理表", type = LogOperationTypeEnum.UPDATE)
     public Result<Boolean> saveUpdate(@RequestBody @Valid MonitorApplicationSaveUpdateDTO parameter) {
       	MonitorApplicationPO model = new MonitorApplicationPO();
@@ -62,6 +64,7 @@ public class MonitorApplicationController extends BaseController<MonitorApplicat
     @ApiOperation(value = "通过ID批量删除应用管理表")
     @PostMapping("batchDeleteById")
     @Log(value = "通过ID批量删除应用管理表", type = LogOperationTypeEnum.DELETE)
+    @PreAuthorize("hasPermission('monitor:application', 'delete')")
     public Result<Boolean> batchDeleteById(@RequestBody List<Serializable> idList) {
         if (CollectionUtils.isEmpty(idList)) {
             return Result.success(false);
@@ -88,7 +91,7 @@ public class MonitorApplicationController extends BaseController<MonitorApplicat
         );
     }
 
-    // TODO: 权限
+    @PreAuthorize("hasPermission('monitor:application', 'setUserGroup')")
     @PostMapping("setUserGroup")
     @ApiOperation(value = "设置应用关联的用户组")
     @Log(value = "设置应用关联的用户组", type = LogOperationTypeEnum.UPDATE, saveResult = true)

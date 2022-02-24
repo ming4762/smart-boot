@@ -14,6 +14,7 @@ import com.smart.db.generator.service.DbCodeTemplateService;
 import com.smart.db.generator.service.DbCodeTemplateUserGroupService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.lang.NonNull;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,24 +49,28 @@ public class DbCodeTemplateController extends BaseController<DbCodeTemplateServi
      */
     @Override
     @PostMapping("save")
+    @PreAuthorize("hasPermission('db:template', 'save')")
     public Result<Boolean> save(@RequestBody DbCodeTemplatePO model) {
         return Result.success(this.service.saveWithUser(model, AuthUtils.getCurrentUserId()));
     }
 
     @Override
     @PostMapping("update")
+    @PreAuthorize("hasPermission('db:template', 'update')")
     public Result<Boolean> update(@RequestBody DbCodeTemplatePO model) {
         return Result.success(this.service.updateWithUserById(model, AuthUtils.getCurrentUserId()));
     }
 
     @Override
     @PostMapping("saveUpdate")
+    @PreAuthorize("hasPermission('db:template', 'save') or hasPermission('db:template', 'update')")
     public Result<Boolean> saveUpdate(@RequestBody DbCodeTemplatePO model) {
         return Result.success(this.service.saveOrUpdateWithAllUser(model, AuthUtils.getCurrentUserId()));
     }
 
     @Override
     @PostMapping("batchDeleteById")
+    @PreAuthorize("hasPermission('db:template', 'delete')")
     public Result<Boolean> batchDeleteById(@RequestBody List<Serializable> idList) {
         return super.batchDeleteById(idList);
     }
@@ -103,6 +108,7 @@ public class DbCodeTemplateController extends BaseController<DbCodeTemplateServi
      * @return 结果
      */
     @PostMapping("saveTemplateUserGroup")
+    @PreAuthorize("hasPermission('db:template', 'saveTemplateUserGroup')")
     public Result<Boolean> saveTemplateUserGroup(@RequestBody @Valid DbTemplateUserGroupSaveDTO parameter) {
          return Result.success(this.service.saveTemplateUserGroup(parameter));
     }
@@ -136,12 +142,14 @@ public class DbCodeTemplateController extends BaseController<DbCodeTemplateServi
 
     @PostMapping("saveUpdateGroup")
     @ApiOperation("保存模板分组")
+    @PreAuthorize("hasPermission('db:templateGroup', 'save') or hasPermission('db:templateGroup', 'update')")
     public Result<Boolean> saveUpdateGroup(@RequestBody DbCodeTemplateGroupPO templateGroup) {
         return Result.success(this.templateGroupService.saveOrUpdateWithAllUser(templateGroup, AuthUtils.getCurrentUserId()));
     }
 
     @PostMapping("deleteGroupById")
     @ApiOperation("通过ID删除模板分组")
+    @PreAuthorize("hasPermission('db:templateGroup', 'delete')")
     public Result<Boolean> deleteGroupById(@RequestBody List<Long> idList) {
         return Result.success(this.templateGroupService.removeByIds(idList));
     }
