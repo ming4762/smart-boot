@@ -73,11 +73,7 @@
             <a-input v-model:value="saveModel.i18nCode" :placeholder="$t('system.views.function.validate.i18nCode')" />
           </a-form-item>
           <a-form-item name="icon" :label="$t('system.views.function.table.icon')">
-            <a-input v-model:value="saveModel.icon" :placeholder="$t('system.views.function.validate.icon')">
-              <template #suffix>
-                <component :is="saveModel.icon" />
-              </template>
-            </a-input>
+            <a-input v-model:value="saveModel.icon" :placeholder="$t('system.views.function.validate.icon')" />
           </a-form-item>
           <a-form-item name="url" label="url">
             <a-input v-model:value="saveModel.url" :placeholder="$t('system.views.function.validate.url')" />
