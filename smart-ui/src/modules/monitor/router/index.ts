@@ -19,6 +19,10 @@ const monitorRouters: Array<RouteRecordRaw> = [
       {
         path: 'monitor/manager/event',
         component: () => import('@/modules/monitor/views/manager/event/MonitorEventListView.vue')
+      },
+      {
+        path: 'monitor/manager/slowSql',
+        component: () => import('@/modules/monitor/views/manager/slowSql/MonitorClientSlowSqlListView.vue')
       }
     ]
   },

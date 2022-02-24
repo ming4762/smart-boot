@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smart.monitor.server.manager.mapper.MonitorClientSlowSqlMapper">
+    <sql id="columnList">
+        <!--   id 主键  索引   -->
+        id,
+        <!--   客户端编码    -->
+        application_code,
+        <!--   客户端ID      -->
+        client_id,
+        <!--   数据源      -->
+        datasource_name,
+        <!--   SQL ID      -->
+        sql_id,
+        <!--   SQL      -->
+        sql_text,
+        <!--   参数      -->
+        parameter,
+        <!--   执行用时(ms)      -->
+        use_millis,
+        <!--   时间戳      -->
+        timestamp
+    </sql>
+
+    <resultMap id="commonResultMap" type="com.smart.monitor.server.manager.model.MonitorClientSlowSqlPO">
+        <!--   id 主键  索引   -->
+        <id column="id" property="id" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   客户端编码
+      -->
+        <result column="application_code" property="applicationCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   客户端ID      -->
+        <result column="client_id" property="clientId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   数据源      -->
+        <result column="datasource_name" property="datasourceName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   SQL ID      -->
+        <result column="sql_id" property="sqlId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   SQL      -->
+        <result column="sql_text" property="sqlText" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   参数      -->
+        <result column="parameter" property="parameter" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   执行用时(ms)      -->
+        <result column="use_millis" property="useMillis" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   时间戳      -->
+        <result column="timestamp" property="timestamp" javaType="java.lang.Long" jdbcType="BIGINT"/>
+    </resultMap>
+</mapper>

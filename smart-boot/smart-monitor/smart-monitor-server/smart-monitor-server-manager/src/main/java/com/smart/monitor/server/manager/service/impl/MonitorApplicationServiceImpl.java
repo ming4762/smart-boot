@@ -92,4 +92,19 @@ public class MonitorApplicationServiceImpl extends BaseServiceImpl<MonitorApplic
         entity.setDeleteYn(null);
         return super.updateById(entity);
     }
+
+    @Override
+    public List<String> listApplicationNameByUser(@NonNull Long userId) {
+        List<Long> applicationIdList = this.monitorUserGroupApplicationService.listApplicationIdByUserId(userId);
+        if (CollectionUtils.isEmpty(applicationIdList)) {
+            return new ArrayList<>(0);
+        }
+        // 查询客户端名称
+        return this.list(
+                new QueryWrapper<MonitorApplicationPO>().lambda()
+                        .select(MonitorApplicationPO :: getApplicationCode)
+                        .eq(MonitorApplicationPO :: getUseYn, true)
+                        .in(MonitorApplicationPO :: getId, applicationIdList)
+        ).stream().map(MonitorApplicationPO :: getApplicationCode).collect(Collectors.toList());
+    }
 }
