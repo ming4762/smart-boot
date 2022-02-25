@@ -13,7 +13,6 @@ import org.springframework.lang.NonNull;
 import javax.sql.DataSource;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -36,12 +35,12 @@ public class DruidDatasourceMetrics implements ApplicationListener<ApplicationRe
      * @return 指标数据
      */
     private Double getMeterData(DatasourceMetricsConstants datasourceMeter, String name) {
-        Map<String, Object> db = DruidUtils.getDatasourceByName(name);
-        if (db == null) {
-            return 0.0;
-        }
-        return Double.parseDouble(db.get(datasourceMeter.getProperty()).toString());
+        return DruidUtils.datasourceList().stream()
+                .filter(item -> name.equals(item.get("Name")))
+                .mapToDouble(item -> Double.parseDouble(item.get(datasourceMeter.getProperty()).toString()))
+                .sum();
     }
+
 
     @Override
     public void onApplicationEvent(@NonNull ApplicationReadyEvent event) {
@@ -50,7 +49,7 @@ public class DruidDatasourceMetrics implements ApplicationListener<ApplicationRe
         for (String name : dataSourceNameList) {
             for (DatasourceMetricsConstants item : DatasourceMetricsConstants.values()) {
                 Gauge.builder(item.getMeterName(), this, obj -> obj.getMeterData(item, name))
-                        .tag("name", name)
+                        .tag("datasource", name)
                         .description(item.getDescription())
                         .register(this.meterRegistry);
             }
