@@ -10,4 +10,6 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.smart.monitor.autoconfigure.actuator.druid.DruidMetricsAutoConfiguration,\
   com.smart.monitor.autoconfigure.actuator.druid.DruidSlowSqlEndPointAutoConfiguration,\
   com.smart.monitor.autoconfigure.actuator.druid.DruidSqlEndPointAutoConfiguration,\
-  com.smart.monitor.autoconfigure.actuator.druid.DruidWallEndPointAutoConfiguration
+  com.smart.monitor.autoconfigure.actuator.druid.DruidWallEndPointAutoConfiguration,\
+  com.smart.monitor.autoconfigure.actuator.redis.RedisEndpointAutoConfiguration,\
+  com.smart.monitor.autoconfigure.actuator.redis.RedisMetricsAutoConfiguration

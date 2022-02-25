@@ -4,7 +4,6 @@ import com.smart.monitor.server.common.model.ClientData;
 import com.smart.monitor.server.core.client.repository.ClientRepository;
 import com.smart.monitor.server.manager.service.MonitorApplicationService;
 import com.smart.monitor.server.manager.service.MonitorClientService;
-import com.smart.monitor.server.manager.service.MonitorUserGroupApplicationService;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
@@ -21,13 +20,10 @@ public class MonitorClientServiceImpl implements MonitorClientService {
 
     private final ClientRepository clientRepository;
 
-    private final MonitorUserGroupApplicationService monitorUserGroupApplicationService;
-
     private final MonitorApplicationService monitorApplicationService;
 
-    public MonitorClientServiceImpl(ClientRepository clientRepository, MonitorUserGroupApplicationService monitorUserGroupApplicationService, MonitorApplicationService monitorApplicationService) {
+    public MonitorClientServiceImpl(ClientRepository clientRepository, MonitorApplicationService monitorApplicationService) {
         this.clientRepository = clientRepository;
-        this.monitorUserGroupApplicationService = monitorUserGroupApplicationService;
         this.monitorApplicationService = monitorApplicationService;
     }
 

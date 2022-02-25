@@ -15,7 +15,9 @@
 
 	<modules>
 		<module>druid-actuator-spring-boot-starter</module>
+		<module>redis-actuator-spring-boot-starter</module>
 		<module>smart-monitor-actuator-druid</module>
+		<module>smart-monitor-actuator-redis</module>
 	</modules>
 
 	<properties>

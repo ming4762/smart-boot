@@ -1,7 +1,11 @@
-package com.smart.starter.redis.service;
+package com.smart.starter.redis;
 
+import com.smart.starter.redis.service.RedisService;
+import com.smart.starter.redis.service.RedisServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -11,8 +15,9 @@ import org.springframework.data.redis.core.RedisTemplate;
  * @author shizhongming
  * 2020/1/17 8:45 下午
  */
-@Configuration
-public class RedisAutoConfiguration {
+@Configuration(proxyBeanMethods = false)
+@AutoConfigureAfter(RedisAutoConfiguration.class)
+public class SmartRedisAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean

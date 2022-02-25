@@ -1,5 +1,7 @@
 package com.smart.starter.redis.service;
 
+import com.smart.starter.redis.constants.RedisInfoParameterEnum;
+import com.smart.starter.redis.model.RedisKeySpace;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStringCommands;
@@ -17,6 +19,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * redis服务层
@@ -186,4 +189,32 @@ public class RedisServiceImpl implements RedisService {
         final RedisConnection redisConnection = factory.getConnection();
         return redisConnection.scan(scanOptions);
     }
+
+    @Override
+    public Properties info(@Nullable RedisInfoParameterEnum parameter) {
+        RedisConnection redisConnection = this.redisTemplate.getRequiredConnectionFactory().getConnection();
+        if (parameter == null) {
+            return redisConnection.info();
+        }
+        return redisConnection.info(parameter.getParameter());
+    }
+
+    @Override
+    @NonNull
+    public Map<String, RedisKeySpace> queryKeySpace() {
+        Properties properties = this.info(RedisInfoParameterEnum.KEYSPACE);
+
+        Map<String, RedisKeySpace> result = new HashMap<>(properties.size());
+
+        properties.forEach((key, value) -> result.put(key.toString(), this.analysisKeySpace(key.toString(), value.toString())));
+        return result;
+    }
+
+    private RedisKeySpace analysisKeySpace(String db, String data) {
+        List<String[]> analysisData = Arrays.stream(data.split(","))
+                .map(item -> item.split("="))
+                .collect(Collectors.toList());
+        return new RedisKeySpace(db, Long.parseLong(analysisData.get(0)[1]), Long.parseLong(analysisData.get(1)[1]), Long.parseLong(analysisData.get(2)[1]));
+    }
+
 }
