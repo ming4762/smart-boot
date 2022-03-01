@@ -21,7 +21,7 @@
     </a-layout-header>
     <a-layout class="full-height">
       <a-layout-sider style="overflow: auto">
-        <LayoutSide :data="menuData" :path-handler="pathHandler" />
+        <LayoutSide :data="menuData" :path-handler="pathHandler" :has-actuator="hasActuator" />
       </a-layout-sider>
       <a-layout>
         <div class="page-container full-height">
@@ -41,7 +41,9 @@
 <script lang="ts">
 import { defineComponent, PropType, reactive } from 'vue'
 
-import { useShutdown, useLoadApplication, useRefreshClient, useLoadActuator } from './ClientMainHook'
+import { useShutdown, useLoadApplication, useRefreshClient } from './ClientMainHook'
+
+import { useActuator } from '../../components/hooks/ClientActuatorHooks'
 
 import LayoutSide from '@/modules/monitor/components/layout/LayoutSide.vue'
 
@@ -54,6 +56,7 @@ interface Menu {
   id: string;
   data: Data;
   text: string;
+  actuator?: string;
   children: Array<Menu>;
 }
 
@@ -78,7 +81,8 @@ const menuList: Array<Menu> = [
         id: '1-2',
         data: {
           icon: 'ApiOutlined',
-          path: '/monitor/client/environment'
+          path: '/monitor/client/environment',
+          actuator: 'env'
         },
         text: 'Environment',
         children: []
@@ -87,7 +91,8 @@ const menuList: Array<Menu> = [
         id: '1-3',
         data: {
           icon: 'ApartmentOutlined',
-          path: '/monitor/client/beans'
+          path: '/monitor/client/beans',
+          actuator: 'beans'
         },
         text: 'Beans',
         children: []
@@ -96,7 +101,8 @@ const menuList: Array<Menu> = [
         id: '1-4',
         data: {
           icon: 'UnorderedListOutlined',
-          path: '/monitor/client/metrics'
+          path: '/monitor/client/metrics',
+          actuator: 'metrics'
         },
         text: 'Metrics',
         children: []
@@ -106,7 +112,8 @@ const menuList: Array<Menu> = [
   {
     id: '2',
     data: {
-      icon: 'DatabaseOutlined'
+      icon: 'DatabaseOutlined',
+      actuator: 'druidDatasource'
     },
     text: 'Druid',
     children:[
@@ -114,7 +121,8 @@ const menuList: Array<Menu> = [
         id: '2-1',
         data: {
           icon: 'ApiOutlined',
-          path: '/monitor/client/druid/dbConnection'
+          path: '/monitor/client/druid/dbConnection',
+          actuator: 'druidDatasource'
         },
         text: 'Connection',
         children: []
@@ -123,7 +131,8 @@ const menuList: Array<Menu> = [
         id: '2-2',
         data: {
           icon: 'FileTextOutlined',
-          path: '/monitor/client/druid/dbSql'
+          path: '/monitor/client/druid/dbSql',
+          actuator: 'druidSql'
         },
         text: 'sql',
         children: []
@@ -132,7 +141,8 @@ const menuList: Array<Menu> = [
         id: '2-3',
         data: {
           icon: 'WalletOutlined',
-          path: '/monitor/client/druid/dbWall'
+          path: '/monitor/client/druid/dbWall',
+          actuator: 'druidWall-datasourceName'
         },
         text: 'Wall',
         children: []
@@ -150,7 +160,8 @@ const menuList: Array<Menu> = [
         id: '3-1',
         data: {
           icon: 'SettingOutlined',
-          path: '/monitor/client/loggerConfig'
+          path: '/monitor/client/loggerConfig',
+          actuator: 'loggers'
         },
         text: 'LoggerConfig',
         children: []
@@ -168,7 +179,8 @@ const menuList: Array<Menu> = [
         id: '4-1',
         data: {
           icon: 'ForkOutlined',
-          path: '/monitor/client/httpMapping'
+          path: '/monitor/client/httpMapping',
+          actuator: 'mappings'
         },
         text: 'Http Mapping',
         children: []
@@ -178,7 +190,8 @@ const menuList: Array<Menu> = [
   {
     id: '5',
     data: {
-      icon: 'DatabaseOutlined'
+      icon: 'DatabaseOutlined',
+      actuator: 'redisInfo'
     },
     text: 'Redis',
     children: [
@@ -186,7 +199,8 @@ const menuList: Array<Menu> = [
         id: '5-1',
         data: {
           icon: 'InfoCircleOutlined',
-          path: '/monitor/client/redis/info'
+          path: '/monitor/client/redis/info',
+          actuator: 'redisInfo'
         },
         text: 'Info',
         children: []
@@ -225,8 +239,7 @@ export default defineComponent({
     /**
      * 加载端点
      */
-    const { actuators, loadActuators } = useLoadActuator(props.clientId)
-    loadActuators()
+    const { actuators, hasActuator } = useActuator(props.clientId)
     const pathHandler = (path: string) => {
       return {
         path: path,
@@ -241,7 +254,8 @@ export default defineComponent({
       ...loadApplicationHook,
       ...refreshClientHook,
       menuData: reactive(menuList),
-      pathHandler
+      pathHandler,
+      hasActuator
     }
   }
 })

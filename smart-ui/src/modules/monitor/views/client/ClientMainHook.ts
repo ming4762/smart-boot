@@ -135,27 +135,3 @@ export const useRefreshClient = () => {
   }
 }
 
-/**
- * 加载客户端端点
- * @param clientId 客户端ID
- */
-export const useLoadActuator = (clientId: string) => {
-  const actuators = ref<any>({})
-  /**
-   * 加载端点函数
-   */
-  const loadActuators = async () => {
-    try {
-      const result = await loadActuatorList(clientId)
-      if (result && result._links) {
-        actuators.value = result._links
-      }
-    } catch (e) {
-      errorMessage(e)
-    }
-  }
-  return {
-    actuators,
-    loadActuators
-  }
-}
