@@ -44,8 +44,6 @@ import { defineComponent, PropType, reactive } from 'vue'
 import { useShutdown, useLoadApplication, useRefreshClient, useLoadActuator } from './ClientMainHook'
 
 import LayoutSide from '@/modules/monitor/components/layout/LayoutSide.vue'
-import TimeTaskUtil from '@/common/utils/TimeTaskUtil'
-import { MONITOR_DETAIL_LOOP_GROUP } from '@/modules/monitor/constants/MonitorConstants'
 
 interface Data {
   icon: string;
@@ -173,6 +171,24 @@ const menuList: Array<Menu> = [
           path: '/monitor/client/httpMapping'
         },
         text: 'Http Mapping',
+        children: []
+      }
+    ]
+  },
+  {
+    id: '5',
+    data: {
+      icon: 'DatabaseOutlined'
+    },
+    text: 'Redis',
+    children: [
+      {
+        id: '5-1',
+        data: {
+          icon: 'InfoCircleOutlined',
+          path: '/monitor/client/redis/info'
+        },
+        text: 'Info',
         children: []
       }
     ]

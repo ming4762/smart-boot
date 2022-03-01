@@ -199,6 +199,16 @@ const metricsMap: {[index: string]: MeterData} = {
         value: 0
       }
     ]
+  },
+  'redis.keys': {
+    key: 'redis.keys',
+    name: '',
+    measurements: [
+      {
+        statistic: 'value',
+        value: 0
+      }
+    ]
   }
 }
 

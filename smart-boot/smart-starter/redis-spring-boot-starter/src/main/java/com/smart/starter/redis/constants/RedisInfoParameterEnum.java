@@ -20,10 +20,10 @@ public enum RedisInfoParameterEnum {
     PERSISTENCE("persistence", "RDB和AOF相关信息"),
     STATS("stats", "一般统计"),
     REPLICATION("replication", "主/副本复制信息"),
-    CPU("memory", "CPU消耗统计信息"),
-    COMMANDSTATS("memory", "Redis命令统计"),
-    CLUSTER("memory", " Redis群集部分"),
-    ALL("memory", "返回所有部分"),
+    CPU("cpu", "CPU消耗统计信息"),
+    COMMANDSTATS("commandstats", "Redis命令统计"),
+    CLUSTER("cluster", " Redis群集部分"),
+    ALL("all", "返回所有部分"),
     DEFAULT_PARAMETER("default", "仅返回默认的部分集"),
     ;
 

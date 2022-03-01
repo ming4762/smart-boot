@@ -29,7 +29,8 @@ const permissionMappingPaths: any = {
   '/monitor/client/metrics': '/monitor/manager/client',
   '/monitor/client/druid/dbConnection': '/monitor/manager/client',
   '/monitor/client/druid/dbSql': '/monitor/manager/client',
-  '/monitor/client/druid/dbWall': '/monitor/manager/client'
+  '/monitor/client/druid/dbWall': '/monitor/manager/client',
+  '/monitor/client/redis/info': '/monitor/manager/client'
 }
 
 /**

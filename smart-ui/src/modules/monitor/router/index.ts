@@ -78,6 +78,11 @@ const monitorRouters: Array<RouteRecordRaw> = [
         path: 'druid/dbWall',
         props: route => ({ clientId: route.query.clientId }),
         component: () => import('@/modules/monitor/views/client/druid/wall/DbWallListView.vue')
+      },
+      {
+        path: 'redis/info',
+        props: route => ({ clientId: route.query.clientId }),
+        component: () => import('@/modules/monitor/views/client/redis/RedisMonitorView.vue')
       }
     ]
   }
