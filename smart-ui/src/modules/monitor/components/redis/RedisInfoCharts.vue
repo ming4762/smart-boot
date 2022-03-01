@@ -16,6 +16,15 @@
         <RedisClientChart :data="computedConnectedClientsData" :time="time" />
       </a-col>
     </a-row>
+
+    <a-row style="margin: 10px 0 0 0" :gutter="gutter" class="chart-row">
+      <a-col :span="12" style="padding-left: 0">
+        <RedisOpsPerChart :data="computedOpsPerData" :time="time" />
+      </a-col>
+      <a-col :span="12" style="padding-right: 0">
+        <RedisInOutKpsChart :time="time" :data="computedInputOutputData" />
+      </a-col>
+    </a-row>
   </div>
 </template>
 
@@ -30,6 +39,8 @@ import RedisKeyChart from './charts/RedisKeyChart.vue'
 import RedisMemoryChart from './charts/RedisMemoryChart.vue'
 import RedisCpuChart from './charts/RedisCpuChart.vue'
 import RedisClientChart from './charts/RedisClientChart.vue'
+import RedisOpsPerChart from './charts/RedisOpsPerChart.vue'
+import RedisInOutKpsChart from './charts/RedisInOutKpsChart.vue'
 
 
 export default defineComponent({
@@ -38,7 +49,9 @@ export default defineComponent({
     RedisKeyChart,
     RedisMemoryChart,
     RedisCpuChart,
-    RedisClientChart
+    RedisClientChart,
+    RedisOpsPerChart,
+    RedisInOutKpsChart
   },
   props: {
     data: {
@@ -87,12 +100,32 @@ export default defineComponent({
       return 0
     })
 
+    const computedOpsPerData = computed(() => {
+      const cpuData = data.value.filter(item => item.key === 'instantaneous_ops_per_sec')
+      if (cpuData && cpuData.length > 0) {
+        return parseInt(cpuData[0].value)
+      }
+      return 0
+    })
+
+    const computedInputOutputData = computed(() => {
+      const inputData = data.value.filter(item => item.key === 'instantaneous_input_kbps')
+      const outputData = data.value.filter(item => item.key === 'instantaneous_ops_per_sec')
+
+      return {
+        input: inputData.length > 0 ? inputData[0].value : 0,
+        output: outputData.length > 0 ? outputData[0].value : 0
+      }
+    })
+
     return {
       computedData,
       computedMemoryData,
       computedCpuSysData,
       time,
-      computedConnectedClientsData
+      computedConnectedClientsData,
+      computedOpsPerData,
+      computedInputOutputData
     }
   },
   data () {
