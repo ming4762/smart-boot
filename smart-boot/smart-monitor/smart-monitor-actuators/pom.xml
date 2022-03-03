@@ -15,8 +15,10 @@
 
 	<modules>
 		<module>druid-actuator-spring-boot-starter</module>
+		<module>logback-actuator-spring-boot-starter</module>
 		<module>redis-actuator-spring-boot-starter</module>
 		<module>smart-monitor-actuator-druid</module>
+		<module>smart-monitor-actuator-logback</module>
 		<module>smart-monitor-actuator-redis</module>
 	</modules>
 
