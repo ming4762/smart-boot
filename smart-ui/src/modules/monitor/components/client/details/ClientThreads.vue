@@ -18,7 +18,7 @@
       <a-col class="center" :span="8">{{ currentDaemon }}</a-col>
       <a-col class="center" :span="8">{{ currentPeak }}</a-col>
     </a-row>
-    <a-row style="height: 370px">
+    <a-row style="height: 280px">
       <a-col :span="24">
         <Echarts ref="chartRef" manual-update autoresize />
       </a-col>
@@ -51,6 +51,10 @@ const createOption = (data: Array<any>) => {
     tooltip: {
       trigger: 'axis'
     },
+    grid: {
+      top: 20,
+      bottom: 40
+    },
     xAxis: {
       type: 'category',
       boundaryGap: false,
@@ -65,12 +69,14 @@ const createOption = (data: Array<any>) => {
         data: dataLive,
         type: 'line',
         name: '活动线程',
+        symbol: 'none',
         areaStyle: {}
       },
       {
         data: dataDaemon,
         type: 'line',
         name: '守护线程',
+        symbol: 'none',
         areaStyle: {}
       }
     ]

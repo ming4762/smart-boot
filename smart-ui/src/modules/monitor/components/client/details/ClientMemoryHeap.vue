@@ -18,7 +18,7 @@
       <a-col class="center" :span="8">{{ currentCommitted }} MB</a-col>
       <a-col class="center" :span="8">{{ currentMax }} MB</a-col>
     </a-row>
-    <a-row style="height: 370px">
+    <a-row style="height: 300px">
       <a-col :span="24">
         <Echarts ref="chartRef" manual-update autoresize />
       </a-col>
@@ -49,6 +49,10 @@ const createOption = (data: Array<any>) => {
     tooltip: {
       trigger: 'axis'
     },
+    grid: {
+      top: 35,
+      bottom: 40
+    },
     xAxis: {
       type: 'category',
       boundaryGap: false,
@@ -66,11 +70,13 @@ const createOption = (data: Array<any>) => {
         data: dataDaemon,
         type: 'line',
         name: '当前可用',
+        symbol: 'none',
         areaStyle: {}
       },
       {
         data: dataLive,
         type: 'line',
+        symbol: 'none',
         name: '已用',
         areaStyle: {}
       }

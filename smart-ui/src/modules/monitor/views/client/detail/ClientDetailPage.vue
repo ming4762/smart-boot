@@ -1,6 +1,6 @@
 <template>
-  <div class="full-height" style="padding: 8px; overflow: auto">
-    <ClientDetail :client-id="clientId" />
+  <div class="full-height" style="padding: 8px;">
+    <ClientDetail class="full-height" style="overflow: auto;" :client-id="clientId" />
   </div>
 </template>
 

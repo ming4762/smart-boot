@@ -1,7 +1,7 @@
 <template>
   <div>
-    <a-row :gutter="gutter">
-      <a-col :span="12">
+    <a-row :gutter="gutter" style="margin: 0">
+      <a-col :span="12" style="padding-left: 0">
         <a-row>
           <a-col :span="24">
             <ClientInfo :client-id="clientId" />
@@ -14,13 +14,13 @@
           </a-col>
         </a-row>
       </a-col>
-      <a-col :span="12">
+      <a-col v-if="hasActuator('health')" :span="12" style="padding-right: 0">
         <client-health :client-id="clientId" :time="time" />
       </a-col>
     </a-row>
 
-    <a-row class="detail-span large" :gutter="gutter">
-      <a-col :span="12">
+    <a-row v-if="hasActuator('metrics')" class="detail-span large" :gutter="gutter">
+      <a-col :span="12" style="padding-left: 0">
         <a-row>
           <a-col :span="24">
             <ClientProcess :client-id="clientId" :time="time" />
@@ -32,13 +32,13 @@
           </a-col>
         </a-row>
       </a-col>
-      <a-col :span="12">
+      <a-col :span="12" style="padding-right: 0">
         <ClientThreads :client-id="clientId" :time="time" />
       </a-col>
     </a-row>
 
-    <a-row class="detail-span large" style="height: 400px" :gutter="gutter">
-      <a-col :span="12">
+    <a-row v-if="hasActuator('metrics')" class="detail-span large" style="height: 400px" :gutter="gutter">
+      <a-col :span="12" style="padding-left: 0">
         <ClientMemoryHeap :client-id="clientId" :time="time" />
       </a-col>
     </a-row>
@@ -52,6 +52,8 @@ import TimeTaskUtil from '@/common/utils/TimeTaskUtil'
 import { MONITOR_DETAIL_LOOP_GROUP } from '@/modules/monitor/constants/MonitorConstants'
 
 import ApiService from '@/common/utils/ApiService'
+
+import { useActuator } from '../../../components/hooks/ClientActuatorHooks'
 
 import ClientInfo from './ClientInfo.vue'
 import ClientMetadata from './ClientMetadata.vue'
@@ -97,9 +99,12 @@ export default defineComponent({
       time.value ++
     })
     onBeforeUnmount(() => TimeTaskUtil.removeLoop(MONITOR_DETAIL_LOOP_GROUP, loopKey))
+
+    const { hasActuator } = useActuator(clientId.value)
     return {
       time,
-      clientData
+      clientData,
+      hasActuator
     }
   },
   data () {
@@ -112,9 +117,9 @@ export default defineComponent({
 
 <style lang="less" scoped>
 .detail-span {
-  margin-top: 15px;
+  margin: 15px 0 0 0 !important;
   .large {
-    margin-top: 25px;
+    margin: 25px 0 0 0 !important;
   }
 }
 </style>

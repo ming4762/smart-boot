@@ -71,7 +71,7 @@ export default defineComponent({
     }
 
     .user-layout-content {
-      padding: 32px 0 24px;
+      padding: 32px 0 0;
 
       .top {
         text-align: center;
