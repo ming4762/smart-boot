@@ -85,6 +85,14 @@ export const useVxeTable = (service: (params: Params, searchParameter: any) => P
   }
 
   /**
+   * 重置分页页数
+   */
+  const handleResetPage = () => {
+    tablePage.currentPage = 1
+  }
+
+
+  /**
    * 排序变化时触发
    * @param property
    * @param order
@@ -118,6 +126,7 @@ export const useVxeTable = (service: (params: Params, searchParameter: any) => P
     }),
     loadData,
     handleReset,
+    handleResetPage,
     searchModel,
     pageProps: computed(() => {
       return {

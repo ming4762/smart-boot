@@ -54,7 +54,7 @@
               :size="buttonSizeConfig"
               style="margin-left: 5px"
               type="primary"
-              @click="loadData">
+              @click="handleLoad">
               {{ $t('common.button.search') }}
             </a-button>
             <a-button
@@ -97,7 +97,7 @@ export default defineComponent({
     /**
      * 查询数据hook
      */
-    const { tableProps, handleReset, pageProps, loadData, searchModel } = useVxeTable(handleLoadData, {
+    const { tableProps, handleReset, pageProps, loadData, searchModel, handleResetPage } = useVxeTable(handleLoadData, {
       paging: true,
       defaultParameter: {
         level: '',
@@ -118,7 +118,11 @@ export default defineComponent({
       loadData,
       searchModel,
       logLevels: reactive(levels),
-      handleDownload: () => handleDownload(searchModel.value)
+      handleDownload: () => handleDownload(searchModel.value),
+      handleLoad: () => {
+        handleResetPage()
+        loadData()
+      }
     }
   },
   data () {
