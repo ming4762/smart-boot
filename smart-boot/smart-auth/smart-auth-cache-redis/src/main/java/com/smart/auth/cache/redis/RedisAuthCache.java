@@ -106,7 +106,7 @@ public class RedisAuthCache extends AbstractAuthCache<String, Object> {
 
     @Override
     public Set<String> matchKeys(@NonNull String matchKey) {
-        return this.cacheService.matchKeys(this.getKey(matchKey))
+        return this.cacheService.matchKeys(this.getKey(matchKey) + "*")
                 .stream()
                 .map(item -> this.getRealKey(item.toString()))
                 .collect(Collectors.toSet());

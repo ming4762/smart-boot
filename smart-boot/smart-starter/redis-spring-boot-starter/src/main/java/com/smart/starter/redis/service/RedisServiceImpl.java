@@ -156,12 +156,12 @@ public class RedisServiceImpl implements RedisService {
     @Override
     public List<Object> matchKeys(@NonNull Object patternKey) {
         List<Object> result = new LinkedList<>();
-        Cursor<byte[]> scan = this.scan(patternKey, null);
-        while (scan.hasNext()) {
-            String key = new String(scan.next());
-            result.add(key);
+        try (Cursor<byte[]> scan = this.scan(patternKey, null)) {
+            while (scan.hasNext()) {
+                result.add(this.redisTemplate.getKeySerializer().deserialize(scan.next()));
+            }
+            return result;
         }
-        return result;
     }
 
     @Override
@@ -178,7 +178,7 @@ public class RedisServiceImpl implements RedisService {
     private Cursor<byte[]> scan(@NonNull Object patternKey, Integer count) {
         // 创建扫描参数
         ScanOptions.ScanOptionsBuilder builder = ScanOptions.scanOptions()
-                .match(patternKey.toString());
+                .match("*" + patternKey);
         if (Objects.nonNull(count)) {
             builder.count(count);
         }
