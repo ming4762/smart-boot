@@ -291,7 +291,7 @@ export const vueCreateDict = (row: Ref, t: Function) => {
     try {
       const tempToken = await applyTempToken('db:connection:createDic', false)
       selectTemplateIdList.forEach(templateId => {
-        const url = `${ApiService.getApiUrl()}public/db/createDic?connectionId=${row.value.id}&templateId=${templateId}&token=${tempToken}`
+        const url = `${ApiService.getApiUrl()}public/db/createDic?connectionId=${row.value.id}&templateId=${templateId}&access-token=${tempToken}`
         window.open(url)
       })
     } catch (e) {

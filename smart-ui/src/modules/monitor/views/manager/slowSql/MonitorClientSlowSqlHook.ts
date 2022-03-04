@@ -15,7 +15,6 @@ const timestampKey = 'timestamp'
  * @param searchParameter 查询参数
  */
 export const handleLoadData = async (params: any, searchParameter: any) => {
-	console.log('==========')
 	const searchWithSymbol: any = {}
 	Object.keys(searchParameter).forEach(key => {
 		if (key === timestampKey) {

@@ -10,7 +10,8 @@ export default {
       use: '启用',
       noUse: '停用',
       save: '保存',
-      look: '查看'
+      look: '查看',
+      download: '下载'
     },
     title: {
       details: '详情',

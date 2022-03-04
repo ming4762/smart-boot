@@ -14,3 +14,6 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.smart.monitor.autoconfigure.actuator.redis.RedisEndpointAutoConfiguration,\
   com.smart.monitor.autoconfigure.actuator.redis.RedisMetricsAutoConfiguration,\
   com.smart.monitor.autoconfigure.actuator.logback.LogBackEndPointAutoConfiguration
+
+org.springframework.context.ApplicationListener=\
+  com.smart.monitor.actuator.logback.listener.LogAppenderInitListener

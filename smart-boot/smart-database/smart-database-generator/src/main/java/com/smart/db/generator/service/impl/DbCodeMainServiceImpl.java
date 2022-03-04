@@ -425,7 +425,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
             }
         }
         // 3、获取页面配置信息
-        result.setCodePageConfigList(this.listDbCodePageConfig(dbCodeMain.getId()));
+        result.setCodePageConfigList(this.listDbCodePageConfig(dbCodeMain.getId(), false));
         // 4、获取表格配置信息
         result.setCodeFormConfigList(this.listDbCodeFormConfigDto(dbCodeMain.getId(), false));
         // 5、获取搜索配置信息
@@ -620,7 +620,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
      */
     private void dealCodePageConfig(@NonNull DbTemplateCodeTableDTO dbTemplateCodeTable) {
         // 1、查询page配置
-        final List<DbCodePageConfigPO> codePageConfigList = this.listDbCodePageConfig(dbTemplateCodeTable.getId());
+        final List<DbCodePageConfigPO> codePageConfigList = this.listDbCodePageConfig(dbTemplateCodeTable.getId(), true);
 
         final List<DbCodePageConfigTemplateVO> dbCodePageConfigTemplateList = codePageConfigList.stream().map(item -> {
             final DbCodePageConfigTemplateVO template = new DbCodePageConfigTemplateVO();
@@ -635,6 +635,8 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
             // 设置有主键
             dbTemplateCodeTable.setHasId(true);
             dbTemplateCodeTable.setIdField(primaryKeyList.get(0));
+        } else {
+            dbTemplateCodeTable.setIdField(new DbCodePageConfigTemplateVO());
         }
         // 2、处理实体类引入列表，部分实体类属性类型对应的CLASS需要单独引入
         dbTemplateCodeTable.setModelClassImportList(
@@ -651,12 +653,14 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
      * @param mainId 主ID
      * @return DbCodePageConfigPO
      */
-    private List<DbCodePageConfigPO> listDbCodePageConfig(Long mainId) {
-        return this.dbCodePageConfigService.list(
-                new QueryWrapper<DbCodePageConfigPO>().lambda()
+    private List<DbCodePageConfigPO> listDbCodePageConfig(Long mainId, boolean visible) {
+        LambdaQueryWrapper<DbCodePageConfigPO> queryWrapper = new QueryWrapper<DbCodePageConfigPO>().lambda()
                 .eq(DbCodePageConfigPO :: getMainId, mainId)
-                .orderByAsc(DbCodePageConfigPO :: getSeq)
-        );
+                .orderByAsc(DbCodePageConfigPO :: getSeq);
+        if (visible) {
+            queryWrapper.eq(DbCodePageConfigPO :: getVisible, true);
+        }
+        return this.dbCodePageConfigService.list(queryWrapper);
     }
 
     /**

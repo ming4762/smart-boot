@@ -10,7 +10,8 @@ export default {
       use: 'Use',
       noUse: 'No use',
       save: 'Save',
-      look: 'Look'
+      look: 'Look',
+      download: 'Download'
     },
     title: {
       details: 'Details',

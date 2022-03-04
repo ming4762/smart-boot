@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smart.monitor.server.manager.mapper.MonitorClientLogMapper">
+    <sql id="columnList">
+        <!--   id 主键  索引   -->
+        id,
+        <!--   客户端编码      -->
+        application_code,
+        <!--   客户端ID      -->
+        client_id,
+        <!--   createTime      -->
+        create_time,
+        <!--   线程名      -->
+        thread_name,
+        <!--   日志名      -->
+        logger_name,
+        <!--   时间戳      -->
+        timestamp,
+        <!--   日志级别      -->
+        level,
+        <!--   日志内容      -->
+        log_text
+    </sql>
+
+    <resultMap id="commonResultMap" type="com.smart.monitor.server.manager.model.MonitorClientLogPO">
+        <!--   id 主键  索引   -->
+        <id column="id" property="id" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   客户端编码      -->
+        <result column="application_code" property="applicationCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   客户端ID      -->
+        <result column="client_id" property="clientId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   createTime      -->
+        <result column="create_time" property="createTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+        <!--   线程名      -->
+        <result column="thread_name" property="threadName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   日志名      -->
+        <result column="logger_name" property="loggerName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   时间戳      -->
+        <result column="timestamp" property="timestamp" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   日志级别      -->
+        <result column="level" property="level" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   日志内容      -->
+        <result column="log_text" property="logText" javaType="java.lang.String" jdbcType="VARCHAR"/>
+    </resultMap>
+</mapper>

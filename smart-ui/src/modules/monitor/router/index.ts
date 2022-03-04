@@ -23,6 +23,10 @@ const monitorRouters: Array<RouteRecordRaw> = [
       {
         path: 'monitor/manager/slowSql',
         component: () => import('@/modules/monitor/views/manager/slowSql/MonitorClientSlowSqlListView.vue')
+      },
+      {
+        path: 'monitor/manager/log',
+        component: () => import('@/modules/monitor/views/manager/log/MonitorClientLogListView.vue')
       }
     ]
   },

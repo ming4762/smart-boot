@@ -100,7 +100,7 @@ export const hasPermission = (permission: string | null | undefined): boolean =>
  * @param resource 申请资源
  * @param once 是否只使用一次
  */
-export const applyTempToken = async (resource: string, once = true) => {
+export const applyTempToken = async (resource: string, once = true): Promise<string> => {
   return await ApiService.postAjax('auth/tempToken/apply', { resource, once })
 }
 

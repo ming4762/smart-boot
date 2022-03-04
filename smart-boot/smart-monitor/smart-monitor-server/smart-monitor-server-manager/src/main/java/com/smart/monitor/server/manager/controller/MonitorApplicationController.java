@@ -1,6 +1,7 @@
 package com.smart.monitor.server.manager.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.smart.auth.core.utils.AuthUtils;
 import com.smart.commons.core.log.Log;
 import com.smart.commons.core.log.LogOperationTypeEnum;
 import com.smart.commons.core.message.Result;
@@ -97,5 +98,11 @@ public class MonitorApplicationController extends BaseController<MonitorApplicat
     @Log(value = "设置应用关联的用户组", type = LogOperationTypeEnum.UPDATE, saveResult = true)
     public Result<Boolean> setUserGroup(@RequestBody MonitorApplicationSetUserGroupDTO parameter) {
         return Result.success(this.monitorUserGroupApplicationService.setUserGroup(parameter));
+    }
+
+    @PostMapping("listUserApplicationName")
+    @ApiOperation(value = "获取用户关联的应用名称列表")
+    public Result<List<String>> listUserApplicationName() {
+        return Result.success(this.service.listApplicationNameByUser(AuthUtils.getNonNullCurrentUserId()));
     }
 }

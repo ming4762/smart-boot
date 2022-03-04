@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
@@ -53,7 +54,7 @@ public class MonitorClientSlowSqlServiceImpl extends BaseServiceImpl<MonitorClie
     public Integer sync(@NonNull ClientData clientData) {
         log.debug("client slow log sync start, application name: {}, client id: {}", clientData.getApplication().getApplicationName(), clientData.getId().getValue());
         Map<String, String> headers = Maps.newHashMap();
-        headers.put(HttpHeaders.CONTENT_TYPE, "application/json");
+        headers.put(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         AtomicInteger saveNum = new AtomicInteger();
         this.clientWebProxy.forward(clientData.getId(), repositoryData -> ClientWebProxy.ForwardRequest.builder()
                 .uri(clientData.getApplication().getManagementUrl() + "/druidSlowSql?clear=true")

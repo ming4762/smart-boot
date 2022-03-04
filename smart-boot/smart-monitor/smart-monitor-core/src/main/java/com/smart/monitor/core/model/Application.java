@@ -28,7 +28,6 @@ public class Application {
 
     /**
      * 端点地址
-     * TODO: 待完成
      */
     private String managementUrl;
 
@@ -54,5 +53,14 @@ public class Application {
 
     public boolean hasEndPoint(String endPoint) {
         return this.endPoints.contains(endPoint);
+    }
+
+    /**
+     * 获取端点地址
+     * @param endPoint 端点
+     * @return 端点地址
+     */
+    public String getEndPointUrl(String endPoint) {
+        return String.format("%s/%s", this.managementUrl, endPoint);
     }
 }
