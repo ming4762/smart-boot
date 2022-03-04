@@ -53,11 +53,11 @@ public class HealthStatusMonitor implements StatusMonitor {
         String[] healthData = new String[1];
         long startTimestamp = System.nanoTime();
         try {
-            this.clientWebProxy.forward(repositoryData.getId(), (data) -> ClientWebProxy.ForwardRequest.builder()
+            this.clientWebProxy.forward(repositoryData.getId(), data -> ClientWebProxy.ForwardRequest.builder()
                     .uri(ClientUrlEnum.HEALTH.getUrl())
                     .httpMethod(HttpMethod.GET)
                     .build(),
-                    (result) -> healthData[0] = result, false, String.class
+                    result -> healthData[0] = result, false, String.class
             );
         } catch (Exception e) {
             log.warn("client health monitor error, application name: {}, client id: {}, error message: {}", repositoryData.getApplication().getApplicationName(), repositoryData.getId().getValue(), e.getMessage());

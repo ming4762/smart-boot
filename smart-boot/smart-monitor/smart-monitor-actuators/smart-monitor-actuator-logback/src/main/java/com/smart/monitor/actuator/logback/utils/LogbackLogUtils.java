@@ -25,6 +25,10 @@ public class LogbackLogUtils {
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
             .withZone(ZoneId.systemDefault());
 
+    private LogbackLogUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
     private static final String POINT_SPIT = "\\.";
 
     /**
@@ -33,31 +37,31 @@ public class LogbackLogUtils {
      * @return 日志内容
      */
     public static String convertToLogText(LoggingEventData loggingEventData) {
-        final StringBuffer stringBuffer = new StringBuffer();
+        final StringBuilder builder = new StringBuilder();
         // 添加时间戳
-        stringBuffer.append( DATE_TIME_FORMATTER.format(Instant.ofEpochMilli(loggingEventData.getTimestamp())))
+        builder.append( DATE_TIME_FORMATTER.format(Instant.ofEpochMilli(loggingEventData.getTimestamp())))
                 .append(" ");
         // 添加日志级别
-        stringBuffer.append(StringUtils.leftPad(loggingEventData.getLevel().name(), 5, " "))
+        builder.append(StringUtils.leftPad(loggingEventData.getLevel().name(), 5, " "))
                 .append(" --- ")
                 .append("[")
                 .append(StringUtils.leftPad(convertThreadName(loggingEventData.getThreadName(), 15), 15, " "))
                 .append("] ");
         // 添加LoggerName
-        stringBuffer.append(StringUtils.rightPad(convertLoggerName(loggingEventData.getLoggerName(), 40), 40, " "))
+        builder.append(StringUtils.rightPad(convertLoggerName(loggingEventData.getLoggerName(), 40), 40, " "))
                 .append(" : ")
                 .append(loggingEventData.getFormattedMessage());
         // 拼接异常信息
         final LoggingEventData.ThrowableData throwableData = loggingEventData.getThrowable();
         if (throwableData == null) {
-            return stringBuffer.toString();
+            return builder.toString();
         }
-        stringBuffer.append("\n")
+        builder.append("\n")
                 .append(throwableData.getClassName())
                 .append(" : ")
                 .append(throwableData.getMessage());
         // 拼接堆栈信息
-        throwableData.getStackTraceElementList().forEach(item -> stringBuffer.append("\n")
+        throwableData.getStackTraceElementList().forEach(item -> builder.append("\n")
                 .append("    ")
                 .append("at ")
                 .append(item.getClassName())
@@ -68,7 +72,7 @@ public class LogbackLogUtils {
                 .append(":")
                 .append(item.getLineNumber())
                 .append(")"));
-        return stringBuffer.toString();
+        return builder.toString();
     }
 
     private static String convertThreadName(String threadName, int length) {

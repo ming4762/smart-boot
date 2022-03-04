@@ -48,9 +48,9 @@ public class RedisKeyMetrics implements ApplicationListener<ApplicationReadyEven
         // 未注册的 DB 进行注册
         keySpaceMap.forEach((key, value) -> {
             if (!REGISTRY_TAGS.contains(key)) {
-                Gauge.builder(RedisMetricsConstants.keys.getMeterName(), this, obj -> obj.getKeyNum(key))
+                Gauge.builder(RedisMetricsConstants.KEYS.getMeterName(), this, obj -> obj.getKeyNum(key))
                         .tag("db", key)
-                        .description(RedisMetricsConstants.keys.getDescription())
+                        .description(RedisMetricsConstants.KEYS.getDescription())
                         .register(meterRegistry);
                 REGISTRY_TAGS.add(key);
             }

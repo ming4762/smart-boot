@@ -10,7 +10,6 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.core.Ordered;
 import org.springframework.lang.NonNull;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -46,7 +45,7 @@ public class DataSyncDispatcher implements ApplicationListener<ApplicationReadyE
                 .collect(Collectors.toList());
         if (CollectionUtils.isNotEmpty(monitorDataSyncList)) {
             this.taskSchedulerProvider.getTaskScheduler()
-                    .scheduleWithFixedDelay(() -> this.doSync(monitorDataSyncList), 60 * 1000);
+                    .scheduleWithFixedDelay(() -> this.doSync(monitorDataSyncList), 60L * 1000);
         }
     }
 

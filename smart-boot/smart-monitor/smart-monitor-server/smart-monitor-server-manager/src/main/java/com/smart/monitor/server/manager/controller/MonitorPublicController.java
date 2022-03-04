@@ -59,7 +59,7 @@ public class MonitorPublicController {
         }
         List<MonitorClientLogPO> logList = this.monitorClientLogService.list(query);
         String fileName = DATE_TIME_FORMATTER.format(LocalDateTime.now()) + ".log";
-        response.setHeader("Content-Disposition", "attachment;filename=" + new String (fileName.getBytes (StandardCharsets.UTF_8), "ISO8859-1"));
+        response.setHeader("Content-Disposition", "attachment;filename=" + new String (fileName.getBytes (StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1));
         response.setCharacterEncoding (StandardCharsets.UTF_8.name());
         for (MonitorClientLogPO log : logList) {
             response.getWriter().write(log.getLogText());

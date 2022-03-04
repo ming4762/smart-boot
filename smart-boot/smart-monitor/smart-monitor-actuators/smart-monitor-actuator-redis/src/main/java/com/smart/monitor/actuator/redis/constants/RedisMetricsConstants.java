@@ -14,7 +14,7 @@ public enum RedisMetricsConstants {
     /**
      * redis key
      */
-    keys("redis.keys", "Redis key数量")
+    KEYS("redis.keys", "Redis key数量")
     ;
 
     private final String meterName;

@@ -5,9 +5,10 @@ import com.smart.commons.core.utils.json.InstantJson;
 import com.smart.monitor.core.model.Application;
 import com.smart.monitor.server.common.constants.ClientStatusEnum;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
+import org.springframework.lang.NonNull;
 
+import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.HashSet;
@@ -20,8 +21,9 @@ import java.util.Set;
  */
 @Getter
 @Setter
-public final class ClientData {
+public final class ClientData implements Serializable {
 
+    private static final long serialVersionUID = 4944979208990091705L;
     /**
      * 时间戳
      */
@@ -67,6 +69,7 @@ public final class ClientData {
 
     public ClientData(Application application, ClientId clientId, ClientManagerData clientManager) {
         this.id = clientId;
+        this.serializeEventCodes = clientManager.getSerializeEventCodes() == null ? new HashSet<>(0) : clientManager.getSerializeEventCodes();
         this.refresh(application, clientManager);
     }
 
@@ -82,7 +85,6 @@ public final class ClientData {
         this.offlineInterval = clientManager.getOfflineInterval();
         this.token = clientManager.getToken();
         this.refreshTime = Instant.now();
-        this.serializeEventCodes = clientManager.getSerializeEventCodes() == null ? new HashSet<>(0) : clientManager.getSerializeEventCodes();
         this.notifyEventCodes = clientManager.getNotifyEventCodes() == null ? new HashSet<>(0) : clientManager.getNotifyEventCodes();
         this.notifyMails = clientManager.getNotifyMails() == null ? new HashSet<>(0) : clientManager.getNotifyMails();
         return this;

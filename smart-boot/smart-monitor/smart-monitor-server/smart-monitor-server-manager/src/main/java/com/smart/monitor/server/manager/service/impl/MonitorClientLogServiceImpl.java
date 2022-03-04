@@ -57,7 +57,7 @@ public class MonitorClientLogServiceImpl extends BaseServiceImpl<MonitorClientLo
         Map<String, String> headers = Maps.newHashMap();
         headers.put(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         AtomicInteger logNum = new AtomicInteger();
-        this.clientWebProxy.forward(clientData.getId(), (data) -> ClientWebProxy.ForwardRequest.builder()
+        this.clientWebProxy.forward(clientData.getId(), data -> ClientWebProxy.ForwardRequest.builder()
                 .uri(clientData.getApplication().getEndPointUrl(END_POINT))
                 .httpMethod(HttpMethod.POST)
                 .httpHeaders(headers)

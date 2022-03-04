@@ -27,7 +27,7 @@ public class DefaultApplicationRegistrarImpl implements ApplicationRegistrar {
 
     private final RegistrarClient registrarClient;
 
-    private final AtomicReference<String> registeredId =new AtomicReference<String>();
+    private final AtomicReference<String> registeredId = new AtomicReference<>();
 
     public DefaultApplicationRegistrarImpl(@NonNull ApplicationFactory applicationFactory, @NonNull List<String> serverUrls, boolean once, @NonNull RegistrarClient registrarClient) {
         this.applicationFactory = applicationFactory;

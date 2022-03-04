@@ -1,6 +1,5 @@
 package com.smart.monitor.actuator.druid.points;
 
-import com.alibaba.druid.stat.DruidStatManagerFacade;
 import com.smart.monitor.actuator.druid.constants.EndPointIdConstant;
 import com.smart.monitor.actuator.druid.utils.DruidUtils;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
@@ -19,9 +18,6 @@ import java.util.Map;
  */
 @Endpoint(id = EndPointIdConstant.DRUID_WALL_END_POINT)
 public class DruidWallEndPoint {
-
-    private static final DruidStatManagerFacade STAT_MANAGER_FACADE = DruidStatManagerFacade.getInstance();
-
 
     @ReadOperation
     public Map<String, Object> handler(@Selector String datasourceName) {

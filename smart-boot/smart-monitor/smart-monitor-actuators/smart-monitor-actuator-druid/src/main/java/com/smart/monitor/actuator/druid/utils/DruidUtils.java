@@ -5,6 +5,7 @@ import com.alibaba.druid.stat.DruidDataSourceStatManager;
 import com.alibaba.druid.stat.DruidStatManagerFacade;
 import com.alibaba.druid.util.DruidDataSourceUtils;
 import lombok.NonNull;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
 
@@ -19,6 +20,10 @@ import java.util.stream.Collectors;
  * @since 1.0
  */
 public class DruidUtils {
+
+    private DruidUtils() {
+        throw new IllegalStateException("Utility class");
+    }
 
     private static final DruidStatManagerFacade STAT_MANAGER_FACADE = DruidStatManagerFacade.getInstance();
 
@@ -51,7 +56,7 @@ public class DruidUtils {
         List<Map<String, Object>> datasourceList = datasourceList().stream()
                 .filter(item -> name.equals(item.get("Name")))
                 .collect(Collectors.toList());
-        if (datasourceList.size() > 0) {
+        if (CollectionUtils.isNotEmpty(datasourceList)) {
             return datasourceList.get(0);
         }
         return new HashMap<>(0);

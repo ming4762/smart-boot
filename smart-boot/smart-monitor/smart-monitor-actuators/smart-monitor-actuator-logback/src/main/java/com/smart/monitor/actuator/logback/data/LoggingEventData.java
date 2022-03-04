@@ -31,7 +31,7 @@ public class LoggingEventData implements Serializable {
 
     private String formattedMessage;
 
-    private Object[] argumentArray;
+    private Serializable[] argumentArray;
 
 
 
@@ -45,7 +45,8 @@ public class LoggingEventData implements Serializable {
 
     @Getter
     @Setter
-    public static class ThrowableData {
+    public static class ThrowableData implements Serializable {
+        private static final long serialVersionUID = 6213855179244882474L;
         private String className;
 
         private String message;

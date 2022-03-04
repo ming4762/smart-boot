@@ -46,6 +46,7 @@ public interface ClientRepository {
     /**
      * 通过ID查询
      * @param clientId 客户端ID
+     * @param active 是否只查询激活状态的客户端
      * @return 客户端信息
      */
     @Nullable

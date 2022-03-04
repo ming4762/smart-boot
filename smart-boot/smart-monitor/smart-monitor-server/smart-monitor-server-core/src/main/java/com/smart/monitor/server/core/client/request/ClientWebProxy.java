@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Consumer;
@@ -50,7 +51,7 @@ public class ClientWebProxy {
     }
 
     public void forward(@NonNull ClientId clientId, HttpServletRequest request, HttpServletResponse response, boolean needUp) {
-        this.forward(clientId, (repositoryData) -> this.createForwardRequest(request, repositoryData), (result) -> {
+        this.forward(clientId, repositoryData -> this.createForwardRequest(request, repositoryData), result -> {
             if (result != null) {
                 try {
                     response.getWriter().write(JsonUtils.toJsonString(Result.success(result)));
@@ -76,7 +77,7 @@ public class ClientWebProxy {
             throw new ClientNoRegisterException(clientId);
         }
 
-        this.forwardDownload(repositoryData, (clientData) -> this.createForwardRequest(request, clientData), response.getOutputStream(), needUp);
+        this.forwardDownload(repositoryData, clientData -> this.createForwardRequest(request, clientData), response.getOutputStream(), needUp);
     }
 
     /**
@@ -86,7 +87,7 @@ public class ClientWebProxy {
      * @param resultHandler 结果回调
      * @param needUp 客户端是否必须在线，true则客户端不在线抛出异常
      */
-    public <T> void forward(@NonNull ClientId clientId, Function<ClientData, ForwardRequest> requestHandler, Consumer<T> resultHandler, boolean needUp, Class<T> resultClass) {
+    public <T extends Serializable> void forward(@NonNull ClientId clientId, Function<ClientData, ForwardRequest> requestHandler, Consumer<T> resultHandler, boolean needUp, Class<T> resultClass) {
         // 获取客户端信息
         final ClientData repositoryData = this.clientRepository.findById(clientId, false);
         if (repositoryData == null) {
@@ -102,9 +103,10 @@ public class ClientWebProxy {
      * @param resultHandler 结果回调
      * @param needUp 客户端是否必须在线，true则客户端不在线抛出异常
      */
-    public void forward(@NonNull ClientId clientId, Function<ClientData, ForwardRequest> requestHandler, Consumer<Object> resultHandler, boolean needUp) {
-        this.forward(clientId, requestHandler, resultHandler, needUp, Object.class);
+    public void forward(@NonNull ClientId clientId, Function<ClientData, ForwardRequest> requestHandler, Consumer<Serializable> resultHandler, boolean needUp) {
+        this.forward(clientId, requestHandler, resultHandler, needUp, Serializable.class);
     }
+
 
     /**
      * forward
@@ -113,7 +115,7 @@ public class ClientWebProxy {
      * @param resultHandler 结果回调
      * @param needUp 客户端是否必须在线，true则客户端不在线抛出异常
      */
-    public <T> void forward(@NonNull ClientData clientData, Function<ClientData, ForwardRequest> requestHandler, Consumer<T> resultHandler, boolean needUp, Class<T> resultClass) {
+    public <T extends Serializable> void forward(@NonNull ClientData clientData, Function<ClientData, ForwardRequest> requestHandler, Consumer<T> resultHandler, boolean needUp, Class<T> resultClass) {
         // 获取客户端信息
         if (needUp && clientData.getStatus().equals(ClientStatusEnum.DOWN)) {
             throw new ClientDownException(clientData.getId());
@@ -168,8 +170,7 @@ public class ClientWebProxy {
      */
     @SneakyThrows
     public ForwardRequest createForwardRequest(@NonNull HttpServletRequest request, @NonNull ClientData clientData) {
-        //  TODO:开发中
-        String url = "/actuator/" + UriComponentsBuilder.fromPath(this.pathMatcher.extractPathWithinPattern(ClientProxyController.CLIENT_PROXY_PATH, request.getRequestURI())).build(true).toUri();
+        String url = clientData.getApplication().getEndPointUrl(UriComponentsBuilder.fromPath(this.pathMatcher.extractPathWithinPattern(ClientProxyController.CLIENT_PROXY_PATH, request.getRequestURI())).build(true).toUri().toString());
         // 添加参数
         Enumeration<String> parameterNames = request.getParameterNames();
         final List<String> parameters = new ArrayList<>();
@@ -191,6 +192,7 @@ public class ClientWebProxy {
     /**
      * 创建请求头信息
      * @param request HttpServletRequest
+     * @param clientData 客户端数据
      * @return 请求头
      */
     protected Map<String, String> createHttpHeaders(@NonNull HttpServletRequest request, @NonNull ClientData clientData) {

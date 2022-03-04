@@ -34,7 +34,7 @@ public class RegistrationApplicationListener implements InitializingBean, Dispos
     private final ThreadPoolTaskScheduler taskScheduler = taskScheduler();
 
     @Nullable
-    private volatile ScheduledFuture<?> scheduledTask = null;
+    private ScheduledFuture<?> scheduledTask = null;
 
     public RegistrationApplicationListener(ApplicationRegistrar applicationRegistrar, ClientProperties clientProperties) {
         this.applicationRegistrar = applicationRegistrar;
@@ -64,7 +64,7 @@ public class RegistrationApplicationListener implements InitializingBean, Dispos
     /**
      * 启动注册任务
      */
-    public void startRegisterTask() {
+    public synchronized void startRegisterTask() {
         if (this.scheduledTask != null && !this.scheduledTask.isDone()) {
             return;
         }
@@ -75,7 +75,7 @@ public class RegistrationApplicationListener implements InitializingBean, Dispos
     /**
      * 关闭注册定时任务
      */
-    public void stopRegisterTask() {
+    public synchronized void stopRegisterTask() {
         if (this.scheduledTask != null && !this.scheduledTask.isDone()) {
             this.scheduledTask.cancel(true);
             log.debug("registration task is stop");

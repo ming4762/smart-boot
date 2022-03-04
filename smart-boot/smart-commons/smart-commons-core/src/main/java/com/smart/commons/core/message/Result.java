@@ -26,8 +26,9 @@ import java.util.Optional;
 @Getter
 @Setter
 @ApiModel(value = "通用api接口", description = "通用api接口返回")
-public class Result<T> {
+public class Result<T> implements Serializable {
 
+    private static final long serialVersionUID = 9144229906004159463L;
     @ApiModelProperty(value = "状态码", example = "200", required = true)
     private Integer code = ResultCodeEnum.SUCCESS.getCode();
 
@@ -104,8 +105,8 @@ public class Result<T> {
      * @param <T> 泛型
      * @return 分页数据
      */
-    public static <T extends Serializable> Result<PageData<T>> success(@NonNull List<T> rows, Long total) {
-        return Result.success(new PageData<>(rows, total));
+    public static <T> Result<PageData<T>> success(@NonNull List<T> rows, Long total) {
+        return Result.success(new PageData<T>(rows, total));
     }
 
 

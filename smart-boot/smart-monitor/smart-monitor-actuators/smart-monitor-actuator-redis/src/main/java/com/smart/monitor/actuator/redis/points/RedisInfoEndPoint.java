@@ -15,13 +15,15 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Reids INFO端点
+ * Redis INFO端点
  * @author ShiZhongMing
  * 2022/2/24
  * @since 2.0.0
  */
 @Endpoint(id = RedisEndPointIdConstant.INFO)
 public class RedisInfoEndPoint {
+
+    private static final String DB_PREFIX = "db";
 
     private static final Map<String, RedisInfoResultEnum> REDIS_INFO_RESULT_MAP = Arrays.stream(RedisInfoResultEnum.values())
             .collect(Collectors.toMap(RedisInfoResultEnum::getValue, item -> item));
@@ -53,7 +55,7 @@ public class RedisInfoEndPoint {
         return properties.entrySet().stream()
                 .map(item -> {
                     RedisInfoResultEnum redisInfoResultEnum = REDIS_INFO_RESULT_MAP.get(item.getKey().toString());
-                    if (item.getKey().toString().startsWith("db")) {
+                    if (item.getKey().toString().startsWith(DB_PREFIX)) {
                         return new RedisInfo(RedisInfoParameterEnum.KEYSPACE.getParameter(), item.getKey().toString(), item.getValue().toString(), RedisInfoParameterEnum.KEYSPACE.getDescription());
                     }
                     if (redisInfoResultEnum == null) {

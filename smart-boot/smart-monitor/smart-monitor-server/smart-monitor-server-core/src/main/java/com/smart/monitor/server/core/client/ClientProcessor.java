@@ -79,7 +79,6 @@ public class ClientProcessor {
             repositoryData.refresh(application, managerData);
             // 发布更新事件
             this.monitorContext.publishEvent(new ClientRegisteredUpdateEvent(repositoryData, this));
-            // 启动状态监听事件，如果任务重复不会重复添加 todo:作用
             this.statusMonitorManager.addScheduled(repositoryData);
             return repositoryData;
         });
