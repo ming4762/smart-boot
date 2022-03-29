@@ -1,5 +1,6 @@
 package com.smart.commons.core.utils;
 
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -106,8 +107,9 @@ public final class DateUtils {
      * @return 时间
      * @throws ParseException ParseException
      */
+    @SneakyThrows
     @Nullable
-    public static Date convertDate(String dateStr) throws ParseException {
+    public static Date convertDate(String dateStr) {
         boolean isUtc = false;
         if (StringUtils.isBlank(dateStr)) {
             return null;

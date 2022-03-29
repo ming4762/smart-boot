@@ -5,6 +5,7 @@
       v-bind="tableProps"
       :size="tableSizeConfig"
       border
+      show-overflow
       :toolbar-config="toolbarConfig"
       :columns="columns"
       height="auto"

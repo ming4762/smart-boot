@@ -14,7 +14,10 @@ import org.springframework.core.Ordered;
 import org.springframework.lang.NonNull;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 import java.util.stream.Collectors;
@@ -35,6 +38,8 @@ public class StatusMonitorManager implements ApplicationContextAware, Disposable
      */
     private List<? extends StatusMonitor> statusMonitorList;
 
+    private ApplicationContext applicationContext;
+
     /**
      * 存储执行的定时任务信息
      */
@@ -47,10 +52,7 @@ public class StatusMonitorManager implements ApplicationContextAware, Disposable
 
     @Override
     public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
-        this.statusMonitorList = Arrays.stream(applicationContext.getBeanNamesForType(StatusMonitor.class))
-                .map(item -> applicationContext.getBean(item, StatusMonitor.class))
-                .sorted(Comparator.comparingInt(Ordered::getOrder))
-                .collect(Collectors.toList());
+        this.applicationContext = applicationContext;
     }
 
     /**
@@ -70,11 +72,21 @@ public class StatusMonitorManager implements ApplicationContextAware, Disposable
         }
     }
 
+    private synchronized void initStatusMonitor() {
+        if (this.statusMonitorList == null) {
+            this.statusMonitorList = Arrays.stream(applicationContext.getBeanNamesForType(StatusMonitor.class))
+                    .map(item -> applicationContext.getBean(item, StatusMonitor.class))
+                    .sorted(Comparator.comparingInt(Ordered::getOrder))
+                    .collect(Collectors.toList());
+        }
+    }
+
     /**
      * 添加定时任务
      * @param repositoryData 客户端信息
      */
     public void addScheduled(@NonNull ClientData repositoryData) {
+        this.initStatusMonitor();
         if (scheduledFutureMap.containsKey(repositoryData.getId())) {
             log.warn("task is running");
             return;

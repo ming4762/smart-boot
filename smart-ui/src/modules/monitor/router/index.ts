@@ -27,6 +27,10 @@ const monitorRouters: Array<RouteRecordRaw> = [
       {
         path: 'monitor/manager/log',
         component: () => import('@/modules/monitor/views/manager/log/MonitorClientLogListView.vue')
+      },
+      {
+        path: 'monitor/manager/httpTrace',
+        component: () => import('@/modules/monitor/views/manager/httpTrace/MonitorClientHttpTraceListView.vue')
       }
     ]
   },

@@ -13,7 +13,8 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.smart.monitor.autoconfigure.actuator.druid.DruidWallEndPointAutoConfiguration,\
   com.smart.monitor.autoconfigure.actuator.redis.RedisEndpointAutoConfiguration,\
   com.smart.monitor.autoconfigure.actuator.redis.RedisMetricsAutoConfiguration,\
-  com.smart.monitor.autoconfigure.actuator.logback.LogBackEndPointAutoConfiguration
+  com.smart.monitor.autoconfigure.actuator.logback.LogBackEndPointAutoConfiguration,\
+  com.smart.monitor.autoconfigure.client.HttpTraceEndpointAutoConfiguration
 
 org.springframework.context.ApplicationListener=\
   com.smart.monitor.actuator.logback.listener.LogAppenderInitListener

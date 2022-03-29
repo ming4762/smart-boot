@@ -28,6 +28,8 @@ public class ClientProperties implements InitializingBean {
 
     private Auth auth;
 
+    private HttpTrace httpTrace;
+
     /**
      * 认证信息
      */
@@ -38,6 +40,22 @@ public class ClientProperties implements InitializingBean {
         private Boolean enabled = Boolean.TRUE;
     }
 
+    /**
+     * HttpTrace配置信息
+     */
+    @Getter
+    @Setter
+    public static class HttpTrace {
+
+        /**
+         * 排除的URL列表
+         */
+        private String excludeUrls;
+    }
+
+    /**
+     * 客户端信息
+     */
     @Getter
     @Setter
     public static class Instance {
@@ -62,6 +80,9 @@ public class ClientProperties implements InitializingBean {
 
     }
 
+    /**
+     * 注册配置参数
+     */
     @Getter
     @Setter
     public static class Registration {

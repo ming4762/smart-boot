@@ -13,17 +13,22 @@ import slowSqlEnUS from '../views/manager/slowSql/lang/en_US'
 import logZhCN from '../views/manager/log/lang/zh_CN'
 import logEnUS from '../views/manager/log/lang/en_US'
 
+import httpTraceZhCN from '../views/manager/httpTrace/lang/zh_CN'
+import httpTraceEnUS from '../views/manager/httpTrace/lang/en_US'
+
 export default {
   zh_CN: merge({},
     transferI18n(managerApplicationZhCN),
     transferI18n(eventZhCN),
     transferI18n(slowSqlZhCN),
-    transferI18n(logZhCN)
+    transferI18n(logZhCN),
+    transferI18n(httpTraceZhCN)
   ),
   en_US: merge({},
     transferI18n(managerApplicationEnUS),
     transferI18n(eventEnUS),
     transferI18n(slowSqlEnUS),
-    transferI18n(logEnUS)
+    transferI18n(logEnUS),
+    transferI18n(httpTraceEnUS)
   )
 }

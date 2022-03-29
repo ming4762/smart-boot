@@ -6,23 +6,22 @@
       :columns="columns"
       highlight-hover-row
       height="auto"
-      border
-      stripe></vxe-grid>
+      stripe
+      border></vxe-grid>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted } from 'vue'
+import {defineComponent, onMounted} from 'vue'
 
-import { useVxeTable } from '@/components/hooks'
+import {useVxeTable} from '@/components/hooks'
 import ApiService from '@/common/utils/ApiService'
-import { errorMessage } from '@/components/notice/SystemNotice'
-import { tableBooleanColumn } from '@/components/common/TableCommon'
+import {errorMessage} from '@/components/notice/SystemNotice'
+import {tableBooleanColumn} from '@/components/common/TableCommon'
 
 const doLoadData = async () => {
   try {
-    const data = await ApiService.postAjax('db/code/main/getTemplateDataDocument')
-    return data
+    return await ApiService.postAjax('db/code/main/getTemplateDataDocument')
   } catch (e) {
     errorMessage(e)
     throw e

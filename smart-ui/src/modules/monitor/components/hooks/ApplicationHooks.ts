@@ -7,7 +7,7 @@ import { errorMessage } from '@/components/notice/SystemNotice'
  * 用户关联的应用名字
  */
 export const useUserApplicationName = () => {
-  const applicationNameList = ref<string>([])
+  const applicationNameList = ref<Array<string>>([])
 
   /**
    * 获取用户关联的应用名字列表
