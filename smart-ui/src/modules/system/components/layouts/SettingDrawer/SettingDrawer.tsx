@@ -1,6 +1,7 @@
-import { defineComponent, inject, PropType, ref } from 'vue'
+import { defineComponent, inject, PropType } from 'vue'
+import { useStore } from 'vuex'
 
-import { CloseOutlined, SettingOutlined, NotificationOutlined } from '@ant-design/icons-vue'
+import { NotificationOutlined } from '@ant-design/icons-vue'
 // @ts-ignore
 // import omit from 'ant-design-vue/es/_util/omit'
 
@@ -8,11 +9,13 @@ import BlockCheckbox from './BlockCheckbox'
 import ThemeColor from './ThemeColor'
 import LayoutSetting, { renderLayoutSettingItem } from './LayoutChange'
 import { updateTheme, updateColorWeak } from '@/components/layouts/utils/dynamicTheme'
+
 // import { genStringToTheme } from '@/common/utils/utils'
 
 import VuePropTypes from '@/common/utils/VueTypes'
 
 import './SettingDrawer.less'
+import {use} from "vxe-table";
 
 export const setting = {
   theme: {
@@ -47,10 +50,6 @@ export const SettingDrawerProps = {
 
 const baseClassName = 'ant-pro-setting-drawer'
 
-const iconStyle = {
-  color: '#fff',
-  fontSize: 20
-}
 
 const getThemeList = (i18nRender: Function) => {
   // @ts-ignore
@@ -135,18 +134,6 @@ const Body = defineComponent({
   }
 })
 
-const renderHandle = (show: boolean, setShow: Function) => {
-  return () => {
-    return (
-      <div onClick={() => setShow(!show)} class={`${baseClassName}-handle`}>
-        {
-          show ? <CloseOutlined style={iconStyle} /> : <SettingOutlined style={iconStyle} />
-        }
-      </div>
-    )
-  }
-}
-
 const defaultI18nRender = (t: any) => t
 
 
@@ -161,29 +148,22 @@ const handleChangeSetting = (key: string, value: any, hideMessageLoading: any) =
     updateColorWeak(value);
   }
 }
-//
-// const genCopySettingJson = (settings: any) => {
-//   return JSON.stringify(omit(Object.assign({}, settings, {
-//     primaryColor: genStringToTheme(settings.primaryColor)
-//   }), ['colorWeak']), null, 2)
-// }
 
 export default defineComponent({
   name: 'SettingDrawer',
   props: SettingDrawerProps,
   emits: ['change'],
   setup () {
-    const show = ref(false)
+    const store = useStore()
     const setShow = (showValue: boolean) => {
-      show.value = showValue
+      store.commit('app/showHideSettingDrawer', showValue)
     }
     return {
-      show,
       setShow
     }
   },
   render () {
-    const { show, setShow, settings } = this
+    const { setShow, settings } = this
     const theme = settings.theme === void 0 ? 'dark' : settings.theme
     const primaryColor = settings.primaryColor === void 0 ? 'daybreak' : settings.primaryColor
     const layout = settings.layout === void 0 ? 'sidemenu' : settings.layout
@@ -193,9 +173,9 @@ export default defineComponent({
     const hasMultiTab = settings.hasMultiTab === void 0 ? false : settings.hasMultiTab
     const isTopMenu = layout === 'topmenu'
     const drawerProps = {
-      visible: show,
       width: 300,
       placement: 'right',
+      closable: false,
       onClose: () => setShow(false)
     }
     const changeSetting = (type: string, value: any) => {
@@ -208,7 +188,6 @@ export default defineComponent({
     const i18n: any = this.i18nRender || inject('locale', defaultI18nRender)
     const themeList = getThemeList(i18n)
     const slots = {
-      handle: renderHandle(show, setShow),
       default: () => (
         <div class={`${baseClassName}-content`}>
           <Body title={i18n('system.setting.pageStyle.title')}>
@@ -310,7 +289,7 @@ export default defineComponent({
               icon={(
                 <NotificationOutlined />
               )}
-              style="margin-botton: 16px"
+              style={{'margin-bottom': '16px'}}
               type="warning"/>
           }
           {

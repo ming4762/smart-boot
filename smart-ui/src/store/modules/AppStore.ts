@@ -77,6 +77,7 @@ const LayoutStore: StoreOptions<any> = {
       formSize: StoreUtil.getStore(STORE_KEYS.APP_FORM_SIZE) || defaultSettings.formSize,
       hasMultiTab: StoreUtil.getStore(STORE_KEYS.APP_HAS_MULTI_TAB) || defaultSettings.hasMultiTab
     },
+    settingDrawerVisible: false,
     // 全局加载状态
     globalLoading: false,
     // 侧边栏关闭状态
@@ -174,6 +175,14 @@ const LayoutStore: StoreOptions<any> = {
     [STORE_APP_MUTATION.APP_COLLAPSED_SIDEBAR]: (state) => {
       state.collapsed = !state.collapsed
       StoreUtil.setStore(STORE_KEYS.APP_SIDEBAR_STATUS, state.collapsed)
+    },
+    /**
+     * 显示关闭SettingDrawer
+     * @param state
+     * @param show
+     */
+    showHideSettingDrawer: (state, show: boolean) => {
+      state.settingDrawerVisible = show
     }
   },
   actions: {
@@ -267,7 +276,8 @@ const LayoutStore: StoreOptions<any> = {
     userMenuList: state => state.menu.userMenuList,
     openMenuList: state => state.menu.openMenuList,
     // 语言
-    lang: state => state.i18n.lang
+    lang: state => state.i18n.lang,
+    settingDrawerVisible: state => state.settingDrawerVisible
   }
 }
 

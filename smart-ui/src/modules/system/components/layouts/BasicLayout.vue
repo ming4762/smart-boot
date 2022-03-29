@@ -31,7 +31,7 @@
       <RightContent :is-mobile="isMobile" :theme="setting.theme" :top-menu="setting.layout === 'topmenu'" />
     </template>
 
-    <SettingDrawer v-if="isDev" :i18n-render="i18nRender" :settings="setting" @change="handleSettingChange">
+    <SettingDrawer v-if="isDev" :visible="settingDrawerVisible" :i18n-render="i18nRender" :settings="setting" @change="handleSettingChange">
       <div style="margin: 12px 0;">
         This is SettingDrawer custom footer content.
       </div>
@@ -222,7 +222,8 @@ export default defineComponent({
       title: defaultSettings.title,
       isDev: import.meta.env.DEV,
       i18nRender,
-      ...tabsVue
+      ...tabsVue,
+      settingDrawerVisible: computed(() => store.getters['app/settingDrawerVisible'])
     }
   }
 })

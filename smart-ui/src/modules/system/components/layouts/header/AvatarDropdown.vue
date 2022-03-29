@@ -19,6 +19,10 @@
             <LogoutOutlined />
             {{ $t('system.main.account.logout') }}
           </a-menu-item>
+          <a-menu-item v-if="isDev" key="settingDrawer">
+            <setting-outlined />
+            {{ $t('system.setting.title') }}
+          </a-menu-item>
         </a-menu>
       </template>
     </a-dropdown>
@@ -42,6 +46,7 @@
         </a-form-item>
       </a-form>
     </a-modal>
+
   </div>
 </template>
 
@@ -50,7 +55,7 @@ import {defineComponent, PropType, createVNode, ref, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { Modal, message } from 'ant-design-vue'
-import { LogoutOutlined, ExclamationCircleOutlined, LockOutlined, UserOutlined } from '@ant-design/icons-vue'
+import { LogoutOutlined, ExclamationCircleOutlined, LockOutlined, UserOutlined, SettingOutlined } from '@ant-design/icons-vue'
 
 import ApiService from '@/common/utils/ApiService'
 import { createPassword, getCurrentUser } from '@/common/auth/AuthUtils'
@@ -164,7 +169,8 @@ export default defineComponent({
   components: {
     LogoutOutlined,
     LockOutlined,
-    UserOutlined
+    UserOutlined,
+    SettingOutlined
   },
   props: {
     currentUser: {
@@ -179,7 +185,8 @@ export default defineComponent({
   setup () {
     const { t } = useI18n()
     return {
-      ...changePasswordHoop(t)
+      ...changePasswordHoop(t),
+      isDev: import.meta.env.DEV
     }
   },
   methods: {
@@ -196,6 +203,10 @@ export default defineComponent({
         }
         case 'userAccount': {
           message.warn('开发中')
+          break
+        }
+        case 'settingDrawer': {
+          this.$store.commit('app/showHideSettingDrawer', true)
           break
         }
       }

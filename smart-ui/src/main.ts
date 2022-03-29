@@ -5,7 +5,7 @@ import './style/index.less'
 
 import Antd from 'ant-design-vue'
 // 引入antd css
-import 'ant-design-vue/dist/antd.css'
+import 'ant-design-vue/dist/antd.variable.min.css'
 
 import router from './router'
 import i18n from './i18n'

@@ -33,6 +33,7 @@ export default {
       }
     },
     setting: {
+      title: 'Style setting',
       sidemenu: 'Side menu layout',
       topmenu: 'Top menu layout',
       pageStyle: {

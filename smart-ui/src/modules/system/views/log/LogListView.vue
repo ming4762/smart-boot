@@ -154,7 +154,6 @@ const doLoadData = async (parameter: any, searchParameter: any) => {
       } else if (key === 'logSource' && value.length > 0) {
         params[`${key}@in`] = value
       } else if (key === 'createTime') {
-        console.log(value[0])
         params[`${key}@>=`] = value[0].format()
         params[`${key}@<=`] = value[1].format()
       }

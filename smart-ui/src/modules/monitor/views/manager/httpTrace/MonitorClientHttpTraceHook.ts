@@ -9,6 +9,8 @@ const searchSymbol: {[index: string]: string} = {
 	timestamp: '='
 }
 
+const timestampKey = 'timestamp'
+
 /**
  * 加载数据
  * @param params 参数
@@ -17,7 +19,13 @@ const searchSymbol: {[index: string]: string} = {
 export const handleLoadData = async (params: any, searchParameter: any) => {
 	const searchWithSymbol: any = {}
 	Object.keys(searchParameter).forEach(key => {
-		if (searchSymbol[key]) {
+		if (key === timestampKey) {
+			const timeData: Array<any> = searchParameter[key]
+			if (timeData && timeData.length > 0) {
+				searchWithSymbol[`${timestampKey}@>=`] = timeData[0].toDate().getTime()
+				searchWithSymbol[`${timestampKey}@<=`] = timeData[1].toDate().getTime()
+			}
+		} else if (searchSymbol[key]) {
 			searchWithSymbol[`${key}@${searchSymbol[key]}`] = searchParameter[key]
 		} else {
 			searchWithSymbol[key] = searchParameter[key]

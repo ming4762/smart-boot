@@ -33,7 +33,7 @@
             <a-input v-model:value="searchModel.responseStatus" :size="formSizeConfig" />
           </a-form-item>
           <a-form-item :label="$t('monitor.views.client.httpTrace.title.timestamp')">
-            <a-input v-model:value="searchModel.timestamp" :size="formSizeConfig" :placeholder="$t('monitor.views.client.httpTrace.search.timestamp')" />
+            <a-range-picker v-model:value="searchModel.timestamp" :size="formSizeConfig" show-time style="width: 320px" />
           </a-form-item>
           <a-form-item>
             <a-button
@@ -51,6 +51,9 @@
             </a-button>
           </a-form-item>
         </a-form>
+      </template>
+      <template #table-responseStatus="{ row }">
+
       </template>
     </vxe-grid>
   </div>
@@ -146,7 +149,10 @@ export default defineComponent({
           field: 'responseStatus',
           sortable: true,
           title: '{monitor.views.client.httpTrace.title.responseStatus}',
-          width: 120
+          width: 120,
+          slots: {
+            default: 'table-responseStatus'
+          }
         },
         {
           field: 'timestamp',
