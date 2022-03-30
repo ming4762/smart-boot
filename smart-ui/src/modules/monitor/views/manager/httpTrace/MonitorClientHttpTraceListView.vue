@@ -59,7 +59,8 @@
         </a-form>
       </template>
       <template #table-responseStatus="{ row }">
-
+        <a-tag v-if="row.responseStatus >= 200 && row.responseStatus < 300" color="#87d068">{{ row.responseStatus }}</a-tag>
+        <a-tag v-else color="#f50">{{ row.responseStatus }}</a-tag>
       </template>
     </vxe-grid>
   </div>
@@ -184,6 +185,7 @@ export default defineComponent({
           sortable: true,
           title: '{monitor.views.client.httpTrace.title.responseStatus}',
           width: 120,
+          align: 'center',
           slots: {
             default: 'table-responseStatus'
           }
