@@ -19,10 +19,16 @@
       <template #toolbar_buttons>
         <a-form layout="inline" style="margin-left: 10px">
           <a-form-item :label="$t('monitor.views.client.httpTrace.title.applicationCode')">
-            <a-input v-model:value="searchModel.applicationCode" :size="formSizeConfig" :placeholder="$t('monitor.views.client.httpTrace.search.applicationCode')" />
+            <a-select v-model:value="searchModel.applicationCode" style="width: 210px" show-search :size="formSizeConfig">
+              <a-select-option value="">ALL</a-select-option>
+              <a-select-option v-for="applicationName in applicationNameList" :key="'applicationName' + applicationName" :value="applicationName">{{ applicationName }}</a-select-option>
+            </a-select>
           </a-form-item>
           <a-form-item :label="$t('monitor.views.client.httpTrace.title.clientId')">
-            <a-input v-model:value="searchModel.clientId" :size="formSizeConfig" :placeholder="$t('monitor.views.client.httpTrace.search.clientId')" />
+            <a-select v-model:value="searchModel.clientId" :size="formSizeConfig" style="width: 140px;">
+              <a-select-option value="">ALL</a-select-option>
+              <a-select-option v-for="clientId in clientIdList" :key="clientId" :value="clientId">{{ clientId }}</a-select-option>
+            </a-select>
           </a-form-item>
           <a-form-item :label="$t('monitor.views.client.httpTrace.title.httpMethod')">
             <a-select v-model:value="searchModel.httpMethod" :size="formSizeConfig" style="width: 120px">
@@ -60,16 +66,37 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue'
+import {computed, defineComponent, onMounted, ref, watch} from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { useVxeTable, useVxeDelete } from '@/components/hooks'
 import SizeConfigHooks from '@/components/config/SizeConfigHooks'
+import { useUserApplicationName } from '@/modules/monitor/components/hooks/ApplicationHooks'
 
 import { handleLoadData, handleDelete } from './MonitorClientHttpTraceHook'
 import dayjs from 'dayjs'
+import ApiService from '@/common/utils/ApiService'
+import {errorMessage} from '@/components/notice/SystemNotice'
 
 const httpMethods = ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'TRACE']
+
+const useClientId = (applicationCode: any) => {
+  const clientIdList = ref<Array<string>>([])
+  const loadClientId = async () => {
+    try {
+      clientIdList.value = await ApiService.postAjax('monitor/client/httpTrace/listClientId', {
+        applicationName: applicationCode.value
+      })
+    } catch (e) {
+      errorMessage(e)
+    }
+  }
+  onMounted(loadClientId)
+  watch(applicationCode, loadClientId)
+  return {
+    clientIdList
+  }
+}
 
 export default defineComponent({
   name: 'MonitorClientHttpTraceListView',
@@ -84,13 +111,18 @@ export default defineComponent({
      * 查询数据hook
      */
     const { tableProps, handleReset, pageProps, loadData, searchModel } = useVxeTable(handleLoadData, {
-      paging: true
+      paging: true,
+      defaultParameter: {
+        applicationCode: ''
+      }
     })
 
     /**
      * 删除hook
      */
     const deleteHook = useVxeDelete(gridRef, t, handleDelete, { idField: 'id', listHandler: loadData })
+
+    const { applicationNameList } = useUserApplicationName()
 
     onMounted(loadData)
     return {
@@ -101,7 +133,9 @@ export default defineComponent({
       pageProps,
       handleReset,
       loadData,
-      searchModel
+      searchModel,
+      applicationNameList,
+      ...useClientId(computed(() => searchModel.value.applicationCode))
     }
   },
   data () {

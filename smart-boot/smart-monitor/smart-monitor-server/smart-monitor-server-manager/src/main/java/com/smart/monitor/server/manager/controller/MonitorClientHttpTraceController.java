@@ -1,12 +1,15 @@
 package com.smart.monitor.server.manager.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.smart.commons.core.message.Result;
 import com.smart.crud.constants.CrudCommonEnum;
 import com.smart.crud.controller.BaseController;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.monitor.server.manager.model.MonitorClientHttpTracePO;
+import com.smart.monitor.server.manager.pojo.dto.ClientIdQueryDTO;
 import com.smart.monitor.server.manager.service.MonitorClientHttpTraceService;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
 * monitor_client_http_trace - 客户端HttpTrace Controller
@@ -49,5 +54,20 @@ public class MonitorClientHttpTraceController extends BaseController<MonitorClie
     @PostMapping("getById")
     public Result<MonitorClientHttpTracePO> getById(@RequestBody Serializable id) {
         return super.getById(id);
+    }
+
+
+    @PostMapping("listClientId")
+    @ApiOperation(value = "查询客户端ID列表")
+    public Result<List<String>> listClientId(@RequestBody ClientIdQueryDTO parameter) {
+        QueryWrapper<MonitorClientHttpTracePO> queryWrapper = new QueryWrapper<MonitorClientHttpTracePO>().select("DISTINCT client_id");
+        if (StringUtils.isNotBlank(parameter.getApplicationName())) {
+            queryWrapper.lambda().eq(MonitorClientHttpTracePO :: getApplicationCode, parameter.getApplicationName());
+        }
+        return Result.success(
+                this.service.list(queryWrapper).stream()
+                        .map(MonitorClientHttpTracePO::getClientId)
+                        .collect(Collectors.toList())
+        );
     }
 }
