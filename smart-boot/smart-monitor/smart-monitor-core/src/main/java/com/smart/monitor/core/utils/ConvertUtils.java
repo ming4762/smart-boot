@@ -11,6 +11,10 @@ import java.time.Instant;
  */
 public class ConvertUtils {
 
+    private ConvertUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
     /**
      * BigDecimal 转为 Instant
      * @param value BigDecimal

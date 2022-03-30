@@ -38,7 +38,10 @@
             </a-select>
           </a-form-item>
           <a-form-item :label="$t('monitor.views.client.log.title.clientId')">
-            <a-input v-model:value="searchModel.clientId" :size="formSizeConfig" style="width: 150px;" :placeholder="$t('monitor.views.client.log.search.clientId')" />
+            <a-select v-model:value="searchModel.clientId" :size="formSizeConfig" style="width: 140px;">
+              <a-select-option value="">ALL</a-select-option>
+              <a-select-option v-for="clientId in clientIdList" :key="clientId" :value="clientId">{{ clientId }}</a-select-option>
+            </a-select>
           </a-form-item>
           <a-form-item :label="$t('monitor.views.client.log.title.level')">
             <a-select v-model:value="searchModel.level" style="width: 90px" :size="formSizeConfig" :placeholder="$t('monitor.views.client.log.search.level')">
@@ -74,17 +77,37 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, reactive } from 'vue'
+import {defineComponent, onMounted, ref, reactive, watch, computed} from 'vue'
 
 import { DownloadOutlined } from '@ant-design/icons-vue'
 
 import { useVxeTable } from '@/components/hooks'
 import SizeConfigHooks from '@/components/config/SizeConfigHooks'
+import ApiService from '@/common/utils/ApiService'
+import { errorMessage } from '@/components/notice/SystemNotice'
 
 import { handleLoadData, handleDownload } from './MonitorClientLogHook'
 import { useUserApplicationName } from '@/modules/monitor/components/hooks/ApplicationHooks'
 
 const levels = ['ALL', 'ERROR', 'WARN', 'INFO', 'DEBUG', 'TRACE']
+
+const useClientId = (applicationCode: any) => {
+  const clientIdList = ref<Array<string>>([])
+  const loadClientId = async () => {
+    try {
+      clientIdList.value = await ApiService.postAjax('monitor/client/log/listClientId', {
+        applicationName: applicationCode.value
+      })
+    } catch (e) {
+      errorMessage(e)
+    }
+  }
+  onMounted(loadClientId)
+  watch(applicationCode, loadClientId)
+  return {
+    clientIdList
+  }
+}
 
 export default defineComponent({
   name: 'MonitorClientLogListView',
@@ -101,7 +124,8 @@ export default defineComponent({
       paging: true,
       defaultParameter: {
         level: '',
-        applicationCode: ''
+        applicationCode: '',
+        clientId: ''
       }
     })
 
@@ -122,7 +146,8 @@ export default defineComponent({
       handleLoad: () => {
         handleResetPage()
         loadData()
-      }
+      },
+      ...useClientId(computed(() => searchModel.value.applicationCode))
     }
   },
   data () {
@@ -139,6 +164,11 @@ export default defineComponent({
         {
           type: 'seq',
           width: 60
+        },
+        {
+          field: 'clientId',
+          title: 'Client ID',
+          width: 120
         },
         {
           field: 'logText',

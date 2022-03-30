@@ -57,11 +57,11 @@ public class MonitorClientHttpTraceServiceImpl extends BaseServiceImpl<MonitorCl
         Map<String, String> headers = Maps.newHashMap();
         headers.put(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         AtomicInteger saveNum = new AtomicInteger();
-        this.clientWebProxy.forward(clientData.getId(), (repositoryData) -> ClientWebProxy.ForwardRequest.builder()
+        this.clientWebProxy.forward(clientData.getId(), repositoryData -> ClientWebProxy.ForwardRequest.builder()
                 .uri(clientData.getApplication().getEndPointUrl("httptrace?clear=true"))
                 .httpMethod(HttpMethod.GET)
                 .httpHeaders(headers)
-                .build(), (result) -> saveNum.set(this.saveHttpTrace((List<Map<String, Object>>) result, clientData)), true);
+                .build(), result -> saveNum.set(this.saveHttpTrace((List<Map<String, Object>>) result, clientData)), true);
         return saveNum.get();
     }
 
@@ -123,7 +123,7 @@ public class MonitorClientHttpTraceServiceImpl extends BaseServiceImpl<MonitorCl
                 return new ArrayList<>(0);
             }
             if (!AuthUtils.isSuperAdmin()) {
-                List<String> codeList = this.monitorApplicationService.listApplicationNameByUser(AuthUtils.getCurrentUserId());
+                List<String> codeList = this.monitorApplicationService.listApplicationNameByUser(AuthUtils.getNonNullCurrentUserId());
                 if (CollectionUtils.isEmpty(codeList)) {
                     return new ArrayList<>(0);
                 }
