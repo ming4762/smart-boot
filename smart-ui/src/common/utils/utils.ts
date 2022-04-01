@@ -1,3 +1,4 @@
+// @ts-ignore
 import isPlainObject from 'lodash/isPlainObject'
 import { inBrowser } from 'ant-design-vue/es/_util/env'
 import triggerEvent from 'ant-design-vue/es/_util/triggerEvent'

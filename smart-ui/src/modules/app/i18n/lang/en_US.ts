@@ -60,7 +60,8 @@ export default {
       dropdownMenu: {
         location: 'Locate the current tab',
         closeAll: 'Close all tabs',
-        closeOther: 'Close other tabs'
+        closeOther: 'Close other tabs',
+        refreshCurrent: 'Refresh current'
       },
       closeOperation: 'Action'
     },

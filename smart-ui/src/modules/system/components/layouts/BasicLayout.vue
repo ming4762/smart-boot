@@ -20,11 +20,6 @@
     </template>
 
     <template #headerContentRender>
-      <div>
-        <a-tooltip title="刷新页面">
-          <ReloadOutlined style="font-size: 18px;cursor: pointer;" @click="() => { console.log('=============') }" />
-        </a-tooltip>
-      </div>
     </template>
 
     <template #rightContentRender>

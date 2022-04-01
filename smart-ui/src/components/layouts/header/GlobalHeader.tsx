@@ -1,6 +1,7 @@
 import { PropType, defineComponent } from 'vue'
 import { defaultRenderLogo } from '@/components/SiderMenu/SiderMenu'
 import { isFun, triggerEvent, inBrowser } from '@/common/utils/utils'
+// @ts-ignore
 import debounce from 'lodash/debounce'
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons-vue'
 

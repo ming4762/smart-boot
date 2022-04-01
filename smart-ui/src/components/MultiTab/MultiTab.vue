@@ -6,11 +6,12 @@
         :lang="computedLang"
         v-bind="$props">
         <template #dropdown-menu>
-          <a-menu :selected-keys="[]" class="multi-drop-menu">
-            <a-menu-item key="location">{{ i18nRender('app.multiTab.dropdownMenu.location') }} </a-menu-item>
+          <a-menu :selected-keys="[]" class="multi-drop-menu" @click="handleClickItem">
+            <a-menu-item key="location"><aim-outlined class="icon" />{{ i18nRender('app.multiTab.dropdownMenu.location') }} </a-menu-item>
             <a-divider />
-            <a-menu-item key="closeAll">{{ i18nRender('app.multiTab.dropdownMenu.closeAll') }} </a-menu-item>
-            <a-menu-item key="closeOther">{{ i18nRender('app.multiTab.dropdownMenu.closeOther') }} </a-menu-item>
+            <a-menu-item key="closeAll"><close-outlined class="icon" />{{ i18nRender('app.multiTab.dropdownMenu.closeAll') }} </a-menu-item>
+            <a-menu-item key="closeOther"><close-circle-outlined class="icon" />{{ i18nRender('app.multiTab.dropdownMenu.closeOther') }} </a-menu-item>
+            <a-menu-item key="refreshCurrent"><reload-outlined class="icon" />{{ i18nRender('app.multiTab.dropdownMenu.refreshCurrent') }}</a-menu-item>
           </a-menu>
         </template>
       </Navigation>
@@ -22,6 +23,8 @@
 import { defineComponent, PropType, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
+
+import { AimOutlined, ReloadOutlined, CloseOutlined, CloseCircleOutlined } from '@ant-design/icons-vue'
 
 import Navigation, { NavigationProps } from './Navigation.vue'
 
@@ -38,7 +41,11 @@ export const MultiTabProps = Object.assign({
 export default defineComponent({
   name: 'MultiTab',
   components: {
-    Navigation
+    Navigation,
+    AimOutlined,
+    ReloadOutlined,
+    CloseOutlined,
+    CloseCircleOutlined
   },
   props: MultiTabProps,
   setup () {
@@ -50,9 +57,13 @@ export default defineComponent({
     const computedLang = computed(() => {
       return store.getters['app/lang']
     })
+    const handleClickItem = ({ key }: any) => {
+      console.log(key)
+    }
     return {
       computedActiveValue,
-      computedLang
+      computedLang,
+      handleClickItem
     }
   }
 })
@@ -60,8 +71,11 @@ export default defineComponent({
 
 <style lang="less" scoped>
 .multi-drop-menu {
-  ::v-deep(.ant-divider-horizontal) {
+  .ant-divider-horizontal {
     margin: 5px 0 !important;
   }
+}
+.icon {
+  margin-right: 5px;
 }
 </style>

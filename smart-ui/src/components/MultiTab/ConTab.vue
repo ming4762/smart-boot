@@ -20,7 +20,7 @@
     </div>
     <div :class="show ? ['show'] : []" class="btn-group float-right">
       <a-dropdown v-model:visible="show" :trigger="['click']">
-        <button type="button" class="btn btn-default dropdown-toggle btn-outline" :style="{height: (height -1) + 'px' }" >
+        <button type="button" class="btn btn-default dropdown-toggle btn-outline" :style="{height: (height -1) + 'px' }">
           <CaretDownOutlined />
         </button>
         <template #overlay>
@@ -70,10 +70,10 @@ export default defineComponent({
         height: height.value + 'px'
       }
     })
-    const handleClick = (data) => {
+    const handleClick = (data: any) => {
       console.log(data)
     }
-    const handleCloseMenu = (data) => {
+    const handleCloseMenu = (data: any) => {
       console.log(data)
     }
     const show = ref(false)

@@ -50,13 +50,13 @@ import LayoutSide from '@/modules/monitor/components/layout/LayoutSide.vue'
 interface Data {
   icon: string;
   path?: string;
+  actuator?: string;
 }
 
 interface Menu {
   id: string;
   data: Data;
   text: string;
-  actuator?: string;
   children: Array<Menu>;
 }
 

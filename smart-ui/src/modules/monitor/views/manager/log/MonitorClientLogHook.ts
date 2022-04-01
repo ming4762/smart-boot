@@ -66,6 +66,7 @@ export const handleDownload = async (searchParameter: any) => {
 		parameter['access-token'] = await applyTempToken('monitor:client:log')
 	} catch (e) {
 		errorMessage(e)
+		return false
 	}
 	// 拼接URL
 	const parameterStr = Object.keys(parameter).map(key => {

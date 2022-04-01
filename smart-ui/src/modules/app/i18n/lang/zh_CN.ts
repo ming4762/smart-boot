@@ -60,7 +60,8 @@ export default {
       dropdownMenu: {
         location: '定位当前选项卡',
         closeAll: '关闭全部选项卡',
-        closeOther: '关闭其他选项卡'
+        closeOther: '关闭其他选项卡',
+        refreshCurrent: '刷新页面'
       },
       closeOperation: '关闭操作'
     },

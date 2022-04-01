@@ -1,4 +1,5 @@
 import { PropType } from 'vue'
+// @ts-ignore
 import isPlainObject from 'lodash/isPlainObject'
 import { toType, isInteger, warn, isArray, isFunction, getType, validateType } from './utils'
 

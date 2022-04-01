@@ -48,7 +48,7 @@ export default defineComponent({
     },
     pathHandler: {
       type: Function,
-      default: path => path
+      default: (path: string) => path
     },
     hasActuator: {
       type: Function,
@@ -58,7 +58,7 @@ export default defineComponent({
   setup (props) {
     const router = useRouter()
     const route = useRoute()
-    const handlerClickMenu = ({ key }) => {
+    const handlerClickMenu = ({ key }: any) => {
       router.push(props.pathHandler(key))
     }
 

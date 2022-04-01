@@ -129,7 +129,10 @@ export default defineComponent({
       type: Array as PropType<Array<any>>,
       default: () => []
     },
-    lang: String
+    lang: {
+      type: String as PropType<string>,
+      required: true
+    }
   }, NavigationProps),
   setup (props) {
     const { navHeight, lang } = toRefs(props)

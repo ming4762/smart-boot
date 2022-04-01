@@ -32,14 +32,14 @@ export default defineComponent({
       y: 0
     })
     onMounted(() => {
-      divRef.value.addEventListener(props.event, (event) => {
+      divRef.value.addEventListener(props.event, (event: any) => {
         visible.value = true
         menuPosition.x = event.clientX
         menuPosition.y = event.clientY
         event.preventDefault()
       })
       closeEvents.forEach(item => {
-        document.addEventListener(item, (event) => {
+        document.addEventListener(item, (event: any) => {
           if (props.event !== item || event.target !== divRef.value) {
             visible.value = false
           }

@@ -31,7 +31,6 @@ const renderHeaderContent = (props: any) => {
     const { theme, menuHeaderRender, logo, menuRender, rightContentRender } = props
     const baseCls = 'ant-pro-top-nav-header'
     const contentWidth = props.contentWidth === 'Fixed'
-    console.log(contentWidth)
     const rightContentProps = {
       theme: theme,
       isTop: isTop,
