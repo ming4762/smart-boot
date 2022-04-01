@@ -177,7 +177,9 @@ export default defineComponent({
         }
         case 'createDic': {
           createDictVue.handleShowCreateDictModal()
-          templateSelectedRef.value.loadData()
+          if (templateSelectedRef.value) {
+            templateSelectedRef.value.loadData()
+          }
           break
         }
       }

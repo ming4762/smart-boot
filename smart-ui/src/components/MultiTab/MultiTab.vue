@@ -58,7 +58,11 @@ export default defineComponent({
       return store.getters['app/lang']
     })
     const handleClickItem = ({ key }: any) => {
-      console.log(key)
+      switch (key) {
+        case 'refreshCurrent': {
+          break
+        }
+      }
     }
     return {
       computedActiveValue,

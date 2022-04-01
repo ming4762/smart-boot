@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref, toRefs } from 'vue'
+import { defineComponent, PropType, ref, toRefs, onMounted } from 'vue'
 
 import ApiService from '@/common/utils/ApiService'
 import { errorMessage } from '@/components/notice/SystemNotice'
@@ -55,6 +55,7 @@ export default defineComponent({
         dataLoading.value = false
       }
     }
+    onMounted(loadData)
     const handleTransChange = (targetKeys: Array<string>) => {
       content.emit('templateChange', targetKeys)
       targetKeysModel.value = targetKeys
