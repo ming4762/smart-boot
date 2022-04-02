@@ -1,12 +1,14 @@
 package com.smart.auth.core.authentication;
 
 import com.smart.auth.core.constants.AuthTypeEnum;
+import com.smart.auth.core.exception.IpBindAuthenticationException;
 import com.smart.auth.core.exception.LoginInfoMissAuthenticationException;
 import com.smart.auth.core.exception.RestUsernameNotFoundException;
 import com.smart.auth.core.i18n.AuthI18nMessage;
 import com.smart.auth.core.model.RestUserDetailsImpl;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.commons.core.i18n.I18nUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
@@ -15,6 +17,8 @@ import org.springframework.security.authentication.dao.AbstractUserDetailsAuthen
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsChecker;
 import org.springframework.security.core.userdetails.UserDetailsService;
+
+import java.util.List;
 
 /**
  * 登录管理
@@ -41,6 +45,10 @@ public class RestAuthenticationProvider extends AbstractUserDetailsAuthenticatio
         if (!StringUtils.equals(userDetails.getPassword(), password)) {
             logger.debug("登录失败：密码错误");
             throw new BadCredentialsException(I18nUtils.get(AuthI18nMessage.USERNAME_PASSWORD_ERROR, user.getLoginFailTime() + 1));
+        }
+        List<String> ipWhiteList = user.getIpWhiteList();
+        if (CollectionUtils.isNotEmpty(ipWhiteList) && !ipWhiteList.contains(user.getLoginIp())) {
+            throw new IpBindAuthenticationException(I18nUtils.get(AuthI18nMessage.ACCOUNT_IP_NOT_IN_WHITELIST));
         }
     }
 

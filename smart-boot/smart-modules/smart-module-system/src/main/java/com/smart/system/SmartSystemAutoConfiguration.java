@@ -37,7 +37,7 @@ public class SmartSystemAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean(AuthEventLockedHandler.class)
-    public AuthEventLockedHandler authEventLockedHandler(AuthProperties properties, SysUserService sysUserService, SysUserAccountService sysAuthUserService) {
-        return new AuthEventLockedHandler(properties, sysUserService, sysAuthUserService);
+    public AuthEventLockedHandler authEventLockedHandler(SysUserService sysUserService, SysUserAccountService sysAuthUserService) {
+        return new AuthEventLockedHandler(sysUserService, sysAuthUserService);
     }
 }

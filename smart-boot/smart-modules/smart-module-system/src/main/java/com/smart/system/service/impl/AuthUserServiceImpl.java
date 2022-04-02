@@ -2,9 +2,13 @@ package com.smart.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.common.collect.ImmutableList;
+import com.smart.auth.core.exception.LongTimeNoLoginLockedException;
+import com.smart.auth.core.exception.PasswordNoLifeLockedException;
+import com.smart.auth.core.i18n.AuthI18nMessage;
 import com.smart.auth.core.model.AuthUser;
 import com.smart.auth.core.model.Permission;
 import com.smart.auth.core.service.AuthUserService;
+import com.smart.commons.core.i18n.I18nUtils;
 import com.smart.system.constants.FunctionTypeEnum;
 import com.smart.system.constants.UserAccountStatusEnum;
 import com.smart.system.model.SysRolePO;
@@ -13,14 +17,15 @@ import com.smart.system.model.SysUserPO;
 import com.smart.system.service.SysUserAccountService;
 import com.smart.system.service.SysUserService;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -71,21 +76,35 @@ public class AuthUserServiceImpl implements AuthUserService {
                 .username(user.getUsername())
                 .password(user.getPassword())
                 .fullName(user.getFullName())
-                .loginFailTime(0)
+                .loginFailTime(0L)
                 .build();
         // 查询用户账户状态
         SysUserAccountPO userAccount = this.sysUserAccountService.getById(user.getUserId());
-
-        if (userAccount != null) {
-            if (UserAccountStatusEnum.LOGIN_FAIL_LOCKED.equals(userAccount.getAccountStatus()) || UserAccountStatusEnum.LONG_TIME_LOCKED.equals(userAccount.getAccountStatus())) {
-                authUser.setLocked(true);
-            }
-            // 验证是否长时间未登录锁定
-            // TODO: 未开发
-            // 设置登录失败次数
-            authUser.setLoginFailTime(userAccount.getLoginFailTime());
+        if (userAccount == null) {
+            throw new DisabledException(I18nUtils.get(AuthI18nMessage.ACCOUNT_NOT_CREATED));
         }
-
+        // 验证是否长时间未登录
+        if (userAccount.getMaxDaysSinceLogin() > 0 && userAccount.getLastLoginTime().plusDays(userAccount.getMaxDaysSinceLogin()).isBefore(LocalDateTime.now())) {
+            throw new LongTimeNoLoginLockedException(I18nUtils.get(AuthI18nMessage.ACCOUNT_NOT_LOGIN_LOCKED));
+        }
+        // 验证是否长时间未修改密码
+        if (userAccount.getPasswordLifeDays() > 0 && userAccount.getPasswordModifyTime().plusDays(userAccount.getPasswordLifeDays()).isBefore(LocalDateTime.now())) {
+            throw new PasswordNoLifeLockedException(I18nUtils.get(AuthI18nMessage.ACCOUNT_PASSWORD_NO_MODIFY_LOCKED));
+        }
+        if (UserAccountStatusEnum.LOGIN_FAIL_LOCKED.equals(userAccount.getAccountStatus()) || UserAccountStatusEnum.LONG_TIME_LOCKED.equals(userAccount.getAccountStatus())) {
+            authUser.setLocked(true);
+        }
+        // 设置IP白名单
+        authUser.setIpWhiteList(
+                Optional.ofNullable(userAccount.getIpWhiteList())
+                    .map(
+                            item -> Arrays.stream(item.split(";"))
+                                    .map(String::trim)
+                                    .filter(StringUtils::isNotBlank)
+                                    .collect(Collectors.toList())
+                    ).orElse(new ArrayList<>(0))
+        );
+        authUser.setLoginFailTime(userAccount.getLoginFailTime());
         return authUser;
     }
 

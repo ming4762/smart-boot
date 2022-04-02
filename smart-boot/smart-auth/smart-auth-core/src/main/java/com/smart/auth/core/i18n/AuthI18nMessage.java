@@ -46,6 +46,15 @@ public enum AuthI18nMessage implements I18nMessage {
     ACCOUNT_DISABLED("auth.check.account.disabled", "User is disabled"),
     // 用户已过期
     ACCOUNT_EXPIRED("auth.check.account.expired", "User account has expired"),
+    // 账户未创建
+    ACCOUNT_NOT_CREATED("auth.check.account.notCreated", "Account not created"),
+    // 长时间未登录锁定
+    ACCOUNT_NOT_LOGIN_LOCKED("auth.check.noLogin.locked", "Account locking without login for a long time"),
+    // 长时间未修改密码账户锁定
+    ACCOUNT_PASSWORD_NO_MODIFY_LOCKED("auth.check.password.noModify.locked", "Account lock without password modification"),
+    // 登录IP不在白名单内
+    ACCOUNT_IP_NOT_IN_WHITELIST("auth.check.ip.whitelist.error", "Login IP is not in the white list"),
+
 
     // --------- 修改密码错误 ---------------
     // 原密码错误
@@ -57,7 +66,7 @@ public enum AuthI18nMessage implements I18nMessage {
 
     // ---------- 验证码 ------------------
     CAPTCHA_EXPIRE_ERROR("auth.error.captcha_expire", "Verification code has expired"),
-    CAPTCHA_ERROR("auth.error.captcha_error", "Verification code error")
+    CAPTCHA_ERROR("auth.error.captcha_error", "Verification code error"),
 
     ;
 

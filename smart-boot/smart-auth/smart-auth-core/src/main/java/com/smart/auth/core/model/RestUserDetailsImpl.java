@@ -69,7 +69,7 @@ public class RestUserDetailsImpl implements RestUserDetails, Serializable {
     private String loginIp;
 
     @Getter
-    private Integer loginFailTime;
+    private Long loginFailTime;
 
     /**
      * 账户是否锁定

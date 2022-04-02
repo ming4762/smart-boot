@@ -1,5 +1,6 @@
 package com.smart.auth.security;
 
+import com.smart.auth.core.authentication.AuthenticationFailureEventInitializer;
 import com.smart.auth.core.authentication.MethodPermissionEvaluatorImpl;
 import com.smart.auth.core.beans.DefaultUrlMappingProvider;
 import com.smart.auth.core.beans.UrlMappingProvider;
@@ -19,6 +20,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.access.PermissionEvaluator;
+import org.springframework.security.authentication.DefaultAuthenticationEventPublisher;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
@@ -93,5 +95,11 @@ public class AuthSecurity2AutoConfiguration {
     @ConditionalOnMissingBean(UrlMappingProvider.class)
     public DefaultUrlMappingProvider defaultUrlMappingProvider(RequestMappingHandlerMapping mapping) {
         return new DefaultUrlMappingProvider(mapping);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public AuthenticationFailureEventInitializer authenticationFailureEventInitializer(DefaultAuthenticationEventPublisher eventPublisher) {
+        return new AuthenticationFailureEventInitializer(eventPublisher);
     }
 }

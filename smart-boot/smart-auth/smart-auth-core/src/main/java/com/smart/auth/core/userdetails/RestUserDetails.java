@@ -103,5 +103,5 @@ public interface RestUserDetails extends UserDetails {
      * 获取登录失败次数
      * @return 登录失败次数
      */
-    Integer getLoginFailTime();
+    Long getLoginFailTime();
 }

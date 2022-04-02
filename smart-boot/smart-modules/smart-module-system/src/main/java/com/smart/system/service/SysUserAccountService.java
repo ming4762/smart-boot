@@ -22,12 +22,6 @@ public interface SysUserAccountService extends BaseService<SysUserAccountPO> {
      */
     List<SysOnlineUserVO> listOnlineUser(Set<String> tokens);
 
-    /**
-     * 创建初始化的用户账号
-     * @param userId 用户ID
-     * @return 用户账户信息
-     */
-    SysUserAccountPO createInitUserAccount(@NonNull Long userId);
 
     /**
      * 更新密码

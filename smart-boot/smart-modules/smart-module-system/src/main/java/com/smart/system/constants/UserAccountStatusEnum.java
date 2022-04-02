@@ -25,7 +25,11 @@ public enum UserAccountStatusEnum implements IEnum<String> {
     /**
      * 超出指定时间未登录锁定
      */
-    LONG_TIME_LOCKED("30")
+    LONG_TIME_LOCKED("30"),
+    /**
+     * 超出指定时间未修改密码锁定
+     */
+    LONG_TIME_PASSWORD_MODIFY_LOCKED("40")
     ;
 
     @EnumValue

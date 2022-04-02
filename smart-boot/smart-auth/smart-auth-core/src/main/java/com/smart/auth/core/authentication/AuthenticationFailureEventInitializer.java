@@ -3,9 +3,12 @@ package com.smart.auth.core.authentication;
 import com.google.common.collect.ImmutableMap;
 import com.smart.auth.core.event.AuthenticationFailureIpBindEvent;
 import com.smart.auth.core.exception.IpBindAuthenticationException;
+import com.smart.auth.core.exception.LongTimeNoLoginLockedException;
+import com.smart.auth.core.exception.PasswordNoLifeLockedException;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.authentication.DefaultAuthenticationEventPublisher;
+import org.springframework.security.authentication.event.AuthenticationFailureLockedEvent;
 
 /**
  * @author ShiZhongMing
@@ -22,11 +25,13 @@ public class AuthenticationFailureEventInitializer implements ApplicationRunner 
     }
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(ApplicationArguments args) {
         eventPublisher.setAdditionalExceptionMappings(
                 ImmutableMap.of(
                         // ip绑定认证异常
-                        IpBindAuthenticationException.class, AuthenticationFailureIpBindEvent.class
+                        IpBindAuthenticationException.class, AuthenticationFailureIpBindEvent.class,
+                        LongTimeNoLoginLockedException.class, AuthenticationFailureLockedEvent.class,
+                        PasswordNoLifeLockedException.class, AuthenticationFailureLockedEvent.class
                 )
         );
     }

@@ -1,9 +1,11 @@
 package com.smart.system.auth;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.smart.auth.core.event.AuthEventHandler;
-import com.smart.auth.core.properties.AuthProperties;
+import com.smart.auth.core.exception.LongTimeNoLoginLockedException;
+import com.smart.auth.core.exception.PasswordNoLifeLockedException;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.system.constants.UserAccountStatusEnum;
 import com.smart.system.model.SysUserAccountPO;
@@ -13,7 +15,9 @@ import com.smart.system.service.SysUserService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.security.authentication.event.AbstractAuthenticationFailureEvent;
 import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
+import org.springframework.security.authentication.event.AuthenticationFailureLockedEvent;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -27,14 +31,11 @@ import java.util.List;
  */
 public class AuthEventLockedHandler implements AuthEventHandler {
 
-    private final AuthProperties properties;
-
     private final SysUserService sysUserService;
 
     private final SysUserAccountService sysAuthUserService;
 
-    public AuthEventLockedHandler(AuthProperties properties, SysUserService sysUserService, SysUserAccountService sysAuthUserService) {
-        this.properties = properties;
+    public AuthEventLockedHandler(SysUserService sysUserService, SysUserAccountService sysAuthUserService) {
         this.sysUserService = sysUserService;
         this.sysAuthUserService = sysAuthUserService;
     }
@@ -55,23 +56,13 @@ public class AuthEventLockedHandler implements AuthEventHandler {
         RestUserDetails user = (RestUserDetails) event.getAuthentication().getPrincipal();
         // 查询用户账户信息
         SysUserAccountPO authUser = this.sysAuthUserService.getById(user.getUserId());
-        if (authUser != null) {
-            if ( authUser.getLoginFailTime() > 0) {
-                this.sysAuthUserService.update(
-                        new UpdateWrapper<SysUserAccountPO>().lambda()
-                                .set(SysUserAccountPO:: getLoginFailTime, 0)
-                                .set(SysUserAccountPO :: getLastLoginTime, LocalDateTime.now())
-                                .eq(SysUserAccountPO:: getUserId, user.getUserId())
-                );
-            }
-        } else {
-            authUser = new SysUserAccountPO();
-            authUser.setUserId(user.getUserId());
-            authUser.setCreateTime(LocalDateTime.now());
-            authUser.setLastLoginTime(LocalDateTime.now());
-            authUser.setLoginFailTime(0);
-            this.sysAuthUserService.save(authUser);
+        LambdaUpdateWrapper<SysUserAccountPO> updateWrapper = new UpdateWrapper<SysUserAccountPO>().lambda()
+                .eq(SysUserAccountPO:: getUserId, user.getUserId())
+                .set(SysUserAccountPO :: getLastLoginTime, LocalDateTime.now());
+        if (authUser.getLoginFailTime() > 0) {
+            updateWrapper.set(SysUserAccountPO:: getLoginFailTime, 0L);
         }
+        this.sysAuthUserService.update(updateWrapper);
     }
 
     /**
@@ -83,37 +74,64 @@ public class AuthEventLockedHandler implements AuthEventHandler {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void handleLoginFail(AbstractAuthenticationFailureEvent event) {
+        if (event instanceof AuthenticationFailureLockedEvent) {
+            this.handleLocked((AuthenticationFailureLockedEvent) event);
+            return;
+        }
         if (!(event instanceof AuthenticationFailureBadCredentialsEvent)) {
             // 只处理BadCredentialsException
             return;
         }
+        SysUserAccountPO authUser = this.getUserAccount((String) event.getAuthentication().getPrincipal());
+        if (authUser == null) {
+            return;
+        }
+        Long time = authUser.getLoginFailTime() + 1;
+        LambdaUpdateWrapper<SysUserAccountPO> updateWrapper = new UpdateWrapper<SysUserAccountPO>().lambda()
+                .eq(SysUserAccountPO :: getUserId, authUser.getUserId())
+                .set(SysUserAccountPO :: getLoginFailTime, time);
+
+        if (time > authUser.getLoginFailTimeLimit()) {
+            // 锁定用户
+            updateWrapper.set(SysUserAccountPO :: getAccountStatus, UserAccountStatusEnum.LOGIN_FAIL_LOCKED);
+        }
+        this.sysAuthUserService.update(updateWrapper);
+    }
+
+    /**
+     * 登录锁定
+     * @param event 事件
+     */
+    private void handleLocked(AuthenticationFailureLockedEvent event) {
+        AuthenticationException exception = event.getException();
         // 用户名
-        String username = (String) event.getAuthentication().getPrincipal();
+        SysUserAccountPO userAccount = this.getUserAccount((String) event.getAuthentication().getPrincipal());
+        if (userAccount == null) {
+            return;
+        }
+        LambdaUpdateWrapper<SysUserAccountPO> updateWrapper = new UpdateWrapper<SysUserAccountPO>().lambda()
+                .eq(SysUserAccountPO :: getUserId, userAccount.getUserId());
+        if (exception instanceof LongTimeNoLoginLockedException) {
+            // 长时间未登录锁定
+            updateWrapper.set(SysUserAccountPO::getAccountStatus, UserAccountStatusEnum.LONG_TIME_LOCKED);
+        } else if (exception instanceof PasswordNoLifeLockedException) {
+            updateWrapper.set(SysUserAccountPO::getAccountStatus, UserAccountStatusEnum.LONG_TIME_PASSWORD_MODIFY_LOCKED);
+        }
+        this.sysAuthUserService.update(updateWrapper);
+    }
+
+    private SysUserAccountPO getUserAccount(String username) {
         // 通过用户名查询用户ID
         List<SysUserPO> userList = this.sysUserService.list(
                 new QueryWrapper<SysUserPO>().lambda()
-                .select(SysUserPO :: getUserId)
-                .eq(SysUserPO :: getUsername, username)
+                        .select(SysUserPO :: getUserId)
+                        .eq(SysUserPO :: getUsername, username)
         );
         if (CollectionUtils.isEmpty(userList)) {
-            return;
+            return null;
         }
         SysUserPO user = userList.get(0);
         // 查询用户锁定次数
-        SysUserAccountPO authUser = this.sysAuthUserService.getById(user.getUserId());
-        if (authUser == null) {
-            authUser = new SysUserAccountPO();
-            authUser.setUserId(user.getUserId());
-            authUser.setLoginFailTime(0);
-            authUser.setCreateTime(LocalDateTime.now());
-        }
-        int time = authUser.getLoginFailTime() + 1;
-        if (time >= this.properties.getStatus().getLoginFailLockTime()) {
-            // 锁定用户
-            authUser.setAccountStatus(UserAccountStatusEnum.LOGIN_FAIL_LOCKED);
-        }
-        authUser.setLoginFailTime(time);
-        // 更新次数
-        this.sysAuthUserService.saveOrUpdate(authUser);
+        return this.sysAuthUserService.getById(user.getUserId());
     }
 }

@@ -3,6 +3,7 @@ package com.smart.system.model;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.smart.crud.model.BaseModel;
+import com.smart.system.constants.MaxConnectionsPolicyEnum;
 import com.smart.system.constants.UserAccountStatusEnum;
 import lombok.*;
 
@@ -29,7 +30,7 @@ public class SysUserAccountPO extends BaseModel {
     /**
      * 登录失败次数
      */
-    private Integer loginFailTime;
+    private Long loginFailTime;
 
     private UserAccountStatusEnum accountStatus;
 
@@ -49,5 +50,20 @@ public class SysUserAccountPO extends BaseModel {
     private Long maxDaysSinceLogin;
 
     private Long passwordLifeDays;
+
+    /**
+     * 超出最大连接数执行策略
+     */
+    private MaxConnectionsPolicyEnum maxConnectionsPolicy;
+
+    /**
+     * 登录失败锁定次数，0永不锁定
+     */
+    private Long loginFailTimeLimit;
+
+    /**
+     * 密码修改时间
+     */
+    private LocalDateTime passwordModifyTime;
 
 }

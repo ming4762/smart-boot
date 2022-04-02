@@ -76,6 +76,7 @@ public class DefaultUserDetailsServiceImpl implements UserDetailsService, SmsUse
         restUserDetails.setPassword(user.getPassword());
         restUserDetails.setAccountNonLocked(!(Boolean.TRUE.equals(user.getLocked())));
         restUserDetails.setLoginFailTime(user.getLoginFailTime());
+        restUserDetails.setIpWhiteList(user.getIpWhiteList());
         return restUserDetails;
     }
 

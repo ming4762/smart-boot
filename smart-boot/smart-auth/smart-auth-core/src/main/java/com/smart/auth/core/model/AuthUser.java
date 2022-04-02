@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author ShiZhongMing
@@ -33,5 +34,7 @@ public class AuthUser implements Serializable {
     /**
      * 登录失败次数
      */
-    private Integer loginFailTime;
+    private Long loginFailTime;
+
+    private List<String> ipWhiteList;
 }

@@ -1,6 +1,7 @@
 package com.smart.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.smart.auth.core.properties.AuthProperties;
@@ -8,7 +9,6 @@ import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.auth.extensions.jwt.resolver.JwtResolver;
 import com.smart.commons.core.i18n.I18nException;
 import com.smart.crud.service.BaseServiceImpl;
-import com.smart.system.constants.UserAccountStatusEnum;
 import com.smart.system.i18n.SystemI18nMessage;
 import com.smart.system.mapper.SysUserAccountMapper;
 import com.smart.system.mapper.SysUserMapper;
@@ -79,16 +79,6 @@ public class SysUserAccountServiceImpl extends BaseServiceImpl<SysUserAccountMap
         }).collect(Collectors.toList());
     }
 
-    @Override
-    public SysUserAccountPO createInitUserAccount(@NonNull Long userId) {
-        SysUserAccountPO userAccount = new SysUserAccountPO();
-        userAccount.setUserId(userId);
-        userAccount.setLoginFailTime(0);
-        userAccount.setAccountStatus(UserAccountStatusEnum.NORMAL);
-        userAccount.setInitialPasswordYn(true);
-        userAccount.setCreateTime(LocalDateTime.now());
-        return userAccount;
-    }
 
     /**
      * 更改密码
@@ -100,19 +90,11 @@ public class SysUserAccountServiceImpl extends BaseServiceImpl<SysUserAccountMap
     @Transactional(rollbackFor = Exception.class)
     public boolean changePassword(@NonNull Long userId, @NonNull String password) {
         // 获取账户信息
-        SysUserAccountPO userAccount = this.getById(userId);
-        if (userAccount == null) {
-            userAccount = this.createInitUserAccount(userId);
-            userAccount.setInitialPasswordYn(false);
-            this.save(userAccount);
-        }
-        if (Boolean.TRUE.equals(userAccount.getInitialPasswordYn())) {
-            this.update(
-                    new UpdateWrapper<SysUserAccountPO>().lambda()
-                    .set(SysUserAccountPO :: getInitialPasswordYn, Boolean.FALSE)
-                    .eq(SysUserAccountPO :: getUserId, userId)
-            );
-        }
+        LambdaUpdateWrapper<SysUserAccountPO> updateWrapper = new UpdateWrapper<SysUserAccountPO>().lambda()
+                .set(SysUserAccountPO :: getPasswordModifyTime, LocalDateTime.now())
+                .set(SysUserAccountPO :: getInitialPasswordYn, Boolean.FALSE)
+                .eq(SysUserAccountPO :: getUserId, userId);
+        this.update(updateWrapper);
         // 更新密码
         return SqlHelper.retBool(this.sysUserMapper.update(null,
                 new UpdateWrapper<SysUserPO>().lambda()
