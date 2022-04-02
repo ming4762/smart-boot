@@ -71,6 +71,21 @@ public class AuthProperties {
          * 登录失败锁定次数
          */
         private Integer loginFailLockTime = 5;
+
+        /**
+         * 最大访问连接数，单个用户可同时登录的数量，0：不限制
+         */
+        private Long maxConnections = 1L;
+
+        /**
+         * 指定天数未登录账户锁定，0：永不锁定
+         */
+        private Long maxDaysSinceLogin = 30L;
+
+        /**
+         * 密码必须修改的天使，0：不限制
+         */
+        private Long passwordLifeDays = 90L;
     }
 
     @Getter

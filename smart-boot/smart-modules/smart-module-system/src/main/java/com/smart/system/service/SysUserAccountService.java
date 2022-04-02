@@ -37,4 +37,10 @@ public interface SysUserAccountService extends BaseService<SysUserAccountPO> {
      */
     boolean changePassword(@NonNull Long userId, @NonNull String password);
 
+    /**
+     * 批量创建账号
+     * @param userIdList 用户ID列表
+     * @return 是否创建成功
+     */
+    boolean createAccount(@NonNull List<Long> userIdList);
 }

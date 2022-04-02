@@ -250,3 +250,52 @@ export const vueAddEdit = (loadData: any) => {
     handleShowUpdate
   }
 }
+
+/**
+ * 创建用户账户hook
+ * @param tableRef
+ * @param t
+ */
+export const useCreateAccount = (tableRef: Ref, t: Function) => {
+  // 获取选中的用户IDList
+  const getSelectUserList = (): Array<any> => tableRef.value.getCheckboxRecords()
+
+  /**
+   * 创建账户
+   */
+  const handleCreateAccount = () => {
+    const userList = getSelectUserList()
+    if (userList.length === 0) {
+      message.warn(t('system.views.user.validate.selectUser'))
+      return false
+    }
+    // 判断是否有用户已经删除
+    const hasDelete = userList.some(item => item.deleteYn === true)
+    if (hasDelete) {
+      message.warn(t('system.views.user.message.deleteUserNotCreateAccount'))
+      return false
+    }
+    // 判断是否有停用用户
+    const hasNoUse = userList.some(item => item.useYn === false)
+    if (hasNoUse) {
+      message.warn(t('system.views.user.message.noUseUserNotCreateAccount'))
+      return false
+    }
+    Modal.confirm({
+      title: t('system.views.user.validate.createAccountConfirm'),
+      icon: createVNode(ExclamationCircleOutlined),
+      onOk: async () => {
+        try {
+          await ApiService.postAjax('auth/createAccount', userList.map(item => item.userId))
+          message.success(t('system.views.user.message.createAccountSuccess'))
+        } catch (e) {
+          errorMessage(e)
+        }
+      }
+    })
+  }
+
+  return {
+    handleCreateAccount
+  }
+}

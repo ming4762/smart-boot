@@ -4,8 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.smart.crud.model.BaseModel;
 import com.smart.system.constants.UserAccountStatusEnum;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -18,6 +17,9 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @TableName("sys_user_account")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class SysUserAccountPO extends BaseModel {
     private static final long serialVersionUID = -8246582845593471040L;
 
@@ -39,5 +41,13 @@ public class SysUserAccountPO extends BaseModel {
     private LocalDateTime lastLoginTime;
 
     private LocalDateTime createTime;
+
+    private String ipWhiteList;
+
+    private Long maxConnections;
+
+    private Long maxDaysSinceLogin;
+
+    private Long passwordLifeDays;
 
 }

@@ -1,6 +1,7 @@
 package com.smart.system.controller;
 
 import com.smart.auth.core.utils.AuthUtils;
+import com.smart.commons.core.exception.BusinessException;
 import com.smart.commons.core.i18n.I18nUtils;
 import com.smart.commons.core.message.Result;
 import com.smart.crud.controller.BaseController;
@@ -41,7 +42,7 @@ public class SysI18nItemController extends BaseController<SysI18nItemService, Sy
             BeanUtils.copyProperties(parameter, model);
             return Result.success(this.service.saveOrUpdateWithCreateUser(model, AuthUtils.getCurrentUserId()));
         } catch (DuplicateKeyException e) {
-            return Result.failure(501, I18nUtils.get(SystemI18nMessage.I18N_ITEM_DUPLICATE, parameter.getLocale().toLanguageTag()));
+            throw new BusinessException(I18nUtils.get(SystemI18nMessage.I18N_ITEM_DUPLICATE, parameter.getLocale().toLanguageTag()), e);
         }
     }
 

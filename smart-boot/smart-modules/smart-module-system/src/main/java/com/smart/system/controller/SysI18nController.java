@@ -2,6 +2,7 @@ package com.smart.system.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.smart.auth.core.utils.AuthUtils;
+import com.smart.commons.core.exception.BusinessException;
 import com.smart.commons.core.i18n.I18nUtils;
 import com.smart.commons.core.log.Log;
 import com.smart.commons.core.log.LogOperationTypeEnum;
@@ -19,7 +20,6 @@ import com.smart.system.service.SysI18nService;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -110,8 +110,7 @@ public class SysI18nController extends BaseController<SysI18nService, SysI18nPO>
             BeanUtils.copyProperties(parameter, model);
             return Result.success(this.service.saveOrUpdateWithAllUser(model, AuthUtils.getCurrentUserId()));
         } catch (DuplicateKeyException e) {
-            log.warn(e.getMessage(), e);
-            return Result.failure(501, I18nUtils.get(SystemI18nMessage.I18N_DUPLICATE, parameter.getI18nCode()));
+            throw new BusinessException(I18nUtils.get(SystemI18nMessage.I18N_DUPLICATE, parameter.getI18nCode()), e);
         }
     }
 

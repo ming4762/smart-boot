@@ -72,6 +72,14 @@
               {{ $t('common.button.use') }}
             </a-button>
             <a-button
+              v-permission="permissions.createAccount"
+              :size="buttonSizeConfig"
+              class="button-margin"
+              type="primary"
+              @click="handleCreateAccount">
+              {{ $t('system.views.user.button.createAccount') }}
+            </a-button>
+            <a-button
               v-permission="permissions.useYn"
               danger
               class="button-margin"
@@ -134,7 +142,7 @@ import { useI18n } from 'vue-i18n'
 
 import { Modal } from 'ant-design-vue'
 
-import { vueLoadData, vueAddEdit, userOperationHoops } from './UserListSupport'
+import { vueLoadData, vueAddEdit, userOperationHoops, useCreateAccount } from './UserListSupport'
 
 import ApiService from '@/common/utils/ApiService'
 import { SystemPermissions } from '../../constants/SystemConstants'
@@ -182,7 +190,8 @@ export default defineComponent({
       ...SizeConfigHoops(),
       handleSetYn,
       ...addEditVue,
-      permissions: SystemPermissions.user
+      permissions: SystemPermissions.user,
+      ...useCreateAccount(tableRef, t)
     }
   },
   data () {

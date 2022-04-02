@@ -7,7 +7,8 @@ export const SystemPermissions = {
     delete: 'sys:user:delete',
     update: 'sys:user:update',
     setRole: 'sys:user:setRole',
-    useYn: 'sys:user:useYn'
+    useYn: 'sys:user:useYn',
+    createAccount: 'sys:user:createAccount'
   },
   role: {
     add: 'sys:role:save',

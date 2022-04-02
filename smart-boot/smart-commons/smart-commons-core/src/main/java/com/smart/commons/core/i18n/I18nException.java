@@ -14,6 +14,8 @@ public class I18nException extends BusinessException {
 
     private final I18nMessage i18nMessage;
 
+    private Object[] args;
+
     public I18nException(Throwable e) {
         super(e);
         this.i18nMessage = null;
@@ -24,8 +26,14 @@ public class I18nException extends BusinessException {
         this.i18nMessage = i18nMessage;
     }
 
-    public I18nException(I18nMessage i18nMessage) {
+    public I18nException(I18nMessage i18nMessage, Throwable e, Object ...args) {
+        this(i18nMessage, e);
+        this.args = args;
+    }
+
+    public I18nException(I18nMessage i18nMessage, Object ...args) {
         this.i18nMessage = i18nMessage;
+        this.args = args;
     }
 
     /**
