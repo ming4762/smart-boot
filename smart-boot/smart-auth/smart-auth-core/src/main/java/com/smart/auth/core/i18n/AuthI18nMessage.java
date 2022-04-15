@@ -54,6 +54,8 @@ public enum AuthI18nMessage implements I18nMessage {
     ACCOUNT_PASSWORD_NO_MODIFY_LOCKED("auth.check.password.noModify.locked", "Account lock without password modification"),
     // 登录IP不在白名单内
     ACCOUNT_IP_NOT_IN_WHITELIST("auth.check.ip.whitelist.error", "Login IP is not in the white list"),
+    // 登录用户数量达到最大连接数，登录失败
+    MAX_CONNECTION_LOGIN_FAIL("auth.check.login.maxConnection.error", "The login user has reached the maximum number of connections. Login is not allowed"),
 
 
     // --------- 修改密码错误 ---------------

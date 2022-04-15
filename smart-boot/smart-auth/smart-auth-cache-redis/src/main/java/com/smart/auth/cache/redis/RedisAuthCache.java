@@ -82,7 +82,7 @@ public class RedisAuthCache extends AbstractAuthCache<String, Object> {
     @NonNull
     public Set<Object> batchGet(@NonNull Collection<String> keys) {
         final Set<String> prefixKeys = keys.stream().map(this::getKey).collect(Collectors.toSet());
-        List<Object> data = this.cacheService.batchGet(Collections.singleton(prefixKeys));
+        List<Object> data = this.cacheService.batchGet(new ArrayList<>(prefixKeys));
         return Objects.isNull(data) ? new HashSet<>(0) : new HashSet<>(data);
     }
 

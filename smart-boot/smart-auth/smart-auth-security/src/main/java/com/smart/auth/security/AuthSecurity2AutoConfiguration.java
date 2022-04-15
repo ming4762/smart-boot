@@ -80,7 +80,7 @@ public class AuthSecurity2AutoConfiguration {
      * @return 方法级权限认证器
      */
     @Bean
-    @ConditionalOnProperty(prefix = "gc.auth", name = "method", havingValue = "true")
+    @ConditionalOnProperty(prefix = "smart.auth", name = "method", havingValue = "true")
     @ConditionalOnMissingBean(PermissionEvaluator.class)
     public PermissionEvaluator permissionEvaluator(AuthProperties authProperties) {
         return new MethodPermissionEvaluatorImpl(authProperties);

@@ -4,10 +4,12 @@ import com.google.common.collect.ImmutableMap;
 import com.smart.auth.core.event.AuthenticationFailureIpBindEvent;
 import com.smart.auth.core.exception.IpBindAuthenticationException;
 import com.smart.auth.core.exception.LongTimeNoLoginLockedException;
+import com.smart.auth.core.exception.MaxConnectionAuthenticationException;
 import com.smart.auth.core.exception.PasswordNoLifeLockedException;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.authentication.DefaultAuthenticationEventPublisher;
+import org.springframework.security.authentication.event.AuthenticationFailureDisabledEvent;
 import org.springframework.security.authentication.event.AuthenticationFailureLockedEvent;
 
 /**
@@ -31,7 +33,9 @@ public class AuthenticationFailureEventInitializer implements ApplicationRunner 
                         // ip绑定认证异常
                         IpBindAuthenticationException.class, AuthenticationFailureIpBindEvent.class,
                         LongTimeNoLoginLockedException.class, AuthenticationFailureLockedEvent.class,
-                        PasswordNoLifeLockedException.class, AuthenticationFailureLockedEvent.class
+                        PasswordNoLifeLockedException.class, AuthenticationFailureLockedEvent.class,
+                        // 超过最大登录数不允许登录
+                        MaxConnectionAuthenticationException.class, AuthenticationFailureDisabledEvent.class
                 )
         );
     }

@@ -15,5 +15,9 @@ public enum CrudCommonEnum {
     KEYWORD,
     WITH_ALL,
     QUERY_CREATE_UPDATE_USER,
-    FILTER_BY_USER
+    FILTER_BY_USER,
+    /**
+     * 指定字段
+     */
+    ASSIGN_FIELD
 }

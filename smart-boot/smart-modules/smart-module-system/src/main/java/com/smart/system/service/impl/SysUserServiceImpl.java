@@ -305,7 +305,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
                 .in(SysFunctionPO :: getFunctionId, functionIds)
                 .orderByAsc(SysFunctionPO :: getSeq);
         if (CollectionUtils.isNotEmpty(types)) {
-            queryWrapper.in(SysFunctionPO :: getFunctionType, types);
+            queryWrapper.in(SysFunctionPO :: getFunctionType, types.stream().map(FunctionTypeEnum::getValue).collect(Collectors.toList()));
         }
         return this.sysFunctionService.list(queryWrapper);
     }

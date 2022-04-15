@@ -1,7 +1,9 @@
 package com.smart.auth.extensions.jwt.store;
 
+import com.smart.auth.extensions.jwt.data.JwtData;
 import org.springframework.lang.NonNull;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -41,4 +43,19 @@ public interface CacheJwtStore extends JwtStore {
      */
     @NonNull
     Set<String> listAll(@NonNull String username);
+
+    /**
+     * 查询所有数据
+     * @return jwt数据
+     */
+    @NonNull
+    List<JwtData> listData();
+
+    /**
+     * 通过用户名查询jwt数据
+     * @param username 用户名
+     * @return jwt数据
+     */
+    @NonNull
+    List<JwtData> listData(@NonNull String username);
 }

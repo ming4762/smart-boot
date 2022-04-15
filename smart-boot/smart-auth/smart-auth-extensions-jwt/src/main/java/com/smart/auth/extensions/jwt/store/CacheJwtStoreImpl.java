@@ -5,12 +5,14 @@ import com.smart.auth.core.constants.LoginTypeEnum;
 import com.smart.auth.core.properties.AuthProperties;
 import com.smart.auth.core.service.AuthCache;
 import com.smart.auth.core.userdetails.RestUserDetails;
+import com.smart.auth.extensions.jwt.data.JwtData;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -49,7 +51,8 @@ public class CacheJwtStoreImpl implements CacheJwtStore {
             timeout = authProperties.getSession().getTimeout().getRemember();
         }
         // 保存jwt到cache中
-        this.authCache.put(this.getTokenKey(user.getUsername(), jwt), timeout, timeout);
+        LocalDateTime currentTime = LocalDateTime.now();
+        this.authCache.put(this.getTokenKey(user.getUsername(), jwt), new JwtData(jwt, currentTime, currentTime, timeout), timeout);
         return true;
     }
 
@@ -65,10 +68,11 @@ public class CacheJwtStoreImpl implements CacheJwtStore {
 
         String attributeKey = this.getAttributeKey(user.getUsername(), jwt);
         // 获取有效期
-        Duration timeout = (Duration) this.authCache.get(jwtKey);
-        if (ObjectUtils.isNotEmpty(timeout)) {
-            this.authCache.expire(jwtKey, timeout);
-            this.authCache.expire(attributeKey, timeout);
+        JwtData jwtData = (JwtData) this.authCache.get(jwtKey);
+        if (ObjectUtils.isNotEmpty(jwtData)) {
+            jwtData.setRefreshTime(LocalDateTime.now());
+            this.authCache.put(jwtKey, jwtData, jwtData.getTimeout());
+            this.authCache.expire(attributeKey, jwtData.getTimeout());
             return true;
         } else {
             return false;
@@ -136,5 +140,29 @@ public class CacheJwtStoreImpl implements CacheJwtStore {
             return new HashSet<>(0);
         }
         return keys.stream().map(item -> item.split(JWT_SPLIT_KEY)[2]).collect(Collectors.toSet());
+    }
+
+    @Override
+    @NonNull
+    public List<JwtData> listData() {
+        Set<String> keys = this.authCache.matchKeys(this.getTokenKey(null, null));
+        if (CollectionUtils.isEmpty(keys)) {
+            return new ArrayList<>(0);
+        }
+        return this.authCache.batchGet(keys).stream()
+                .map(item -> (JwtData)item)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @NonNull
+    public List<JwtData> listData(@NonNull String username) {
+        Set<String> keys = this.authCache.matchKeys(this.getTokenKey(username, null));
+        if (CollectionUtils.isEmpty(keys)) {
+            return new ArrayList<>(0);
+        }
+        return this.authCache.batchGet(keys).stream()
+                .map(item -> (JwtData)item)
+                .collect(Collectors.toList());
     }
 }

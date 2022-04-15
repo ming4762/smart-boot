@@ -3,13 +3,17 @@ package com.smart.system.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.common.collect.ImmutableList;
 import com.smart.auth.core.exception.LongTimeNoLoginLockedException;
+import com.smart.auth.core.exception.MaxConnectionAuthenticationException;
 import com.smart.auth.core.exception.PasswordNoLifeLockedException;
 import com.smart.auth.core.i18n.AuthI18nMessage;
 import com.smart.auth.core.model.AuthUser;
 import com.smart.auth.core.model.Permission;
 import com.smart.auth.core.service.AuthUserService;
+import com.smart.auth.extensions.jwt.data.JwtData;
+import com.smart.auth.extensions.jwt.store.CacheJwtStore;
 import com.smart.commons.core.i18n.I18nUtils;
 import com.smart.system.constants.FunctionTypeEnum;
+import com.smart.system.constants.MaxConnectionsPolicyEnum;
 import com.smart.system.constants.UserAccountStatusEnum;
 import com.smart.system.model.SysRolePO;
 import com.smart.system.model.SysUserAccountPO;
@@ -40,9 +44,12 @@ public class AuthUserServiceImpl implements AuthUserService {
 
     private final SysUserAccountService sysUserAccountService;
 
-    public AuthUserServiceImpl(SysUserService sysUserService, SysUserAccountService sysAuthUserService) {
+    private final CacheJwtStore cacheJwtStore;
+
+    public AuthUserServiceImpl(SysUserService sysUserService, SysUserAccountService sysAuthUserService, CacheJwtStore cacheJwtStore) {
         this.sysUserService = sysUserService;
         this.sysUserAccountService = sysAuthUserService;
+        this.cacheJwtStore = cacheJwtStore;
     }
 
 
@@ -70,16 +77,11 @@ public class AuthUserServiceImpl implements AuthUserService {
         return this.createAuthUser(user);
     }
 
-    protected AuthUser createAuthUser(SysUserPO user) {
-        AuthUser authUser = AuthUser.builder()
-                .userId(user.getUserId())
-                .username(user.getUsername())
-                .password(user.getPassword())
-                .fullName(user.getFullName())
-                .loginFailTime(0L)
-                .build();
-        // 查询用户账户状态
-        SysUserAccountPO userAccount = this.sysUserAccountService.getById(user.getUserId());
+    /**
+     * 验证账户
+     * @param userAccount 用户账户
+     */
+    protected boolean validateAccount(@NonNull SysUserPO user, SysUserAccountPO userAccount) {
         if (userAccount == null) {
             throw new DisabledException(I18nUtils.get(AuthI18nMessage.ACCOUNT_NOT_CREATED));
         }
@@ -91,6 +93,46 @@ public class AuthUserServiceImpl implements AuthUserService {
         if (userAccount.getPasswordLifeDays() > 0 && userAccount.getPasswordModifyTime().plusDays(userAccount.getPasswordLifeDays()).isBefore(LocalDateTime.now())) {
             throw new PasswordNoLifeLockedException(I18nUtils.get(AuthI18nMessage.ACCOUNT_PASSWORD_NO_MODIFY_LOCKED));
         }
+        Long connectionNum = userAccount.getMaxConnections();
+        // 验证账户登录数
+        if (connectionNum > 0) {
+            // 获取当前登录数
+            List<JwtData> loginDataList = this.cacheJwtStore.listData(user.getUsername());
+            if (loginDataList.size() >= connectionNum) {
+                // 登录用户数量已达上限
+                MaxConnectionsPolicyEnum maxConnectionsPolicy = userAccount.getMaxConnectionsPolicy();
+                if (maxConnectionsPolicy.equals(MaxConnectionsPolicyEnum.LOGIN_NOT_ALLOW)) {
+                    throw new MaxConnectionAuthenticationException(I18nUtils.get(AuthI18nMessage.MAX_CONNECTION_LOGIN_FAIL));
+                }
+                if (maxConnectionsPolicy.equals(MaxConnectionsPolicyEnum.FIRST_USER_LOGOUT)) {
+                    // 移除最早登录的用户
+                    loginDataList.stream()
+                            .min(Comparator.comparing(JwtData::getRefreshTime))
+                            .ifPresent(jwtData -> this.cacheJwtStore.invalidateByToken(user.getUsername(), jwtData.getJwt()));
+                }
+            }
+        }
+
+        return true;
+    }
+
+    protected AuthUser createAuthUser(SysUserPO user) {
+        AuthUser authUser = AuthUser.builder()
+                .userId(user.getUserId())
+                .username(user.getUsername())
+                .password(user.getPassword())
+                .fullName(user.getFullName())
+                .loginFailTime(0L)
+                .build();
+        // 查询用户账户状态
+        SysUserAccountPO userAccount = this.sysUserAccountService.getById(user.getUserId());
+
+        // 验证账户
+        boolean result = this.validateAccount(user, userAccount);
+        if (!result) {
+            return null;
+        }
+
         if (UserAccountStatusEnum.LOGIN_FAIL_LOCKED.equals(userAccount.getAccountStatus()) || UserAccountStatusEnum.LONG_TIME_LOCKED.equals(userAccount.getAccountStatus())) {
             authUser.setLocked(true);
         }

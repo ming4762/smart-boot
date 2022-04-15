@@ -109,12 +109,15 @@ public class AuthEventLockedHandler implements AuthEventHandler {
         if (userAccount == null) {
             return;
         }
+        if (!(exception instanceof LongTimeNoLoginLockedException || exception instanceof PasswordNoLifeLockedException)) {
+            return;
+        }
         LambdaUpdateWrapper<SysUserAccountPO> updateWrapper = new UpdateWrapper<SysUserAccountPO>().lambda()
                 .eq(SysUserAccountPO :: getUserId, userAccount.getUserId());
         if (exception instanceof LongTimeNoLoginLockedException) {
             // 长时间未登录锁定
             updateWrapper.set(SysUserAccountPO::getAccountStatus, UserAccountStatusEnum.LONG_TIME_LOCKED);
-        } else if (exception instanceof PasswordNoLifeLockedException) {
+        } else {
             updateWrapper.set(SysUserAccountPO::getAccountStatus, UserAccountStatusEnum.LONG_TIME_PASSWORD_MODIFY_LOCKED);
         }
         this.sysAuthUserService.update(updateWrapper);
