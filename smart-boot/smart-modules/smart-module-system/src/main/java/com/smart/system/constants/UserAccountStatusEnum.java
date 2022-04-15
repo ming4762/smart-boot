@@ -11,7 +11,7 @@ import lombok.Getter;
  * @since 1.0.7
  */
 @Getter
-public enum UserAccountStatusEnum implements IEnum<String> {
+public enum UserAccountStatusEnum {
 
     /**
      * 10:正常

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.smart.crud.model.BaseModelUserTime;
 import com.smart.system.constants.FunctionTypeEnum;
+import com.smart.system.mybatis.type.FunctionTypeTypeHandler;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.HttpMethod;
@@ -14,7 +15,7 @@ import org.springframework.http.HttpMethod;
  * @author jackson
  * 2020/1/27 12:13 下午
  */
-@TableName("sys_function")
+@TableName(value = "sys_function", autoResultMap = true)
 @Getter
 @Setter
 public class SysFunctionPO extends BaseModelUserTime {
@@ -40,6 +41,7 @@ public class SysFunctionPO extends BaseModelUserTime {
     /**
      * 功能类型（10：目录 20：菜单 30：功能）
      */
+    @TableField(typeHandler = FunctionTypeTypeHandler.class)
     private FunctionTypeEnum functionType;
 
     /**

@@ -1,6 +1,5 @@
 package com.smart.db.generator.constants;
 
-import com.baomidou.mybatisplus.annotation.IEnum;
 import lombok.Getter;
 
 /**
@@ -8,7 +7,7 @@ import lombok.Getter;
  * @author shizhongming
  * 2021/5/11 9:23 下午
  */
-public enum ButtonIdentEnum implements IEnum<String> {
+public enum ButtonIdentEnum {
     /**
      * 按钮类型
      */
@@ -27,7 +26,6 @@ public enum ButtonIdentEnum implements IEnum<String> {
         this.name = name;
     }
 
-    @Override
     public String getValue() {
         return this.value;
     }
