@@ -91,7 +91,7 @@ public class AuthEventLockedHandler implements AuthEventHandler {
                 .eq(SysUserAccountPO :: getUserId, authUser.getUserId())
                 .set(SysUserAccountPO :: getLoginFailTime, time);
 
-        if (time > authUser.getLoginFailTimeLimit()) {
+        if (authUser.getLoginFailTimeLimit() > 0 && time > authUser.getLoginFailTimeLimit()) {
             // 锁定用户
             updateWrapper.set(SysUserAccountPO :: getAccountStatus, UserAccountStatusEnum.LOGIN_FAIL_LOCKED);
         }

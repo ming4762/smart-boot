@@ -149,6 +149,7 @@ public class SysUserAccountServiceImpl extends BaseServiceImpl<SysUserAccountMap
                         .userId(item.getUserId())
                         .lastLoginTime(currentTime)
                         .createTime(currentTime)
+                        .passwordModifyTime(currentTime)
                         .maxConnections(userStatusProperties.getMaxConnections())
                         .maxDaysSinceLogin(userStatusProperties.getMaxDaysSinceLogin())
                         .passwordLifeDays(userStatusProperties.getPasswordLifeDays())
