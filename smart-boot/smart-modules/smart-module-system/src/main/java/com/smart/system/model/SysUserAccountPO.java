@@ -71,4 +71,11 @@ public class SysUserAccountPO extends BaseModel {
      */
     private LocalDateTime passwordModifyTime;
 
+    private Long passwordErrorUnlockSecond;
+
+    /**
+     * 账户锁定时间
+     */
+    private LocalDateTime lockTime;
+
 }

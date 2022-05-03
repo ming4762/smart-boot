@@ -1,6 +1,7 @@
 package com.smart.system.service;
 
 import com.smart.crud.service.BaseService;
+import com.smart.system.constants.UserAccountStatusEnum;
 import com.smart.system.model.SysUserAccountPO;
 import com.smart.system.pojo.vo.SysOnlineUserVO;
 import org.springframework.lang.NonNull;
@@ -37,4 +38,21 @@ public interface SysUserAccountService extends BaseService<SysUserAccountPO> {
      * @return 是否创建成功
      */
     boolean createAccount(@NonNull List<Long> userIdList);
+
+    /**
+     * 结果账户
+     * @param userAccount 账户
+     * @param lockStatus 解锁的锁定状态，null则所有锁定状态都解锁
+     * @return 是否解锁成功
+     */
+    boolean unlock(@NonNull SysUserAccountPO userAccount, UserAccountStatusEnum lockStatus);
+
+
+    /**
+     * 解锁账户
+     * @param userId 用户ID
+     * @param lockStatus 解锁的锁定状态，null则所有锁定状态都解锁
+     * @return 是否解锁成功
+     */
+    boolean unlock(@NonNull Long userId, UserAccountStatusEnum lockStatus);
 }

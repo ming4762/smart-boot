@@ -9,6 +9,7 @@ import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.auth.extensions.jwt.resolver.JwtResolver;
 import com.smart.commons.core.i18n.I18nException;
 import com.smart.crud.service.BaseServiceImpl;
+import com.smart.system.constants.UserAccountStatusEnum;
 import com.smart.system.i18n.SystemI18nMessage;
 import com.smart.system.mapper.SysUserAccountMapper;
 import com.smart.system.mapper.SysUserMapper;
@@ -156,5 +157,44 @@ public class SysUserAccountServiceImpl extends BaseServiceImpl<SysUserAccountMap
                         .build())
                 .collect(Collectors.toList());
         return this.saveBatch(userAccountList);
+    }
+
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean unlock(@NonNull SysUserAccountPO userAccount, UserAccountStatusEnum lockStatus) {
+        if (userAccount.getAccountStatus().equals(UserAccountStatusEnum.NORMAL)) {
+            return false;
+        }
+        if (lockStatus != null && !lockStatus.equals(userAccount.getAccountStatus())) {
+            return false;
+        }
+        LambdaUpdateWrapper<SysUserAccountPO> updateWrapper = new UpdateWrapper<SysUserAccountPO>().lambda()
+                .eq(SysUserAccountPO :: getUserId, userAccount.getUserId())
+                .set(SysUserAccountPO::getAccountStatus, UserAccountStatusEnum.NORMAL);
+        switch (userAccount.getAccountStatus()) {
+            case LONG_TIME_LOCKED: {
+                // 长时间未登录锁定解锁
+                updateWrapper.set(SysUserAccountPO::getLastLoginTime, LocalDateTime.now());
+                break;
+            }
+            case LONG_TIME_PASSWORD_MODIFY_LOCKED: {
+                // 长时间密码未修改锁定解锁
+                updateWrapper.set(SysUserAccountPO::getPasswordModifyTime, LocalDateTime.now());
+                break;
+            }
+            default: {}
+        }
+        return this.update(updateWrapper);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean unlock(@NonNull Long userId, UserAccountStatusEnum lockStatus) {
+        SysUserAccountPO userAccount = this.getById(userId);
+        if (userAccount == null) {
+            return false;
+        }
+        return this.unlock(userAccount, lockStatus);
     }
 }

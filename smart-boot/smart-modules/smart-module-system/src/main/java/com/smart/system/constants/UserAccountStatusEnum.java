@@ -1,7 +1,6 @@
 package com.smart.system.constants;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
-import com.baomidou.mybatisplus.annotation.IEnum;
 import lombok.Getter;
 
 /**
@@ -15,7 +14,6 @@ public enum UserAccountStatusEnum {
 
     /**
      * 10:正常
-     * 20:锁定
      */
     NORMAL("10"),
     /**

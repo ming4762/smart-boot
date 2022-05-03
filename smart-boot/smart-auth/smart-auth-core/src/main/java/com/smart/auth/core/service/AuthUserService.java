@@ -45,4 +45,5 @@ public interface AuthUserService {
      */
     Set<Permission> listPermission(@NonNull AuthUser authUser);
 
+
 }

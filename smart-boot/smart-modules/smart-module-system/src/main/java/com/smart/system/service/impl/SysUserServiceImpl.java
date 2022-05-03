@@ -77,15 +77,15 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
 
     private final UserSetterService userSetterService;
 
-    @Autowired
-    private SysUserAccountService sysUserAccountService;
+    private final SysUserAccountService sysUserAccountService;
 
-    public SysUserServiceImpl(SysUserRoleService sysUserRoleService, SysUserGroupUserMapper sysUserGroupUserMapper, SysUserGroupRoleMapper sysUserGroupRoleMapper, SysRoleFunctionService sysRoleFunctionService, UserSetterService userSetterService) {
+    public SysUserServiceImpl(SysUserRoleService sysUserRoleService, SysUserGroupUserMapper sysUserGroupUserMapper, SysUserGroupRoleMapper sysUserGroupRoleMapper, SysRoleFunctionService sysRoleFunctionService, UserSetterService userSetterService, SysUserAccountService sysUserAccountService) {
         this.sysUserRoleService = sysUserRoleService;
         this.sysUserGroupUserMapper = sysUserGroupUserMapper;
         this.sysUserGroupRoleMapper = sysUserGroupRoleMapper;
         this.sysRoleFunctionService = sysRoleFunctionService;
         this.userSetterService = userSetterService;
+        this.sysUserAccountService = sysUserAccountService;
     }
 
     @Override
@@ -103,7 +103,26 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         if (Boolean.TRUE.equals(parameter.getParameter().get(CrudCommonEnum.QUERY_CREATE_UPDATE_USER.name()))) {
             this.userSetterService.setCreateUpdateUser(voList);
         }
+        // 查询账户信息
+        this.queryUserAccount(voList);
         return voList;
+    }
+
+    /**
+     * 查询用户账户信息
+     * @param userList 用户列表
+     */
+    private void queryUserAccount(List<SysUserListVO> userList) {
+        if (CollectionUtils.isEmpty(userList)) {
+            return;
+        }
+        List<Long> userIdList = userList.stream().map(SysUserListVO::getUserId).collect(Collectors.toList());
+        Map<Long, SysUserAccountPO> sysUserAccountMap = Lists.partition(userIdList, 400).stream()
+                .flatMap(idList -> this.sysUserAccountService.list(
+                        new QueryWrapper<SysUserAccountPO>().lambda()
+                        .in(SysUserAccountPO::getUserId, idList)
+                ).stream()).collect(Collectors.toMap(SysUserAccountPO::getUserId, item -> item));
+        userList.forEach(item -> item.setUserAccount(sysUserAccountMap.get(item.getUserId())));
     }
 
     /**
@@ -401,4 +420,5 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
     public List<SysUserWthAccountBO> listUserWithAccount(QueryWrapper<SysUserPO> parameter) {
         return this.baseMapper.listUserWithAccount(parameter);
     }
+
 }

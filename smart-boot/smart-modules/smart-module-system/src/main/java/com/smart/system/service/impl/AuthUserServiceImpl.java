@@ -116,6 +116,11 @@ public class AuthUserServiceImpl implements AuthUserService {
         return true;
     }
 
+    /**
+     * 通过系统用户信息创建账户
+     * @param user 系统用户
+     * @return AuthUser
+     */
     protected AuthUser createAuthUser(SysUserPO user) {
         AuthUser authUser = AuthUser.builder()
                 .userId(user.getUserId())
@@ -133,8 +138,8 @@ public class AuthUserServiceImpl implements AuthUserService {
             return null;
         }
 
-        if (UserAccountStatusEnum.LOGIN_FAIL_LOCKED.equals(userAccount.getAccountStatus()) || UserAccountStatusEnum.LONG_TIME_LOCKED.equals(userAccount.getAccountStatus())) {
-            authUser.setLocked(true);
+        if (UserAccountStatusEnum.LOGIN_FAIL_LOCKED.equals(userAccount.getAccountStatus())) {
+            authUser.setLocked(!this.unLockPasswordErrorLock(userAccount));
         }
         // 设置IP白名单
         authUser.setIpWhiteList(
@@ -148,6 +153,24 @@ public class AuthUserServiceImpl implements AuthUserService {
         );
         authUser.setLoginFailTime(userAccount.getLoginFailTime());
         return authUser;
+    }
+
+    /**
+     * 执行自动解锁账户
+     * @param userAccount 用户账户信息
+     */
+    protected boolean unLockPasswordErrorLock(SysUserAccountPO userAccount) {
+        Long unlockSecond = userAccount.getPasswordErrorUnlockSecond();
+        if (unlockSecond <= 0) {
+            return false;
+        }
+        LocalDateTime lockTime = userAccount.getLockTime();
+
+        if (LocalDateTime.now().isAfter(lockTime.plusSeconds(unlockSecond))) {
+            // 已经达到自动解锁时间，执行解锁
+            return this.sysUserAccountService.unlock(userAccount, UserAccountStatusEnum.LOGIN_FAIL_LOCKED);
+        }
+        return false;
     }
 
     @Nullable

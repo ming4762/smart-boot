@@ -2,6 +2,7 @@ package com.smart.system.pojo.vo;
 
 import com.smart.crud.model.BaseUser;
 import com.smart.crud.model.CreateUpdateUserSetter;
+import com.smart.system.model.SysUserAccountPO;
 import com.smart.system.model.SysUserPO;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,4 +22,6 @@ public class SysUserListVO extends SysUserPO implements CreateUpdateUserSetter {
     private BaseUser createUser;
 
     private BaseUser updateUser;
+
+    private SysUserAccountPO userAccount;
 }
