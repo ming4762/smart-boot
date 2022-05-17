@@ -2,22 +2,20 @@ package com.smart.commons.core.exception;
 
 import com.smart.commons.core.http.HttpStatus;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 /**
  * @author jackson
  * 2020/1/28 3:15 下午
  */
 @Getter
-@NoArgsConstructor
 public class BaseException extends RuntimeException {
     private static final long serialVersionUID = 5741320275497601133L;
 
-    private Integer code;
+    private final Integer code;
 
-    private String message;
+    private final String message;
 
-    private Throwable e;
+    private final Throwable e;
 
     public BaseException(String message) {
         this(message, null);

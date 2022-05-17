@@ -59,7 +59,7 @@ public class RestUtils {
                 objectOutputStream.close();
             }
         };
-        restTemplate.execute(url, httpMethod, requestCallback, (response) -> {
+        restTemplate.execute(url, httpMethod, requestCallback, response -> {
             IOUtils.copy(response.getBody(), outputStream);
             return null;
         }, uriVariables);

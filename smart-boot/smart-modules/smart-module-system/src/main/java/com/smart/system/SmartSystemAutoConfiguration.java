@@ -1,6 +1,5 @@
 package com.smart.system;
 
-import com.smart.auth.core.properties.AuthProperties;
 import com.smart.system.auth.AuthEventLockedHandler;
 import com.smart.system.auth.AuthEventLogHandler;
 import com.smart.system.service.SysUserAccountService;

@@ -183,7 +183,9 @@ public class SysUserAccountServiceImpl extends BaseServiceImpl<SysUserAccountMap
                 updateWrapper.set(SysUserAccountPO::getPasswordModifyTime, LocalDateTime.now());
                 break;
             }
-            default: {}
+            default: {
+                // do noting
+            }
         }
         return this.update(updateWrapper);
     }

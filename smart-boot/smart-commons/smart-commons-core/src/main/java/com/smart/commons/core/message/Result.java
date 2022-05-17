@@ -13,7 +13,6 @@ import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.lang.NonNull;
 import org.springframework.validation.BindingResult;
 
-import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Objects;
@@ -26,7 +25,7 @@ import java.util.Optional;
 @Getter
 @Setter
 @ApiModel(value = "通用api接口", description = "通用api接口返回")
-public class Result<T> implements Serializable {
+public class Result<T> {
 
     private static final long serialVersionUID = 9144229906004159463L;
     @ApiModelProperty(value = "状态码", example = "200", required = true)

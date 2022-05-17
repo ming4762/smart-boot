@@ -5,10 +5,8 @@ import com.smart.auth.core.i18n.AuthI18nMessage;
 import com.smart.auth.core.model.TempTokenData;
 import com.smart.auth.core.properties.AuthProperties;
 import com.smart.auth.core.service.AuthCache;
-import com.smart.auth.core.service.AuthUserService;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.auth.core.utils.AuthUtils;
-import com.smart.auth.core.utils.CaptchaUtils;
 import com.smart.auth.security.pojo.dto.TempTokenApplyDTO;
 import com.smart.commons.core.i18n.I18nUtils;
 import com.smart.commons.core.message.Result;
@@ -16,7 +14,6 @@ import com.smart.commons.core.utils.Base64Utils;
 import com.smart.commons.core.utils.IpUtils;
 import com.smart.commons.core.utils.JsonUtils;
 import io.swagger.annotations.ApiOperation;
-import lombok.SneakyThrows;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -24,7 +21,6 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 /**
@@ -40,7 +36,7 @@ public class AuthController {
 
     private final AuthCache<String, Object> authCache;
 
-    public AuthController(AuthCache<String, Object> authCache, AuthProperties authProperties, AuthUserService authUserService) {
+    public AuthController(AuthCache<String, Object> authCache, AuthProperties authProperties) {
         this.authCache = authCache;
         this.authProperties = authProperties;
     }

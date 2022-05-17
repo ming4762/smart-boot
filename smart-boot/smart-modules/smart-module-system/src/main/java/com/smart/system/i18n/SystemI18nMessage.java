@@ -3,7 +3,7 @@ package com.smart.system.i18n;
 import com.smart.commons.core.i18n.I18nMessage;
 
 /**
- * TODO:国际化
+ * 系统模块国际化
  * @author ShiZhongMing
  * 2021/11/19
  * @since 1.0.7

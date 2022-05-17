@@ -92,7 +92,6 @@ public abstract class AbstractDefaultDatabaseExecutor implements DatabaseExecuto
     @SneakyThrows
     @Override
     public @NonNull List<TableViewDO> listBaseTable(@NonNull DbConnectionConfig connectionConfig, @Nullable String tableNamePattern, DbTableTypeEnum... types) {
-        ResultSet resultSet = null;
         Connection connection = this.dbConnectionProvider.getConnection(connectionConfig);
         try {
             if (!this.checkConnection(connection)|| ArrayUtils.isEmpty(types)) {
@@ -103,11 +102,11 @@ public abstract class AbstractDefaultDatabaseExecutor implements DatabaseExecuto
                     .map(Enum::name)
                     .toArray(String[]::new);
             // 获取resultSet
-            resultSet = connection.getMetaData().getTables(connection.getCatalog(), connection.getSchema(), tableNamePattern, typesStr);
-            Map<String, Field> mapping = this.getDatabaseMapping(TableViewDO.class);
-            return DatabaseUtils.resultSetToModel(resultSet, TableViewDO.class, mapping);
+            try (ResultSet resultSet = connection.getMetaData().getTables(connection.getCatalog(), connection.getSchema(), tableNamePattern, typesStr)) {
+                Map<String, Field> mapping = this.getDatabaseMapping(TableViewDO.class);
+                return DatabaseUtils.resultSetToModel(resultSet, TableViewDO.class, mapping);
+            }
         }  finally {
-            close(resultSet);
             this.dbConnectionProvider.returnConnection(connectionConfig, connection);
         }
     }
@@ -121,20 +120,19 @@ public abstract class AbstractDefaultDatabaseExecutor implements DatabaseExecuto
     @SneakyThrows
     @Override
     public List<PrimaryKeyDO> listPrimaryKey(@NonNull DbConnectionConfig connectionConfig, String tableName)  {
-        ResultSet resultSet = null;
         Connection connection = this.dbConnectionProvider.getConnection(connectionConfig);
         try {
             if (!this.checkConnection(connection)) {
                 return Lists.newArrayList();
             }
-            resultSet = connection.getMetaData().getPrimaryKeys(connection.getCatalog(), null, tableName);
-            Map<String, Field> mapping = CacheUtils.getFieldMapping(PrimaryKeyDO.class);
-            if (mapping == null) {
-                throw new SmartDatabaseException(ExceptionConstant.DATABASE_FILE_MAPPING_NOT_FOUND, PrimaryKeyDO.class.getName());
+            try (ResultSet resultSet = connection.getMetaData().getPrimaryKeys(connection.getCatalog(), null, tableName)) {
+                Map<String, Field> mapping = CacheUtils.getFieldMapping(PrimaryKeyDO.class);
+                if (mapping == null) {
+                    throw new SmartDatabaseException(ExceptionConstant.DATABASE_FILE_MAPPING_NOT_FOUND, PrimaryKeyDO.class.getName());
+                }
+                return DatabaseUtils.resultSetToModel(resultSet, PrimaryKeyDO.class, mapping);
             }
-            return DatabaseUtils.resultSetToModel(resultSet, PrimaryKeyDO.class, mapping);
         } finally {
-            close(resultSet);
             this.dbConnectionProvider.returnConnection(connectionConfig, connection);
         }
     }
@@ -148,20 +146,20 @@ public abstract class AbstractDefaultDatabaseExecutor implements DatabaseExecuto
     @SneakyThrows
     @Override
     public List<ImportKeyDO> listImportedKeys(@NonNull DbConnectionConfig connectionConfig, String tableName){
-        ResultSet resultSet = null;
         Connection connection = this.dbConnectionProvider.getConnection(connectionConfig);
         try {
             if (!this.checkConnection(connection)) {
                 return Lists.newArrayList();
             }
-            resultSet  = connection.getMetaData().getImportedKeys(connection.getCatalog(), connection.getSchema(), tableName);
-            Map<String, Field> mapping = CacheUtils.getFieldMapping(ImportKeyDO.class);
-            if (mapping == null) {
-                throw new SmartDatabaseException(ExceptionConstant.DATABASE_FILE_MAPPING_NOT_FOUND, ImportKeyDO.class.getName());
+
+            try (ResultSet resultSet  = connection.getMetaData().getImportedKeys(connection.getCatalog(), connection.getSchema(), tableName)) {
+                Map<String, Field> mapping = CacheUtils.getFieldMapping(ImportKeyDO.class);
+                if (mapping == null) {
+                    throw new SmartDatabaseException(ExceptionConstant.DATABASE_FILE_MAPPING_NOT_FOUND, ImportKeyDO.class.getName());
+                }
+                return DatabaseUtils.resultSetToModel(resultSet, ImportKeyDO.class, mapping);
             }
-            return DatabaseUtils.resultSetToModel(resultSet, ImportKeyDO.class, mapping);
         } finally {
-            close(resultSet);
             this.dbConnectionProvider.returnConnection(connectionConfig, connection);
         }
     }
@@ -177,7 +175,6 @@ public abstract class AbstractDefaultDatabaseExecutor implements DatabaseExecuto
     @SneakyThrows
     @Override
     public List<IndexDO> listIndex(@NonNull DbConnectionConfig connectionConfig, String tableName, Boolean unique, Boolean approximate) {
-        ResultSet resultSet = null;
         final Connection connection = this.dbConnectionProvider.getConnection(connectionConfig);
         try {
             if (!this.checkConnection(connection)) {
@@ -189,14 +186,14 @@ public abstract class AbstractDefaultDatabaseExecutor implements DatabaseExecuto
             if (unique == null) {
                 unique = true;
             }
-            resultSet  = connection.getMetaData().getIndexInfo(connection.getCatalog(), connection.getSchema(), tableName, unique, approximate);
-            Map<String, Field> mapping = CacheUtils.getFieldMapping(IndexDO.class);
-            if (mapping == null) {
-                throw new SmartDatabaseException(ExceptionConstant.DATABASE_FILE_MAPPING_NOT_FOUND, IndexDO.class.getName());
+            try (ResultSet resultSet = connection.getMetaData().getIndexInfo(connection.getCatalog(), connection.getSchema(), tableName, unique, approximate)) {
+                Map<String, Field> mapping = CacheUtils.getFieldMapping(IndexDO.class);
+                if (mapping == null) {
+                    throw new SmartDatabaseException(ExceptionConstant.DATABASE_FILE_MAPPING_NOT_FOUND, IndexDO.class.getName());
+                }
+                return DatabaseUtils.resultSetToModel(resultSet, IndexDO.class, mapping);
             }
-            return DatabaseUtils.resultSetToModel(resultSet, IndexDO.class, mapping);
         }  finally {
-            close(resultSet);
             this.dbConnectionProvider.returnConnection(connectionConfig, connection);
         }
     }
@@ -275,20 +272,19 @@ public abstract class AbstractDefaultDatabaseExecutor implements DatabaseExecuto
     @SneakyThrows
     @Override
     public List<ColumnDO> listBaseColumn(@NonNull DbConnectionConfig connectionConfig, @NonNull String tableName) {
-        ResultSet resultSet = null;
         final Connection connection = this.dbConnectionProvider.getConnection(connectionConfig);
         try {
             if (!this.checkConnection(connection)) {
                 return Lists.newArrayList();
             }
-            resultSet  = connection.getMetaData().getColumns(connection.getCatalog(), connection.getSchema(), tableName, null);
-            Map<String, Field> mapping = CacheUtils.getFieldMapping(ColumnDO.class);
-            if (mapping == null) {
-                throw new SmartDatabaseException(ExceptionConstant.DATABASE_FILE_MAPPING_NOT_FOUND, ColumnBO.class.getName());
+            try (ResultSet resultSet = connection.getMetaData().getColumns(connection.getCatalog(), connection.getSchema(), tableName, null)) {
+                Map<String, Field> mapping = CacheUtils.getFieldMapping(ColumnDO.class);
+                if (mapping == null) {
+                    throw new SmartDatabaseException(ExceptionConstant.DATABASE_FILE_MAPPING_NOT_FOUND, ColumnBO.class.getName());
+                }
+                return DatabaseUtils.resultSetToModel(resultSet, ColumnDO.class, mapping);
             }
-            return DatabaseUtils.resultSetToModel(resultSet, ColumnDO.class, mapping);
         } finally {
-            close(resultSet);
             this.dbConnectionProvider.returnConnection(connectionConfig, connection);
         }
     }
@@ -372,7 +368,7 @@ public abstract class AbstractDefaultDatabaseExecutor implements DatabaseExecuto
                 .map(TableViewDO::getTableName).collect(Collectors.toList());
         try (
                 PreparedStatement psmt = this.setInParameter(connection, commentSql, tableNameList);
-                ResultSet rs = psmt.executeQuery();
+                ResultSet rs = psmt.executeQuery()
         ) {
             final List<TableRemarkDO> tableRemarkList = DatabaseUtils.resultSetToModel(rs, TableRemarkDO.class, this.getDatabaseMapping(TableRemarkDO.class));
             // 转为map
@@ -405,7 +401,7 @@ public abstract class AbstractDefaultDatabaseExecutor implements DatabaseExecuto
                 .map(ColumnDO::getTableName).collect(Collectors.toSet());
         try (
                 PreparedStatement psmt = this.setInParameter(connection, commentSql, tableNames);
-                ResultSet rs = psmt.executeQuery();
+                ResultSet rs = psmt.executeQuery()
                 ) {
             final List<ColumnRemarkDO> columnRemarkList = DatabaseUtils.resultSetToModel(rs, ColumnRemarkDO.class, this.getDatabaseMapping(ColumnRemarkDO.class));
             if (CollectionUtils.isNotEmpty(columnRemarkList)) {
@@ -451,33 +447,6 @@ public abstract class AbstractDefaultDatabaseExecutor implements DatabaseExecuto
         return fieldMap;
     }
 
-    /**
-     * 关闭 ResultSet
-     * @param rs ResultSet
-     */
-    static  void close(ResultSet rs) {
-        try {
-            if (rs != null) {
-                rs.close();
-            }
-        } catch (SQLException e) {
-            log.info(e.getMessage(), e);
-        }
-    }
-
-    /**
-     * 关闭Statement
-     * @param st Statement
-     */
-    static void close(Statement st) {
-        try {
-            if (st != null) {
-                st.close();
-            }
-        } catch (SQLException e) {
-            log.info(e.getMessage(), e);
-        }
-    }
 
     @Autowired
     public void setDbConnectionProvider(DbConnectionProvider dbConnectionProvider) {

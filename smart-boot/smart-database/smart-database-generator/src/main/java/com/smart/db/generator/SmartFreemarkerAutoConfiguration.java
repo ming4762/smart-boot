@@ -2,7 +2,6 @@ package com.smart.db.generator;
 
 import com.smart.db.generator.config.FreemarkerProperties;
 import freemarker.cache.ByteArrayTemplateLoader;
-import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.MultiTemplateLoader;
 import freemarker.cache.TemplateLoader;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;

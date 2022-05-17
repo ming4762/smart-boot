@@ -7,7 +7,6 @@ import com.smart.auth.core.service.AuthCache;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.auth.extensions.jwt.data.JwtData;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 
@@ -69,7 +68,7 @@ public class CacheJwtStoreImpl implements CacheJwtStore {
         String attributeKey = this.getAttributeKey(user.getUsername(), jwt);
         // 获取有效期
         JwtData jwtData = (JwtData) this.authCache.get(jwtKey);
-        if (ObjectUtils.isNotEmpty(jwtData)) {
+        if (jwtData != null) {
             jwtData.setRefreshTime(LocalDateTime.now());
             this.authCache.put(jwtKey, jwtData, jwtData.getTimeout());
             this.authCache.expire(attributeKey, jwtData.getTimeout());
@@ -150,7 +149,7 @@ public class CacheJwtStoreImpl implements CacheJwtStore {
             return new ArrayList<>(0);
         }
         return this.authCache.batchGet(keys).stream()
-                .map(item -> (JwtData)item)
+                .map(JwtData.class::cast)
                 .collect(Collectors.toList());
     }
 
@@ -162,7 +161,7 @@ public class CacheJwtStoreImpl implements CacheJwtStore {
             return new ArrayList<>(0);
         }
         return this.authCache.batchGet(keys).stream()
-                .map(item -> (JwtData)item)
+                .map(JwtData.class::cast)
                 .collect(Collectors.toList());
     }
 }

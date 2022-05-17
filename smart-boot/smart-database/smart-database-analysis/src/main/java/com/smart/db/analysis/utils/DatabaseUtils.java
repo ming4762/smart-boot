@@ -58,7 +58,7 @@ public class DatabaseUtils {
                         value = resultSet.getObject(i);
                     }
                     if (value instanceof Short) {
-                        value = new Integer((Short)value);
+                        value = Integer.valueOf(value.toString());
                     }
                     if (Objects.nonNull(value)) {
                         // 判断类型是否一致，如果不一致 使用转换器进行转换

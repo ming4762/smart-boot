@@ -17,7 +17,7 @@ import java.time.ZoneId;
  */
 @Getter
 @Setter
-public class RepositoryElementMetaData implements Serializable {
+public class RepositoryElementMetaData {
     private static final long serialVersionUID = 4156363454876149890L;
 
     private String modifiedUser;

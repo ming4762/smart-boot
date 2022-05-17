@@ -35,7 +35,7 @@
         <jacob.version>1.20</jacob.version>
         <kettle.version>9.2.0.0</kettle.version>
         <xxl-job.version>2.3.0</xxl-job.version>
-        <druid.version>1.2.5</druid.version>
+        <druid.version>1.2.8</druid.version>
         <easy-captcha.version>1.6.2</easy-captcha.version>
         <ojdbc8.version>19.3.0.0</ojdbc8.version>
         <commons-lang.version>2.6</commons-lang.version>
@@ -54,6 +54,7 @@
         <module>smart-file</module>
         <module>smart-kettle</module>
         <module>smart-modules</module>
+        <module>smart-monitor</module>
         <module>smart-starter</module>
 
         <module>smart-samples</module>

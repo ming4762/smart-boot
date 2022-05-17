@@ -3,7 +3,6 @@ package com.smart.kettle.core.model;
 import lombok.*;
 import org.pentaho.di.repository.ObjectId;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -16,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RepositoryDirectoryData implements Serializable {
+public class RepositoryDirectoryData {
 
     private static final long serialVersionUID = 7694434350598412064L;
     private ObjectId id;

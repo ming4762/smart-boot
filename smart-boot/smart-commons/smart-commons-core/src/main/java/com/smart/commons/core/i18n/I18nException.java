@@ -32,6 +32,7 @@ public class I18nException extends BusinessException {
     }
 
     public I18nException(I18nMessage i18nMessage, Object ...args) {
+        super(i18nMessage.defaultMessage());
         this.i18nMessage = i18nMessage;
         this.args = args;
     }
