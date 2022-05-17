@@ -2,6 +2,7 @@ package com.smart.monitor.server.core.controller;
 
 import com.smart.monitor.server.common.model.ClientId;
 import com.smart.monitor.server.core.client.request.ClientWebProxy;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,7 +40,8 @@ public class ClientProxyController {
     @RequestMapping(path = CLIENT_PROXY_PATH, method = { RequestMethod.GET, RequestMethod.HEAD, RequestMethod.POST,
             RequestMethod.PUT, RequestMethod.PATCH, RequestMethod.DELETE, RequestMethod.OPTIONS })
     public void clientProxy(@PathVariable("clientId") String clientId, HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("application/json;charset=UTF-8");
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         this.clientWebProxy.forward(ClientId.create(clientId), request, response, true);
     }

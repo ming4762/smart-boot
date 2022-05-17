@@ -6,6 +6,7 @@ import com.smart.kettle.core.log.KettleLogController;
 import com.smart.kettle.core.model.RepositoryDirectoryData;
 import com.smart.kettle.core.properties.KettleDatabaseRepositoryProperties;
 import com.smart.kettle.core.repository.pool.KettleDatabaseRepositoryProvider;
+import lombok.SneakyThrows;
 import org.pentaho.di.core.logging.LogLevel;
 import org.pentaho.di.job.Job;
 import org.pentaho.di.job.JobListener;
@@ -113,6 +114,7 @@ public class KettleServiceImpl implements KettleService, ApplicationContextAware
     }
 
     @Override
+    @SneakyThrows
     public Trans executeClasspathFileTransfer(
             @NonNull String ktrPath,
             @NonNull String[] params,
@@ -121,10 +123,13 @@ public class KettleServiceImpl implements KettleService, ApplicationContextAware
             @NonNull LogLevel logLevel,
             Consumer<Trans> beforeHandler
     ) {
-        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(ktrPath);
-        Assert.notNull(inputStream, "execute trans fail,can not find trans file");
-        TransMeta transMeta = KettleActuator.getTransMeta(inputStream);
-        return this.doExecuteTrans(transMeta, params, variableMap, parameterMap, logLevel, beforeHandler);
+        ClassLoader classLoader = this.getClass().getClassLoader();
+        Assert.notNull(classLoader, "execute trans fail, classLoader is null");
+        try (InputStream inputStream = classLoader.getResourceAsStream(ktrPath)) {
+            Assert.notNull(inputStream, "execute trans fail,can not find trans file");
+            TransMeta transMeta = KettleActuator.getTransMeta(inputStream);
+            return this.doExecuteTrans(transMeta, params, variableMap, parameterMap, logLevel, beforeHandler);
+        }
     }
 
 
@@ -175,6 +180,7 @@ public class KettleServiceImpl implements KettleService, ApplicationContextAware
     }
 
     @Override
+    @SneakyThrows
     public Job executeClasspathJob(
             @NonNull String jobPath,
             @NonNull Map<String, String> variableMap,
@@ -182,10 +188,13 @@ public class KettleServiceImpl implements KettleService, ApplicationContextAware
             @NonNull LogLevel logLevel,
             Consumer<Job> beforeHandler
     ) {
-        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(jobPath);
-        Assert.notNull(inputStream, "execute job fail,can not find job file");
-        JobMeta jobMeta = KettleActuator.getJobMeta(inputStream);
-        return this.doExecuteJob(jobMeta, null, variableMap, parameterMap, logLevel, beforeHandler);
+        ClassLoader classLoader = this.getClass().getClassLoader();
+        Assert.notNull(classLoader, "execute trans fail, classLoader is null");
+        try (InputStream inputStream = classLoader.getResourceAsStream(jobPath)) {
+            Assert.notNull(inputStream, "execute job fail,can not find job file");
+            JobMeta jobMeta = KettleActuator.getJobMeta(inputStream);
+            return this.doExecuteJob(jobMeta, null, variableMap, parameterMap, logLevel, beforeHandler);
+        }
     }
 
     protected Job doExecuteJob(

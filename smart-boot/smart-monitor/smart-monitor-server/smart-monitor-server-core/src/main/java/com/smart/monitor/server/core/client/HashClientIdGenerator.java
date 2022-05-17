@@ -20,7 +20,7 @@ public class HashClientIdGenerator implements ClientIdGenerator {
     @SneakyThrows
     @Override
     public ClientId create(Application application) {
-        final MessageDigest digest = MessageDigest.getInstance("SHA-1");
+        final MessageDigest digest = MessageDigest.getInstance("SHA-256");
         final byte[] bytes = digest.digest((application.getApplicationName() + application.getClientUrl()).getBytes(StandardCharsets.UTF_8));
         return ClientId.create(new String(this.encodeHex(bytes, 0, 12)));
     }
@@ -35,4 +35,5 @@ public class HashClientIdGenerator implements ClientIdGenerator {
         }
         return chars;
     }
+
 }

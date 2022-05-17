@@ -1,6 +1,7 @@
 package com.smart.commons.core.utils;
 
 import com.smart.commons.core.message.Result;
+import org.springframework.http.MediaType;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -16,7 +17,7 @@ public class RestJsonWriter {
     }
 
     public static void writeJson(HttpServletResponse response, Result<?> result) throws IOException {
-        response.setContentType("application/json;charset=UTF-8");
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.getWriter().write(JsonUtils.toJsonString(result));
     }
 }

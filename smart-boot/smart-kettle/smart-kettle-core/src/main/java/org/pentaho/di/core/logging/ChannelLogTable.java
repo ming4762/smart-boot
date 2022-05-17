@@ -13,7 +13,6 @@ import org.w3c.dom.Node;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -21,22 +20,20 @@ import java.util.List;
  * @author shizhongming
  */
 public class ChannelLogTable extends BaseLogTable implements Cloneable, LogTableInterface {
-    private static Class<?> PKG = ChannelLogTable.class;
+    private static final Class<?> PKG = ChannelLogTable.class;
     public static final String XML_TAG = "channel-log-table";
 
     protected ChannelLogTable(VariableSpace space, HasDatabasesInterface databasesInterface) {
-        super(space, databasesInterface, (String)null, (String)null, (String)null);
+        super(space, databasesInterface, null, null, null);
     }
     @Override
     public Object clone() {
         try {
             ChannelLogTable table = (ChannelLogTable)super.clone();
-            table.fields = new ArrayList();
-            Iterator var2 = this.fields.iterator();
+            table.fields = new ArrayList<>();
 
-            while(var2.hasNext()) {
-                LogTableField field = (LogTableField)var2.next();
-                table.fields.add((LogTableField)field.clone());
+            for (LogTableField field : this.fields) {
+                table.fields.add((LogTableField) field.clone());
             }
 
             return table;
@@ -74,18 +71,18 @@ public class ChannelLogTable extends BaseLogTable implements Cloneable, LogTable
 
     public static ChannelLogTable getDefault(VariableSpace space, HasDatabasesInterface databasesInterface) {
         ChannelLogTable table = new ChannelLogTable(space, databasesInterface);
-        table.fields.add(new LogTableField(ID.ID_BATCH.id, true, false, "ID_BATCH", BaseMessages.getString(PKG, "ChannelLogTable.FieldName.IdBatch", new String[0]), BaseMessages.getString(PKG, "ChannelLogTable.FieldDescription.IdBatch", new String[0]), 5, 8));
-        table.fields.add(new LogTableField(ID.CHANNEL_ID.id, true, false, "CHANNEL_ID", BaseMessages.getString(PKG, "ChannelLogTable.FieldName.ChannelId", new String[0]), BaseMessages.getString(PKG, "ChannelLogTable.FieldDescription.ChannelId", new String[0]), 2, 255));
-        table.fields.add(new LogTableField(ID.LOG_DATE.id, true, false, "LOG_DATE", BaseMessages.getString(PKG, "ChannelLogTable.FieldName.LogDate", new String[0]), BaseMessages.getString(PKG, "ChannelLogTable.FieldDescription.LogDate", new String[0]), 3, -1));
-        table.fields.add(new LogTableField(ID.LOGGING_OBJECT_TYPE.id, true, false, "LOGGING_OBJECT_TYPE", BaseMessages.getString(PKG, "ChannelLogTable.FieldName.ObjectType", new String[0]), BaseMessages.getString(PKG, "ChannelLogTable.FieldDescription.ObjectType", new String[0]), 2, 255));
-        table.fields.add(new LogTableField(ID.OBJECT_NAME.id, true, false, "OBJECT_NAME", BaseMessages.getString(PKG, "ChannelLogTable.FieldName.ObjectName", new String[0]), BaseMessages.getString(PKG, "ChannelLogTable.FieldDescription.ObjectName", new String[0]), 2, 255));
-        table.fields.add(new LogTableField(ID.OBJECT_COPY.id, true, false, "OBJECT_COPY", BaseMessages.getString(PKG, "ChannelLogTable.FieldName.ObjectCopy", new String[0]), BaseMessages.getString(PKG, "ChannelLogTable.FieldDescription.ObjectCopy", new String[0]), 2, 255));
-        table.fields.add(new LogTableField(ID.REPOSITORY_DIRECTORY.id, true, false, "REPOSITORY_DIRECTORY", BaseMessages.getString(PKG, "ChannelLogTable.FieldName.RepositoryDirectory", new String[0]), BaseMessages.getString(PKG, "ChannelLogTable.FieldDescription.RepositoryDirectory", new String[0]), 2, 255));
-        table.fields.add(new LogTableField(ID.FILENAME.id, true, false, "FILENAME", BaseMessages.getString(PKG, "ChannelLogTable.FieldName.Filename", new String[0]), BaseMessages.getString(PKG, "ChannelLogTable.FieldDescription.Filename", new String[0]), 2, 255));
-        table.fields.add(new LogTableField(ID.OBJECT_ID.id, true, false, "OBJECT_ID", BaseMessages.getString(PKG, "ChannelLogTable.FieldName.ObjectId", new String[0]), BaseMessages.getString(PKG, "ChannelLogTable.FieldDescription.ObjectId", new String[0]), 2, 255));
-        table.fields.add(new LogTableField(ID.OBJECT_REVISION.id, true, false, "OBJECT_REVISION", BaseMessages.getString(PKG, "ChannelLogTable.FieldName.ObjectRevision", new String[0]), BaseMessages.getString(PKG, "ChannelLogTable.FieldDescription.ObjectRevision", new String[0]), 2, 255));
-        table.fields.add(new LogTableField(ID.PARENT_CHANNEL_ID.id, true, false, "PARENT_CHANNEL_ID", BaseMessages.getString(PKG, "ChannelLogTable.FieldName.ParentChannelId", new String[0]), BaseMessages.getString(PKG, "ChannelLogTable.FieldDescription.ParentChannelId", new String[0]), 2, 255));
-        table.fields.add(new LogTableField(ID.ROOT_CHANNEL_ID.id, true, false, "ROOT_CHANNEL_ID", BaseMessages.getString(PKG, "ChannelLogTable.FieldName.RootChannelId", new String[0]), BaseMessages.getString(PKG, "ChannelLogTable.FieldDescription.RootChannelId", new String[0]), 2, 255));
+        table.fields.add(new LogTableField(ID.ID_BATCH.id, true, false, "ID_BATCH", BaseMessages.getString(PKG, "ChannelLogTable.FieldName.IdBatch"), BaseMessages.getString(PKG, "ChannelLogTable.FieldDescription.IdBatch"), 5, 8));
+        table.fields.add(new LogTableField(ID.CHANNEL_ID.id, true, false, "CHANNEL_ID", BaseMessages.getString(PKG, "ChannelLogTable.FieldName.ChannelId"), BaseMessages.getString(PKG, "ChannelLogTable.FieldDescription.ChannelId"), 2, 255));
+        table.fields.add(new LogTableField(ID.LOG_DATE.id, true, false, "LOG_DATE", BaseMessages.getString(PKG, "ChannelLogTable.FieldName.LogDate"), BaseMessages.getString(PKG, "ChannelLogTable.FieldDescription.LogDate"), 3, -1));
+        table.fields.add(new LogTableField(ID.LOGGING_OBJECT_TYPE.id, true, false, "LOGGING_OBJECT_TYPE", BaseMessages.getString(PKG, "ChannelLogTable.FieldName.ObjectType"), BaseMessages.getString(PKG, "ChannelLogTable.FieldDescription.ObjectType"), 2, 255));
+        table.fields.add(new LogTableField(ID.OBJECT_NAME.id, true, false, "OBJECT_NAME", BaseMessages.getString(PKG, "ChannelLogTable.FieldName.ObjectName"), BaseMessages.getString(PKG, "ChannelLogTable.FieldDescription.ObjectName"), 2, 255));
+        table.fields.add(new LogTableField(ID.OBJECT_COPY.id, true, false, "OBJECT_COPY", BaseMessages.getString(PKG, "ChannelLogTable.FieldName.ObjectCopy"), BaseMessages.getString(PKG, "ChannelLogTable.FieldDescription.ObjectCopy"), 2, 255));
+        table.fields.add(new LogTableField(ID.REPOSITORY_DIRECTORY.id, true, false, "REPOSITORY_DIRECTORY", BaseMessages.getString(PKG, "ChannelLogTable.FieldName.RepositoryDirectory"), BaseMessages.getString(PKG, "ChannelLogTable.FieldDescription.RepositoryDirectory"), 2, 255));
+        table.fields.add(new LogTableField(ID.FILENAME.id, true, false, "FILENAME", BaseMessages.getString(PKG, "ChannelLogTable.FieldName.Filename"), BaseMessages.getString(PKG, "ChannelLogTable.FieldDescription.Filename"), 2, 255));
+        table.fields.add(new LogTableField(ID.OBJECT_ID.id, true, false, "OBJECT_ID", BaseMessages.getString(PKG, "ChannelLogTable.FieldName.ObjectId"), BaseMessages.getString(PKG, "ChannelLogTable.FieldDescription.ObjectId"), 2, 255));
+        table.fields.add(new LogTableField(ID.OBJECT_REVISION.id, true, false, "OBJECT_REVISION", BaseMessages.getString(PKG, "ChannelLogTable.FieldName.ObjectRevision"), BaseMessages.getString(PKG, "ChannelLogTable.FieldDescription.ObjectRevision"), 2, 255));
+        table.fields.add(new LogTableField(ID.PARENT_CHANNEL_ID.id, true, false, "PARENT_CHANNEL_ID", BaseMessages.getString(PKG, "ChannelLogTable.FieldName.ParentChannelId"), BaseMessages.getString(PKG, "ChannelLogTable.FieldDescription.ParentChannelId"), 2, 255));
+        table.fields.add(new LogTableField(ID.ROOT_CHANNEL_ID.id, true, false, "ROOT_CHANNEL_ID", BaseMessages.getString(PKG, "ChannelLogTable.FieldName.RootChannelId"), BaseMessages.getString(PKG, "ChannelLogTable.FieldDescription.RootChannelId"), 2, 255));
         table.findField(ID.LOG_DATE.id).setLogDateField(true);
         table.findField(ID.ID_BATCH.id).setKey(true);
         return table;
@@ -102,16 +99,14 @@ public class ChannelLogTable extends BaseLogTable implements Cloneable, LogTable
             }
 
             RowMetaAndData row = new RowMetaAndData();
-            Iterator var7 = this.fields.iterator();
 
-            while(var7.hasNext()) {
-                LogTableField field = (LogTableField)var7.next();
+            for (LogTableField field : this.fields) {
                 if (field.isEnabled()) {
                     Object value = null;
                     if (subject != null) {
-                        switch(ID.valueOf(field.getId())) {
+                        switch (ID.valueOf(field.getId())) {
                             case ID_BATCH:
-                                value = new Long(loggingHierarchy.getBatchId());
+                                value = loggingHierarchy.getBatchId();
                                 break;
                             case CHANNEL_ID:
                                 value = loggingObject.getLogChannelId();
@@ -164,7 +159,7 @@ public class ChannelLogTable extends BaseLogTable implements Cloneable, LogTable
     }
     @Override
     public String getLogTableType() {
-        return BaseMessages.getString(PKG, "ChannelLogTable.Type.Description", new String[0]);
+        return BaseMessages.getString(PKG, "ChannelLogTable.Type.Description");
     }
     @Override
     public String getConnectionNameVariable() {
@@ -180,14 +175,13 @@ public class ChannelLogTable extends BaseLogTable implements Cloneable, LogTable
     }
     @Override
     public List<RowMetaInterface> getRecommendedIndexes() {
-        List<RowMetaInterface> indexes = new ArrayList();
-        return indexes;
+        return new ArrayList<>();
     }
 
     /**
      * ID美剧
      */
-    public static enum ID {
+    public enum ID {
         /**
          * ID字段信息
          */
@@ -204,9 +198,9 @@ public class ChannelLogTable extends BaseLogTable implements Cloneable, LogTable
         PARENT_CHANNEL_ID("PARENT_CHANNEL_ID"),
         ROOT_CHANNEL_ID("ROOT_CHANNEL_ID");
 
-        private String id;
+        private final String id;
 
-        private ID(String id) {
+        ID(String id) {
             this.id = id;
         }
 

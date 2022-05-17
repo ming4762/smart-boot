@@ -15,6 +15,11 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.smart</groupId>
+			<artifactId>smart-commons-core</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.smart</groupId>
 			<artifactId>smart-document-core</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>

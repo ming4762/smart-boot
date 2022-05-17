@@ -1,6 +1,7 @@
 package com.smart.converter.office.converter;
 
 import com.jacob.com.ComThread;
+import com.smart.commons.core.exception.SystemException;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
@@ -78,7 +79,10 @@ public abstract class AbstractOfficeConverter implements OfficeConverter {
         // 获取文件目录
         File dirFile = toFile.getParentFile();
         if (!dirFile.exists()) {
-            dirFile.mkdirs();
+            boolean result = dirFile.mkdirs();
+            if (!result) {
+                throw new SystemException("directory create fail");
+            }
         }
         // 文件已存在，删除
         if (toFile.exists()) {

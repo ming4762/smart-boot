@@ -88,9 +88,10 @@ public class JxlsUtils {
      */
     public static void exportExcel(File templateFile, File outFile, @NonNull Object model, @Nullable Map<String, Object> functionMap, Consumer<JexlBuilder> jexlBuilderHandler) throws IOException {
         try (
-                InputStream inputStream = new FileInputStream(templateFile)
+                InputStream inputStream = new FileInputStream(templateFile);
+                OutputStream outputStream = new FileOutputStream(outFile)
                 ) {
-            exportExcel(inputStream, new FileOutputStream(outFile), model, functionMap, jexlBuilderHandler);
+            exportExcel(inputStream, outputStream, model, functionMap, jexlBuilderHandler);
         }
     }
 }
