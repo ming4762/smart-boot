@@ -36,7 +36,6 @@ public interface UrlMappingProvider {
      */
     @Getter
     @Setter
-    static
     class UrlMapping {
         /**
          * 请求方法

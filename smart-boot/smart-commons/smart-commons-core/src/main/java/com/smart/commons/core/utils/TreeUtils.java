@@ -59,8 +59,8 @@ public final class TreeUtils {
      * 构建树形列表
      * @param nodes 树形数据
      * @param idParam 上级ID
-     * @param <T>
-     * @return
+     * @param <T> 泛型
+     * @return 树形列表
      */
     @NonNull
     public static <T extends Serializable> List<Tree<T>>  buildList(@Nullable List<Tree<T>> nodes, @NonNull Serializable idParam) {

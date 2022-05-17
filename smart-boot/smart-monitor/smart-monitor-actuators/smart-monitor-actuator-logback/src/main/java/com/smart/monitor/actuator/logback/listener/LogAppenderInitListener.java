@@ -6,6 +6,7 @@ import com.smart.monitor.actuator.logback.appender.MemoryCacheLogAppender;
 import org.slf4j.impl.StaticLoggerBinder;
 import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
 import org.springframework.context.ApplicationListener;
+import org.springframework.lang.NonNull;
 
 /**
  * @author ShiZhongMing
@@ -14,7 +15,7 @@ import org.springframework.context.ApplicationListener;
  */
 public class LogAppenderInitListener implements ApplicationListener<ApplicationEnvironmentPreparedEvent> {
     @Override
-    public void onApplicationEvent(ApplicationEnvironmentPreparedEvent event) {
+    public void onApplicationEvent(@NonNull ApplicationEnvironmentPreparedEvent event) {
         LoggerContext loggerContext = (LoggerContext) StaticLoggerBinder.getSingleton().getLoggerFactory();
         Logger logger = loggerContext.getLogger(Logger.ROOT_LOGGER_NAME);
         MemoryCacheLogAppender logAppender = new MemoryCacheLogAppender();

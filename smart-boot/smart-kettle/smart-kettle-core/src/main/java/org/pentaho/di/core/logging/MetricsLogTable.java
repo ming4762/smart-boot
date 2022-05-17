@@ -14,7 +14,6 @@ import org.w3c.dom.Node;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -22,22 +21,20 @@ import java.util.List;
  * @author shizhongming
  */
 public class MetricsLogTable extends BaseLogTable implements Cloneable, LogTableInterface {
-    private static Class<?> PKG = MetricsLogTable.class;
+    private static final Class<?> PKG = MetricsLogTable.class;
     public static final String XML_TAG = "metrics-log-table";
 
     protected MetricsLogTable(VariableSpace space, HasDatabasesInterface databasesInterface) {
-        super(space, databasesInterface, (String)null, (String)null, (String)null);
+        super(space, databasesInterface, null, null, null);
     }
     @Override
     public Object clone() {
         try {
             MetricsLogTable table = (MetricsLogTable)super.clone();
-            table.fields = new ArrayList();
-            Iterator var2 = this.fields.iterator();
+            table.fields = new ArrayList<>();
 
-            while(var2.hasNext()) {
-                LogTableField field = (LogTableField)var2.next();
-                table.fields.add((LogTableField)field.clone());
+            for (LogTableField field : this.fields) {
+                table.fields.add((LogTableField) field.clone());
             }
 
             return table;
@@ -47,15 +44,13 @@ public class MetricsLogTable extends BaseLogTable implements Cloneable, LogTable
     }
     @Override
     public String getXML() {
-        StringBuilder retval = new StringBuilder();
-        retval.append("      ").append(XMLHandler.openTag("metrics-log-table")).append(Const.CR);
-        retval.append("        ").append(XMLHandler.addTagValue("connection", this.connectionName));
-        retval.append("        ").append(XMLHandler.addTagValue("schema", this.schemaName));
-        retval.append("        ").append(XMLHandler.addTagValue("table", this.tableName));
-        retval.append("        ").append(XMLHandler.addTagValue("timeout_days", this.timeoutInDays));
-        retval.append(super.getFieldsXML());
-        retval.append("      ").append(XMLHandler.closeTag("metrics-log-table")).append(Const.CR);
-        return retval.toString();
+        return "      " + XMLHandler.openTag("metrics-log-table") + Const.CR +
+                "        " + XMLHandler.addTagValue("connection", this.connectionName) +
+                "        " + XMLHandler.addTagValue("schema", this.schemaName) +
+                "        " + XMLHandler.addTagValue("table", this.tableName) +
+                "        " + XMLHandler.addTagValue("timeout_days", this.timeoutInDays) +
+                super.getFieldsXML() +
+                "      " + XMLHandler.closeTag("metrics-log-table") + Const.CR;
     }
     @Override
     public void loadXML(Node node, List<DatabaseMeta> databases, List<StepMeta> steps) {
@@ -75,15 +70,15 @@ public class MetricsLogTable extends BaseLogTable implements Cloneable, LogTable
 
     public static MetricsLogTable getDefault(VariableSpace space, HasDatabasesInterface databasesInterface) {
         MetricsLogTable table = new MetricsLogTable(space, databasesInterface);
-        table.fields.add(new LogTableField(ID.ID_BATCH.id, true, false, "ID_BATCH", BaseMessages.getString(PKG, "MetricsLogTable.FieldName.IdBatch", new String[0]), BaseMessages.getString(PKG, "MetricsLogTable.FieldDescription.IdBatch", new String[0]), 5, 8));
-        table.fields.add(new LogTableField(ID.CHANNEL_ID.id, true, false, "CHANNEL_ID", BaseMessages.getString(PKG, "MetricsLogTable.FieldName.ChannelId", new String[0]), BaseMessages.getString(PKG, "MetricsLogTable.FieldDescription.ChannelId", new String[0]), 2, 255));
-        table.fields.add(new LogTableField(ID.LOG_DATE.id, true, false, "LOG_DATE", BaseMessages.getString(PKG, "MetricsLogTable.FieldName.LogDate", new String[0]), BaseMessages.getString(PKG, "MetricsLogTable.FieldDescription.LogDate", new String[0]), 3, -1));
-        table.fields.add(new LogTableField(ID.METRICS_DATE.id, true, false, "METRICS_DATE", BaseMessages.getString(PKG, "MetricsLogTable.FieldName.MetricsDate", new String[0]), BaseMessages.getString(PKG, "MetricsLogTable.FieldDescription.MetricsDate", new String[0]), 3, -1));
-        table.fields.add(new LogTableField(ID.METRICS_CODE.id, true, false, "METRICS_CODE", BaseMessages.getString(PKG, "MetricsLogTable.FieldName.MetricsDescription", new String[0]), BaseMessages.getString(PKG, "MetricsLogTable.FieldDescription.MetricsCode", new String[0]), 2, 255));
-        table.fields.add(new LogTableField(ID.METRICS_DESCRIPTION.id, true, false, "METRICS_DESCRIPTION", BaseMessages.getString(PKG, "MetricsLogTable.FieldName.MetricsDescription", new String[0]), BaseMessages.getString(PKG, "MetricsLogTable.FieldDescription.MetricsDescription", new String[0]), 2, 255));
-        table.fields.add(new LogTableField(ID.METRICS_SUBJECT.id, true, false, "METRICS_SUBJECT", BaseMessages.getString(PKG, "MetricsLogTable.FieldName.MetricsSubject", new String[0]), BaseMessages.getString(PKG, "MetricsLogTable.FieldDescription.MetricsSubject", new String[0]), 2, 255));
-        table.fields.add(new LogTableField(ID.METRICS_TYPE.id, true, false, "METRICS_TYPE", BaseMessages.getString(PKG, "MetricsLogTable.FieldName.MetricsType", new String[0]), BaseMessages.getString(PKG, "MetricsLogTable.FieldDescription.MetricsType", new String[0]), 2, 255));
-        table.fields.add(new LogTableField(ID.METRICS_VALUE.id, true, false, "METRICS_VALUE", BaseMessages.getString(PKG, "MetricsLogTable.FieldName.MetricsValue", new String[0]), BaseMessages.getString(PKG, "MetricsLogTable.FieldDescription.MetricsValue", new String[0]), 5, 12));
+        table.fields.add(new LogTableField(ID.ID_BATCH.id, true, false, "ID_BATCH", BaseMessages.getString(PKG, "MetricsLogTable.FieldName.IdBatch"), BaseMessages.getString(PKG, "MetricsLogTable.FieldDescription.IdBatch"), 5, 8));
+        table.fields.add(new LogTableField(ID.CHANNEL_ID.id, true, false, "CHANNEL_ID", BaseMessages.getString(PKG, "MetricsLogTable.FieldName.ChannelId"), BaseMessages.getString(PKG, "MetricsLogTable.FieldDescription.ChannelId"), 2, 255));
+        table.fields.add(new LogTableField(ID.LOG_DATE.id, true, false, "LOG_DATE", BaseMessages.getString(PKG, "MetricsLogTable.FieldName.LogDate"), BaseMessages.getString(PKG, "MetricsLogTable.FieldDescription.LogDate"), 3, -1));
+        table.fields.add(new LogTableField(ID.METRICS_DATE.id, true, false, "METRICS_DATE", BaseMessages.getString(PKG, "MetricsLogTable.FieldName.MetricsDate"), BaseMessages.getString(PKG, "MetricsLogTable.FieldDescription.MetricsDate"), 3, -1));
+        table.fields.add(new LogTableField(ID.METRICS_CODE.id, true, false, "METRICS_CODE", BaseMessages.getString(PKG, "MetricsLogTable.FieldName.MetricsDescription"), BaseMessages.getString(PKG, "MetricsLogTable.FieldDescription.MetricsCode"), 2, 255));
+        table.fields.add(new LogTableField(ID.METRICS_DESCRIPTION.id, true, false, "METRICS_DESCRIPTION", BaseMessages.getString(PKG, "MetricsLogTable.FieldName.MetricsDescription"), BaseMessages.getString(PKG, "MetricsLogTable.FieldDescription.MetricsDescription"), 2, 255));
+        table.fields.add(new LogTableField(ID.METRICS_SUBJECT.id, true, false, "METRICS_SUBJECT", BaseMessages.getString(PKG, "MetricsLogTable.FieldName.MetricsSubject"), BaseMessages.getString(PKG, "MetricsLogTable.FieldDescription.MetricsSubject"), 2, 255));
+        table.fields.add(new LogTableField(ID.METRICS_TYPE.id, true, false, "METRICS_TYPE", BaseMessages.getString(PKG, "MetricsLogTable.FieldName.MetricsType"), BaseMessages.getString(PKG, "MetricsLogTable.FieldDescription.MetricsType"), 2, 255));
+        table.fields.add(new LogTableField(ID.METRICS_VALUE.id, true, false, "METRICS_VALUE", BaseMessages.getString(PKG, "MetricsLogTable.FieldName.MetricsValue"), BaseMessages.getString(PKG, "MetricsLogTable.FieldDescription.MetricsValue"), 5, 12));
         table.findField(ID.LOG_DATE.id).setLogDateField(true);
         table.findField(ID.ID_BATCH.id).setKey(true);
         return table;
@@ -100,16 +95,14 @@ public class MetricsLogTable extends BaseLogTable implements Cloneable, LogTable
             }
 
             RowMetaAndData row = new RowMetaAndData();
-            Iterator var7 = this.fields.iterator();
 
-            while(var7.hasNext()) {
-                LogTableField field = (LogTableField)var7.next();
+            for (LogTableField field : this.fields) {
                 if (field.isEnabled()) {
                     Object value = null;
                     if (subject != null) {
-                        switch(ID.valueOf(field.getId())) {
+                        switch (ID.valueOf(field.getId())) {
                             case ID_BATCH:
-                                value = new Long(loggingMetric.getBatchId());
+                                value = loggingMetric.getBatchId();
                                 break;
                             case CHANNEL_ID:
                                 value = snapshot.getLogChannelId();
@@ -153,7 +146,7 @@ public class MetricsLogTable extends BaseLogTable implements Cloneable, LogTable
     }
     @Override
     public String getLogTableType() {
-        return BaseMessages.getString(PKG, "MetricsLogTable.Type.Description", new String[0]);
+        return BaseMessages.getString(PKG, "MetricsLogTable.Type.Description");
     }
     @Override
     public String getConnectionNameVariable() {
@@ -169,14 +162,13 @@ public class MetricsLogTable extends BaseLogTable implements Cloneable, LogTable
     }
     @Override
     public List<RowMetaInterface> getRecommendedIndexes() {
-        List<RowMetaInterface> indexes = new ArrayList();
-        return indexes;
+        return new ArrayList<>();
     }
 
     /**
      * ID
      */
-    public static enum ID {
+    public enum ID {
         /**
          * id
          */
@@ -190,9 +182,9 @@ public class MetricsLogTable extends BaseLogTable implements Cloneable, LogTable
         METRICS_TYPE("METRICS_TYPE"),
         METRICS_VALUE("METRICS_VALUE");
 
-        private String id;
+        private final String id;
 
-        private ID(String id) {
+        ID(String id) {
             this.id = id;
         }
 

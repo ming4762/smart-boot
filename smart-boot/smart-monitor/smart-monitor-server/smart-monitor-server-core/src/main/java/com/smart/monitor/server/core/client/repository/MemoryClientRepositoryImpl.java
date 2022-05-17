@@ -69,7 +69,10 @@ public class MemoryClientRepositoryImpl extends AbstractClientRepositoryImpl {
     @Override
     public ClientData findById(@NonNull ClientId clientId, boolean active) {
         final ClientData repositoryData = this.repositoryDataMap.get(clientId);
-        if (repositoryData == null || (active && !this.isActive(repositoryData))) {
+        if (repositoryData == null) {
+            return null;
+        }
+        if (active && !this.isActive(repositoryData)) {
             return null;
         }
         return repositoryData;

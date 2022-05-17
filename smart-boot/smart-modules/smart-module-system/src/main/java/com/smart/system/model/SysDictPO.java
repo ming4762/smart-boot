@@ -16,6 +16,7 @@ import lombok.Setter;
 @TableName("sys_dict")
 public class SysDictPO extends BaseModelUserTime {
 
+    private static final long serialVersionUID = -4129235312297061914L;
     /**
     * dict_code - 字典编码
     */

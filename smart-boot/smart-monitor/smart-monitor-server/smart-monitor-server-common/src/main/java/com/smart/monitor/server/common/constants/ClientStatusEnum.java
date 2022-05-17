@@ -18,5 +18,5 @@ public enum ClientStatusEnum {
     /**
      * 下线
      */
-    DOWN;
+    DOWN
 }

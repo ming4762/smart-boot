@@ -17,5 +17,6 @@ import lombok.ToString;
 @Setter
 public class SysLogListVO extends SysLogPO implements CreateUserSetter {
 
+    private static final long serialVersionUID = 8493022723816142778L;
     private BaseUser createUser;
 }

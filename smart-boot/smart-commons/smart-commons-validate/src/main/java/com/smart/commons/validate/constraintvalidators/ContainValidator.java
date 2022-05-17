@@ -36,8 +36,8 @@ public class ContainValidator implements ConstraintValidator<Contain, Object> {
 
     /**
      * 判断是否在allow里
-     * @param value
-     * @return
+     * @param value value
+     * @return 是否在allow里
      */
     private boolean checkAllow(Object value) {
         final List<String> allowList = Arrays.asList(allow);
@@ -46,8 +46,8 @@ public class ContainValidator implements ConstraintValidator<Contain, Object> {
 
     /**
      * 检查是否在包含的枚举内
-     * @param value
-     * @return
+     * @param value value
+     * @return 是否在包含的枚举内
      */
     private boolean checkAllowClass(Object value) {
         if (Objects.equals(this.allowClass, IValidateEnum.class)) {

@@ -21,6 +21,6 @@ public final class PageData<T> implements Serializable {
 
     private List<T> rows;
 
-    private Long total = 0L;
+    private long total;
 
 }

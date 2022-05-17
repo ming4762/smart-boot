@@ -43,15 +43,13 @@ public class ChannelLogTable extends BaseLogTable implements Cloneable, LogTable
     }
     @Override
     public String getXML() {
-        StringBuilder retval = new StringBuilder();
-        retval.append("      ").append(XMLHandler.openTag("channel-log-table")).append(Const.CR);
-        retval.append("        ").append(XMLHandler.addTagValue("connection", this.connectionName));
-        retval.append("        ").append(XMLHandler.addTagValue("schema", this.schemaName));
-        retval.append("        ").append(XMLHandler.addTagValue("table", this.tableName));
-        retval.append("        ").append(XMLHandler.addTagValue("timeout_days", this.timeoutInDays));
-        retval.append(super.getFieldsXML());
-        retval.append("      ").append(XMLHandler.closeTag("channel-log-table")).append(Const.CR);
-        return retval.toString();
+        return "      " + XMLHandler.openTag("channel-log-table") + Const.CR +
+                "        " + XMLHandler.addTagValue("connection", this.connectionName) +
+                "        " + XMLHandler.addTagValue("schema", this.schemaName) +
+                "        " + XMLHandler.addTagValue("table", this.tableName) +
+                "        " + XMLHandler.addTagValue("timeout_days", this.timeoutInDays) +
+                super.getFieldsXML() +
+                "      " + XMLHandler.closeTag("channel-log-table") + Const.CR;
     }
     @Override
     public void loadXML(Node node, List<DatabaseMeta> databases, List<StepMeta> steps) {

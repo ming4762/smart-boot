@@ -52,17 +52,15 @@ public class JobLogTable extends BaseLogTable implements Cloneable, LogTableInte
     }
     @Override
     public String getXML() {
-        StringBuilder retval = new StringBuilder();
-        retval.append("      ").append(XMLHandler.openTag("job-log-table")).append(Const.CR);
-        retval.append("        ").append(XMLHandler.addTagValue("connection", this.connectionName));
-        retval.append("        ").append(XMLHandler.addTagValue("schema", this.schemaName));
-        retval.append("        ").append(XMLHandler.addTagValue("table", this.tableName));
-        retval.append("        ").append(XMLHandler.addTagValue("size_limit_lines", this.logSizeLimit));
-        retval.append("        ").append(XMLHandler.addTagValue("interval", this.logInterval));
-        retval.append("        ").append(XMLHandler.addTagValue("timeout_days", this.timeoutInDays));
-        retval.append(super.getFieldsXML());
-        retval.append("      ").append(XMLHandler.closeTag("job-log-table")).append(Const.CR);
-        return retval.toString();
+        return "      " + XMLHandler.openTag("job-log-table") + Const.CR +
+                "        " + XMLHandler.addTagValue("connection", this.connectionName) +
+                "        " + XMLHandler.addTagValue("schema", this.schemaName) +
+                "        " + XMLHandler.addTagValue("table", this.tableName) +
+                "        " + XMLHandler.addTagValue("size_limit_lines", this.logSizeLimit) +
+                "        " + XMLHandler.addTagValue("interval", this.logInterval) +
+                "        " + XMLHandler.addTagValue("timeout_days", this.timeoutInDays) +
+                super.getFieldsXML() +
+                "      " + XMLHandler.closeTag("job-log-table") + Const.CR;
     }
     @Override
     public void loadXML(Node node, List<DatabaseMeta> databases, List<StepMeta> steps) {

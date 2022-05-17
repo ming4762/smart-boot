@@ -21,6 +21,7 @@ import java.io.Serializable;
 @ApiModel("用户离线参数")
 public class OfflineDTO implements Serializable {
 
+    private static final long serialVersionUID = 16332489185546505L;
     @ApiModelProperty("用户名")
     private String username;
 

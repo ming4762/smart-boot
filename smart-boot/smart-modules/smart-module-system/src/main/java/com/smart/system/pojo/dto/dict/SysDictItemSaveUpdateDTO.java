@@ -18,6 +18,7 @@ import java.io.Serializable;
 public class SysDictItemSaveUpdateDTO implements Serializable {
 
 
+    private static final long serialVersionUID = -1933118566698565044L;
     /**
     * 字典编码
     */

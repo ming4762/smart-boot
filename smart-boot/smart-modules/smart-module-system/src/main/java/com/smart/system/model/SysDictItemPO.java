@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 @TableName("sys_dict_item")
 public class SysDictItemPO extends BaseModel {
 
+    private static final long serialVersionUID = 4637452253459448214L;
     /**
     * dict_code - 字典编码
     */

@@ -44,7 +44,7 @@ public class JwtAuthSuccessDataHandler extends DefaultAuthSuccessDataHandler imp
     }
 
     private void save(@NonNull String jwt, @NonNull RestUserDetails user) {
-        boolean result = false;
+        boolean result;
         for (JwtStore jwtStore : jwtStoreList) {
             result = jwtStore.save(jwt, user);
             if (result) {

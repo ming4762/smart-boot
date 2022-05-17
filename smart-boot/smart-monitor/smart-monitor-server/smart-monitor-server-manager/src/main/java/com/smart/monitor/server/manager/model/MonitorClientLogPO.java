@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
 @Builder
 public class MonitorClientLogPO extends BaseModel {
 
+    private static final long serialVersionUID = 5153677950410116677L;
     /**
     * id - id
     */

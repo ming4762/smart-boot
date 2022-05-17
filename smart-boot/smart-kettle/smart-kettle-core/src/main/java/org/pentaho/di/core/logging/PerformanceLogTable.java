@@ -16,7 +16,6 @@ import org.pentaho.di.trans.step.StepMeta;
 import org.w3c.dom.Node;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 
@@ -31,18 +30,16 @@ public class PerformanceLogTable extends BaseLogTable implements Cloneable, LogT
     private String logInterval;
 
     protected PerformanceLogTable(VariableSpace space, HasDatabasesInterface databasesInterface) {
-        super(space, databasesInterface, (String)null, (String)null, (String)null);
+        super(space, databasesInterface, null, null, null);
     }
     @Override
     public Object clone() {
         try {
             PerformanceLogTable table = (PerformanceLogTable)super.clone();
-            table.fields = new ArrayList();
-            Iterator var2 = this.fields.iterator();
+            table.fields = new ArrayList<>();
 
-            while(var2.hasNext()) {
-                LogTableField field = (LogTableField)var2.next();
-                table.fields.add((LogTableField)field.clone());
+            for (LogTableField field : this.fields) {
+                table.fields.add((LogTableField) field.clone());
             }
 
             return table;
@@ -52,16 +49,14 @@ public class PerformanceLogTable extends BaseLogTable implements Cloneable, LogT
     }
     @Override
     public String getXML() {
-        StringBuilder retval = new StringBuilder();
-        retval.append("      ").append(XMLHandler.openTag("perf-log-table")).append(Const.CR);
-        retval.append("        ").append(XMLHandler.addTagValue("connection", this.connectionName));
-        retval.append("        ").append(XMLHandler.addTagValue("schema", this.schemaName));
-        retval.append("        ").append(XMLHandler.addTagValue("table", this.tableName));
-        retval.append("        ").append(XMLHandler.addTagValue("interval", this.logInterval));
-        retval.append("        ").append(XMLHandler.addTagValue("timeout_days", this.timeoutInDays));
-        retval.append(super.getFieldsXML());
-        retval.append("      ").append(XMLHandler.closeTag("perf-log-table")).append(Const.CR);
-        return retval.toString();
+        return "      " + XMLHandler.openTag("perf-log-table") + Const.CR +
+                "        " + XMLHandler.addTagValue("connection", this.connectionName) +
+                "        " + XMLHandler.addTagValue("schema", this.schemaName) +
+                "        " + XMLHandler.addTagValue("table", this.tableName) +
+                "        " + XMLHandler.addTagValue("interval", this.logInterval) +
+                "        " + XMLHandler.addTagValue("timeout_days", this.timeoutInDays) +
+                super.getFieldsXML() +
+                "      " + XMLHandler.closeTag("perf-log-table") + Const.CR;
     }
     @Override
     public void loadXML(Node node, List<DatabaseMeta> databases, List<StepMeta> steps) {
@@ -127,19 +122,17 @@ public class PerformanceLogTable extends BaseLogTable implements Cloneable, LogT
         } else {
             StepPerformanceSnapShot snapShot = (StepPerformanceSnapShot)subject;
             RowMetaAndData row = new RowMetaAndData();
-            Iterator var6 = this.fields.iterator();
 
-            while(var6.hasNext()) {
-                LogTableField field = (LogTableField)var6.next();
+            for (LogTableField field : this.fields) {
                 if (field.isEnabled()) {
                     Object value = null;
                     if (subject != null) {
-                        switch(ID.valueOf(field.getId())) {
+                        switch (ID.valueOf(field.getId())) {
                             case ID_BATCH:
-                                value = new Long(snapShot.getBatchId());
+                                value = snapShot.getBatchId();
                                 break;
                             case SEQ_NR:
-                                value = new Long((long)snapShot.getSeqNr());
+                                value = (long) snapShot.getSeqNr();
                                 break;
                             case LOGDATE:
                                 value = snapShot.getDate();
@@ -151,34 +144,34 @@ public class PerformanceLogTable extends BaseLogTable implements Cloneable, LogT
                                 value = snapShot.getStepName();
                                 break;
                             case STEP_COPY:
-                                value = new Long((long)snapShot.getStepCopy());
+                                value = (long) snapShot.getStepCopy();
                                 break;
                             case LINES_READ:
-                                value = new Long(snapShot.getLinesRead());
+                                value = snapShot.getLinesRead();
                                 break;
                             case LINES_WRITTEN:
-                                value = new Long(snapShot.getLinesWritten());
+                                value = snapShot.getLinesWritten();
                                 break;
                             case LINES_INPUT:
-                                value = new Long(snapShot.getLinesInput());
+                                value = snapShot.getLinesInput();
                                 break;
                             case LINES_OUTPUT:
-                                value = new Long(snapShot.getLinesOutput());
+                                value = snapShot.getLinesOutput();
                                 break;
                             case LINES_UPDATED:
-                                value = new Long(snapShot.getLinesUpdated());
+                                value = snapShot.getLinesUpdated();
                                 break;
                             case LINES_REJECTED:
-                                value = new Long(snapShot.getLinesRejected());
+                                value = snapShot.getLinesRejected();
                                 break;
                             case ERRORS:
-                                value = new Long(snapShot.getErrors());
+                                value = snapShot.getErrors();
                                 break;
                             case INPUT_BUFFER_ROWS:
-                                value = new Long(snapShot.getInputBufferSize());
+                                value = snapShot.getInputBufferSize();
                                 break;
                             case OUTPUT_BUFFER_ROWS:
-                                value = new Long(snapShot.getOutputBufferSize());
+                                value = snapShot.getOutputBufferSize();
                                 break;
                             default:
                         }
@@ -214,8 +207,7 @@ public class PerformanceLogTable extends BaseLogTable implements Cloneable, LogT
     }
     @Override
     public List<RowMetaInterface> getRecommendedIndexes() {
-        List<RowMetaInterface> indexes = new ArrayList<>();
-        return indexes;
+        return new ArrayList<>();
     }
     @Override
     public void setAllGlobalParametersToNull() {
@@ -230,7 +222,7 @@ public class PerformanceLogTable extends BaseLogTable implements Cloneable, LogT
     /**
      * ID
      */
-    public static enum ID {
+    public enum ID {
         /**
          * ID
          */

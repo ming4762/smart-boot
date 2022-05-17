@@ -15,5 +15,5 @@ public enum FileTypeEnum {
 
     TEMP,
 
-    APP;
+    APP
 }

@@ -115,7 +115,7 @@ public final class LogAspect {
      * @param point 切点
      */
     @Before("logPointCut()")
-    private void before(JoinPoint point) {
+    public void before(JoinPoint point) {
         if (BooleanUtils.isTrue(this.logProperties.getConsole())) {
             ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
             HttpServletRequest request = Objects.requireNonNull(attributes).getRequest();
@@ -132,7 +132,7 @@ public final class LogAspect {
     }
 
     @After("logPointCut()")
-    private void after() {
+    public void after() {
         if (BooleanUtils.isTrue(this.logProperties.getConsole())) {
             log.info("=========================================== End ===========================================");
         }

@@ -10,6 +10,7 @@ import com.smart.commons.core.utils.RestJsonWriter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.util.Assert;
@@ -47,10 +48,9 @@ public class AuthCaptchaFilter extends OncePerRequestFilter {
         String key = request.getParameter("codeKey");
         Assert.notNull(key, "验证码验证发生错误，key为null");
         if (this.isCreate(request)) {
-            response.setContentType("image/png");
+            response.setContentType(MediaType.IMAGE_PNG_VALUE);
             CaptchaUtils.out(response.getOutputStream(), key, authCache);
-        }
-        if (this.isValidate(request)) {
+        } else if (this.isValidate(request)) {
             // 验证验证码
             String code = request.getParameter("code");
             try {

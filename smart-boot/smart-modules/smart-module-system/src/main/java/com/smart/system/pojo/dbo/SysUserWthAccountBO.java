@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 @Setter
 public class SysUserWthAccountBO extends SysUserPO {
 
+    private static final long serialVersionUID = -314839324747456457L;
     /**
      * 登录失败次数
      */
