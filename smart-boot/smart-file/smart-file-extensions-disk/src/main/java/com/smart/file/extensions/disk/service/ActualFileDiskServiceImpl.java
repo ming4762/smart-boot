@@ -1,6 +1,6 @@
 package com.smart.file.extensions.disk.service;
 
-import com.smart.commons.core.utils.Md5Utils;
+import com.smart.commons.core.utils.DigestUtils;
 import com.smart.commons.file.SmartFileProperties;
 import com.smart.commons.file.common.ActualFileServiceRegisterName;
 import com.smart.commons.file.constants.ActualFileServiceEnum;
@@ -41,8 +41,8 @@ public class ActualFileDiskServiceImpl implements ActualFileService {
                 FileInputStream inputStream = new FileInputStream(file);
                 FileInputStream md5InputStream = new FileInputStream(file)
                 ) {
-            String md5 = Md5Utils.md5(md5InputStream);
-            return this.save(inputStream, !StringUtils.hasText(filename) ? file.getName() : filename, md5);
+            String message = DigestUtils.sha256(md5InputStream);
+            return this.save(inputStream, !StringUtils.hasText(filename) ? file.getName() : filename, message);
         }
     }
 

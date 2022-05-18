@@ -1,7 +1,7 @@
 package com.smart.file.manager.pojo.bo;
 
+import com.smart.commons.core.utils.DigestUtils;
 import com.smart.commons.core.utils.IdGenerator;
-import com.smart.commons.core.utils.Md5Utils;
 import com.smart.file.manager.constants.FileTypeEnum;
 import com.smart.file.manager.model.SysFilePO;
 import lombok.*;
@@ -32,7 +32,7 @@ public class SysFileBO {
                 .type(StringUtils.isEmpty(type) ? FileTypeEnum.TEMP.name() : type)
                 .contentType(multipartFile.getContentType())
                 .handlerType(handlerType)
-                .md5(Md5Utils.md5(multipartFile.getInputStream()))
+                .md5(DigestUtils.sha256(multipartFile.getInputStream()))
                 .fileSize(multipartFile.getSize())
                 .build();
         this.inputStream = multipartFile.getInputStream();

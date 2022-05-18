@@ -9,7 +9,7 @@ import com.google.common.collect.Sets;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.auth.core.utils.AuthUtils;
 import com.smart.commons.core.i18n.I18nUtils;
-import com.smart.commons.core.utils.Md5Utils;
+import com.smart.commons.core.utils.DigestUtils;
 import com.smart.crud.constants.CrudCommonEnum;
 import com.smart.crud.constants.UserPropertyEnum;
 import com.smart.crud.query.PageSortQuery;
@@ -206,7 +206,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
      */
     @Override
     public boolean save(@NonNull SysUserPO entity) {
-        entity.setPassword(Md5Utils.md5(entity.getUsername() + DEFAULT_PASSWORD + SALT, 2));
+        entity.setPassword(DigestUtils.sha256(entity.getUsername() + DEFAULT_PASSWORD + SALT, 2));
         return super.save(entity);
     }
 
