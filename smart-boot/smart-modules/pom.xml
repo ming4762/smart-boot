@@ -14,6 +14,7 @@
 	<packaging>pom</packaging>
 
 	<modules>
+		<module>smart-module-document</module>
 		<module>smart-module-system</module>
 	</modules>
 
