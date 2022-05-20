@@ -1,6 +1,5 @@
 package com.smart.system.constants;
 
-import com.baomidou.mybatisplus.annotation.EnumValue;
 import lombok.Getter;
 
 /**
@@ -30,7 +29,6 @@ public enum UserAccountStatusEnum {
     LONG_TIME_PASSWORD_MODIFY_LOCKED("40")
     ;
 
-    @EnumValue
     private final String value;
 
     UserAccountStatusEnum(String value) {

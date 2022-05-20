@@ -11,6 +11,8 @@ import org.springframework.lang.Nullable;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -26,19 +28,13 @@ public class GuavaCacheServiceImpl implements GuavaCacheService {
     public GuavaCacheServiceImpl() {
         this.cache = CacheBuilder.newBuilder()
                 .build();
-        new Thread(() -> {
-            while (true) {
-                log.debug("start clear guava cache");
-                long startTime = System.nanoTime();
-                this.clearExpire();
-                log.debug("clear up complete, use[{}]ms", TimeUnit.MILLISECONDS.convert(System.nanoTime() - startTime, TimeUnit.NANOSECONDS));
-                try {
-                    Thread.sleep(30L * 1000L);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+        executorService.scheduleAtFixedRate(() -> {
+            log.debug("start clear guava cache");
+            long startTime = System.nanoTime();
+            this.clearExpire();
+            log.debug("clear up complete, use[{}]ms", TimeUnit.MILLISECONDS.convert(System.nanoTime() - startTime, TimeUnit.NANOSECONDS));
+        }, 1000, 30L * 1000L, TimeUnit.MILLISECONDS);
     }
 
     @Override

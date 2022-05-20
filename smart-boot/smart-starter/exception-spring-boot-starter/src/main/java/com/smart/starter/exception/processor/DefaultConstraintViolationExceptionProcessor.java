@@ -6,9 +6,7 @@ import com.smart.commons.core.message.Result;
 import org.springframework.lang.Nullable;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import java.util.Set;
 
 /**
  * @author ShiZhongMing
@@ -23,7 +21,6 @@ public class DefaultConstraintViolationExceptionProcessor extends AbstractTypeEx
 
     @Override
     public Object message(ConstraintViolationException e, @Nullable HttpServletRequest request) {
-        Set<ConstraintViolation<?>> constraintViolations =  e.getConstraintViolations();
         return Result.failure(HttpStatus.BAD_REQUEST.getCode(), I18nUtils.get(HttpStatus.BAD_REQUEST));
     }
 }
