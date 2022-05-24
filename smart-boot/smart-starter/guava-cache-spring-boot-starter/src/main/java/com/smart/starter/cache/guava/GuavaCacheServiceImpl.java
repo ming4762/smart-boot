@@ -7,12 +7,11 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.lang.Nullable;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -28,13 +27,26 @@ public class GuavaCacheServiceImpl implements GuavaCacheService {
     public GuavaCacheServiceImpl() {
         this.cache = CacheBuilder.newBuilder()
                 .build();
-        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-        executorService.scheduleAtFixedRate(() -> {
-            log.debug("start clear guava cache");
-            long startTime = System.nanoTime();
-            this.clearExpire();
-            log.debug("clear up complete, use[{}]ms", TimeUnit.MILLISECONDS.convert(System.nanoTime() - startTime, TimeUnit.NANOSECONDS));
-        }, 1000, 30L * 1000L, TimeUnit.MILLISECONDS);
+        ThreadPoolTaskScheduler threadPoolTaskScheduler = this.createThreadPoolTaskScheduler();
+        threadPoolTaskScheduler.initialize();
+        threadPoolTaskScheduler.scheduleWithFixedDelay(() -> {
+            try {
+                log.debug("start clear guava cache");
+                long startTime = System.nanoTime();
+                this.clearExpire();
+                log.debug("clear up complete, use[{}]ms", TimeUnit.MILLISECONDS.convert(System.nanoTime() - startTime, TimeUnit.NANOSECONDS));
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+            }
+        }, Duration.ofMillis(30L * 1000L));
+    }
+
+    private ThreadPoolTaskScheduler createThreadPoolTaskScheduler() {
+        ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
+        taskScheduler.setPoolSize(1);
+        taskScheduler.setRemoveOnCancelPolicy(false);
+        taskScheduler.setThreadNamePrefix("guava cache clear");
+        return taskScheduler;
     }
 
     @Override
