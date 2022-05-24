@@ -30,4 +30,8 @@ public class KettleLogConfigHolder {
         map.computeIfAbsent(logType, key -> new KettleLogConfig());
         return map.get(logType);
     }
+
+    public static void clean() {
+        THREAD_LOCAL.remove();
+    }
 }

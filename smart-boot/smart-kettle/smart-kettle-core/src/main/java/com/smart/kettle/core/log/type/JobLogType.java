@@ -26,21 +26,21 @@ public enum JobLogType implements LogType {
      * job日志
      */
     JOB_LOG(
-            (jobMate) -> EnhancedJobLogTable.getDefault(jobMate, jobMate),
+            jobMate -> EnhancedJobLogTable.getDefault(jobMate, jobMate),
             (jobMate, logTable ) -> jobMate.setJobLogTable((JobLogTable) logTable)
     ),
     /**
      * 作业项日志
      */
     JOB_ENTRY_LOG(
-            (jobMate) -> EnhancedJobEntryLogTable.getDefault(jobMate, jobMate),
+            jobMate -> EnhancedJobEntryLogTable.getDefault(jobMate, jobMate),
             (jobMate, logTable ) -> jobMate.setJobEntryLogTable((JobEntryLogTable) logTable)
     ),
     /**
      * job日志通道
      */
     JOB_CHANNEL_LOG(
-            (jobMate) -> EnhancedChannelLogTable.getDefault(jobMate, jobMate),
+            jobMate -> EnhancedChannelLogTable.getDefault(jobMate, jobMate),
             (jobMate, logTable ) -> jobMate.setChannelLogTable((ChannelLogTable) logTable)
     )
     ;

@@ -6,7 +6,6 @@ import org.pentaho.di.repository.ObjectId;
 import org.pentaho.di.repository.RepositoryElementMetaInterface;
 import org.pentaho.di.repository.RepositoryObjectType;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 

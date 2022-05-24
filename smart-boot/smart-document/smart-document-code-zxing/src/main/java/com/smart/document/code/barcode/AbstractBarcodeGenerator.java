@@ -78,9 +78,9 @@ public abstract class AbstractBarcodeGenerator implements BarcodeGenerator {
         BufferedImage wordImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = wordImage.createGraphics();
         // 抗锯齿
-        setGraphics2D(g2d);
+        this.setGraphics2D(g2d);
         // 设置白色
-        setColorWhite(g2d);
+        this.setColorWhite(g2d);
         // 画条形码到新的面板
         g2d.drawImage(this.bufferedImage, this.config.getMargin(), this.config.getMargin(), this.bufferedImage.getWidth(), this.bufferedImage.getHeight(), null);
         if (this.config.isShowWord()) {
@@ -119,7 +119,7 @@ public abstract class AbstractBarcodeGenerator implements BarcodeGenerator {
      * 设置 Graphics2D 属性  （抗锯齿）
      * @param g2d  Graphics2D提供对几何形状、坐标转换、颜色管理和文本布局更为复杂的控制
      */
-    private static void setGraphics2D(Graphics2D g2d){
+    protected void setGraphics2D(Graphics2D g2d){
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_DEFAULT);
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
@@ -131,7 +131,7 @@ public abstract class AbstractBarcodeGenerator implements BarcodeGenerator {
      * 设置背景为白色
      * @param g2d Graphics2D提供对几何形状、坐标转换、颜色管理和文本布局更为复杂的控制
      */
-    private static void setColorWhite(Graphics2D g2d){
+    protected void setColorWhite(Graphics2D g2d){
         g2d.setColor(Color.WHITE);
         //填充整个屏幕
         g2d.fillRect(0,0,600,600);
