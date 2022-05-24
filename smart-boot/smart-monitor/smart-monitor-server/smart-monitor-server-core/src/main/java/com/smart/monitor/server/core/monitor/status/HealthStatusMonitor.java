@@ -93,9 +93,10 @@ public class HealthStatusMonitor implements StatusMonitor {
             // 判断是否移除
             if (Duration.between(repositoryData.getTimestamp(), Instant.now()).compareTo(repositoryData.getOfflineInterval()) > 0) {
                 log.info("client offline, application name: {}, client id: {}", repositoryData.getApplication().getApplicationName(), repositoryData.getId().getValue());
-                // 事件间隔已经超过最大时间间隔，移除客户端，发布下线事件
-                this.clientProcessor.removeClient(repositoryData.getId());
+                // 事件间隔已经超过最大时间间隔,发布下线事件
                 this.monitorEventPublisher.publishEvent(new ClientOfflineEvent(repositoryData, this));
+                // 移除客户端
+                this.clientProcessor.removeClient(repositoryData.getId());
             }
             // 返回false，不再执行后续的检测
             return false;
