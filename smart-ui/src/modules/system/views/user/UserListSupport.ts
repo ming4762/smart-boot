@@ -299,3 +299,37 @@ export const useCreateAccount = (tableRef: Ref, t: Function) => {
     handleCreateAccount
   }
 }
+
+/**
+ * 用户账户信息
+ */
+export const useUserAccount = () => {
+  // 账户modal状态
+  const accountModalVisible = ref(false)
+  const accountModel = ref<any>({})
+
+  /**
+   * 显示账户信息
+   * @param user
+   */
+  const handleShowAccount = (user: any) => {
+    accountModalVisible.value = true
+    accountModel.value = user
+  }
+
+  /**
+   * 用户解锁
+   * @param userId 用户ID
+   * @param accountStatus 用户状态
+   */
+  const handleUnLock = ({ userId, accountStatus }: any) => {
+
+  }
+
+  return {
+    accountModalVisible,
+    accountModel,
+    handleShowAccount
+  }
+}
+

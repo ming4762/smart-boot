@@ -3,10 +3,11 @@
  * @param t
  * @param title
  * @param field
+ * @param valueHandler
  */
-export const tableBooleanColumn = (t: Function, title: string, field: string) => {
+export const tableBooleanColumn = (t: Function, title: string, field: string, valueHandler?:Function) => {
   const createSlot = ({ row }: any) => {
-    const value = row[field]
+    const value = valueHandler ? valueHandler(row) : row[field]
     if (value === true) {
       return <a-tag color="#108ee9">{t('common.form.yes')}</a-tag>
     }

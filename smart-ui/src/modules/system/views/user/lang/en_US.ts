@@ -12,7 +12,8 @@ export default {
           fullName: 'Full name',
           email: 'Email',
           mobile: 'Mobile',
-          userType: 'User type'
+          userType: 'User type',
+          userAccountYn: 'Has Account'
         },
         button: {
           createAccount: 'Create Account'

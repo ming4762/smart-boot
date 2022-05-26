@@ -12,7 +12,8 @@ export default {
           fullName: '姓名',
           email: '邮箱',
           mobile: '手机号',
-          userType: '用户类型'
+          userType: '用户类型',
+          userAccountYn: '是否创建账户'
         },
         button: {
           createAccount: '创建账户'

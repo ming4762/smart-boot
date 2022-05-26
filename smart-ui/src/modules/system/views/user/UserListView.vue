@@ -25,6 +25,7 @@
       </template>
       <template #table-operation="{ row }">
         <a-button v-permission="permissions.update" :size="buttonSizeConfig" type="link" @click="() => handleShowUpdate(row.userId)">{{ $t('common.button.edit') }}</a-button>
+        <a-button :size="buttonSizeConfig" type="link" @click="() => handleShowAccount(row)">查看账户</a-button>
       </template>
       <template #toolbar_buttons>
         <a-form style="margin-left: 10px" layout="inline" :model="searchModel">
@@ -133,6 +134,12 @@
         </a-form>
       </a-spin>
     </a-modal>
+    <!--  账户信息弹窗  -->
+    <a-modal
+      v-model:visible="accountModalVisible"
+      title="账户信息">
+      <user-account :data="accountModel" />
+    </a-modal>
   </div>
 </template>
 
@@ -142,17 +149,22 @@ import { useI18n } from 'vue-i18n'
 
 import { Modal } from 'ant-design-vue'
 
-import { vueLoadData, vueAddEdit, userOperationHoops, useCreateAccount } from './UserListSupport'
+import { vueLoadData, vueAddEdit, userOperationHoops, useCreateAccount, useUserAccount } from './UserListSupport'
 
 import ApiService from '@/common/utils/ApiService'
 import { SystemPermissions } from '../../constants/SystemConstants'
 import dayjs from 'dayjs'
-import { tableUseYn, tableDeleteYn } from '@/components/common/TableCommon'
+import { tableUseYn, tableDeleteYn, tableBooleanColumn } from '@/components/common/TableCommon'
 import SizeConfigHoops from '@/components/config/SizeConfigHooks'
+
+import UserAccount from './componenets/UserAccount.vue'
 
 
 export default defineComponent({
   name: 'UserListPage',
+  components: {
+    UserAccount
+  },
   setup () {
     const tableRef = ref()
     const { t } = useI18n()
@@ -191,7 +203,8 @@ export default defineComponent({
       handleSetYn,
       ...addEditVue,
       permissions: SystemPermissions.user,
-      ...useCreateAccount(tableRef, t)
+      ...useCreateAccount(tableRef, t),
+      ...useUserAccount()
     }
   },
   data () {
@@ -245,6 +258,10 @@ export default defineComponent({
         {
           ...tableDeleteYn(this.$t).createColumn(),
           sortable: true
+        },
+        {
+          ...tableBooleanColumn(this.$t, '{system.views.user.table.userAccountYn}', 'userAccount', (row: any) => row.userAccount !== null).createColumn(),
+          width: 120
         },
         {
           title: '{common.table.seq}',
