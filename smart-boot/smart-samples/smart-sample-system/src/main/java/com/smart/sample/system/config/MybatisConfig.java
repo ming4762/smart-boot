@@ -4,10 +4,7 @@ import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceBuilder;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import com.github.pagehelper.PageInterceptor;
 import com.google.common.collect.Lists;
-import com.smart.db.generator.DatabaseMybatisPlusTypeEnumsPackage;
-import com.smart.db.generator.constants.CodeMybatisConstants;
-import com.smart.system.constants.SystemMybatisPlusTypeEnumsPackage;
-import com.smart.system.constants.SysMybatisConstants;
+import com.smart.commons.core.constants.MapperPackageConstants;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -33,8 +30,10 @@ import java.util.Properties;
  */
 @Configuration
 @MapperScan(basePackages = {
-        SysMybatisConstants.MAPPER_BASE_PACKAGE,
-        CodeMybatisConstants.MAPPER_SCAN_PACKAGE
+        MapperPackageConstants.MODULE_SYSTEM,
+        MapperPackageConstants.DATABASE_GENERATOR,
+        MapperPackageConstants.MONITOR_SERVER,
+        MapperPackageConstants.MODULE_FILE
 }, sqlSessionTemplateRef = "systemSqlSessionTemplate")
 public class MybatisConfig {
 
@@ -59,10 +58,7 @@ public class MybatisConfig {
 
         // 设置通用枚举扫描路径
         List<String> enumPackageList = Lists.newArrayList();
-        // 系统模块枚举路径
-        enumPackageList.addAll(SystemMybatisPlusTypeEnumsPackage.TYPE_ENUMS_PACKAGE);
         // 代码生成器模块枚举路径
-        enumPackageList.addAll(DatabaseMybatisPlusTypeEnumsPackage.TYPE_ENUMS_PACKAGE);
         mybatisSqlSessionFactoryBean.setTypeEnumsPackage(
                 String.join(";", enumPackageList)
         );

@@ -1,6 +1,7 @@
 package com.smart.sample.system;
 
 import com.github.pagehelper.autoconfigure.PageHelperAutoConfiguration;
+import com.smart.auth.security.imports.EnableAuthTempToken;
 import com.smart.commons.core.cors.EnableCors;
 import com.smart.commons.core.validate.EnableGlobalValidator;
 import com.smart.i18n.config.EnableValidatorI18nSource;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableValidatorI18nSource
 @EnableCors
 @EnableGlobalValidator
+@EnableAuthTempToken
 public class SmartSampleSystemApplication {
 
     public static void main(String[] args) {
