@@ -22,7 +22,11 @@ public class CorsFilter implements Filter {
         final HttpServletRequest request = (HttpServletRequest) req;
         final HttpServletResponse response = (HttpServletResponse) res;
         response.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, request.getHeader(HttpHeaders.ORIGIN));
-        response.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, Arrays.stream(HttpMethod.values()).map(Enum::name).collect(Collectors.joining(",")));
+        response.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS,
+                Arrays.stream(HttpMethod.values())
+                        .filter(item -> !item.equals(HttpMethod.TRACE))
+                        .map(Enum::name)
+                        .collect(Collectors.joining(",")));
         response.setHeader(HttpHeaders.ACCESS_CONTROL_MAX_AGE, "3600");
         response.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "authority, Authorization, Origin, No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, Content-Type, X-E4M-With, userId, token, Content-Disposition");
         response.setHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, HttpHeaders.CONTENT_DISPOSITION);

@@ -19,7 +19,7 @@ public class TaskSchedulerProvider implements InitializingBean, DisposableBean {
 
     private static ThreadPoolTaskScheduler taskScheduler() {
         final ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
-        taskScheduler.setPoolSize(10);
+        taskScheduler.setPoolSize(20);
         taskScheduler.setRemoveOnCancelPolicy(false);
         taskScheduler.setThreadNamePrefix("Monitor Task");
         return taskScheduler;
