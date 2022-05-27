@@ -7,6 +7,9 @@ import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.auth.extensions.appsecret.service.AccessTokenCreator;
 import com.smart.commons.core.message.Result;
 import com.smart.commons.core.utils.RestJsonWriter;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -14,9 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**

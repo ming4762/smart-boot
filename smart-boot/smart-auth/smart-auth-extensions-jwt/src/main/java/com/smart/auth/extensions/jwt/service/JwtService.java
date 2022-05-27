@@ -8,13 +8,13 @@ import com.smart.auth.core.utils.AuthUtils;
 import com.smart.auth.extensions.jwt.resolver.JwtResolver;
 import com.smart.auth.extensions.jwt.store.CacheJwtStore;
 import com.smart.auth.extensions.jwt.utils.JwtUtils;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.Authentication;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * JWT服务层

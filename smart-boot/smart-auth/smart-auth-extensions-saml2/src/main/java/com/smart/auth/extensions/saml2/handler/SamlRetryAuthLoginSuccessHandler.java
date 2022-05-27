@@ -3,11 +3,11 @@ package com.smart.auth.extensions.saml2.handler;
 import com.smart.auth.core.handler.AuthLoginSuccessHandler;
 import com.smart.auth.extensions.saml2.utils.SamlRetryTimerHolder;
 import com.smart.commons.core.utils.IpUtils;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**

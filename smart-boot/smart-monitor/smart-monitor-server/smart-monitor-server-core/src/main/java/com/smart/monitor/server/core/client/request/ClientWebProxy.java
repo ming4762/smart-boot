@@ -13,6 +13,8 @@ import com.smart.monitor.server.core.client.repository.ClientRepository;
 import com.smart.monitor.server.core.controller.ClientProxyController;
 import com.smart.monitor.server.core.exception.ClientDownException;
 import com.smart.monitor.server.core.exception.ClientNoRegisterException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.SneakyThrows;
@@ -24,8 +26,6 @@ import org.springframework.util.PathMatcher;
 import org.springframework.util.StringUtils;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Serializable;

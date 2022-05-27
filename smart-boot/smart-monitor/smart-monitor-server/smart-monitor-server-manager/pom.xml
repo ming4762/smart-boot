@@ -5,10 +5,10 @@
     <parent>
         <groupId>com.smart</groupId>
         <artifactId>smart-monitor-server</artifactId>
-        <version>2.0.0-SNAPSHOT</version>
+        <version>3.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>smart-monitor-server-manager</artifactId>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>3.0.0-SNAPSHOT</version>
     <name>smart-monitor-server-manager</name>
     <description>监控管理模块</description>
     <properties>

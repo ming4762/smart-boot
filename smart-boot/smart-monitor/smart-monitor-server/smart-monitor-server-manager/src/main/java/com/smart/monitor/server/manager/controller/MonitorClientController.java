@@ -9,9 +9,9 @@ import com.smart.monitor.server.core.client.repository.ClientRepository;
 import com.smart.monitor.server.manager.model.MonitorApplicationPO;
 import com.smart.monitor.server.manager.service.MonitorApplicationService;
 import com.smart.monitor.server.manager.service.MonitorClientService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -25,7 +25,7 @@ import java.util.Objects;
  */
 @RestController
 @RequestMapping("monitor/manager/client")
-@Api("客户端管理接口")
+@Tag(name = "客户端管理接口")
 public class MonitorClientController {
 
     private final MonitorClientService monitorClientService;
@@ -46,8 +46,8 @@ public class MonitorClientController {
      * @return 注册的客户端
      */
     @PostMapping("listClient")
-    @ApiOperation(value = "查询注册客户端列表", httpMethod = "POST")
-    public Result<Collection<ClientData>> listRegisterClient(@ApiParam(name = "是否只查询激活状态", required = true) @RequestBody Boolean active) {
+    @Operation(summary = "查询注册客户端列表", method = "POST")
+    public Result<Collection<ClientData>> listRegisterClient(@Parameter(name = "是否只查询激活状态", required = true) @RequestBody Boolean active) {
         boolean isActive = Objects.equals(Boolean.TRUE, active);
         return Result.success(this.monitorClientService.listRegisterClient(isActive));
     }
@@ -58,8 +58,8 @@ public class MonitorClientController {
      * @return 注册的客户端
      */
     @PostMapping("listUserClient")
-    @ApiOperation(value = "查询当前用户有权限的注册的客户端", httpMethod = "POST")
-    public Result<Collection<ClientData>> listUserClient(@ApiParam(name = "是否只查询激活状态", required = true) @RequestBody Boolean active) {
+    @Operation(summary = "查询当前用户有权限的注册的客户端", method = "POST")
+    public Result<Collection<ClientData>> listUserClient(@Parameter(name = "是否只查询激活状态", required = true) @RequestBody Boolean active) {
         boolean isActive = Objects.equals(Boolean.TRUE, active);
         return Result.success(this.monitorClientService.listUserClient(AuthUtils.getNonNullCurrentUserId(), isActive));
     }
@@ -70,7 +70,7 @@ public class MonitorClientController {
      * @return 客户端信息
      */
     @PostMapping("getApplicationByClientId")
-    @ApiOperation(value = "通过客户端ID查询应用信息", httpMethod = "POST")
+    @Operation(summary = "通过客户端ID查询应用信息", method = "POST")
     public Result<MonitorApplicationPO> getApplicationByClientId(@RequestBody String clientId) {
         ClientData clientData = this.clientRepository.findById(ClientId.create(clientId), false);
         if (clientData == null) {
@@ -92,8 +92,8 @@ public class MonitorClientController {
      * @return 客户端信息
      */
     @PostMapping("getClientById/{id}")
-    @ApiOperation(value = "通过ID查询注册客户端信息", httpMethod = "POST")
-    public Result<ClientData> getClientById(@ApiParam(name = "是否只查询激活状态", required = true) @RequestBody Boolean active, @PathVariable("id") String id) {
+    @Operation(summary = "通过ID查询注册客户端信息", method = "POST")
+    public Result<ClientData> getClientById(@Parameter(name = "是否只查询激活状态", required = true) @RequestBody Boolean active, @PathVariable("id") String id) {
         boolean isActive = Objects.equals(Boolean.TRUE, active);
         return Result.success(this.clientRepository.findById(ClientId.create(id), isActive));
     }

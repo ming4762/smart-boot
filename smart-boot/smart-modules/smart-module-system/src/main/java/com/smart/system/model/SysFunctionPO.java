@@ -4,12 +4,14 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.smart.commons.core.http.HttpMethod;
 import com.smart.crud.model.BaseModelUserTime;
 import com.smart.system.constants.FunctionTypeEnum;
 import com.smart.system.mybatis.type.FunctionTypeTypeHandler;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.http.HttpMethod;
+
+import java.io.Serial;
 
 /**
  * @author jackson
@@ -21,6 +23,7 @@ import org.springframework.http.HttpMethod;
 public class SysFunctionPO extends BaseModelUserTime {
 
 
+    @Serial
     private static final long serialVersionUID = -4732658608405383250L;
     /**
      * 功能ID

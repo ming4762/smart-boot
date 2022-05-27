@@ -6,7 +6,7 @@ import com.smart.crud.query.PageSortQuery;
 import com.smart.monitor.server.core.constants.BuiltInEventCodeEnum;
 import com.smart.monitor.server.manager.model.MonitorEventPO;
 import com.smart.monitor.server.manager.service.MonitorEventService;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,19 +29,19 @@ public class MonitorEventController extends BaseController<MonitorEventService, 
 
     @Override
     @PostMapping("list")
-    @ApiOperation(value = "查询角色列表（支持分页、实体类属性查询）")
+    @Operation(summary = "查询角色列表（支持分页、实体类属性查询）")
     public Result<Object> list(@RequestBody @NonNull PageSortQuery parameter) {
         return super.list(parameter);
     }
 
     @Override
-    @ApiOperation(value = "通过ID查询")
+    @Operation(summary = "通过ID查询")
     @PostMapping("getById")
     public Result<MonitorEventPO> getById(@RequestBody Serializable id) {
         return super.getById(id);
     }
 
-    @ApiOperation("查询内置的事件编码")
+    @Operation(summary = "查询内置的事件编码")
     @PostMapping("listBuiltInEventCode")
     public Result<List<String>> listBuiltInEventCode() {
         return Result.success(

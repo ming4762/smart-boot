@@ -796,7 +796,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean removeByIds(Collection<? extends Serializable> idList) {
+    public boolean removeByIds(Collection<?> idList) {
         if (CollectionUtils.isEmpty(idList)) {
             return false;
         }
@@ -814,9 +814,9 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
                         .in(DbCodePageConfigPO :: getMainId, idList)
         );
         // 删除表单配置
-        this.removeFormConfigByMainId(idList);
+        this.removeFormConfigByMainId((Collection<? extends Serializable>) idList);
         // 删除搜索配置
-        this.removeSearchConfigByMainId(idList);
+        this.removeSearchConfigByMainId((Collection<? extends Serializable>) idList);
         // 删除主表附表关联关系
 
         this.dbCodeRelatedTableService.remove(

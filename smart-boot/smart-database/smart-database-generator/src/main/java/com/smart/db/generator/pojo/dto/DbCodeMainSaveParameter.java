@@ -7,12 +7,13 @@ import com.smart.db.generator.model.DbCodeFormConfigPO;
 import com.smart.db.generator.model.DbCodeMainPO;
 import com.smart.db.generator.model.DbCodePageConfigPO;
 import com.smart.db.generator.model.DbCodeSearchConfigPO;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -25,6 +26,7 @@ import java.util.List;
 @Getter
 @Setter
 public class DbCodeMainSaveParameter extends DbCodeMainPO {
+    @Serial
     private static final long serialVersionUID = -2821275792943359287L;
 
     /**
@@ -64,6 +66,7 @@ public class DbCodeMainSaveParameter extends DbCodeMainPO {
     @ToString
     public static class DbCodeSearchConfigParameter extends DbCodeSearchConfigPO {
 
+        @Serial
         private static final long serialVersionUID = -7138318701088963477L;
 
         /**
@@ -80,6 +83,7 @@ public class DbCodeMainSaveParameter extends DbCodeMainPO {
     @ToString
     public static class DbCodeFormConfigParameter extends DbCodeFormConfigPO {
 
+        @Serial
         private static final long serialVersionUID = 4911110887343927163L;
 
         /**
@@ -100,6 +104,7 @@ public class DbCodeMainSaveParameter extends DbCodeMainPO {
     @Setter
     @ToString
     public static class DbCodeRelatedTableParameter implements Serializable {
+        @Serial
         private static final long serialVersionUID = 7848554623697145564L;
         /**
          * 附表ID
@@ -119,6 +124,7 @@ public class DbCodeMainSaveParameter extends DbCodeMainPO {
     @Setter
     @ToString
     public static class DbCodeRuleSaveDTO implements Serializable {
+        @Serial
         private static final long serialVersionUID = -5973595319886211762L;
         @NotNull(message = "验证类型不能为空")
         private RuleTypeEnum ruleType;

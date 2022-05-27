@@ -3,10 +3,9 @@ package com.smart.starter.exception.processor;
 import com.smart.commons.core.http.HttpStatus;
 import com.smart.commons.core.i18n.I18nUtils;
 import com.smart.commons.core.message.Result;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.lang.Nullable;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.ConstraintViolationException;
 
 /**
  * @author ShiZhongMing

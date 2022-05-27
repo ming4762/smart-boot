@@ -1,10 +1,11 @@
 package com.smart.monitor.server.manager.pojo.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.validation.constraints.NotNull;
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -18,6 +19,7 @@ import java.io.Serializable;
 public class MonitorApplicationSaveUpdateDTO implements Serializable {
 
 
+    @Serial
     private static final long serialVersionUID = 3968885198685798549L;
 
     private Long id;

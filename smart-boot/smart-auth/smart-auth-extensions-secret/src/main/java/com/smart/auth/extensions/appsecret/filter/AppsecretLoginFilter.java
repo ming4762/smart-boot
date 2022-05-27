@@ -2,15 +2,12 @@ package com.smart.auth.extensions.appsecret.filter;
 
 import com.smart.auth.extensions.appsecret.authentication.AppsecretAuthenticationToken;
 import com.smart.commons.core.utils.IpUtils;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
  * @author ShiZhongMing
@@ -29,7 +26,7 @@ public class AppsecretLoginFilter extends AbstractAuthenticationProcessingFilter
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         String appId = request.getParameter(APP_ID_KEY);
         String secret = request.getParameter(SECRET_KEY);
         AppsecretAuthenticationToken token = new AppsecretAuthenticationToken(appId, secret, IpUtils.getIpAddr(request));

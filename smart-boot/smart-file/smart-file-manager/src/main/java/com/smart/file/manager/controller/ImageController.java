@@ -2,11 +2,11 @@ package com.smart.file.manager.controller;
 
 import com.smart.file.manager.pojo.bo.SysFileBO;
 import com.smart.file.manager.service.SysFileService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Objects;
 

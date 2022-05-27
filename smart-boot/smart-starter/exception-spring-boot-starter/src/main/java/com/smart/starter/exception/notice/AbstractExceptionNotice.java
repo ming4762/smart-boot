@@ -1,9 +1,9 @@
 package com.smart.starter.exception.notice;
 
 import com.smart.auth.core.userdetails.RestUserDetails;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.lang.NonNull;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**

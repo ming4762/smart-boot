@@ -7,12 +7,12 @@ import com.smart.db.generator.pojo.dto.DbCreateDicDTO;
 import com.smart.db.generator.service.DbCodeTemplateService;
 import com.smart.db.generator.service.DbConnectionService;
 import com.smart.db.generator.service.DbDictGeneratorService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;

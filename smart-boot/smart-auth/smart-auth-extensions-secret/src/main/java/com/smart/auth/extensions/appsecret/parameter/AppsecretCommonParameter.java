@@ -1,9 +1,9 @@
 package com.smart.auth.extensions.appsecret.parameter;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * 开放接口请求通用参数

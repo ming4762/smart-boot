@@ -1,11 +1,10 @@
 package com.smart.auth.core.model;
 
 import com.smart.auth.core.constants.LoginTypeEnum;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * 登录参数

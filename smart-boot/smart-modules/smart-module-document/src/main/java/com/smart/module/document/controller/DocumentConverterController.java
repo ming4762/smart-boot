@@ -12,16 +12,16 @@ import com.smart.module.document.pojo.dto.converter.ExcelMultiSheetConvertDTO;
 import com.smart.module.document.pojo.dto.converter.ExcelSingleSheetConvertDTO;
 import com.smart.module.document.service.DocumentExcelService;
 import com.smart.module.document.service.DocumentTemplateService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -34,7 +34,7 @@ import java.io.InputStream;
  */
 @Controller
 @RequestMapping("document/convert")
-@Api(value = "文档转换接口接口", tags = "文档转换接口接口")
+@Tag(name = "文档转换接口接口")
 public class DocumentConverterController {
 
     private final DocumentTemplateService documentTemplateService;
@@ -59,7 +59,7 @@ public class DocumentConverterController {
      * @param response 输出流
      * @throws IOException IOException
      */
-    @ApiOperation("填充转换单sheet Excel（带有条形码/二维码）")
+    @Operation(summary = "填充转换单sheet Excel（带有条形码/二维码）")
     @PostMapping("fillConvertSingleSheetWithCode")
     public void fillConvertSingleSheetWithCode(@RequestBody @Valid ExcelSingleSheetConvertDTO parameter, HttpServletResponse response) throws IOException {
         ByteArrayInputStream inputStream = null;
@@ -85,7 +85,7 @@ public class DocumentConverterController {
      * @param response 输出流`````````````````
      * @throws IOException IOException
      */
-    @ApiOperation("填充转换多sheet Excel（带有条形码/二维码）")
+    @Operation(summary = "填充转换多sheet Excel（带有条形码/二维码）")
     @PostMapping("fillConvertMultiSheetWithCode")
     public void fillConvertMultiSheetWithCode(@RequestBody @Valid ExcelMultiSheetConvertDTO parameter, HttpServletResponse response) throws IOException {
         ByteArrayInputStream inputStream = null;
@@ -111,7 +111,7 @@ public class DocumentConverterController {
      * @param response 输出流
      * @throws IOException IOException
      */
-    @ApiOperation("填充转换excel")
+    @Operation(summary = "填充转换excel")
     @PostMapping("fillConvertExcel")
     public void fillConvertExcel(@RequestBody @Valid ExcelFillConvertDataDTO parameter, HttpServletResponse response) throws IOException {
         ByteArrayInputStream inputStream = null;
@@ -138,7 +138,7 @@ public class DocumentConverterController {
      */
     @SneakyThrows
     @PostMapping("convert")
-    @ApiOperation("转换文档")
+    @Operation(summary = "转换文档")
     public void convert(@Valid DocumentConvertDTO parameter, HttpServletResponse response) {
         if (parameter.getToFormat().equals(DocumentFormatEnum.pdf)) {
             response.setContentType("application/pdf");

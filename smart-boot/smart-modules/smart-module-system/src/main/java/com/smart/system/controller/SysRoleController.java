@@ -14,7 +14,8 @@ import com.smart.system.pojo.dto.role.RoleMenuSaveDTO;
 import com.smart.system.pojo.dto.role.RoleSetUserDTO;
 import com.smart.system.service.SysRoleFunctionService;
 import com.smart.system.service.SysRoleService;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,7 +45,7 @@ public class SysRoleController extends BaseController<SysRoleService, SysRolePO>
 
     @Override
     @PostMapping("save")
-    @ApiOperation(value = "添加角色")
+    @Operation(summary = "添加角色")
     @Log(value = "添加角色", type = LogOperationTypeEnum.ADD)
     @PreAuthorize("hasPermission('sys:role', 'save')")
     public Result<Boolean> save(@RequestBody SysRolePO model) {
@@ -54,7 +54,7 @@ public class SysRoleController extends BaseController<SysRoleService, SysRolePO>
 
     @Override
     @PostMapping("update")
-    @ApiOperation(value = "更新角色")
+    @Operation(summary = "更新角色")
     @Log(value = "更新角色", type = LogOperationTypeEnum.UPDATE)
     @PreAuthorize("hasPermission('sys:role', 'update')")
     public Result<Boolean> update(@RequestBody SysRolePO model) {
@@ -64,13 +64,13 @@ public class SysRoleController extends BaseController<SysRoleService, SysRolePO>
 
     @Override
     @PostMapping("list")
-    @ApiOperation(value = "查询角色列表（支持分页、实体类属性查询）")
+    @Operation(summary = "查询角色列表（支持分页、实体类属性查询）")
     public Result<Object> list(@RequestBody @NonNull PageSortQuery parameter) {
         return super.list(parameter);
     }
 
     @Override
-    @ApiOperation(value = "添加修改角色")
+    @Operation(summary = "添加修改角色")
     @PostMapping("saveUpdate")
     @Log(value = "添加修改角色", type = LogOperationTypeEnum.UPDATE)
     @PreAuthorize("hasPermission('sys:role', 'save') or hasPermission('sys:role', 'update')")
@@ -80,7 +80,7 @@ public class SysRoleController extends BaseController<SysRoleService, SysRolePO>
 
     @Override
     @PreAuthorize("hasPermission('sys:role', 'delete')")
-    @ApiOperation(value = "通过ID批量删除角色")
+    @Operation(summary = "通过ID批量删除角色")
     @PostMapping("batchDeleteById")
     @Log(value = "通过ID批量删除角色", type = LogOperationTypeEnum.DELETE)
     public Result<Boolean> batchDeleteById(@RequestBody List<Serializable> idList) {
@@ -88,7 +88,7 @@ public class SysRoleController extends BaseController<SysRoleService, SysRolePO>
     }
 
     @Override
-    @ApiOperation(value = "通过ID查询")
+    @Operation(summary = "通过ID查询")
     @PostMapping("getById")
     public Result<SysRolePO> getById(@RequestBody Serializable id) {
         return super.getById(id);
@@ -99,7 +99,7 @@ public class SysRoleController extends BaseController<SysRoleService, SysRolePO>
      * @param roleId 角色ID
      * @return 功能ID集合
      */
-    @ApiOperation(value = "获取角色对应的功能ID集合")
+    @Operation(summary = "获取角色对应的功能ID集合")
     @PostMapping("listFunctionId")
     public Result<List<Long>> listFunctionId(@RequestBody Long roleId) {
         return Result.success(
@@ -113,7 +113,7 @@ public class SysRoleController extends BaseController<SysRoleService, SysRolePO>
     }
 
 
-    @ApiOperation(value = "保存角色功能")
+    @Operation(summary = "保存角色功能")
     @PostMapping("saveRoleMenu")
     @Log(value = "保存角色功能", type = LogOperationTypeEnum.UPDATE)
     @PreAuthorize("hasPermission('sys:role', 'setFunction')")
@@ -121,7 +121,7 @@ public class SysRoleController extends BaseController<SysRoleService, SysRolePO>
         return Result.success(this.service.saveRoleMenu(parameter));
     }
 
-    @ApiOperation(value = "设置角色对应的用户")
+    @Operation(summary = "设置角色对应的用户")
     @PostMapping("setRoleUser")
     @Log(value = "设置角色对应的用户", type = LogOperationTypeEnum.UPDATE)
     @PreAuthorize("hasPermission('sys:role', 'setRoleUser')")

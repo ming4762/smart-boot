@@ -1,10 +1,10 @@
 package com.smart.auth.core.authentication.url;
 
 import com.smart.commons.core.beans.BeanNameProvider;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.security.core.Authentication;
 
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * URl验证接口

@@ -1,10 +1,9 @@
 package com.smart.starter.exception.processor;
 
 import com.smart.commons.core.message.Result;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.Nullable;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author ShiZhongMing

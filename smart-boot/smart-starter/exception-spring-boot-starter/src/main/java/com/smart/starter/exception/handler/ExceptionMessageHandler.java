@@ -1,8 +1,7 @@
 package com.smart.starter.exception.handler;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.lang.Nullable;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * 异常信息处理类

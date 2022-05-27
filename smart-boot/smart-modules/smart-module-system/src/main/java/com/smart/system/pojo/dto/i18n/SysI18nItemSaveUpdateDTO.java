@@ -1,10 +1,11 @@
 package com.smart.system.pojo.dto.i18n;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.validation.constraints.NotNull;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Locale;
 
@@ -18,6 +19,7 @@ import java.util.Locale;
 @Setter
 @ToString
 public class SysI18nItemSaveUpdateDTO implements Serializable {
+    @Serial
     private static final long serialVersionUID = 4281677029598942858L;
 
     @NotNull(message = "国际化ID不能为空")

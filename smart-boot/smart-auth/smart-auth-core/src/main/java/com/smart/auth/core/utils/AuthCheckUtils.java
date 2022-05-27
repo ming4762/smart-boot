@@ -3,12 +3,14 @@ package com.smart.auth.core.utils;
 import com.google.common.collect.Sets;
 import com.smart.auth.core.matcher.ExtensionPathMatcher;
 import com.smart.auth.core.properties.AuthProperties;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpMethod;
 import org.springframework.lang.NonNull;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 import java.util.Set;
+
+import static org.springframework.http.HttpMethod.*;
 
 /**
  * @author ShiZhongMing
@@ -27,46 +29,33 @@ public class AuthCheckUtils {
      */
     public static boolean checkIgnores(@NonNull HttpServletRequest request, @NonNull AuthProperties.IgnoreConfig ignoreConfig) {
         String method = request.getMethod();
-        HttpMethod httpMethod = HttpMethod.resolve(method);
-        if (Objects.isNull(httpMethod)) {
-            httpMethod = HttpMethod.GET;
-        }
+        HttpMethod httpMethod = HttpMethod.valueOf(method);
+
         Set<String> ignores = Sets.newHashSet();
-        switch (httpMethod) {
-            case GET:
-                ignores.addAll(ignoreConfig
-                        .getGet());
-                break;
-            case PUT:
-                ignores.addAll(ignoreConfig
-                        .getPut());
-                break;
-            case HEAD:
-                ignores.addAll(ignoreConfig
-                        .getHead());
-                break;
-            case POST:
-                ignores.addAll(ignoreConfig
-                        .getPost());
-                break;
-            case PATCH:
-                ignores.addAll(ignoreConfig
-                        .getPatch());
-                break;
-            case TRACE:
-                ignores.addAll(ignoreConfig
-                        .getTrace());
-                break;
-            case DELETE:
-                ignores.addAll(ignoreConfig
-                        .getDelete());
-                break;
-            case OPTIONS:
-                ignores.addAll(ignoreConfig
-                        .getOptions());
-                break;
-            default:
-                break;
+        if (GET.equals(httpMethod)) {
+            ignores.addAll(ignoreConfig
+                    .getGet());
+        } else if (PUT.equals(httpMethod)) {
+            ignores.addAll(ignoreConfig
+                    .getPut());
+        } else if (HEAD.equals(httpMethod)) {
+            ignores.addAll(ignoreConfig
+                    .getHead());
+        } else if (POST.equals(httpMethod)) {
+            ignores.addAll(ignoreConfig
+                    .getPost());
+        } else if (PATCH.equals(httpMethod)) {
+            ignores.addAll(ignoreConfig
+                    .getPatch());
+        } else if (TRACE.equals(httpMethod)) {
+            ignores.addAll(ignoreConfig
+                    .getTrace());
+        } else if (DELETE.equals(httpMethod)) {
+            ignores.addAll(ignoreConfig
+                    .getDelete());
+        } else if (OPTIONS.equals(httpMethod)) {
+            ignores.addAll(ignoreConfig
+                    .getOptions());
         }
 
         ignores.addAll(ignoreConfig

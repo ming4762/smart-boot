@@ -4,8 +4,7 @@ import com.smart.commons.core.exception.BaseException;
 import com.smart.commons.core.exception.BusinessException;
 import com.smart.commons.core.http.HttpStatus;
 import com.smart.commons.core.http.IHttpStatus;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
@@ -24,20 +23,20 @@ import java.util.Optional;
  */
 @Getter
 @Setter
-@ApiModel(value = "通用api接口", description = "通用api接口返回")
+@Schema(title = "通用api接口", description = "通用api接口返回")
 public class Result<T> {
 
     private static final long serialVersionUID = 9144229906004159463L;
-    @ApiModelProperty(value = "状态码", example = "200", required = true)
+    @Schema(title = "状态码", example = "200", required = true)
     private Integer code = ResultCodeEnum.SUCCESS.getCode();
 
-    @ApiModelProperty(value = "返回信息", example = "成功")
+    @Schema(title = "返回信息", example = "成功")
     private String message = null;
 
-    @ApiModelProperty(value = "接口返回状态", example = "true", required = true)
+    @Schema(title = "接口返回状态", example = "true", required = true)
     private boolean success = true;
 
-    @ApiModelProperty(value = "接口返回数据")
+    @Schema(title = "接口返回数据")
     private T data = null;
 
     private static <T> Result<T> newInstance() {

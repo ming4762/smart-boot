@@ -4,6 +4,7 @@ import com.smart.commons.core.message.Result;
 import com.smart.kettle.core.properties.KettleDatabaseRepositoryProperties;
 import com.smart.kettle.core.service.KettleService;
 import com.smart.starter.kettle.xxl.pojo.dto.KettleTransExecuteDTO;
+import jakarta.annotation.PostConstruct;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.pentaho.di.core.plugins.PluginFolder;
@@ -13,8 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.annotation.PostConstruct;
 
 /**
  * @author ShiZhongMing

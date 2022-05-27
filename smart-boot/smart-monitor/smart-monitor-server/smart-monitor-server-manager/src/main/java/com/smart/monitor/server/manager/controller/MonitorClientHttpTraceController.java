@@ -8,7 +8,7 @@ import com.smart.crud.query.PageSortQuery;
 import com.smart.monitor.server.manager.model.MonitorClientHttpTracePO;
 import com.smart.monitor.server.manager.pojo.dto.ClientIdQueryDTO;
 import com.smart.monitor.server.manager.service.MonitorClientHttpTraceService;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,7 +31,7 @@ public class MonitorClientHttpTraceController extends BaseController<MonitorClie
 
     @Override
     @PostMapping("list")
-    @ApiOperation(value = "查询角色列表（支持分页、实体类属性查询）")
+    @Operation(summary = "查询角色列表（支持分页、实体类属性查询）")
     public Result<Object> list(@RequestBody @NonNull PageSortQuery parameter) {
         return super.list(parameter);
     }
@@ -50,7 +50,7 @@ public class MonitorClientHttpTraceController extends BaseController<MonitorClie
     }
 
     @Override
-    @ApiOperation(value = "通过ID查询")
+    @Operation(summary = "通过ID查询")
     @PostMapping("getById")
     public Result<MonitorClientHttpTracePO> getById(@RequestBody Serializable id) {
         return super.getById(id);
@@ -58,7 +58,7 @@ public class MonitorClientHttpTraceController extends BaseController<MonitorClie
 
 
     @PostMapping("listClientId")
-    @ApiOperation(value = "查询客户端ID列表")
+    @Operation(summary = "查询客户端ID列表")
     public Result<List<String>> listClientId(@RequestBody ClientIdQueryDTO parameter) {
         QueryWrapper<MonitorClientHttpTracePO> queryWrapper = new QueryWrapper<MonitorClientHttpTracePO>().select("DISTINCT client_id");
         if (StringUtils.isNotBlank(parameter.getApplicationName())) {

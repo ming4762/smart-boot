@@ -1,11 +1,11 @@
 package com.smart.commons.core.cors;
 
+import jakarta.servlet.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -25,7 +25,7 @@ public class CorsFilter implements Filter {
         response.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS,
                 Arrays.stream(HttpMethod.values())
                         .filter(item -> !item.equals(HttpMethod.TRACE))
-                        .map(Enum::name)
+                        .map(HttpMethod::name)
                         .collect(Collectors.joining(",")));
         response.setHeader(HttpHeaders.ACCESS_CONTROL_MAX_AGE, "3600");
         response.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "authority, Authorization, Origin, No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, Content-Type, X-E4M-With, userId, token, Content-Disposition");

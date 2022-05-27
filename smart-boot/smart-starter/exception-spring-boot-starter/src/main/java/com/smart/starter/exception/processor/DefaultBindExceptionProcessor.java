@@ -1,10 +1,9 @@
 package com.smart.starter.exception.processor;
 
 import com.smart.commons.core.message.Result;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.lang.Nullable;
 import org.springframework.validation.BindException;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author ShiZhongMing

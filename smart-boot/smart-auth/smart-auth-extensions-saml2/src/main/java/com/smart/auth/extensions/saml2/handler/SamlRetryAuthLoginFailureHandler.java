@@ -5,13 +5,13 @@ import com.smart.auth.core.properties.AuthProperties;
 import com.smart.auth.extensions.saml2.constants.SamlUrlConstants;
 import com.smart.auth.extensions.saml2.utils.SamlRetryTimerHolder;
 import com.smart.commons.core.utils.IpUtils;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.opensaml.common.SAMLException;
 import org.springframework.security.core.AuthenticationException;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**

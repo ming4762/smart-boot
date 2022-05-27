@@ -14,8 +14,9 @@ import com.smart.system.model.SysUserPO;
 import com.smart.system.pojo.dto.UserGroupUserSaveDTO;
 import com.smart.system.pojo.dto.UserUserGroupSaveDTO;
 import com.smart.system.service.SysUserGroupService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -35,12 +35,12 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("sys/userGroup")
-@Api(value = "用户组管理", tags = "系统模块")
+@Tag(name = "用户组管理")
 @NonUrlCheck
 public class SysUserGroupController extends BaseController<SysUserGroupService, SysUserGroupPO> {
 
     @Override
-    @ApiOperation(value = "添加修改用户组")
+    @Operation(summary = "添加修改用户组")
     @PostMapping("saveUpdate")
     @Log(value = "添加修改用户组", type = LogOperationTypeEnum.UPDATE)
     @PreAuthorize("hasPermission('sys:userGroup', 'save') or hasPermission('sys:userGroup', 'update')")
@@ -54,7 +54,7 @@ public class SysUserGroupController extends BaseController<SysUserGroupService, 
      * @return 是否删除成功
      */
     @PreAuthorize("hasPermission('sys:userGroup', 'delete')")
-    @ApiOperation(value = "通过ID批量删除用户组")
+    @Operation(summary = "通过ID批量删除用户组")
     @PostMapping("batchDeleteById")
     @Log(value = "通过ID批量删除用户组", type = LogOperationTypeEnum.DELETE)
     @Override
@@ -67,7 +67,7 @@ public class SysUserGroupController extends BaseController<SysUserGroupService, 
 
     @Override
     @PostMapping("list")
-    @ApiOperation(value = "查询用户组列表（支持分页、实体类属性查询）")
+    @Operation(summary = "查询用户组列表（支持分页、实体类属性查询）")
     public Result<Object> list(@RequestBody @NonNull PageSortQuery parameter) {
         return super.list(parameter);
     }
@@ -78,7 +78,7 @@ public class SysUserGroupController extends BaseController<SysUserGroupService, 
      * @return 用户集合
      */
     @PostMapping("listUserById")
-    @ApiOperation(value = "通过用户组ID查询用户列表", httpMethod = "POST")
+    @Operation(summary = "通过用户组ID查询用户列表", method = "POST")
     public Result<List<SysUserPO>> listUserById(@RequestBody Long id) {
         final Map<Long, List<SysUserPO>> result = this.service.listUserByIds(ImmutableList.of(id));
         if (result.containsKey(id)) {
@@ -93,7 +93,7 @@ public class SysUserGroupController extends BaseController<SysUserGroupService, 
      * @return 用户ID集合
      */
     @PostMapping(value = "listUserIdById")
-    @ApiOperation(value = "通过用户组ID查询用户ID列表")
+    @Operation(summary = "通过用户组ID查询用户ID列表")
     public Result<List<Long>> listUserIdById(@RequestBody Long id) {
         final Map<Long, List<Long>> result = this.service.listUserIdByIds(ImmutableList.of(id));
         if (result.containsKey(id)) {
@@ -109,7 +109,7 @@ public class SysUserGroupController extends BaseController<SysUserGroupService, 
      */
     @PostMapping("saveUserGroupByGroupId")
     @PreAuthorize("hasPermission('sys:userGroup', 'setUser')")
-    @ApiOperation(value = "设置用户组包含的用户")
+    @Operation(summary = "设置用户组包含的用户")
     @Log(value = "设置用户组包含的用户", type = LogOperationTypeEnum.UPDATE)
     public Result<Boolean> saveUserGroupByGroupId(@RequestBody @Valid UserGroupUserSaveDTO parameter) {
         return Result.success(this.service.saveUserGroupByGroupId(parameter));
@@ -121,7 +121,7 @@ public class SysUserGroupController extends BaseController<SysUserGroupService, 
      * @return 是否保存成功
      */
     @PostMapping("saveUserGroupByUserId")
-    @ApiOperation(value = "设置用户所属用户组")
+    @Operation(summary = "设置用户所属用户组")
     @PreAuthorize("hasPermission('sys:userGroup', 'setUser')")
     @Log(value = "设置用户所属用户组", type = LogOperationTypeEnum.UPDATE)
     public Result<Boolean> saveUserGroupByUserId(@RequestBody @Valid UserUserGroupSaveDTO parameter) {
@@ -130,7 +130,7 @@ public class SysUserGroupController extends BaseController<SysUserGroupService, 
 
     @Override
     @PostMapping("getById")
-    @ApiOperation(value = "通过ID查询用户组信息")
+    @Operation(summary = "通过ID查询用户组信息")
     public Result<SysUserGroupPO> getById(@RequestBody Serializable id) {
         return super.getById(id);
     }

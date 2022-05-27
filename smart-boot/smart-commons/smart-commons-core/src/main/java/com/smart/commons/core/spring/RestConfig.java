@@ -1,10 +1,9 @@
 package com.smart.commons.core.spring;
 
 import com.smart.commons.core.utils.RestUtils;
+import jakarta.annotation.PostConstruct;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestTemplate;
-
-import javax.annotation.PostConstruct;
+import org.springframework.web.client.RestTemplate;;
 
 /**
  * @author ShiZhongMing

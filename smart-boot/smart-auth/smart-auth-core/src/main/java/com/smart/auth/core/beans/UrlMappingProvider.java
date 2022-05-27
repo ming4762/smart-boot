@@ -1,6 +1,7 @@
 package com.smart.auth.core.beans;
 
 import com.google.common.collect.Multimap;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.lang.NonNull;
@@ -8,7 +9,6 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.method.HandlerMethod;
 
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author ShiZhongMing

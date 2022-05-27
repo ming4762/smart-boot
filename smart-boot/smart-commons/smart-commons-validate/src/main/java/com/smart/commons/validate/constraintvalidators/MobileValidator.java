@@ -2,10 +2,10 @@ package com.smart.commons.validate.constraintvalidators;
 
 import com.smart.commons.validate.constraints.Mobile;
 import com.smart.commons.validate.utils.ValidatorUtils;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.util.StringUtils;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
 
 /**
  * 手机号校验器

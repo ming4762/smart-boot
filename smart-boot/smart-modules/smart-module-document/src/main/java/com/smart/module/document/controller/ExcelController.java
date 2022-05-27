@@ -9,16 +9,16 @@ import com.smart.module.document.pojo.dto.excel.ExcelMultiSheetDTO;
 import com.smart.module.document.pojo.dto.excel.ExcelSingleSheetDTO;
 import com.smart.module.document.service.DocumentExcelService;
 import com.smart.module.document.service.DocumentTemplateService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,7 +30,7 @@ import java.io.InputStream;
  */
 @Controller
 @RequestMapping("document/excel")
-@Api(value = "Excel处理接口", tags = "Excel处理接口")
+@Tag(name = "Excel处理接口")
 public class ExcelController {
 
     private final ExcelService excelService;
@@ -52,7 +52,7 @@ public class ExcelController {
      */
     @SneakyThrows
     @PostMapping("fillSingleWithCode")
-    @ApiOperation("填充单一sheetExcel(带有条形码/二维码)")
+    @Operation(summary = "填充单一sheetExcel(带有条形码/二维码)")
     public void fillSingleWithCode(@RequestBody @Valid ExcelSingleSheetDTO parameter, HttpServletResponse response) {
         try (InputStream inputStream = this.getTemplateInputStream(parameter.getTemplateCode())) {
             this.documentExcelService.fillSingleWithCode(inputStream, response.getOutputStream(), parameter.getData());
@@ -66,7 +66,7 @@ public class ExcelController {
      */
     @SneakyThrows
     @PostMapping("fillMultiWithCode")
-    @ApiOperation("填充多sheetExcel(带有条形码/二维码)")
+    @Operation(summary = "填充多sheetExcel(带有条形码/二维码)")
     public void fillMultiWithCode(@RequestBody @Valid ExcelMultiSheetDTO parameter, HttpServletResponse response) {
         try (
                 InputStream inputStream = this.getTemplateInputStream(parameter.getTemplateCode())
@@ -82,7 +82,7 @@ public class ExcelController {
      * @throws IOException IOException
      */
     @PostMapping("fillExcel")
-    @ApiOperation("填充Excel")
+    @Operation(summary = "填充Excel")
     public void fillExcel(@RequestBody @Valid ExcelFillDataDTO parameter, HttpServletResponse response) throws IOException {
         try (
                 InputStream inputStream =  this.getTemplateInputStream(parameter.getTemplateCode())

@@ -9,7 +9,8 @@ import com.smart.crud.query.IdParameter;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.system.model.SysDictPO;
 import com.smart.system.service.SysDictService;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.io.Serializable;
 import java.util.List;
 
@@ -33,13 +33,13 @@ public class SysDictController extends BaseController<SysDictService, SysDictPO>
 
     @Override
     @PostMapping("list")
-    @ApiOperation(value = "查询角色列表（支持分页、实体类属性查询）")
+    @Operation(summary = "查询角色列表（支持分页、实体类属性查询）")
     public Result<Object> list(@RequestBody @NonNull PageSortQuery parameter) {
         return super.list(parameter);
     }
 
     @Override
-    @ApiOperation(value = "添加修改系统字典表")
+    @Operation(summary = "添加修改系统字典表")
     @PostMapping("saveUpdate")
     @Log(value = "添加修改系统字典表", type = LogOperationTypeEnum.UPDATE)
     @PreAuthorize("hasPermission('sys:dict', 'save') or hasPermission('sys:dict', 'update')")
@@ -48,7 +48,7 @@ public class SysDictController extends BaseController<SysDictService, SysDictPO>
     }
 
     @Override
-    @ApiOperation(value = "通过ID批量删除系统字典表")
+    @Operation(summary = "通过ID批量删除系统字典表")
     @PostMapping("batchDeleteById")
     @Log(value = "通过ID批量删除系统字典表", type = LogOperationTypeEnum.DELETE)
     @PreAuthorize("hasPermission('sys:dict', 'delete')")
@@ -59,7 +59,7 @@ public class SysDictController extends BaseController<SysDictService, SysDictPO>
         return super.batchDeleteById(idList);
     }
 
-    @ApiOperation(value = "通过ID查询")
+    @Operation(summary = "通过ID查询")
     @PostMapping("getById")
     public Result<SysDictPO> getById(@RequestBody @Valid IdParameter parameter) {
         return super.getById(parameter.getId());

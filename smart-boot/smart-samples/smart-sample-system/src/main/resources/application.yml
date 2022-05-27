@@ -5,11 +5,11 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    druid:
-      stat-view-servlet:
-        enabled: true
-        login-username: root
-        login-password: root
+#    druid:
+#      stat-view-servlet:
+#        enabled: true
+#        login-username: root
+#        login-password: root
     system:
       url: jdbc:mysql://localhost:3306/smart-system2?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
       username: root

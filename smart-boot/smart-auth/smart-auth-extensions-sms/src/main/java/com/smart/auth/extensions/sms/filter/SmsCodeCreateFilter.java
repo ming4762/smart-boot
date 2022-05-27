@@ -5,15 +5,14 @@ import com.smart.auth.extensions.sms.provider.SmsCreateValidateProvider;
 import com.smart.commons.core.i18n.I18nUtils;
 import com.smart.commons.core.message.Result;
 import com.smart.commons.core.utils.RestJsonWriter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -31,7 +30,7 @@ public class SmsCodeCreateFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws IOException {
         // 1、获取手机号
         final String phone = request.getParameter("phone");
         if (StringUtils.isBlank(phone)) {

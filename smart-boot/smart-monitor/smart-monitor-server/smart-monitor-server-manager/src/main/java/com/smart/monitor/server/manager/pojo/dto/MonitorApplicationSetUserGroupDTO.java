@@ -1,10 +1,11 @@
 package com.smart.monitor.server.manager.pojo.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.validation.constraints.NotNull;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -19,6 +20,7 @@ import java.util.List;
 @ToString
 public class MonitorApplicationSetUserGroupDTO implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -7350636025389366842L;
 
     @NotNull(message = "应用ID不能为空")

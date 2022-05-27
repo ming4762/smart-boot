@@ -1,10 +1,11 @@
 package com.smart.system.pojo.dto.i18n;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.validation.constraints.NotNull;
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -18,6 +19,7 @@ import java.io.Serializable;
 @ToString
 public class SysI18nSaveUpdateDTO implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 3941780796398979844L;
 
     private Long i18nId;

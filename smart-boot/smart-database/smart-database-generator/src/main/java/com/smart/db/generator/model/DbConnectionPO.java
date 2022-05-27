@@ -5,10 +5,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.smart.crud.model.BaseModelUserTime;
 import com.smart.db.analysis.constants.DatabaseTypeEnum;
 import com.smart.db.analysis.pool.model.DbConnectionConfig;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.NotNull;
+import java.io.Serial;
 
 /**
  * @author ShiZhongMing
@@ -19,6 +20,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @TableName("db_connection")
 public class DbConnectionPO extends BaseModelUserTime {
+    @Serial
     private static final long serialVersionUID = -4806669717234559319L;
 
     @TableId(type = IdType.ASSIGN_ID)

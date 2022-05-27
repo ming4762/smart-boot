@@ -1,12 +1,13 @@
 package com.smart.module.document.pojo.dto.excel;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.validation.constraints.NotNull;
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -18,9 +19,11 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-@ApiModel("填充多sheetExcel(带有条形码&二维码)参数")
-public class ExcelMultiSheetDTO {
+@Schema(title = "填充多sheetExcel(带有条形码&二维码)参数")
+public class ExcelMultiSheetDTO implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = 4694477637074889338L;
     /**
      * 模板编码
      */
@@ -30,12 +33,12 @@ public class ExcelMultiSheetDTO {
     /**
      * sheet名字
      */
-    @ApiModelProperty(value = "sheet名字列表（sheet名字不能与模板sheet名字相同）")
+    @Schema(title = "sheet名字列表（sheet名字不能与模板sheet名字相同）")
     private List<String> sheetNameList;
 
     /**
      * 数据列表
      */
-    @ApiModelProperty(value = "填充数据列表", required = true)
+    @Schema(title = "填充数据列表", required = true)
     private List<ExcelFillWithCodeData> dataList;
 }

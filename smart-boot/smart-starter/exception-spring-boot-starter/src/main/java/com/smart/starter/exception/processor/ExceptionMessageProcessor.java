@@ -1,8 +1,8 @@
 package com.smart.starter.exception.processor;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.lang.Nullable;
 
-import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Type;
 
 /**

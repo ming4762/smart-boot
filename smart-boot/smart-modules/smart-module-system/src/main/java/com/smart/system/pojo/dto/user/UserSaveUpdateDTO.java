@@ -3,12 +3,13 @@ package com.smart.system.pojo.dto.user;
 import com.smart.commons.validate.constraints.Contain;
 import com.smart.commons.validate.constraints.Mobile;
 import com.smart.system.constants.UserTypeEnum;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -20,6 +21,7 @@ import java.io.Serializable;
 @ToString
 public class UserSaveUpdateDTO implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 8790839450326558559L;
 
 

@@ -2,12 +2,12 @@ package com.smart.auth.extensions.sms.filter;
 
 import com.smart.auth.core.model.SmsLoginParameter;
 import com.smart.auth.extensions.sms.authentication.SmsAuthenticationToken;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author ShiZhongMing

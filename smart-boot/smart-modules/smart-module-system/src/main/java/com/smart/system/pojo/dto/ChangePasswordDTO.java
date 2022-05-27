@@ -1,10 +1,9 @@
 package com.smart.system.pojo.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
-import javax.validation.constraints.NotNull;
 
 /**
  * @author ShiZhongMing

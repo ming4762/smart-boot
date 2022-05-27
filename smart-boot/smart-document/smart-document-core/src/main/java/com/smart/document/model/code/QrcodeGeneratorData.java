@@ -1,11 +1,9 @@
 package com.smart.document.model.code;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-
-import javax.validation.constraints.NotNull;
 
 /**
  * @author ShiZhongMing
@@ -14,14 +12,14 @@ import javax.validation.constraints.NotNull;
  */
 @Getter
 @Setter
-@ApiModel(value = "二维码生成参数")
+@Schema(title = "二维码生成参数")
 @ToString
 @SuperBuilder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
 public class QrcodeGeneratorData extends AbstractCodeGeneratorData {
 
-    @ApiModelProperty(value = "条形码内容", required = true)
+    @Schema(title = "条形码内容", required = true)
     @NotNull(message = "条形码内容不能为空")
     private String content;
 }

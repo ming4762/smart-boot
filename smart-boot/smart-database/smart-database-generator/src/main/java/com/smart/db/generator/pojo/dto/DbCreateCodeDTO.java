@@ -1,11 +1,12 @@
 package com.smart.db.generator.pojo.dto;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import java.util.List;
 @Setter
 @ToString
 public class DbCreateCodeDTO implements Serializable {
+    @Serial
     private static final long serialVersionUID = 525969661071146013L;
 
     @NotNull(message = "主ID不能为空")

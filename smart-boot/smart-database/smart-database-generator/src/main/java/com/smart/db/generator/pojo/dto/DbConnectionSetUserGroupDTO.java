@@ -1,10 +1,12 @@
 package com.smart.db.generator.pojo.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.validation.constraints.NotNull;
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -16,8 +18,10 @@ import java.util.List;
 @ToString
 @Getter
 @Setter
-public class DbConnectionSetUserGroupDTO {
+public class DbConnectionSetUserGroupDTO implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = -9190615310611428862L;
     @NotNull(message = "数据库连接ID不能为空")
     private Long connectionId;
 

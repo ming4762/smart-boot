@@ -8,7 +8,7 @@ import com.smart.crud.query.PageSortQuery;
 import com.smart.monitor.server.manager.model.MonitorClientLogPO;
 import com.smart.monitor.server.manager.pojo.dto.ClientIdQueryDTO;
 import com.smart.monitor.server.manager.service.MonitorClientLogService;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,14 +30,14 @@ import java.util.stream.Collectors;
 public class MonitorClientLogController extends BaseController<MonitorClientLogService, MonitorClientLogPO> {
 
     @PostMapping("listFilterUser")
-    @ApiOperation(value = "查询客户端日志列表（支持分页、实体类属性查询）")
+    @Operation(summary = "查询客户端日志列表（支持分页、实体类属性查询）")
     public Result<Object> listFilterUser(@RequestBody @NonNull PageSortQuery parameter) {
         parameter.getParameter().put(CrudCommonEnum.FILTER_BY_USER.name(), true);
         return super.list(parameter);
     }
 
     @PostMapping("listClientId")
-    @ApiOperation(value = "查询客户端ID列表")
+    @Operation(summary = "查询客户端ID列表")
     public Result<List<String>> listClientId(@RequestBody ClientIdQueryDTO parameter) {
         QueryWrapper<MonitorClientLogPO> queryWrapper = new QueryWrapper<MonitorClientLogPO>().select("DISTINCT client_id");
         if (StringUtils.isNotBlank(parameter.getApplicationName())) {
@@ -52,7 +52,7 @@ public class MonitorClientLogController extends BaseController<MonitorClientLogS
 
 
     @Override
-    @ApiOperation(value = "通过ID查询")
+    @Operation(summary = "通过ID查询")
     @PostMapping("getById")
     public Result<MonitorClientLogPO> getById(@RequestBody Serializable id) {
         return super.getById(id);

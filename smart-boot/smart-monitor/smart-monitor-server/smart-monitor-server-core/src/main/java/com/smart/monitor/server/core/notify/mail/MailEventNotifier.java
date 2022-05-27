@@ -4,6 +4,7 @@ import com.smart.monitor.server.common.MonitorServerProperties;
 import com.smart.monitor.server.common.model.ClientData;
 import com.smart.monitor.server.core.event.MonitorEvent;
 import com.smart.monitor.server.core.notify.AbstractEventNotifier;
+import jakarta.mail.internet.MimeMessage;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
@@ -14,7 +15,6 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import javax.mail.internet.MimeMessage;
 import java.util.Set;
 
 /**

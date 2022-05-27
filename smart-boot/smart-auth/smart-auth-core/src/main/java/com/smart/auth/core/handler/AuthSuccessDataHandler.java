@@ -2,9 +2,8 @@ package com.smart.auth.core.handler;
 
 import com.smart.auth.core.constants.LoginTypeEnum;
 import com.smart.auth.core.model.LoginResult;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author ShiZhongMing

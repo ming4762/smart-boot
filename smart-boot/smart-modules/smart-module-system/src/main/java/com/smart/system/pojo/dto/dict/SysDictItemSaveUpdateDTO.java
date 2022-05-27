@@ -1,10 +1,11 @@
 package com.smart.system.pojo.dto.dict;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.validation.constraints.NotNull;
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -18,6 +19,7 @@ import java.io.Serializable;
 public class SysDictItemSaveUpdateDTO implements Serializable {
 
 
+    @Serial
     private static final long serialVersionUID = -1933118566698565044L;
     /**
     * 字典编码

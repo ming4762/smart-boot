@@ -1,9 +1,8 @@
 package com.smart.starter.exception.processor;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.lang.Nullable;
 import org.springframework.security.access.AccessDeniedException;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * 无权限异常处理器

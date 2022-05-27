@@ -5,9 +5,9 @@ import com.smart.auth.core.constants.LoginTypeEnum;
 import com.smart.auth.core.model.LoginResult;
 import com.smart.auth.core.model.Permission;
 import com.smart.auth.core.userdetails.RestUserDetails;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 import java.util.stream.Collectors;
 

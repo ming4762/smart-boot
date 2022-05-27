@@ -44,12 +44,12 @@ public abstract class BaseServiceImpl<K extends CrudBaseMapper<T>, T extends Bas
 
     @Override
     protected Class<T> currentModelClass() {
-        return (Class<T>) ReflectionKit.getSuperClassGenericType(getClass(), 1);
+        return (Class<T>) ReflectionKit.getSuperClassGenericType(getClass(), BaseServiceImpl.class,1);
     }
 
     @Override
-    protected Class<T> currentMapperClass() {
-        return (Class<T>) ReflectionKit.getSuperClassGenericType(getClass(), 0);
+    protected Class<K> currentMapperClass() {
+        return (Class<K>) ReflectionKit.getSuperClassGenericType(getClass(), BaseServiceImpl.class,0);
     }
 
     /**
@@ -59,9 +59,9 @@ public abstract class BaseServiceImpl<K extends CrudBaseMapper<T>, T extends Bas
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean removeByIds(Collection<? extends Serializable> idList) {
+    public boolean removeByIds(Collection<?> idList) {
         if (idList.size() == 1) {
-            return this.removeById(idList.iterator().next());
+            return this.removeById((Serializable) idList.iterator().next());
         }
         return super.removeByIds(idList);
     }

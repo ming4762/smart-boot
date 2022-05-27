@@ -1,12 +1,11 @@
 package com.smart.auth.core.model;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.NonNull;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author ShiZhongMing

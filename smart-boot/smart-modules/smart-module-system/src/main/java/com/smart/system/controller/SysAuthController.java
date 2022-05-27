@@ -19,8 +19,9 @@ import com.smart.system.pojo.dto.auth.OnlineUserQueryDTO;
 import com.smart.system.pojo.vo.SysOnlineUserVO;
 import com.smart.system.service.SysUserAccountService;
 import com.smart.system.service.SysUserService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -31,7 +32,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -43,7 +43,7 @@ import java.util.Set;
  */
 @RestController
 @RequestMapping
-@Api(tags = "系统认证管理")
+@Tag(name = "系统认证管理")
 @Slf4j
 public class SysAuthController {
 
@@ -69,7 +69,7 @@ public class SysAuthController {
      */
     @PostMapping("auth/changePassword")
     @Log(value = "更新密码", type = LogOperationTypeEnum.UPDATE, saveParameter = false, saveResult = true)
-    @ApiOperation(value = "更改密码")
+    @Operation(summary = "更改密码")
     public Result<Boolean> changePassword(@NonNull @RequestBody @Valid ChangePasswordDTO parameter) {
         // 验证密码是否一致
         if (!StringUtils.equals(parameter.getNewPassword(), parameter.getNewPasswordConfirm())) {
@@ -98,14 +98,14 @@ public class SysAuthController {
      * @return 在线用户列表
      */
     @PostMapping("auth/listOnlineUser")
-    @ApiOperation(value = "查询所有在线用户")
+    @Operation(summary = "查询所有在线用户")
     public Result<List<SysOnlineUserVO>> listOnlineUser(@RequestBody OnlineUserQueryDTO parameter) {
         Set<String> tokens = parameter.getUsername() == null ? this.cacheJwtStore.listAll() : this.cacheJwtStore.listAll(parameter.getUsername());
         return Result.success(this.sysUserAccountService.listOnlineUser(tokens));
     }
 
     @PostMapping("auth/offline")
-    @ApiOperation(value = "用户离线操作")
+    @Operation(summary = "用户离线操作")
     @Log(value = "用户离线操作", type = LogOperationTypeEnum.DELETE)
     @PreAuthorize("hasPermission('sys:auth', 'offline')")
     public Result<Boolean> offline(@RequestBody OfflineDTO parameter) {
@@ -124,7 +124,7 @@ public class SysAuthController {
      * @return 是否是初始化密码
      */
     @PostMapping("auth/isInitialPassword")
-    @ApiOperation(value = "是否是初始化密码")
+    @Operation(summary = "是否是初始化密码")
     public Result<Boolean> isInitialPassword() {
         List<SysUserWthAccountBO> userList = this.sysUserService.listUserWithAccount(
                 new QueryWrapper<SysUserPO>()
@@ -144,7 +144,7 @@ public class SysAuthController {
      * @return 是否创建成功
      */
     @PostMapping("auth/createAccount")
-    @ApiOperation(value = "批量创建账户")
+    @Operation(summary = "批量创建账户")
     @Log(value = "创建账户", type = LogOperationTypeEnum.ADD)
     @PreAuthorize("hasPermission('sys:auth', 'createAccount')")
     public Result<Boolean> createAccount(@RequestBody List<Long> userIdList) {

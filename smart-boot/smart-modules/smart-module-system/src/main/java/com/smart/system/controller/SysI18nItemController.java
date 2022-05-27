@@ -10,7 +10,8 @@ import com.smart.system.i18n.SystemI18nMessage;
 import com.smart.system.model.SysI18nItemPO;
 import com.smart.system.pojo.dto.i18n.SysI18nItemSaveUpdateDTO;
 import com.smart.system.service.SysI18nItemService;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.lang.NonNull;
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.io.Serializable;
 import java.util.List;
 
@@ -34,7 +34,7 @@ import java.util.List;
 public class SysI18nItemController extends BaseController<SysI18nItemService, SysI18nItemPO> {
 
     @PostMapping("saveUpdate")
-    @ApiOperation("添加修改国际化项")
+    @Operation(summary = "添加修改国际化项")
     @PreAuthorize("hasPermission('sys:i18n', 'save') or hasPermission('sys:i18n', 'update')")
     public Result<Boolean> saveUpdate(@RequestBody @Valid SysI18nItemSaveUpdateDTO parameter) {
         try {
@@ -47,7 +47,7 @@ public class SysI18nItemController extends BaseController<SysI18nItemService, Sy
     }
 
     @Override
-    @ApiOperation("批量删除国际化项")
+    @Operation(summary = "批量删除国际化项")
     @PostMapping("batchDeleteById")@PreAuthorize("hasPermission('sys:i18n', 'delete')")
     public Result<Boolean> batchDeleteById(@RequestBody List<Serializable> idList) {
         return super.batchDeleteById(idList);
@@ -55,14 +55,14 @@ public class SysI18nItemController extends BaseController<SysI18nItemService, Sy
 
     @Override
     @PostMapping("list")
-    @ApiOperation("查询国际化项")
+    @Operation(summary = "查询国际化项")
     public Result<Object> list(@RequestBody @NonNull PageSortQuery parameter) {
         return super.list(parameter);
     }
 
     @Override
     @PostMapping("getById")
-    @ApiOperation("通过ID查询国际化国际化项")
+    @Operation(summary = "通过ID查询国际化国际化项")
     public Result<SysI18nItemPO> getById(@RequestBody Serializable id) {
         return super.getById(id);
     }

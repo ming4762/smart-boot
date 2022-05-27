@@ -3,11 +3,11 @@ package com.smart.starter.exception.notice;
 import com.google.common.collect.Lists;
 import com.smart.commons.core.exception.BusinessException;
 import com.smart.commons.core.i18n.I18nException;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.lang.NonNull;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
-import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 /**

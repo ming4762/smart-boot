@@ -3,11 +3,11 @@ package com.smart.auth.core.handler;
 import com.smart.commons.core.http.HttpStatus;
 import com.smart.commons.core.message.Result;
 import com.smart.commons.core.utils.RestJsonWriter;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**

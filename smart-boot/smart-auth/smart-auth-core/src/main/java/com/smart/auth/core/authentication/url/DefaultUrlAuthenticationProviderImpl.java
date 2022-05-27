@@ -6,14 +6,14 @@ import com.smart.auth.core.constants.RoleEnum;
 import com.smart.auth.core.model.Permission;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.commons.core.beans.AbstractBeanNameProvider;
+import com.smart.commons.core.http.HttpMethod;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;

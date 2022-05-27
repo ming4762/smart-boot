@@ -1,13 +1,13 @@
 package com.smart.system.pojo.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotNull;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -18,15 +18,16 @@ import java.util.List;
 @ToString
 @Getter
 @Setter
-@ApiModel("用户所在用户组参数实体")
+@Schema(title = "用户所在用户组参数实体")
 public class UserUserGroupSaveDTO implements Serializable {
+    @Serial
     private static final long serialVersionUID = -6508219832444270076L;
 
-    @ApiModelProperty(value = "用户ID", required = true)
+    @Schema(title = "用户ID", required = true)
     @NotNull(message = "用户ID不能为空")
     private Long userId;
 
-    @ApiModelProperty(value = "用户组ID", required = true)
+    @Schema(title = "用户组ID", required = true)
     @NotNull(message = "用户组ID不能为空")
     @Length(min = 1, message = "用户组ID不能为空")
     private List<Long> groupIdList;

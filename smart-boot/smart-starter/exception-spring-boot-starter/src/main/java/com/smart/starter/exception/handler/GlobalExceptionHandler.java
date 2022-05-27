@@ -2,12 +2,11 @@ package com.smart.starter.exception.handler;
 
 import com.smart.auth.core.utils.AuthUtils;
 import com.smart.starter.exception.notice.AsyncNoticeHandler;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * 全局异常管理

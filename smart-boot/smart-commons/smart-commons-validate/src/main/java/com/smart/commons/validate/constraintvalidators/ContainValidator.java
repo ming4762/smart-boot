@@ -2,9 +2,9 @@ package com.smart.commons.validate.constraintvalidators;
 
 import com.smart.commons.validate.constraints.Contain;
 import com.smart.commons.validate.enums.IValidateEnum;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;

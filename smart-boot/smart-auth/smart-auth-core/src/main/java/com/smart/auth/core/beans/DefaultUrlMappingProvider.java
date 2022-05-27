@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import com.smart.commons.core.beans.AbstractBeanNameProvider;
 import com.smart.commons.core.http.HttpStatus;
 import com.smart.commons.core.i18n.I18nUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.lang.NonNull;
@@ -17,7 +18,6 @@ import org.springframework.web.servlet.mvc.condition.RequestMethodsRequestCondit
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;

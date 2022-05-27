@@ -1,9 +1,9 @@
 package com.smart.commons.validate.constraints;
 
 import com.smart.commons.validate.constraintvalidators.MobileValidator;
+import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
 
-import javax.validation.Constraint;
-import javax.validation.Payload;
 import java.lang.annotation.*;
 
 /**

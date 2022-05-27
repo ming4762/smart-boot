@@ -3,16 +3,18 @@ package com.smart.crud.controller;
 import com.smart.commons.core.message.Result;
 import com.smart.crud.model.BaseModel;
 import com.smart.crud.service.BaseService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
+
+;
 
 /**
  * 基础controller

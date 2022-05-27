@@ -1,10 +1,10 @@
 package com.smart.auth.security.pojo.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.validation.constraints.NotNull;
 
 /**
  * 临时令牌申请DTO

@@ -7,10 +7,11 @@ import com.smart.file.manager.model.SysFilePO;
 import com.smart.file.manager.pojo.bo.SysFileBO;
 import com.smart.file.manager.pojo.dto.SaveFileDTO;
 import com.smart.file.manager.service.SysFileService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URLEncoder;
@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  * 2020/1/27 7:51 下午
  */
 @Slf4j
-@Api(value = "文件管理", tags = "文件管理")
+@Tag(name = "文件管理")
 public class SysFileController extends BaseController<SysFileService, SysFilePO> {
 
     /**
@@ -42,11 +42,12 @@ public class SysFileController extends BaseController<SysFileService, SysFilePO>
      * @param type 文件类型
      * @return 保存的文件信息
      */
-    @ApiOperation(value = "上传文件")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "file", value = "文件信息", dataTypeClass = MultipartFile.class, required = true),
-            @ApiImplicitParam(name = "fileName", value = "文件名", dataTypeClass = String.class),
-            @ApiImplicitParam(name = "type", value = "文件类型", defaultValue = "TEMP", dataTypeClass = String.class)
+    @Operation(summary = "上传文件")
+    @Parameters({
+            //TODO:swagger
+            @Parameter(name = "file", description = "文件信息", required = true),
+            @Parameter(name = "fileName", description = "文件名"),
+            @Parameter(name = "type", description = "文件类型")
     })
     public Result<SysFilePO> upload(
             @RequestParam("file")MultipartFile multipartFile,
@@ -63,10 +64,11 @@ public class SysFileController extends BaseController<SysFileService, SysFilePO>
      * @param type 文件类型
      * @return 保存的文件信息
      */
-    @ApiOperation(value = "批量上传文件")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "files", value = "文件集合", required = true),
-            @ApiImplicitParam(name = "type", value = "文件类型", defaultValue = "TEMP", dataTypeClass = String.class),
+    @Operation(summary = "批量上传文件")
+    @Parameters({
+            //TODO:swagger
+            @Parameter(name = "files", description = "文件集合", required = true),
+            @Parameter(name = "type", description = "文件类型"),
     })
     public Result<List<SysFilePO>> batchUpload(
             @RequestParam("files")List<MultipartFile> multipartFileList,
@@ -88,7 +90,7 @@ public class SysFileController extends BaseController<SysFileService, SysFilePO>
      * @param response HttpServletResponse
      * @throws IOException IOException
      */
-    @ApiOperation(value = "下载文件")
+    @Operation(summary = "下载文件")
     public void download(@PathVariable("id") Long id, HttpServletResponse response) throws IOException {
         final SysFileBO file = this.service.download(id);
         if (file != null) {
@@ -105,7 +107,7 @@ public class SysFileController extends BaseController<SysFileService, SysFilePO>
      * @return 是否删除成功
      */
     @SneakyThrows
-    @ApiOperation("批量删除文件")
+    @Operation(summary = "批量删除文件")
     @Override
     public Result<Boolean> batchDeleteById(@RequestBody List<Serializable> ids)  {
         return Result.success(this.service.batchDeleteFile(ids));

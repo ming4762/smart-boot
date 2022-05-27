@@ -2,6 +2,7 @@ package com.smart.starter.exception.handler;
 
 import com.smart.commons.core.message.Result;
 import com.smart.starter.exception.processor.ExceptionMessageProcessor;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
@@ -9,7 +10,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.lang.NonNull;
 
-import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Type;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

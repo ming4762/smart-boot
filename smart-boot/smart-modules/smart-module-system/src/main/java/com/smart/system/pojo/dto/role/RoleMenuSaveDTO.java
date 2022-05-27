@@ -1,10 +1,11 @@
 package com.smart.system.pojo.dto.role;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.validation.constraints.NotNull;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import java.util.List;
 @Setter
 @ToString
 public class RoleMenuSaveDTO implements Serializable {
+    @Serial
     private static final long serialVersionUID = -4698594343302930017L;
 
     @NotNull(message = "角色ID不能为空")

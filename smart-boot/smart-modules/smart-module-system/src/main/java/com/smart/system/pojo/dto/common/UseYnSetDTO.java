@@ -1,11 +1,12 @@
 package com.smart.system.pojo.dto.common;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -19,6 +20,7 @@ import java.util.List;
 @Setter
 @ToString
 public class UseYnSetDTO implements Serializable {
+    @Serial
     private static final long serialVersionUID = 6629810837312846715L;
 
     /**

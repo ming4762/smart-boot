@@ -1,8 +1,9 @@
 package com.smart.auth.core.model;
 
+import com.smart.commons.core.http.HttpMethod;
 import lombok.*;
-import org.springframework.http.HttpMethod;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -19,6 +20,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class Permission implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -8062914682511384643L;
     /**
      * 请求方法

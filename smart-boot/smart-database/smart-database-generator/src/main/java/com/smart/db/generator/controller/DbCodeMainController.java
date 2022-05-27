@@ -15,6 +15,7 @@ import com.smart.db.generator.pojo.dto.DbCreateCodeDTO;
 import com.smart.db.generator.pojo.vo.DbCodeVO;
 import com.smart.db.generator.pojo.vo.DbMainConfigVO;
 import com.smart.db.generator.service.DbCodeMainService;
+import jakarta.validation.Valid;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
@@ -25,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.io.Serializable;
 import java.util.List;
 

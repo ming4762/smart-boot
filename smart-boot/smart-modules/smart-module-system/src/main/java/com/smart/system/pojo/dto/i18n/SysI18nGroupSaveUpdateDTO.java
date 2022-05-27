@@ -1,11 +1,12 @@
 package com.smart.system.pojo.dto.i18n;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.validation.constraints.NotNull;
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -14,11 +15,12 @@ import java.io.Serializable;
  * 2021/11/12
  * @since 1.0.7
  */
-@ApiModel("国际化组保存/修改实体")
+@Schema(title = "国际化组保存/修改实体")
 @Getter
 @Setter
 @ToString
 public class SysI18nGroupSaveUpdateDTO implements Serializable {
+    @Serial
     private static final long serialVersionUID = 3457561915135780546L;
 
     @NotNull(message = "{system.i18n.group.group_name_null}")
