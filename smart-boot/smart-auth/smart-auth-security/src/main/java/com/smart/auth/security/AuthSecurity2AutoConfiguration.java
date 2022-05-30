@@ -12,6 +12,7 @@ import com.smart.auth.core.properties.AuthProperties;
 import com.smart.auth.core.service.AuthUserService;
 import com.smart.auth.security.config.AuthMethodSecurityConfig;
 import com.smart.auth.security.userdetails.DefaultUserDetailsServiceImpl;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -21,7 +22,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.access.PermissionEvaluator;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.DefaultAuthenticationEventPublisher;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
@@ -102,5 +105,12 @@ public class AuthSecurity2AutoConfiguration {
     @ConditionalOnMissingBean
     public AuthenticationFailureEventInitializer authenticationFailureEventInitializer(DefaultAuthenticationEventPublisher eventPublisher) {
         return new AuthenticationFailureEventInitializer(eventPublisher);
+    }
+
+    @SneakyThrows
+    @Bean
+    @ConditionalOnMissingBean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) {
+        return configuration.getAuthenticationManager();
     }
 }
