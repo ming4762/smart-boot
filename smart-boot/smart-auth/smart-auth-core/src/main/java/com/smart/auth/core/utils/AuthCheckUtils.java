@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpMethod;
 import org.springframework.lang.NonNull;
 
-import java.util.Objects;
 import java.util.Set;
 
 import static org.springframework.http.HttpMethod.*;

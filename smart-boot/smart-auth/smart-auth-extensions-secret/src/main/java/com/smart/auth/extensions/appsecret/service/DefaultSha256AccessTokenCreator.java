@@ -1,10 +1,8 @@
 package com.smart.auth.extensions.appsecret.service;
 
-import com.google.common.hash.Hashing;
 import com.smart.auth.core.secret.data.AppDetails;
+import com.smart.commons.core.utils.DigestUtils;
 import com.smart.commons.core.utils.JsonUtils;
-
-import java.nio.charset.StandardCharsets;
 
 /**
  * @author ShiZhongMing
@@ -13,6 +11,6 @@ import java.nio.charset.StandardCharsets;
 public class DefaultSha256AccessTokenCreator implements AccessTokenCreator {
     @Override
     public String createAccessToken(AppDetails appDetails) {
-        return Hashing.sha256().newHasher().putString(JsonUtils.toJsonString(appDetails) + System.currentTimeMillis(), StandardCharsets.UTF_8).hash().toString();
+        return DigestUtils.sha256(JsonUtils.toJsonString(appDetails) + System.currentTimeMillis(), 1);
     }
 }

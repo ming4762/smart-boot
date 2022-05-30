@@ -24,7 +24,7 @@ public class DefaultExceptionMessageHandler implements ExceptionMessageHandler, 
 
     private ApplicationContext applicationContext;
 
-    private Map<Type, ExceptionMessageProcessor<? extends Exception>> messageProcessorMap = new ConcurrentHashMap<>();
+    private final Map<Type, ExceptionMessageProcessor<? extends Exception>> messageProcessorMap = new ConcurrentHashMap<>();
 
     @Override
     public Object message(Exception e, HttpServletRequest request) {

@@ -12,7 +12,6 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 
 import java.io.IOException;
 
-;
 
 /**
  * 验证失败处理类

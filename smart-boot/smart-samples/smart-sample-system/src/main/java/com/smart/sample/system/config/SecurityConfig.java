@@ -4,12 +4,15 @@ import com.smart.auth.core.properties.AuthProperties;
 import com.smart.auth.extensions.jwt.AuthJwtSecurityConfigurer;
 import com.smart.auth.security.config.AuthCaptchaSecurityConfigurer;
 import com.smart.auth.security.config.AuthWebSecurityConfigurerAdapter;
+import lombok.SneakyThrows;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
 
 /**
  * @author shizhongming
@@ -18,18 +21,15 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 @Configuration(proxyBeanMethods = false)
 @EnableWebSecurity
 public class SecurityConfig extends AuthWebSecurityConfigurerAdapter {
+
+
     public SecurityConfig(AuthProperties authProperties) {
         super(authProperties);
     }
 
-    @Override
+    @SneakyThrows
     @Bean
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChainConfig(HttpSecurity http, ApplicationContext applicationContext) {
         super.configure(http);
         http
                 .formLogin().disable()
@@ -41,13 +41,20 @@ public class SecurityConfig extends AuthWebSecurityConfigurerAdapter {
                 // jwt配置
                 .apply(AuthJwtSecurityConfigurer.jwt())
                 .serviceProvider()
-                .applicationContext(this.getApplicationContext())
+                .applicationContext(applicationContext)
                 .and()
                 .and()
                 // 验证码配置
                 .apply(AuthCaptchaSecurityConfigurer.captcha())
                 .serviceProvider()
-                .applicationContext(this.getApplicationContext())
+                .applicationContext(applicationContext)
                 .loginUrl(AuthJwtSecurityConfigurer.LOGIN_URL);
+        return http.build();
+    }
+
+    @Override
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizerConfigure() {
+        return super.webSecurityCustomizerConfigure();
     }
 }

@@ -15,6 +15,8 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.security.web.context.HttpRequestResponseHolder;
 import org.springframework.security.web.context.SecurityContextRepository;
 
+import java.util.function.Supplier;
+
 
 /**
  * @author ShiZhongMing
@@ -29,27 +31,34 @@ public class JwtSecurityContextRepository implements SecurityContextRepository {
 
     @Override
     public SecurityContext loadContext(HttpRequestResponseHolder requestResponseHolder) {
-        HttpServletRequest request = requestResponseHolder.getRequest();
-        String jwt = JwtUtils.getJwt(request);
-        if (StringUtils.isBlank(jwt)) {
-            return generateNewContext();
-        }
-        // 解析jwt
-        try {
-            RestUserDetails user = jwtResolver.resolver(jwt);
-            if (user == null) {
+        return null;
+    }
+
+    @Override
+    public Supplier<SecurityContext> loadContext(HttpServletRequest request) {
+        return () -> {
+            String jwt = JwtUtils.getJwt(request);
+            if (StringUtils.isBlank(jwt)) {
                 return generateNewContext();
             }
-            RestUsernamePasswordAuthenticationToken authentication = new RestUsernamePasswordAuthenticationToken(user, null, user.getAuthorities(), user.getBindIp(), user.getLoginIp(), user.getLoginType());
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            SecurityContext securityContext = generateNewContext();
-            securityContext.setAuthentication(authentication);
-            return securityContext;
-        } catch (Exception e) {
-            log.warn("解析JWT失败", e);
-            return generateNewContext();
-        }
+            // 解析jwt
+            try {
+                RestUserDetails user = jwtResolver.resolver(jwt);
+                if (user == null) {
+                    return generateNewContext();
+                }
+                RestUsernamePasswordAuthenticationToken authentication = new RestUsernamePasswordAuthenticationToken(user, null, user.getAuthorities(), user.getBindIp(), user.getLoginIp(), user.getLoginType());
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContext securityContext = generateNewContext();
+                securityContext.setAuthentication(authentication);
+                return securityContext;
+            } catch (Exception e) {
+                log.warn("解析JWT失败", e);
+                return generateNewContext();
+            }
+        };
     }
+
 
     @Override
     public void saveContext(SecurityContext context, HttpServletRequest request, HttpServletResponse response) {

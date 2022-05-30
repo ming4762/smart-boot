@@ -30,7 +30,7 @@
         <!--   时间戳      -->
         <result column="timestamp" property="timestamp" javaType="java.lang.Long" jdbcType="BIGINT"/>
         <!--   事件内容      -->
-        <result column="event_message" property="eventMessage" javaType="java.lang.String" jdbcType="TEXT"/>
+        <result column="event_message" property="eventMessage" javaType="java.lang.String" jdbcType="VARCHAR"/>
         <!--   创建事件      -->
         <result column="create_time" property="createTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
     </resultMap>

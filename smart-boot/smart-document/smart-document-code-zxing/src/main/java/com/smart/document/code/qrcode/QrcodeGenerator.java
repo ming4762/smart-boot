@@ -36,7 +36,7 @@ public interface QrcodeGenerator extends Generator {
      * @param path logo路径
      * @param remote 是否远程logo
      * @return 二维码对象
-     * @throws IOException
+     * @throws IOException IOException
      */
     QrcodeGenerator setLogo(@NonNull String path, boolean remote) throws IOException;
 
@@ -44,7 +44,7 @@ public interface QrcodeGenerator extends Generator {
      * 设置logo
      * @param path logo path
      * @return this
-     * @throws IOException IOException
+     * @throws IOException IOException IOException
      */
     default QrcodeGenerator setLogo(@NonNull String path) throws IOException {
         return this.setLogo(path, false);

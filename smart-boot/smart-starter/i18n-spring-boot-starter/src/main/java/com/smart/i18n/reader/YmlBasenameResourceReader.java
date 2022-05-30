@@ -56,8 +56,8 @@ public class YmlBasenameResourceReader extends AbstractBasenameResourceReader {
 
     /**
      * 读取内容
-     * @param path
-     * @throws IOException
+     * @param path path
+     * @throws IOException IOException
      */
     protected Map<String, String> doRead(String path) throws IOException {
         final Map<String, String> result = Maps.newLinkedHashMap();
@@ -69,7 +69,7 @@ public class YmlBasenameResourceReader extends AbstractBasenameResourceReader {
                 log.warn("not found resource，path:{}", path);
                 continue;
             }
-            try (final InputStreamReader inputStreamReader = new InputStreamReader(url.openStream(), this.getEncoding());) {
+            try (final InputStreamReader inputStreamReader = new InputStreamReader(url.openStream(), this.getEncoding())) {
                 // 读取内容
                 final Map<String, Object> data = YamlUtils.readInOneLayer(inputStreamReader);
                 data.forEach((key, value) -> result.put(key, value.toString()));
