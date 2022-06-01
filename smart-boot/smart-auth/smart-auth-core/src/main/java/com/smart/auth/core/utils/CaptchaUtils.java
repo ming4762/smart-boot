@@ -89,6 +89,15 @@ public class CaptchaUtils {
     }
 
     /**
+     * 使验证码失效
+     * @param key 验证码的key
+     * @param authCache 缓存类
+     */
+    public static void invalid(@NonNull String key, @NonNull AuthCache<String, Object> authCache) {
+        authCache.remove(getKey(key));
+    }
+
+    /**
      * 获取key
      * @param ident 标识位
      * @return 带前缀的key
