@@ -43,10 +43,7 @@ public class AuthLoginSuccessHandler implements AuthenticationSuccessHandler, In
      * @param request 请求信息
      */
     protected void setSessionMaxInactiveInterval(HttpServletRequest request, LoginTypeEnum loginType) {
-        var session = request.getSession(false);
-        if (session == null) {
-            return;
-        }
+
         // 获取有效期
         Duration timeout = authProperties.getSession().getTimeout().getGlobal();
         if (Objects.equals(loginType, LoginTypeEnum.MOBILE)) {
@@ -54,7 +51,7 @@ public class AuthLoginSuccessHandler implements AuthenticationSuccessHandler, In
         } else if (Objects.equals(loginType, LoginTypeEnum.REMEMBER)) {
             timeout = authProperties.getSession().getTimeout().getRemember();
         }
-        session.setMaxInactiveInterval((int) timeout.getSeconds());
+        request.getSession().setMaxInactiveInterval((int) timeout.getSeconds());
     }
 
     @Autowired
