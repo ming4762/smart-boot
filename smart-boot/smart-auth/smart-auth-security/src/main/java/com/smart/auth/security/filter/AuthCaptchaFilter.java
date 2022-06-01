@@ -55,6 +55,7 @@ public class AuthCaptchaFilter extends OncePerRequestFilter {
             String code = request.getParameter("code");
             try {
                 if (StringUtils.isBlank(code) || !CaptchaUtils.validate(key, code, authCache)) {
+                    CaptchaUtils.invalid(key, authCache);
                     RestJsonWriter.writeJson(response, Result.failure(HttpStatus.UNAUTHORIZED.value(), I18nUtils.get(AuthI18nMessage.CAPTCHA_ERROR)));
                     return;
                 }
@@ -62,6 +63,7 @@ public class AuthCaptchaFilter extends OncePerRequestFilter {
                 RestJsonWriter.writeJson(response, Result.failure(HttpStatus.UNAUTHORIZED.value(), e.getMessage()));
                 return;
             }
+            CaptchaUtils.invalid(key, authCache);
             filterChain.doFilter(request, response);
         }
     }
