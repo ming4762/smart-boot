@@ -41,17 +41,6 @@ public abstract class BaseServiceImpl<K extends CrudBaseMapper<T>, T extends Bas
 
     private static final String KEY_PROPERTY_NULL_ERROR = "error: can not execute. because can not find column for id from entity!";
 
-
-    @Override
-    protected Class<T> currentModelClass() {
-        return (Class<T>) ReflectionKit.getSuperClassGenericType(getClass(), BaseServiceImpl.class,1);
-    }
-
-    @Override
-    protected Class<K> currentMapperClass() {
-        return (Class<K>) ReflectionKit.getSuperClassGenericType(getClass(), BaseServiceImpl.class,0);
-    }
-
     /**
      * 重写批量删除方法，如果ID只有一个调用removeById方法
      * @param idList ID列表
