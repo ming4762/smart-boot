@@ -8,6 +8,7 @@ import com.smart.commons.core.utils.RestJsonWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -43,7 +44,10 @@ public class AuthLoginSuccessHandler implements AuthenticationSuccessHandler, In
      * @param request 请求信息
      */
     protected void setSessionMaxInactiveInterval(HttpServletRequest request, LoginTypeEnum loginType) {
-
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            return;
+        }
         // 获取有效期
         Duration timeout = authProperties.getSession().getTimeout().getGlobal();
         if (Objects.equals(loginType, LoginTypeEnum.MOBILE)) {
@@ -51,7 +55,7 @@ public class AuthLoginSuccessHandler implements AuthenticationSuccessHandler, In
         } else if (Objects.equals(loginType, LoginTypeEnum.REMEMBER)) {
             timeout = authProperties.getSession().getTimeout().getRemember();
         }
-        request.getSession().setMaxInactiveInterval((int) timeout.getSeconds());
+        session.setMaxInactiveInterval((int) timeout.getSeconds());
     }
 
     @Autowired
