@@ -1,7 +1,7 @@
 import StoreUtil from '@/common/utils/StoreUtil'
 
 import ApiService, { API_SERVICE } from '@/common/utils/ApiService'
-import md5 from 'blueimp-md5'
+import sha256 from 'crypto-js/sha256'
 
 const USER_KEY = 'smart_auth_user'
 const PERMISSION_KEY = 'smart_auth_permission'
@@ -104,6 +104,11 @@ export const applyTempToken = async (resource: string, once = true): Promise<str
   return await ApiService.postAjax('auth/tempToken/apply', { resource, once })
 }
 
+/**
+ * 创建加密密码
+ * @param username 用户名
+ * @param password 密码明文
+ */
 export const createPassword = (username: string, password: string) => {
-  return md5(md5(`${username}${password}888888$#@`))
+  return sha256(sha256(`${username}${password}888888$#@`)).toString()
 }
