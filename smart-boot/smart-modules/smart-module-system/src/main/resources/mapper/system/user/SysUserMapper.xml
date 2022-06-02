@@ -2,8 +2,30 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.smart.system.mapper.SysUserMapper">
 
+    <resultMap id="listUserWithAccountResultMap" type="com.smart.system.pojo.dbo.SysUserWthAccountBO">
+        <id column="USER_ID" property="userId"/>
+        <result column="USERNAME" property="username"/>
+        <result column="FULL_NAME" property="fullName"/>
+        <result column="PASSWORD" property="password"/>
+        <result column="EMAIL" property="email"/>
+        <result column="MOBILE" property="mobile"/>
+        <result column="USER_TYPE" property="userType"/>
+        <result column="CREATE_USER_ID" property="createUserId"/>
+        <result column="CREATE_TIME" property="createTime"/>
+        <result column="UPDATE_USER_ID" property="updateUserId"/>
+        <result column="USERNAME" property="username"/>
+        <result column="UPDATE_TIME" property="updateTime"/>
+        <result column="SEQ" property="seq"/>
+        <result column="DELETE_YN" property="deleteYn"/>
+        <result column="USE_YN" property="useYn"/>
+        <result column="account_status" property="accountStatus" typeHandler="com.smart.system.mybatis.type.UserAccountStatusTypeHandler"/>
+        <result column="login_fail_time" property="loginFailTime"/>
+        <result column="last_login_time" property="lastLoginTime"/>
+        <result column="initial_password_yn" property="initialPasswordYn"/>
+    </resultMap>
+
     <!--  查询用户列表带账号信息  -->
-    <select id="listUserWithAccount" resultType="com.smart.system.pojo.dbo.SysUserWthAccountBO">
+    <select id="listUserWithAccount" resultMap="listUserWithAccountResultMap">
         SELECT A.USER_ID,
                A.USERNAME,
                A.FULL_NAME,
@@ -20,7 +42,6 @@
                A.USE_YN,
                B.account_status,
                B.login_fail_time,
-               B.account_status,
                B.last_login_time,
                B.initial_password_yn
         FROM sys_user A
