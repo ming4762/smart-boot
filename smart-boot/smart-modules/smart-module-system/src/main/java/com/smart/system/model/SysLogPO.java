@@ -1,13 +1,11 @@
 package com.smart.system.model;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.smart.commons.core.log.LogOperationTypeEnum;
 import com.smart.commons.core.log.LogSourceEnum;
 import com.smart.crud.model.BaseModelCreateUserTime;
-import com.smart.system.mybatis.type.LogSourceTypeHandler;
 import lombok.*;
 
 /**
@@ -83,6 +81,5 @@ public class SysLogPO extends BaseModelCreateUserTime {
     /**
      * 日志来源
      */
-    @TableField(typeHandler = LogSourceTypeHandler.class)
     private LogSourceEnum logSource;
 }

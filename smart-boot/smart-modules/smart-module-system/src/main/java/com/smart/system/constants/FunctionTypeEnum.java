@@ -1,5 +1,6 @@
 package com.smart.system.constants;
 
+import com.baomidou.mybatisplus.annotation.IEnum;
 import com.smart.commons.validate.enums.IValidateEnum;
 import lombok.Getter;
 
@@ -7,7 +8,7 @@ import lombok.Getter;
  * @author shizhongming
  * 2020/9/22 8:56 下午
  */
-public enum FunctionTypeEnum implements IValidateEnum {
+public enum FunctionTypeEnum implements IValidateEnum, IEnum<String> {
     /**
      * 目录、菜单、功能
      */
