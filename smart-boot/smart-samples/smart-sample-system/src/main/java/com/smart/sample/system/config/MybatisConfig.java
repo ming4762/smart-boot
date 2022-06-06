@@ -3,11 +3,9 @@ package com.smart.sample.system.config;
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceBuilder;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import com.github.pagehelper.PageInterceptor;
-import com.google.common.collect.Lists;
-import com.smart.db.generator.DatabaseMybatisPlusTypeEnumsPackage;
-import com.smart.db.generator.constants.CodeMybatisConstants;
-import com.smart.system.constants.SystemMybatisPlusTypeEnumsPackage;
-import com.smart.system.constants.SysMybatisConstants;
+
+import com.smart.commons.core.constants.MapperPackageConstants;
+import com.smart.crud.mybatis.spring.CrudMybatisSqlSessionFactoryBean;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -23,7 +21,6 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 import javax.sql.DataSource;
 import java.io.IOException;
-import java.util.List;
 import java.util.Properties;
 
 /**
@@ -46,27 +43,22 @@ public class MybatisConfig {
 
     /**
      * 创建session工厂
-     * @param dataSource 数据源
      * @return session工厂
      * @throws Exception Exception
      */
     @Bean("systemSqlSessionFactory")
-    public SqlSessionFactory systemSqlSessionFactory(@Qualifier("systemDatasource") DataSource dataSource) throws Exception {
-        MybatisSqlSessionFactoryBean mybatisSqlSessionFactoryBean = new MybatisSqlSessionFactoryBean();
+    public SqlSessionFactory systemSqlSessionFactory(MybatisSqlSessionFactoryBean sqlSessionFactoryBean) throws Exception {
+        return sqlSessionFactoryBean.getObject();
+    }
+
+    @Bean
+    public CrudMybatisSqlSessionFactoryBean crudMybatisSqlSessionFactoryBean(@Qualifier("systemDatasource") DataSource dataSource) throws IOException {
+        var mybatisSqlSessionFactoryBean = new CrudMybatisSqlSessionFactoryBean();
         mybatisSqlSessionFactoryBean.setDataSource(dataSource);
         mybatisSqlSessionFactoryBean.setMapperLocations(matchMapperLocations());
         mybatisSqlSessionFactoryBean.setPlugins(this.createPageHelperPlugins());
 
-        // 设置通用枚举扫描路径
-        List<String> enumPackageList = Lists.newArrayList();
-        // 系统模块枚举路径
-        enumPackageList.addAll(SystemMybatisPlusTypeEnumsPackage.TYPE_ENUMS_PACKAGE);
-        // 代码生成器模块枚举路径
-        enumPackageList.addAll(DatabaseMybatisPlusTypeEnumsPackage.TYPE_ENUMS_PACKAGE);
-        mybatisSqlSessionFactoryBean.setTypeEnumsPackage(
-                String.join(";", enumPackageList)
-        );
-        return mybatisSqlSessionFactoryBean.getObject();
+        return mybatisSqlSessionFactoryBean;
     }
 
     /**

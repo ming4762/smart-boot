@@ -1,5 +1,6 @@
 package com.smart.system.constants;
 
+import com.baomidou.mybatisplus.annotation.IEnum;
 import lombok.Getter;
 
 /**
@@ -9,7 +10,7 @@ import lombok.Getter;
  * @since 2.0
  */
 @Getter
-public enum MaxConnectionsPolicyEnum {
+public enum MaxConnectionsPolicyEnum implements IEnum<String> {
     /**
      * 超出最大连接数执行策略
      */

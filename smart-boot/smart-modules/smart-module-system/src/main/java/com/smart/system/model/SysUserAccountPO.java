@@ -1,13 +1,10 @@
 package com.smart.system.model;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.smart.crud.model.BaseModel;
 import com.smart.system.constants.MaxConnectionsPolicyEnum;
 import com.smart.system.constants.UserAccountStatusEnum;
-import com.smart.system.mybatis.type.MaxConnectionsPolicyTypeHandler;
-import com.smart.system.mybatis.type.UserAccountStatusTypeHandler;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -35,7 +32,6 @@ public class SysUserAccountPO extends BaseModel {
      */
     private Long loginFailTime;
 
-    @TableField(typeHandler = UserAccountStatusTypeHandler.class)
     private UserAccountStatusEnum accountStatus;
 
     private Boolean initialPasswordYn;
@@ -58,7 +54,6 @@ public class SysUserAccountPO extends BaseModel {
     /**
      * 超出最大连接数执行策略
      */
-    @TableField(typeHandler = MaxConnectionsPolicyTypeHandler.class)
     private MaxConnectionsPolicyEnum maxConnectionsPolicy;
 
     /**
