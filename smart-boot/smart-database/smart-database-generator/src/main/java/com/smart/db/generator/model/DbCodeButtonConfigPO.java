@@ -1,12 +1,10 @@
 package com.smart.db.generator.model;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.smart.crud.model.BaseModel;
 import com.smart.db.generator.constants.ButtonIdentEnum;
-import com.smart.db.generator.mybatis.type.ButtonIdentTypeHandler;
 import lombok.*;
 
 import java.io.Serial;
@@ -36,7 +34,6 @@ public class DbCodeButtonConfigPO extends BaseModel {
     /**
      * 按钮标识
      */
-    @TableField(typeHandler = ButtonIdentTypeHandler.class)
     private ButtonIdentEnum ident;
 
     private String button;
