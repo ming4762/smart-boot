@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.List;
 @Getter
 @Setter
 public class Tree<T extends Serializable> implements Serializable {
+    @Serial
     private static final long serialVersionUID = -4056107665873673992L;
 
     private Serializable id = null;

@@ -8,6 +8,8 @@ import com.smart.commons.core.log.LogSourceEnum;
 import com.smart.crud.model.BaseModelCreateUserTime;
 import lombok.*;
 
+import java.io.Serial;
+
 /**
  * 系统日志PO类
  * @author ShiZhongMing
@@ -21,6 +23,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SysLogPO extends BaseModelCreateUserTime {
+    @Serial
     private static final long serialVersionUID = 598505043338521702L;
 
     @TableId(type = IdType.ASSIGN_ID)

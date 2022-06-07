@@ -12,6 +12,7 @@ import com.smart.db.generator.mybatis.type.RuleTriggerTypeHandler;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
 import java.util.List;
 
 /**
@@ -23,6 +24,7 @@ import java.util.List;
 @Setter
 @TableName(value = "db_code_rule_config", autoResultMap = true)
 public class DbCodeRuleConfigPO extends BaseModel {
+    @Serial
     private static final long serialVersionUID = -478223145425048284L;
 
     @TableId(type = IdType.ASSIGN_ID)

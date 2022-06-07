@@ -9,6 +9,8 @@ import com.smart.db.generator.constants.ButtonIdentEnum;
 import com.smart.db.generator.mybatis.type.ButtonIdentTypeHandler;
 import lombok.*;
 
+import java.io.Serial;
+
 /**
  * @author shizhongming
  * 2021/5/11 9:21 下午
@@ -20,6 +22,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DbCodeButtonConfigPO extends BaseModel {
+    @Serial
     private static final long serialVersionUID = -5227167613945536367L;
 
     @TableId(type = IdType.ASSIGN_ID)
