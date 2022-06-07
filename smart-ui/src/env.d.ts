@@ -9,6 +9,8 @@ declare module '*.vue' {
 
 declare module 'nprogress'
 
+declare module 'crypto-js/sha256'
+
 declare module 'sortablejs'
 
 declare module 'vue-echart5'

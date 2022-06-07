@@ -45,6 +45,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, onMounted, Ref, ref, watch } from 'vue'
+import { errorMessage } from '@/components/notice/SystemNotice'
 import { Store, useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
 import { RouteLocationNormalized, Router, useRoute, useRouter } from 'vue-router'
@@ -206,7 +207,7 @@ export default defineComponent({
           })
         }
       } catch (e) {
-        console.error(e)
+        errorMessage(e)
       }
     })
     return {
