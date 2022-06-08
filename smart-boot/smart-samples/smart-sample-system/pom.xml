@@ -76,6 +76,12 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>com.smart</groupId>
+			<artifactId>smart-monitor-starter-server</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
 	</dependencies>
 
 

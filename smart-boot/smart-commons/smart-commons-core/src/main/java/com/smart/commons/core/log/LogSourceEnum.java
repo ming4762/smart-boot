@@ -1,6 +1,5 @@
 package com.smart.commons.core.log;
 
-import com.baomidou.mybatisplus.annotation.IEnum;
 import lombok.Getter;
 
 /**
@@ -8,7 +7,7 @@ import lombok.Getter;
  * 2020/1/22 2:34 下午
  */
 @Getter
-public enum LogSourceEnum implements IEnum<String> {
+public enum LogSourceEnum {
     /**
      * 系统自动
      */
