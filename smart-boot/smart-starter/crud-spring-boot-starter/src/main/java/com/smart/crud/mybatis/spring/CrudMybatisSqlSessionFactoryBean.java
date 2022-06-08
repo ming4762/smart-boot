@@ -1,6 +1,8 @@
 package com.smart.crud.mybatis.spring;
 
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
+import lombok.Setter;
+import org.apache.ibatis.session.SqlSessionFactory;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -13,7 +15,8 @@ import java.util.Set;
  */
 public class CrudMybatisSqlSessionFactoryBean extends MybatisSqlSessionFactoryBean {
 
-    private final Set<String> typeEnumsPackages;
+    @Setter
+    private Set<String> typeEnumsPackages;
 
     public CrudMybatisSqlSessionFactoryBean() {
         this.typeEnumsPackages = new HashSet<>();
@@ -25,10 +28,6 @@ public class CrudMybatisSqlSessionFactoryBean extends MybatisSqlSessionFactoryBe
 
     public void addEnumPackage(Collection<String> enumsPackages) {
         this.typeEnumsPackages.addAll(enumsPackages);
-    }
-
-    public void setTypeEnumsPackages(Set<String> typeEnumsPackages) {
-        this.addEnumPackage(typeEnumsPackages);
     }
 
     @Override
