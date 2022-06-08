@@ -3,6 +3,8 @@ package com.smart.commons.core.i18n;
 import com.smart.commons.core.exception.BusinessException;
 import lombok.Getter;
 
+import java.io.Serial;
+
 /**
  * 支持I18n 的异常信息
  * @author shizhongming
@@ -10,6 +12,7 @@ import lombok.Getter;
  */
 @Getter
 public class I18nException extends BusinessException {
+    @Serial
     private static final long serialVersionUID = 7336029237493468850L;
 
     private final I18nMessage i18nMessage;

@@ -47,10 +47,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!(principal instanceof RestUserDetails)) {
+        if (!(principal instanceof RestUserDetails user)) {
             throw new BadCredentialsException(I18nUtils.get(AuthI18nMessage.ERROR_TOKEN_EMPTY));
         }
-        RestUserDetails user = (RestUserDetails) principal;
         // 验证JWT是否有效
         String jwt = JwtUtils.getJwt(request);
         if (StringUtils.isBlank(jwt)) {

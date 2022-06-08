@@ -2,6 +2,8 @@ package com.smart.commons.core.exception;
 
 import com.smart.commons.core.message.ResultCodeEnum;
 
+import java.io.Serial;
+
 /**
  * 业务异常封装
  * @author ShiZhongMing
@@ -9,6 +11,7 @@ import com.smart.commons.core.message.ResultCodeEnum;
  * @since 1.0
  */
 public class BusinessException extends BaseException {
+    @Serial
     private static final long serialVersionUID = -4132232198964375274L;
 
     public BusinessException(String message) {

@@ -63,7 +63,7 @@ public class DefaultUrlMappingProvider extends AbstractBeanNameProvider implemen
                                 return true;
                             }
                             return StringUtils.equals(currentMethod, item.getRequestMethod().name());
-                        }).collect(Collectors.toList());
+                        }).toList();
                 if (filterUrlMapping.isEmpty()) {
                     throw new AccessDeniedException(I18nUtils.get(HttpStatus.METHOD_NOT_ALLOWED));
                 }

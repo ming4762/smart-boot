@@ -3,12 +3,15 @@ package com.smart.commons.core.exception;
 import com.smart.commons.core.http.HttpStatus;
 import lombok.Getter;
 
+import java.io.Serial;
+
 /**
  * @author jackson
  * 2020/1/28 3:15 下午
  */
 @Getter
 public class BaseException extends RuntimeException {
+    @Serial
     private static final long serialVersionUID = 5741320275497601133L;
 
     private final Integer code;

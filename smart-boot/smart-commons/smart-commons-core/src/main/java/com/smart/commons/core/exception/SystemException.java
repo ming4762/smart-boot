@@ -1,11 +1,14 @@
 package com.smart.commons.core.exception;
 
+import java.io.Serial;
+
 /**
  * @author ShiZhongMing
  * 2021/6/30 10:31
  * @since 1.0
  */
 public class SystemException extends BaseException{
+    @Serial
     private static final long serialVersionUID = 3456037296888119325L;
 
     public SystemException(String message) {

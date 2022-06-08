@@ -23,7 +23,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import java.security.Key;
 import java.time.ZoneId;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * jwt工具类
@@ -135,7 +134,7 @@ public class JwtUtils {
                             permission.setMethod(HttpMethod.resolve(method));
                         }
                         return permission;
-                    }).collect(Collectors.toList());
+                    }).toList();
             // 设置角色
             final List<String> roles = claims.get(ROLE_KEY, List.class);
             final Set<SmartGrantedAuthority> authorities = new HashSet<>(permissions.size() + roles.size());
