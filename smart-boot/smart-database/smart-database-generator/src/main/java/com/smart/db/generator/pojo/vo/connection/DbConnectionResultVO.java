@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serial;
+
 /**
  * @author ShiZhongMing
  * 2021/6/25 15:22
@@ -16,6 +18,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class DbConnectionResultVO extends DbConnectionPO implements CreateUpdateUserSetter {
+    @Serial
     private static final long serialVersionUID = 7075305604905476783L;
 
     private BaseUser createUser;

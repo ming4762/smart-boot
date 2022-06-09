@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -25,6 +26,7 @@ import java.util.Set;
 @Setter
 @ToString
 public class DbTemplateCodeTableDTO extends DbCodeMainPO {
+    @Serial
     private static final long serialVersionUID = 2839798474432673236L;
 
     public DbTemplateCodeTableDTO() {

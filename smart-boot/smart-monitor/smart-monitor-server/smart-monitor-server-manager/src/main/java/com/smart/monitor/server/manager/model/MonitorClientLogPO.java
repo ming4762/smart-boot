@@ -7,6 +7,7 @@ import com.smart.crud.model.BaseModel;
 import lombok.*;
 import org.springframework.boot.logging.LogLevel;
 
+import java.io.Serial;
 import java.time.LocalDateTime;
 
 /**
@@ -22,6 +23,7 @@ import java.time.LocalDateTime;
 @Builder
 public class MonitorClientLogPO extends BaseModel {
 
+    @Serial
     private static final long serialVersionUID = 5153677950410116677L;
     /**
     * id - id

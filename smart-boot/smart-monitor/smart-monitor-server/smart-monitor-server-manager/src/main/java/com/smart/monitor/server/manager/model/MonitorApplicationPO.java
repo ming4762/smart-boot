@@ -7,6 +7,8 @@ import com.smart.crud.model.BaseModelUserTime;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
+
 /**
  * @author shizhongming
  * 2021/3/13 8:45 下午
@@ -15,6 +17,7 @@ import lombok.Setter;
 @Setter
 @TableName(value = "monitor_application", autoResultMap = true)
 public class MonitorApplicationPO extends BaseModelUserTime {
+    @Serial
     private static final long serialVersionUID = 8851568305606154497L;
 
     @TableId(type = IdType.ASSIGN_ID)

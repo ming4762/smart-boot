@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serial;
+
 /**
  * @author ShiZhongMing
  * 2021/5/8 13:06
@@ -14,6 +16,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class DbCodePageConfigTemplateVO extends DbCodePageConfigPO {
+    @Serial
     private static final long serialVersionUID = 2977613076184347745L;
 
     public DbCodePageConfigTemplateVO() {

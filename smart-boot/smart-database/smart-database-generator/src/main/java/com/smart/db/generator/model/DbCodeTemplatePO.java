@@ -9,6 +9,8 @@ import com.smart.db.generator.constants.TemplateTypeEnum;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
+
 /**
  * @author ShiZhongMing
  * 2021/5/7 17:14
@@ -18,6 +20,7 @@ import lombok.Setter;
 @Setter
 @TableName("db_code_template")
 public class DbCodeTemplatePO extends BaseModelUserTime {
+    @Serial
     private static final long serialVersionUID = 8967841209043755314L;
 
     @TableId(type = IdType.ASSIGN_ID)

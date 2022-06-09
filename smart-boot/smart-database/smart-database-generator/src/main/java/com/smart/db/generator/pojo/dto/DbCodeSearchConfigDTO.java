@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serial;
 import java.util.List;
 
 /**
@@ -18,6 +19,7 @@ import java.util.List;
 @Setter
 @ToString
 public class DbCodeSearchConfigDTO extends DbCodeSearchConfigPO {
+    @Serial
     private static final long serialVersionUID = -8062136073063162454L;
 
     /**

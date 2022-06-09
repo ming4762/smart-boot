@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serial;
+
 /**
  * @author ShiZhongMing
  * 2021/8/16 22:11
@@ -15,4 +17,6 @@ import lombok.ToString;
 @ToString
 public class ExcelFillConvertDataDTO extends ExcelFillDataDTO {
 
+    @Serial
+    private static final long serialVersionUID = -8775858283654259525L;
 }

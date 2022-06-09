@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serial;
 import java.util.Map;
 
 /**
@@ -19,6 +20,7 @@ import java.util.Map;
 @ToString
 public class SysFunctionListVO extends SysFunctionPO implements CreateUpdateUserSetter {
 
+    @Serial
     private static final long serialVersionUID = 1260522096785428563L;
     private BaseUser createUser;
 

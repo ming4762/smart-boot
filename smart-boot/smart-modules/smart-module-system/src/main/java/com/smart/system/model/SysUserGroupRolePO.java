@@ -7,6 +7,8 @@ import com.smart.crud.model.BaseModelCreateUserTime;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
+
 /**
  * @author jackson
  * 2020/1/24 3:45 下午
@@ -16,6 +18,7 @@ import lombok.Setter;
 @Setter
 public class SysUserGroupRolePO extends BaseModelCreateUserTime {
 
+    @Serial
     private static final long serialVersionUID = -1506076132970865247L;
     /**
      * 用户组ID

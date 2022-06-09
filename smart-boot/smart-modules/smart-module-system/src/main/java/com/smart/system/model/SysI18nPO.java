@@ -7,6 +7,8 @@ import com.smart.crud.model.BaseModelUserTime;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
+
 /**
  * @author ShiZhongMing
  * 2021/11/12
@@ -16,6 +18,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SysI18nPO extends BaseModelUserTime {
+    @Serial
     private static final long serialVersionUID = 1567001566507494995L;
 
     @TableId(type = IdType.ASSIGN_ID)

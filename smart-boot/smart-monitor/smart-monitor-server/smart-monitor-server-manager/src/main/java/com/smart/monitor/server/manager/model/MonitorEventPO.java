@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.smart.crud.model.BaseModel;
 import lombok.*;
 
+import java.io.Serial;
 import java.time.LocalDateTime;
 
 /**
@@ -21,6 +22,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class MonitorEventPO extends BaseModel {
 
+    @Serial
     private static final long serialVersionUID = 2402591844218914563L;
     /**
     * id - id

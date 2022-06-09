@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,12 +24,14 @@ import java.util.List;
 public class SysOnlineUserVO extends SysUserPO {
 
 
+    @Serial
     private static final long serialVersionUID = 3127805743664997934L;
     private List<UserLoginData> userLoginDataList;
 
     @Getter
     @Setter
     public static class UserLoginData implements Serializable {
+        @Serial
         private static final long serialVersionUID = 187324682045393739L;
         private String loginIp;
 

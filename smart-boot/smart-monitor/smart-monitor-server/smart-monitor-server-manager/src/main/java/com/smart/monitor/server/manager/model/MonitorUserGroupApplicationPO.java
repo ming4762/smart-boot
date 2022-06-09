@@ -6,6 +6,8 @@ import com.smart.crud.model.BaseModelCreateUserTime;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
+
 /**
  * 应用-用户组关系表
  * @author ShiZhongMing
@@ -16,6 +18,7 @@ import lombok.Setter;
 @Setter
 @TableName("monitor_user_group_application")
 public class MonitorUserGroupApplicationPO extends BaseModelCreateUserTime {
+    @Serial
     private static final long serialVersionUID = -625402630296588435L;
 
     private Long userGroupId;

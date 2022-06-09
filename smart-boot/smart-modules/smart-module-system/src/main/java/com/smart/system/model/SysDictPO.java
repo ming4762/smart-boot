@@ -6,6 +6,8 @@ import com.smart.crud.model.BaseModelUserTime;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
+
 /**
 * sys_dict - 系统字典表
 * @author GCCodeGenerator
@@ -16,6 +18,7 @@ import lombok.Setter;
 @TableName("sys_dict")
 public class SysDictPO extends BaseModelUserTime {
 
+    @Serial
     private static final long serialVersionUID = -4129235312297061914L;
     /**
     * dict_code - 字典编码

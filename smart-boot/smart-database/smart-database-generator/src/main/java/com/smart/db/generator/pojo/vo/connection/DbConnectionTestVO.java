@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 /**
  * 数据库连接测试结果
  * @author ShiZhongMing
@@ -15,8 +18,10 @@ import lombok.ToString;
 @Setter
 @AllArgsConstructor
 @ToString
-public class DbConnectionTestVO {
+public class DbConnectionTestVO implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = -8992212216772912050L;
     private Boolean result;
 
     private String message;

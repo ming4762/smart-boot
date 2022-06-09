@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 /**
  * @author ShiZhongMing
  * 2021/4/30 14:47
@@ -15,8 +18,10 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class DbTableQueryDTO {
+public class DbTableQueryDTO implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = 207348260004448385L;
     @NotNull(message = "数据库连接ID不能为空")
     @Schema(title = "数据库连接ID")
     private Long dbConnectionId;

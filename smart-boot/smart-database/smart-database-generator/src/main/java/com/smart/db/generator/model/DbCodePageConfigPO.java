@@ -7,6 +7,8 @@ import com.smart.crud.model.BaseModelUserTime;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
+
 /**
  * @author ShiZhongMing
  * 2021/5/6 15:39
@@ -16,6 +18,7 @@ import lombok.Setter;
 @Setter
 @TableName("db_code_page_config")
 public class DbCodePageConfigPO extends BaseModelUserTime {
+    @Serial
     private static final long serialVersionUID = 4336964239066778547L;
 
     @TableId(type = IdType.ASSIGN_ID)

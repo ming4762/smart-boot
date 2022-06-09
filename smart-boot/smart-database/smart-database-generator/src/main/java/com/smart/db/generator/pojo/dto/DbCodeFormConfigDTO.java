@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serial;
 import java.util.List;
 
 /**
@@ -20,6 +21,7 @@ import java.util.List;
 @ToString
 public class DbCodeFormConfigDTO extends DbCodeFormConfigPO {
 
+    @Serial
     private static final long serialVersionUID = -6412413400973081963L;
 
     /**

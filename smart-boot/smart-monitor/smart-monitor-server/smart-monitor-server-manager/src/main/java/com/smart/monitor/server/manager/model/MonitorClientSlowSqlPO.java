@@ -7,6 +7,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.smart.crud.model.BaseModel;
 import lombok.*;
 
+import java.io.Serial;
+
 /**
 * monitor_client_slow_sql - 客户端慢SQL
 * @author GCCodeGenerator
@@ -20,6 +22,7 @@ import lombok.*;
 @AllArgsConstructor
 public class MonitorClientSlowSqlPO extends BaseModel {
 
+    @Serial
     private static final long serialVersionUID = 4817793987516339679L;
     /**
     * id - id

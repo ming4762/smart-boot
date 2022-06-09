@@ -3,6 +3,7 @@ package com.smart.crud.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
 import java.time.LocalDateTime;
 
 /**
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public abstract class BaseModelUserTime extends BaseModelCreateUserTime {
+    @Serial
     private static final long serialVersionUID = 2257266050574705690L;
 
     protected Long updateUserId;

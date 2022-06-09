@@ -7,6 +7,8 @@ import com.smart.crud.model.BaseModelUserTime;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
+
 /**
  * 代码模板分组实体
  * @author ShiZhongMing
@@ -18,6 +20,8 @@ import lombok.Setter;
 @TableName("db_code_template_group")
 public class DbCodeTemplateGroupPO extends BaseModelUserTime {
 
+    @Serial
+    private static final long serialVersionUID = 4020704972447839303L;
     @TableId(type = IdType.ASSIGN_ID)
     private Long groupId;
 

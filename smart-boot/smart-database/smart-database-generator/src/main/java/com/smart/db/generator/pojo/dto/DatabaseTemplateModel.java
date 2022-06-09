@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import java.util.List;
 @Builder
 @ToString
 public class DatabaseTemplateModel implements Serializable {
+    @Serial
     private static final long serialVersionUID = 3609925977487065194L;
 
     /**

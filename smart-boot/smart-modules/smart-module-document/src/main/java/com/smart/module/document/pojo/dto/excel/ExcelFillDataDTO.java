@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -17,8 +19,10 @@ import java.util.Map;
 @Setter
 @ToString
 @Schema(name = "excel填充数据")
-public class ExcelFillDataDTO {
+public class ExcelFillDataDTO implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = 3262362513110914027L;
     @NotNull(message = "模板编码不能为空")
     private String templateCode;
 

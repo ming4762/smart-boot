@@ -7,6 +7,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.smart.crud.model.BaseModelCreateUserTime;
 import lombok.*;
 
+import java.io.Serial;
+
 /**
  * @author jackson
  * 2020/1/24 3:02 下午
@@ -18,6 +20,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SysUserGroupUserPO extends BaseModelCreateUserTime {
+    @Serial
     @TableField(exist = false)
     private static final long serialVersionUID = 6003195650534799142L;
 

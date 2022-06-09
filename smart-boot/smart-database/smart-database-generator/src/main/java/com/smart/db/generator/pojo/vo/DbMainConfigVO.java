@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -23,6 +24,7 @@ import java.util.List;
 @Setter
 @ToString
 public class DbMainConfigVO extends DbCodeMainPO {
+    @Serial
     private static final long serialVersionUID = -8319201416653035913L;
 
     /**

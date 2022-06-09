@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serial;
+
 /**
  * @author ShiZhongMing
  * 2021/7/6 16:03
@@ -17,6 +19,7 @@ import lombok.ToString;
 @ToString
 public class SysUserGroupListVO extends SysUserGroupPO implements CreateUpdateUserSetter {
 
+    @Serial
     private static final long serialVersionUID = -9153208237080130517L;
     private BaseUser createUser;
 

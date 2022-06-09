@@ -7,6 +7,7 @@ import com.smart.crud.model.BaseModel;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
 import java.time.LocalDateTime;
 
 /**
@@ -19,6 +20,7 @@ import java.time.LocalDateTime;
 @TableName("sys_dict_item")
 public class SysDictItemPO extends BaseModel {
 
+    @Serial
     private static final long serialVersionUID = 4637452253459448214L;
     /**
     * dict_code - 字典编码

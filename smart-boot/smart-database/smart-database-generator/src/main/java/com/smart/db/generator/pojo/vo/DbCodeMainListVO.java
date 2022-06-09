@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serial;
+
 /**
  * @author ShiZhongMing
  * 2021/5/7 10:36
@@ -15,6 +17,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class DbCodeMainListVO extends DbCodeMainPO {
+    @Serial
     private static final long serialVersionUID = 539767754724258473L;
 
     /**

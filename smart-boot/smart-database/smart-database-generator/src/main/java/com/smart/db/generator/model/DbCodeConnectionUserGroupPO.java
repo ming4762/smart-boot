@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serial;
+
 /**
  * @author ShiZhongMing
  * 2021/6/24 9:36
@@ -21,6 +23,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class DbCodeConnectionUserGroupPO extends BaseModelCreateUserTime {
 
+    @Serial
     private static final long serialVersionUID = -2976101858494136551L;
     @TableId(type = IdType.NONE)
     private Long connectionId;

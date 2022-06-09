@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.smart.crud.model.BaseModel;
 import lombok.*;
 
+import java.io.Serial;
 import java.time.LocalDateTime;
 
 /**
@@ -22,6 +23,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class MonitorClientHttpTracePO extends BaseModel {
 
+    @Serial
     private static final long serialVersionUID = -3412239413431611188L;
 
     @TableId(type = IdType.ASSIGN_ID)

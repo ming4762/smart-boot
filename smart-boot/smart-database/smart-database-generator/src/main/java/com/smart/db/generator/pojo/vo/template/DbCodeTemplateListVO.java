@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serial;
+
 /**
  * @author ShiZhongMing
  * 2021/6/28 10:33
@@ -16,6 +18,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class DbCodeTemplateListVO extends DbCodeTemplatePO implements CreateUpdateUserSetter {
+    @Serial
     private static final long serialVersionUID = -3923663463869455255L;
 
     private BaseUser createUser;

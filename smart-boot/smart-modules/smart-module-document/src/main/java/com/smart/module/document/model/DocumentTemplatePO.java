@@ -8,6 +8,8 @@ import com.smart.module.document.constants.TemplateIdentEnum;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
+
 /**
  * @author shizhongming
  * 2021/8/14 8:04 下午
@@ -16,6 +18,7 @@ import lombok.Setter;
 @Setter
 @TableName("document_template")
 public class DocumentTemplatePO extends BaseModelUserTime {
+    @Serial
     private static final long serialVersionUID = 6108967120733387606L;
 
     @TableId(type = IdType.ASSIGN_ID)

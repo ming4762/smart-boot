@@ -5,6 +5,8 @@ import com.smart.db.generator.constants.FromControlTypeEnum;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
+
 /**
  * @author shizhongming
  * 2021/5/9 3:38 下午
@@ -12,6 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class DbCodeFormConfigCommonPO extends BaseModelUserTime {
+    @Serial
     private static final long serialVersionUID = -992374588735109553L;
 
     private Long mainId;

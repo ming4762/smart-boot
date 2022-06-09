@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -17,6 +18,7 @@ import java.io.Serializable;
 @ToString
 public class SysDictItemIdDTO implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -378829530122590266L;
     private String dictCode;
 

@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serial;
+
 /**
  * @author ShiZhongMing
  * 2021/8/16 21:55
@@ -15,4 +17,6 @@ import lombok.ToString;
 @ToString
 public class ExcelSingleSheetConvertDTO extends ExcelSingleSheetDTO {
 
+    @Serial
+    private static final long serialVersionUID = -1985845036098437304L;
 }

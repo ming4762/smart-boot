@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
+
 /**
  * @author ShiZhongMing
  * 2021/5/6 15:52
@@ -15,6 +17,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class DbCodeFormConfigPO extends DbCodeFormConfigCommonPO {
+    @Serial
     private static final long serialVersionUID = 1058703315631404522L;
 
     @TableId(type = IdType.ASSIGN_ID)

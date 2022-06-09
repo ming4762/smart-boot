@@ -12,6 +12,7 @@ import com.smart.crud.mybatis.handler.LocaleTypeHandler;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
 import java.util.Locale;
 
 /**
@@ -23,6 +24,7 @@ import java.util.Locale;
 @Getter
 @Setter
 public class SysI18nItemPO extends BaseModelCreateUserTime {
+    @Serial
     private static final long serialVersionUID = -685851423581308459L;
 
     @TableId(type = IdType.ASSIGN_ID)

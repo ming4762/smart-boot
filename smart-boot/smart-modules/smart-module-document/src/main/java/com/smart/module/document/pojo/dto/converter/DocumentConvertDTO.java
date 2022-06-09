@@ -7,6 +7,9 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 /**
  * @author ShiZhongMing
  * 2021/8/27 14:09
@@ -16,8 +19,10 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 @Setter
 @Schema(name = "文档转换参数")
-public class DocumentConvertDTO {
+public class DocumentConvertDTO implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = 4781207703470509484L;
     @Schema(name = "文件")
     private MultipartFile file;
 

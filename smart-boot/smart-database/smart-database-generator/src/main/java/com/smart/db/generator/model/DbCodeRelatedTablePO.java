@@ -8,6 +8,8 @@ import com.smart.db.generator.constants.RelatedTableTypeEnum;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
+
 /**
  * @author shizhongming
  * 2021/5/12 9:16 下午
@@ -16,6 +18,7 @@ import lombok.Setter;
 @Getter
 @TableName("db_code_related_table")
 public class DbCodeRelatedTablePO extends BaseModel {
+    @Serial
     private static final long serialVersionUID = -4522273528733971546L;
 
     /**

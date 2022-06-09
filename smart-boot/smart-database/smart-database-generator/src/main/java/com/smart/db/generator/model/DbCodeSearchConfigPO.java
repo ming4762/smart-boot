@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
+
 /**
  * 搜索配置类
  * @author shizhongming
@@ -15,6 +17,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class DbCodeSearchConfigPO extends DbCodeFormConfigCommonPO {
+    @Serial
     private static final long serialVersionUID = -8137689298989008494L;
 
     @TableId(type = IdType.ASSIGN_ID)

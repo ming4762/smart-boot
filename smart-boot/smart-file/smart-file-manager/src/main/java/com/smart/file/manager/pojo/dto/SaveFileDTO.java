@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -17,6 +18,7 @@ import java.io.Serializable;
 @ToString
 public class SaveFileDTO implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 8030356270886177531L;
     private String filename;
 
