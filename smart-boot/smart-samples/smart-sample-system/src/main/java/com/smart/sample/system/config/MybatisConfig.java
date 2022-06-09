@@ -31,6 +31,7 @@ import java.util.Properties;
 @Configuration
 @MapperScan(basePackages = {
         MapperPackageConstants.MODULE_SYSTEM,
+        MapperPackageConstants.MONITOR_SERVER,
         MapperPackageConstants.DATABASE_GENERATOR
 }, sqlSessionTemplateRef = "systemSqlSessionTemplate")
 public class MybatisConfig {
