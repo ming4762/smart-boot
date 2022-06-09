@@ -19,7 +19,6 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * redis服务层
@@ -212,8 +211,7 @@ public class RedisServiceImpl implements RedisService {
 
     private RedisKeySpace analysisKeySpace(String db, String data) {
         List<String[]> analysisData = Arrays.stream(data.split(","))
-                .map(item -> item.split("="))
-                .collect(Collectors.toList());
+                .map(item -> item.split("=")).toList();
         return new RedisKeySpace(db, Long.parseLong(analysisData.get(0)[1]), Long.parseLong(analysisData.get(1)[1]), Long.parseLong(analysisData.get(2)[1]));
     }
 

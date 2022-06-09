@@ -1,5 +1,6 @@
 package com.smart.crud.model;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -9,6 +10,7 @@ import java.io.Serializable;
  * 2020/1/10 9:48 下午
  */
 public abstract class BaseModel implements Serializable {
+    @Serial
     private static final long serialVersionUID = 258297002694861599L;
 
 }

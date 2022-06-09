@@ -63,7 +63,7 @@ public class RedisInfoEndPoint {
                     }
                     return new RedisInfo(redisInfoResultEnum.getParameter().getParameter(), item.getKey().toString(), item.getValue().toString(), redisInfoResultEnum.getDescription());
                 }).filter(Objects::nonNull)
-                .sorted(Comparator.comparing(RedisInfo::getGroup).thenComparing(RedisInfo::getKey))
+                .sorted(Comparator.comparing(RedisInfo::group).thenComparing(RedisInfo::key))
                 .collect(Collectors.toList());
     }
 }

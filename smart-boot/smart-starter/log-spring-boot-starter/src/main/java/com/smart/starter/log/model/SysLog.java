@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -18,6 +19,7 @@ import java.io.Serializable;
 @Builder
 public class SysLog implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 7634433741019323407L;
 
     /**

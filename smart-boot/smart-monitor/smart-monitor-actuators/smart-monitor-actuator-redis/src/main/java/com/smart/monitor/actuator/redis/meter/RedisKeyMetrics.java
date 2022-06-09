@@ -56,7 +56,7 @@ public class RedisKeyMetrics implements ApplicationListener<ApplicationReadyEven
             }
         });
         if (keySpaceMap.containsKey(tag)) {
-            return keySpaceMap.get(tag).getKeyNum();
+            return keySpaceMap.get(tag).keyNum();
         }
         return 0L;
     }

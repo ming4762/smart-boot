@@ -3,6 +3,7 @@ package com.smart.crud.query;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ import java.util.Map;
 @Getter
 @Setter
 public class CommonQuery implements Serializable {
+    @Serial
     private static final long serialVersionUID = 25607615568253403L;
 
     private Map<String, Serializable> parameter = new HashMap<>(0);
