@@ -94,7 +94,7 @@ public class AuthEventLockedHandler implements AuthEventHandler {
         // 多次登录失败，账户锁定
         if (authUser.getLoginFailTimeLimit() > 0 && time >= authUser.getLoginFailTimeLimit()) {
             // 锁定用户
-            updateWrapper.set(SysUserAccountPO :: getAccountStatus, UserAccountStatusEnum.LOGIN_FAIL_LOCKED)
+            updateWrapper.set(SysUserAccountPO :: getAccountStatus, UserAccountStatusEnum.LOGIN_FAIL_LOCKED.getValue())
                     // 设置锁定时间
                     .set(SysUserAccountPO :: getLockTime, LocalDateTime.now());
         }
@@ -120,9 +120,9 @@ public class AuthEventLockedHandler implements AuthEventHandler {
                 .eq(SysUserAccountPO :: getUserId, userAccount.getUserId());
         if (exception instanceof LongTimeNoLoginLockedException) {
             // 长时间未登录锁定
-            updateWrapper.set(SysUserAccountPO::getAccountStatus, UserAccountStatusEnum.LONG_TIME_LOCKED);
+            updateWrapper.set(SysUserAccountPO::getAccountStatus, UserAccountStatusEnum.LONG_TIME_LOCKED.getValue());
         } else {
-            updateWrapper.set(SysUserAccountPO::getAccountStatus, UserAccountStatusEnum.LONG_TIME_PASSWORD_MODIFY_LOCKED);
+            updateWrapper.set(SysUserAccountPO::getAccountStatus, UserAccountStatusEnum.LONG_TIME_PASSWORD_MODIFY_LOCKED.getValue());
         }
         this.sysAuthUserService.update(updateWrapper);
     }
