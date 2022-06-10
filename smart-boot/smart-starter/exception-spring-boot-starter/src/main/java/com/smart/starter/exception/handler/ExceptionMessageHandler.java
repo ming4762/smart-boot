@@ -13,8 +13,9 @@ public interface ExceptionMessageHandler {
     /**
      * 异常返回信息
      * @param e Exception
+     * @param exceptionNo 异常编号
      * @param request HttpServletRequest
      * @return 信息
      */
-    Object message(Exception e, @Nullable HttpServletRequest request);
+    Object message(Exception e, long exceptionNo, @Nullable HttpServletRequest request);
 }

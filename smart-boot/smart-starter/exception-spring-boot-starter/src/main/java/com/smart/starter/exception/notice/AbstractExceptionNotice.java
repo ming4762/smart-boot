@@ -15,9 +15,9 @@ import java.util.List;
 public abstract class AbstractExceptionNotice implements ExceptionNotice {
 
     @Override
-    public void notice(@NonNull Exception e, RestUserDetails user, @NonNull HttpServletRequest request) {
+    public void notice(@NonNull Exception e, long exceptionNo, RestUserDetails user, @NonNull HttpServletRequest request) {
         if (this.isInclude(e) && !this.isExclude(e)) {
-            this.doNotice(e, user, request);
+            this.doNotice(e, exceptionNo, user, request);
         }
     }
 
@@ -47,8 +47,9 @@ public abstract class AbstractExceptionNotice implements ExceptionNotice {
     /**
      * 进行通知
      * @param e 异常信息
+     * @param exceptionNo 异常编号
      * @param user 用户
      * @param request 请求信息
      */
-    protected abstract void doNotice(@NonNull Exception e, RestUserDetails user, @NonNull HttpServletRequest request);
+    protected abstract void doNotice(@NonNull Exception e, long exceptionNo, RestUserDetails user, @NonNull HttpServletRequest request);
 }

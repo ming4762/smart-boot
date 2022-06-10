@@ -18,10 +18,11 @@ public interface ExceptionNotice {
     /**
      * 异常通知
      * @param e 异常信息
+     * @param exceptionNo 异常编号
      * @param user 用户信息
      * @param request 请求信息
      */
-    void notice(@NonNull Exception e, RestUserDetails user, @NonNull HttpServletRequest request);
+    void notice(@NonNull Exception e, long exceptionNo, RestUserDetails user, @NonNull HttpServletRequest request);
 
     /**
      * 包含的异常进行通知

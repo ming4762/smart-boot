@@ -24,6 +24,12 @@
 
 		<dependency>
 			<groupId>com.smart</groupId>
+			<artifactId>exception-spring-boot-starter</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.smart</groupId>
 			<artifactId>smart-auth-extensions-jwt</artifactId>
 			<version>${project.parent.version}</version>
 			<optional>true</optional>

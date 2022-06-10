@@ -23,7 +23,7 @@ public class DefaultNoHandlerFoundExceptionMessageProcessor extends AbstractI18n
 
 
     @Override
-    public Object message(NoHandlerFoundException e, @Nullable HttpServletRequest request) {
+    public Object message(NoHandlerFoundException e, long exceptionNo, @Nullable HttpServletRequest request) {
         log.error("NoHandlerFoundException: 请求方法 {}, 请求路径 {}", e.getRequestURL(), e.getHttpMethod(), e);
         final String message = this.i18nMessage(HttpStatus.NOT_FOUND, e.toString(), e.getRequestURL(), e.getHttpMethod());
         return Result.failure(message);

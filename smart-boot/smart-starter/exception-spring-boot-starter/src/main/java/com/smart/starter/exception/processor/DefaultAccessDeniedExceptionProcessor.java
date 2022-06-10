@@ -19,7 +19,7 @@ public class DefaultAccessDeniedExceptionProcessor extends AbstractTypeException
     }
 
     @Override
-    public Object message(AccessDeniedException e, @Nullable HttpServletRequest request) {
+    public Object message(AccessDeniedException e, long exceptionNo, @Nullable HttpServletRequest request) {
         throw e;
     }
 }
