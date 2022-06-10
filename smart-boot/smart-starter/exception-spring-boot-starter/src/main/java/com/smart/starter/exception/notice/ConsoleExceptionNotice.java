@@ -16,8 +16,8 @@ import java.util.Optional;
 public class ConsoleExceptionNotice extends AbstractCommonExcludeExceptionNotice {
 
     @Override
-    protected void doNotice(@NonNull Exception e, RestUserDetails user, @NonNull HttpServletRequest request) {
-        log.info("系统发生异常\n异常信息：{}:{}\n当前用户：{}", e.getClass().getSimpleName(), e.getMessage(), Optional.ofNullable(user).map(RestUserDetails::getFullName).orElse("未登录"));
+    protected void doNotice(@NonNull Exception e, long exceptionNo, RestUserDetails user, @NonNull HttpServletRequest request) {
+        log.info("系统发生异常\n异常信息：{}:{}\n异常编号：{}\n当前用户：{}", e.getClass().getSimpleName(), e.getMessage(), exceptionNo, Optional.ofNullable(user).map(RestUserDetails::getFullName).orElse("未登录"));
         log.error("错误信息", e);
     }
 }

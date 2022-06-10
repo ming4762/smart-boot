@@ -22,7 +22,7 @@ public class DefaultHttpRequestMethodNotSupportedExceptionMessageProcessor exten
     }
 
     @Override
-    public Object message(HttpRequestMethodNotSupportedException e, @Nullable HttpServletRequest request) {
+    public Object message(HttpRequestMethodNotSupportedException e, long exceptionNo, @Nullable HttpServletRequest request) {
         log.error("HttpRequestMethodNotSupportedException: 当前请求方式 {}, 支持请求方式 {}", e.getMethod(), JsonUtils.toJsonString(e.getSupportedHttpMethods()));
         final String message = this.i18nMessage(HttpStatus.METHOD_NOT_ALLOWED, e.toString(), e.getMethod(), JsonUtils.toJsonString(e.getSupportedHttpMethods()));
         return Result.failure(message);

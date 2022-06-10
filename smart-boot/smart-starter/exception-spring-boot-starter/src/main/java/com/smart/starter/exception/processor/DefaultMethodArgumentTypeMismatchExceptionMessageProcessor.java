@@ -21,7 +21,7 @@ public class DefaultMethodArgumentTypeMismatchExceptionMessageProcessor extends 
     }
 
     @Override
-    public Object message(MethodArgumentTypeMismatchException e, @Nullable HttpServletRequest request) {
+    public Object message(MethodArgumentTypeMismatchException e, long exceptionNo, @Nullable HttpServletRequest request) {
 
         log.error("MethodArgumentTypeMismatchException: 参数名 {}, 异常信息 {}", e.getName(), e.getMessage());
         final String message = this.i18nMessage(HttpStatus.PARAM_NOT_MATCH, e.getName(), e.getMessage());

@@ -21,7 +21,7 @@ public class DefaultHttpMediaTypeNotSupportedExceptionProcessor extends Abstract
     }
 
     @Override
-    public Object message(HttpMediaTypeNotSupportedException e, @Nullable HttpServletRequest request) {
+    public Object message(HttpMediaTypeNotSupportedException e, long exceptionNo, @Nullable HttpServletRequest request) {
         log.error(HttpStatus.UNSUPPORTED_MEDIA_TYPE.getMessage(), e);
         final String message = this.i18nMessage(HttpStatus.PARAM_NOT_MATCH, HttpStatus.PARAM_NOT_MATCH.getMessage());
         return Result.failure(message);

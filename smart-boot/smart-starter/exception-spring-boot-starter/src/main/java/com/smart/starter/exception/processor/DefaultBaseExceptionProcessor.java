@@ -20,7 +20,7 @@ public class DefaultBaseExceptionProcessor extends AbstractTypeExceptionMessageP
     }
 
     @Override
-    public Object message(BaseException e, @Nullable HttpServletRequest request) {
+    public Object message(BaseException e, long exceptionNo, @Nullable HttpServletRequest request) {
         log.error(String.format("DataManagerException: 状态码 %s, 异常信息 %s", e.getCode(), e.getMessage()), e.getE());
         return Result.failure(e);
     }

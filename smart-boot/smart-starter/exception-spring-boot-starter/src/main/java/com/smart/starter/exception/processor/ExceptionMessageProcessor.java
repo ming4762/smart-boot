@@ -30,8 +30,9 @@ public interface ExceptionMessageProcessor<T extends Exception> {
     /**
      * 返回的信息
      * @param e 异常
+     * @param exceptionNo 异常编号
      * @param request 请求信息
      * @return 信息
      */
-    Object message(T e, @Nullable HttpServletRequest request);
+    Object message(T e, long exceptionNo, @Nullable HttpServletRequest request);
 }

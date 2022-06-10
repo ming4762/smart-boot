@@ -1,6 +1,8 @@
 package com.smart.starter.exception.notice;
 
 import com.smart.auth.core.userdetails.RestUserDetails;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -8,7 +10,9 @@ import org.springframework.lang.NonNull;
 import org.springframework.scheduling.annotation.Async;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 异步通知
@@ -16,12 +20,10 @@ import java.util.Map;
  * 2020/11/15 12:21 上午
  */
 @Async
+@Slf4j
 public class AsyncNoticeHandler implements ApplicationContextAware {
 
-    /**
-     * spring 上下文
-     */
-    private ApplicationContext applicationContext;
+    private List<ExceptionNotice> exceptionNoticeList;
 
 
     /**
@@ -30,15 +32,23 @@ public class AsyncNoticeHandler implements ApplicationContextAware {
      * @param user 用户信息
      * @param request 请求信息
      */
-    public void noticeException(Exception e, RestUserDetails user, HttpServletRequest request) {
-        // 获取所有通知器
-        Map<String, ExceptionNotice> noticeMap = applicationContext.getBeansOfType(ExceptionNotice.class);
+    public void noticeException(Exception e, long exceptionNo, RestUserDetails user, HttpServletRequest request) {
         // 执行通知
-        noticeMap.forEach((key, notice) -> notice.notice(e, user, request));
+        if (CollectionUtils.isNotEmpty(exceptionNoticeList)) {
+            exceptionNoticeList.forEach(item -> {
+                try {
+                    item.notice(e, exceptionNo, user, request);
+                } catch (Exception exception) {
+                    log.error(exception.getMessage(), exception);
+                }
+            });
+        }
     }
 
     @Override
     public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
+        this.exceptionNoticeList = Arrays.stream(applicationContext.getBeanNamesForType(ExceptionNotice.class))
+                .map(name -> applicationContext.getBean(name, ExceptionNotice.class))
+                .collect(Collectors.toList());
     }
 }

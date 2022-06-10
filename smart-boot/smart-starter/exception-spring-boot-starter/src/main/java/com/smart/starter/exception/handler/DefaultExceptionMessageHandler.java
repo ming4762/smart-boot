@@ -27,13 +27,13 @@ public class DefaultExceptionMessageHandler implements ExceptionMessageHandler, 
     private final Map<Type, ExceptionMessageProcessor<? extends Exception>> messageProcessorMap = new ConcurrentHashMap<>();
 
     @Override
-    public Object message(Exception e, HttpServletRequest request) {
+    public Object message(Exception e, long exceptionNo, HttpServletRequest request) {
         ExceptionMessageProcessor processor =  messageProcessorMap.get(e.getClass());
         if (Objects.isNull(processor)) {
             processor = messageProcessorMap.get(Exception.class);
         }
         if (Objects.nonNull(processor)) {
-            return processor.message(e, request);
+            return processor.message(e, exceptionNo, request);
         }
         log.error("系统发生未知异常", e);
         return Result.failure("系统发生未知异常", e.toString());
@@ -41,7 +41,7 @@ public class DefaultExceptionMessageHandler implements ExceptionMessageHandler, 
 
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         // 获取所有的ExceptionMessageProcessor对象
         final Map<String, ExceptionMessageProcessor> processorMap = applicationContext.getBeansOfType(ExceptionMessageProcessor.class);
         // 存储类型

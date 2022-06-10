@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class DefaultHttpMessageNotReadableExceptionMessageProcessor extends AbstractI18nExceptionMessageProcessor<HttpMessageNotReadableException> {
     @Override
-    public Object message(HttpMessageNotReadableException e, @Nullable HttpServletRequest request) {
+    public Object message(HttpMessageNotReadableException e, long exceptionNo, @Nullable HttpServletRequest request) {
         return Result.failure("数据读取失败", e.getMessage());
     }
 

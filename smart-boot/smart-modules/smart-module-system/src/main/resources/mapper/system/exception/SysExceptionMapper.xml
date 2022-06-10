@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smart.system.mapper.SysExceptionMapper">
+    <sql id="columnList">
+        <!--   id      -->
+        id,
+        <!--   异常信息      -->
+        exception_message,
+        <!--   请求IP      -->
+        request_ip,
+        <!--   服务器IP      -->
+        server_ip,
+        <!--   请求路径      -->
+        request_path,
+        <!--   操作人员ID      -->
+        operate_user_id,
+        <!--   创建时间      -->
+        create_time,
+        <!--   用户是否反馈      -->
+        user_feedback,
+        <!--   用户反馈信息      -->
+        feedback_message,
+        <!--   反馈时间      -->
+        feedback_time,
+        <!--   是否已处理      -->
+        resolved,
+        <!--   处理信息      -->
+        resolved_message,
+        <!--   处理人员ID      -->
+        resolved_user_id,
+        <!--   处理时间      -->
+        resolved_time,
+    </sql>
+
+    <resultMap id="commonResultMap" type="com.smart.system.model.SysExceptionPO">
+        <!--   id      -->
+        <id column="id" property="id" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   异常信息      -->
+        <result column="exception_message" property="exceptionMessage" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   请求IP      -->
+        <result column="request_ip" property="requestIp" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   服务器IP      -->
+        <result column="server_ip" property="serverIp" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   请求路径      -->
+        <result column="request_path" property="requestPath" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   操作人员ID      -->
+        <result column="operate_user_id" property="operateUserId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   创建时间      -->
+        <result column="create_time" property="createTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+        <!--   用户是否反馈      -->
+        <result column="user_feedback" property="userFeedback" javaType="java.lang.Boolean" jdbcType="BIT"/>
+        <!--   用户反馈信息      -->
+        <result column="feedback_message" property="feedbackMessage" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   反馈时间      -->
+        <result column="feedback_time" property="feedbackTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+        <!--   是否已处理      -->
+        <result column="resolved" property="resolved" javaType="java.lang.Boolean" jdbcType="BIT"/>
+        <!--   处理信息      -->
+        <result column="resolved_message" property="resolvedMessage" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   处理人员ID      -->
+        <result column="resolved_user_id" property="resolvedUserId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   处理时间      -->
+        <result column="resolved_time" property="resolvedTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+    </resultMap>
+</mapper>

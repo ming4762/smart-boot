@@ -18,7 +18,7 @@ public class DefaultBindExceptionProcessor extends AbstractTypeExceptionMessageP
     }
 
     @Override
-    public Object message(BindException e, @Nullable HttpServletRequest request) {
+    public Object message(BindException e, long exceptionNo, @Nullable HttpServletRequest request) {
         return Result.failure(e.getBindingResult());
     }
 }

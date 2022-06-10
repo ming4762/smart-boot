@@ -20,7 +20,7 @@ public class DefaultConstraintViolationExceptionProcessor extends AbstractTypeEx
     }
 
     @Override
-    public Object message(ConstraintViolationException e, @Nullable HttpServletRequest request) {
+    public Object message(ConstraintViolationException e, long exceptionNo, @Nullable HttpServletRequest request) {
         return Result.failure(HttpStatus.BAD_REQUEST.getCode(), I18nUtils.get(HttpStatus.BAD_REQUEST));
     }
 }

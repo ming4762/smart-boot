@@ -19,7 +19,7 @@ public class DefaultExceptionHandler extends AbstractI18nExceptionMessageProcess
     }
 
     @Override
-    public Object message(Exception e, @Nullable HttpServletRequest request) {
+    public Object message(Exception e, long exceptionNo, @Nullable HttpServletRequest request) {
         log.error("系统发生未知异常", e);
         return Result.failure("系统发生未知异常", e.toString());
     }

@@ -18,7 +18,7 @@ public class DefaultMethodArgumentNotValidExceptionProcessor extends AbstractTyp
     }
 
     @Override
-    public Object message(MethodArgumentNotValidException e, @Nullable HttpServletRequest request) {
+    public Object message(MethodArgumentNotValidException e, long exceptionNo, @Nullable HttpServletRequest request) {
         return Result.failure(e.getBindingResult());
     }
 }

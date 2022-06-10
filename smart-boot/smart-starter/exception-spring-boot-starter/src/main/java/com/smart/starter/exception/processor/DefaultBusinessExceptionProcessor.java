@@ -20,7 +20,7 @@ public class DefaultBusinessExceptionProcessor extends AbstractTypeExceptionMess
     }
 
     @Override
-    public Object message(BusinessException e, @Nullable HttpServletRequest request) {
+    public Object message(BusinessException e, long exceptionNo, @Nullable HttpServletRequest request) {
         log.error("系统发生业务异常", e);
         return Result.failure(e);
     }

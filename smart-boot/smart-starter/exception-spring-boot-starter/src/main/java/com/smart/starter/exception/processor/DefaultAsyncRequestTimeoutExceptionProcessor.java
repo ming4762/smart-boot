@@ -20,7 +20,7 @@ public class DefaultAsyncRequestTimeoutExceptionProcessor extends AbstractTypeEx
     }
 
     @Override
-    public Object message(AsyncRequestTimeoutException e, @Nullable HttpServletRequest request) {
+    public Object message(AsyncRequestTimeoutException e, long exceptionNo, @Nullable HttpServletRequest request) {
         log.error("请求超时");
         return Result.failure("请求超时");
     }
