@@ -2,6 +2,7 @@
   <div class="full-height">
     <vxe-grid
       highlight-current-row
+      ref="gridRef"
       :toolbar-config="toolbarConfig"
       size="small"
       :loading="dataLoading"
@@ -30,7 +31,7 @@
           <a-button v-permission="permissions.add" type="primary" class="button-margin" :size="buttonSizeConfig" @click="() => handleShowModal(true, null)">
             {{ $t('common.button.add') }}
           </a-button>
-          <a-button v-permission="permissions.delete" type="primary" danger class="button-margin" :size="buttonSizeConfig">
+          <a-button v-permission="permissions.delete" type="primary" danger class="button-margin" :size="buttonSizeConfig" @click="handleDeleteByCheckbox">
             {{ $t('common.button.delete') }}
           </a-button>
         </div>
@@ -101,6 +102,7 @@ import { SystemPermissions } from '@/modules/system/constants/SystemConstants'
 import SizeConfigHoops from '@/components/config/SizeConfigHooks'
 import { tableUseYn } from '@/components/common/TableCommon'
 import { errorMessage } from '@/components/notice/SystemNotice'
+import { useVxeDelete } from '@/components/hooks/CrudHooks'
 
 const platformListV = [
   {
@@ -282,17 +284,31 @@ export default defineComponent({
   },
   emits: ['change'],
   setup (props, { emit }) {
+    const gridRef = ref()
+    const { t } = useI18n()
     const { groupId } = toRefs(props)
     const loadDataVue = loadDataVueSupport(groupId, emit)
     const addEditVue = addEditVueSupport(loadDataVue.loadData, groupId)
     const handleCurrentChange = ({ row }: any) => {
       loadDataVue.currentChange(row.i18nId)
     }
+    const { handleDeleteByCheckbox } = useVxeDelete(gridRef, t, async (idList: Array<number>) => {
+      try {
+        await ApiService.postAjax('sys/i18n/batchDeleteById', idList)
+      } catch (e) {
+        errorMessage(e)
+      }
+    }, {
+      idField: 'i18nId',
+      listHandler: loadDataVue.loadData
+    } )
     return {
       ...loadDataVue,
       ...SizeConfigHoops(),
       ...addEditVue,
-      handleCurrentChange
+      handleCurrentChange,
+      gridRef,
+      handleDeleteByCheckbox
     }
   },
   data () {
