@@ -3,6 +3,7 @@ package com.smart.starter.log.aspect;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.smart.commons.core.exception.BaseException;
 import com.smart.commons.core.log.Log;
 import com.smart.commons.core.log.LogSourceEnum;
 import com.smart.commons.core.message.Result;
@@ -102,7 +103,7 @@ public final class LogAspect {
             log.info("Time-Consuming : {} ms", time);
         }
         // 保存日志
-        this.saveLog(point, time, result);
+        this.saveLog(point, time, result, exception);
         if (exception != null) {
             // 待完善
             throw exception;
@@ -145,7 +146,7 @@ public final class LogAspect {
      * @param result 执行结果
      */
     @SuppressWarnings("rawtypes")
-    private void saveLog(ProceedingJoinPoint point, long time, Object result) {
+    private void saveLog(ProceedingJoinPoint point, long time, Object result, Exception exception) {
         try {
             final Signature signature = point.getSignature();
             if (signature instanceof MethodSignature) {
@@ -164,6 +165,15 @@ public final class LogAspect {
                     // 如果设置了保存的编码，并且不包含保存的编码  则不保存日志
                     if (!saveCodeList.isEmpty() && !saveCodeList.contains(code)) {
                         saveLog = false;
+                    }
+                }
+                // 判断是否有异常信息
+                if (exception != null) {
+                    errorMessage = exception.toString();
+                    if (exception instanceof BaseException baseException) {
+                        code = baseException.getCode();
+                    } else {
+                        code = 500;
                     }
                 }
                 if (saveLog) {
