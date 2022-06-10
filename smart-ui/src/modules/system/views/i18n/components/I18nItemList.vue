@@ -1,6 +1,7 @@
 <template>
   <div class="full-height">
     <vxe-grid
+      ref="gridRef"
       height="auto"
       :toolbar-config="toolbarConfig"
       size="small"
@@ -11,7 +12,7 @@
       <template #table-tools>
         <div style="margin-right: 5px">
           <a-button v-permission="permissions.add" style="margin-right: 5px;" type="primary" :size="buttonSizeConfig" @click="() => handleShowModal(true, null)">{{ $t('common.button.add') }}</a-button>
-          <a-button v-permission="permissions.delete" type="primary" danger :size="buttonSizeConfig">{{ $t('common.button.delete') }}</a-button>
+          <a-button v-permission="permissions.delete" type="primary" danger :size="buttonSizeConfig" @click="handleDeleteByCheckbox">{{ $t('common.button.delete') }}</a-button>
         </div>
       </template>
 
@@ -54,6 +55,8 @@ import { message } from 'ant-design-vue'
 import ApiService from '@/common/utils/ApiService'
 import { SystemPermissions } from '@/modules/system/constants/SystemConstants'
 import SizeConfigHoops from '@/components/config/SizeConfigHooks'
+import { useVxeDelete } from '@/components/hooks/CrudHooks'
+import { errorMessage } from '@/components/notice/SystemNotice'
 
 const loadDataVueSupport = (i18nId: Ref<number | null | undefined>) => {
   const dataLoading = ref(false)
@@ -159,13 +162,31 @@ export default defineComponent({
     i18nId: Number as PropType<number | null>
   },
   setup (props) {
+    const gridRef = ref()
+    const { t } = useI18n()
     const { i18nId } = toRefs(props)
     const loadDataVue = loadDataVueSupport(i18nId)
     const addEditVue = addEditVueSupport(loadDataVue.loadData, i18nId)
+    /**
+     * 删除操作
+     */
+    const { handleDeleteByCheckbox } = useVxeDelete(gridRef, t, async (idList: Array<number>) => {
+      try {
+        await ApiService.postAjax('sys/i18nItem/batchDeleteById', idList)
+      } catch (e) {
+        errorMessage(e)
+      }
+    }, {
+      idField: 'i18nItemId',
+      listHandler: loadDataVue.loadData
+    })
+
     return {
       ...loadDataVue,
       ...SizeConfigHoops(),
-      ...addEditVue
+      ...addEditVue,
+      gridRef,
+      handleDeleteByCheckbox
     }
   },
   data () {

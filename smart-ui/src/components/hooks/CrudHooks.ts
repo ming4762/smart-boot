@@ -284,6 +284,7 @@ export const useVxeDelete = (gridRef: Ref, i18nRender: Function, deleteHandler: 
       content: i18nRender('common.notice.deleteConfirm'),
       onOk: async () => {
         await deleteHandler(idList)
+        message.success(i18nRender('common.message.deleteSuccess'))
         if (parameter.listHandler) {
           parameter.listHandler()
         }
