@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -32,6 +33,7 @@ public class DbExceptionNotice extends AbstractCommonExcludeExceptionNotice {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     protected void doNotice(@NonNull Exception e, long exceptionNo, RestUserDetails user, @NonNull HttpServletRequest request) {
         // 异常信息保存到数据库
         try {

@@ -5,7 +5,10 @@ import AppStore from './modules/AppStore'
 
 export default createStore({
   modules: {
-    system: systemStore,
+    system: {
+      namespaced: true,
+      ...systemStore
+    },
     app: {
       namespaced: true,
       ...AppStore

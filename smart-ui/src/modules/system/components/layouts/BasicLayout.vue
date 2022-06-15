@@ -40,6 +40,8 @@
         <component :is="Component" v-else :key="route.name" />
       </transition>
     </router-view>
+
+    <ExceptionModal />
   </pro-layout>
 </template>
 
@@ -61,6 +63,7 @@ import { STORE_APP_MUTATION } from '@/common/constants/CommonConstants'
 import ProLayout from '@/components/layouts/ProLayout'
 import RightContent from './header/RightContent.vue'
 import SettingDrawer from './SettingDrawer/SettingDrawer'
+import ExceptionModal from '../excption/ExceptionModal.vue'
 
 import './BasicLayout.less'
 import TreeUtils from '@/common/utils/TreeUtils'
@@ -117,8 +120,6 @@ const settingVueSupport = (store: Store<any>) => {
     handleSettingChange
   }
 }
-
-
 /**
  * 加载用户菜单信息
  */
@@ -135,7 +136,6 @@ const UserMenuVueSupport = (store : Store<any>) => {
     userMenu
   }
 }
-
 /**
  * tab相关
  */
@@ -171,6 +171,17 @@ const tabsVueSupport = (store: Store<any>, route: RouteLocationNormalized, route
   }
 }
 
+/**
+ * 异常信息谭
+ */
+const useSystemException = (store: Store<any>) => {
+  // 异常modal显示装填
+  const exceptionModalVisible = computed(() => store.getters['system/exception'].modalVisible)
+
+  return {
+    exceptionModalVisible
+  }
+}
 
 /**
  * 基础布局
@@ -181,7 +192,8 @@ export default defineComponent({
     ProLayout,
     ReloadOutlined,
     RightContent,
-    SettingDrawer
+    SettingDrawer,
+    ExceptionModal
   },
   setup () {
     const store = useStore()
@@ -193,6 +205,7 @@ export default defineComponent({
     const settingVue = settingVueSupport(store)
     const i18nRender = useI18n().t
     const userMenuVue = UserMenuVueSupport(store)
+    const systemExceptionHook = useSystemException(store)
 
     // TODO:不显示tab，以下代码无意义，如何优化？
     const tabsVue = tabsVueSupport(store, route, router)
@@ -215,6 +228,7 @@ export default defineComponent({
       ...collapsedVue,
       ...settingVue,
       ...userMenuVue,
+      ...systemExceptionHook,
       title: defaultSettings.title,
       isDev: import.meta.env.DEV,
       i18nRender,

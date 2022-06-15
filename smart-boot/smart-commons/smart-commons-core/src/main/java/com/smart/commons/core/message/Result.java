@@ -5,7 +5,9 @@ import com.smart.commons.core.exception.BusinessException;
 import com.smart.commons.core.http.HttpStatus;
 import com.smart.commons.core.http.IHttpStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -24,6 +26,8 @@ import java.util.Optional;
 @Getter
 @Setter
 @Schema(title = "通用api接口", description = "通用api接口返回")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Result<T> {
 
     private static final long serialVersionUID = 9144229906004159463L;

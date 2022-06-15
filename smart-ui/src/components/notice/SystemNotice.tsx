@@ -1,7 +1,6 @@
-import { createVNode } from 'vue'
+import store from '@/store'
 
-import { message, Modal, Collapse, CollapsePanel  } from 'ant-design-vue'
-import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
+import { message } from 'ant-design-vue'
 
 /**
  * 错误信息处理
@@ -19,21 +18,15 @@ export const errorMessage = (e: any) => {
   }
 }
 
+export const successMessage = (msg: string) => {
+  message.success(msg)
+}
+
 /**
  * 500 错误提示
- * TODO: 待完善
  * @param e
  */
 const error500Handler = (e: any) => {
-  const { message, data } = e
-  Modal.confirm({
-    title: message,
-    width: 600,
-    icon: createVNode(ExclamationCircleOutlined),
-    content: createVNode(Collapse, {  }, [
-      createVNode(CollapsePanel, {
-        header: 'Error Detail'
-      }, data)
-    ])
-  })
+  const { exceptionNo } = e
+  store.commit('system/handleShowExceptionModal', exceptionNo)
 }
