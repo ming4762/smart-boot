@@ -59,7 +59,7 @@ public class AuthCaptchaSecurityConfigurer extends SecurityConfigurerAdapter<Def
         return this.serviceProvider;
     }
 
-    public static class ServiceProvider {
+    public class ServiceProvider {
         private String createUrl;
 
         private List<String> loginUrls;
@@ -79,6 +79,10 @@ public class AuthCaptchaSecurityConfigurer extends SecurityConfigurerAdapter<Def
         public ServiceProvider loginUrl(String ...loginUrls) {
             this.loginUrls = Arrays.asList(loginUrls);
             return this;
+        }
+
+        public AuthCaptchaSecurityConfigurer and() {
+            return AuthCaptchaSecurityConfigurer.this;
         }
     }
 }
