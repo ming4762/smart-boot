@@ -16,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
+ * 缓存服务类-基于GUAVA实现
  * @author ShiZhongMing
  * @since 1.0
  */
@@ -45,7 +46,7 @@ public class GuavaCacheServiceImpl implements GuavaCacheService {
         ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
         taskScheduler.setPoolSize(1);
         taskScheduler.setRemoveOnCancelPolicy(false);
-        taskScheduler.setThreadNamePrefix("guava cache clear");
+        taskScheduler.setThreadNamePrefix("guava-cache");
         return taskScheduler;
     }
 

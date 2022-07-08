@@ -74,7 +74,7 @@ public class DefaultFileServiceImpl extends BaseServiceImpl<SysFileMapper, SysFi
             actualFileService = this.actualFileServiceMap.get(this.fileProperties.getDefaultHandler());
         }
         if (Objects.isNull(actualFileService)) {
-            throw new SmartFileException(String.format("获取文件执行器失败，为找到对应的文件执行器，执行器名称：%s", dbName));
+            throw new SmartFileException(String.format("获取文件执行器失败，未找到对应的文件执行器，执行器名称：%s", dbName));
         }
         return actualFileService;
     }
@@ -185,7 +185,7 @@ public class DefaultFileServiceImpl extends BaseServiceImpl<SysFileMapper, SysFi
             this.removeById(fileId);
             // 删除实际文件
             if (ObjectUtils.isEmpty(file.getDbId())) {
-                throw new BaseException("实际文件ID未空，删除失败");
+                throw new BaseException("实际文件ID为空，删除失败");
             }
             this.getActualFileService(file.getHandlerType()).delete(file.getDbId());
         }
@@ -255,7 +255,7 @@ public class DefaultFileServiceImpl extends BaseServiceImpl<SysFileMapper, SysFi
     @Override
     @NonNull
     public SysFileBO download(@NonNull SysFilePO file) {
-        Assert.notNull(file.getDbId(), "实际文件ID未空，删除失败");
+        Assert.notNull(file.getDbId(), "实际文件ID为空，删除失败");
         try {
             return new SysFileBO(file, this.getActualFileService(file.getHandlerType()).download(file.getDbId()));
         } catch (FileNotFoundException e) {
