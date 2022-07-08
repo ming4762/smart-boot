@@ -17,3 +17,10 @@ export const STORE_APP_MUTATION = {
   APP_LANGUAGE: 'smart_app_lang',
   APP_SIDEBAR_TYPE: 'smart_app_sidebar_type'
 }
+
+/**
+ * 系统事件symbol
+ */
+export const EVENT_SYMBOLS = {
+  SYSTEM_ADD_MENU: Symbol('system_add_menu')
+}

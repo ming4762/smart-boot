@@ -24,6 +24,18 @@
           @page-change="handlePageChange" />
       </template>
       <template #table-operation="{ row }">
+        <a-dropdown>
+          <a-button :size="tableButtonSizeConfig" type="primary">
+            Actions
+            <DownOutlined />
+          </a-button>
+          <template #overlay>
+            <a-menu @click="({ key }) => handleActions(row, key)">
+              <a-menu-item key="edit" :disabled="!hasPermission(permissions.update)"><edit-outlined />{{ $t('common.button.edit') }}</a-menu-item>
+              <a-menu-item key="editAccount"></a-menu-item>
+            </a-menu>
+          </template>
+        </a-dropdown>
         <a-button v-permission="permissions.update" :size="buttonSizeConfig" type="link" @click="() => handleShowUpdate(row.userId)">{{ $t('common.button.edit') }}</a-button>
       </template>
       <template #toolbar_buttons>
@@ -141,6 +153,7 @@ import { defineComponent, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { Modal } from 'ant-design-vue'
+import { DownOutlined, EditOutlined } from '@ant-design/icons-vue'
 
 import { vueLoadData, vueAddEdit, userOperationHoops, useCreateAccount } from './UserListSupport'
 
@@ -149,10 +162,15 @@ import { SystemPermissions } from '../../constants/SystemConstants'
 import dayjs from 'dayjs'
 import { tableUseYn, tableDeleteYn } from '@/components/common/TableCommon'
 import SizeConfigHoops from '@/components/config/SizeConfigHooks'
+import { hasPermission } from '@/common/auth/AuthUtils'
 
 
 export default defineComponent({
   name: 'UserListPage',
+  components: {
+    DownOutlined,
+    EditOutlined
+  },
   setup () {
     const tableRef = ref()
     const { t } = useI18n()
@@ -183,6 +201,15 @@ export default defineComponent({
         }
       })
     }
+    const handleActions = (row: any, key: string) => {
+      const { userId } = row
+      switch (key) {
+        case 'edit': {
+          addEditVue.handleShowUpdate(userId)
+          break
+        }
+      }
+    }
     return {
       tableRef,
       ...userOperationVue,
@@ -191,7 +218,9 @@ export default defineComponent({
       handleSetYn,
       ...addEditVue,
       permissions: SystemPermissions.user,
-      ...useCreateAccount(tableRef, t)
+      ...useCreateAccount(tableRef, t),
+      handleActions,
+      hasPermission
     }
   },
   data () {

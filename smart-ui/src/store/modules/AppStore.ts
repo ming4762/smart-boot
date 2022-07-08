@@ -9,6 +9,9 @@ import { CONTENT_WIDTH_TYPE } from '@/modules/system/store/mutation-types'
 import { STORE_APP_MUTATION } from '@/common/constants/CommonConstants'
 import defaultSetting from '@/config/defaultSetting'
 
+import { publish } from '@/common/utils/PublishUtils'
+import { EVENT_SYMBOLS } from '@/common/constants/CommonConstants'
+
 const STORE_KEYS = {
   ACTIVE_MENU: 'smart_app_active_menu',
   OPEN_MENU_LIST: 'smart_app_open_menu',
@@ -200,7 +203,6 @@ const LayoutStore: StoreOptions<any> = {
           resolve(null)
           return false
         }
-        router.push(menu.path)
         // 判断是否超出最大打开数
         // if (state.openMenuList.length >= 15) {
         //   reject('more page')
@@ -212,6 +214,8 @@ const LayoutStore: StoreOptions<any> = {
           })
           if (!hasMenu) {
             commit(STORE_APP_MUTATION.APP_ADD_OPEN_MENU, menu)
+            // 发布添加菜单事件
+            publish(EVENT_SYMBOLS.SYSTEM_ADD_MENU, menu)
           }
         }
         resolve(null)

@@ -3,7 +3,7 @@ import { ref, createVNode, onMounted, computed, watch, reactive, onBeforeUnmount
 import { Modal, notification } from 'ant-design-vue'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
 
-import { loadActuator, loadActuatorList } from '@/modules/monitor/utils/ClientApiUtils'
+import { loadActuator } from '@/modules/monitor/utils/ClientApiUtils'
 import { errorMessage } from '@/components/notice/SystemNotice'
 import ApiService from '@/common/utils/ApiService'
 

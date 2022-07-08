@@ -1,5 +1,8 @@
 import { StoreOptions } from 'vuex'
 
+/**
+ * 系统模块store
+ */
 const systemStore: StoreOptions<any> = {
   state: {
     exception: {

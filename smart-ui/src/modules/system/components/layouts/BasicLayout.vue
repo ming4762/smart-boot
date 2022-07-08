@@ -5,8 +5,10 @@
     :is-mobile="isMobile"
     :open-menu-list="computedOpenMenuList"
     :tab-remove="handleTabRemove"
+    :lang="computedLang"
     :tab-click="handleTabClick"
     :handle-collapse="handleCollapse"
+    :menu-click="handleMenuClick"
     :handle-media-query="handleMediaQuery"
     :i18n-render="i18nRender"
     v-bind="setting"
@@ -149,7 +151,7 @@ const tabsVueSupport = (store: Store<any>, route: RouteLocationNormalized, route
   })
   // 页面初始加载，如果路径不是主页 则添加页面
   onMounted(() => {
-    store.dispatch('app/addMenu', '/main')
+    // store.dispatch('app/addMenu', '/main')
     if (route.fullPath !== '/main') {
       store.dispatch('app/addMenu', route.fullPath)
     }
@@ -210,6 +212,10 @@ export default defineComponent({
     // TODO:不显示tab，以下代码无意义，如何优化？
     const tabsVue = tabsVueSupport(store, route, router)
 
+    const computedLang = computed(() => {
+      return store.getters['app/lang']
+    })
+
     onMounted(async () => {
       try {
         const result = await ApiService.postAjax('auth/isInitialPassword')
@@ -223,6 +229,11 @@ export default defineComponent({
         errorMessage(e)
       }
     })
+    // 监控添加菜单事件
+    const handleMenuClick = (menuId: string) => {
+      router.push(menuId)
+    }
+
     return {
       ...mobileVue,
       ...collapsedVue,
@@ -233,6 +244,8 @@ export default defineComponent({
       isDev: import.meta.env.DEV,
       i18nRender,
       ...tabsVue,
+      computedLang,
+      handleMenuClick,
       settingDrawerVisible: computed(() => store.getters['app/settingDrawerVisible'])
     }
   }

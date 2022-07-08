@@ -1,22 +1,10 @@
 import { defineComponent, PropType, toRefs, computed, createVNode } from 'vue'
 import VuePropsTypes from '@/common/utils/VueTypes'
-import RouteMenu from './RouteMenu'
+import RouteMenu, { RouteMenuProps } from './RouteMenu'
 import './SideMenu.less'
 import { isFun } from '@/common/utils/utils'
 
 export const SiderMenuProps = {
-  i18nRender: {
-    type: [Function, Boolean] as PropType<Function | boolean>,
-    default: false
-  },
-  mode: {
-    type: String as PropType<string>,
-    default: 'inline'
-  },
-  theme: {
-    type: String as PropType<string>,
-    default: 'dark'
-  },
   contentWidth: {
     type: String as PropType<string>,
     validator: VuePropsTypes.oneOf(['Fluid', 'Fixed']).validator,
@@ -25,14 +13,8 @@ export const SiderMenuProps = {
   collapsible: {
     type: Boolean as PropType<boolean>
   },
-  collapsed: {
-    type: Boolean as PropType<boolean>
-  },
   handleCollapse: {
     type: Function as PropType<Function>
-  },
-  menus: {
-    type: Array as PropType<Array<any>>
   },
   siderWidth: {
     type: Number as PropType<number>,
@@ -60,7 +42,8 @@ export const SiderMenuProps = {
   },
   menuRender: {
     validator: VuePropsTypes.oneOfType([Function, Array, Object, Boolean]).validator
-  }
+  },
+  ...RouteMenuProps
 }
 
 export const defaultRenderLogo = (logo: any) => {
@@ -111,7 +94,7 @@ export default defineComponent({
     }
   },
   render () {
-    const { logo, siderWidth, theme, collapsible, collapsed, computedSiderClass, title, menuHeaderRender, menuRender, menus, mode, i18nRender } = this
+    const { logo, siderWidth, theme, collapsible, collapsed, computedSiderClass, title, menuHeaderRender, menuRender, menus, mode, i18nRender, menuClick, lang } = this
     const headerDom = defaultRenderLogoAntTitle({
       logo,
       title,
@@ -140,7 +123,9 @@ export default defineComponent({
           menus,
           mode,
           theme,
-          i18nRender
+          i18nRender,
+          menuClick,
+          lang
         })
       }
       </a-layout-sider>
