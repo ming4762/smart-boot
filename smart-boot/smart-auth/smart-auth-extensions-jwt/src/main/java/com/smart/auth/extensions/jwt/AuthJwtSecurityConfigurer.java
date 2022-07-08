@@ -101,31 +101,28 @@ public class AuthJwtSecurityConfigurer extends SecurityConfigurerAdapter<Default
         return Optional.ofNullable(this.serviceProvider.loginUrl).orElse(LOGIN_URL);
     }
 
-    /**
-     * 初始化函数
-     * @param builder HttpSecurity
-     * @throws Exception Exception
-     */
     @Override
-    public void init(HttpSecurity builder) throws Exception {
-        builder.setSharedObject(SecurityContextRepository.class, this.postProcess(new JwtSecurityContextRepository()));
-        // 初始化bean
-        this.initBean();
-        // 创建上下文
-        this.jwtContext = this.createJwtContext();
+    public void configure(HttpSecurity builder) throws Exception {
         // 构建
         builder
-                .formLogin().disable()
-                .httpBasic().disable()
-                .logout().disable()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
                 .authenticationProvider(this.getBean(RestAuthenticationProvider.class, this.serviceProvider.authenticationProvider))
                 // 添加登录 登出过滤器
                 .addFilterAfter(this.createJwtFilterChainProxy(), BasicAuthenticationFilter.class)
                 // 添加认证过滤器
                 .addFilterAfter(new JwtAuthenticationFilter(this.jwtContext, this.getJwtStore()), ExceptionTranslationFilter.class);
+    }
+
+    /**
+     * 初始化函数
+     * @param builder HttpSecurity
+     */
+    @Override
+    public void init(HttpSecurity builder) {
+        builder.setSharedObject(SecurityContextRepository.class, this.postProcess(new JwtSecurityContextRepository()));
+        // 初始化bean
+        this.initBean();
+        // 创建上下文
+        this.jwtContext = this.createJwtContext();
     }
 
     protected List<JwtStore> getJwtStore() {

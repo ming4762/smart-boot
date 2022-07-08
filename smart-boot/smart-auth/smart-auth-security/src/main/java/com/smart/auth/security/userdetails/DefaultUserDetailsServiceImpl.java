@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * 默认的UserDetailsService
@@ -52,14 +51,13 @@ public class DefaultUserDetailsServiceImpl implements UserDetailsService, SmsUse
         // 添加角色
         grantedAuthoritySet.addAll(
                 this.userService.listRoleCode(user).stream()
-                        .map(RoleGrantedAuthority::new)
-                        .collect(Collectors.toList())
+                        .map(RoleGrantedAuthority::new).toList()
         );
         // 添加权限
         grantedAuthoritySet.addAll(
                 this.userService.listPermission(user)
                         .stream()
-                        .map(PermissionGrantedAuthority::new).collect(Collectors.toList())
+                        .map(PermissionGrantedAuthority::new).toList()
         );
         // 查询用户角色信息
         final RestUserDetailsImpl restUserDetails = createByUser(user);

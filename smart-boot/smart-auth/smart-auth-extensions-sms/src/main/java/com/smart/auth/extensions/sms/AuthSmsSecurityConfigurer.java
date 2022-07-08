@@ -49,8 +49,7 @@ public class AuthSmsSecurityConfigurer extends SecurityConfigurerAdapter<Default
     }
 
     @Override
-    public void init(HttpSecurity builder) {
-
+    public void configure(HttpSecurity builder) throws Exception {
         builder
                 .authenticationProvider(this.getBean(SmsAuthenticationProvider.class, this.serviceProvider.authenticationProvider))
                 .addFilterBefore(this.createLoginFilter(), BasicAuthenticationFilter.class);
