@@ -102,8 +102,6 @@ import SizeConfigHooks from '@/components/config/SizeConfigHooks'
 import { handleLoadData, useShowStackTrace } from './SysExceptionHook'
 import { tableBooleanColumn } from '@/components/common/TableCommon'
 import { hasPermission } from '@/common/auth/AuthUtils'
-import ApiService from '@/common/utils/ApiService'
-import {errorMessage} from '@/components/notice/SystemNotice'
 
 export default defineComponent({
   name: 'SysExceptionListView',
@@ -125,13 +123,6 @@ export default defineComponent({
         resolved: ''
       }
     })
-    const test = async () => {
-      try {
-        await ApiService.postAjax('public/test/testLogException')
-      } catch (e) {
-        errorMessage(e)
-      }
-    }
     /**
      * 按钮操作
      * @param row 行数据
@@ -143,9 +134,6 @@ export default defineComponent({
           // 查看堆栈信息
           showStackTrackHook.handleShowStackTrace(row.id)
           break
-        }
-        case 'test': {
-          test()
         }
       }
     }

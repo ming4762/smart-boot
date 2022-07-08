@@ -1,8 +1,37 @@
 import { defineComponent, PropType, ref, createVNode, computed } from 'vue'
 import * as icons from '@ant-design/icons-vue'
 
-import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
+
+export const RouteMenuProps = {
+  mode: {
+    type: String as PropType<string>,
+    default: 'inline'
+  },
+  theme: {
+    type: String as PropType<string>,
+    default: 'dark'
+  },
+  menus: {
+    type: Array as PropType<Array<any>>,
+    default: () => []
+  },
+  collapsed: {
+    type: Boolean as PropType<boolean>
+  },
+  i18nRender: {
+    type: [Function, Boolean] as PropType<Function | boolean>,
+    default: false
+  },
+  lang: {
+    type: String as PropType<string>,
+    default: 'zh-CN'
+  },
+  // 菜单点击事件
+  menuClick: {
+    type: Function as PropType<Function>
+  }
+}
 
 /**
  * 渲染菜单项
@@ -97,52 +126,27 @@ const renderMenuItem = (menu: any, lang: string) => {
 
 export default defineComponent({
   name: 'RouteMenu',
-  props: {
-    mode: {
-      type: String as PropType<string>,
-      default: 'inline'
-    },
-    theme: {
-      type: String as PropType<string>,
-      default: 'dark'
-    },
-    menus: {
-      type: Array as PropType<Array<any>>,
-      default: () => []
-    },
-    collapsed: {
-      type: Boolean as PropType<boolean>
-    },
-    i18nRender: {
-      type: [Function, Boolean] as PropType<Function | boolean>,
-      default: false
-    }
-  },
+  props: RouteMenuProps,
   emits: ['change'],
-  setup () {
-    const store = useStore()
+  setup (props) {
     const route = useRoute()
-
-    const computedLang = computed(() => {
-      return store.getters['app/lang']
-    })
-
     const openKeys = ref([])
     const selectedKeys = computed(() => {
       return [route.fullPath]
     })
     const handleMenuSelect = (menu: any) => {
-      store.dispatch('app/addMenu', menu.key)
+      if (props.menuClick) {
+        props.menuClick(menu.key)
+      }
     }
     return {
       openKeys,
       selectedKeys,
-      handleMenuSelect,
-      computedLang
+      handleMenuSelect
     }
   },
   render () {
-    const { mode, theme, openKeys, selectedKeys, menus, handleMenuSelect, computedLang } = this
+    const { mode, theme, openKeys, selectedKeys, menus, handleMenuSelect, lang } = this
     const dynamicProps = {
       mode,
       theme,
@@ -157,7 +161,7 @@ export default defineComponent({
       if (item.hidden) {
         return null
       }
-      return renderMenu(item, computedLang)
+      return renderMenu(item, lang)
     })
     return (
       <a-menu {...dynamicProps}>
