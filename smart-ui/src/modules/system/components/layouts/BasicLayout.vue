@@ -151,7 +151,7 @@ const tabsVueSupport = (store: Store<any>, route: RouteLocationNormalized, route
   })
   // 页面初始加载，如果路径不是主页 则添加页面
   onMounted(() => {
-    // store.dispatch('app/addMenu', '/main')
+    store.dispatch('app/addMenu', '/main')
     if (route.fullPath !== '/main') {
       store.dispatch('app/addMenu', route.fullPath)
     }
