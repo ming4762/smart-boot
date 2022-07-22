@@ -214,8 +214,10 @@ const LayoutStore: StoreOptions<any> = {
           })
           if (!hasMenu) {
             commit(STORE_APP_MUTATION.APP_ADD_OPEN_MENU, menu)
-            // 发布添加菜单事件
-            publish(EVENT_SYMBOLS.SYSTEM_ADD_MENU, menu)
+            if (menu.name !== 'main') {
+              // 发布添加菜单事件
+              publish(EVENT_SYMBOLS.SYSTEM_ADD_MENU, menu)
+            }
           }
         }
         resolve(null)
