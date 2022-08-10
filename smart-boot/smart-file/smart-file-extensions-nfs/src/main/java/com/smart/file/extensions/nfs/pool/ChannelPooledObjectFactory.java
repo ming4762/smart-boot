@@ -36,6 +36,7 @@ public class ChannelPooledObjectFactory<T extends Channel> implements PooledObje
         return new DefaultPooledObject<>(channel);
     }
 
+
     @Override
     public void destroyObject(PooledObject<T> pooledObject) throws Exception {
         T object = pooledObject.getObject();

@@ -81,7 +81,7 @@ public class AuthController {
         tempTokenData.setUserId(user.getUserId());
         tempTokenData.setIp(IpUtils.getIpAddr(request));
 
-        String key = Base64Utils.encoder(JsonUtils.toJsonString(tempTokenData));
+        String key = Base64Utils.encode(JsonUtils.toJsonString(tempTokenData));
         // 默认有效期60秒
         this.authCache.put(key, tempTokenData, properties.getTimeout());
         return Result.success(key);

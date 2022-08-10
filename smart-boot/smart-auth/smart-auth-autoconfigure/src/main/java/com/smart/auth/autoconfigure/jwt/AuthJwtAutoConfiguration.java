@@ -1,21 +1,42 @@
 package com.smart.auth.autoconfigure.jwt;
 
+import com.nimbusds.jose.jwk.JWK;
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.RSAKey;
+import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
+import com.nimbusds.jose.jwk.source.JWKSource;
+import com.nimbusds.jose.proc.SecurityContext;
 import com.smart.auth.core.authentication.RestAuthenticationProvider;
 import com.smart.auth.core.handler.AuthLogoutSuccessHandler;
 import com.smart.auth.core.handler.AuthSuccessDataHandler;
+import com.smart.auth.core.handler.SecurityLogoutHandler;
 import com.smart.auth.core.properties.AuthProperties;
 import com.smart.auth.core.service.AuthCache;
 import com.smart.auth.extensions.jwt.AuthJwtConfigure;
 import com.smart.auth.extensions.jwt.handler.JwtAuthSuccessDataHandler;
+import com.smart.auth.extensions.jwt.handler.JwtLogoutHandler;
 import com.smart.auth.extensions.jwt.service.JwtService;
 import com.smart.auth.extensions.jwt.store.CacheJwtStore;
 import com.smart.auth.extensions.jwt.store.CacheJwtStoreImpl;
+import com.smart.commons.core.utils.auth.RsaUtils;
+import com.smart.commons.jwt.JwtDecoder;
+import com.smart.commons.jwt.JwtEncoder;
+import com.smart.commons.jwt.NimbusJwtDecoder;
+import com.smart.commons.jwt.NimbusJwtEncoder;
+import lombok.SneakyThrows;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.interfaces.RSAPublicKey;
 
 /**
  * @author ShiZhongMing
@@ -32,13 +53,57 @@ public class AuthJwtAutoConfiguration {
     }
     /**
      * 创建JwtService
-     * @param authProperties 参数
      * @return JwtService
      */
     @Bean
     @ConditionalOnMissingBean(JwtService.class)
-    public JwtService jwtService(AuthProperties authProperties, CacheJwtStore jwtStore) {
-        return new JwtService(authProperties, jwtStore);
+    public JwtService jwtService() {
+        return new JwtService();
+    }
+
+    /**
+     * 构建jwt解码器
+     * @param authProperties AuthProperties
+     * @return JwtDecoder
+     * @throws IOException IOException
+     */
+    @Bean
+    @ConditionalOnMissingBean(JwtDecoder.class)
+    public JwtDecoder jwtDecoder(AuthProperties authProperties) throws IOException {
+        InputStream pubKeyInputStream = this.getKeyInputStream(authProperties.getJwt().getPublicKey());
+        try (pubKeyInputStream) {
+            return NimbusJwtDecoder.withPublicKey((RSAPublicKey) RsaUtils.generaPublicKey(pubKeyInputStream)).build();
+        }
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(JwtEncoder.class)
+    public JwtEncoder jwtEncoder(AuthProperties authProperties) throws IOException {
+        InputStream pubKeyInputStream = this.getKeyInputStream(authProperties.getJwt().getPublicKey());
+        InputStream priKeyInputStream = this.getKeyInputStream(authProperties.getJwt().getPrivateKey());
+
+        try (pubKeyInputStream; priKeyInputStream) {
+            JWK jwk = new RSAKey.Builder((RSAPublicKey) RsaUtils.generaPublicKey(pubKeyInputStream))
+                    .privateKey(RsaUtils.generaPrivateKey(priKeyInputStream))
+                    .build();
+            JWKSource<SecurityContext> jwkSource = new ImmutableJWKSet<>(new JWKSet(jwk));
+            return new NimbusJwtEncoder(jwkSource);
+        }
+    }
+
+    /**
+     * 获取key输入流
+     * @param path key的路径
+     * @return inputStream
+     */
+    @SneakyThrows
+    private InputStream getKeyInputStream(String path) {
+        if (path.startsWith("classpath:")) {
+            path = StringUtils.removeStart(path, "classpath:");
+            return new ClassPathResource(path).getInputStream();
+        } else {
+            return new FileInputStream(path);
+        }
     }
 
     /**
@@ -49,6 +114,17 @@ public class AuthJwtAutoConfiguration {
     @ConditionalOnMissingBean(LogoutSuccessHandler.class)
     public LogoutSuccessHandler logoutSuccessHandler() {
         return new AuthLogoutSuccessHandler();
+    }
+
+    /**
+     * 创建登出执行器
+     * @param cacheJwtStore CacheJwtStore
+     * @return SecurityLogoutHandler
+     */
+    @Bean
+    @ConditionalOnMissingBean(SecurityLogoutHandler.class)
+    public SecurityLogoutHandler jwtLogoutHandler(CacheJwtStore cacheJwtStore) {
+        return new JwtLogoutHandler(cacheJwtStore);
     }
 
     /**

@@ -56,7 +56,7 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.swagger</groupId>
+            <groupId>io.swagger.core.v3</groupId>
             <artifactId>swagger-annotations</artifactId>
         </dependency>
         <dependency>

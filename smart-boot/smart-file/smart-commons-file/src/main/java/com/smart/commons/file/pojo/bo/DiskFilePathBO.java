@@ -46,7 +46,7 @@ public class DiskFilePathBO {
     public DiskFilePathBO(String basePath, String md5, String filename) {
         this.basePath = basePath;
         this.md5 = md5;
-        this.filename = Base64Utils.encoder(filename);
+        this.filename = Base64Utils.encode(filename);
         // 如果文件名中存在路径分隔符，则进行替换
         if (StringUtils.contains(this.filename, FILE_SEPARATOR)) {
             this.filename = StringUtils.replace(this.filename, FILE_SEPARATOR, SEPARATOR_REPLACE);
@@ -91,7 +91,7 @@ public class DiskFilePathBO {
         if (StringUtils.contains(this.filename, SEPARATOR_REPLACE)) {
             name = StringUtils.replace(this.filename, SEPARATOR_REPLACE, FILE_SEPARATOR);
         }
-        return Base64Utils.decoder(name);
+        return Base64Utils.decodeStr(name);
     }
 
     /**

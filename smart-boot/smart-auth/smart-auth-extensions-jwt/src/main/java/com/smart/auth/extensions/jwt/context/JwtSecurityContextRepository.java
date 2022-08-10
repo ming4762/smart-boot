@@ -15,7 +15,6 @@ import org.springframework.security.web.context.SecurityContextRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.function.Supplier;
 
 /**
  * @author ShiZhongMing

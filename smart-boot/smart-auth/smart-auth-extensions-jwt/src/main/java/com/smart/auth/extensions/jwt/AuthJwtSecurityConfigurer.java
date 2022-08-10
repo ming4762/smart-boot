@@ -12,7 +12,6 @@ import com.smart.auth.extensions.jwt.filter.JwtAuthenticationFilter;
 import com.smart.auth.extensions.jwt.filter.JwtLoginFilter;
 import com.smart.auth.extensions.jwt.filter.JwtLogoutFilter;
 import com.smart.auth.extensions.jwt.service.JwtService;
-import com.smart.auth.extensions.jwt.store.CacheJwtStore;
 import com.smart.auth.extensions.jwt.store.JwtStore;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
@@ -22,7 +21,6 @@ import org.springframework.core.Ordered;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.security.web.SecurityFilterChain;
@@ -84,7 +82,7 @@ public class AuthJwtSecurityConfigurer extends SecurityConfigurerAdapter<Default
         }
         this.jwtService = this.getBean(JwtService.class, this.jwtService);
         if (Objects.isNull(this.jwtService)) {
-            this.jwtService = new JwtService(this.getAuthProperties(), this.getBean(CacheJwtStore.class, null));
+            this.jwtService = new JwtService();
         }
 
     }
@@ -174,7 +172,7 @@ public class AuthJwtSecurityConfigurer extends SecurityConfigurerAdapter<Default
         // 创建LogoutHandler
         List<LogoutHandler> logoutHandlerList = this.handlerBuilder.getLogoutHandlers();
         if (CollectionUtils.isEmpty(logoutHandlerList)) {
-            logoutHandlerList = Lists.newArrayList(this.getBean(SecurityLogoutHandler.class, this.jwtService));
+            logoutHandlerList = Lists.newArrayList(this.getBean(SecurityLogoutHandler.class, null));
         }
         // 添加登出通知类
         logoutHandlerList.add(this.postProcess(new LogoutSuccessEventPublishingLogoutHandler()));
