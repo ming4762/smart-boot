@@ -62,8 +62,7 @@ public class JobEntryLogTable extends BaseLogTable implements Cloneable, LogTabl
     }
     @Override
     public void replaceMeta(LogTableCoreInterface logTableInterface) {
-        if (logTableInterface instanceof JobEntryLogTable) {
-            JobEntryLogTable logTable = (JobEntryLogTable)logTableInterface;
+        if (logTableInterface instanceof JobEntryLogTable logTable) {
             super.replaceMeta(logTable);
         }
     }

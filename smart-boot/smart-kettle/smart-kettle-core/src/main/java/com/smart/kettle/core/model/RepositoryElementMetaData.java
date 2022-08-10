@@ -6,6 +6,8 @@ import org.pentaho.di.repository.ObjectId;
 import org.pentaho.di.repository.RepositoryElementMetaInterface;
 import org.pentaho.di.repository.RepositoryObjectType;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
@@ -16,7 +18,8 @@ import java.time.ZoneId;
  */
 @Getter
 @Setter
-public class RepositoryElementMetaData {
+public class RepositoryElementMetaData implements Serializable {
+    @Serial
     private static final long serialVersionUID = 4156363454876149890L;
 
     private String modifiedUser;

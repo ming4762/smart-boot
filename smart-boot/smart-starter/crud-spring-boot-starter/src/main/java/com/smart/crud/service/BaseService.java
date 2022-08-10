@@ -9,7 +9,7 @@ import org.springframework.lang.NonNull;
 import java.util.List;
 
 /**
- * 基础serivce层
+ * 基础service层
  * @author shizhongming
  * 2020/1/10 9:50 下午
  */

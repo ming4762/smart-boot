@@ -86,8 +86,7 @@ public class JobLogTable extends BaseLogTable implements Cloneable, LogTableInte
     }
     @Override
     public void replaceMeta(LogTableCoreInterface logTableInterface) {
-        if (logTableInterface instanceof JobLogTable) {
-            JobLogTable logTable = (JobLogTable)logTableInterface;
+        if (logTableInterface instanceof JobLogTable logTable) {
             super.replaceMeta(logTable);
             this.logInterval = logTable.logInterval;
             this.logSizeLimit = logTable.logSizeLimit;
@@ -213,70 +212,29 @@ public class JobLogTable extends BaseLogTable implements Cloneable, LogTableInte
                     Object value = null;
                     if (job != null) {
                         switch (ID.valueOf(field.getId())) {
-                            case ID_JOB:
-                                value = job.getBatchId();
-                                break;
-                            case CHANNEL_ID:
-                                value = job.getLogChannelId();
-                                break;
-                            case JOBNAME:
-                                value = job.getJobname();
-                                break;
-                            case STATUS:
-                                value = status.getStatus();
-                                break;
-                            case LINES_READ:
-                                value = result == null ? null : result.getNrLinesRead();
-                                break;
-                            case LINES_WRITTEN:
-                                value = result == null ? null : result.getNrLinesWritten();
-                                break;
-                            case LINES_INPUT:
-                                value = result == null ? null : result.getNrLinesInput();
-                                break;
-                            case LINES_OUTPUT:
-                                value = result == null ? null : result.getNrLinesOutput();
-                                break;
-                            case LINES_UPDATED:
-                                value = result == null ? null : result.getNrLinesUpdated();
-                                break;
-                            case LINES_REJECTED:
-                                value = result == null ? null : result.getNrLinesRejected();
-                                break;
-                            case ERRORS:
-                                value = result == null ? null : result.getNrErrors();
-                                break;
-                            case STARTDATE:
-                                value = job.getStartDate();
-                                break;
-                            case LOGDATE:
-                                value = job.getLogDate();
-                                break;
-                            case ENDDATE:
-                                value = job.getEndDate();
-                                break;
-                            case DEPDATE:
-                                value = job.getDepDate();
-                                break;
-                            case REPLAYDATE:
-                                value = job.getCurrentDate();
-                                break;
-                            case LOG_FIELD:
-                                value = this.getLogBuffer(job, job.getLogChannelId(), status, this.logSizeLimit);
-                                break;
-                            case EXECUTING_SERVER:
-                                value = job.getExecutingServer();
-                                break;
-                            case EXECUTING_USER:
-                                value = job.getExecutingUser();
-                                break;
-                            case START_JOB_ENTRY:
-                                value = job.getStartJobEntryCopy() != null ? job.getStartJobEntryCopy().getName() : null;
-                                break;
-                            case CLIENT:
-                                value = KettleClientEnvironment.getInstance().getClient() != null ? KettleClientEnvironment.getInstance().getClient().toString() : "unknown";
-                                break;
-                            default:
+                            case ID_JOB -> value = job.getBatchId();
+                            case CHANNEL_ID -> value = job.getLogChannelId();
+                            case JOBNAME -> value = job.getJobname();
+                            case STATUS -> value = status.getStatus();
+                            case LINES_READ -> value = result == null ? null : result.getNrLinesRead();
+                            case LINES_WRITTEN -> value = result == null ? null : result.getNrLinesWritten();
+                            case LINES_INPUT -> value = result == null ? null : result.getNrLinesInput();
+                            case LINES_OUTPUT -> value = result == null ? null : result.getNrLinesOutput();
+                            case LINES_UPDATED -> value = result == null ? null : result.getNrLinesUpdated();
+                            case LINES_REJECTED -> value = result == null ? null : result.getNrLinesRejected();
+                            case ERRORS -> value = result == null ? null : result.getNrErrors();
+                            case STARTDATE -> value = job.getStartDate();
+                            case LOGDATE -> value = job.getLogDate();
+                            case ENDDATE -> value = job.getEndDate();
+                            case DEPDATE -> value = job.getDepDate();
+                            case REPLAYDATE -> value = job.getCurrentDate();
+                            case LOG_FIELD -> value = this.getLogBuffer(job, job.getLogChannelId(), status, this.logSizeLimit);
+                            case EXECUTING_SERVER -> value = job.getExecutingServer();
+                            case EXECUTING_USER -> value = job.getExecutingUser();
+                            case START_JOB_ENTRY -> value = job.getStartJobEntryCopy() != null ? job.getStartJobEntryCopy().getName() : null;
+                            case CLIENT -> value = KettleClientEnvironment.getInstance().getClient() != null ? KettleClientEnvironment.getInstance().getClient().toString() : "unknown";
+                            default -> {
+                            }
                         }
                     }
 

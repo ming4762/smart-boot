@@ -67,8 +67,7 @@ public class StepLogTable extends BaseLogTable implements Cloneable, LogTableInt
 
     @Override
     public void replaceMeta(LogTableCoreInterface logTableInterface) {
-        if (logTableInterface instanceof StepLogTable) {
-            StepLogTable logTable = (StepLogTable)logTableInterface;
+        if (logTableInterface instanceof StepLogTable logTable) {
             super.replaceMeta(logTable);
         }
     }
@@ -111,49 +110,22 @@ public class StepLogTable extends BaseLogTable implements Cloneable, LogTableInt
                     Object value = null;
                     if (subject != null) {
                         switch (ID.valueOf(field.getId())) {
-                            case ID_BATCH:
-                                value = combi.step.getTrans().getBatchId();
-                                break;
-                            case CHANNEL_ID:
-                                value = combi.step.getLogChannel().getLogChannelId();
-                                break;
-                            case LOG_DATE:
-                                value = new Date();
-                                break;
-                            case TRANSNAME:
-                                value = combi.step.getTrans().getName();
-                                break;
-                            case STEPNAME:
-                                value = combi.stepname;
-                                break;
-                            case STEP_COPY:
-                                value = (long) combi.copy;
-                                break;
-                            case LINES_READ:
-                                value = combi.step.getLinesRead();
-                                break;
-                            case LINES_WRITTEN:
-                                value = combi.step.getLinesWritten();
-                                break;
-                            case LINES_UPDATED:
-                                value = combi.step.getLinesUpdated();
-                                break;
-                            case LINES_INPUT:
-                                value = combi.step.getLinesInput();
-                                break;
-                            case LINES_OUTPUT:
-                                value = combi.step.getLinesOutput();
-                                break;
-                            case LINES_REJECTED:
-                                value = combi.step.getLinesRejected();
-                                break;
-                            case ERRORS:
-                                value = combi.step.getErrors();
-                                break;
-                            case LOG_FIELD:
-                                value = this.getLogBuffer(combi.step, combi.step.getLogChannel().getLogChannelId(), status, null);
-                                break;
-                            default:
+                            case ID_BATCH -> value = combi.step.getTrans().getBatchId();
+                            case CHANNEL_ID -> value = combi.step.getLogChannel().getLogChannelId();
+                            case LOG_DATE -> value = new Date();
+                            case TRANSNAME -> value = combi.step.getTrans().getName();
+                            case STEPNAME -> value = combi.stepname;
+                            case STEP_COPY -> value = (long) combi.copy;
+                            case LINES_READ -> value = combi.step.getLinesRead();
+                            case LINES_WRITTEN -> value = combi.step.getLinesWritten();
+                            case LINES_UPDATED -> value = combi.step.getLinesUpdated();
+                            case LINES_INPUT -> value = combi.step.getLinesInput();
+                            case LINES_OUTPUT -> value = combi.step.getLinesOutput();
+                            case LINES_REJECTED -> value = combi.step.getLinesRejected();
+                            case ERRORS -> value = combi.step.getErrors();
+                            case LOG_FIELD -> value = this.getLogBuffer(combi.step, combi.step.getLogChannel().getLogChannelId(), status, null);
+                            default -> {
+                            }
                         }
                     }
 

@@ -195,23 +195,13 @@ public class KettleLogController {
     private String getGlobalTransLogTableName(TransLogType logType) {
         String tableName = null;
         switch (logType) {
-            case TRANS_LOG:
-                tableName = this.logDatabaseProperties.getTransLogTableName();
-                break;
-            case STEP_LOG:
-                tableName = this.logDatabaseProperties.getStepLogTableName();
-                break;
-            case METRICS_LOG:
-                tableName = this.logDatabaseProperties.getMetricsLogTableName();
-                break;
-            case PERFORMANCE_LOG:
-                tableName = this.logDatabaseProperties.getPerformanceLogTableName();
-                break;
-            case TRANS_CHANNEL_LOG:
-                tableName = this.logDatabaseProperties.getChannelLogTableName();
-                break;
-            default:
-                break;
+            case TRANS_LOG -> tableName = this.logDatabaseProperties.getTransLogTableName();
+            case STEP_LOG -> tableName = this.logDatabaseProperties.getStepLogTableName();
+            case METRICS_LOG -> tableName = this.logDatabaseProperties.getMetricsLogTableName();
+            case PERFORMANCE_LOG -> tableName = this.logDatabaseProperties.getPerformanceLogTableName();
+            case TRANS_CHANNEL_LOG -> tableName = this.logDatabaseProperties.getChannelLogTableName();
+            default -> {
+            }
         }
         return tableName;
     }

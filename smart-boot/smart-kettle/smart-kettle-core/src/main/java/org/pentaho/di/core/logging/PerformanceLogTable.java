@@ -79,8 +79,7 @@ public class PerformanceLogTable extends BaseLogTable implements Cloneable, LogT
     }
     @Override
     public void replaceMeta(LogTableCoreInterface logTableInterface) {
-        if (logTableInterface instanceof PerformanceLogTable) {
-            PerformanceLogTable logTable = (PerformanceLogTable)logTableInterface;
+        if (logTableInterface instanceof PerformanceLogTable logTable) {
             super.replaceMeta(logTable);
         }
     }
@@ -128,52 +127,23 @@ public class PerformanceLogTable extends BaseLogTable implements Cloneable, LogT
                     Object value = null;
                     if (subject != null) {
                         switch (ID.valueOf(field.getId())) {
-                            case ID_BATCH:
-                                value = snapShot.getBatchId();
-                                break;
-                            case SEQ_NR:
-                                value = (long) snapShot.getSeqNr();
-                                break;
-                            case LOGDATE:
-                                value = snapShot.getDate();
-                                break;
-                            case TRANSNAME:
-                                value = snapShot.getTransName();
-                                break;
-                            case STEPNAME:
-                                value = snapShot.getStepName();
-                                break;
-                            case STEP_COPY:
-                                value = (long) snapShot.getStepCopy();
-                                break;
-                            case LINES_READ:
-                                value = snapShot.getLinesRead();
-                                break;
-                            case LINES_WRITTEN:
-                                value = snapShot.getLinesWritten();
-                                break;
-                            case LINES_INPUT:
-                                value = snapShot.getLinesInput();
-                                break;
-                            case LINES_OUTPUT:
-                                value = snapShot.getLinesOutput();
-                                break;
-                            case LINES_UPDATED:
-                                value = snapShot.getLinesUpdated();
-                                break;
-                            case LINES_REJECTED:
-                                value = snapShot.getLinesRejected();
-                                break;
-                            case ERRORS:
-                                value = snapShot.getErrors();
-                                break;
-                            case INPUT_BUFFER_ROWS:
-                                value = snapShot.getInputBufferSize();
-                                break;
-                            case OUTPUT_BUFFER_ROWS:
-                                value = snapShot.getOutputBufferSize();
-                                break;
-                            default:
+                            case ID_BATCH -> value = snapShot.getBatchId();
+                            case SEQ_NR -> value = (long) snapShot.getSeqNr();
+                            case LOGDATE -> value = snapShot.getDate();
+                            case TRANSNAME -> value = snapShot.getTransName();
+                            case STEPNAME -> value = snapShot.getStepName();
+                            case STEP_COPY -> value = (long) snapShot.getStepCopy();
+                            case LINES_READ -> value = snapShot.getLinesRead();
+                            case LINES_WRITTEN -> value = snapShot.getLinesWritten();
+                            case LINES_INPUT -> value = snapShot.getLinesInput();
+                            case LINES_OUTPUT -> value = snapShot.getLinesOutput();
+                            case LINES_UPDATED -> value = snapShot.getLinesUpdated();
+                            case LINES_REJECTED -> value = snapShot.getLinesRejected();
+                            case ERRORS -> value = snapShot.getErrors();
+                            case INPUT_BUFFER_ROWS -> value = snapShot.getInputBufferSize();
+                            case OUTPUT_BUFFER_ROWS -> value = snapShot.getOutputBufferSize();
+                            default -> {
+                            }
                         }
                     }
 

@@ -62,8 +62,7 @@ public class MetricsLogTable extends BaseLogTable implements Cloneable, LogTable
     }
     @Override
     public void replaceMeta(LogTableCoreInterface logTableInterface) {
-        if (logTableInterface instanceof MetricsLogTable) {
-            MetricsLogTable logTable = (MetricsLogTable)logTableInterface;
+        if (logTableInterface instanceof MetricsLogTable logTable) {
             super.replaceMeta(logTable);
         }
     }
@@ -101,34 +100,17 @@ public class MetricsLogTable extends BaseLogTable implements Cloneable, LogTable
                     Object value = null;
                     if (subject != null) {
                         switch (ID.valueOf(field.getId())) {
-                            case ID_BATCH:
-                                value = loggingMetric.getBatchId();
-                                break;
-                            case CHANNEL_ID:
-                                value = snapshot.getLogChannelId();
-                                break;
-                            case LOG_DATE:
-                                value = new Date();
-                                break;
-                            case METRICS_DATE:
-                                value = snapshot.getDate();
-                                break;
-                            case METRICS_CODE:
-                                value = snapshot.getMetric().getCode();
-                                break;
-                            case METRICS_DESCRIPTION:
-                                value = snapshot.getMetric().getDescription();
-                                break;
-                            case METRICS_SUBJECT:
-                                value = snapshot.getSubject();
-                                break;
-                            case METRICS_TYPE:
-                                value = snapshot.getMetric().getType().name();
-                                break;
-                            case METRICS_VALUE:
-                                value = snapshot.getValue();
-                                break;
-                            default:
+                            case ID_BATCH -> value = loggingMetric.getBatchId();
+                            case CHANNEL_ID -> value = snapshot.getLogChannelId();
+                            case LOG_DATE -> value = new Date();
+                            case METRICS_DATE -> value = snapshot.getDate();
+                            case METRICS_CODE -> value = snapshot.getMetric().getCode();
+                            case METRICS_DESCRIPTION -> value = snapshot.getMetric().getDescription();
+                            case METRICS_SUBJECT -> value = snapshot.getSubject();
+                            case METRICS_TYPE -> value = snapshot.getMetric().getType().name();
+                            case METRICS_VALUE -> value = snapshot.getValue();
+                            default -> {
+                            }
                         }
                     }
 

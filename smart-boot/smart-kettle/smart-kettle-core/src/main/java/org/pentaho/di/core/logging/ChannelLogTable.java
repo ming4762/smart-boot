@@ -61,8 +61,7 @@ public class ChannelLogTable extends BaseLogTable implements Cloneable, LogTable
     }
     @Override
     public void replaceMeta(LogTableCoreInterface logTableInterface) {
-        if (logTableInterface instanceof ChannelLogTable) {
-            ChannelLogTable logTable = (ChannelLogTable)logTableInterface;
+        if (logTableInterface instanceof ChannelLogTable logTable) {
             super.replaceMeta(logTable);
         }
     }
@@ -103,43 +102,20 @@ public class ChannelLogTable extends BaseLogTable implements Cloneable, LogTable
                     Object value = null;
                     if (subject != null) {
                         switch (ID.valueOf(field.getId())) {
-                            case ID_BATCH:
-                                value = loggingHierarchy.getBatchId();
-                                break;
-                            case CHANNEL_ID:
-                                value = loggingObject.getLogChannelId();
-                                break;
-                            case LOG_DATE:
-                                value = new Date();
-                                break;
-                            case LOGGING_OBJECT_TYPE:
-                                value = loggingObject.getObjectType().toString();
-                                break;
-                            case OBJECT_NAME:
-                                value = loggingObject.getObjectName();
-                                break;
-                            case OBJECT_COPY:
-                                value = loggingObject.getObjectCopy();
-                                break;
-                            case REPOSITORY_DIRECTORY:
-                                value = loggingObject.getRepositoryDirectory() == null ? null : loggingObject.getRepositoryDirectory().getPath();
-                                break;
-                            case FILENAME:
-                                value = loggingObject.getFilename();
-                                break;
-                            case OBJECT_ID:
-                                value = loggingObject.getObjectId() == null ? null : loggingObject.getObjectId().toString();
-                                break;
-                            case OBJECT_REVISION:
-                                value = loggingObject.getObjectRevision() == null ? null : loggingObject.getObjectRevision().toString();
-                                break;
-                            case PARENT_CHANNEL_ID:
-                                value = loggingObject.getParent() == null ? null : loggingObject.getParent().getLogChannelId();
-                                break;
-                            case ROOT_CHANNEL_ID:
-                                value = loggingHierarchy.getRootChannelId();
-                                break;
-                            default:
+                            case ID_BATCH -> value = loggingHierarchy.getBatchId();
+                            case CHANNEL_ID -> value = loggingObject.getLogChannelId();
+                            case LOG_DATE -> value = new Date();
+                            case LOGGING_OBJECT_TYPE -> value = loggingObject.getObjectType().toString();
+                            case OBJECT_NAME -> value = loggingObject.getObjectName();
+                            case OBJECT_COPY -> value = loggingObject.getObjectCopy();
+                            case REPOSITORY_DIRECTORY -> value = loggingObject.getRepositoryDirectory() == null ? null : loggingObject.getRepositoryDirectory().getPath();
+                            case FILENAME -> value = loggingObject.getFilename();
+                            case OBJECT_ID -> value = loggingObject.getObjectId() == null ? null : loggingObject.getObjectId().toString();
+                            case OBJECT_REVISION -> value = loggingObject.getObjectRevision() == null ? null : loggingObject.getObjectRevision().toString();
+                            case PARENT_CHANNEL_ID -> value = loggingObject.getParent() == null ? null : loggingObject.getParent().getLogChannelId();
+                            case ROOT_CHANNEL_ID -> value = loggingHierarchy.getRootChannelId();
+                            default -> {
+                            }
                         }
                     }
 
