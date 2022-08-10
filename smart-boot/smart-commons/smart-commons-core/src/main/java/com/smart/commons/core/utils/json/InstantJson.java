@@ -18,6 +18,10 @@ import java.time.Instant;
  */
 public class InstantJson {
 
+    private InstantJson() {
+        // nothing
+    }
+
     /**
      * 反序列化
      */

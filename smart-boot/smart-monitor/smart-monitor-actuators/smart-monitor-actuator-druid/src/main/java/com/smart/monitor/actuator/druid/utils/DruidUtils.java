@@ -55,7 +55,7 @@ public class DruidUtils {
     public static Map<String, Object> getDatasourceByName(@NonNull String name) {
         List<Map<String, Object>> datasourceList = datasourceList().stream()
                 .filter(item -> name.equals(item.get("Name")))
-                .collect(Collectors.toList());
+                .toList();
         if (CollectionUtils.isNotEmpty(datasourceList)) {
             return datasourceList.get(0);
         }
@@ -114,7 +114,7 @@ public class DruidUtils {
         }
         return databaseList.stream()
                 .map(item -> STAT_MANAGER_FACADE.getWallStatMap((Integer) item.get("Identity")))
-                .collect(Collectors.toList());
+                .toList();
     }
 
 }

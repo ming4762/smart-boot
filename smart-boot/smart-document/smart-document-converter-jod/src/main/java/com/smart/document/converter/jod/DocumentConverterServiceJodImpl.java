@@ -8,6 +8,7 @@ import org.jodconverter.core.DocumentConverter;
 import org.jodconverter.core.document.DefaultDocumentFormatRegistry;
 import org.jodconverter.core.job.ConversionJobWithOptionalSourceFormatUnspecified;
 import org.jodconverter.core.job.ConversionJobWithSourceSpecified;
+import org.jodconverter.core.office.OfficeException;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -30,7 +31,7 @@ public class DocumentConverterServiceJodImpl implements DocumentConverterService
         this.documentConverter = documentConverter;
     }
 
-    @SneakyThrows
+    @SneakyThrows(OfficeException.class)
     @Override
     public void convert(InputStream inputStream, OutputStream outputStream, @Nullable DocumentFormatEnum fromFormat, @NonNull DocumentFormatEnum toFormat) {
         log.info("开始进行文档转换，转换源格式：{}，目标格式：{}", fromFormat == null ? "未知" : fromFormat.name(), toFormat.name());

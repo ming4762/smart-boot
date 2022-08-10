@@ -31,7 +31,7 @@ public class DbConnectionProvider implements InitializingBean, DisposableBean {
      * @param config 数据库配置信息
      * @return 数据库连接
      */
-    @SneakyThrows
+    @SneakyThrows(Exception.class)
     public Connection getConnection(DbConnectionConfig config) {
         // 获取连接池
         if (!POOL_MAP.containsKey(config)) {

@@ -7,6 +7,10 @@ package com.smart.commons.jwt.header;
  */
 public final class HeaderNames {
 
+    private HeaderNames() {
+        // nothing
+    }
+
     public static final String ALG = "alg";
 
 

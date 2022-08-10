@@ -8,7 +8,6 @@ import org.apache.commons.collections4.queue.CircularFifoQueue;
 import org.springframework.boot.logging.LogLevel;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * logback 日志内存存储器
@@ -72,7 +71,7 @@ public class MemoryCacheLogAppender extends UnsynchronizedAppenderBase<ILoggingE
         if (levels.isEmpty()) {
             return new ArrayList<>(0);
         }
-        return CIRCULAR_FIFO_QUEUE.stream().filter(item -> levels.contains(item.getLevel())).collect(Collectors.toList());
+        return CIRCULAR_FIFO_QUEUE.stream().filter(item -> levels.contains(item.getLevel())).toList();
     }
 
 }

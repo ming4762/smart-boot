@@ -114,8 +114,8 @@ public class KettleLogController {
             if (this.isEnableTransLog(logType)) {
                 KettleLogConfig logConfig = KettleLogConfigHolder.getConfig(logType);
                 BaseLogTable logTable = logType.getGetFunction().apply(transMeta);
-                if (logTable instanceof LogModifierHandlerSetter) {
-                    ((LogModifierHandlerSetter) logTable).setLogModifierHandler(this.logModifierHandler);
+                if (logTable instanceof LogModifierHandlerSetter modifierHandlerSetter) {
+                    modifierHandlerSetter.setLogModifierHandler(this.logModifierHandler);
                 }
                 logTable.setConnectionName(databaseMeta.getName());
                 logTable.setTableName(StringUtils.isBlank(logConfig.getTableName()) ? this.getGlobalTransLogTableName(logType) : logConfig.getTableName());
@@ -136,8 +136,8 @@ public class KettleLogController {
             if (this.isEnableJobLog(logType)) {
                 KettleLogConfig logConfig = KettleLogConfigHolder.getConfig(logType);
                 BaseLogTable logTable = logType.getGetFunction().apply(jobMeta);
-                if (logTable instanceof LogModifierHandlerSetter) {
-                    ((LogModifierHandlerSetter) logTable).setLogModifierHandler(this.logModifierHandler);
+                if (logTable instanceof LogModifierHandlerSetter modifierHandlerSetter) {
+                    modifierHandlerSetter.setLogModifierHandler(this.logModifierHandler);
                 }
                 logTable.setConnectionName(databaseMeta.getName());
                 logTable.setTableName(StringUtils.isBlank(logConfig.getTableName()) ? this.getGlobalJobLogTableName(logType) : logConfig.getTableName());
@@ -201,6 +201,7 @@ public class KettleLogController {
             case PERFORMANCE_LOG -> tableName = this.logDatabaseProperties.getPerformanceLogTableName();
             case TRANS_CHANNEL_LOG -> tableName = this.logDatabaseProperties.getChannelLogTableName();
             default -> {
+                // nothing
             }
         }
         return tableName;

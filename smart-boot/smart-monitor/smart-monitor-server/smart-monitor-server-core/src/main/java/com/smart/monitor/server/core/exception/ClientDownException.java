@@ -3,6 +3,8 @@ package com.smart.monitor.server.core.exception;
 import com.smart.commons.core.exception.BusinessException;
 import com.smart.monitor.server.common.model.ClientId;
 
+import java.io.Serial;
+
 /**
  * @author ShiZhongMing
  * 2021/3/25 15:54
@@ -10,6 +12,7 @@ import com.smart.monitor.server.common.model.ClientId;
  */
 public class ClientDownException extends BusinessException {
 
+    @Serial
     private static final long serialVersionUID = -8663434862331832072L;
 
     public ClientDownException(ClientId clientId) {

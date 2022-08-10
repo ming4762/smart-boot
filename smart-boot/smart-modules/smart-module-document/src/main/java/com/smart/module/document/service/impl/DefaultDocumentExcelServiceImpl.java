@@ -1,7 +1,7 @@
 package com.smart.module.document.service.impl;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import com.smart.commons.core.exception.IORuntimeException;
 import com.smart.document.service.CodeService;
 import com.smart.document.service.ExcelService;
 import com.smart.module.document.pojo.dto.excel.ExcelFillWithCodeData;
@@ -17,7 +17,6 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author ShiZhongMing
@@ -36,19 +35,19 @@ public class DefaultDocumentExcelServiceImpl implements DocumentExcelService {
         this.excelService = excelService;
     }
 
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     @Override
     public void fillSingleWithCode(InputStream inputStream, OutputStream outputStream, ExcelFillWithCodeData data) {
         this.excelService.fillExcel(inputStream, outputStream, this.createTemplateData(data));
     }
 
-    @SneakyThrows
+    @SneakyThrows({IOException.class})
     @Override
     public void fillMultiWithCode(InputStream inputStream, OutputStream outputStream, List<ExcelFillWithCodeData> dataList, List<String> sheetNameList) {
         List<Map<String, Object>> templateDataList = dataList.stream()
                 .map(this :: createTemplateData)
-                .collect(Collectors.toList());
-        this.excelService.fillExcel(inputStream, outputStream, ImmutableMap.of("dataList", templateDataList, "sheetNameList", sheetNameList));
+                .toList();
+        this.excelService.fillExcel(inputStream, outputStream, Map.of("dataList", templateDataList, "sheetNameList", sheetNameList));
     }
 
     /**
@@ -67,7 +66,7 @@ public class DefaultDocumentExcelServiceImpl implements DocumentExcelService {
                     this.codeService.generateBarcode(value, barcodeStream);
                     barcodeMap.put(key, barcodeStream.toByteArray());
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    throw new IORuntimeException(e);
                 }
             });
             templateData.put("barcodeMap", barcodeMap);
@@ -80,7 +79,7 @@ public class DefaultDocumentExcelServiceImpl implements DocumentExcelService {
                     this.codeService.generateQrcode(value, qrcodeStream);
                     qrcodeMap.put(key, qrcodeStream.toByteArray());
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    throw new IORuntimeException(e);
                 }
             });
             templateData.put("qrcodeMap", qrcodeMap);

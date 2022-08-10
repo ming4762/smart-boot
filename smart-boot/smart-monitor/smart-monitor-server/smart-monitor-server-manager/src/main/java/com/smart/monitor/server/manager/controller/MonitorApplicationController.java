@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
 * monitor_application - 应用管理表 Controller
@@ -88,7 +87,7 @@ public class MonitorApplicationController extends BaseController<MonitorApplicat
                         new QueryWrapper<MonitorUserGroupApplicationPO>().lambda()
                                 .select(MonitorUserGroupApplicationPO :: getUserGroupId)
                                 .eq(MonitorUserGroupApplicationPO :: getApplicationId, id)
-                ).stream().map(MonitorUserGroupApplicationPO :: getUserGroupId).collect(Collectors.toList())
+                ).stream().map(MonitorUserGroupApplicationPO :: getUserGroupId).toList()
         );
     }
 

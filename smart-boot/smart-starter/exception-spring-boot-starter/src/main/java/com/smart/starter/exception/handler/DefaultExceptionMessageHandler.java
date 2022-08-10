@@ -27,6 +27,7 @@ public class DefaultExceptionMessageHandler implements ExceptionMessageHandler, 
 
     private final Map<Type, ExceptionMessageProcessor<? extends Exception>> messageProcessorMap = new ConcurrentHashMap<>();
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public Object message(Exception e, long exceptionNo, HttpServletRequest request) {
         ExceptionMessageProcessor processor =  messageProcessorMap.get(e.getClass());
@@ -47,6 +48,7 @@ public class DefaultExceptionMessageHandler implements ExceptionMessageHandler, 
     }
 
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public void afterPropertiesSet() {
         // 获取所有的ExceptionMessageProcessor对象

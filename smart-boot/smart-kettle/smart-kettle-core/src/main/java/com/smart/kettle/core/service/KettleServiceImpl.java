@@ -22,13 +22,13 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.lang.NonNull;
 import org.springframework.util.Assert;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 /**
  * @author ShiZhongMing
@@ -114,7 +114,7 @@ public class KettleServiceImpl implements KettleService, ApplicationContextAware
     }
 
     @Override
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     public Trans executeClasspathFileTransfer(
             @NonNull String ktrPath,
             @NonNull String[] params,
@@ -180,7 +180,7 @@ public class KettleServiceImpl implements KettleService, ApplicationContextAware
     }
 
     @Override
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     public Job executeClasspathJob(
             @NonNull String jobPath,
             @NonNull Map<String, String> variableMap,
@@ -248,12 +248,12 @@ public class KettleServiceImpl implements KettleService, ApplicationContextAware
     public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
         this.transListenerList = Arrays.stream(applicationContext.getBeanNamesForType(TransListener.class))
                 .map(item -> applicationContext.getBean(item, TransListener.class))
-                .collect(Collectors.toList());
+                .toList();
         this.transStoppedListenerList = Arrays.stream(applicationContext.getBeanNamesForType(TransStoppedListener.class))
                 .map(item -> applicationContext.getBean(item, TransStoppedListener.class))
-                .collect(Collectors.toList());
+                .toList();
         this.jobListenerList = Arrays.stream(applicationContext.getBeanNamesForType(JobListener.class))
                 .map(item -> applicationContext.getBean(item, JobListener.class))
-                .collect(Collectors.toList());
+                .toList();
     }
 }

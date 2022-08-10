@@ -59,7 +59,7 @@ public class SysUserGroupServiceImpl extends BaseServiceImpl<SysUserGroupMapper,
                     SysUserGroupListVO vo = new SysUserGroupListVO();
                     BeanUtils.copyProperties(item, vo);
                     return vo;
-                }).collect(Collectors.toList());
+                }).toList();
         if (Boolean.TRUE.equals(parameter.getParameter().get(CrudCommonEnum.QUERY_CREATE_UPDATE_USER.name()))) {
             this.userSetterService.setCreateUpdateUser(voList);
         }
@@ -133,7 +133,7 @@ public class SysUserGroupServiceImpl extends BaseServiceImpl<SysUserGroupMapper,
                             value.stream().
                                     map(userMap::get)
                                     .filter(ObjectUtils :: isNotEmpty)
-                                    .collect(Collectors.toList())));
+                                    .toList()));
                     return result;
                 }
             }
@@ -162,7 +162,7 @@ public class SysUserGroupServiceImpl extends BaseServiceImpl<SysUserGroupMapper,
                         .userId(item)
                         .useYn(Boolean.TRUE)
                         .build()
-                ).collect(Collectors.toList());
+                ).toList();
         return this.sysUserGroupUserService.saveBatch(sysUserGroupUserList);
     }
 
@@ -187,7 +187,7 @@ public class SysUserGroupServiceImpl extends BaseServiceImpl<SysUserGroupMapper,
                         .userGroupId(item)
                         .useYn(Boolean.TRUE)
                         .build()
-                ).collect(Collectors.toList());
+                ).toList();
         return this.sysUserGroupUserService.saveBatch(sysUserGroupUserList);
     }
 }

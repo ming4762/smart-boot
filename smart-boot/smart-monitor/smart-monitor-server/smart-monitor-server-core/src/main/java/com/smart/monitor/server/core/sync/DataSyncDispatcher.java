@@ -11,11 +11,11 @@ import org.springframework.core.Ordered;
 import org.springframework.lang.NonNull;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 数据同步调度器
@@ -42,10 +42,10 @@ public class DataSyncDispatcher implements ApplicationListener<ApplicationReadyE
         List<MonitorDataSync> monitorDataSyncList = Arrays.stream(event.getApplicationContext().getBeanNamesForType(MonitorDataSync.class))
                 .map(name -> event.getApplicationContext().getBean(name, MonitorDataSync.class))
                 .sorted(Comparator.comparing(Ordered::getOrder))
-                .collect(Collectors.toList());
+                .toList();
         if (CollectionUtils.isNotEmpty(monitorDataSyncList)) {
             this.taskSchedulerProvider.getTaskScheduler()
-                    .scheduleWithFixedDelay(() -> this.doSync(monitorDataSyncList), 60L * 1000);
+                    .scheduleWithFixedDelay(() -> this.doSync(monitorDataSyncList), Duration.ofSeconds(60));
         }
     }
 

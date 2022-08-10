@@ -88,6 +88,7 @@ public class DbTemplateCodeTableDTO extends DbCodeMainPO {
     @ToString
     public static class DbCodeFormConfigTemplateDTO extends DbCodeFormConfigPO {
 
+        @Serial
         private static final long serialVersionUID = -4075245994474313790L;
 
         /**
@@ -106,6 +107,7 @@ public class DbTemplateCodeTableDTO extends DbCodeMainPO {
     @ToString
     public static class DbCodeSearchConfigTemplateDTO extends DbCodeSearchConfigPO {
 
+        @Serial
         private static final long serialVersionUID = -4075245994474313790L;
 
         /**

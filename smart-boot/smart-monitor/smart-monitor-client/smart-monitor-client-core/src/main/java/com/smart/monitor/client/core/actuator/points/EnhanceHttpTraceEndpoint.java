@@ -35,8 +35,4 @@ public class EnhanceHttpTraceEndpoint extends HttpTraceEndpoint {
         return this.repository.findAll();
     }
 
-    @Override
-    public HttpTraceDescriptor traces() {
-        return super.traces();
-    }
 }

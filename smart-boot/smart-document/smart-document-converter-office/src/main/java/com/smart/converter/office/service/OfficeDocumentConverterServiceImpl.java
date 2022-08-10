@@ -12,10 +12,8 @@ import com.smart.document.service.DocumentConverterService;
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.util.Map;
 import java.util.Optional;
@@ -43,18 +41,19 @@ public class OfficeDocumentConverterServiceImpl implements DocumentConverterServ
             .build();
 
     private static final Map<DocumentFormatEnum, Map<Class<? extends OfficeConverter>, ConvertFileType>> FORMAT_ENUM_CONVERT_FILE_TYPE_MAP = ImmutableMap.<DocumentFormatEnum, Map<Class<? extends OfficeConverter>, ConvertFileType>>builder()
-            .put(DocumentFormatEnum.pdf, ImmutableMap.of(
+            .put(DocumentFormatEnum.pdf, Map.of(
                     WordConverter.class, WdSaveFormat.wdFormatPDF,
                     ExcelConverter.class, XlFileFormat.xlTypePDF,
                     PowerPointConverter.class, PpSaveAsFileType.ppSaveAsPDF
             ))
-            .put(DocumentFormatEnum.html, ImmutableMap.of(
+            .put(DocumentFormatEnum.html, Map.of(
                     WordConverter.class, WdSaveFormat.wdFormatHTML,
                     ExcelConverter.class, XlFileFormat.xlHtml
             ))
             .build();
 
-    @SneakyThrows
+    @SneakyThrows({IOException.class, NoSuchMethodException.class, InstantiationException.class,
+            IllegalAccessException.class, IllegalArgumentException.class, InvocationTargetException.class})
     @Override
     public void convert(InputStream inputStream, OutputStream outputStream, DocumentFormatEnum fromFormat, DocumentFormatEnum toFormat) {
         // 判断源格式是否支持

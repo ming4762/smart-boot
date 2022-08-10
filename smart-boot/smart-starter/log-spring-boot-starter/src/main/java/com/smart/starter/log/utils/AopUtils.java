@@ -28,11 +28,11 @@ public class AopUtils {
     public static Map<String, Object> getParameterMap(ProceedingJoinPoint point) {
         final Signature signature = point.getSignature();
         Map<String, Object> parameterMap = Maps.newHashMap();
-        if (signature instanceof MethodSignature) {
+        if (signature instanceof MethodSignature methodSignature) {
             // 获取参数
             Object[] objects = point.getArgs();
             // 获取参数名
-            String[] names = ((MethodSignature) signature).getParameterNames();
+            String[] names = methodSignature.getParameterNames();
             for (int i = 0; i < names.length; i++) {
                 parameterMap.put(names[i], objects[i]);
             }

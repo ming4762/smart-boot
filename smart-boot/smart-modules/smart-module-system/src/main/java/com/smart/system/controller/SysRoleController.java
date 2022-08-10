@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 角色业务层
@@ -108,7 +107,7 @@ public class SysRoleController extends BaseController<SysRoleService, SysRolePO>
                         .select(SysRoleFunctionPO :: getFunctionId)
                         .eq(SysRoleFunctionPO :: getRoleId, roleId)
                 ).stream().map(SysRoleFunctionPO :: getFunctionId)
-                .collect(Collectors.toList())
+                .toList()
         );
     }
 

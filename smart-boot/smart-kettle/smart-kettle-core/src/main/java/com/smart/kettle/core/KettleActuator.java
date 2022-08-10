@@ -7,7 +7,11 @@ import lombok.SneakyThrows;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.pentaho.di.core.KettleEnvironment;
+import org.pentaho.di.core.exception.KettleException;
+import org.pentaho.di.core.exception.KettleMissingPluginsException;
+import org.pentaho.di.core.exception.KettleXMLException;
 import org.pentaho.di.core.logging.LogLevel;
+import org.pentaho.di.core.parameters.UnknownParamException;
 import org.pentaho.di.core.util.EnvUtil;
 import org.pentaho.di.job.Job;
 import org.pentaho.di.job.JobMeta;
@@ -24,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 /**
  * kettle执行器
@@ -61,7 +64,7 @@ public class KettleActuator {
      * 获取TransMeta
      * @param ktrPath 转换路径
      */
-    @SneakyThrows
+    @SneakyThrows({KettleXMLException.class, KettleMissingPluginsException.class})
     public static TransMeta getTransMeta(@NonNull String ktrPath) {
         initKettle();
         return new TransMeta(ktrPath);
@@ -71,7 +74,7 @@ public class KettleActuator {
      * 获取TransMeta
      * @param inputStream 转换流
      */
-    @SneakyThrows
+    @SneakyThrows({KettleXMLException.class, KettleMissingPluginsException.class})
     public static TransMeta getTransMeta(@NonNull InputStream inputStream) {
         initKettle();
         return new TransMeta(inputStream, null, true, null, null);
@@ -83,7 +86,7 @@ public class KettleActuator {
      * @param transName 转换名
      * @param directoryName 目录名
      */
-    @SneakyThrows
+    @SneakyThrows(KettleException.class)
     public static TransMeta getDbTransMeta(@NonNull KettleDatabaseRepository repository, @NonNull String transName, String directoryName) {
         initKettle();
         RepositoryDirectoryInterface directoryInterface = getDirectoryInterface(repository, directoryName);
@@ -99,7 +102,7 @@ public class KettleActuator {
      * @param logLevel 日志级别
      * @param beforeHandler 执行前回调
      */
-    @SneakyThrows
+    @SneakyThrows(KettleException.class)
     public static Trans executeTransfer(
             @NonNull TransMeta transMeta,
             @NonNull String[] params,
@@ -137,7 +140,7 @@ public class KettleActuator {
      * @param jobName job名称
      * @param directoryName 目录
      */
-    @SneakyThrows
+    @SneakyThrows(KettleException.class)
     public static JobMeta getDbJobMate(@NonNull KettleDatabaseRepository repository, @NonNull String jobName, String directoryName) {
         initKettle();
         RepositoryDirectoryInterface directoryInterface = getDirectoryInterface(repository, directoryName);
@@ -148,7 +151,7 @@ public class KettleActuator {
      * 获取JobMate
      * @param path job文件路径
      */
-    @SneakyThrows
+    @SneakyThrows(KettleXMLException.class)
     public static JobMeta getJobMeta(@NonNull String path) {
         initKettle();
         return new JobMeta(path, null);
@@ -158,7 +161,7 @@ public class KettleActuator {
      * 通过InputStream获取JobMate
      * @param inputStream 输入流
      */
-    @SneakyThrows
+    @SneakyThrows(KettleXMLException.class)
     public static JobMeta getJobMeta(@NonNull InputStream inputStream) {
         initKettle();
         return new JobMeta(inputStream, null, null);
@@ -173,7 +176,7 @@ public class KettleActuator {
      * @param parameterMap 命名参数
      * @param beforeHandler 执行前回调
      */
-    @SneakyThrows
+    @SneakyThrows(UnknownParamException.class)
     public static Job executeJob(
             KettleDatabaseRepository repository,
             @NonNull JobMeta jobMeta,
@@ -204,7 +207,7 @@ public class KettleActuator {
     /**
      * 初始化kettle环境
      */
-    @SneakyThrows
+    @SneakyThrows(KettleException.class)
     public static void initKettle() {
         if (!KettleEnvironment.isInitialized()) {
             KettleEnvironment.init();
@@ -218,7 +221,7 @@ public class KettleActuator {
      * @param directoryName 目录名
      * @return 目录路径
      */
-    @SneakyThrows
+    @SneakyThrows(KettleException.class)
     private static RepositoryDirectoryInterface getDirectoryInterface(@NonNull KettleDatabaseRepository repository, String directoryName) {
         RepositoryDirectoryInterface directoryInterface = repository.loadRepositoryDirectoryTree();
         if (StringUtils.isNotBlank(directoryName)) {
@@ -227,13 +230,13 @@ public class KettleActuator {
         return directoryInterface;
     }
 
-    @SneakyThrows
+    @SneakyThrows(KettleException.class)
     public static Tree<RepositoryDirectoryData> loadRepositoryData(@NonNull Repository repository, boolean hasDeleted) {
         RepositoryDirectoryInterface repositoryDirectoryInterface = repository.loadRepositoryDirectoryTree();
         return loadRepositoryData(repository, repositoryDirectoryInterface, hasDeleted);
     }
 
-    @SneakyThrows
+    @SneakyThrows(KettleException.class)
     private static Tree<RepositoryDirectoryData> loadRepositoryData(@NonNull Repository repository, @NonNull RepositoryDirectoryInterface repositoryDirectoryInterface, boolean hasDeleted) {
         // 获取job trans数据
         List<RepositoryElementMetaInterface> repositoryElementMetaInterfaceList = repository.getJobAndTransformationObjects(repositoryDirectoryInterface.getObjectId(), hasDeleted);
@@ -242,7 +245,7 @@ public class KettleActuator {
                 .name(repositoryDirectoryInterface.getName())
                 .path(repositoryDirectoryInterface.getPath())
                 .jobTransList(repositoryElementMetaInterfaceList == null ? new ArrayList<>(0) :
-                                repositoryElementMetaInterfaceList.stream().map(RepositoryElementMetaData::createByRepositoryElementMeta).collect(Collectors.toList())
+                                repositoryElementMetaInterfaceList.stream().map(RepositoryElementMetaData::createByRepositoryElementMeta).toList()
                         )
                 .build();
         if (repositoryDirectoryInterface.getParent() != null) {
@@ -257,7 +260,7 @@ public class KettleActuator {
         // 使用递归构建树
         if (CollectionUtils.isNotEmpty(repositoryDirectoryInterface.getChildren())) {
             tree.setChildren(
-                    repositoryDirectoryInterface.getChildren().stream().map(item -> loadRepositoryData(repository, item, hasDeleted)).collect(Collectors.toList())
+                    repositoryDirectoryInterface.getChildren().stream().map(item -> loadRepositoryData(repository, item, hasDeleted)).toList()
             );
             tree.setHasChildren(true);
         } else {

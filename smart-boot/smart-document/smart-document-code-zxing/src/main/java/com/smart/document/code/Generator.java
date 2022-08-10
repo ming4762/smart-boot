@@ -4,6 +4,7 @@ import com.google.zxing.WriterException;
 import lombok.NonNull;
 
 import java.awt.image.BufferedImage;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -14,7 +15,7 @@ import java.io.OutputStream;
  * 2021/8/11 12:51
  * @since 1.0
  */
-public interface Generator extends AutoCloseable {
+public interface Generator extends Closeable {
 
     /**
      * 获取图片

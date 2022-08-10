@@ -15,7 +15,6 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 /**
  * 登录事件监听器
@@ -74,6 +73,6 @@ public class AuthEventListener implements ApplicationContextAware {
         this.handlerList = Arrays.stream(applicationContext.getBeanNamesForType(AuthEventHandler.class))
                 .map(item -> applicationContext.getBean(item, AuthEventHandler.class))
                 .sorted(Comparator.comparing(AuthEventHandler::getOrder))
-                .collect(Collectors.toList());
+                .toList();
     }
 }

@@ -46,6 +46,8 @@ import java.security.interfaces.RSAPublicKey;
 @ConditionalOnClass(AuthJwtConfigure.class)
 public class AuthJwtAutoConfiguration {
 
+    private static final String CLASSPATH_BEGIN = "classpath:";
+
     @Bean
     @ConditionalOnMissingBean(CacheJwtStore.class)
     public CacheJwtStore cacheJwtStore(AuthProperties authProperties, AuthCache<String, Object> authCache) {
@@ -96,10 +98,10 @@ public class AuthJwtAutoConfiguration {
      * @param path key的路径
      * @return inputStream
      */
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     private InputStream getKeyInputStream(String path) {
-        if (path.startsWith("classpath:")) {
-            path = StringUtils.removeStart(path, "classpath:");
+        if (path.startsWith(CLASSPATH_BEGIN)) {
+            path = StringUtils.removeStart(path, CLASSPATH_BEGIN);
             return new ClassPathResource(path).getInputStream();
         } else {
             return new FileInputStream(path);

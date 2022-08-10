@@ -74,8 +74,8 @@ public class AuthEventLockedHandler implements AuthEventHandler {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void handleLoginFail(AbstractAuthenticationFailureEvent event) {
-        if (event instanceof AuthenticationFailureLockedEvent) {
-            this.handleLocked((AuthenticationFailureLockedEvent) event);
+        if (event instanceof AuthenticationFailureLockedEvent event1) {
+            this.handleLocked(event1);
             return;
         }
         if (!(event instanceof AuthenticationFailureBadCredentialsEvent)) {

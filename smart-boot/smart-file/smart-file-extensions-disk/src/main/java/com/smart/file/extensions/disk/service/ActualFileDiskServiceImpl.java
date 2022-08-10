@@ -52,7 +52,7 @@ public class ActualFileDiskServiceImpl implements ActualFileService {
      * @param filename 文件名
      * @return 文件ID
      */
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     @Override
     public @NonNull String save(@NonNull InputStream inputStream, String filename, String md5) {
         // 计算md5
@@ -72,7 +72,7 @@ public class ActualFileDiskServiceImpl implements ActualFileService {
      * 删除文件
      * @param id 文件ID
      */
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     @Override
     public void delete(@NonNull String id) {
         final String filePath = DiskFilePathBO.createById(id, this.basePath).getFilePath();
@@ -108,7 +108,7 @@ public class ActualFileDiskServiceImpl implements ActualFileService {
      * @param id 文件ID
      * @param outputStream 输出流，文件信息会写入输出流
      */
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     @Override
     public void download(@NonNull String id, @NonNull OutputStream outputStream) {
         final String filePath = DiskFilePathBO.createById(id, this.basePath).getFilePath();

@@ -35,8 +35,7 @@ public class ConverterInitializer implements InitializingBean {
             // 获取接口类型
             final Type[] types = item.getClass().getGenericInterfaces();
             for (Type type : types) {
-                if (type instanceof ParameterizedType && StringUtils.equals(((ParameterizedType) type).getRawType().getTypeName(), Converter.class.getName())) {
-                    final ParameterizedType parameterizedType = (ParameterizedType) type;
+                if (type instanceof ParameterizedType parameterizedType && StringUtils.equals((parameterizedType).getRawType().getTypeName(), Converter.class.getName())) {
                     // 将接口中的两个类型拼接到一起作为key
                     String key = Arrays.stream(parameterizedType.getActualTypeArguments())
                             .map(Type :: getTypeName)

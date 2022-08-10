@@ -1,6 +1,7 @@
 package com.smart.document.code.qrcode;
 
 import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.Version;
 import com.smart.document.code.Generator;
@@ -121,7 +122,7 @@ public abstract class AbstractQrcodeGenerator implements QrcodeGenerator {
      * @param qrcodeGenerator 二维码创建对象
      * @return 图片信息
      */
-    @SneakyThrows
+    @SneakyThrows(WriterException.class)
     protected static BufferedImage generateQrcode(AbstractQrcodeGenerator qrcodeGenerator) {
         QrcodeConfig config = qrcodeGenerator.getConfig();
         QrcodeWriter.QrcodeBitMatrix qrcodeBitMatrix = new QrcodeWriter().encodeX(qrcodeGenerator.content, BarcodeFormat.QR_CODE, config.getWidth(), config.getHeight(), null);

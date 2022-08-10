@@ -15,6 +15,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -36,7 +37,8 @@ public class DatabaseUtils {
      * @param <T> 实体类类型
      * @return 实体类实例
      */
-    @SneakyThrows
+    @SneakyThrows({SQLException.class, NoSuchMethodException.class,
+            InstantiationException.class, IllegalAccessException.class, IllegalArgumentException.class, InvocationTargetException.class})
     @NonNull
     public static <T> List<T> resultSetToModel(@NonNull ResultSet resultSet, @NonNull Class<T> clazz, @NonNull Map<String, Field> mapping) {
         final ResultSetMetaData metaData = resultSet.getMetaData();
@@ -82,6 +84,7 @@ public class DatabaseUtils {
      * @param value 需要转换的值
      * @return 转换后的值
      */
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private static Object convertValue(@NonNull Field field, @NonNull Object value) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         Converter converter = null;
         // 1、判断field是否有自定义的转换器，如果有使用自定义转换器

@@ -88,12 +88,12 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
             return dbCodeMainList;
         }
         // 将结果转为VO
-        final List<DbCodeMainPO> voList = dbCodeMainList.stream()
+        final List<DbCodeMainListVO> voList = dbCodeMainList.stream()
                 .map(item -> {
                     final DbCodeMainListVO dbCodeMainListVo = new DbCodeMainListVO();
                     BeanUtils.copyProperties(item, dbCodeMainListVo);
                     return dbCodeMainListVo;
-                }).collect(Collectors.toList());
+                }).toList();
 
         // 设置连接信息
         this.setConnection(voList);
@@ -106,7 +106,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
      * 设置创建人修改人
      * @param voList voList
      */
-    private void setCreateUpdateUser(List<DbCodeMainPO> voList) {
+    private void setCreateUpdateUser(List<DbCodeMainListVO> voList) {
         // 查询添加人/修改人
         Set<Long> userIds = Sets.newHashSet();
         voList.forEach(item -> {
@@ -132,7 +132,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
      * 设置连接信息
      * @param voList voList
      */
-    private void setConnection(List<DbCodeMainPO> voList) {
+    private void setConnection(List<DbCodeMainListVO> voList) {
         // 查询连接信息
         final Set<Long> connectionIds = voList.stream().map(DbCodeMainPO :: getConnectionId).collect(Collectors.toSet());
         Map<Long, String> connectionMap = this.databaseConnectionService.list(
@@ -167,7 +167,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
                     item.setId(null);
                     // 设置序号
                     item.setSeq(pageConfigIndex.getAndIncrement());
-                }).collect(Collectors.toList()),
+                }).toList(),
                 AuthUtils.getCurrentUserId()
         );
         // 保存附表配置
@@ -198,7 +198,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
                     relatedTable.setIdent(RelatedTableIdentEnum.MAIN_TABLE);
                     relatedTable.setSeq(atomicInteger.getAndIncrement());
                     return relatedTable;
-                }).collect(Collectors.toList());
+                }).toList();
         this.dbCodeRelatedTableService.saveBatch(relatedTableList);
     }
 
@@ -229,7 +229,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
                     dbCodeRelatedTable.setMainId(search.getId());
                     dbCodeRelatedTable.setType(RelatedTableTypeEnum.SELECT_TABLE);
                     return dbCodeRelatedTable;
-                }).collect(Collectors.toList()));
+                }).toList());
             }
         });
         if (!relatedTableList.isEmpty()) {
@@ -263,7 +263,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
                     dbCodeRelatedTable.setMainId(item.getId());
                     dbCodeRelatedTable.setType(RelatedTableTypeEnum.SELECT_TABLE);
                     return dbCodeRelatedTable;
-                }).collect(Collectors.toList()));
+                }).toList());
             }
         });
         if (!relatedTableList.isEmpty()) {
@@ -281,7 +281,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
                     dbCodeRuleConfig.setIdent(RuleIdentEnum.SAVE_FORM);
                     dbCodeRuleConfig.setRelationId(item.getId());
                     return dbCodeRuleConfig;
-                }).collect(Collectors.toList()));
+                }).toList());
             }
         });
         if (!ruleConfigList.isEmpty()) {
@@ -309,7 +309,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
                                     .relatedId(mainId)
                                     .seq(left.getAndIncrement())
                                     .build()
-                    ).collect(Collectors.toList())
+                    ).toList()
             );
         }
         if (CollectionUtils.isNotEmpty(model.getRightButtonList())) {
@@ -321,7 +321,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
                                     .relatedId(mainId)
                                     .seq(right.getAndIncrement())
                                     .build()
-                    ).collect(Collectors.toList())
+                    ).toList()
             );
         }
         if (CollectionUtils.isNotEmpty(model.getRowButtonList())) {
@@ -333,7 +333,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
                                     .relatedId(mainId)
                                     .seq(row.getAndIncrement())
                                     .build()
-                    ).collect(Collectors.toList())
+                    ).toList()
             );
         }
         if (!codeButtonConfigList.isEmpty()) {
@@ -380,7 +380,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
                     .filename(dbCodeTemplateData.getClassName() + template.getFilenameSuffix())
                     .code(code)
                     .build();
-        }).collect(Collectors.toList());
+        }).toList();
     }
 
     /**
@@ -408,7 +408,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
                     .eq(DbCodeRelatedTablePO :: getIdent, RelatedTableIdentEnum.MAIN_TABLE)
                     .orderByAsc(DbCodeRelatedTablePO :: getSeq)
             );
-            final List<Long> relatedTableIdList = relatedTableList.stream().map(DbCodeRelatedTablePO :: getAddendumId).collect(Collectors.toList());
+            final List<Long> relatedTableIdList = relatedTableList.stream().map(DbCodeRelatedTablePO :: getAddendumId).toList();
             if (CollectionUtils.isNotEmpty(relatedTableIdList)) {
                 final Map<Long, DbCodeMainPO> dbCodeMainIdMap = this.listByIds(relatedTableIdList)
                         .stream().collect(Collectors.toMap(DbCodeMainPO :: getId, item -> item));
@@ -421,7 +421,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
                             .configName(relatedTable.getConfigName())
                             .relatedColumn(item.getRelatedColumn())
                             .build();
-                }).collect(Collectors.toList()));
+                }).toList());
             }
         }
         // 3、获取页面配置信息
@@ -464,7 +464,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
             Assert.notNull(templateCodeTable, "查询附表失败，未查询到指定附表");
             templateCodeTable.setRelatedColumn(item.getRelatedColumn());
             return templateCodeTable;
-        }).collect(Collectors.toList());
+        }).toList();
     }
 
     /**
@@ -507,7 +507,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
             templateCodeTable.setCodeFormConfigList(Lists.newArrayList());
             return;
         }
-        final List<Long> formConfigIdList = codeFormConfigList.stream().map(DbCodeFormConfigPO :: getId).collect(Collectors.toList());
+        final List<Long> formConfigIdList = codeFormConfigList.stream().map(DbCodeFormConfigPO :: getId).toList();
         // 查询关联表信息
         final Map<Long, List<DbTemplateCodeTableDTO>> relatedTableMap = this.queryRelatedTableData(formConfigIdList, RelatedTableIdentEnum.FORM, RelatedTableTypeEnum.SELECT_TABLE);
         // 查询RULE关联信息
@@ -528,7 +528,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
             final List<DbCodeRuleConfigPO> ruleList = ruleConfigMap.get(dbCodeFormConfigTemplate.getId());
             dbCodeFormConfigTemplate.setRuleList(ruleList == null ? Lists.newArrayList() : ruleList);
             return dbCodeFormConfigTemplate;
-        }).collect(Collectors.toList());
+        }).toList();
         templateCodeTable.setCodeFormConfigList(dbCodeFormConfigTemplateList);
     }
 
@@ -545,7 +545,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
             return;
         }
         // 查询关联表信息
-        final Map<Long, List<DbTemplateCodeTableDTO>> relatedTableMap = this.queryRelatedTableData(codeSearchConfigList.stream().map(DbCodeSearchConfigPO :: getId).collect(Collectors.toList()), RelatedTableIdentEnum.SEARCH, RelatedTableTypeEnum.SELECT_TABLE);
+        final Map<Long, List<DbTemplateCodeTableDTO>> relatedTableMap = this.queryRelatedTableData(codeSearchConfigList.stream().map(DbCodeSearchConfigPO :: getId).toList(), RelatedTableIdentEnum.SEARCH, RelatedTableTypeEnum.SELECT_TABLE);
         final List<DbTemplateCodeTableDTO.DbCodeSearchConfigTemplateDTO> dbCodeFormConfigTemplateList = codeSearchConfigList.stream().map(item -> {
             final DbTemplateCodeTableDTO.DbCodeSearchConfigTemplateDTO dbCodeSearchConfigTemplate = new DbTemplateCodeTableDTO.DbCodeSearchConfigTemplateDTO();
             BeanUtils.copyProperties(item, dbCodeSearchConfigTemplate);
@@ -558,7 +558,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
                 dbCodeSearchConfigTemplate.setSelectTable(relatedTableList.get(0));
             }
             return dbCodeSearchConfigTemplate;
-        }).collect(Collectors.toList());
+        }).toList();
         templateCodeTable.setCodeSearchConfigList(dbCodeFormConfigTemplateList);
     }
 
@@ -608,7 +608,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
                 }
                 return dbTemplateCodeTable;
             }).filter(Objects::nonNull)
-                    .collect(Collectors.toList());
+                    .toList();
             result.put(key, templateCodeTableList);
         });
         return result;
@@ -626,9 +626,9 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
             final DbCodePageConfigTemplateVO template = new DbCodePageConfigTemplateVO();
             BeanUtils.copyProperties(item, template);
             return template;
-        }).collect(Collectors.toList());
+        }).toList();
         // 获取主键数量
-        final List<DbCodePageConfigTemplateVO> primaryKeyList = dbCodePageConfigTemplateList.stream().filter(DbCodePageConfigPO::getPrimaryKey).collect(Collectors.toList());
+        final List<DbCodePageConfigTemplateVO> primaryKeyList = dbCodePageConfigTemplateList.stream().filter(DbCodePageConfigPO::getPrimaryKey).toList();
         if (!primaryKeyList.isEmpty()) {
             // 将第一个主键设置添加注解主键（mybatis plus无法添加多个主键）
             primaryKeyList.get(0).setIdAnnotation(true);
@@ -691,7 +691,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
             return Lists.newArrayList();
         }
         // 获取ID集合
-        final List<Long> searchConfigIdList = dbCodeSearchConfigList.stream().map(DbCodeSearchConfigPO :: getId).collect(Collectors.toList());
+        final List<Long> searchConfigIdList = dbCodeSearchConfigList.stream().map(DbCodeSearchConfigPO :: getId).toList();
         // 查询关联信息并以主ID、类型分组
         final Map<Long, Map<RelatedTableTypeEnum, List<DbCodeRelatedTablePO>>> relatedTableTypeListMap = this.queryRelatedTableData(searchConfigIdList, RelatedTableIdentEnum.SEARCH);
         // 设置关联表信息
@@ -703,7 +703,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
                 dto.setSelectTableList(relatedTableTypeListMap.get(item.getId()).get(RelatedTableTypeEnum.SELECT_TABLE));
             }
             return dto;
-        }).collect(Collectors.toList());
+        }).toList();
     }
 
     /**
@@ -718,7 +718,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
             return Lists.newArrayList();
         }
         // 查询所有关联表信息（下拉table）
-        final List<Long> formConfigIdList = dbCodeFormConfigList.stream().map(DbCodeFormConfigPO :: getId).collect(Collectors.toList());
+        final List<Long> formConfigIdList = dbCodeFormConfigList.stream().map(DbCodeFormConfigPO :: getId).toList();
         // 查询关联信息并以主ID、类型分组
         final Map<Long, Map<RelatedTableTypeEnum, List<DbCodeRelatedTablePO>>> relatedTableTypeListMap = this.queryRelatedTableData(formConfigIdList, RelatedTableIdentEnum.FORM);
 
@@ -737,7 +737,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
                 dto.setRuleList(ruleConfigMap.get(item.getId()));
             }
             return dto;
-        }).collect(Collectors.toList());
+        }).toList();
     }
 
     /**
@@ -794,6 +794,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
      * @param idList ID列表
      * @return 是否删除成功
      */
+    @SuppressWarnings("unchecked")
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean removeByIds(Collection<?> idList) {

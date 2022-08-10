@@ -1,6 +1,7 @@
 package com.smart.document.code.utils;
 
 import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
 import com.smart.document.code.barcode.BarcodeConfig;
 import com.smart.document.code.barcode.BarcodeGenerator;
 import com.smart.document.code.barcode.SimpleBarcodeGenerator;
@@ -11,6 +12,7 @@ import com.smart.document.model.code.BarcodeGeneratorData;
 import com.smart.document.model.code.QrcodeGeneratorData;
 import lombok.SneakyThrows;
 
+import java.io.IOException;
 import java.io.OutputStream;
 
 /**
@@ -29,7 +31,7 @@ public class CodeGeneratorUtils {
      * @param parameter 条形码参数
      * @param outputStream 输出流
      */
-    @SneakyThrows
+    @SneakyThrows({WriterException.class, IOException.class})
     public static void generateBarcode(BarcodeGeneratorData parameter, OutputStream outputStream) {
         BarcodeConfig barcodeConfig = new BarcodeConfig();
         if (parameter.getFormat() != null) {
@@ -73,7 +75,7 @@ public class CodeGeneratorUtils {
      * @param parameter 参数
      * @param outputStream 输出流
      */
-    @SneakyThrows
+    @SneakyThrows({WriterException.class, IOException.class})
     public static void generateQrcode(QrcodeGeneratorData parameter, OutputStream outputStream) {
         QrcodeConfig config = new QrcodeConfig();
         if (parameter.getHeight() != null) {

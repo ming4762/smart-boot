@@ -10,6 +10,8 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.awt.*;
+import java.io.Serial;
+import java.io.Serializable;
 
 
 /**
@@ -26,8 +28,10 @@ import java.awt.*;
 @SuperBuilder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class BarcodeGeneratorData extends AbstractCodeGeneratorData {
+public class BarcodeGeneratorData extends AbstractCodeGeneratorData implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = 8103868991406837545L;
     @Schema(title = "条形码内容", required = true)
     @NotNull(message = "条形码内容不能为空")
     private String content;

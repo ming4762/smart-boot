@@ -1,5 +1,6 @@
 package com.smart.file.extensions.nfs.pool;
 
+import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.smart.commons.file.SmartFileProperties;
 import com.smart.file.extensions.nfs.utils.JcraftUtils;
@@ -25,7 +26,7 @@ public class JcraftSessionPooledObjectFactory implements PooledObjectFactory<Ses
         this.properties = properties;
     }
 
-    @SneakyThrows
+    @SneakyThrows(JSchException.class)
     @Override
     public PooledObject<Session> makeObject() {
         final Session session = JcraftUtils.createSession(this.properties);
@@ -44,7 +45,7 @@ public class JcraftSessionPooledObjectFactory implements PooledObjectFactory<Ses
         return Objects.nonNull(session) && session.isConnected();
     }
 
-    @SneakyThrows
+    @SneakyThrows(JSchException.class)
     @Override
     public void activateObject(PooledObject<Session> pooledObject) {
         Session object = pooledObject.getObject();

@@ -69,7 +69,7 @@ public class ClientWebProxy {
      * @param response 请求响应
      * @param needUp 是否在线
      */
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     public void forwardDownload(@NonNull ClientId clientId, HttpServletRequest request, HttpServletResponse response, boolean needUp) {
         // 获取客户端信息
         final ClientData repositoryData = this.clientRepository.findById(clientId, false);
@@ -168,7 +168,7 @@ public class ClientWebProxy {
      * @param clientData 客户端数据
      * @return 跳转请求信息
      */
-    @SneakyThrows
+    @SneakyThrows({IOException.class})
     public ForwardRequest createForwardRequest(@NonNull HttpServletRequest request, @NonNull ClientData clientData) {
         String url = clientData.getApplication().getEndPointUrl(UriComponentsBuilder.fromPath(this.pathMatcher.extractPathWithinPattern(ClientProxyController.CLIENT_PROXY_PATH, request.getRequestURI())).build(true).toUri().toString());
         // 添加参数

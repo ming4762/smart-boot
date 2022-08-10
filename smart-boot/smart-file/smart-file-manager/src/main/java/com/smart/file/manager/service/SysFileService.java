@@ -81,9 +81,8 @@ public interface SysFileService extends BaseService<SysFilePO> {
      *
      * @param fileIds 文件id列表
      * @return 删除是否成功
-     * @throws IOException IOException
      */
-    boolean batchDeleteFile(@NonNull Collection<Serializable> fileIds) throws IOException;
+    boolean batchDeleteFile(@NonNull Collection<Serializable> fileIds);
 
     /**
      * 下载文件

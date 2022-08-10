@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
 * monitor_client_log - 客户端日志 Controller
@@ -46,7 +45,7 @@ public class MonitorClientLogController extends BaseController<MonitorClientLogS
         return Result.success(
                 this.service.list(queryWrapper).stream()
                         .map(MonitorClientLogPO::getClientId)
-                        .collect(Collectors.toList())
+                        .toList()
         );
     }
 

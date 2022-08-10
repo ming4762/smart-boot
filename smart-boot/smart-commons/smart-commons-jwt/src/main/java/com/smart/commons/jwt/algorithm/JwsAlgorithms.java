@@ -20,6 +20,7 @@ package com.smart.commons.jwt.algorithm;
  * The cryptographic algorithms defined by the JSON Web Algorithms (JWA) specification and
  * used by JSON Web Signature (JWS) to digitally sign or create a MAC of the contents of
  * the JWS Protected Header and JWS Payload.
+ * @author spring
  */
 public final class JwsAlgorithms {
 

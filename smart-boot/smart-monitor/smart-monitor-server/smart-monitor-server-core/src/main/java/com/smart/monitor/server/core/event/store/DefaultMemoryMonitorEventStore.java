@@ -7,7 +7,6 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -37,6 +36,6 @@ public class DefaultMemoryMonitorEventStore implements MonitorEventStore {
         if (eventCode != null) {
             eventStream = eventStream.filter(item -> eventCode.getCode().equals(item.getCode().getCode()));
         }
-        return eventStream.collect(Collectors.toList());
+        return eventStream.toList();
     }
 }

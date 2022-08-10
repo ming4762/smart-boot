@@ -13,7 +13,6 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * 缓存服务类-基于GUAVA实现
@@ -141,13 +140,13 @@ public class GuavaCacheServiceImpl implements GuavaCacheService {
     @Nullable
     @Override
     public List<Object> batchGet(@NonNull Collection<Object> keys) {
-        return keys.stream().map(this :: get).collect(Collectors.toList());
+        return keys.stream().map(this :: get).toList();
     }
 
     @Nullable
     @Override
     public <T> List<T> batchGet(@NonNull Collection<Object> keys, @NonNull Class<T> clazz) {
-        return keys.stream().map(key -> (T)this.get(key)).collect(Collectors.toList());
+        return keys.stream().map(key -> (T)this.get(key)).toList();
     }
 
     @Override
@@ -165,7 +164,7 @@ public class GuavaCacheServiceImpl implements GuavaCacheService {
         this.clearExpire();
         return this.cache.asMap().keySet().stream()
                 .filter(objectCacheObject -> objectCacheObject.toString().startsWith(patternKey.toString()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.smart.kettle.core.log.modifier;
 
-import lombok.SneakyThrows;
 import org.pentaho.di.core.RowMetaAndData;
 import org.pentaho.di.core.logging.BaseLogTable;
 import org.pentaho.di.core.logging.LogStatus;
@@ -23,7 +22,6 @@ public class LogModifierHandler implements ApplicationContextAware {
 
     private Map<Class<? extends BaseLogTable>, List<LogRecordModifier>> logRecordModifierMap = new HashMap<>(0);
 
-    @SneakyThrows
     public RowMetaAndData modifyLogRecord(Class<? extends BaseLogTable> supportClass, RowMetaAndData rowMetaAndData, LogStatus status, Object subject, Object parent) {
         if (logRecordModifierMap.get(supportClass) != null) {
             for (LogRecordModifier logRecordModifier : logRecordModifierMap.get(supportClass)) {

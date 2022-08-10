@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author ShiZhongMing
@@ -112,7 +111,7 @@ public class DbConnectionController extends BaseController<DbConnectionService, 
                 .select(DbCodeConnectionUserGroupPO :: getUserGroupId)
                 .eq(DbCodeConnectionUserGroupPO :: getConnectionId, connectionId)
         ).stream().map(DbCodeConnectionUserGroupPO :: getUserGroupId)
-                .collect(Collectors.toList());
+                .toList();
         return Result.success(userGroupIdList);
     }
 

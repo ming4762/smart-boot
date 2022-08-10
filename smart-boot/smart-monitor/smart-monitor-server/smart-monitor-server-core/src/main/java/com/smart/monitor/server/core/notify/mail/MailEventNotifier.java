@@ -4,6 +4,7 @@ import com.smart.monitor.server.common.MonitorServerProperties;
 import com.smart.monitor.server.common.model.ClientData;
 import com.smart.monitor.server.core.event.MonitorEvent;
 import com.smart.monitor.server.core.notify.AbstractEventNotifier;
+import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +38,7 @@ public class MailEventNotifier extends AbstractEventNotifier {
         this.mailNotifyProperties = mailNotifyProperties;
     }
 
-    @SneakyThrows
+    @SneakyThrows({MessagingException.class})
     @Override
     protected void doNotify(@NonNull MonitorEvent<?> event) {
         ClientData clientData = event.getClientData();

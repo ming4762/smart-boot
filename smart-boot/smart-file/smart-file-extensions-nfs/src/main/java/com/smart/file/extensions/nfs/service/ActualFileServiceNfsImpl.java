@@ -65,7 +65,7 @@ public class ActualFileServiceNfsImpl implements ActualFileService {
      * @param filename 文件名
      * @return 文件ID
      */
-    @SneakyThrows
+    @SneakyThrows(SftpException.class)
     @Override
     @NonNull
     public String save(@NonNull InputStream inputStream, String filename, String md5) {
@@ -118,7 +118,7 @@ public class ActualFileServiceNfsImpl implements ActualFileService {
      * @param id 文件id
      * @return 文件流
      */
-    @SneakyThrows
+    @SneakyThrows({IOException.class, SftpException.class})
     @Override
     public InputStream download(@NonNull String id) {
         // 获取channel
@@ -147,7 +147,7 @@ public class ActualFileServiceNfsImpl implements ActualFileService {
      * @param id 文件ID
      * @param outputStream 输出流，文件信息会写入输出流
      */
-    @SneakyThrows
+    @SneakyThrows({SftpException.class, IOException.class})
     @Override
     public void download(@NonNull String id, @NonNull OutputStream outputStream) {
         // 获取channel

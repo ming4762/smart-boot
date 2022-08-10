@@ -9,5 +9,6 @@ import java.sql.SQLException;
  */
 public class Driver extends com.mysql.cj.jdbc.Driver {
     public Driver() throws SQLException {
+        // nothing
     }
 }

@@ -10,8 +10,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 
 /**
@@ -28,7 +26,7 @@ public class AuthWebSecurityConfigurerAdapter {
         this.authProperties = authProperties;
     }
 
-    @SneakyThrows
+    @SneakyThrows(Exception.class)
     protected void configure(HttpSecurity http) {
         http.csrf().disable()
                 .cors()
@@ -47,7 +45,7 @@ public class AuthWebSecurityConfigurerAdapter {
         }
     }
 
-    @SneakyThrows
+    @SneakyThrows(Exception.class)
     public void ignore(HttpSecurity http) {
         var ignoreConfig = this.authProperties.getIgnores();
         var registry = http.authorizeRequests();

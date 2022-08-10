@@ -14,10 +14,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.lang.NonNull;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.List;
 
 /**
@@ -43,7 +40,7 @@ public class ActualFileServiceMongoImpl implements ActualFileService {
      * @param filename 文件名
      * @return 文件id
      */
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     @Override
     public @NonNull
     String save(@NonNull File file, String filename) {
@@ -107,7 +104,7 @@ public class ActualFileServiceMongoImpl implements ActualFileService {
      * @param id           文件ID
      * @param outputStream 输出流
      */
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     @Override
     public void download(@NonNull String id, @NonNull OutputStream outputStream) {
         try (InputStream inputStream = this.download(id)) {

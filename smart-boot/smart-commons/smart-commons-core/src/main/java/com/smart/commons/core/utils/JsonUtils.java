@@ -1,5 +1,6 @@
 package com.smart.commons.core.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -66,7 +67,7 @@ public final class JsonUtils {
      * @param object 实体
      * @return json字符串
      */
-    @SneakyThrows
+    @SneakyThrows(JsonProcessingException.class)
     public static String toJsonString(Object object) {
         return OBJECT_MAPPER.writeValueAsString(object);
     }
@@ -76,7 +77,7 @@ public final class JsonUtils {
      * @param json json字符串
      * @return 实体
      */
-    @SneakyThrows
+    @SneakyThrows(JsonProcessingException.class)
     public static Object parse(String json) {
         return OBJECT_MAPPER.readValue(json, Object.class);
     }
@@ -86,7 +87,7 @@ public final class JsonUtils {
      * @param json json字符串
      * @return 实体
      */
-    @SneakyThrows
+    @SneakyThrows(JsonProcessingException.class)
     public static <T>  T parse(String json, Class<T> clazz) {
         return OBJECT_MAPPER.readValue(json, clazz);
     }
@@ -98,7 +99,7 @@ public final class JsonUtils {
      * @param <T> T
      * @return List列表
      */
-    @SneakyThrows
+    @SneakyThrows(JsonProcessingException.class)
     public static <T> List<T> parseCollection(String json, Class<T> clazz) {
         final JavaType javaType = OBJECT_MAPPER.getTypeFactory().constructCollectionType(List.class, clazz);
         return OBJECT_MAPPER.readValue(json, javaType);

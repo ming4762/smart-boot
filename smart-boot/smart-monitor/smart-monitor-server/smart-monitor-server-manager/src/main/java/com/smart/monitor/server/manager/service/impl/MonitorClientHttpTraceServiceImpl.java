@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 /**
 * monitor_client_http_trace - 客户端HttpTrace Service实现类
@@ -83,7 +82,7 @@ public class MonitorClientHttpTraceServiceImpl extends BaseServiceImpl<MonitorCl
                     .timestamp(timestamp)
                     .data(JsonUtils.toJsonString(item))
                     .build();
-        }).collect(Collectors.toList());
+        }).toList();
         this.saveBatch(httpTraceList);
         return httpTraceList.size();
     }

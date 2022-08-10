@@ -61,6 +61,6 @@ public class RuleTriggerTypeHandler extends BaseTypeHandler<List<RuleTriggerEnum
     private List<RuleTriggerEnum> parse(@NonNull String value) {
         return Arrays.stream(value.split(SPLIT))
                 .map(RuleTriggerEnum::valueOf)
-                .collect(Collectors.toList());
+                .toList();
     }
 }

@@ -49,7 +49,7 @@ public class SysI18nServiceImpl extends BaseServiceImpl<SysI18nMapper, SysI18nPO
             SysI18nUserVO vo = new SysI18nUserVO();
             BeanUtils.copyProperties(item, vo);
             return vo;
-        }).collect(Collectors.toList());
+        }).toList();
         if (Boolean.TRUE.equals(parameter.getParameter().get(CrudCommonEnum.QUERY_CREATE_UPDATE_USER.name()))) {
             this.userSetterService.setCreateUpdateUser(voList);
         }

@@ -25,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author jackson
@@ -56,7 +55,7 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRoleMapper, SysRolePO
                     SysRoleListVO vo = new SysRoleListVO();
                     BeanUtils.copyProperties(item, vo);
                     return vo;
-                }).collect(Collectors.toList());
+                }).toList();
         if (Boolean.TRUE.equals(parameter.getParameter().get(CrudCommonEnum.QUERY_CREATE_UPDATE_USER.name()))) {
             this.userSetterService.setCreateUpdateUser(roleVoList);
         }
@@ -84,7 +83,7 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRoleMapper, SysRolePO
                     sysRoleFunction.setFunctionId(item);
                     sysRoleFunction.setRoleId(parameter.getRoleId());
                     return sysRoleFunction;
-                }).collect(Collectors.toList()),
+                }).toList(),
                     AuthUtils.getCurrentUserId()
             );
         }
@@ -103,7 +102,7 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRoleMapper, SysRolePO
             return false;
         }
         this.sysUserRoleService.saveBatchWithUser(
-                parameter.getUserIdList().stream().map(item -> new SysUserRolePO(item, parameter.getRoleId(), true)).collect(Collectors.toList()),
+                parameter.getUserIdList().stream().map(item -> new SysUserRolePO(item, parameter.getRoleId(), true)).toList(),
                 AuthUtils.getCurrentUserId()
         );
         return true;

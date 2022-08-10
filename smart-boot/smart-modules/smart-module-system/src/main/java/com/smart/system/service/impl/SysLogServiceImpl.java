@@ -16,7 +16,6 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author ShiZhongMing
@@ -45,7 +44,7 @@ public class SysLogServiceImpl extends BaseServiceImpl<SysLogMapper, SysLogPO> i
             SysLogListVO vo = new SysLogListVO();
             BeanUtils.copyProperties(item, vo);
             return vo;
-        }).collect(Collectors.toList());
+        }).toList();
         if (Boolean.TRUE.equals(parameter.getParameter().get(CrudCommonEnum.QUERY_CREATE_UPDATE_USER.name()))) {
             this.userSetterService.setCreateUser(logVoList);
         }

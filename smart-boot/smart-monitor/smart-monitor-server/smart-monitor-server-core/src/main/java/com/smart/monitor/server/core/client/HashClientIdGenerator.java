@@ -6,6 +6,7 @@ import lombok.SneakyThrows;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * 通过客户端名字和URLhash
@@ -17,7 +18,7 @@ public class HashClientIdGenerator implements ClientIdGenerator {
     private static final char[] HEX_CHARS = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e',
             'f' };
 
-    @SneakyThrows
+    @SneakyThrows(NoSuchAlgorithmException.class)
     @Override
     public ClientId create(Application application) {
         final MessageDigest digest = MessageDigest.getInstance("SHA-256");

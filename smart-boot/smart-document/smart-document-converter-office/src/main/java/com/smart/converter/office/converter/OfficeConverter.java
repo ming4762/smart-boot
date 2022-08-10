@@ -2,6 +2,7 @@ package com.smart.converter.office.converter;
 
 import lombok.NonNull;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -11,7 +12,7 @@ import java.io.OutputStream;
  * 2021/8/25 15:35
  * @since 1.0
  */
-public interface OfficeConverter extends AutoCloseable {
+public interface OfficeConverter extends Closeable {
 
     /**
      * 转换的类型

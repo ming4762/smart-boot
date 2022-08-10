@@ -10,5 +10,10 @@ import org.springframework.lang.NonNull;
 @FunctionalInterface
 public interface JwtEncoder {
 
+    /**
+     * JWT编码
+     * @param parameter 编码参数
+     * @return JWT
+     */
     Jwt encode(@NonNull JwtEncoderParameters parameter);
 }

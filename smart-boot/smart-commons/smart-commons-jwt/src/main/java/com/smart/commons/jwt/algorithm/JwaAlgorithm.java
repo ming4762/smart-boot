@@ -7,5 +7,9 @@ package com.smart.commons.jwt.algorithm;
  */
 public interface JwaAlgorithm {
 
+    /**
+     * 获取名字
+     * @return name
+     */
     String getName();
 }

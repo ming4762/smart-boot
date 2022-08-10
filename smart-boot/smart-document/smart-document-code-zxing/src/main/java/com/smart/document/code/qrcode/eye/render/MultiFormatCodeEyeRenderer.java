@@ -8,6 +8,7 @@ import org.springframework.util.Assert;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * 支持多种类型的码眼渲染类
@@ -17,7 +18,8 @@ import java.awt.image.BufferedImage;
  * @since 1.0
  */
 public class MultiFormatCodeEyeRenderer implements CodeEyeRenderer {
-    @SneakyThrows
+    @SneakyThrows({NoSuchMethodException.class, InstantiationException.class,
+            IllegalAccessException.class, IllegalArgumentException.class, InvocationTargetException.class})
     @Override
     public void render(BufferedImage bufferedImage, CodeEyeFormatProvider codeEyeFormatProvider, CodeEyePosition position, Color slave, Color border, Color point) {
         Class<? extends CodeEyeRenderer> renderClass = codeEyeFormatProvider.getRenderClass();

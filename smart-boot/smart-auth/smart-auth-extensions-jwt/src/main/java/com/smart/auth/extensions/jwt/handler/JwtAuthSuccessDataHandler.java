@@ -20,7 +20,6 @@ import org.springframework.util.Assert;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author ShiZhongMing
@@ -69,6 +68,6 @@ public class JwtAuthSuccessDataHandler extends DefaultAuthSuccessDataHandler imp
         this.jwtStoreList = Arrays.stream(applicationContext.getBeanNamesForType(JwtStore.class))
                 .map(item -> applicationContext.getBean(item, JwtStore.class))
                 .sorted(Comparator.comparingInt(Ordered::getOrder))
-                .collect(Collectors.toList());
+                .toList();
     }
 }

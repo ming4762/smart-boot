@@ -6,6 +6,7 @@ import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.binary.StringUtils;
 import org.springframework.lang.NonNull;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.security.MessageDigest;
 
@@ -46,7 +47,7 @@ public final class DigestUtils {
      * @param hashIterations 加密次数
      * @return 加密的值
      */
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     public static String digest(MessageDigestAlgorithms algorithms, @NonNull InputStream inputStream, @NonNull Integer hashIterations) {
         MessageDigest messageDigest = org.apache.commons.codec.digest.DigestUtils.getDigest(algorithms.getAlgorithms());
         byte[] hash = org.apache.commons.codec.digest.DigestUtils.digest(messageDigest, inputStream);

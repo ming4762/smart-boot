@@ -26,7 +26,7 @@ public class KettleDatabaseRepositoryProvider implements InitializingBean, Dispo
      * @param properties 连接参数
      * @return KettleDatabaseRepository
      */
-    @SneakyThrows
+    @SneakyThrows(Exception.class)
     public KettleDatabaseRepository getRepository(KettleDatabaseRepositoryProperties properties) {
         KettleActuator.initKettle();
         return pool.borrowObject(properties);
@@ -38,7 +38,6 @@ public class KettleDatabaseRepositoryProvider implements InitializingBean, Dispo
      * @param properties 参数
      * @param repository KettleDatabaseRepository
      */
-    @SneakyThrows
     public void returnRepository(KettleDatabaseRepositoryProperties properties, KettleDatabaseRepository repository) {
         pool.returnObject(properties, repository);
     }

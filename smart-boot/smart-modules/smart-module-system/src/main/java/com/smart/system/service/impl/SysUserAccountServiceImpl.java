@@ -73,11 +73,11 @@ public class SysUserAccountServiceImpl extends BaseServiceImpl<SysUserAccountMap
                             SysOnlineUserVO.UserLoginData loginData = new SysOnlineUserVO.UserLoginData();
                             BeanUtils.copyProperties(userDetail, loginData);
                             return loginData;
-                        }).collect(Collectors.toList())
+                        }).toList()
                 );
             }
             return onlineUser;
-        }).collect(Collectors.toList());
+        }).toList();
     }
 
 
@@ -115,14 +115,14 @@ public class SysUserAccountServiceImpl extends BaseServiceImpl<SysUserAccountMap
         // 验证用户是否已经删除
         List<SysUserPO> deleteUser = userList.stream()
                 .filter(item -> Boolean.TRUE.equals(item.getDeleteYn()))
-                .collect(Collectors.toList());
+                .toList();
         if (CollectionUtils.isNotEmpty(deleteUser)) {
             throw new I18nException(SystemI18nMessage.SYSTEM_ACCOUNT_HAS_DELETE_ERROR, deleteUser.stream().map(SysUserPO::getUsername).collect(Collectors.joining(",")));
         }
         // 验证用户是否未启用
         List<SysUserPO> noUserList = userList.stream()
                 .filter(item -> Boolean.FALSE.equals(item.getUseYn()))
-                .collect(Collectors.toList());
+                .toList();
         if (CollectionUtils.isNotEmpty(noUserList)) {
             throw new I18nException(SystemI18nMessage.SYSTEM_ACCOUNT_HAS_NO_USE_ERROR, noUserList.stream().map(SysUserPO::getUsername).collect(Collectors.joining(",")));
         }
@@ -155,7 +155,7 @@ public class SysUserAccountServiceImpl extends BaseServiceImpl<SysUserAccountMap
                         .maxDaysSinceLogin(userStatusProperties.getMaxDaysSinceLogin())
                         .passwordLifeDays(userStatusProperties.getPasswordLifeDays())
                         .build())
-                .collect(Collectors.toList());
+                .toList();
         return this.saveBatch(userAccountList);
     }
 
@@ -173,16 +173,12 @@ public class SysUserAccountServiceImpl extends BaseServiceImpl<SysUserAccountMap
                 .eq(SysUserAccountPO :: getUserId, userAccount.getUserId())
                 .set(SysUserAccountPO::getAccountStatus, UserAccountStatusEnum.NORMAL);
         switch (userAccount.getAccountStatus()) {
-            case LONG_TIME_LOCKED -> {
-                // 长时间未登录锁定解锁
-                updateWrapper.set(SysUserAccountPO::getLastLoginTime, LocalDateTime.now());
-                break;
-            }
-            case LONG_TIME_PASSWORD_MODIFY_LOCKED -> {
-                // 长时间密码未修改锁定解锁
-                updateWrapper.set(SysUserAccountPO::getPasswordModifyTime, LocalDateTime.now());
-                break;
-            }
+            case LONG_TIME_LOCKED ->
+                    // 长时间未登录锁定解锁
+                    updateWrapper.set(SysUserAccountPO::getLastLoginTime, LocalDateTime.now());
+            case LONG_TIME_PASSWORD_MODIFY_LOCKED ->
+                    // 长时间密码未修改锁定解锁
+                    updateWrapper.set(SysUserAccountPO::getPasswordModifyTime, LocalDateTime.now());
             default -> {
                 // do noting
             }

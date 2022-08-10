@@ -97,7 +97,7 @@ public class I18nUtils {
      * @return 是否支持I18N
      */
     public static boolean supportI18n() {
-       return Objects.nonNull(messageSource) && !(messageSource instanceof DelegatingMessageSource && Objects.isNull(((DelegatingMessageSource) messageSource).getParentMessageSource()));
+       return Objects.nonNull(messageSource) && !(messageSource instanceof DelegatingMessageSource  delegatingMessageSource && Objects.isNull(delegatingMessageSource.getParentMessageSource()));
     }
 
     /**

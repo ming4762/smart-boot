@@ -79,7 +79,7 @@ public class MonitorClientLogServiceImpl extends BaseServiceImpl<MonitorClientLo
                 .level(item.getLevel())
                 .logText(LogbackLogUtils.convertToLogText(item))
                 .createTime(currentTime)
-                .build()).collect(Collectors.toList());
+                .build()).toList();
         this.saveBatch(logList);
         return logList.size();
     }

@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author ShiZhongMing
@@ -91,7 +90,7 @@ public class DbCodeTemplateServiceImpl extends BaseServiceImpl<DbCodeTemplateMap
                 new QueryWrapper<DbCodeTemplateUserGroupPO>().lambda()
                         .select(DbCodeTemplateUserGroupPO :: getTemplateId)
                         .in(DbCodeTemplateUserGroupPO :: getGroupId, groupIdList)
-        ).stream().map(DbCodeTemplateUserGroupPO :: getTemplateId).collect(Collectors.toList());
+        ).stream().map(DbCodeTemplateUserGroupPO :: getTemplateId).toList();
     }
 
     @Override
@@ -105,7 +104,7 @@ public class DbCodeTemplateServiceImpl extends BaseServiceImpl<DbCodeTemplateMap
         if (CollectionUtils.isNotEmpty(parameter.getGroupIdList())) {
             final List<DbCodeTemplateUserGroupPO> templateUserGroupList = parameter.getGroupIdList().stream()
                     .map(item -> new DbCodeTemplateUserGroupPO(parameter.getTemplateId(), item))
-                    .collect(Collectors.toList());
+                    .toList();
             this.dbCodeTemplateUserGroupService.saveBatchWithUser(templateUserGroupList, AuthUtils.getCurrentUserId());
         }
         // 保存数据

@@ -29,6 +29,7 @@ import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Collection;
@@ -211,7 +212,7 @@ public class DefaultFileServiceImpl extends BaseServiceImpl<SysFileMapper, SysFi
                                 value.stream()
                                         .map(SysFilePO :: getDbId)
                                         .filter(StringUtils :: isNotEmpty)
-                                        .collect(Collectors.toList())
+                                        .toList()
                         ));
             }
             return true;
@@ -281,7 +282,7 @@ public class DefaultFileServiceImpl extends BaseServiceImpl<SysFileMapper, SysFi
      * @param file 文件信息
      * @return 文件ID
      */
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     private String saveActualFile(SysFileBO file) {
         try (InputStream inputStream = file.getInputStream()) {
             return this.getActualFileService(file.getFile().getHandlerType()).save(inputStream, file.getFile().getFileName(), file.getFile().getMd5());

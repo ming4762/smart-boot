@@ -58,7 +58,7 @@ public class TableViewBO extends TableViewDO {
     public static List<TableViewBO> batchCreateFromDo(@NonNull List<TableViewDO> tableViewList) {
         return tableViewList.stream()
                 .map(TableViewBO::createFromDo)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**

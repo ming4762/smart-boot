@@ -69,7 +69,7 @@ public abstract class AbstractOfficeConverter implements OfficeConverter {
         return "." + this.fileType.getExtension();
     }
 
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     private void execute() {
         if (StringUtils.isBlank(this.fromPath)) {
             throw new IllegalArgumentException("convert file is null, please set fromPath");

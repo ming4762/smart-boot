@@ -24,7 +24,7 @@ public class DocumentConvertDTO implements Serializable {
     @Serial
     private static final long serialVersionUID = 4781207703470509484L;
     @Schema(name = "文件")
-    private MultipartFile file;
+    private transient MultipartFile file;
 
     @Schema(name = "源格式")
     private DocumentFormatEnum fromFormat;

@@ -1,6 +1,5 @@
 package com.smart.file.manager.controller;
 
-import com.google.common.collect.ImmutableList;
 import com.smart.commons.core.message.Result;
 import com.smart.crud.controller.BaseController;
 import com.smart.file.manager.model.SysFilePO;
@@ -12,7 +11,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +23,6 @@ import java.io.Serializable;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author shizhongming
@@ -75,12 +72,12 @@ public class SysFileController extends BaseController<SysFileService, SysFilePO>
             @RequestParam(value = "type", required = false) String type
     ) {
         if (multipartFileList.isEmpty()) {
-            return Result.success(ImmutableList.of());
+            return Result.success(List.of());
         }
         return Result.success(
                 multipartFileList.stream()
                         .map(item -> this.service.saveFile(item, type))
-                        .collect(Collectors.toList())
+                        .toList()
         );
     }
 
@@ -106,7 +103,6 @@ public class SysFileController extends BaseController<SysFileService, SysFilePO>
      * @param ids 文件ID列表
      * @return 是否删除成功
      */
-    @SneakyThrows
     @Operation(summary = "批量删除文件")
     @Override
     public Result<Boolean> batchDeleteById(@RequestBody List<Serializable> ids)  {

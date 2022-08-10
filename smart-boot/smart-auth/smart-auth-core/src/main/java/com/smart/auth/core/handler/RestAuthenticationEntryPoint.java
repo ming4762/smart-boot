@@ -21,8 +21,8 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
         Result<String> result = Result.failure(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
-        if (e instanceof AuthException) {
-            result = Result.failure(((AuthException) e).getCode(), e.getMessage());
+        if (e instanceof AuthException authException) {
+            result = Result.failure(authException.getCode(), e.getMessage());
         }
         RestJsonWriter.writeJson(httpServletResponse, result);
     }

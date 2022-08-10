@@ -87,14 +87,14 @@ public class CacheJwtStoreImpl implements CacheJwtStore {
     protected String getTokenKey(String username, String jwt) {
         List<String> list = Lists.newArrayList(TOKE_KEY_PREFIX, username, jwt)
                 .stream().filter(StringUtils::isNotBlank)
-                .collect(Collectors.toList());
+                .toList();
         return String.join(JWT_SPLIT_KEY, list);
     }
 
     protected String getAttributeKey(String username, String jwt) {
         List<String> list = Lists.newArrayList(DATA_KEY_PREFIX, username, jwt)
                 .stream().filter(StringUtils::isNotBlank)
-                .collect(Collectors.toList());
+                .toList();
 
         return String.join(JWT_SPLIT_KEY, list);
     }
@@ -150,7 +150,7 @@ public class CacheJwtStoreImpl implements CacheJwtStore {
         }
         return this.authCache.batchGet(keys).stream()
                 .map(JwtData.class::cast)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -162,6 +162,6 @@ public class CacheJwtStoreImpl implements CacheJwtStore {
         }
         return this.authCache.batchGet(keys).stream()
                 .map(JwtData.class::cast)
-                .collect(Collectors.toList());
+                .toList();
     }
 }

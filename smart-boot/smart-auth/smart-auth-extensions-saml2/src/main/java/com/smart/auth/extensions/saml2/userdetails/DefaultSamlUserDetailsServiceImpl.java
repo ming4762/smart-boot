@@ -4,7 +4,6 @@ import com.google.common.collect.Sets;
 import com.smart.auth.core.constants.AuthTypeEnum;
 import com.smart.auth.core.model.*;
 import com.smart.auth.core.service.AuthUserService;
-import lombok.SneakyThrows;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.saml.SAMLCredential;
@@ -12,7 +11,6 @@ import org.springframework.security.saml.userdetails.SAMLUserDetailsService;
 
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @author ShiZhongMing
@@ -27,7 +25,6 @@ public class DefaultSamlUserDetailsServiceImpl implements SAMLUserDetailsService
         this.userService = authUserService;
     }
 
-    @SneakyThrows
     @Override
     public Object loadUserBySAML(SAMLCredential credential) {
         // 获取用户名
@@ -41,14 +38,13 @@ public class DefaultSamlUserDetailsServiceImpl implements SAMLUserDetailsService
         // 添加角色
         grantedAuthoritySet.addAll(
                 this.userService.listRoleCode(user).stream()
-                        .map(RoleGrantedAuthority::new)
-                        .collect(Collectors.toList())
+                        .map(RoleGrantedAuthority::new).toList()
         );
         // 添加权限
         grantedAuthoritySet.addAll(
                 this.userService.listPermission(user)
                         .stream()
-                        .map(PermissionGrantedAuthority::new).collect(Collectors.toList())
+                        .map(PermissionGrantedAuthority::new).toList()
         );
         // 查询用户角色信息
         final RestUserDetailsImpl restUserDetails = createByUser(user);

@@ -13,7 +13,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author ShiZhongMing
@@ -123,7 +122,7 @@ public class LogbackLogUtils {
                 throwableData.setStackTraceElementList(
                         Arrays.stream(throwableProxy.getStackTraceElementProxyArray())
                         .map(StackTraceElementProxy::getStackTraceElement)
-                        .collect(Collectors.toList())
+                        .toList()
                 );
             }
         }

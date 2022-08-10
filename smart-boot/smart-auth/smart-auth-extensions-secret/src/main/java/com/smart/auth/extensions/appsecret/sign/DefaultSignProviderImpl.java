@@ -2,8 +2,6 @@ package com.smart.auth.extensions.appsecret.sign;
 
 import com.smart.commons.core.utils.DigestUtils;
 
-import java.nio.charset.StandardCharsets;
-
 /**
  * @author ShiZhongMing
  * @since 1.0

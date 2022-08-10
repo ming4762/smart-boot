@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
-import java.util.stream.Collectors;
 
 /**
  * 存储在客户端的信息
@@ -83,7 +82,7 @@ public class MemoryClientRepositoryImpl extends AbstractClientRepositoryImpl {
     public Collection<ClientData> findByName(@NonNull String name, boolean active) {
         return this.findAll(active).stream()
                 .filter(item -> item.getApplication().getApplicationName().equals(name))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @NonNull
@@ -94,7 +93,7 @@ public class MemoryClientRepositoryImpl extends AbstractClientRepositoryImpl {
         }
         return this.findAll(active).stream()
                 .filter(item -> codeList.contains(item.getApplication().getApplicationName()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -155,6 +154,6 @@ public class MemoryClientRepositoryImpl extends AbstractClientRepositoryImpl {
 
 
     private Collection<ClientData> getActiveList(Collection<ClientData> repositoryDatas) {
-        return repositoryDatas.stream().filter(this::isActive).collect(Collectors.toList());
+        return repositoryDatas.stream().filter(this::isActive).toList();
     }
 }

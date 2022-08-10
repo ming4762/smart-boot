@@ -5,9 +5,12 @@ import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
 import org.springframework.lang.NonNull;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
+import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
@@ -18,6 +21,10 @@ import java.security.spec.X509EncodedKeySpec;
  * @since 3.0.0
  */
 public class RsaUtils {
+
+    private RsaUtils() {
+        // nothing
+    }
 
     /**
      * 秘钥算法
@@ -33,7 +40,7 @@ public class RsaUtils {
      * 随机生成秘钥对
      * @return 秘钥对
      */
-    @SneakyThrows
+    @SneakyThrows(NoSuchAlgorithmException.class)
     public static KeyPair generateKeyPair() {
         KeyPairGenerator generator = KeyPairGenerator.getInstance(ALGORITHM);
         generator.initialize(KEY_SIZE);
@@ -46,7 +53,7 @@ public class RsaUtils {
      * @param key key
      * @param outputStream 输出流
      */
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     public static void saveKey(@NonNull Key key, OutputStream outputStream) {
         var encoded = key.getEncoded();
 
@@ -80,7 +87,7 @@ public class RsaUtils {
      * @param pubKeyBase64 公钥文本
      * @return 公钥
      */
-    @SneakyThrows
+    @SneakyThrows({NoSuchAlgorithmException.class, InvalidKeySpecException.class})
     public static PublicKey generaPublicKey(String pubKeyBase64) {
         var pubKeyByte = Base64Utils.decode(pubKeyBase64);
         X509EncodedKeySpec keySpec = new X509EncodedKeySpec(pubKeyByte);
@@ -88,12 +95,12 @@ public class RsaUtils {
         return KeyFactory.getInstance(ALGORITHM).generatePublic(keySpec);
     }
 
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     public static PublicKey generaPublicKey(InputStream inputStream) {
         return generaPublicKey(IOUtils.toString(inputStream, StandardCharsets.UTF_8));
     }
 
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     public static PrivateKey generaPrivateKey(InputStream inputStream) {
         return generaPrivateKey(IOUtils.toString(inputStream, StandardCharsets.UTF_8));
     }
@@ -103,7 +110,7 @@ public class RsaUtils {
      * @param priKeyBase64 私钥文本
      * @return 私钥
      */
-    @SneakyThrows
+    @SneakyThrows({NoSuchAlgorithmException.class, InvalidKeySpecException.class})
     public static PrivateKey generaPrivateKey(String priKeyBase64) {
         var pubKeyByte = Base64Utils.decode(priKeyBase64);
         PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(pubKeyByte);

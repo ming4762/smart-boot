@@ -3,6 +3,7 @@ package com.smart.commons.core.utils;
 import lombok.SneakyThrows;
 import org.apache.commons.collections.CollectionUtils;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -25,7 +26,8 @@ public class BeanUtils {
      * @param <T> 目标类型
      * @return 拷贝后的列表
      */
-    @SneakyThrows
+    @SneakyThrows({NoSuchMethodException.class, InstantiationException.class, IllegalAccessException.class,
+            IllegalArgumentException.class, InvocationTargetException.class})
     public static <T> List<T> copyProperties(Collection<?> sourceList, Class<T> targetClass) {
         if (CollectionUtils.isEmpty(sourceList)) {
             return new ArrayList<>(0);

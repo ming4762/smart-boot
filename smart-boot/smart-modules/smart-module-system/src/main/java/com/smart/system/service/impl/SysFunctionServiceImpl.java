@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author jackson
@@ -51,7 +50,7 @@ public class SysFunctionServiceImpl extends BaseServiceImpl<SysFunctionMapper, S
                     SysFunctionListVO vo = new SysFunctionListVO();
                     BeanUtils.copyProperties(item, vo);
                     return vo;
-                }).collect(Collectors.toList());
+                }).toList();
         if (Boolean.TRUE.equals(parameter.getParameter().get(CrudCommonEnum.QUERY_CREATE_UPDATE_USER.name()))) {
             this.userSetterService.setCreateUpdateUser(functionVoList);
         }

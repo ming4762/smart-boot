@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
 * monitor_client_http_trace - 客户端HttpTrace Controller
@@ -67,7 +66,7 @@ public class MonitorClientHttpTraceController extends BaseController<MonitorClie
         return Result.success(
                 this.service.list(queryWrapper).stream()
                         .map(MonitorClientHttpTracePO::getClientId)
-                        .collect(Collectors.toList())
+                        .toList()
         );
     }
 }

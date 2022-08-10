@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.io.IOException;
+
 /**
  * 二维码条形码工具
  * @author ShiZhongMing
@@ -33,7 +35,7 @@ public class CodeController {
     /**
      * 生成条形码
      */
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     @PostMapping("generateBarcode")
     @Operation(summary = "生成条形码")
     public void generateBarcode(@RequestBody @Valid BarcodeGeneratorData parameter, HttpServletResponse response) {
@@ -46,7 +48,7 @@ public class CodeController {
      * @param parameter 参数
      * @param response HttpServletResponse
      */
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     @PostMapping("generateQrcode")
     @Operation(summary = "生成二维码")
     public void generateQrcode(@RequestBody @Valid QrcodeGeneratorData parameter, HttpServletResponse response) {

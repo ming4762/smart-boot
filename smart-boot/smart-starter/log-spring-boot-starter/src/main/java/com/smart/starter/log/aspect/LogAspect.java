@@ -31,7 +31,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * 日志切面
@@ -67,7 +66,7 @@ public final class LogAspect {
             } else {
                 this.codeList = Arrays.stream(codes.split(","))
                         .map(code -> Integer.parseInt(code.trim()))
-                        .collect(Collectors.toList());
+                        .toList();
             }
         }
     }
@@ -149,17 +148,17 @@ public final class LogAspect {
     private void saveLog(ProceedingJoinPoint point, long time, Object result, Exception exception) {
         try {
             final Signature signature = point.getSignature();
-            if (signature instanceof MethodSignature) {
-                final Method method = ((MethodSignature) signature).getMethod();
+            if (signature instanceof MethodSignature methodSignature) {
+                final Method method = methodSignature.getMethod();
                 final Log logAnnotation = method.getAnnotation(Log.class);
                 int code = 200;
                 boolean saveLog = true;
                 // 错误信息
                 String errorMessage = null;
-                if (result instanceof Result) {
-                    code = ((Result) result).getCode();
-                    if (BooleanUtils.isFalse(((Result) result).isSuccess())) {
-                        errorMessage = ((Result) result).getMessage();
+                if (result instanceof Result result1) {
+                    code = result1.getCode();
+                    if (BooleanUtils.isFalse(result1.isSuccess())) {
+                        errorMessage = result1.getMessage();
                     }
                     List<Integer> saveCodeList = this.getCodeList();
                     // 如果设置了保存的编码，并且不包含保存的编码  则不保存日志

@@ -26,8 +26,10 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -120,7 +122,7 @@ public abstract class BaseServiceImpl<K extends CrudBaseMapper<T>, T extends Bas
      * @param entity 实体类
      * @param tableInfo 表信息
      */
-    @SneakyThrows
+    @SneakyThrows({IllegalAccessException.class, IntrospectionException.class, InvocationTargetException.class})
     protected void setNumberId(@NonNull T entity, @NonNull TableInfo tableInfo) {
         final IdType idType = tableInfo.getIdType();
         if (idType.getKey() == IdType.ASSIGN_ID.getKey() && Number.class.isAssignableFrom(tableInfo.getKeyType())) {
@@ -317,7 +319,7 @@ public abstract class BaseServiceImpl<K extends CrudBaseMapper<T>, T extends Bas
      * @param model 实体类
      * @param userId 用户ID
      */
-    @SneakyThrows
+    @SneakyThrows({IllegalAccessException.class, InvocationTargetException.class, NoSuchMethodException.class})
     protected void setCreateUserId(T model, Long userId) {
         PropertyUtils.setProperty(model, UserPropertyEnum.CREATE_USER_ID.getName(), userId);
     }
@@ -326,17 +328,17 @@ public abstract class BaseServiceImpl<K extends CrudBaseMapper<T>, T extends Bas
      * 设置创建时间
      * @param model 实体类
      */
-    @SneakyThrows
+    @SneakyThrows({IllegalAccessException.class, InvocationTargetException.class, NoSuchMethodException.class})
     protected void setCreateTime(T model) {
         PropertyUtils.setProperty(model, UserPropertyEnum.CREATE_TIME.getName(), LocalDateTime.now());
     }
 
-    @SneakyThrows
+    @SneakyThrows({IllegalAccessException.class, InvocationTargetException.class, NoSuchMethodException.class})
     protected void setUpdateUserId(T model, Long userId) {
         PropertyUtils.setProperty(model, UserPropertyEnum.UPDATE_USER_ID.getName(), userId);
     }
 
-    @SneakyThrows
+    @SneakyThrows({IllegalAccessException.class, InvocationTargetException.class, NoSuchMethodException.class})
     protected void setUpdateTime(T model) {
         PropertyUtils.setProperty(model, UserPropertyEnum.UPDATE_TIME.getName(), LocalDateTime.now());
     }

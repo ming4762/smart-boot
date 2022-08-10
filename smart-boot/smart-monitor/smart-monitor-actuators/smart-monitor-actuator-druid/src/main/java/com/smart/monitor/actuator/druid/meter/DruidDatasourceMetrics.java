@@ -13,7 +13,6 @@ import org.springframework.lang.NonNull;
 import javax.sql.DataSource;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 数据源meter绑定
@@ -66,6 +65,6 @@ public class DruidDatasourceMetrics implements ApplicationListener<ApplicationRe
                 .map(name -> applicationContext.getBean(name, DataSource.class))
                 .filter(DruidUtils::isDruidDatasource)
                 .map(dataSource -> ((DruidDataSource)dataSource).getName())
-                .collect(Collectors.toList());
+                .toList();
     }
 }

@@ -89,7 +89,7 @@ public abstract class AbstractDefaultDatabaseExecutor implements DatabaseExecuto
      * 获取表格信息
      * @param types 类型
      */
-    @SneakyThrows
+    @SneakyThrows(SQLException.class)
     @Override
     public @NonNull List<TableViewDO> listBaseTable(@NonNull DbConnectionConfig connectionConfig, @Nullable String tableNamePattern, DbTableTypeEnum... types) {
         Connection connection = this.dbConnectionProvider.getConnection(connectionConfig);
@@ -117,7 +117,7 @@ public abstract class AbstractDefaultDatabaseExecutor implements DatabaseExecuto
      * @param tableName 标明
      * @return 主键列表
      */
-    @SneakyThrows
+    @SneakyThrows(SQLException.class)
     @Override
     public List<PrimaryKeyDO> listPrimaryKey(@NonNull DbConnectionConfig connectionConfig, String tableName)  {
         Connection connection = this.dbConnectionProvider.getConnection(connectionConfig);
@@ -143,7 +143,7 @@ public abstract class AbstractDefaultDatabaseExecutor implements DatabaseExecuto
      * @param tableName 表名
      * @return 外键列表
      */
-    @SneakyThrows
+    @SneakyThrows(SQLException.class)
     @Override
     public List<ImportKeyDO> listImportedKeys(@NonNull DbConnectionConfig connectionConfig, String tableName){
         Connection connection = this.dbConnectionProvider.getConnection(connectionConfig);
@@ -172,7 +172,7 @@ public abstract class AbstractDefaultDatabaseExecutor implements DatabaseExecuto
      * @param approximate when true, result is allowed to reflect approximate or out of data values; when false, results are requested to be accurate
      * @return 主键信息
      */
-    @SneakyThrows
+    @SneakyThrows(SQLException.class)
     @Override
     public List<IndexDO> listIndex(@NonNull DbConnectionConfig connectionConfig, String tableName, Boolean unique, Boolean approximate) {
         final Connection connection = this.dbConnectionProvider.getConnection(connectionConfig);
@@ -269,7 +269,7 @@ public abstract class AbstractDefaultDatabaseExecutor implements DatabaseExecuto
      * @param tableName 表名
      * @return 列基本信息
      */
-    @SneakyThrows
+    @SneakyThrows(SQLException.class)
     @Override
     public List<ColumnDO> listBaseColumn(@NonNull DbConnectionConfig connectionConfig, @NonNull String tableName) {
         final Connection connection = this.dbConnectionProvider.getConnection(connectionConfig);
@@ -356,7 +356,7 @@ public abstract class AbstractDefaultDatabaseExecutor implements DatabaseExecuto
      * @param tableList 表格列表
      * @param commentSql 查询sql
      */
-    @SneakyThrows
+    @SneakyThrows(SQLException.class)
     protected void queryTableRemark(@NonNull DbConnectionConfig connectionConfig, @NonNull List<TableViewDO> tableList, @NonNull String commentSql) {
         if (tableList.isEmpty()) {
             return;
@@ -365,7 +365,7 @@ public abstract class AbstractDefaultDatabaseExecutor implements DatabaseExecuto
         final Connection connection = this.dbConnectionProvider.getConnection(connectionConfig);
         // 获取表名
         List<String> tableNameList = tableList.stream()
-                .map(TableViewDO::getTableName).collect(Collectors.toList());
+                .map(TableViewDO::getTableName).toList();
         try (
                 PreparedStatement psmt = this.setInParameter(connection, commentSql, tableNameList);
                 ResultSet rs = psmt.executeQuery()
@@ -389,7 +389,7 @@ public abstract class AbstractDefaultDatabaseExecutor implements DatabaseExecuto
      * @param columnList 表格列表
      * @param commentSql 查询sql
      */
-    @SneakyThrows
+    @SneakyThrows({SQLException.class})
     protected void queryColumnRemark(@NonNull DbConnectionConfig connectionConfig, @NonNull List<ColumnDO> columnList, @NonNull String commentSql) {
         if (columnList.isEmpty()) {
             return;
@@ -421,7 +421,7 @@ public abstract class AbstractDefaultDatabaseExecutor implements DatabaseExecuto
      * @param parameterList 参数列表
      * @return PreparedStatement
      */
-    @SneakyThrows
+    @SneakyThrows(SQLException.class)
     private PreparedStatement setInParameter(@NonNull Connection connection, @NonNull String commentSql, @NonNull Collection<String> parameterList) {
         if (CollectionUtils.isNotEmpty(parameterList) && commentSql.contains(IN_PLACEHOLDER)) {
             commentSql = commentSql.replace(IN_PLACEHOLDER, String.format(" (%s) ", parameterList.stream().map(item -> "?").collect(Collectors.joining(","))));

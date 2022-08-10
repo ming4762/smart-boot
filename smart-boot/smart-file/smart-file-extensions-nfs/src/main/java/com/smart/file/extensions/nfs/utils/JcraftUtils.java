@@ -9,7 +9,6 @@ import org.springframework.lang.NonNull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
-import java.util.stream.Collectors;
 
 /**
  * @author ShiZhongMing
@@ -66,7 +65,7 @@ public class JcraftUtils {
         }
         // 获取路径列表
         final List<String> paths = Arrays.stream(path.split(PATH_SPLIT))
-                .collect(Collectors.toList());
+                .toList();
         return JcraftUtils.createDirectories(channelSftp, paths);
     }
 
@@ -78,7 +77,7 @@ public class JcraftUtils {
      */
     public static boolean createDirectories(@NonNull ChannelSftp channelSftp, @NonNull List<String> paths) throws SftpException {
         // 过滤路径
-        final List<String> pathList = paths.stream().filter(StringUtils :: isNotBlank).collect(Collectors.toList());
+        final List<String> pathList = paths.stream().filter(StringUtils :: isNotBlank).toList();
         StringBuilder filePath = new StringBuilder(PATH_SPLIT);
         for (String path : pathList) {
             filePath.append(path).append(PATH_SPLIT);

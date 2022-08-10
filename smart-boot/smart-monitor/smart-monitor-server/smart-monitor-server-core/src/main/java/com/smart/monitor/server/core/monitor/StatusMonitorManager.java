@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
-import java.util.stream.Collectors;
 
 /**
  * 客户端状态监听管理器
@@ -77,7 +76,7 @@ public class StatusMonitorManager implements ApplicationContextAware, Disposable
             this.statusMonitorList = Arrays.stream(applicationContext.getBeanNamesForType(StatusMonitor.class))
                     .map(item -> applicationContext.getBean(item, StatusMonitor.class))
                     .sorted(Comparator.comparingInt(Ordered::getOrder))
-                    .collect(Collectors.toList());
+                    .toList();
         }
     }
 

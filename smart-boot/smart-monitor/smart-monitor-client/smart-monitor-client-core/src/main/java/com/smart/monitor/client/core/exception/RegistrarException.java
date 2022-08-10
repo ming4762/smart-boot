@@ -12,7 +12,7 @@ public class RegistrarException extends RuntimeException {
 
     private static final long serialVersionUID = -6717677133918741958L;
     @Getter
-    private final Result<?> data;
+    private transient final Result<?> data;
 
     public RegistrarException(Result<?> data) {
         super(data.getMessage());

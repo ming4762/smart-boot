@@ -1,6 +1,5 @@
 package com.smart.system.controller;
 
-import com.google.common.collect.ImmutableList;
 import com.smart.auth.core.annotation.NonUrlCheck;
 import com.smart.auth.core.utils.AuthUtils;
 import com.smart.commons.core.http.HttpStatus;
@@ -80,11 +79,11 @@ public class SysUserGroupController extends BaseController<SysUserGroupService, 
     @PostMapping("listUserById")
     @Operation(summary = "通过用户组ID查询用户列表", method = "POST")
     public Result<List<SysUserPO>> listUserById(@RequestBody Long id) {
-        final Map<Long, List<SysUserPO>> result = this.service.listUserByIds(ImmutableList.of(id));
+        final Map<Long, List<SysUserPO>> result = this.service.listUserByIds(List.of(id));
         if (result.containsKey(id)) {
             return Result.success(result.get(id));
         }
-        return Result.success(ImmutableList.of());
+        return Result.success(List.of());
     }
 
     /**
@@ -95,11 +94,11 @@ public class SysUserGroupController extends BaseController<SysUserGroupService, 
     @PostMapping(value = "listUserIdById")
     @Operation(summary = "通过用户组ID查询用户ID列表")
     public Result<List<Long>> listUserIdById(@RequestBody Long id) {
-        final Map<Long, List<Long>> result = this.service.listUserIdByIds(ImmutableList.of(id));
+        final Map<Long, List<Long>> result = this.service.listUserIdByIds(List.of(id));
         if (result.containsKey(id)) {
             return Result.success(result.get(id));
         }
-        return Result.success(ImmutableList.of());
+        return Result.success(List.of());
     }
 
     /**

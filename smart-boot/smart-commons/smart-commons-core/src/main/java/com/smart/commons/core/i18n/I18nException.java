@@ -17,21 +17,20 @@ public class I18nException extends BusinessException {
 
     private final I18nMessage i18nMessage;
 
-    private Object[] args;
+    private final transient Object[] args;
 
     public I18nException(Throwable e) {
-        super(e);
-        this.i18nMessage = null;
+        this(null, e);
     }
 
     public I18nException(I18nMessage i18nMessage, Throwable e) {
-        super(e);
-        this.i18nMessage = i18nMessage;
+        this(i18nMessage, e, (Object) null);
     }
 
     public I18nException(I18nMessage i18nMessage, Throwable e, Object ...args) {
-        this(i18nMessage, e);
+        super(e);
         this.args = args;
+        this.i18nMessage = i18nMessage;
     }
 
     public I18nException(I18nMessage i18nMessage, Object ...args) {

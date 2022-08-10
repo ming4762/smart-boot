@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author ShiZhongMing
@@ -48,7 +47,7 @@ public class MonitorUserGroupApplicationServiceImpl extends BaseServiceImpl<Moni
                 new QueryWrapper<MonitorUserGroupApplicationPO>().lambda()
                 .select(MonitorUserGroupApplicationPO :: getApplicationId)
                 .in(MonitorUserGroupApplicationPO :: getUserGroupId, userGroupIdList)
-        ).stream().map(MonitorUserGroupApplicationPO :: getApplicationId).collect(Collectors.toList());
+        ).stream().map(MonitorUserGroupApplicationPO :: getApplicationId).toList();
     }
 
     @Override
@@ -66,7 +65,7 @@ public class MonitorUserGroupApplicationServiceImpl extends BaseServiceImpl<Moni
                 po.setApplicationId(parameter.getApplicationId());
                 po.setUserGroupId(item);
                 return po;
-            }).collect(Collectors.toList());
+            }).toList();
             this.saveBatchWithUser(data, AuthUtils.getCurrentUserId());
         }
         return true;

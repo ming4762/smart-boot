@@ -36,7 +36,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.util.Assert;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * JWT配置类
@@ -91,6 +90,7 @@ public class AuthJwtSecurityConfigurer extends SecurityConfigurerAdapter<Default
         return this.getBean(AuthProperties.class, this.serviceProvider.authProperties);
     }
 
+    @SuppressWarnings("unchecked")
     private AuthCache<String, Object> getAuthCache() {
         return this.getBean(AuthCache.class, this.serviceProvider.authCache);
     }
@@ -100,7 +100,7 @@ public class AuthJwtSecurityConfigurer extends SecurityConfigurerAdapter<Default
     }
 
     @Override
-    public void configure(HttpSecurity builder) throws Exception {
+    public void configure(HttpSecurity builder) {
         // 构建
         builder
                 .authenticationProvider(this.getBean(RestAuthenticationProvider.class, this.serviceProvider.authenticationProvider))
@@ -130,7 +130,7 @@ public class AuthJwtSecurityConfigurer extends SecurityConfigurerAdapter<Default
         return Arrays.stream(this.serviceProvider.applicationContext.getBeanNamesForType(JwtStore.class))
                 .map(item -> this.serviceProvider.applicationContext.getBean(item, JwtStore.class))
                 .sorted(Comparator.comparingInt(Ordered::getOrder))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**

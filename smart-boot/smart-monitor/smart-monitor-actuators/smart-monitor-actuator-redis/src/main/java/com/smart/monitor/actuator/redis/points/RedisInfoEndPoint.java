@@ -38,7 +38,7 @@ public class RedisInfoEndPoint {
     public Object info(@Selector String parameter) {
         List<RedisInfoParameterEnum> parameterList = Arrays.stream(RedisInfoParameterEnum.values())
                 .filter(item -> item.getParameter().equals(parameter))
-                .collect(Collectors.toList());
+                .toList();
         if (CollectionUtils.isEmpty(parameterList)) {
             return Result.failure(String.format("redis info 参数错误，只能是以下值[%s]", Arrays.stream(RedisInfoParameterEnum.values()).map(RedisInfoParameterEnum::getParameter).collect(Collectors.joining(","))));
         }
@@ -64,6 +64,6 @@ public class RedisInfoEndPoint {
                     return new RedisInfo(redisInfoResultEnum.getParameter().getParameter(), item.getKey().toString(), item.getValue().toString(), redisInfoResultEnum.getDescription());
                 }).filter(Objects::nonNull)
                 .sorted(Comparator.comparing(RedisInfo::group).thenComparing(RedisInfo::key))
-                .collect(Collectors.toList());
+                .toList();
     }
 }

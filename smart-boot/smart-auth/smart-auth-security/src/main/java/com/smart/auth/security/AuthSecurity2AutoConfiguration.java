@@ -107,7 +107,7 @@ public class AuthSecurity2AutoConfiguration {
         return new AuthenticationFailureEventInitializer(eventPublisher);
     }
 
-    @SneakyThrows
+    @SneakyThrows(Exception.class)
     @Bean
     @ConditionalOnMissingBean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) {

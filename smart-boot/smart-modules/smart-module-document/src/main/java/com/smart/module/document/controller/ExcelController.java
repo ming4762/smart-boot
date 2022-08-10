@@ -50,7 +50,7 @@ public class ExcelController {
      * @param parameter 参数
      * @param response HttpServletResponse
      */
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     @PostMapping("fillSingleWithCode")
     @Operation(summary = "填充单一sheetExcel(带有条形码/二维码)")
     public void fillSingleWithCode(@RequestBody @Valid ExcelSingleSheetDTO parameter, HttpServletResponse response) {
@@ -64,7 +64,7 @@ public class ExcelController {
      * @param parameter 参数
      * @param response HttpServletResponse
      */
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     @PostMapping("fillMultiWithCode")
     @Operation(summary = "填充多sheetExcel(带有条形码/二维码)")
     public void fillMultiWithCode(@RequestBody @Valid ExcelMultiSheetDTO parameter, HttpServletResponse response) {

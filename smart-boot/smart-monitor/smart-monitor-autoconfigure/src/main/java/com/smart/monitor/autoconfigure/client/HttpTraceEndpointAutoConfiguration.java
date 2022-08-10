@@ -17,7 +17,6 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author ShiZhongMing
@@ -45,7 +44,7 @@ public class HttpTraceEndpointAutoConfiguration {
                     Arrays.stream(clientProperties.getHttpTrace().getExcludeUrls().split(","))
                             .map(String::trim)
                             .filter(StringUtils::isNotBlank)
-                            .collect(Collectors.toList())
+                            .toList()
             );
         }
         return new InMemoryEnhanceHttpTraceRepository(excludeUrls);

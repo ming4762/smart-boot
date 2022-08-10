@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 /**
 * monitor_client_slow_sql - 客户端慢SQL Service实现类
@@ -85,7 +84,7 @@ public class MonitorClientSlowSqlServiceImpl extends BaseServiceImpl<MonitorClie
                 .useMillis(Long.parseLong(item.get("useMillis").toString()))
                 .datasourceName((String) item.get("datasourceName"))
                 .timestamp((Long) item.get("timestamp"))
-                .build()).collect(Collectors.toList());
+                .build()).toList();
         this.saveBatch(clientSlowSqlList);
         return clientSlowSqlList.size();
     }

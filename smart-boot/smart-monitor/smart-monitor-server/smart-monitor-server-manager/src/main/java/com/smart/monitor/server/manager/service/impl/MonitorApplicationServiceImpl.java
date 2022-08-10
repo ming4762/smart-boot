@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author shizhongming
@@ -66,7 +65,7 @@ public class MonitorApplicationServiceImpl extends BaseServiceImpl<MonitorApplic
             MonitorApplicationUserVO vo = new MonitorApplicationUserVO();
             BeanUtils.copyProperties(item, vo);
             return vo;
-        }).collect(Collectors.toList());
+        }).toList();
         if (Boolean.TRUE.equals(parameter.getParameter().get(CrudCommonEnum.QUERY_CREATE_UPDATE_USER.name()))) {
             this.userSetterService.setCreateUpdateUser(voList);
         }
@@ -105,6 +104,6 @@ public class MonitorApplicationServiceImpl extends BaseServiceImpl<MonitorApplic
                         .select(MonitorApplicationPO :: getApplicationCode)
                         .eq(MonitorApplicationPO :: getUseYn, true)
                         .in(MonitorApplicationPO :: getId, applicationIdList)
-        ).stream().map(MonitorApplicationPO :: getApplicationCode).collect(Collectors.toList());
+        ).stream().map(MonitorApplicationPO :: getApplicationCode).toList();
     }
 }

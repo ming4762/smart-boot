@@ -136,7 +136,7 @@ public class DocumentConverterController {
      * @param parameter 参数
      * @param response 输出流
      */
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     @PostMapping("convert")
     @Operation(summary = "转换文档")
     public void convert(@Valid DocumentConvertDTO parameter, HttpServletResponse response) {

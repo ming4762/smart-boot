@@ -1,7 +1,6 @@
 package com.smart.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.google.common.collect.ImmutableList;
 import com.smart.auth.core.exception.LongTimeNoLoginLockedException;
 import com.smart.auth.core.exception.MaxConnectionAuthenticationException;
 import com.smart.auth.core.exception.PasswordNoLifeLockedException;
@@ -149,7 +148,7 @@ public class AuthUserServiceImpl implements AuthUserService {
                             item -> Arrays.stream(item.split(";"))
                                     .map(String::trim)
                                     .filter(StringUtils::isNotBlank)
-                                    .collect(Collectors.toList())
+                                    .toList()
                     ).orElse(new ArrayList<>(0))
         );
         authUser.setLoginFailTime(userAccount.getLoginFailTime());
@@ -218,7 +217,7 @@ public class AuthUserServiceImpl implements AuthUserService {
      */
     @Override
     public Set<Permission> listPermission(@NonNull AuthUser authUser) {
-        return this.sysUserService.listUserFunction(authUser.getUserId(), ImmutableList.of(FunctionTypeEnum.FUNCTION))
+        return this.sysUserService.listUserFunction(authUser.getUserId(), List.of(FunctionTypeEnum.FUNCTION))
                 .stream()
                 .flatMap(item -> {
                     String url = item.getUrl();

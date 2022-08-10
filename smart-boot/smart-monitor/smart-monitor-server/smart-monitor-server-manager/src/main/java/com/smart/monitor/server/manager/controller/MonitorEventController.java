@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
 * monitor_event - 事件信息 Controller
@@ -47,7 +46,7 @@ public class MonitorEventController extends BaseController<MonitorEventService, 
         return Result.success(
                 Arrays.stream(BuiltInEventCodeEnum.values())
                         .map(BuiltInEventCodeEnum::getCode)
-                        .collect(Collectors.toList())
+                        .toList()
         );
     }
 }

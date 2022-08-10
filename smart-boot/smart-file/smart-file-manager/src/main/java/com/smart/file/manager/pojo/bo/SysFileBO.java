@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -24,7 +25,7 @@ public class SysFileBO {
 
     private InputStream inputStream;
 
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     public SysFileBO(@NonNull MultipartFile multipartFile, String filename, String type, String handlerType) {
         this.file = SysFilePO.builder()
                 .fileId(IdGenerator.nextId())

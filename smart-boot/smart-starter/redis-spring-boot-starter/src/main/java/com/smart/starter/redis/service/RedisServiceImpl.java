@@ -71,6 +71,7 @@ public class RedisServiceImpl implements RedisService {
         this.batchPut(keyValues, Duration.ofSeconds(timeout));
     }
 
+    @SuppressWarnings({"rawtypes", "ConstantConditions"})
     @Override
     public void batchPut(@NonNull Map<Object, Object> keyValues, @NonNull Duration timeout) {
         this.redisTemplate.executePipelined((RedisCallback<Object>) connection -> {

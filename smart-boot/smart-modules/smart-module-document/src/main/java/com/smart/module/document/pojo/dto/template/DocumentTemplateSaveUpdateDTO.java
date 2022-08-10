@@ -24,7 +24,7 @@ public class DocumentTemplateSaveUpdateDTO implements Serializable {
     @Serial
     private static final long serialVersionUID = 2221212581575843191L;
     @Schema(name = "模板文件")
-    private MultipartFile file;
+    private transient MultipartFile file;
 
     @Schema(name = "模板编码", required = true)
     @NotNull(message = "模板编码不能为空")

@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -105,7 +106,7 @@ public final class DateUtils {
      * @param dateStr 字符串
      * @return 时间
      */
-    @SneakyThrows
+    @SneakyThrows(ParseException.class)
     @Nullable
     public static Date convertDate(String dateStr) {
         boolean isUtc = false;

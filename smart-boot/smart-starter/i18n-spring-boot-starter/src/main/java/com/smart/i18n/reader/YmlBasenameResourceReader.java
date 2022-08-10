@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * YML ResourceReader
@@ -42,12 +41,12 @@ public class YmlBasenameResourceReader extends AbstractBasenameResourceReader {
     protected Map<String, String> readByBasename(String basename, Locale locale) throws IOException {
         final Map<String, String> result = Maps.newLinkedHashMap();
         // 读取主文件
-        for (String path: EXTENSIONS.stream().map(item -> basename + item).collect(Collectors.toList())) {
+        for (String path: EXTENSIONS.stream().map(item -> basename + item).toList()) {
             result.putAll(this.doRead(path));
         }
         // 获取路径
         final String basePath = this.getPath(basename, locale);
-        for (String path : EXTENSIONS.stream().map(item -> basePath + item).collect(Collectors.toList())) {
+        for (String path : EXTENSIONS.stream().map(item -> basePath + item).toList()) {
             result.putAll(this.doRead(path));
         }
         return result;

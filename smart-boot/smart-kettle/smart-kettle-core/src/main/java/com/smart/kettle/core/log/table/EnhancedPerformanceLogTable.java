@@ -3,7 +3,6 @@ package com.smart.kettle.core.log.table;
 import com.smart.kettle.core.log.modifier.LogModifierHandler;
 import com.smart.kettle.core.log.modifier.LogModifierHandlerSetter;
 import lombok.EqualsAndHashCode;
-import lombok.SneakyThrows;
 import org.pentaho.di.core.RowMetaAndData;
 import org.pentaho.di.core.logging.LogStatus;
 import org.pentaho.di.core.logging.LogTableField;
@@ -51,7 +50,6 @@ public class EnhancedPerformanceLogTable extends PerformanceLogTable implements 
         return table;
     }
 
-    @SneakyThrows
     @Override
     public RowMetaAndData getLogRecord(LogStatus status, Object subject, Object parent) {
         RowMetaAndData rowMetaAndData = super.getLogRecord(status, subject, parent);

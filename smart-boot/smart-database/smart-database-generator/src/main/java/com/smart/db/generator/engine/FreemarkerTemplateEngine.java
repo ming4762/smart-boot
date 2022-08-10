@@ -4,6 +4,7 @@ import com.smart.db.generator.engine.data.TemplateElement;
 import freemarker.cache.ByteArrayTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
 import org.springframework.lang.NonNull;
@@ -32,7 +33,7 @@ public class FreemarkerTemplateEngine implements TemplateEngine {
      * @param outputStream 输出流
      * @param templateElement 模板信息
      */
-    @SneakyThrows
+    @SneakyThrows({IOException.class, TemplateException.class})
     @Override
     public void processToOutputStream(@NonNull Object model, @NonNull OutputStream outputStream, @NonNull TemplateElement templateElement) {
         final InputStream inputStream = templateElement.getInputStream();
@@ -55,7 +56,7 @@ public class FreemarkerTemplateEngine implements TemplateEngine {
      * @param templateValue 模板内容
      * @param out 输出
      */
-    @SneakyThrows
+    @SneakyThrows({IOException.class, TemplateException.class})
     @Override
     public void processTemplate(@NonNull Object model, @NonNull String templateName, @NonNull String templateValue, @NonNull Writer out) {
         final Template template = new Template(templateName, templateValue, this.configuration);

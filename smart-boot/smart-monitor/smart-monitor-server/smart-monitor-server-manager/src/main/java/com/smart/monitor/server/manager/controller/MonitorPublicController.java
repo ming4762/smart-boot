@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -35,7 +36,7 @@ public class MonitorPublicController {
         this.monitorClientLogService = monitorClientLogService;
     }
 
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     @Operation(summary = "下载日志")
     @GetMapping("downloadFilterUser")
     @TempToken(resource = "monitor:client:log")

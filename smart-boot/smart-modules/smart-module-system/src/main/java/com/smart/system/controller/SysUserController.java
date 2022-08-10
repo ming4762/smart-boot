@@ -153,7 +153,7 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
                     tree.setText(item.getFunctionName());
                     tree.setParentId(item.getParentId());
                     return tree;
-                }).collect(Collectors.toList()),
+                }).toList(),
                 0L
         ));
     }

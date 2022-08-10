@@ -3,7 +3,6 @@ package com.smart.system.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.smart.auth.core.userdetails.RestUserDetails;
@@ -37,6 +36,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -98,7 +98,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
                     SysUserListVO vo = new SysUserListVO();
                     BeanUtils.copyProperties(item, vo);
                     return vo;
-                }).collect(Collectors.toList());
+                }).toList();
         if (Boolean.TRUE.equals(parameter.getParameter().get(CrudCommonEnum.QUERY_CREATE_UPDATE_USER.name()))) {
             this.userSetterService.setCreateUpdateUser(voList);
         }
@@ -115,7 +115,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         if (CollectionUtils.isEmpty(userList)) {
             return;
         }
-        List<Long> userIdList = userList.stream().map(SysUserListVO::getUserId).collect(Collectors.toList());
+        List<Long> userIdList = userList.stream().map(SysUserListVO::getUserId).toList();
         Map<Long, SysUserAccountPO> sysUserAccountMap = Lists.partition(userIdList, 400).stream()
                 .flatMap(idList -> this.sysUserAccountService.list(
                         new QueryWrapper<SysUserAccountPO>().lambda()
@@ -244,7 +244,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
      * @param resource 原
      * @param <T> 目标类型
      */
-    @SneakyThrows
+    @SneakyThrows({IllegalAccessException.class, InvocationTargetException.class, NoSuchMethodException.class})
     private <T> void setWithUser(@NonNull List<T> resource, boolean withCreateUser, boolean withUpdateUser) {
         if (resource.isEmpty()) {
             return;
@@ -292,7 +292,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         if (Objects.isNull(userDetails)) {
             return Lists.newArrayList();
         }
-        return this.listUserFunctionWithLocale(userDetails.getUserId(), ImmutableList.of(FunctionTypeEnum.CATALOG, FunctionTypeEnum.MENU), localeList);
+        return this.listUserFunctionWithLocale(userDetails.getUserId(), List.of(FunctionTypeEnum.CATALOG, FunctionTypeEnum.MENU), localeList);
     }
 
     /**
@@ -325,7 +325,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
                 .in(SysFunctionPO :: getFunctionId, functionIds)
                 .orderByAsc(SysFunctionPO :: getSeq);
         if (CollectionUtils.isNotEmpty(types)) {
-            queryWrapper.in(SysFunctionPO :: getFunctionType, types.stream().map(FunctionTypeEnum::getValue).collect(Collectors.toList()));
+            queryWrapper.in(SysFunctionPO :: getFunctionType, types.stream().map(FunctionTypeEnum::getValue).toList());
         }
         return this.sysFunctionService.list(queryWrapper);
     }
@@ -355,7 +355,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
                 );
             }
             return vo;
-        }).collect(Collectors.toList());
+        }).toList();
     }
 
     /**
@@ -377,7 +377,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
                             .roleId(roleId)
                             .enable(Boolean.TRUE)
                             .userId(parameter.getUserId())
-                            .build()).collect(Collectors.toList()),
+                            .build()).toList(),
                     AuthUtils.getCurrentUserId()
             );
         }

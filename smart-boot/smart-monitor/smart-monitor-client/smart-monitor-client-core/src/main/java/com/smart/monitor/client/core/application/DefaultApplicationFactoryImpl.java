@@ -16,6 +16,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.lang.NonNull;
 
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -65,7 +66,7 @@ public class DefaultApplicationFactoryImpl implements ApplicationFactory, Applic
      * 获取客户端地址
      * @return 客户端地址
      */
-    @SneakyThrows
+    @SneakyThrows(UnknownHostException.class)
     private String getClientUrl() {
         String contextPath = this.serverProperties.getServlet().getContextPath() == null ? "/" : this.serverProperties.getServlet().getContextPath();
         return String.format("http://%s:%s%s", InetAddress.getLocalHost().getHostAddress(), this.serverProperties.getPort(), contextPath);

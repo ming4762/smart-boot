@@ -4,8 +4,11 @@ import lombok.SneakyThrows;
 import org.joda.time.DateTime;
 import org.joda.time.chrono.ISOChronology;
 import org.opensaml.saml2.metadata.provider.AbstractReloadingMetadataProvider;
+import org.opensaml.saml2.metadata.provider.MetadataProviderException;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.lang.Nullable;
+
+import java.io.IOException;
 
 /**
  * 重写 metadata Provider，支持从jar中读取
@@ -28,7 +31,7 @@ public class JarClassPathMetadataProvider extends AbstractReloadingMetadataProvi
         return this.classPathResource.getPath();
     }
 
-    @SneakyThrows
+    @SneakyThrows({IOException.class, MetadataProviderException.class})
     @Override
     @Nullable
     protected byte[] fetchMetadata() {

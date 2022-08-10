@@ -56,11 +56,6 @@ public class JwtClaimsSet {
         private Builder() {
         }
 
-        private Builder(JwtClaimsSet claims) {
-            Assert.notNull(claims, "claims cannot be null");
-            this.claims.putAll(claims.getClaims());
-        }
-
         public Builder claim(String name, Object value) {
             Assert.hasText(name, "name cannot be empty");
             Assert.notNull(value, "value cannot be null");

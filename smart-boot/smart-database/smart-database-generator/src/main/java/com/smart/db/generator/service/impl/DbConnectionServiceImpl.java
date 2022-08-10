@@ -29,6 +29,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -57,7 +58,6 @@ public class DbConnectionServiceImpl extends BaseServiceImpl<DbConnectionMapper,
         this.createUpdateUserService = createUpdateUserService;
     }
 
-    @SneakyThrows
     @Override
     public List<? extends DbConnectionPO> list(@NonNull QueryWrapper<DbConnectionPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
         if (Objects.equals(parameter.getParameter().get(DbCrudEnum.LIST_BY_AUTH.name()), Boolean.TRUE)) {
@@ -73,7 +73,7 @@ public class DbConnectionServiceImpl extends BaseServiceImpl<DbConnectionMapper,
                     DbConnectionResultVO vo = new DbConnectionResultVO();
                     BeanUtils.copyProperties(item, vo);
                     return vo;
-                }).collect(Collectors.toList());
+                }).toList();
         // 设置创建人/更新人
         if (Objects.equals(parameter.getParameter().get(DbCrudEnum.QUERY_CREATE_UPDATE_USER.name()), Boolean.TRUE)) {
             this.queryCreateUpdateUser(connectionVoList);
@@ -146,12 +146,12 @@ public class DbConnectionServiceImpl extends BaseServiceImpl<DbConnectionMapper,
         );
         // 保存新数据
         List<DbCodeConnectionUserGroupPO> saveList = parameter.getUserGroupIdList().stream().map(item -> new DbCodeConnectionUserGroupPO(parameter.getConnectionId(), item))
-                .collect(Collectors.toList());
+                .toList();
         this.dbCodeConnectionUserGroupService.saveBatchWithUser(saveList, AuthUtils.getNonNullCurrentUserId());
         return true;
     }
 
-    @SneakyThrows
+    @SneakyThrows(SQLException.class)
     @Override
     public boolean testConnection(Long connectionId) {
         DbConnectionPO databaseConnection = this.getById(connectionId);

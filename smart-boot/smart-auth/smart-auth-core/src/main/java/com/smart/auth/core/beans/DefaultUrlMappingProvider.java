@@ -22,7 +22,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * 默认的映射提供器
@@ -112,7 +111,7 @@ public class DefaultUrlMappingProvider extends AbstractBeanNameProvider implemen
                                     urlMapping.setRequestMethod(requestMethod);
                                     urlMapping.setHandlerMethod(handlerMethod);
                                     return urlMapping;
-                                }).collect(Collectors.toList());
+                                }).toList();
                         urlMappings.putAll(s, urlMappingList);
                     }
                 });

@@ -6,7 +6,6 @@ import lombok.*;
 import org.springframework.beans.BeanUtils;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 列业务类
@@ -35,7 +34,7 @@ public class ColumnBO extends ColumnDO {
     public static List<ColumnBO> batchCreateFromDo(@NonNull List<ColumnDO> columnList) {
         return columnList.stream()
                 .map(ColumnBO::createFromDo)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**

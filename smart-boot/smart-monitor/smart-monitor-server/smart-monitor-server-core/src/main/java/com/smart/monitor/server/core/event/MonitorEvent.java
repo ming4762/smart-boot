@@ -4,6 +4,8 @@ import com.smart.monitor.server.common.model.ClientData;
 import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
 
+import java.io.Serial;
+
 /**
  * 事件基类
  * @author shizhongming
@@ -11,13 +13,14 @@ import org.springframework.context.ApplicationEvent;
  */
 @Getter
 public class MonitorEvent<T> extends ApplicationEvent {
+    @Serial
     private static final long serialVersionUID = -7020603083672803537L;
 
     private final EventCode code;
 
     private final ClientData clientData;
 
-    private final T data;
+    private final transient T data;
 
     public MonitorEvent(T data, EventCode code, ClientData clientData, Object source) {
         super(source);

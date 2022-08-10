@@ -9,7 +9,6 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.lang.NonNull;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author ShiZhongMing
@@ -19,12 +18,14 @@ import java.util.stream.Collectors;
 @Slf4j
 public class MonitorEventStoreHandler implements ApplicationContextAware {
 
+    private static final String ALL = "ALL";
+
     private List<MonitorEventStore> monitorEventStoreList = new ArrayList<>(0);
 
     @MonitorEventListener
     public void handler(MonitorEvent<?> event) {
         Set<String> serializeEventCodes = event.getClientData().getSerializeEventCodes();
-        if (serializeEventCodes.contains("ALL") || serializeEventCodes.contains(event.getCode().getCode())) {
+        if (serializeEventCodes.contains(ALL) || serializeEventCodes.contains(event.getCode().getCode())) {
             for (MonitorEventStore eventStore : this.monitorEventStoreList) {
                 try {
                     eventStore.serialize(event);
@@ -40,6 +41,6 @@ public class MonitorEventStoreHandler implements ApplicationContextAware {
         monitorEventStoreList = Arrays.stream(applicationContext.getBeanNamesForType(MonitorEventStore.class))
                 .map(name -> applicationContext.getBean(name, MonitorEventStore.class))
                 .sorted(Comparator.comparingInt(MonitorEventStore::getOrder))
-                .collect(Collectors.toList());
+                .toList();
     }
 }

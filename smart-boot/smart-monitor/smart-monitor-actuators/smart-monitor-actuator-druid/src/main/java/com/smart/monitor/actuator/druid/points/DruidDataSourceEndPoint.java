@@ -11,7 +11,6 @@ import org.springframework.boot.actuate.endpoint.annotation.Selector;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 数据源端点
@@ -46,7 +45,7 @@ public class DruidDataSourceEndPoint {
     private List<String> names() {
         return STAT_MANAGER_FACADE.getDataSourceStatDataList().stream()
                 .map(item -> item.get("Name").toString())
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
