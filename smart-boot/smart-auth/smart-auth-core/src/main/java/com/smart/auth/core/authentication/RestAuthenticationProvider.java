@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsChecker;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -67,6 +68,7 @@ public class RestAuthenticationProvider extends AbstractUserDetailsAuthenticatio
         user.setAuthType(AuthTypeEnum.USERNAME);
         user.setBindIp(token.getBindIp());
         user.setLoginIp(token.getLoginIp());
+        user.setLoginTime(LocalDateTime.now());
         return user;
     }
 

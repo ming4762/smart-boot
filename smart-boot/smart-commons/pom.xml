@@ -15,6 +15,7 @@
 
     <modules>
         <module>smart-commons-core</module>
+        <module>smart-commons-jwt</module>
         <module>smart-commons-validate</module>
     </modules>
 

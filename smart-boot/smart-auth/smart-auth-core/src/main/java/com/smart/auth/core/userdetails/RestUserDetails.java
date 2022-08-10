@@ -104,4 +104,6 @@ public interface RestUserDetails extends UserDetails {
      * @return 登录失败次数
      */
     Long getLoginFailTime();
+
+    Boolean getAccountNonLocked();
 }

@@ -33,9 +33,9 @@ public final class Base64Utils {
      * @return 编码后的字符串
      */
     @NonNull
-    public static String encoder(@NonNull String str) {
+    public static String encode(@NonNull String str) {
         final byte[] textByte = str.getBytes(StandardCharsets.UTF_8);
-        return encoder(textByte);
+        return encode(textByte);
     }
 
     /**
@@ -44,7 +44,7 @@ public final class Base64Utils {
      * @return 编码后的字符串
      */
     @NonNull
-    public static String encoder(@NonNull byte[] bytes) {
+    public static String encode(@NonNull byte[] bytes) {
         return ENCODER.encodeToString(bytes);
     }
 
@@ -54,7 +54,11 @@ public final class Base64Utils {
      * @return 解码后的字符串
      */
     @NonNull
-    public static String decoder(@NonNull String str) {
+    public static String decodeStr(@NonNull String str) {
         return new String(DECODER.decode(str), StandardCharsets.UTF_8);
+    }
+
+    public static byte[] decode(@NonNull String str) {
+        return DECODER.decode(str);
     }
 }

@@ -9,7 +9,6 @@ import com.smart.auth.extensions.jwt.store.JwtStore;
 import com.smart.auth.extensions.jwt.utils.JwtUtils;
 import com.smart.commons.core.i18n.I18nUtils;
 import com.smart.commons.core.utils.IpUtils;
-import io.jsonwebtoken.lang.Assert;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,6 +20,7 @@ import org.springframework.security.authentication.AuthenticationServiceExceptio
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.Assert;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;

@@ -3,12 +3,11 @@ package com.smart.auth.core.properties;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.lang.NonNull;
+import org.springframework.util.Assert;
 
-import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.List;
 
@@ -22,11 +21,10 @@ import java.util.List;
 @Setter
 public class AuthProperties implements InitializingBean {
 
-    private String jwtKey = "smart-boot-auth_123789460_security";
 
     private String prefix = "smart-session";
 
-    private boolean jwt = false;
+    private JwtProperties jwt = new JwtProperties();
 
     private Session session = new Session();
 
@@ -57,9 +55,20 @@ public class AuthProperties implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        if (StringUtils.isBlank(this.getJwtKey()) || this.getJwtKey().getBytes(StandardCharsets.UTF_8).length < 32) {
-            throw new IllegalArgumentException("jwt key长度不能小于32位");
+        if (this.jwt.enabled) {
+            Assert.notNull(this.jwt.privateKey, "JWT私钥路径不能为空");
+            Assert.notNull(this.jwt.publicKey, "JWT公钥路径不能为空");
         }
+    }
+
+    @Getter
+    @Setter
+    public static class JwtProperties {
+        private Boolean enabled = Boolean.FALSE;
+
+        private String privateKey = "classpath:auth/jwt/key/pri.key";
+
+        private String publicKey = "classpath:auth/jwt/key/pub.key";
     }
 
     /**
