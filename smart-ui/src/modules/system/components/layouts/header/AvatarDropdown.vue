@@ -217,7 +217,7 @@ export default defineComponent({
         title: this.$t('app.common.notice.logout'),
         icon: createVNode(ExclamationCircleOutlined),
         onOk () {
-          ApiService.postAjax('auth/logout')
+          return ApiService.postAjax('auth/logout')
             .finally(() => {
               $store.dispatch('app/logout')
               $router.push('/user/login')
