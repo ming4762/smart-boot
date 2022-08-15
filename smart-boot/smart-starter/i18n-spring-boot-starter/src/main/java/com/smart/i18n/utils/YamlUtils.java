@@ -1,11 +1,11 @@
 package com.smart.i18n.utils;
 
-import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.Reader;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -41,7 +41,7 @@ public class YamlUtils {
      */
     public static Map<String, Object> readInOneLayer(Reader reader) {
         Map<String, Object> data = read(reader);
-        Map<String, Object> result = Maps.newHashMap();
+        Map<String, Object> result = new HashMap<>();
         convertInOneLayer(data, "", result);
         return result;
     }

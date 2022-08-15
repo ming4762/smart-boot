@@ -1,7 +1,6 @@
 package com.smart.i18n.reader;
 
-import com.google.common.collect.Maps;
-
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -17,7 +16,7 @@ public class ResourceBundleResourceReader extends AbstractBasenameResourceReader
 
     @Override
     public Map<String, String> read(Locale locale) {
-        Map<String, String> result = Maps.newHashMap();
+        Map<String, String> result = new HashMap<>();
         this.getBasename().forEach(basename -> result.putAll(this.resourceBundle2Map(this.doGetBundle(basename, locale))));
         return result;
     }
@@ -28,7 +27,7 @@ public class ResourceBundleResourceReader extends AbstractBasenameResourceReader
      * @return map
      */
     protected Map<String, String> resourceBundle2Map(ResourceBundle resourceBundle) {
-        final Map<String, String> result = Maps.newHashMap();
+        final Map<String, String> result = new HashMap<>();
         resourceBundle.keySet().forEach(key -> result.put(key, resourceBundle.getString(key)));
         return result;
     }
