@@ -44,6 +44,7 @@ public class RestUserDetailsImpl implements RestUserDetails, Serializable {
 
     private String locale;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Set<SmartGrantedAuthority> authorities;
 
     @Getter
