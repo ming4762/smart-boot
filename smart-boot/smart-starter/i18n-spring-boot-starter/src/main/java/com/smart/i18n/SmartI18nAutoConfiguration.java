@@ -6,7 +6,8 @@ import com.smart.i18n.format.DefaultMessageFormat;
 import com.smart.i18n.format.MessageFormat;
 import com.smart.i18n.reader.ResourceBundleResourceReader;
 import com.smart.i18n.reader.ResourceReader;
-import com.smart.i18n.resolve.AcceptHeaderAndUserLocaleResolver;
+import com.smart.i18n.resolver.AcceptHeaderSmartLocalResolver;
+import com.smart.i18n.resolver.DelegateLocaleResolver;
 import com.smart.i18n.source.AutoReloadMessageSource;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -15,7 +16,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.util.StringUtils;
+import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.LocaleResolver;
 
 /**
@@ -47,12 +50,19 @@ public class SmartI18nAutoConfiguration {
      * @param properties 参数
      * @return localeResolver
      */
-    @Bean
+    @Bean(name = DispatcherServlet.LOCALE_RESOLVER_BEAN_NAME)
     @ConditionalOnMissingBean(LocaleResolver.class)
+    @Order
     public LocaleResolver localeResolver(I18nProperties properties) {
-        final AcceptHeaderAndUserLocaleResolver localeResolver =  new AcceptHeaderAndUserLocaleResolver();
+        DelegateLocaleResolver localeResolver = new DelegateLocaleResolver();
         localeResolver.setDefaultLocale(properties.getDefaultLocale());
         return localeResolver;
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public AcceptHeaderSmartLocalResolver acceptHeaderSmartLocalResolver() {
+        return new AcceptHeaderSmartLocalResolver();
     }
 
     /**

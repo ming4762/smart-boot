@@ -1,11 +1,11 @@
 package com.smart.i18n.reader;
 
-import com.google.common.collect.Sets;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.util.ClassUtils;
 
 import java.nio.charset.Charset;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -15,7 +15,7 @@ import java.util.Set;
  */
 public abstract class AbstractBasenameResourceReader implements BasenameResourceReader {
 
-    private final Set<String> basenameSet = Sets.newLinkedHashSet();
+    private final Set<String> basenameSet = new LinkedHashSet<>();
 
 
     private final ClassLoader defaultClassLoader = ClassUtils.getDefaultClassLoader();

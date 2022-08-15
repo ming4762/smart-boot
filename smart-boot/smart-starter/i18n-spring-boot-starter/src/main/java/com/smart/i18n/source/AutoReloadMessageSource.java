@@ -1,6 +1,5 @@
 package com.smart.i18n.source;
 
-import com.google.common.collect.Maps;
 import lombok.Setter;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.convert.DurationUnit;
@@ -13,6 +12,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
@@ -30,7 +30,7 @@ public class AutoReloadMessageSource extends DefaultMessageSource implements Ini
     /**
      * 资源读取时间存储
      */
-    private static final ConcurrentMap<Locale, LocalDateTime> READ_TIME_CACHE = Maps.newConcurrentMap();
+    private static final ConcurrentMap<Locale, LocalDateTime> READ_TIME_CACHE = new ConcurrentHashMap<>();
 
     @Override
     protected boolean cacheValid(Locale locale) {

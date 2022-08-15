@@ -1,12 +1,9 @@
 package com.smart.i18n.cache;
 
-import com.google.common.collect.Maps;
 import org.springframework.lang.NonNull;
 
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
@@ -16,7 +13,7 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class MemoryResourceCache implements ResourceCache {
 
-    private static final ConcurrentMap<Locale, Map<String, String>> CACHE = Maps.newConcurrentMap();
+    private static final ConcurrentMap<Locale, Map<String, String>> CACHE = new ConcurrentHashMap<>();
 
     @Override
     public void clear() {
@@ -42,7 +39,7 @@ public class MemoryResourceCache implements ResourceCache {
     public void put(@NonNull Locale locale, @NonNull String key, @NonNull String value) {
         final Map<String, String> values = CACHE.get(locale);
         if (Objects.isNull(values)) {
-            this.putAll(locale, Maps.newHashMap());
+            this.putAll(locale, new HashMap<>(0));
         }
         CACHE.get(locale).put(key, value);
     }

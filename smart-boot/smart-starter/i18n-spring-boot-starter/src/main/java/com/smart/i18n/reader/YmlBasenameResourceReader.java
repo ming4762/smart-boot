@@ -1,7 +1,5 @@
 package com.smart.i18n.reader;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.smart.i18n.utils.YamlUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,12 +18,12 @@ import java.util.stream.Collectors;
 @Slf4j
 public class YmlBasenameResourceReader extends AbstractBasenameResourceReader {
 
-    private static final List<String> EXTENSIONS = Lists.newArrayList(".yml", ".yaml");
+    private static final List<String> EXTENSIONS = List.of(".yml", ".yaml");
 
 
     @Override
     public Map<String, String> read(Locale locale) throws IOException {
-        final Map<String, String> result = Maps.newLinkedHashMap();
+        final Map<String, String> result = new LinkedHashMap<>();
         for (String basename : this.getBasename()) {
             result.putAll(this.readByBasename(basename, locale));
         }
@@ -40,7 +38,7 @@ public class YmlBasenameResourceReader extends AbstractBasenameResourceReader {
      * @throws IOException IOException
      */
     protected Map<String, String> readByBasename(String basename, Locale locale) throws IOException {
-        final Map<String, String> result = Maps.newLinkedHashMap();
+        final Map<String, String> result = new LinkedHashMap<>();
         // 读取主文件
         for (String path: EXTENSIONS.stream().map(item -> basename + item).collect(Collectors.toList())) {
             result.putAll(this.doRead(path));
@@ -60,7 +58,7 @@ public class YmlBasenameResourceReader extends AbstractBasenameResourceReader {
      * @throws IOException IOException
      */
     protected Map<String, String> doRead(String path) throws IOException {
-        final Map<String, String> result = Maps.newLinkedHashMap();
+        final Map<String, String> result = new LinkedHashMap<>();
         // 读取所有资源
         final Enumeration<URL> urls = this.getClassLoader().getResources(path);
         while (urls.hasMoreElements()) {

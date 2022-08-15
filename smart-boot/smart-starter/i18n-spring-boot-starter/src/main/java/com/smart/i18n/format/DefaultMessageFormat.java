@@ -1,9 +1,9 @@
 package com.smart.i18n.format;
 
-import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -22,7 +22,7 @@ public class DefaultMessageFormat implements MessageFormat {
 
     private Set<String> matchValues(String formValue) {
         final Matcher matcher = PATTERN.matcher(formValue);
-        final Set<String> matchValues = Sets.newHashSet();
+        final Set<String> matchValues = new HashSet<>();
         while (matcher.find()) {
             matchValues.add(matcher.group());
         }
