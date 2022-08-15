@@ -15,10 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * JWT服务层
@@ -65,9 +62,7 @@ public class JwtService implements JwtResolver {
     public String create(RestUserDetails userDetails) {
         Set<String> roles = userDetails.getRoles();
         Set<Permission> permissions = userDetails.getPermissions();
-        if (userDetails instanceof RestUserDetailsImpl impl) {
-            impl.setAuthorities(null);
-        }
+
         JwtEncoderParameters parameters = JwtEncoderParameters.builder()
                 .jwsHeader(JwsHeader.builder().algorithm(SignatureAlgorithm.RS256).build())
                 .claims(

@@ -38,7 +38,7 @@ public class NimbusJwtDecoder implements JwtDecoder {
 
     private static final String DECODING_ERROR_MESSAGE_TEMPLATE = "An error occurred while attempting to decode the Jwt: %s";
 
-    private Converter<Map<String, Object>, Map<String, Object>> claimSetConverter = MappedJwtClaimSetConverter
+    private final Converter<Map<String, Object>, Map<String, Object>> claimSetConverter = MappedJwtClaimSetConverter
             .withDefaults(Collections.emptyMap());
 
     private final JWTProcessor<SecurityContext> jwtProcessor;
