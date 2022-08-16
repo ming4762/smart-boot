@@ -171,7 +171,8 @@ public class SysUserAccountServiceImpl extends BaseServiceImpl<SysUserAccountMap
         }
         LambdaUpdateWrapper<SysUserAccountPO> updateWrapper = new UpdateWrapper<SysUserAccountPO>().lambda()
                 .eq(SysUserAccountPO :: getUserId, userAccount.getUserId())
-                .set(SysUserAccountPO::getAccountStatus, UserAccountStatusEnum.NORMAL);
+                .set(SysUserAccountPO::getLockTime, null)
+                .set(SysUserAccountPO::getAccountStatus, UserAccountStatusEnum.NORMAL.getValue());
         switch (userAccount.getAccountStatus()) {
             case LONG_TIME_LOCKED -> {
                 // 长时间未登录锁定解锁
