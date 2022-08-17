@@ -15,12 +15,15 @@ import com.smart.commons.core.utils.TreeUtils;
 import com.smart.crud.controller.BaseController;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.system.model.SysFunctionPO;
+import com.smart.system.model.SysUserAccountPO;
 import com.smart.system.model.SysUserPO;
 import com.smart.system.model.SysUserRolePO;
 import com.smart.system.pojo.dto.common.UseYnSetDTO;
+import com.smart.system.pojo.dto.user.UserAccountSaveDTO;
 import com.smart.system.pojo.dto.user.UserSetRoleDTO;
 import com.smart.system.pojo.dto.user.UserUpdateDTO;
 import com.smart.system.pojo.vo.SysFunctionListVO;
+import com.smart.system.service.SysUserAccountService;
 import com.smart.system.service.SysUserRoleService;
 import com.smart.system.service.SysUserService;
 import io.swagger.annotations.Api;
@@ -55,8 +58,11 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
 
     private final SysUserRoleService sysUserRoleService;
 
-    public SysUserController(SysUserRoleService sysUserRoleService) {
+    private final SysUserAccountService sysUserAccountService;
+
+    public SysUserController(SysUserRoleService sysUserRoleService, SysUserAccountService sysUserAccountService) {
         this.sysUserRoleService = sysUserRoleService;
+        this.sysUserAccountService = sysUserAccountService;
     }
 
     /**
@@ -215,5 +221,31 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
                         .in(SysUserPO :: getUserId, list)
         ));
         return Result.success(true);
+    }
+
+    /**
+     * 批量创建账户接口
+     * @param userIdList 用户ID列表
+     * @return 是否创建成功
+     */
+    @PostMapping("createAccount")
+    @Operation(summary = "批量创建账户")
+    @Log(value = "创建账户", type = LogOperationTypeEnum.ADD)
+    @PreAuthorize("hasPermission('sys:account', 'add')")
+    public Result<Boolean> createAccount(@RequestBody List<Long> userIdList) {
+        if (org.apache.commons.collections4.CollectionUtils.isEmpty(userIdList)) {
+            return Result.success(false);
+        }
+        return Result.success(this.sysUserAccountService.createAccount(userIdList));
+    }
+
+    @PostMapping("saveAccountSetting")
+    @Operation(summary = "保存账户配置信息")
+    @Log(value = "保存账户配置信息", type = LogOperationTypeEnum.ADD)
+    @PreAuthorize("hasPermission('sys:account', 'update')")
+    public Result<Boolean> saveAccountSetting(@RequestBody @Valid UserAccountSaveDTO parameter) {
+        SysUserAccountPO account = new SysUserAccountPO();
+        BeanUtils.copyProperties(parameter, account);
+        return Result.success(this.sysUserAccountService.updateById(account));
     }
 }

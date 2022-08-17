@@ -22,7 +22,6 @@ import com.smart.system.service.SysUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -153,4 +152,5 @@ public class SysAuthController {
         }
         return Result.success(this.sysUserAccountService.createAccount(userIdList));
     }
+
 }

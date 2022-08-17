@@ -37,6 +37,8 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -105,6 +107,23 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         // 查询账户信息
         this.queryUserAccount(voList);
         return voList;
+    }
+
+    @Override
+    public SysUserPO getById(Serializable id) {
+        SysUserPO user = super.getById(id);
+        if (user == null) {
+            return null;
+        }
+        SysUserListVO vo = new SysUserListVO();
+        BeanUtils.copyProperties(user, vo);
+
+        List<SysUserListVO> voList = List.of(vo);
+        // 查询创建人和审批人
+        this.userSetterService.setCreateUpdateUser(voList);
+        // 查询账户信息
+        this.queryUserAccount(voList);
+        return voList.get(0);
     }
 
     /**

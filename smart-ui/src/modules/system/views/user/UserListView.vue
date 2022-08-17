@@ -31,12 +31,11 @@
           </a-button>
           <template #overlay>
             <a-menu @click="({ key }) => handleActions(row, key)">
-              <a-menu-item key="edit" :disabled="!hasPermission(permissions.update)"><edit-outlined />{{ $t('common.button.edit') }}</a-menu-item>
-              <a-menu-item key="editAccount"></a-menu-item>
+              <a-menu-item key="edit" :disabled="!hasPermission(permissions.update)"><edit-outlined /> {{ $t('common.button.edit') }}</a-menu-item>
+              <a-menu-item key="showAccount" :disabled="!hasPermission('sys:account:query')">{{ $t('system.views.user.button.showAccount') }}</a-menu-item>
             </a-menu>
           </template>
         </a-dropdown>
-        <a-button v-permission="permissions.update" :size="buttonSizeConfig" type="link" @click="() => handleShowUpdate(row.userId)">{{ $t('common.button.edit') }}</a-button>
       </template>
       <template #toolbar_buttons>
         <a-form style="margin-left: 10px" layout="inline" :model="searchModel">
@@ -145,6 +144,8 @@
         </a-form>
       </a-spin>
     </a-modal>
+    <!--  更新账户信息  -->
+    <UserAccountUpdateModal ref="userAccountRef" />
   </div>
 </template>
 
@@ -163,16 +164,19 @@ import dayjs from 'dayjs'
 import { tableUseYn, tableDeleteYn } from '@/components/common/TableCommon'
 import SizeConfigHoops from '@/components/config/SizeConfigHooks'
 import { hasPermission } from '@/common/auth/AuthUtils'
+import UserAccountUpdateModal from './account/UserAccountUpdateModal.vue'
 
 
 export default defineComponent({
   name: 'UserListPage',
   components: {
+    UserAccountUpdateModal,
     DownOutlined,
     EditOutlined
   },
   setup () {
     const tableRef = ref()
+    const userAccountRef = ref()
     const { t } = useI18n()
     const loadDataVue = vueLoadData()
     const addEditVue = vueAddEdit(loadDataVue.loadData)
@@ -208,6 +212,10 @@ export default defineComponent({
           addEditVue.handleShowUpdate(userId)
           break
         }
+        case 'showAccount': {
+          userAccountRef.value.show(userId)
+          break
+        }
       }
     }
     return {
@@ -220,7 +228,8 @@ export default defineComponent({
       permissions: SystemPermissions.user,
       ...useCreateAccount(tableRef, t),
       handleActions,
-      hasPermission
+      hasPermission,
+      userAccountRef
     }
   },
   data () {
