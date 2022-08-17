@@ -71,7 +71,7 @@ public class RedisServiceImpl implements RedisService {
         this.batchPut(keyValues, Duration.ofSeconds(timeout));
     }
 
-    @SuppressWarnings({"rawtypes", "ConstantConditions"})
+    @SuppressWarnings({"rawtypes", "ConstantConditions", "unchecked"})
     @Override
     public void batchPut(@NonNull Map<Object, Object> keyValues, @NonNull Duration timeout) {
         this.redisTemplate.executePipelined((RedisCallback<Object>) connection -> {
@@ -107,6 +107,7 @@ public class RedisServiceImpl implements RedisService {
         keys.forEach(key -> this.expire(key, timeout));
     }
 
+    @SuppressWarnings({"rawtypes", "ConstantConditions", "unchecked"})
     @Override
     public void batchPut(@NonNull Map<Object, Object> keyValues, @NonNull Instant expireTime) {
         this.redisTemplate.executePipelined((RedisCallback<Object>) connection -> {
@@ -122,6 +123,7 @@ public class RedisServiceImpl implements RedisService {
         return this.redisTemplate.opsForValue().get(key);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T> T get(@NonNull Object key, @NonNull Class<T> clazz) {
         return (T) this.get(key);
@@ -132,6 +134,7 @@ public class RedisServiceImpl implements RedisService {
         return this.redisTemplate.opsForValue().multiGet(keys);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public @Nullable <T> List<T> batchGet(@NonNull Collection<Object> keys, @NonNull Class<T> clazz) {
         return (List<T>) this.redisTemplate.opsForValue().multiGet(keys);

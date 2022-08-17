@@ -134,7 +134,7 @@ export default defineComponent({
   .title {
     font-size: 16px;
     font-weight: 700;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
   }
 }
 </style>
