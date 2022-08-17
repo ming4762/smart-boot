@@ -15,7 +15,29 @@ export default {
           userType: 'User type'
         },
         button: {
-          createAccount: 'Create Account'
+          createAccount: 'Create account',
+          showAccount: 'Account info'
+        },
+        account: {
+          createTime: 'Account create Time',
+          accountStatus: 'Status',
+          passwordModifyTime: 'Password modify time',
+          lockTime: 'Locked time',
+          loginFailTime: 'Login fail number',
+          initialPasswordYn: 'Initial Password',
+
+          ipWhiteList: 'IP white list',
+          maxConnections: 'Maximum access connections',
+          maxDaysSinceLogin: 'Maximum days since login',
+          passwordLifeDays: 'Password life days',
+          maxConnectionsPolicy: 'Maximum connections policy',
+          loginFailTimeLimit: 'Login fail limit',
+          passwordErrorUnlockSecond: 'Password error unlock',
+
+          loginNotAllow: 'Login not allowed',
+          firstUserLogout: 'Earliest login user logout',
+
+          ipWhiteListPlaceholder: 'IP white list, multiple IPS separated by commas'
         },
         validate: {
           username: 'Please enter username',

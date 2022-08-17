@@ -286,7 +286,7 @@ export const useCreateAccount = (tableRef: Ref, t: Function) => {
       icon: createVNode(ExclamationCircleOutlined),
       onOk: async () => {
         try {
-          await ApiService.postAjax('auth/createAccount', userList.map(item => item.userId))
+          await ApiService.postAjax('sys/user/createAccount', userList.map(item => item.userId))
           message.success(t('system.views.user.message.createAccountSuccess'))
         } catch (e) {
           errorMessage(e)

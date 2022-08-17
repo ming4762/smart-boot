@@ -15,7 +15,29 @@ export default {
           userType: '用户类型'
         },
         button: {
-          createAccount: '创建账户'
+          createAccount: '创建账户',
+          showAccount: '账户信息'
+        },
+        account: {
+          createTime: '账户创建时间',
+          accountStatus: '账户状态',
+          passwordModifyTime: '密码修改时间',
+          lockTime: '账户锁定时间',
+          loginFailTime: '登录失败次数',
+          initialPasswordYn: '是否初始化密码',
+
+          ipWhiteList: 'IP白名单',
+          maxConnections: '最大访问连接数，0：不限制',
+          maxDaysSinceLogin: '指定天数未登录账户锁定，0：永不锁定',
+          passwordLifeDays: '密码必须修改的天数，0：不限制',
+          maxConnectionsPolicy: '超出最大连接数执行策略',
+          loginFailTimeLimit: '登录失败锁定次数，0永不锁定',
+          passwordErrorUnlockSecond: '多次输入密码错误锁定后，指定秒后自动解锁，0：永不自动解锁',
+
+          loginNotAllow: '不允许登录',
+          firstUserLogout: '最早登录用户登出',
+
+          ipWhiteListPlaceholder: 'IP白名单，多个IP以逗号分隔'
         },
         validate: {
           username: '请输入用户名',

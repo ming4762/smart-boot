@@ -1,41 +1,140 @@
 <template>
-  <a-modal>
+  <a-modal
+    v-model:visible="modalVisible"
+    title="账户信息"
+    :ok-button-props="{disabled: !computedHasEditPermission, loading: saveLoading}"
+    :ok-text="$t('common.button.save')"
+    width="1200px"
+    :mask-closable="false"
+    @ok="handleSave">
+    <a-spin :spinning="dataLoading">
+      <a-descriptions title="账户信息" bordered>
+        <a-descriptions-item :label="$t('system.views.user.table.username')">{{ userData.username }}</a-descriptions-item>
+        <a-descriptions-item :label="$t('system.views.user.table.fullName')">{{ userData.fullName }}</a-descriptions-item>
+        <a-descriptions-item :label="$t('system.views.user.table.userType')">{{ userData.userType }}</a-descriptions-item>
 
+        <a-descriptions-item :label="$t('system.views.user.table.mobile')">{{ userData.mobile }}</a-descriptions-item>
+        <a-descriptions-item :label="$t('system.views.user.table.email')" :span="2">{{ userData.email }}</a-descriptions-item>
+
+        <a-descriptions-item :label="$t('system.views.user.account.createTime')">{{ formatTime(accountData.createTime) }}</a-descriptions-item>
+        <a-descriptions-item :label="$t('system.views.user.account.accountStatus')">{{ accountData.accountStatus }}</a-descriptions-item>
+        <a-descriptions-item :label="$t('system.views.user.account.initialPasswordYn')">
+          <a-tag v-if="accountData.initialPasswordYn" color="#f50">{{ $t('common.form.yes') }}</a-tag>
+          <a-tag v-else color="#108ee9">{{ $t('common.form.no') }}</a-tag>
+        </a-descriptions-item>
+
+        <a-descriptions-item :label="$t('system.views.user.account.loginFailTime')">{{ accountData.loginFailTime }}</a-descriptions-item>
+        <a-descriptions-item :label="$t('system.views.user.account.lockTime')">{{ formatTime(accountData.lockTime) }}</a-descriptions-item>
+        <a-descriptions-item :label="$t('system.views.user.account.passwordModifyTime')">{{ formatTime(accountData.passwordModifyTime) }}</a-descriptions-item>
+      </a-descriptions>
+      <a-divider />
+      <section class="account-setting">
+        <div class="title">账户设置</div>
+        <a-form :model="accountData">
+          <a-row>
+            <a-col :span="12">
+              <a-form-item name="maxConnections" :label="$t('system.views.user.account.maxConnections')">
+                <a-input-number v-model:value="accountData.maxConnections" :disabled="!computedHasEditPermission" style="width: 80%"></a-input-number>
+              </a-form-item>
+            </a-col>
+            <a-col :span="12">
+              <a-form-item name="maxDaysSinceLogin" :label="$t('system.views.user.account.maxDaysSinceLogin')">
+                <a-input-number v-model:value="accountData.maxDaysSinceLogin" :disabled="!computedHasEditPermission" style="width: 80%"></a-input-number>
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row>
+            <a-col :span="12">
+              <a-form-item name="passwordLifeDays" :label="$t('system.views.user.account.passwordLifeDays')">
+                <a-input-number v-model:value="accountData.passwordLifeDays" :disabled="!computedHasEditPermission" style="width: 80%"></a-input-number>
+              </a-form-item>
+            </a-col>
+            <a-col :span="12">
+              <a-form-item name="maxConnectionsPolicy" :label="$t('system.views.user.account.maxConnectionsPolicy')">
+                <a-select v-model:value="accountData.maxConnectionsPolicy" :disabled="!computedHasEditPermission" style="width: 80%">
+                  <a-select-option value="LOGIN_NOT_ALLOW">{{ $t('system.views.user.account.loginNotAllow') }}</a-select-option>
+                  <a-select-option value="FIRST_USER_LOGOUT">{{ $t('system.views.user.account.firstUserLogout') }}</a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row>
+            <a-col :span="12">
+              <a-form-item name="loginFailTimeLimit" :label="$t('system.views.user.account.loginFailTimeLimit')">
+                <a-input-number v-model:value="accountData.loginFailTimeLimit" :disabled="!computedHasEditPermission" style="width: 80%"></a-input-number>
+              </a-form-item>
+            </a-col>
+            <a-col :span="12">
+              <a-form-item name="passwordErrorUnlockSecond" :label="$t('system.views.user.account.passwordErrorUnlockSecond')">
+                <a-input-number v-model:value="accountData.passwordErrorUnlockSecond" :disabled="!computedHasEditPermission" style="width: 80%"></a-input-number>
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-form-item name="ipWhiteList" :label="$t('system.views.user.account.ipWhiteList')">
+            <a-textarea v-model:value="accountData.ipWhiteList" :disabled="!computedHasEditPermission" :placeholder="$t('system.views.user.account.ipWhiteListPlaceholder')" :rows="4" />
+          </a-form-item>
+        </a-form>
+      </section>
+    </a-spin>
   </a-modal>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref, toRefs } from 'vue'
+import { defineComponent, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+import dayjs from 'dayjs'
+
+import { useShowAccount } from './UserAccountUpdateHooks'
+import SizeConfigHooks from '@/components/config/SizeConfigHooks'
+import { hasPermission } from '@/common/auth/AuthUtils'
 
 /**
  * 用户账户更新弹窗
  */
 export default defineComponent({
   name: 'UserAccountUpdateModal',
-  props: {
-    userId: {
-      type: Number as PropType<number>
-    }
-  },
-  setup (props) {
-    const { userId } = toRefs(props)
-    // 弹窗显示状态
-    const modalVisible = ref(false)
+  setup () {
+    const { t } = useI18n()
+    const { modalVisible, dataLoading, userData, accountData, show, handleSave, saveLoading } = useShowAccount(t)
+
     /**
-     * 显示弹窗
+     * 格式化时间
      */
-    const handleShowAccountModal = () => {
-      modalVisible.value = true
+    const formatTime = (timeValue: any) => {
+      if (timeValue) {
+        return dayjs(timeValue).format('YYYY-MM-DD HH:mm:ss')
+      }
+      return ''
     }
+
+    /**
+     * 是否有编辑权限
+     */
+    const computedHasEditPermission = computed(() => hasPermission('sys:account:update'))
 
     return {
       modalVisible,
-      handleShowAccountModal
+      dataLoading,
+      userData,
+      accountData,
+      show,
+      formatTime,
+      ...SizeConfigHooks(),
+      computedHasEditPermission,
+      handleSave,
+      saveLoading
     }
   }
 })
 </script>
 
-<style scoped>
-
+<style lang="less" scoped>
+.account-setting {
+  .title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 5px;
+  }
+}
 </style>

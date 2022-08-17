@@ -23,7 +23,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -138,19 +137,4 @@ public class SysAuthController {
         return Result.success(initPassword == null || Boolean.TRUE.equals(initPassword));
     }
 
-    /**
-     * 批量创建账户接口
-     * @param userIdList 用户ID列表
-     * @return 是否创建成功
-     */
-    @PostMapping("auth/createAccount")
-    @Operation(summary = "批量创建账户")
-    @Log(value = "创建账户", type = LogOperationTypeEnum.ADD)
-    @PreAuthorize("hasPermission('sys:auth', 'createAccount')")
-    public Result<Boolean> createAccount(@RequestBody List<Long> userIdList) {
-        if (CollectionUtils.isEmpty(userIdList)) {
-            return Result.success(false);
-        }
-        return Result.success(this.sysUserAccountService.createAccount(userIdList));
-    }
 }
