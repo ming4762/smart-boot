@@ -1,11 +1,14 @@
 package com.smart.system.model;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.smart.crud.model.BaseModelUserTime;
 import com.smart.crud.model.BaseUser;
+import com.smart.system.constants.UserTypeEnum;
+import com.smart.system.mybatis.type.UserTypeTypeHandler;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -17,7 +20,7 @@ import java.io.Serial;
  * @author jackson
  * 2020/1/22 7:04 下午
  */
-@TableName("sys_user")
+@TableName(value = "sys_user", autoResultMap = true)
 @Getter
 @Setter
 @ToString
@@ -62,7 +65,8 @@ public class SysUserPO extends BaseModelUserTime implements BaseUser {
     /**
      * 用户类型（10：系统用户，20：业务用户）
      */
-    private String userType;
+    @TableField(typeHandler = UserTypeTypeHandler.class)
+    private UserTypeEnum userType;
 
     /**
      * 序号
