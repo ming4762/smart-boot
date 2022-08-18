@@ -19,6 +19,8 @@ export default {
           showAccount: '账户信息'
         },
         account: {
+          title: '账户信息',
+          accountSet: '账户设置',
           createTime: '账户创建时间',
           accountStatus: '账户状态',
           passwordModifyTime: '密码修改时间',

@@ -1,14 +1,14 @@
 <template>
   <a-modal
     v-model:visible="modalVisible"
-    title="账户信息"
+    :title="$t('system.views.user.account.title')"
     :ok-button-props="{disabled: !computedHasEditPermission, loading: saveLoading}"
     :ok-text="$t('common.button.save')"
     width="1200px"
     :mask-closable="false"
     @ok="handleSave">
     <a-spin :spinning="dataLoading">
-      <a-descriptions title="账户信息" bordered>
+      <a-descriptions :title="$t('system.views.user.account.title')" bordered>
         <a-descriptions-item :label="$t('system.views.user.table.username')">{{ userData.username }}</a-descriptions-item>
         <a-descriptions-item :label="$t('system.views.user.table.fullName')">{{ userData.fullName }}</a-descriptions-item>
         <a-descriptions-item :label="$t('system.views.user.table.userType')">{{ userData.userType }}</a-descriptions-item>
@@ -29,44 +29,44 @@
       </a-descriptions>
       <a-divider />
       <section class="account-setting">
-        <div class="title">账户设置</div>
+        <div class="title">{{ $t('system.views.user.account.accountSet') }}</div>
         <a-form :model="accountData">
-          <a-row>
+          <a-row :gutter="18">
             <a-col :span="12">
               <a-form-item name="maxConnections" :label="$t('system.views.user.account.maxConnections')">
-                <a-input-number v-model:value="accountData.maxConnections" :disabled="!computedHasEditPermission" style="width: 80%"></a-input-number>
+                <a-input-number v-model:value="accountData.maxConnections" :disabled="!computedHasEditPermission" style="width: 100%"></a-input-number>
               </a-form-item>
             </a-col>
             <a-col :span="12">
               <a-form-item name="maxDaysSinceLogin" :label="$t('system.views.user.account.maxDaysSinceLogin')">
-                <a-input-number v-model:value="accountData.maxDaysSinceLogin" :disabled="!computedHasEditPermission" style="width: 80%"></a-input-number>
+                <a-input-number v-model:value="accountData.maxDaysSinceLogin" :disabled="!computedHasEditPermission" style="width: 100%"></a-input-number>
               </a-form-item>
             </a-col>
           </a-row>
-          <a-row>
+          <a-row :gutter="18">
             <a-col :span="12">
               <a-form-item name="passwordLifeDays" :label="$t('system.views.user.account.passwordLifeDays')">
-                <a-input-number v-model:value="accountData.passwordLifeDays" :disabled="!computedHasEditPermission" style="width: 80%"></a-input-number>
+                <a-input-number v-model:value="accountData.passwordLifeDays" :disabled="!computedHasEditPermission" style="width: 100%"></a-input-number>
               </a-form-item>
             </a-col>
             <a-col :span="12">
               <a-form-item name="maxConnectionsPolicy" :label="$t('system.views.user.account.maxConnectionsPolicy')">
-                <a-select v-model:value="accountData.maxConnectionsPolicy" :disabled="!computedHasEditPermission" style="width: 80%">
+                <a-select v-model:value="accountData.maxConnectionsPolicy" :disabled="!computedHasEditPermission" style="width: 100%">
                   <a-select-option value="LOGIN_NOT_ALLOW">{{ $t('system.views.user.account.loginNotAllow') }}</a-select-option>
                   <a-select-option value="FIRST_USER_LOGOUT">{{ $t('system.views.user.account.firstUserLogout') }}</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
           </a-row>
-          <a-row>
+          <a-row :gutter="18">
             <a-col :span="12">
               <a-form-item name="loginFailTimeLimit" :label="$t('system.views.user.account.loginFailTimeLimit')">
-                <a-input-number v-model:value="accountData.loginFailTimeLimit" :disabled="!computedHasEditPermission" style="width: 80%"></a-input-number>
+                <a-input-number v-model:value="accountData.loginFailTimeLimit" :disabled="!computedHasEditPermission" style="width: 100%"></a-input-number>
               </a-form-item>
             </a-col>
             <a-col :span="12">
               <a-form-item name="passwordErrorUnlockSecond" :label="$t('system.views.user.account.passwordErrorUnlockSecond')">
-                <a-input-number v-model:value="accountData.passwordErrorUnlockSecond" :disabled="!computedHasEditPermission" style="width: 80%"></a-input-number>
+                <a-input-number v-model:value="accountData.passwordErrorUnlockSecond" :disabled="!computedHasEditPermission" style="width: 100%"></a-input-number>
               </a-form-item>
             </a-col>
           </a-row>

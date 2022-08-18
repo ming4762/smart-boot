@@ -19,6 +19,8 @@ export default {
           showAccount: 'Account info'
         },
         account: {
+          title: 'Account info',
+          accountSet: 'Account setting',
           createTime: 'Account create Time',
           accountStatus: 'Status',
           passwordModifyTime: 'Password modify time',
