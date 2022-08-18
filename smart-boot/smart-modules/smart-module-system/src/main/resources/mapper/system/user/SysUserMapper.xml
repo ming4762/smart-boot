@@ -9,7 +9,7 @@
         <result column="PASSWORD" property="password"/>
         <result column="EMAIL" property="email"/>
         <result column="MOBILE" property="mobile"/>
-        <result column="USER_TYPE" property="userType"/>
+        <result column="USER_TYPE" property="userType" typeHandler="com.smart.system.mybatis.type.UserTypeTypeHandler"/>
         <result column="CREATE_USER_ID" property="createUserId"/>
         <result column="CREATE_TIME" property="createTime"/>
         <result column="UPDATE_USER_ID" property="updateUserId"/>
