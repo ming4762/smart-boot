@@ -1,37 +1,44 @@
-package com.smart.monitor.server.manager.service.impl;
+package com.smart.monitor.server.manager.sync;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.smart.auth.core.utils.AuthUtils;
-import com.smart.crud.constants.CrudCommonEnum;
-import com.smart.crud.query.PageSortQuery;
-import com.smart.crud.service.BaseServiceImpl;
-import com.smart.monitor.server.manager.mapper.MonitorClientLogMapper;
+import com.google.common.collect.Maps;
+import com.smart.commons.core.utils.JsonUtils;
+import com.smart.monitor.actuator.logback.data.LoggingEventData;
+import com.smart.monitor.actuator.logback.utils.LogbackLogUtils;
+import com.smart.monitor.server.common.model.ClientData;
+import com.smart.monitor.server.common.sync.MonitorDataSync;
+import com.smart.monitor.server.core.client.request.ClientWebProxy;
 import com.smart.monitor.server.manager.model.MonitorClientLogPO;
-import com.smart.monitor.server.manager.service.MonitorApplicationService;
 import com.smart.monitor.server.manager.service.MonitorClientLogService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
-* monitor_client_log - 客户端日志 Service实现类
-* @author GCCodeGenerator
-* 2022-3-3
-*/
-@Service
+ * 客户端日志同步类
+ * @author ShiZhongMing
+ * 2022/8/19
+ * @since 3.0.0
+ */
 @Slf4j
-public class MonitorClientLogServiceImpl extends BaseServiceImpl<MonitorClientLogMapper, MonitorClientLogPO> implements MonitorClientLogService {
+public class MonitorClientLogSync implements MonitorDataSync {
 
-    private final MonitorApplicationService monitorApplicationService;
+    private static final String END_POINT = "logback";
 
-    public MonitorClientLogServiceImpl(MonitorApplicationService monitorApplicationService) {
-        this.monitorApplicationService = monitorApplicationService;
+    private final ClientWebProxy clientWebProxy;
+
+    private final MonitorClientLogService monitorClientLogService;
+
+    public MonitorClientLogSync(ClientWebProxy clientWebProxy, MonitorClientLogService monitorClientLogService) {
+        this.clientWebProxy = clientWebProxy;
+        this.monitorClientLogService = monitorClientLogService;
     }
-<<<<<<< HEAD
 
     @Override
     public Integer sync(@NonNull ClientData clientData) {
@@ -61,8 +68,8 @@ public class MonitorClientLogServiceImpl extends BaseServiceImpl<MonitorClientLo
                 .level(item.getLevel())
                 .logText(LogbackLogUtils.convertToLogText(item))
                 .createTime(currentTime)
-                .build()).collect(Collectors.toList());
-        this.saveBatch(logList);
+                .build()).toList();
+        this.monitorClientLogService.saveBatch(logList);
         return logList.size();
     }
 
@@ -78,20 +85,5 @@ public class MonitorClientLogServiceImpl extends BaseServiceImpl<MonitorClientLo
     @Override
     public int getOrder() {
         return 0;
-    }
-
-=======
->>>>>>> 9cdd983 (smart-monitor：日志同步功能改成可以通过配置文件开启关闭，默认关闭状态)
-    @Override
-    public List<? extends MonitorClientLogPO> list(@NonNull QueryWrapper<MonitorClientLogPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
-        if (Boolean.TRUE.equals(parameter.getParameter().get(CrudCommonEnum.FILTER_BY_USER.name()))) {
-            // 查询人员关联的客户端
-            List<String> applicationCodeList = this.monitorApplicationService.listApplicationNameByUser(AuthUtils.getNonNullCurrentUserId());
-            if (CollectionUtils.isEmpty(applicationCodeList)) {
-                return new ArrayList<>(0);
-            }
-            queryWrapper.lambda().in(MonitorClientLogPO :: getApplicationCode, applicationCodeList);
-        }
-        return super.list(queryWrapper, parameter, paging);
     }
 }

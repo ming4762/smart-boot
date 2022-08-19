@@ -26,12 +26,33 @@ public class MonitorServerProperties implements InitializingBean {
 
     private Notify notify = new Notify();
 
+    private DataSync dataSync = new DataSync();
+
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         final MailNotify mail = this.notify.getMail();
         if (Objects.equals(mail.enabled, Boolean.TRUE)) {
             Assert.notNull(mail.from, "from email is null");
         }
+    }
+
+    /**
+     * 数据同步配置
+     */
+    @Getter
+    @Setter
+    public static class DataSync {
+        // 日志同步配置
+        private DataSyncLog log = new DataSyncLog();
+    }
+
+    /**
+     * 日志同步配置
+     */
+    @Getter
+    @Setter
+    public static class DataSyncLog {
+        private boolean enabled = false;
     }
 
     @Getter
