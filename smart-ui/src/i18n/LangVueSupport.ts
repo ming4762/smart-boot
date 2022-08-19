@@ -8,7 +8,7 @@ export default () => {
   const store = useStore()
   const i18n = useI18n()
   // 当前语言
-  const currentLang = computed(() => store.state['app/lang'])
+  const currentLang = computed(() => store.getters['app/lang'])
   /**
    * 设置语言
    * @param lang 语言

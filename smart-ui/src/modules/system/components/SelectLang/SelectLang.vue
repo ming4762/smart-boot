@@ -4,7 +4,7 @@
       <GlobalOutlined :title="$t('system.lang.navBar')" />
     </span>
     <template #overlay>
-      <a-menu :selected-keys="[currentLang]" @click="handleLangChange" class="menu ant-pro-header-menu">
+      <a-menu :selected-keys="[currentLang]" class="menu ant-pro-header-menu" @click="handleLangChange">
         <a-menu-item v-for="item in languageList" :key="item.key">
           <span role="img" :aria-label="item.name">{{ item.icon }}</span>
           {{ item.name }}
