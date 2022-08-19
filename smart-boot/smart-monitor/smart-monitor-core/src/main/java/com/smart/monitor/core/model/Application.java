@@ -2,6 +2,7 @@ package com.smart.monitor.core.model;
 
 import lombok.*;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Map;
@@ -19,6 +20,7 @@ import java.util.Set;
 @Builder
 public class Application implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 2847498878134595865L;
     /**
      * 所有端点
