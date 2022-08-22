@@ -32,7 +32,7 @@ public class HttpTraceEndpointAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public HttpTraceEndpoint httpTraceEndpoint(EnhanceHttpTraceRepository httpTraceRepository) {
+    public EnhanceHttpTraceEndpoint httpTraceEndpoint(EnhanceHttpTraceRepository httpTraceRepository) {
         return new EnhanceHttpTraceEndpoint(httpTraceRepository);
     }
 

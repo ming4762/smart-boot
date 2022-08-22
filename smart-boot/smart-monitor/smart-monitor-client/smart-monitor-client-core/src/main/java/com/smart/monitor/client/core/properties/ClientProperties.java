@@ -26,9 +26,9 @@ public class ClientProperties implements InitializingBean {
 
     private Registration registration = new Registration();
 
-    private Auth auth;
+    private Auth auth = new Auth();
 
-    private HttpTrace httpTrace;
+    private HttpTrace httpTrace = new HttpTrace();
 
     /**
      * 认证信息

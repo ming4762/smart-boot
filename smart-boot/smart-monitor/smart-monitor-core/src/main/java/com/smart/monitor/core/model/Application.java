@@ -1,6 +1,7 @@
 package com.smart.monitor.core.model;
 
 import lombok.*;
+import org.springframework.util.StringUtils;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -65,6 +66,9 @@ public class Application implements Serializable {
      * @return 端点地址
      */
     public String getEndPointUrl(String endPoint) {
+        if (!StringUtils.hasLength(endPoint)) {
+            return this.managementUrl;
+        }
         return String.format("%s/%s", this.managementUrl, endPoint);
     }
 }

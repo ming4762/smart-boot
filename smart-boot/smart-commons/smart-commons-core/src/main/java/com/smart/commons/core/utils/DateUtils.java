@@ -42,6 +42,8 @@ public final class DateUtils {
 
     private static final Pattern YYYY_MM_DD_HH_MM_SS_SSS_Z = Pattern.compile("[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{0,3}Z");
 
+    private static final DateTimeFormatter ISO_INSTANT_DATE_TIME_FORMATTER = DateTimeFormatter.ISO_INSTANT;
+
     private DateUtils() {
         throw new IllegalStateException("Utility class");
     }
@@ -222,6 +224,15 @@ public final class DateUtils {
                 .limit(distance + 1)
                 .forEach(result :: add);
         return result;
+    }
+
+    /**
+     * 将instant ISO字符串转为 Instant
+     * @param formatStr instant ISO字符串
+     * @return Instant
+     */
+    public static Instant parseInstant(@NonNull String formatStr) {
+        return ISO_INSTANT_DATE_TIME_FORMATTER.parse(formatStr, Instant :: from);
     }
 
 }

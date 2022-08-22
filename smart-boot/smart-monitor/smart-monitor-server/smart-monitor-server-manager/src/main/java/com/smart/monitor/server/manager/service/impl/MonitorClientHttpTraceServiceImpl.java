@@ -23,11 +23,9 @@ import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -65,13 +63,17 @@ public class MonitorClientHttpTraceServiceImpl extends BaseServiceImpl<MonitorCl
         return saveNum.get();
     }
 
+    @SuppressWarnings("unchecked")
     private int saveHttpTrace(List<Map<String, Object>> data, @NonNull ClientData clientData) {
         final LocalDateTime currentTime = LocalDateTime.now();
         final List<MonitorClientHttpTracePO> httpTraceList = data.stream().map(item -> {
             final Map<String, Object> request = (Map<String, Object>) item.get("request");
             final Map<String, Object> response = (Map<String, Object>) item.get("response");
             // 获取时间戳
-            final Long timestamp = Objects.requireNonNull(DateUtils.convertDate((String) item.get("timestamp"))).toInstant().toEpochMilli();
+            Long timestamp = Optional.ofNullable((String) item.get("timestamp"))
+                    .map(DateUtils::parseInstant)
+                    .map(Instant::toEpochMilli)
+                    .orElse(null);
             return MonitorClientHttpTracePO.builder()
                     .applicationCode(clientData.getApplication().getApplicationName())
                     .clientId(clientData.getId().getValue())

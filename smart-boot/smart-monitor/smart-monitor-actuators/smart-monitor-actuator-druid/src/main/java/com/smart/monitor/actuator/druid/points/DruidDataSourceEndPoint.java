@@ -32,7 +32,7 @@ public class DruidDataSourceEndPoint {
 
 
     @ReadOperation
-    public Object handler(@Selector String ident) {
+    public Object handler(@Selector(match = Selector.Match.ALL_REMAINING) String ident) {
         if (NAME_IDENT.equals(ident)) {
             return this.names();
         }
