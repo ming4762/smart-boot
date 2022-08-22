@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue'
+import { defineComponent, ref, onMounted, onBeforeUnmount } from 'vue'
 
 import { loadActuator } from '@/modules/monitor/utils/ClientApiUtils'
 import { errorMessage } from '@/components/notice/SystemNotice'
@@ -59,6 +59,8 @@ export default defineComponent({
       // 添加循环获取数据
       TimeTaskUtil.addLoop(MONITOR_DETAIL_LOOP_GROUP, 'redisInfo', loadRedisInfo)
     })
+    // 页面销毁时，移除定时任务
+    onBeforeUnmount(() => TimeTaskUtil.removeLoop(MONITOR_DETAIL_LOOP_GROUP, 'redisInfo'))
     return {
       data
     }
