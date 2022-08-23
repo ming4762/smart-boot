@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.smart.crud.model.BaseModelUserTime;
-import com.smart.db.generator.constants.TemplateTypeEnum;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,7 +28,7 @@ public class DbCodeTemplatePO extends BaseModelUserTime {
     /**
      * 字典类型
      */
-    private TemplateTypeEnum templateType;
+    private String templateType;
 
     private String name;
 
