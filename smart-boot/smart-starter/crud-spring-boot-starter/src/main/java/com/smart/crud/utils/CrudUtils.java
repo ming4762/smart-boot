@@ -245,7 +245,7 @@ public final class CrudUtils {
                         log.warn("参数无效，未找到实体类对应属性：{}", keySplit[0]);
                     } else {
                         try {
-                            CrudUtils.dealValue(value, queryWrapper, symbol, dbFieldName);
+                            CrudUtils.dealValue(key, value, queryWrapper, symbol, dbFieldName);
                         } catch (InvocationTargetException | IllegalAccessException e) {
                             ExceptionUtils.doThrow(e);
                         }
@@ -255,18 +255,18 @@ public final class CrudUtils {
         });
     }
 
-    private static <T> void dealValue(@Nullable Object value, @NonNull Wrapper<T> queryWrapper, @Nullable String symbol, @Nullable String dbFieldName) throws InvocationTargetException, IllegalAccessException {
+    private static <T> void dealValue(@NonNull String key, @Nullable Object value, @NonNull Wrapper<T> queryWrapper, @Nullable String symbol, @Nullable String dbFieldName) throws InvocationTargetException, IllegalAccessException {
         if (!Objects.isNull(value)) {
             // 值不为null处理
             if (org.apache.commons.lang3.StringUtils.isNotEmpty(value.toString())) {
                 final Method method = getWrapperMethod(queryWrapper.getClass(), symbol);
                 if (method == null) {
-                    log.warn("参数无效，未找到符号对应执行方法：{}", symbol);
+                    log.warn("参数无效，未找到符号对应执行方法，参数名：{}，符号：{}", key, symbol);
                 } else {
                     method.invoke(queryWrapper, dbFieldName, value);
                 }
             } else {
-                log.warn("参数无效，忽略参数值：{}", value);
+                log.warn("参数无效，忽略参数值，参数名：{}，值：{}", key, value);
             }
         } else {
             // null 处理

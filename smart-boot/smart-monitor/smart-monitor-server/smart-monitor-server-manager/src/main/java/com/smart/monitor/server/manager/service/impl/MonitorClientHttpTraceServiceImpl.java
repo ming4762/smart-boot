@@ -22,6 +22,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -49,7 +50,9 @@ public class MonitorClientHttpTraceServiceImpl extends BaseServiceImpl<MonitorCl
         this.monitorApplicationService = monitorApplicationService;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer sync(@NonNull ClientData clientData) {
         log.debug("client http trace sync start, application code: {}, client id: {}", clientData.getApplication().getApplicationName(), clientData.getId().getValue());
         Map<String, String> headers = Maps.newHashMap();
@@ -60,6 +63,7 @@ public class MonitorClientHttpTraceServiceImpl extends BaseServiceImpl<MonitorCl
                 .httpMethod(HttpMethod.GET)
                 .httpHeaders(headers)
                 .build(), result -> saveNum.set(this.saveHttpTrace((List<Map<String, Object>>) result, clientData)), true);
+        log.info("client http trace sync success, application name: {}, client id: {}, log num: {}", clientData.getApplication().getApplicationName(), clientData.getId().getValue(), saveNum.get());
         return saveNum.get();
     }
 
