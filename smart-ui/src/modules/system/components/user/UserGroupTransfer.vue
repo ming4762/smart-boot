@@ -24,7 +24,7 @@ export default defineComponent({
   name: 'UserGroupTransfer',
   props: {
     targetKeys: {
-      type: Array as PropType<Array<number>>,
+      type: Array as PropType<Array<string>>,
       default: () => []
     },
     height: {

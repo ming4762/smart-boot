@@ -173,7 +173,7 @@ export default defineComponent({
   },
   props: {
     currentUser: {
-      type: Object as PropType<object>,
+      type: Object as PropType<any>,
       default: () => null
     },
     menu: {

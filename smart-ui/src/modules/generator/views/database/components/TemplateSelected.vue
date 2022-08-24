@@ -4,7 +4,7 @@
     :data-source="transDataSource"
     :target-keys="targetKeysModel"
     show-search
-    :render="item => item.title"
+    :render="(item: any) => item.title"
     @change="handleTransChange" />
 </template>
 

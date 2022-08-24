@@ -249,7 +249,11 @@ export const vueSetUserGroup = (t: Function) => {
   const handleCurrentChange = async ({ row }: any) => {
     saveButtonVisible.value = isSuperAdmin() || row.createUserId === getCurrentUserId()
     currentRow.value = row
-    selectGroupIds.value = await ApiService.postAjax('db/connection/listUserGroupId', row.id)
+    try {
+      selectGroupIds.value = await ApiService.postAjax('db/connection/listUserGroupId', row.id)
+    } catch (e) {
+      errorMessage(e)
+    }
   }
   /**
    * 执行保存操作

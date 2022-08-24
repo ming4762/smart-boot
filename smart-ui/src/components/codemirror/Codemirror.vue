@@ -4,7 +4,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, toRefs, ref, onMounted, watch } from 'vue'
 
 import CodeMirror from 'codemirror'
@@ -18,9 +18,9 @@ import 'codemirror/mode/xml/xml.js'
 import 'codemirror/mode/javascript/javascript.js'
 import 'codemirror/mode/htmlmixed/htmlmixed.js'
 
-let coder = null
+let coder: any = null
 
-const initialize = (props) => {
+const initialize = (props: any) => {
   const { code, options, mode, theme, readOnly } = toRefs(props)
   const textareaRef = ref()
   onMounted(() => {
@@ -59,7 +59,7 @@ const initialize = (props) => {
       }
       return coder.getValue()
     },
-    setCode: (code) => {
+    setCode: (code: string) => {
       if (coder) {
         coder.setValue(code)
         setTimeout(() => {
@@ -104,8 +104,8 @@ export default defineComponent({
       default: false
     }
   },
-  setup (props, context) {
-    const initializeVue = initialize(props, context)
+  setup (props) {
+    const initializeVue = initialize(props)
     // 编辑器实例
     return {
       ...initializeVue

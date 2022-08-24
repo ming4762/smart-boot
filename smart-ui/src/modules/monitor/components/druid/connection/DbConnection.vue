@@ -6,7 +6,7 @@
       bordered
       :pagination="false"
       :show-header="false"
-      :row-class-name="(record, index) => (index % 2 === 1 ? 'table-striped' : null)"
+      :row-class-name="(record: any, index) => (index % 2 === 1 ? 'table-striped' : null)"
       :data-source="data">
       <template #key="{ text }">
         <span class="table-font bold">{{ text }}</span>

@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import {defineComponent, computed, PropType} from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 
 import * as icons from '@ant-design/icons-vue'
@@ -43,7 +43,7 @@ export default defineComponent({
   name: 'SideMenu',
   props: {
     data: {
-      type: Array,
+      type: Array as PropType<Array<any>>,
       default: () => []
     },
     pathHandler: {
