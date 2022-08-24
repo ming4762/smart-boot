@@ -7,7 +7,7 @@ import com.smart.auth.core.exception.MaxConnectionAuthenticationException;
 import com.smart.auth.core.exception.PasswordNoLifeLockedException;
 import com.smart.auth.core.i18n.AuthI18nMessage;
 import com.smart.auth.core.model.AuthUser;
-import com.smart.auth.core.model.Permission;
+import com.smart.auth.core.model.UserRolePermission;
 import com.smart.auth.core.service.AuthUserService;
 import com.smart.auth.extensions.jwt.data.JwtData;
 import com.smart.auth.extensions.jwt.store.CacheJwtStore;
@@ -15,7 +15,6 @@ import com.smart.commons.core.i18n.I18nUtils;
 import com.smart.system.constants.FunctionTypeEnum;
 import com.smart.system.constants.MaxConnectionsPolicyEnum;
 import com.smart.system.constants.UserAccountStatusEnum;
-import com.smart.system.model.SysRolePO;
 import com.smart.system.model.SysUserAccountPO;
 import com.smart.system.model.SysUserPO;
 import com.smart.system.service.SysUserAccountService;
@@ -30,8 +29,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author ShiZhongMing
@@ -200,16 +197,15 @@ public class AuthUserServiceImpl implements AuthUserService {
     }
 
     /**
-     * 查询角色列表
+     * 查询用户角色权限信息
      * @param authUser 用户信息
-     * @return 角色列表
+     * @return 权限角色信息
      */
     @Override
-    public Set<String> listRoleCode(@NonNull AuthUser authUser) {
-        return this.sysUserService.listRole(authUser.getUserId()).stream()
-                .map(SysRolePO::getRoleCode)
-                .collect(Collectors.toSet());
+    public UserRolePermission queryRolePermission(@NonNull AuthUser authUser) {
+        return this.sysUserService.queryUserRolePermission(authUser.getUserId(), List.of(FunctionTypeEnum.FUNCTION));
     }
+<<<<<<< HEAD
 
     /**
      * 查询权限列表
@@ -238,4 +234,6 @@ public class AuthUserServiceImpl implements AuthUserService {
                 }).collect(Collectors.toSet());
     }
 
+=======
+>>>>>>> 8be4924 (性能：优化系统登录性能，降低查询数据库次数)
 }

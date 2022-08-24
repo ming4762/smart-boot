@@ -31,7 +31,6 @@ public class MonitorClientLogServiceImpl extends BaseServiceImpl<MonitorClientLo
     public MonitorClientLogServiceImpl(MonitorApplicationService monitorApplicationService) {
         this.monitorApplicationService = monitorApplicationService;
     }
-<<<<<<< HEAD
 
     @Override
     public Integer sync(@NonNull ClientData clientData) {
@@ -80,8 +79,6 @@ public class MonitorClientLogServiceImpl extends BaseServiceImpl<MonitorClientLo
         return 0;
     }
 
-=======
->>>>>>> 9cdd983 (smart-monitor：日志同步功能改成可以通过配置文件开启关闭，默认关闭状态)
     @Override
     public List<? extends MonitorClientLogPO> list(@NonNull QueryWrapper<MonitorClientLogPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
         if (Boolean.TRUE.equals(parameter.getParameter().get(CrudCommonEnum.FILTER_BY_USER.name()))) {

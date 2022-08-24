@@ -1,11 +1,9 @@
 package com.smart.auth.core.service;
 
 import com.smart.auth.core.model.AuthUser;
-import com.smart.auth.core.model.Permission;
+import com.smart.auth.core.model.UserRolePermission;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
-
-import java.util.Set;
 
 /**
  * @author jackson
@@ -19,7 +17,9 @@ public interface AuthUserService {
      * @return 用户信息
      */
     @Nullable
-    AuthUser getByUsername(@NonNull String username);
+    default AuthUser getByUsername(@NonNull String username) {
+        return null;
+    }
 
     /**
      * 通过手机号查询用户
@@ -32,18 +32,9 @@ public interface AuthUserService {
     }
 
     /**
-     * 查询角色列表
+     * 查询用户角色权限信息
      * @param authUser 用户信息
-     * @return 角色列表
+     * @return 权限角色信息
      */
-    Set<String> listRoleCode(@NonNull AuthUser authUser);
-
-    /**
-     * 查询权限列表
-     * @param authUser 用户信息
-     * @return 权限列表
-     */
-    Set<Permission> listPermission(@NonNull AuthUser authUser);
-
-
+    UserRolePermission queryRolePermission(@NonNull AuthUser authUser);
 }

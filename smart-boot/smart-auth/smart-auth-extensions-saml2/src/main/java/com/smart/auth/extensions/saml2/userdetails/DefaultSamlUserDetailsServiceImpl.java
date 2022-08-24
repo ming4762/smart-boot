@@ -39,14 +39,15 @@ public class DefaultSamlUserDetailsServiceImpl implements SAMLUserDetailsService
         }
         Set<SmartGrantedAuthority> grantedAuthoritySet = Sets.newHashSet();
         // 添加角色
+        UserRolePermission userRolePermission = this.userService.queryRolePermission(user);
         grantedAuthoritySet.addAll(
-                this.userService.listRoleCode(user).stream()
-                        .map(RoleGrantedAuthority::new)
-                        .collect(Collectors.toList())
+
+                userRolePermission.getRoleCodes().stream()
+                        .map(RoleGrantedAuthority::new).collect(Collectors.toList())
         );
         // 添加权限
         grantedAuthoritySet.addAll(
-                this.userService.listPermission(user)
+                userRolePermission.getPermissions()
                         .stream()
                         .map(PermissionGrantedAuthority::new).collect(Collectors.toList())
         );

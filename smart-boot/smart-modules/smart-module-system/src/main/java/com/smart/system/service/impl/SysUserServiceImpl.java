@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.smart.auth.core.model.Permission;
+import com.smart.auth.core.model.UserRolePermission;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.auth.core.utils.AuthUtils;
 import com.smart.commons.core.i18n.I18nUtils;
@@ -41,6 +43,7 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author jackson
@@ -156,6 +159,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         // 1、查询用户对应的角色
         final Set<Long> userRoleIdSet = this.sysUserRoleService.list(
                 new QueryWrapper<SysUserRolePO>().lambda()
+                        .select(SysUserRolePO::getRoleId)
                         .eq(SysUserRolePO :: getUserId, userId)
                         .eq(SysUserRolePO :: getEnable, Boolean.TRUE)
         ).stream().map(SysUserRolePO :: getRoleId).collect(Collectors.toSet());
@@ -164,6 +168,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         // 查询用户组
         final Set<Long> userGroupIdSet = this.sysUserGroupUserMapper.selectList(
                 new QueryWrapper<SysUserGroupUserPO>().lambda()
+                        .select(SysUserGroupUserPO::getUserGroupId)
                     .eq(SysUserGroupUserPO :: getUserId, userId)
                     .eq(SysUserGroupUserPO :: getUseYn, Boolean.TRUE)
         ).stream().map(SysUserGroupUserPO :: getUserGroupId).collect(Collectors.toSet());
@@ -171,6 +176,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         if (!userGroupIdSet.isEmpty()) {
             final Set<Long> groupRoleIdSet = this.sysUserGroupRoleMapper.selectList(
                     new QueryWrapper<SysUserGroupRolePO>().lambda()
+                            .select(SysUserGroupRolePO :: getRoleId)
                     .in(SysUserGroupRolePO :: getGroupId, userGroupIdSet)
                     .eq(SysUserGroupRolePO :: getUseYn, Boolean.TRUE)
             ).stream().map(SysUserGroupRolePO :: getRoleId).collect(Collectors.toSet());
@@ -312,6 +318,56 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
             return Lists.newArrayList();
         }
         return this.listUserFunctionWithLocale(userDetails.getUserId(), ImmutableList.of(FunctionTypeEnum.CATALOG, FunctionTypeEnum.MENU), localeList);
+    }
+
+    @Override
+    public UserRolePermission queryUserRolePermission(@NonNull Long userId, @NonNull List<FunctionTypeEnum> types) {
+        UserRolePermission userRolePermission = new UserRolePermission();
+        // 1、查询角色信息
+        List<SysRolePO> sysRoleList = this.listRole(userId);
+        if (CollectionUtils.isEmpty(sysRoleList)) {
+            return userRolePermission;
+        }
+        userRolePermission.setRoleCodes(
+                sysRoleList.stream().map(SysRolePO::getRoleCode).collect(Collectors.toSet())
+        );
+        var roleIds = sysRoleList.stream().map(SysRolePO::getRoleId).collect(Collectors.toSet());
+        // 2、查询角色对应的功能ID
+        var functionIds = this.sysRoleFunctionService.list(
+                new QueryWrapper<SysRoleFunctionPO>().lambda()
+                        .select(SysRoleFunctionPO :: getFunctionId)
+                        .in(SysRoleFunctionPO :: getRoleId, roleIds)
+        ).stream().map(SysRoleFunctionPO :: getFunctionId).collect(Collectors.toSet());
+        if (CollectionUtils.isEmpty(functionIds)) {
+            return userRolePermission;
+        }
+        //3、查询function列表
+        var queryWrapper = new QueryWrapper<SysFunctionPO>().lambda()
+                .select(SysFunctionPO::getUrl, SysFunctionPO::getPermission, SysFunctionPO::getHttpMethod)
+                .in(SysFunctionPO :: getFunctionId, functionIds)
+                .orderByAsc(SysFunctionPO :: getSeq);
+        if (CollectionUtils.isNotEmpty(types)) {
+            queryWrapper.in(SysFunctionPO :: getFunctionType, types.stream().map(FunctionTypeEnum::getValue).toList());
+        }
+        var permissions = this.sysFunctionService.list(queryWrapper).stream()
+                .flatMap(item -> {
+                    var url = item.getUrl();
+                    if (StringUtils.isNotBlank(url)) {
+                        return Arrays.stream(url.split(";"))
+                                .map(uriItem -> Permission.builder()
+                                        .method(item.getHttpMethod())
+                                        .url(uriItem)
+                                        .authority(item.getPermission())
+                                        .build());
+                    }
+                    return Stream.of(Permission.builder()
+                            .method(item.getHttpMethod())
+                            .url(item.getUrl())
+                            .authority(item.getPermission())
+                            .build());
+                }).collect(Collectors.toSet());
+        userRolePermission.setPermissions(permissions);
+        return userRolePermission;
     }
 
     /**
