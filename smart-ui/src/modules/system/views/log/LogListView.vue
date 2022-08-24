@@ -1,7 +1,7 @@
 <template>
   <div class="full-height" style="padding: 10px">
-    <div style="background: white;">
-      <a-form style="padding: 10px; height: 110px; width: 1000px" :model="searchModel">
+    <div class="form-container">
+      <a-form style="padding: 10px; height: 90px; width: 1000px" :model="searchModel">
         <a-row>
           <a-col :span="6">
             <a-form-item :label="$t('system.views.log.title.operation')">
@@ -53,6 +53,7 @@
                 style="width: 120px"
                 :options="operationTypeEnum"
                 :size="formSizeConfig"
+                option-label-prop="children"
                 :placeholder="$t('common.notice.select')">
                 <template #option="{ label }">
                   <span>{{ $t(label) }}</span>
@@ -69,7 +70,7 @@
         </a-row>
       </a-form>
     </div>
-    <div style="height: calc(100% - 110px);">
+    <div style="height: calc(100% - 90px);">
       <vxe-grid
         v-bind="tableProps"
         height="auto"
@@ -90,6 +91,9 @@
         </template>
         <template #table-statusCode="{ row }">
           <a-tag :color="(row.statusCode >= 200 && row.statusCode < 300) ? '#2db7f5' : '#f50'">{{ row.statusCode }}</a-tag>
+        </template>
+        <template #table-useTime="{ row }">
+          <a-tag v-if="row.useTime !== null" :color="getUseTimeTagColor(row.useTime)">{{ row.useTime }}</a-tag>
         </template>
       </vxe-grid>
     </div>
@@ -184,6 +188,23 @@ export default defineComponent({
       paging: true
     })
 
+    /**
+     * 获取使用时间tag颜色
+     * @param useTime 时长
+     */
+    const getUseTimeTagColor = (useTime: number) => {
+      if (useTime <= 300) {
+        return 'blue'
+      }
+      if (useTime <= 500) {
+        return 'green'
+      }
+      if (useTime <= 1000) {
+        return 'orange'
+      }
+      return 'pink'
+    }
+
     onMounted(loadData)
     return {
       ...SizeConfigHooks(),
@@ -193,7 +214,8 @@ export default defineComponent({
       pageProps,
       handleReset,
       dayjs,
-      ...useShowDetails()
+      ...useShowDetails(),
+      getUseTimeTagColor
     }
   },
   data () {
@@ -232,7 +254,9 @@ export default defineComponent({
         {
           title: '{system.views.log.title.operationType}',
           field: 'operationType',
-          width: 120
+          headerAlign: 'left',
+          align: 'center',
+          width: 100
         },
         {
           title: '{system.views.log.title.requestPath}',
@@ -243,6 +267,8 @@ export default defineComponent({
           title: '{system.views.log.title.statusCode}',
           field: 'statusCode',
           width: 100,
+          headerAlign: 'left',
+          align: 'center',
           slots: {
             default: 'table-statusCode'
           },
@@ -256,7 +282,12 @@ export default defineComponent({
         {
           title: '{system.views.log.title.useTime}',
           field: 'useTime',
-          width: 160
+          width: 120,
+          headerAlign: 'left',
+          align: 'center',
+          slots: {
+            default: 'table-useTime'
+          }
         },
         {
           title: '{system.views.log.title.createTime}',
@@ -325,6 +356,11 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
-
+<style lang="less" scoped>
+.form-container {
+  background: white;
+  ::v-deep(.ant-form-item) {
+    margin: 2px;
+  }
+}
 </style>
