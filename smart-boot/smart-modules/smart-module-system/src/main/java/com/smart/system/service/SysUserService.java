@@ -1,6 +1,7 @@
 package com.smart.system.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.smart.auth.core.model.UserRolePermission;
 import com.smart.crud.service.BaseService;
 import com.smart.system.constants.FunctionTypeEnum;
 import com.smart.system.model.SysFunctionPO;
@@ -96,4 +97,11 @@ public interface SysUserService extends BaseService<SysUserPO> {
      * @return 用户列表
      */
     List<SysUserWthAccountBO> listUserWithAccount(QueryWrapper<SysUserPO> parameter);
+
+    /**
+     * 查询用户角色权限信息
+     * @param userId 用户ID
+     * @return 角色权限信息
+     */
+    UserRolePermission queryUserRolePermission(@NonNull Long userId, @NonNull List<FunctionTypeEnum> types);
 }

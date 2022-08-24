@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import java.util.List;
 @Builder
 public class AuthUser implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1978668286729284813L;
     private Long userId;
 
