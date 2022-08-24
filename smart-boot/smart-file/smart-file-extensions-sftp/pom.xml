@@ -7,10 +7,10 @@
 		<artifactId>smart-file</artifactId>
 		<version>3.0.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>smart-file-extensions-mongo</artifactId>
+	<artifactId>smart-file-extensions-sftp</artifactId>
 	<version>3.0.0-SNAPSHOT</version>
-	<name>smart-file-extensions-mongo</name>
-	<description>文件存储到mongo DB扩展插件</description>
+	<name>smart-file-extensions-sftp</name>
+	<description>文件存储到sftp扩展插件</description>
 
 	<properties>
 	</properties>
@@ -22,10 +22,14 @@
 			<version>${project.parent.version}</version>
 		</dependency>
 
-		<!--引入mongodb支持-->
+		<!--	引入连接池	-->
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-mongodb</artifactId>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-pool2</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.jcraft</groupId>
+			<artifactId>jsch</artifactId>
 		</dependency>
 	</dependencies>
 
