@@ -82,7 +82,7 @@
           v-bind="formProps">
           <a-row>
             <a-col :span="24">
-              <a-form-item :label="$t('system.views.dictGroup.title.dictName')" name="dictCode">
+              <a-form-item :label="$t('system.views.dictGroup.title.dictCode')" name="dictCode">
                 <a-input v-model:value="formProps.model.dictCode" :placeholder="$t('system.views.dictGroup.validate.dictCode')" />
               </a-form-item>
             </a-col>

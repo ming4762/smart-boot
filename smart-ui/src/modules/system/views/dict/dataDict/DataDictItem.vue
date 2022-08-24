@@ -133,7 +133,8 @@ export default defineComponent({
   name: 'SysDictItemListView',
   props: {
     dictCode: {
-      type: String as PropType<string>
+      type: String as PropType<string | null>,
+      default: null
     }
   },
   setup (props) {

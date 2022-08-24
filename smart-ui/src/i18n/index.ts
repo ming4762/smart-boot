@@ -25,6 +25,7 @@ import monitorI18n from '@/modules/monitor/i18n'
  */
 const i18n = createI18n({
   // locale: localStorage.getItem('smart_locale') || DefaultSetting.lang,
+  legacy: false,
   locale: store.getters['app/lang'],
   messages: {
     'zh-CN': merge({},

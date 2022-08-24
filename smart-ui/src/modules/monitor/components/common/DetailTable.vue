@@ -16,7 +16,7 @@
   </table>
 </template>
 
-<script>
+<script lang="ts">
 import CommonTable from '@/modules/monitor/components/common/CommonTable.vue'
 
 export default {

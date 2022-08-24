@@ -29,7 +29,7 @@ export default defineComponent({
     }
   },
   setup (props) {
-    const data = ref([])
+    const data = ref<Array<any>>([])
     const sizeConfigHoops = SizeConfigHoops()
     const loadData = async () => {
       const result = await ApiService.postAjax('/db/connection/listByAuth', Object.assign({

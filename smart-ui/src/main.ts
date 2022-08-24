@@ -21,7 +21,9 @@ window['umi_plugin_ant_themeVar'] = themePluginConfig.theme
 import VXETable from 'vxe-table'
 import 'vxe-table/lib/style.css'
 
+
 VXETable.setup({
+  // @ts-ignore
   i18n: (key, args) => i18n.global.t(key, args),
   translate(key: string, args?: any): string {
     if (key.startsWith('{') && key.endsWith('}')) {

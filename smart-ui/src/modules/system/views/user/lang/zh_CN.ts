@@ -5,7 +5,7 @@ export default {
       user: {
         form: {
           systemUser: '系统用户',
-          businessUser: '业务用户'
+          busi文档nessUser: '业务用户'
         },
         table: {
           username: '用户名',

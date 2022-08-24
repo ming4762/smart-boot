@@ -87,7 +87,7 @@ export default defineComponent({
   },
   setup (props) {
     const { id, clientId } = toRefs(props)
-    const data = ref<object>({})
+    const data = ref<any>({})
     const doLoadData = async () => {
       data.value = await loadActuator(clientId.value, `druidSql/${id.value}`)
     }
