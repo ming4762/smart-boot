@@ -3,19 +3,26 @@ package com.smart.file.manager.controller;
 import com.google.common.collect.ImmutableList;
 import com.smart.commons.core.message.Result;
 import com.smart.crud.controller.BaseController;
+import com.smart.crud.query.PageSortQuery;
 import com.smart.file.manager.model.SysFilePO;
-import com.smart.file.manager.pojo.bo.SysFileBO;
-import com.smart.file.manager.pojo.dto.SaveFileDTO;
 import com.smart.file.manager.service.SysFileService;
+<<<<<<< HEAD
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.SneakyThrows;
+=======
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+>>>>>>> 22d0df4 (文件管理模块重构，优化使用体验)
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.lang.NonNull;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+<<<<<<< HEAD
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,12 +33,17 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
+=======
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+>>>>>>> 22d0df4 (文件管理模块重构，优化使用体验)
 
 /**
  * @author shizhongming
  * 2020/1/27 7:51 下午
  */
 @Slf4j
+<<<<<<< HEAD
 @Api(value = "文件管理", tags = "文件管理")
 public class SysFileController extends BaseController<SysFileService, SysFilePO> {
 
@@ -106,9 +118,19 @@ public class SysFileController extends BaseController<SysFileService, SysFilePO>
      */
     @SneakyThrows
     @ApiOperation("批量删除文件")
-    @Override
-    public Result<Boolean> batchDeleteById(@RequestBody List<Serializable> ids)  {
-        return Result.success(this.service.batchDeleteFile(ids));
-    }
+=======
+@Tag(name = "文件管理")
+@Controller
+@RequestMapping("sys/file")
+public class SysFileController extends BaseController<SysFileService, SysFilePO> {
 
+>>>>>>> 22d0df4 (文件管理模块重构，优化使用体验)
+    @Override
+    @PostMapping("list")
+    @Operation(summary = "查询文件列表", method = "POST")
+    @PreAuthorize("hasPermission('sys:file', 'query')")
+    @ResponseBody
+    public Result<Object> list(@RequestBody @NonNull PageSortQuery parameter) {
+        return super.list(parameter);
+    }
 }

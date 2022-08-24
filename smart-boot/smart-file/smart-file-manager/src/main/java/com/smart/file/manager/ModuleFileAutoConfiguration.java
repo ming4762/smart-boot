@@ -1,6 +1,7 @@
 package com.smart.file.manager;
 
-import com.smart.commons.file.SmartFileProperties;
+import com.smart.file.core.SmartFileProperties;
+import com.smart.file.manager.service.FileHandler;
 import com.smart.file.manager.service.SysFileService;
 import com.smart.file.manager.service.impl.DefaultFileServiceImpl;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -20,12 +21,17 @@ public class ModuleFileAutoConfiguration {
 
     /**
      * 创建文件服务实体类
-     * @param properties 参数
      * @return 文件服务实体类
      */
     @Bean
     @ConditionalOnMissingBean(SysFileService.class)
-    public SysFileService sysFileService(SmartFileProperties properties) {
-        return new DefaultFileServiceImpl(properties);
+    public SysFileService sysFileService() {
+        return new DefaultFileServiceImpl();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(FileHandler.class)
+    public FileHandler fileHandler(SmartFileProperties properties, SysFileService sysFileService) {
+        return new FileHandler(properties, sysFileService);
     }
 }

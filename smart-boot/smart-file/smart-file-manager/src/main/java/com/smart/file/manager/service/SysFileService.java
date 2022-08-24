@@ -2,15 +2,6 @@ package com.smart.file.manager.service;
 
 import com.smart.crud.service.BaseService;
 import com.smart.file.manager.model.SysFilePO;
-import com.smart.file.manager.pojo.bo.SysFileBO;
-import com.smart.file.manager.pojo.dto.SaveFileDTO;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Collection;
 
 /**
  * 文件服务层
@@ -19,6 +10,7 @@ import java.util.Collection;
  */
 public interface SysFileService extends BaseService<SysFilePO> {
 
+<<<<<<< HEAD
     /**
      * 保存文件
      * @param multipartFile 文件信息
@@ -108,4 +100,6 @@ public interface SysFileService extends BaseService<SysFilePO> {
      * @return 文件绝对路径
      */
     String getAbsolutePath(@NonNull Long fileId);
+=======
+>>>>>>> 22d0df4 (文件管理模块重构，优化使用体验)
 }

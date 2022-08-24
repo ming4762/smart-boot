@@ -14,10 +14,10 @@
 	<description>文件管理模块</description>
 
 	<modules>
-		<module>smart-commons-file</module>
+		<module>smart-file-core</module>
 		<module>smart-file-extensions-disk</module>
 		<module>smart-file-extensions-mongo</module>
-		<module>smart-file-extensions-nfs</module>
+		<module>smart-file-extensions-sftp</module>
 		<module>smart-file-manager</module>
 	</modules>
 

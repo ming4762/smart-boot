@@ -7,6 +7,7 @@ import com.smart.auth.core.exception.MaxConnectionAuthenticationException;
 import com.smart.auth.core.exception.PasswordNoLifeLockedException;
 import com.smart.auth.core.i18n.AuthI18nMessage;
 import com.smart.auth.core.model.AuthUser;
+import com.smart.auth.core.model.Permission;
 import com.smart.auth.core.model.UserRolePermission;
 import com.smart.auth.core.service.AuthUserService;
 import com.smart.auth.extensions.jwt.data.JwtData;
@@ -29,6 +30,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author ShiZhongMing
@@ -205,7 +208,6 @@ public class AuthUserServiceImpl implements AuthUserService {
     public UserRolePermission queryRolePermission(@NonNull AuthUser authUser) {
         return this.sysUserService.queryUserRolePermission(authUser.getUserId(), List.of(FunctionTypeEnum.FUNCTION));
     }
-<<<<<<< HEAD
 
     /**
      * 查询权限列表
@@ -233,7 +235,4 @@ public class AuthUserServiceImpl implements AuthUserService {
                             .build());
                 }).collect(Collectors.toSet());
     }
-
-=======
->>>>>>> 8be4924 (性能：优化系统登录性能，降低查询数据库次数)
 }

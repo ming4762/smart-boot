@@ -24,7 +24,7 @@
 
 		<dependency>
 			<groupId>com.smart</groupId>
-			<artifactId>smart-commons-file</artifactId>
+			<artifactId>smart-file-core</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 

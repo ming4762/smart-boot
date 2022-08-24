@@ -2,9 +2,9 @@ package com.smart.file.extensions.mongo.service;
 
 import com.mongodb.client.gridfs.GridFSBuckets;
 import com.smart.commons.core.exception.OperationNotSupportedException;
-import com.smart.commons.file.common.ActualFileServiceRegisterName;
-import com.smart.commons.file.constants.ActualFileServiceEnum;
-import com.smart.commons.file.service.ActualFileService;
+import com.smart.file.core.common.ActualFileServiceRegisterName;
+import com.smart.file.core.constants.ActualFileServiceEnum;
+import com.smart.file.core.service.ActualFileService;
 import lombok.SneakyThrows;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.bson.types.ObjectId;

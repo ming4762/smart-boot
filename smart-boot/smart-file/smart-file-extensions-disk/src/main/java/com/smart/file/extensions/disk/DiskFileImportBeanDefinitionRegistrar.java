@@ -1,6 +1,6 @@
 package com.smart.file.extensions.disk;
 
-import com.smart.commons.file.constants.ActualFileServiceEnum;
+import com.smart.file.core.constants.ActualFileServiceEnum;
 import com.smart.file.extensions.disk.service.ActualFileDiskServiceImpl;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;

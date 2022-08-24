@@ -1,11 +1,16 @@
-package com.smart.file.manager.service.impl;
+package com.smart.file.manager.service;
 
-import com.smart.crud.service.BaseServiceImpl;
-import com.smart.file.manager.mapper.SysFileMapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.smart.auth.core.utils.AuthUtils;
+import com.smart.file.core.SmartFileProperties;
+import com.smart.file.core.exception.SmartFileException;
+import com.smart.file.core.service.ActualFileService;
+import com.smart.file.manager.constants.FileTypeEnum;
 import com.smart.file.manager.model.SysFilePO;
-import com.smart.file.manager.service.SysFileService;
+import com.smart.file.manager.pojo.bo.SysFileBO;
+import com.smart.file.manager.pojo.dto.SaveFileDTO;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-<<<<<<< HEAD
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -15,11 +20,13 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Collection;
@@ -27,34 +34,28 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
-=======
->>>>>>> 22d0df4 (文件管理模块重构，优化使用体验)
 
 /**
- * 文件处理层实现类
- * @author shizhongming
- * 2020/1/27 7:50 下午
+ * 文件控制类
+ * @author ShiZhongMing
+ * 2022/8/24
+ * @since 3.0.0
  */
+@Component
 @Slf4j
-public class DefaultFileServiceImpl extends BaseServiceImpl<SysFileMapper, SysFilePO> implements SysFileService {
+public class FileHandler implements ApplicationContextAware, InitializingBean {
 
-<<<<<<< HEAD
+    private ApplicationContext applicationContext;
+
     private Map<String, ActualFileService> actualFileServiceMap;
 
     private final SmartFileProperties fileProperties;
 
-    private ApplicationContext applicationContext;
+    private final SysFileService sysFileService;
 
-    public DefaultFileServiceImpl(SmartFileProperties fileProperties) {
-
+    public FileHandler(SmartFileProperties fileProperties, SysFileService sysFileService) {
         this.fileProperties = fileProperties;
-    }
-
-    private static Map<String, ActualFileService> initActualFileService(ApplicationContext applicationContext) {
-        // 获取所有执行器
-        return applicationContext.getBeansOfType(ActualFileService.class)
-                .values().stream()
-                .collect(Collectors.toMap(item -> item.getRegisterName().getDbName(), item -> item));
+        this.sysFileService = sysFileService;
     }
 
     /**
@@ -68,7 +69,7 @@ public class DefaultFileServiceImpl extends BaseServiceImpl<SysFileMapper, SysFi
             actualFileService = this.actualFileServiceMap.get(this.fileProperties.getDefaultHandler());
         }
         if (Objects.isNull(actualFileService)) {
-            throw new SmartFileException(String.format("获取文件执行器失败，为找到对应的文件执行器，执行器名称：%s", dbName));
+            throw new SmartFileException(String.format("获取文件执行器失败，未找到对应的文件执行器，执行器名称：%s", dbName));
         }
         return actualFileService;
     }
@@ -76,14 +77,70 @@ public class DefaultFileServiceImpl extends BaseServiceImpl<SysFileMapper, SysFi
     /**
      * 保存文件
      * @param multipartFile 文件信息
-     * @param saveFileDto 文件传输对象
-     * @return 保存的文件信息
+     * @param saveFileDto   文件信息
+     * @return 文件实体
      */
-    @Override
+    @NonNull
     @Transactional(rollbackFor = Exception.class)
-    public @NonNull
-    SysFilePO saveFile(@NonNull MultipartFile multipartFile, @NonNull SaveFileDTO saveFileDto) {
+    public SysFilePO saveFile(@NonNull MultipartFile multipartFile, @NonNull SaveFileDTO saveFileDto) {
         return this.saveFile(this.createSysFileBo(multipartFile, saveFileDto.getFilename(), saveFileDto.getType(), saveFileDto.getHandlerType()));
+    }
+
+    /**
+     * 保存文件
+     *
+     * @param file 文件信息
+     * @return 文件信息
+     */
+    @NonNull
+    public SysFilePO saveFile(@NonNull SysFileBO file) {
+        // 判断是否存在相同文件
+        SysFilePO sameFile = this.getSameFile(file.getFile());
+        if (Objects.nonNull(sameFile)) {
+            return sameFile;
+        }
+        // 保存文件
+        file.getFile().setDbId(this.saveActualFile(file));
+        try {
+            if (StringUtils.isEmpty(file.getFile().getType())) {
+                file.getFile().setType(FileTypeEnum.TEMP.name());
+            }
+            this.sysFileService.saveWithUser(file.getFile(), AuthUtils.getCurrentUserId());
+            return file.getFile();
+        } catch (Exception e) {
+            log.error("保存文件信息到数据库发生错误，删除保存的文件");
+            this.getActualFileService(file.getFile().getHandlerType()).delete(file.getFile().getDbId());
+            throw new SmartFileException(e);
+        }
+    }
+
+    /**
+     * 保存文件
+     *
+     * @param multipartFile 文件信息
+     * @param type          文件类型
+     * @param handlerType   指定文件执行器类型
+     * @return 文件实体信息
+     */
+    public SysFilePO saveFile(@NonNull MultipartFile multipartFile, String type, String handlerType) {
+        final SysFilePO file = new SysFilePO();
+        file.setType(type);
+        try {
+            return this.saveFile(new SysFileBO(multipartFile, null, type, handlerType));
+        } catch (Exception e) {
+            throw new SmartFileException("系统发生未知异常", e);
+        }
+    }
+
+    /**
+     * 保存文件
+     *
+     * @param multipartFile 文件信息
+     * @param type          文件类型
+     * @return 文件实体信息
+     */
+    public SysFilePO saveFile(@NonNull MultipartFile multipartFile, String type) {
+        return this.saveFile(multipartFile, type, this.fileProperties.getDefaultHandler());
     }
 
     /**
@@ -91,10 +148,10 @@ public class DefaultFileServiceImpl extends BaseServiceImpl<SysFileMapper, SysFi
      * @param file 比对的文件信息
      * @return 相同的文件信息，返回null 则不存在相同的文件
      */
-    @Override
+    @Nullable
     public SysFilePO getSameFile(@NonNull SysFilePO file) {
         // 根据md5判断文件是否存在
-        final List<SysFilePO> md5FileList = this.list(
+        final List<SysFilePO> md5FileList = this.sysFileService.list(
                 new QueryWrapper<SysFilePO>().lambda()
                         .eq(SysFilePO :: getMd5, file.getMd5())
                         .eq(SysFilePO :: getFileName, file.getFileName())
@@ -107,79 +164,21 @@ public class DefaultFileServiceImpl extends BaseServiceImpl<SysFileMapper, SysFi
     }
 
     /**
-     * 保存文件
-     * @param file 文件对象
-     * @return 保存的文件信息
-     */
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public @NonNull SysFilePO saveFile(@NonNull SysFileBO file) {
-        // 判断是否存在相同文件
-        SysFilePO sameFile = this.getSameFile(file.getFile());
-        if (Objects.nonNull(sameFile)) {
-            return sameFile;
-        }
-        // 保存文件
-        file.getFile().setDbId(this.saveActualFile(file));
-        try {
-            if (StringUtils.isEmpty(file.getFile().getType())) {
-                file.getFile().setType(FileTypeEnum.TEMP.name());
-            }
-            this.saveWithUser(file.getFile(), AuthUtils.getCurrentUserId());
-            return file.getFile();
-        } catch (Exception e) {
-            log.error("保存文件信息到数据库发生错误，删除保存的文件");
-            this.getActualFileService(file.getFile().getHandlerType()).delete(file.getFile().getDbId());
-            throw new BaseException(e);
-        }
-    }
-
-    /**
-     * 保存文件
-     * @param multipartFile 文件信息
-     * @param type 文件类型
-     * @return 保存的文件信息
-     */
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public SysFilePO saveFile(@NonNull MultipartFile multipartFile, String type, String handlerType) {
-        final SysFilePO file = new SysFilePO();
-        file.setType(type);
-        try {
-            return this.saveFile(new SysFileBO(multipartFile, null, type, handlerType));
-        } catch (Exception e) {
-            throw new BaseException("系统发生未知异常", e);
-        }
-    }
-
-    /**
-     * 保存文件
-     *
-     * @param multipartFile 文件信息
-     * @param type          文件类型
-     * @return 文件实体信息
-     */
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public SysFilePO saveFile(@NonNull MultipartFile multipartFile, String type) {
-        return this.saveFile(multipartFile, type, this.fileProperties.getDefaultHandler());
-    }
-
-    /**
      * 删除文件
+     *
      * @param fileId 文件ID
      * @return 文件信息
      */
-    @Override
+    @Nullable
     @Transactional(rollbackFor = Exception.class)
-    public @Nullable SysFilePO deleteFile(@NonNull Long fileId) {
-        final SysFilePO file = this.getById(fileId);
+    public SysFilePO deleteFile(@NonNull Long fileId) {
+        final SysFilePO file = this.sysFileService.getById(fileId);
         if (ObjectUtils.isNotEmpty(file)) {
             // 删除文件信息
-            this.removeById(fileId);
+            this.sysFileService.removeById(fileId);
             // 删除实际文件
             if (ObjectUtils.isEmpty(file.getDbId())) {
-                throw new BaseException("实际文件ID未空，删除失败");
+                throw new SmartFileException("实际文件ID为空，删除失败");
             }
             this.getActualFileService(file.getHandlerType()).delete(file.getDbId());
         }
@@ -188,16 +187,16 @@ public class DefaultFileServiceImpl extends BaseServiceImpl<SysFileMapper, SysFi
 
     /**
      * 批量删除文件
+     *
      * @param fileIds 文件id列表
      * @return 删除是否成功
      */
-    @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean batchDeleteFile(@NonNull Collection<Serializable> fileIds) {
         if (!fileIds.isEmpty()) {
-            final List<SysFilePO> fileList = this.listByIds(fileIds);
+            final List<SysFilePO> fileList = this.sysFileService.listByIds(fileIds);
             if (CollectionUtils.isNotEmpty(fileList)) {
-                this.removeByIds(fileIds);
+                this.sysFileService.removeByIds(fileIds);
                 // 删除实际文件
                 fileList.stream()
                         .collect(Collectors.groupingBy(SysFilePO :: getHandlerType))
@@ -205,7 +204,7 @@ public class DefaultFileServiceImpl extends BaseServiceImpl<SysFileMapper, SysFi
                                 value.stream()
                                         .map(SysFilePO :: getDbId)
                                         .filter(StringUtils :: isNotEmpty)
-                                        .collect(Collectors.toList())
+                                        .toList()
                         ));
             }
             return true;
@@ -215,47 +214,45 @@ public class DefaultFileServiceImpl extends BaseServiceImpl<SysFileMapper, SysFi
 
     /**
      * 下载文件
+     *
      * @param fileId 文件ID
      * @return 文件信息
      */
-    @Override
-    @Nullable
     public SysFileBO download(@NonNull Long fileId) {
-        final SysFilePO file = this.getById(fileId);
+        final SysFilePO file = this.sysFileService.getById(fileId);
         if (ObjectUtils.isNotEmpty(file)) {
             return this.download(file);
         }
         return null;
     }
 
+    /**
+     * 下载文件
+     *
+     * @param file 文件实体类信息
+     * @return 文件信息
+     */
+    public SysFileBO download(@NonNull SysFilePO file) {
+        Assert.notNull(file.getDbId(), "实际文件ID为空，删除失败");
+        try {
+            return new SysFileBO(file, this.getActualFileService(file.getHandlerType()).download(file.getDbId()));
+        } catch (FileNotFoundException e) {
+            throw new SmartFileException("文件未找到", e);
+        }
+    }
 
     /**
      * 获取文件的绝对路径
+     *
      * @param fileId 文件ID
      * @return 文件绝对路径
      */
-    @Override
     public String getAbsolutePath(@NonNull Long fileId) {
-        final SysFilePO file = this.getById(fileId);
+        final SysFilePO file = this.sysFileService.getById(fileId);
         Assert.notNull(file.getDbId(), "获取文件信息发生错误，未找到文件实体ID");
         return this.getActualFileService(file.getHandlerType()).getAbsolutePath(file.getDbId());
     }
 
-    /**
-     * 下载文件
-     * @param file 文件实体类信息
-     * @return 文件信息
-     */
-    @Override
-    @NonNull
-    public SysFileBO download(@NonNull SysFilePO file) {
-        Assert.notNull(file.getDbId(), "实际文件ID未空，删除失败");
-        try {
-            return new SysFileBO(file, this.getActualFileService(file.getHandlerType()).download(file.getDbId()));
-        } catch (FileNotFoundException e) {
-            throw new BaseException("文件未找到", e);
-        }
-    }
 
     /**
      * 创建 SysFileBO
@@ -275,7 +272,7 @@ public class DefaultFileServiceImpl extends BaseServiceImpl<SysFileMapper, SysFi
      * @param file 文件信息
      * @return 文件ID
      */
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     private String saveActualFile(SysFileBO file) {
         try (InputStream inputStream = file.getInputStream()) {
             return this.getActualFileService(file.getFile().getHandlerType()).save(inputStream, file.getFile().getFileName(), file.getFile().getMd5());
@@ -285,13 +282,18 @@ public class DefaultFileServiceImpl extends BaseServiceImpl<SysFileMapper, SysFi
 
     @Override
     public void afterPropertiesSet() {
-        this.actualFileServiceMap = DefaultFileServiceImpl.initActualFileService(applicationContext);
+        this.actualFileServiceMap = FileHandler.initActualFileService(applicationContext);
     }
 
     @Override
     public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }
-=======
->>>>>>> 22d0df4 (文件管理模块重构，优化使用体验)
+
+    private static Map<String, ActualFileService> initActualFileService(ApplicationContext applicationContext) {
+        // 获取所有执行器
+        return applicationContext.getBeansOfType(ActualFileService.class)
+                .values().stream()
+                .collect(Collectors.toMap(item -> item.getRegisterName().getDbName(), item -> item));
+    }
 }

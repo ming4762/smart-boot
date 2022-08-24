@@ -1,11 +1,11 @@
 package com.smart.file.extensions.disk.service;
 
 import com.smart.commons.core.utils.DigestUtils;
-import com.smart.commons.file.SmartFileProperties;
-import com.smart.commons.file.common.ActualFileServiceRegisterName;
-import com.smart.commons.file.constants.ActualFileServiceEnum;
-import com.smart.commons.file.pojo.bo.DiskFilePathBO;
-import com.smart.commons.file.service.ActualFileService;
+import com.smart.file.core.SmartFileProperties;
+import com.smart.file.core.common.ActualFileServiceRegisterName;
+import com.smart.file.core.constants.ActualFileServiceEnum;
+import com.smart.file.core.pojo.bo.DiskFilePathBO;
+import com.smart.file.core.service.ActualFileService;
 import lombok.SneakyThrows;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.lang.NonNull;

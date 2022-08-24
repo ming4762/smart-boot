@@ -7,26 +7,32 @@
 		<artifactId>smart-file</artifactId>
 		<version>2.0.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>smart-file-extensions-mongo</artifactId>
+
+	<artifactId>smart-file-core</artifactId>
 	<version>2.0.0-SNAPSHOT</version>
-	<name>smart-file-extensions-mongo</name>
-	<description>文件存储到mongo DB扩展插件</description>
+	<name>smart-file-core</name>
+	<description>file核心包</description>
 
 	<properties>
 	</properties>
 
 	<dependencies>
+
 		<dependency>
-			<groupId>com.smart</groupId>
-			<artifactId>smart-file-core</artifactId>
-			<version>${project.parent.version}</version>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
 		</dependency>
 
-		<!--引入mongodb支持-->
+		<dependency>
+			<groupId>com.smart</groupId>
+			<artifactId>smart-commons-core</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-mongodb</artifactId>
+			<artifactId>spring-boot</artifactId>
 		</dependency>
+
 	</dependencies>
 
 
