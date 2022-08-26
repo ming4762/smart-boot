@@ -39,6 +39,11 @@ import { dictGroupI18n as dictGroupI18n_en , dictItemI18n as dictItemI18n_en } f
 import exception_zh_CN from '../views/exception/lang/zh_CN'
 import exception_en_US from '../views/exception/lang/en_US'
 
+// 文件管理国际化
+import file_zh_CN from '../views/file/lang/zh-CN'
+import file_en_US from '../views/file/lang/en-US'
+
+
 export default {
   zh_CN: merge({},
     systemZhCN,
@@ -52,7 +57,8 @@ export default {
     log_zh_CN,
     transferI18n(dictGroupI18n_zh),
     transferI18n(dictItemI18n_zh),
-    transferI18n(exception_zh_CN)
+    transferI18n(exception_zh_CN),
+    transferI18n(file_zh_CN)
   ),
   en_US: merge({},
     systemEnUS,
@@ -66,6 +72,7 @@ export default {
     log_en_US,
     transferI18n(dictGroupI18n_en),
     transferI18n(dictItemI18n_en),
-    transferI18n(exception_en_US)
+    transferI18n(exception_en_US),
+    transferI18n(file_en_US)
   )
 }
