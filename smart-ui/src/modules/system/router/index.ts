@@ -74,6 +74,11 @@ const topRouters: Array<RouteRecordRaw> = [
         name: 'system_exception',
         path: 'sys/exception',
         component: () => import('@/modules/system/views/exception/SysExceptionListView.vue')
+      },
+      {
+        name: 'system_file',
+        path: 'sys/file',
+        component: () => import('@/modules/system/views/file/SysFileListView.vue')
       }
     ]
   }
