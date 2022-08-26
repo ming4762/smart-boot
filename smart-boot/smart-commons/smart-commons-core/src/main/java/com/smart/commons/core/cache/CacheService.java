@@ -89,6 +89,18 @@ public interface CacheService {
     void batchExpire(@NonNull Collection<Object> keys, long timeout);
 
     /**
+     * 批量设置key过期时间
+     * @param keys key列表
+     * @param timeout 过期时间
+     */
+    default void batchExpire(@NonNull Collection<Object> keys, Duration timeout) {
+        if (keys.isEmpty()) {
+            return;
+        }
+        keys.forEach(item -> this.expire(item, timeout));
+    }
+
+    /**
      * 批量写入缓存,并设置过期时间
      * @param keyValues 缓存键值对
      * @param expireTime 缓存过期时间
