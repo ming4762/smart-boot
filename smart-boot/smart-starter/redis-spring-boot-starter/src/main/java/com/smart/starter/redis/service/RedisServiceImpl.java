@@ -217,4 +217,83 @@ public class RedisServiceImpl implements RedisService {
         return new RedisKeySpace(db, Long.parseLong(analysisData.get(0)[1]), Long.parseLong(analysisData.get(1)[1]), Long.parseLong(analysisData.get(2)[1]));
     }
 
+    @Override
+    public RedisTemplate<Object, Object> getRedisTemplate() {
+        return this.redisTemplate;
+    }
+
+    @Override
+    public Long listSize(Object key) {
+        return this.redisTemplate.opsForList().size(key);
+    }
+
+    @Override
+    public Long listLeftPush(Object key, List<Object> dataList) {
+        return this.redisTemplate.opsForList().leftPushAll(key, dataList);
+    }
+
+    @Override
+    public Long listRightPush(Object key, List<Object> dataList) {
+        return this.redisTemplate.opsForList().rightPushAll(key, dataList);
+    }
+
+    @Override
+    public void listSet(Object key, long index, Object value) {
+        this.redisTemplate.opsForList().set(key, index, value);
+    }
+
+    @Override
+    public Long listRemove(Object key, long count, Object value) {
+        return this.redisTemplate.opsForList().remove(key, count, value);
+    }
+
+    @Override
+    public Object listIndex(Object key, long index) {
+        return this.redisTemplate.opsForList().index(key, index);
+    }
+
+    @Override
+    public List<Object> listRange(Object key, long start, long end) {
+        return this.redisTemplate.opsForList().range(key, start, end);
+    }
+
+    @Override
+    public Long hashDelete(Object key, List<Object> hashKeys) {
+        return this.redisTemplate.opsForHash().delete(key, hashKeys.toArray());
+    }
+
+    @Override
+    public Boolean hashHasKey(Object key, Object hashKey) {
+        return this.redisTemplate.opsForHash().hasKey(key, hashKey);
+    }
+
+    @Override
+    public Object hashGet(Object key, Object hashKey) {
+        return this.redisTemplate.opsForHash().get(key, hashKey);
+    }
+
+    @Override
+    public Set<Object> hashKeys(Object key) {
+        return this.redisTemplate.opsForHash().keys(key);
+    }
+
+    @Override
+    public Long hashSize(Object key) {
+        return this.redisTemplate.opsForHash().size(key);
+    }
+
+    @Override
+    public void hashPutAll(Object key, Map<?, ?> dataMap) {
+        this.redisTemplate.opsForHash().putAll(key, dataMap);
+    }
+
+    @Override
+    public void hashPut(Object key, Object hashKey, Object value) {
+        this.redisTemplate.opsForHash().put(key, hashKey, value);
+    }
+
+    @Override
+    public Map<Object, Object> hashEntries(Object key) {
+        return this.redisTemplate.opsForHash().entries(key);
+    }
 }
