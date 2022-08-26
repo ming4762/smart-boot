@@ -29,7 +29,7 @@ public class DefaultExceptionMessageHandler implements ExceptionMessageHandler, 
 
     @Override
     public Object message(Exception e, long exceptionNo, HttpServletRequest request) {
-        ExceptionMessageProcessor processor =  messageProcessorMap.get(e.getClass());
+        ExceptionMessageProcessor processor = this.getExceptionMessageProcessor(e.getClass());
         Object result;
         if (Objects.isNull(processor)) {
             processor = messageProcessorMap.get(Exception.class);
@@ -44,6 +44,18 @@ public class DefaultExceptionMessageHandler implements ExceptionMessageHandler, 
             result = ExceptionResult.build((Result<?>)result, exceptionNo);
         }
         return result;
+    }
+
+    @SuppressWarnings("rawtypes")
+    private ExceptionMessageProcessor getExceptionMessageProcessor(Class<?> exceptionClass) {
+        if (messageProcessorMap.containsKey(exceptionClass)) {
+            return messageProcessorMap.get(exceptionClass);
+        }
+        Class<?> superClass = exceptionClass.getSuperclass();
+        if (superClass != null && !superClass.equals(exceptionClass)) {
+            return this.getExceptionMessageProcessor(exceptionClass.getSuperclass());
+        }
+        return null;
     }
 
 

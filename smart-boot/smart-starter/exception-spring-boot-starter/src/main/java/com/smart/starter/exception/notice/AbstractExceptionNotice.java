@@ -31,7 +31,7 @@ public abstract class AbstractExceptionNotice implements ExceptionNotice {
         if (classList == null) {
             return true;
         }
-        return classList.stream().anyMatch(item -> item.equals(e.getClass()));
+        return classList.stream().anyMatch(item -> item.equals(e.getClass()) || item.isAssignableFrom(e.getClass()));
     }
 
     /**
@@ -40,7 +40,7 @@ public abstract class AbstractExceptionNotice implements ExceptionNotice {
      * @return 结果
      */
     protected boolean isExclude(@NonNull Exception e) {
-        return this.exclude().stream().anyMatch(item -> item.equals(e.getClass()));
+        return this.exclude().stream().anyMatch(item -> item.equals(e.getClass()) || item.isAssignableFrom(e.getClass()));
     }
 
 
