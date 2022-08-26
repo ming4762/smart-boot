@@ -19,3 +19,45 @@ logging:
   level:
     root: info
     com.smart: debug
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+smart:
+  file:
+    basePath: E:\Documents\workspace\temp\fileServer
+  auth:
+    ignores:
+      pattern:
+        - /actuator/**
+  monitor:
+    client:
+      registration:
+        url: http://localhost:9095
+      instance:
+        name: smart-system
+    server:
+      dataSync:
+        log:
+          enabled: false
+
+
+management:
+  endpoint:
+    #    开启shutdown端点
+    shutdown:
+      enabled: true
+    health:
+      show-details: always
+    logfile:
+      enabled: true
+    env:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  health:
+    mail:
+      enabled: false

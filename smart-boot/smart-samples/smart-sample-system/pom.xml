@@ -82,6 +82,25 @@
 			<artifactId>smart-monitor-starter-server</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
+
+<!--		<dependency>-->
+<!--			<groupId>com.smart</groupId>-->
+<!--			<artifactId>smart-monitor-starter-client</artifactId>-->
+<!--			<version>${project.parent.version}</version>-->
+<!--		</dependency>-->
+
+		<!--	添加端点	-->
+		<dependency>
+			<groupId>com.smart</groupId>
+			<artifactId>redis-actuator-spring-boot-starter</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.smart</groupId>
+			<artifactId>druid-actuator-spring-boot-starter</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+
 	</dependencies>
 
 
