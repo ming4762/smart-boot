@@ -286,7 +286,176 @@ create table db_code_template
     comment '代码生成模板表';
 
 
-INSERT INTO db_code_template (template_id, name, language, filename_suffix, remark, template, create_user_id, create_time, update_user_id, update_time, delete_yn, seq, template_type, group_id) VALUES (1427494473302050, 'smart-boot 实体类', 'text/x-java', 'PO', 'smart-boot框架实体类', 'package ${packages}.model;
+INSERT INTO db_code_template (template_id, name, language, template_type, filename_suffix, remark, template, create_user_id, create_time, update_user_id, update_time, delete_yn, seq, group_id) VALUES (1458489582944290, '数据库字典模板-excel', 'xml', 'TEMPLATE_DB_DICT', '', null, '<?xml version="1.0"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns:x="urn:schemas-microsoft-com:office:excel"
+ xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:html="http://www.w3.org/TR/REC-html40">
+ <DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">
+  <Author>GCCodeGenerator</Author>
+  <LastAuthor>GCCodeGenerator</LastAuthor>
+  <Created>2021-05-19T08:54:15Z</Created>
+  <LastSaved>2021-05-19T08:54:15Z</LastSaved>
+  <Version>16.00</Version>
+ </DocumentProperties>
+ <OfficeDocumentSettings xmlns="urn:schemas-microsoft-com:office:office">
+  <AllowPNG/>
+ </OfficeDocumentSettings>
+ <ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">
+  <WindowHeight>8928</WindowHeight>
+  <WindowWidth>23040</WindowWidth>
+  <WindowTopX>32767</WindowTopX>
+  <WindowTopY>32767</WindowTopY>
+  <ProtectStructure>False</ProtectStructure>
+  <ProtectWindows>False</ProtectWindows>
+ </ExcelWorkbook>
+ <Styles>
+  <Style ss:ID="Default" ss:Name="Normal">
+   <Alignment ss:Vertical="Center"/>
+   <Borders/>
+   <Font ss:FontName="等线" x:CharSet="134" ss:Size="11" ss:Color="#000000"/>
+   <Interior/>
+   <NumberFormat/>
+   <Protection/>
+  </Style>
+  <Style ss:ID="m2553513267088">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="2"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
+   </Borders>
+   <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="11" ss:Color="#008000"/>
+   <Interior ss:Color="#C6EFCE" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s69">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+   </Borders>
+   <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="11" ss:Color="#008000"/>
+   <Interior ss:Color="#C6EFCE" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s70">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+   </Borders>
+   <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="11" ss:Color="#008000"/>
+   <Interior ss:Color="#C6EFCE" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s71">
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
+   </Borders>
+  </Style>
+  <Style ss:ID="s72">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
+   </Borders>
+   <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="11" ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="s73">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
+   </Borders>
+   <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="11" ss:Color="#000000"/>
+  </Style>
+ </Styles>
+ <Worksheet ss:Name="数据库设计文档">
+  <Table ss:ExpandedColumnCount="7" ss:ExpandedRowCount="${tableList?size * 2 + columnSize + 20}" x:FullColumns="1"
+   x:FullRows="1" ss:DefaultRowHeight="13.8">
+   <Column ss:Index="2" ss:AutoFitWidth="0" ss:Width="142.80000000000001"/>
+   <Column ss:AutoFitWidth="0" ss:Width="141"/>
+   <Column ss:AutoFitWidth="0" ss:Width="61.8"/>
+   <Column ss:AutoFitWidth="0" ss:Width="119.4"/>
+   <Column ss:Index="7" ss:AutoFitWidth="0" ss:Width="90"/>
+   <#list tableList as table>
+  <Row ss:AutoFitHeight="0" ss:Height="25.049999999999997">
+    <Cell ss:MergeAcross="6" ss:StyleID="m2553513267088"><Data ss:Type="String">${table.tableName} ${table.remarks ! ''''}</Data></Cell>
+   </Row>
+  <Row ss:AutoFitHeight="0" ss:Height="14.55">
+    <Cell ss:StyleID="s69"><Data ss:Type="String">序号</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">字段</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">描述</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">主键</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">类型</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">是否为空</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">默认值</Data></Cell>
+   </Row>
+   <#if table.primaryKeyList??>
+    <#list table.primaryKeyList as primaryKey>
+   <Row ss:AutoFitHeight="0" ss:Height="16.95">
+    <Cell ss:StyleID="s71"><Data ss:Type="Number">${primaryKey_index + 1}</Data></Cell>
+    <Cell ss:StyleID="s72"><Data ss:Type="String">${primaryKey.columnName}</Data></Cell>
+    <Cell ss:StyleID="s73"><Data ss:Type="String">${primaryKey.remarks ! ''''}</Data></Cell>
+    <Cell ss:StyleID="s73"><Data ss:Type="String">Y</Data></Cell>
+    <Cell ss:StyleID="s73"><Data ss:Type="String">${primaryKey.typeName}(${(primaryKey.typeName == ''NUMBER'' && primaryKey.columnSize == 0 && primaryKey.decimalDigits == -127) ? string( ''*'' , primaryKey.columnSize)})</Data></Cell>
+    <Cell ss:StyleID="s73"><Data ss:Type="String">N</Data></Cell>
+    <Cell ss:StyleID="s73"><Data ss:Type="String">${primaryKey.columnDef ! ''''}</Data></Cell>
+   </Row>
+    </#list>
+   </#if>
+
+   <#if table.baseColumnList??>
+    <#list table.baseColumnList as column>
+      <Row ss:AutoFitHeight="0" ss:Height="16.95">
+    <Cell ss:StyleID="s71"><Data ss:Type="Number"><#if table.primaryKeyList??>${table.primaryKeyList?size + column_index + 1}<#else >${column_index + 1}</#if></Data></Cell>
+    <Cell ss:StyleID="s72"><Data ss:Type="String">${column.columnName}</Data></Cell>
+    <Cell ss:StyleID="s73"><Data ss:Type="String">${column.remarks ! ''''}</Data></Cell>
+    <Cell ss:StyleID="s73"><Data ss:Type="String"></Data></Cell>
+    <Cell ss:StyleID="s73"><Data ss:Type="String">${column.typeName}(${(column.typeName == ''NUMBER'' && column.columnSize == 0 && column.decimalDigits == -127) ? string( ''*'' , column.columnSize)})</Data></Cell>
+    <Cell ss:StyleID="s73"><Data ss:Type="String">${(column.nullable == 0) ? string(''N'', '''')}</Data></Cell>
+    <Cell ss:StyleID="s73"><Data ss:Type="String">${column.columnDef ! ''''}</Data></Cell>
+   </Row>
+    </#list>
+   </#if>
+   </#list>
+
+  </Table>
+  <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">
+   <PageSetup>
+    <Header x:Margin="0.3"/>
+    <Footer x:Margin="0.3"/>
+    <PageMargins x:Bottom="0.75" x:Left="0.7" x:Right="0.7" x:Top="0.75"/>
+   </PageSetup>
+   <Unsynced/>
+   <Print>
+    <ValidPrinterInfo/>
+    <PaperSizeIndex>9</PaperSizeIndex>
+    <HorizontalResolution>600</HorizontalResolution>
+    <VerticalResolution>600</VerticalResolution>
+   </Print>
+   <Selected/>
+   <Panes>
+    <Pane>
+     <Number>3</Number>
+     <ActiveRow>2</ActiveRow>
+    </Pane>
+   </Panes>
+   <ProtectObjects>False</ProtectObjects>
+   <ProtectScenarios>False</ProtectScenarios>
+  </WorksheetOptions>
+ </Worksheet>
+</Workbook>
+', 1, sysdate(), null, null, 0, null, 1);
+INSERT INTO db_code_template (template_id, name, language, template_type, filename_suffix, remark, template, create_user_id, create_time, update_user_id, update_time, delete_yn, seq, group_id) VALUES (1459582580817954, 'smart-boot 实体类模板', 'text/x-java', 'TEMPLATE_CODE', 'PO', null, 'package ${packages}.model;
 
 <#if mainTable.hasId>
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -303,7 +472,7 @@ import lombok.Setter;
 
 /**
 * ${mainTable.tableName} - ${(description)!''''}
-* @author SmartCodeGenerator
+* @author GCCodeGenerator
 * ${.now}
 */
 @Getter
@@ -322,60 +491,60 @@ public class ${className}PO extends BaseModel {
 
 </#list>
 }
-', 1, sysdate(), null, null, 0, null, 'template_code', 1);
-INSERT INTO db_code_template (template_id, name, language, filename_suffix, remark, template, create_user_id, create_time, update_user_id, update_time, delete_yn, seq, template_type, group_id) VALUES (1427494687211554, 'smart-boot Mapper', 'text/x-java', 'Mapper', 'smart-boot框架 Mapper层', 'package ${packages}.mapper;
+', 1, sysdate(), null, null, 0, null, 2);
+INSERT INTO db_code_template (template_id, name, language, template_type, filename_suffix, remark, template, create_user_id, create_time, update_user_id, update_time, delete_yn, seq, group_id) VALUES (1459582767464482, 'smart-boot mapper 模板', 'text/x-java', 'TEMPLATE_CODE', 'Mapper', null, 'package ${packages}.mapper;
 
 import com.smart.crud.mapper.CrudBaseMapper;
 import ${packages}.model.${className}PO;
 
 /**
 * ${mainTable.tableName} - ${(description)!''''} mapper层
-* @author SmartCodeGenerator
+* @author GCCodeGenerator
 * ${.now}
 */
 public interface ${className}Mapper extends CrudBaseMapper<${className}PO> {
 }
-', 1, sysdate(), null, null, 0, null, 'template_code', 1);
-INSERT INTO db_code_template (template_id, name, language, filename_suffix, remark, template, create_user_id, create_time, update_user_id, update_time, delete_yn, seq, template_type, group_id) VALUES (1427494997590050, 'smart-boot Mapper XML', 'xml', 'Mapper', '', '<?xml version="1.0" encoding="UTF-8" ?>
+', 1, sysdate(), null, null, 0, null, 2);
+INSERT INTO db_code_template (template_id, name, language, template_type, filename_suffix, remark, template, create_user_id, create_time, update_user_id, update_time, delete_yn, seq, group_id) VALUES (1459699847266338, 'smart-boot mapper XML', 'xml', 'TEMPLATE_CODE', 'Mapper', 'smart-boot mybatis mapper模板', '<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="${packages}.mapper.${className}Mapper">
     <sql id="columnList">
-    <#list mainTable.codePageConfigList as item>
+        <#list mainTable.codePageConfigList as item>
         <!--   ${(item.title)!''''} <#if item.primaryKey>主键</#if>  <#if item.indexed>索引</#if>   -->
         ${item.columnName},
-    </#list>
+        </#list>
     </sql>
 
     <resultMap id="commonResultMap" type="${packages}.model.${className}PO">
-    <#list mainTable.codePageConfigList as item>
-    <#if item.primaryKey>
+        <#list mainTable.codePageConfigList as item>
+        <#if item.primaryKey>
         <!--   ${(item.title)!''''} <#if item.primaryKey>主键</#if>  <#if item.indexed>索引</#if>   -->
-        <id column="${item.columnName}" property="${item.javaProperty}" javaType="${item.javaType}" jdbcType="${item.typeName}"/>
-    <#else >
+        <id column="${item.columnName}" property="${item.javaProperty}" javaType="${item.javaType}" jdbcType="<#if item.typeName="INT">INTEGER<#elseif item.typeName="DATETIME">DATE<#else >${item.typeName}</#if>"/>
+        <#else >
         <!--   ${(item.title)!''''} <#if item.primaryKey>主键</#if>  <#if item.indexed>索引</#if>   -->
-        <result column="${item.columnName}" property="${item.javaProperty}" javaType="${item.javaType}" jdbcType="${item.typeName}"/>
-    </#if>
-    </#list>
+        <result column="${item.columnName}" property="${item.javaProperty}" javaType="${item.javaType}" jdbcType="<#if item.typeName="INT">INTEGER<#elseif item.typeName="DATETIME">DATE<#else >${item.typeName}</#if>"/>
+        </#if>
+        </#list>
     </resultMap>
 </mapper>
-', 1, sysdate(), null, null, 0, null, 'template_code', 1);
-INSERT INTO db_code_template (template_id, name, language, filename_suffix, remark, template, create_user_id, create_time, update_user_id, update_time, delete_yn, seq, template_type, group_id) VALUES (1427495144390690, 'smart-boot Service', 'text/x-java', 'Service', 'smart-boot框架 Service层', 'package ${packages}.service;
+', 1, sysdate(), null, null, 0, null, 2);
+INSERT INTO db_code_template (template_id, name, language, template_type, filename_suffix, remark, template, create_user_id, create_time, update_user_id, update_time, delete_yn, seq, group_id) VALUES (1459709976510498, 'smart-boot service接口', 'text/x-java', 'TEMPLATE_CODE', 'Service', null, 'package ${packages}.service;
 
 import com.smart.crud.service.BaseService;
 import ${packages}.model.${className}PO;
 
 /**
 * ${mainTable.tableName} - ${(description)!''''} Service
-* @author SmartCodeGenerator
+* @author GCCodeGenerator
 * ${.now}
 */
 public interface ${className}Service extends BaseService<${className}PO> {
 
 }
-', 1, sysdate(), null, null, 0, null, 'template_code', 1);
-INSERT INTO db_code_template (template_id, name, language, filename_suffix, remark, template, create_user_id, create_time, update_user_id, update_time, delete_yn, seq, template_type, group_id) VALUES (1427495406534690, 'smart-boot Service 实现类', 'text/x-java', 'ServiceImpl', 'gc-support框架 Service实现类', 'package ${packages}.service.impl;
+', 1, sysdate(), null, null, 0, null, 2);
+INSERT INTO db_code_template (template_id, name, language, template_type, filename_suffix, remark, template, create_user_id, create_time, update_user_id, update_time, delete_yn, seq, group_id) VALUES (1459710150574114, 'smart-boot service接口 实现类', 'text/x-java', 'TEMPLATE_CODE', 'ServiceImpl', null, 'package ${packages}.service.impl;
 
-import com.smart.crud.service.impl.BaseServiceImpl;
+import com.smart.crud.service.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 
 import ${packages}.model.${className}PO;
@@ -384,17 +553,17 @@ import ${packages}.mapper.${className}Mapper;
 
 /**
 * ${mainTable.tableName} - ${(description)!''''} Service实现类
-* @author SmartCodeGenerator
+* @author GCCodeGenerator
 * ${.now}
 */
 @Service
 public class ${className}ServiceImpl extends BaseServiceImpl<${className}Mapper, ${className}PO> implements ${className}Service {
 
 }
-', 1, sysdate(), null, null, 0, null, 'template_code', 1);
-INSERT INTO db_code_template (template_id, name, language, filename_suffix, remark, template, create_user_id, create_time, update_user_id, update_time, delete_yn, seq, template_type, group_id) VALUES (1427495656095778, 'smart-boot Controller', 'text/x-java', 'Controller', 'smart-boot框架 Controller层', 'package ${packages}.controller;
+', 1, sysdate(), null, null, 0, null, 2);
+INSERT INTO db_code_template (template_id, name, language, template_type, filename_suffix, remark, template, create_user_id, create_time, update_user_id, update_time, delete_yn, seq, group_id) VALUES (1459710484021282, 'smart-boot controller', 'text/x-java', 'TEMPLATE_CODE', 'Controller', null, 'package ${packages}.controller;
 
-import com.smart.base.message.Result;
+import com.smart.commons.core.message.Result;
 import ${packages}.model.${className}PO;
 import ${packages}.service.${className}Service;
 import com.smart.crud.controller.BaseController;
@@ -405,27 +574,27 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.apache.commons.collections.CollectionUtils;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import com.smart.commons.core.log.annotation.Log;
-import com.smart.commons.core.log.constants.LogOperationTypeEnum;
+import org.springframework.beans.BeanUtils;
+import io.swagger.annotations.ApiOperation;
+import com.smart.commons.core.log.Log;
+import com.smart.commons.core.log.LogOperationTypeEnum;
 
+import javax.validation.Valid;
 import java.io.Serializable;
 import java.util.List;
 
 /**
 * ${mainTable.tableName} - ${(description)!''''} Controller
-* @author SmartCodeGenerator
+* @author GCCodeGenerator
 * ${.now}
 */
 @RestController
-@Tage(name = "${mainTable.tableName} - ${(description)!''''} Controller")
 @RequestMapping("${controllerBasePath}")
 public class ${className}Controller extends BaseController<${className}Service, ${className}PO> {
 
     @Override
     @PostMapping("save")
-    @Operation(summary = "添加${(description)!''''}")
+    @ApiOperation(value = "添加${(description)!''''}")
     @Log(value = "添加${(description)!''''}", type = LogOperationTypeEnum.ADD)
     public Result<Boolean> save(@RequestBody ${className}PO model) {
         return Result.success(this.service.save(model));
@@ -433,7 +602,7 @@ public class ${className}Controller extends BaseController<${className}Service, 
 
     @Override
     @PostMapping("update")
-    @Operation(summary = "更新${(description)!''''}")
+    @ApiOperation(value = "更新${(description)!''''}")
     @Log(value = "更新${(description)!''''}", type = LogOperationTypeEnum.UPDATE)
     public Result<Boolean> update(@RequestBody ${className}PO model) {
         return super.update(model);
@@ -441,21 +610,22 @@ public class ${className}Controller extends BaseController<${className}Service, 
 
     @Override
     @PostMapping("list")
-    @Operation(summary = "查询角色列表（支持分页、实体类属性查询）")
+    @ApiOperation(value = "查询角色列表（支持分页、实体类属性查询）")
     public Result<Object> list(@RequestBody @NonNull PageSortQuery parameter) {
         return super.list(parameter);
     }
 
-    @Override
-    @Operation(summary = "添加修改${(description)!''''}")
+    @ApiOperation(value = "添加修改${(description)!''''}")
     @PostMapping("saveUpdate")
     @Log(value = "添加修改${(description)!''''}", type = LogOperationTypeEnum.UPDATE)
-    public Result<Boolean> saveUpdate(@RequestBody ${className}PO model) {
+    public Result<Boolean> saveUpdate(@RequestBody @Valid ${className}SaveUpdateDTO parameter) {
+      	${className}PO model = new ${className}PO();
+      	BeanUtils.copyProperties(parameter, model);
         return super.saveUpdate(model);
     }
 
     @Override
-    @Operation(summary = "通过ID批量删除${(description)!''''}")
+    @ApiOperation(value = "通过ID批量删除${(description)!''''}")
     @PostMapping("batchDeleteById")
     @Log(value = "通过ID批量删除${(description)!''''}", type = LogOperationTypeEnum.DELETE)
     public Result<Boolean> batchDeleteById(@RequestBody List<Serializable> idList) {
@@ -466,20 +636,21 @@ public class ${className}Controller extends BaseController<${className}Service, 
     }
 
     @Override
-    @Operation(summary = "通过ID查询")
+    @ApiOperation(value = "通过ID查询")
     @PostMapping("getById")
     public Result<${className}PO> getById(@RequestBody Serializable id) {
         return super.getById(id);
     }
 }
-', 1, sysdate(), null, null, 0, null, 'template_code', 1);
-INSERT INTO db_code_template (template_id, name, language, filename_suffix, remark, template, create_user_id, create_time, update_user_id, update_time, delete_yn, seq, template_type, group_id) VALUES (1427640453955618, 'smart-boot前台table VUE3', 'javascript', 'ListView', null, '<template>
+', 1, sysdate(), null, null, 0, null, 2);
+INSERT INTO db_code_template (template_id, name, language, template_type, filename_suffix, remark, template, create_user_id, create_time, update_user_id, update_time, delete_yn, seq, group_id) VALUES (1460969641345058, 'smart-boot UI ListView vue', 'text/x-vue', 'TEMPLATE_CODE', 'ListView', 'smart-boot UI列表模板', '<template>
   <div class="full-height" style="padding: 10px">
     <vxe-grid
       ref="gridRef"
       v-bind="tableProps"
       :size="tableSizeConfig"
       border
+      :column-config="columnConfig"
       :toolbar-config="toolbarConfig"
       :columns="columns"
       height="auto"
@@ -528,19 +699,33 @@ INSERT INTO db_code_template (template_id, name, language, filename_suffix, rema
         <a-form layout="inline" style="margin-left: 10px">
           <#if (mainTable.searchColNum = 1)>
           <#list mainTable.codeSearchConfigList as item>
-          <a-form-item label="${item.title}">
+          <#if item.javaProperty=''useYn''>
+          <a-form-item :label="$t(''common.table.useYn'')">
+          <#elseif item.javaProperty=''createTime''>
+          <a-form-item :label="$t(''common.table.createTime'')">
+          <#elseif item.javaProperty=''updateTime''>
+          <a-form-item :label="$t(''common.table.updateTime'')">
+          <#elseif item.javaProperty=''createUserId''>
+          <a-form-item :label="$t(''common.table.createUser'')">
+          <#elseif item.javaProperty=''remark''>
+          <a-form-item :label="$t(''common.table.remark'')">
+          <#else >
+          <a-form-item :label="$t(''${mainTable.i18nPrefix}.title.${item.javaProperty}'')">
+          </#if>
             <#if (item.controlType=''INPUT'')>
-            <a-input v-model:value="searchModel.${item.javaProperty}" :size="formSizeConfig" placeholder="请输入${item.title}" />
+            <a-input v-model:value="searchModel.${item.javaProperty}" :size="formSizeConfig" :placeholder="$t(''${mainTable.i18nPrefix}.validate.${item.javaProperty}'')" />
             <#elseif (item.controlType=''NUMBER'')>
-            <a-input-number v-model:value="searchModel.${item.javaProperty}" style="width: 100%" :size="formSizeConfig" placeholder="请输入${item.title}" />
+            <a-input-number v-model:value="searchModel.${item.javaProperty}" style="width: 100%" :size="formSizeConfig" :placeholder="$t(''${mainTable.i18nPrefix}.validate.${item.javaProperty}'')" />
             <#elseif (item.controlType=''TEXTAREA'')>
-            <a-textarea v-model:value="searchModel.${item.javaProperty}" :size="formSizeConfig" placeholder="请输入${item.title}" />
+            <a-textarea v-model:value="searchModel.${item.javaProperty}" :size="formSizeConfig" :placeholder="$t(''${mainTable.i18nPrefix}.validate.${item.javaProperty}'')" />
             <#elseif (item.controlType=''PASSWORD'')>
-            <a-input-password v-model:value="searchModel.${item.javaProperty}" :size="formSizeConfig" placeholder="请输入${item.title}" />
+            <a-input-password v-model:value="searchModel.${item.javaProperty}" :size="formSizeConfig" :placeholder="$t(''${mainTable.i18nPrefix}.validate.${item.javaProperty}'')" />
             <#elseif (item.controlType=''RADIO'')>
             <a-radio-group v-model:value="searchModel.${item.javaProperty}" name="radioGroup-${item.javaProperty}">
               // TODO: 待开发
             </a-radio-group>
+            <#elseif (item.controlType=''SWITCH_TYPE'')>
+            <a-switch v-model:checked="searchModel.${item.javaProperty}" />
             </#if>
           </a-form-item>
           </#list>
@@ -549,13 +734,13 @@ INSERT INTO db_code_template (template_id, name, language, filename_suffix, rema
             <#list mainTable.leftButtonList as item>
             <a-button
               :size="buttonSizeConfig"
+              style="margin-left: 5px"
               <#if item="SEARCH">
               type="primary"
               @click="loadData"
               <#elseif item="RESET">
               @click="handleReset"
-              </#if>
-              style="margin-left: 5px">
+              </#if>>
               <#if item="SEARCH">
               {{ $t(''common.button.search'') }}
               <#elseif item="RESET">
@@ -567,7 +752,7 @@ INSERT INTO db_code_template (template_id, name, language, filename_suffix, rema
         </a-form>
       </template>
       </#if>
-      <#if (mainTable.rowButtonList?size>0)>
+      <#if (mainTable.rowButtonType!=''NONE'')>
       <template #table-operation="{ row }">
         <#if (mainTable.rowButtonType="MORE")>
         <a-dropdown>
@@ -604,26 +789,53 @@ INSERT INTO db_code_template (template_id, name, language, filename_suffix, rema
         <a-form
           ref="formRef"
           :rules="rules"
-          :label-col="{span: 5}"
-          :wrapper-col="{span: 18}"
+          :label-col="{span: 6}"
+          :wrapper-col="{span: 17}"
           v-bind="formProps">
           <a-row>
             <#list mainTable.codeFormConfigList as item>
             <#if item.hidden>
-            <a-input v-model:value="formProps.model.${item.javaProperty}"/>
+            <a-input v-model:value="formProps.model.${item.javaProperty}" style="display: none" />
              <#else>
             <a-col :span="${24/mainTable.formColNum}">
-              <a-form-item label="${item.title}" name="${item.javaProperty}">
+              <a-form-item
+                <#if item.javaProperty="seq">
+                :label="$t(''common.table.seq'')"
+                <#elseif item.javaProperty="useYn">
+                :label="$t(''common.table.useYn'')"
+                <#elseif item.javaProperty="remark">
+                :label="$t(''common.table.remark'')"
+                <#else >
+                :label="$t(''${mainTable.i18nPrefix}.title.${item.javaProperty}'')"
+                </#if>
+                name="${item.javaProperty}">
                 <#if (item.controlType=''INPUT'')>
-                <a-input v-model:value="formProps.model.${item.javaProperty}" :size="formSizeConfig" placeholder="请输入${item.title}" />
+                <a-input
+                  v-model:value="formProps.model.${item.javaProperty}"
+                  <#if item.javaProperty="remark">
+                  :placeholder="$t(''common.formValidate.remark'')" />
+                  <#elseif item.javaProperty="seq">
+                  :placeholder="$t(''common.formValidate.seq'')" />
+                  <#else >
+                  :placeholder="$t(''${mainTable.i18nPrefix}.validate.${item.javaProperty}'')" />
+                  </#if>
                 <#elseif (item.controlType=''NUMBER'')>
-                <a-input-number v-model:value="formProps.model.${item.javaProperty}" style="width: 100%" :size="formSizeConfig" placeholder="请输入${item.title}" />
+                <a-input-number
+                  v-model:value="formProps.model.${item.javaProperty}"
+                  style="width: 100%"
+                  <#if item.javaProperty="seq">
+                  :placeholder="$t(''common.formValidate.seq'')" />
+                  <#else >
+                  :placeholder="$t(''${mainTable.i18nPrefix}.validate.${item.javaProperty}'')" />
+                  </#if>
                 <#elseif (item.controlType=''TEXTAREA'')>
-                <a-textarea v-model:value="formProps.model.${item.javaProperty}" :size="formSizeConfig" placeholder="请输入${item.title}" />
+                <a-textarea v-model:value="formProps.model.${item.javaProperty}" :placeholder="$t(''${mainTable.i18nPrefix}.validate.${item.javaProperty}'')" />
                 <#elseif (item.controlType=''PASSWORD'')>
-                <a-input-password v-model:value="formProps.model.${item.javaProperty}" :size="formSizeConfig" placeholder="请输入${item.title}" />
+                <a-input-password v-model:value="formProps.model.${item.javaProperty}" :placeholder="$t(''${mainTable.i18nPrefix}.validate.${item.javaProperty}'')" />
                 <#elseif (item.controlType=''RADIO'')>
                 <a-radio-group v-model:value="formProps.model.${item.javaProperty}" name="radioGroup-${item.javaProperty}"></a-radio-group>
+                <#elseif (item.controlType=''SWITCH_TYPE'')>
+                <a-switch v-model:checked="formProps.model.${item.javaProperty}" />
                 </#if>
               </a-form-item>
             </a-col>
@@ -669,14 +881,14 @@ export default defineComponent({
      * 添加保存hook
      */
     const addEditHook = useAddEdit(gridRef, handleGetById, loadData, handleSaveUpdate, t, {
-      idField: ''${mainTable.idField.javaProperty}''
+      idField: ''${mainTable.idField.javaProperty!}''
     })
     </#if>
 
     /**
      * 删除hook
      */
-    const deleteHook = useVxeDelete(gridRef, t, handleDelete, { idField: ''${mainTable.idField.javaProperty}'', listHandler: loadData })
+    const deleteHook = useVxeDelete(gridRef, t, handleDelete, { idField: ''${mainTable.idField.javaProperty!}'', listHandler: loadData })
 
     <#if (mainTable.rowButtonType="MORE")>
     /**
@@ -684,12 +896,12 @@ export default defineComponent({
      * @param row 行数据
      * @param action 操作
      */
-    const handleActions = (row: any, action: String) => {
+    const handleActions = (row: any, action: string) => {
       switch (action) {
         <#list mainTable.rowButtonList as item>
         case ''${item}'': {
           <#if (item = "EDIT")>
-          addEditHook.handleAddEdit(false, row.${mainTable.idField.javaProperty})
+          addEditHook.handleAddEdit(false, row.${mainTable.idField.javaProperty!})
           <#elseif (item = "DELETE")>
           deleteHook.handleDeleteByRow(row)
           </#if>
@@ -714,17 +926,24 @@ export default defineComponent({
       <#if mainTable.page>
       pageProps,
       </#if>
-      loadData,
       handleReset,
-      handleActions
+      <#if (mainTable.rowButtonType="MORE")>
+      handleActions,
+      </#if>
+      loadData
     }
   },
   data () {
     return {
+      columnConfig: {
+        <#if mainTable.columnSort>
+        resizable: true
+        </#if>
+      },
       toolbarConfig: {
         slots: {
           <#if (mainTable.rightButtonList?size>0)>
-          tools: ''toolbar_tools'',
+          tools: ''toolbar_tools''<#if (mainTable.leftButtonList?size>0)>,</#if>
           </#if>
           <#if (mainTable.leftButtonList?size>0)>
           buttons: ''toolbar_buttons''
@@ -741,16 +960,24 @@ export default defineComponent({
             required: true,
             trigger: [
               <#list rule.ruleTrigger as trigger>
-              ''${trigger}''
+              ''${trigger?lower_case}''<#sep>,
               </#list>
+
             ],
             <#if rule.ruleType=''NUMBER''>
             type: ''number'',
             </#if>
-            message: ''${rule.message}''
-          },
+            <#if item.javaProperty="seq">
+            message: this.$t(''common.formValidate.seq'')
+            <#elseif item.javaProperty="remark">
+            message: this.$t(''common.formValidate.remark'')
+            <#else >
+            message: this.$t(''${mainTable.i18nPrefix}.rules.${item.javaProperty}_${rule.ruleType}'')
+            </#if>
+          }<#sep>,
           </#list>
-        ]
+
+        ]<#sep>,
         </#if>
         </#list>
       },
@@ -766,7 +993,6 @@ export default defineComponent({
        </#if>
        <#list mainTable.codePageConfigList as item>
         {
-          title: ''${item.title}'',
           field: ''${item.javaProperty}'',
           <#if item.fixed??>
           fixed: ''${item.fixed}'',
@@ -777,10 +1003,55 @@ export default defineComponent({
           <#if item.sortable>
           sortable: true,
           </#if>
+          <#if item.javaProperty=''createTime''>
+          title: ''{common.table.createTime}'',
+          formatter: ({ cellValue }: any) => {
+            if (cellValue) {
+              return dayjs(cellValue).format(''YYYY-MM-DD HH:mm:ss'')
+            }
+            return ''''
+          },
+          <#elseif item.javaProperty=''updateTime''>
+          title: ''{common.table.updateTime}'',
+          formatter: ({ cellValue }: any) => {
+            if (cellValue) {
+              return dayjs(cellValue).format(''YYYY-MM-DD HH:mm:ss'')
+            }
+            return ''''
+          },
+          <#elseif item.javaProperty=''createUserId''>
+          title: ''{common.table.createUser}'',
+          formatter: ({ row }: any) => {
+            if (row.createUser) {
+              return row.createUser.fullName
+            }
+            return ''''
+          },
+          <#elseif item.javaProperty=''remark''>
+          title: ''{common.table.remark}'',
+          <#elseif item.javaProperty=''useYn''>
+          title: ''{common.table.useYn}'',
+          <#elseif item.javaProperty=''deleteYn''>
+          title: ''{common.table.deleteYn}'',
+          <#elseif item.javaProperty=''updateUserId''>
+          title: ''{common.table.updateUser}'',
+          formatter: ({ row }: any) => {
+            if (row.updateUser) {
+              return row.updateUser.fullName
+            }
+            return ''''
+          },
+          <#elseif item.javaProperty=''seq''>
+          title: ''{common.table.seq}'',
+          <#elseif item.javaProperty=''useYn''>
+          title: ''{common.table.useYn}'',
+          <#else >
+          title: ''{${mainTable.i18nPrefix}.title.${item.javaProperty}}'',
+          </#if>
           width: ${item.width}
         },
        </#list>
-        <#if (mainTable.rowButtonList?size>0)>
+        <#if (mainTable.rowButtonType!=''NONE'')>
         {
           title: ''{common.table.operation}'',
           field: ''operation'',
@@ -796,9 +1067,16 @@ export default defineComponent({
   }
 })
 </script>
-', 1, sysdate(), null, null, 0, null, 'template_code', 1);
-INSERT INTO db_code_template (template_id, name, language, filename_suffix, remark, template, create_user_id, create_time, update_user_id, update_time, delete_yn, seq, template_type, group_id) VALUES (1427640525258786, 'support 前台support VUE3', 'javascript', 'ListSupport', null, 'import ApiService from ''@/common/utils/ApiService''
+', 1, sysdate(), null, null, 0, null, 2);
+INSERT INTO db_code_template (template_id, name, language, template_type, filename_suffix, remark, template, create_user_id, create_time, update_user_id, update_time, delete_yn, seq, group_id) VALUES (1460969767174178, 'smart-boot UI ListView hook', 'typescript', 'TEMPLATE_CODE', 'Hook', 'smart-boot UI列表模板 hook', 'import ApiService from ''@/common/utils/ApiService''
 import { errorMessage } from ''@/components/notice/SystemNotice''
+
+const searchSymbol: {[index: string]: string} = {
+	<#list mainTable.codeSearchConfigList as item>
+	${item.javaProperty}: ''${item.searchSymbol}''<#sep>,
+	</#list>
+
+}
 
 /**
  * 加载数据
@@ -806,11 +1084,19 @@ import { errorMessage } from ''@/components/notice/SystemNotice''
  * @param searchParameter 查询参数
  */
 export const handleLoadData = async (params: any, searchParameter: any) => {
-  try {
-  	return await ApiService.postAjax(''${controllerBasePath}list'', {
-	  ...params,
-	  parameter: searchParameter
-  	})
+	const searchWithSymbol: any = {}
+	Object.keys(searchParameter).forEach(key => {
+		if (searchSymbol[key]) {
+			searchWithSymbol[`${r''${key}@${searchSymbol[key]}''}`] = searchParameter[key]
+		} else {
+			searchWithSymbol[key] = searchParameter[key]
+		}
+	})
+	try {
+		return await ApiService.postAjax(''${controllerBasePath}list'', {
+			...params,
+			parameter: searchWithSymbol
+		})
   } catch (e) {
 		errorMessage(e)
 		throw e
@@ -859,8 +1145,8 @@ export const handleDelete = async (idList: Array<any>) => {
 		throw e
 	}
 }
-', 1, sysdate(), null, null, 0, null, 'template_code', 1);
-INSERT INTO db_code_template (template_id, name, language, filename_suffix, remark, template, create_user_id, create_time, update_user_id, update_time, delete_yn, seq, template_type, group_id) VALUES (1428027951022114, '数据库字典模板（Word）', 'html', '', null, '<html xmlns:v="urn:schemas-microsoft-com:vml"
+', 1, sysdate(), null, null, 0, null, 2);
+INSERT INTO db_code_template (template_id, name, language, template_type, filename_suffix, remark, template, create_user_id, create_time, update_user_id, update_time, delete_yn, seq, group_id) VALUES (1461205694677026, '数据库字典模板-Word', 'html', 'TEMPLATE_DB_DICT', '', null, '<html xmlns:v="urn:schemas-microsoft-com:vml"
 xmlns:o="urn:schemas-microsoft-com:office:office"
 xmlns:w="urn:schemas-microsoft-com:office:word"
 xmlns:x="urn:schemas-microsoft-com:office:excel"
@@ -1846,7 +2132,7 @@ lang=EN-US><o:p></o:p></span></span></p>
 <p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
 
 <p class=MsoNormal align=center style=''text-align:center''><span
-style=''font-size:16.0pt''>威海联亚软件开发服务有限公司<span lang=EN-US><o:p></o:p></span></span></p>
+style=''font-size:16.0pt''>公司名称<span lang=EN-US><o:p></o:p></span></span></p>
 
 <p class=MsoNormal align=center style=''text-align:center''><span lang=EN-US
 style=''font-size:16.0pt''>${currentDate}<o:p></o:p></span></p>
@@ -2051,178 +2337,84 @@ style=''font-size:16.0pt''><o:p>&nbsp;</o:p></span></p>
 </body>
 
 </html>
-', 1, sysdate(), null, null, 0, null, 'template_db_dict', 1);
-INSERT INTO db_code_template (template_id, name, language, filename_suffix, remark, template, create_user_id, create_time, update_user_id, update_time, delete_yn, seq, template_type, group_id) VALUES (1429132411928610, '数据库字典(Excel)', 'xml', '', null, '<?xml version="1.0"?>
-<?mso-application progid="Excel.Sheet"?>
-<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
- xmlns:o="urn:schemas-microsoft-com:office:office"
- xmlns:x="urn:schemas-microsoft-com:office:excel"
- xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
- xmlns:html="http://www.w3.org/TR/REC-html40">
- <DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">
-  <Author>GCCodeGenerator</Author>
-  <LastAuthor>GCCodeGenerator</LastAuthor>
-  <Created>2021-05-19T08:54:15Z</Created>
-  <LastSaved>2021-05-19T08:54:15Z</LastSaved>
-  <Version>16.00</Version>
- </DocumentProperties>
- <OfficeDocumentSettings xmlns="urn:schemas-microsoft-com:office:office">
-  <AllowPNG/>
- </OfficeDocumentSettings>
- <ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">
-  <WindowHeight>8928</WindowHeight>
-  <WindowWidth>23040</WindowWidth>
-  <WindowTopX>32767</WindowTopX>
-  <WindowTopY>32767</WindowTopY>
-  <ProtectStructure>False</ProtectStructure>
-  <ProtectWindows>False</ProtectWindows>
- </ExcelWorkbook>
- <Styles>
-  <Style ss:ID="Default" ss:Name="Normal">
-   <Alignment ss:Vertical="Center"/>
-   <Borders/>
-   <Font ss:FontName="等线" x:CharSet="134" ss:Size="11" ss:Color="#000000"/>
-   <Interior/>
-   <NumberFormat/>
-   <Protection/>
-  </Style>
-  <Style ss:ID="m2553513267088">
-   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
-   <Borders>
-    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="2"/>
-    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
-   </Borders>
-   <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="11" ss:Color="#008000"/>
-   <Interior ss:Color="#C6EFCE" ss:Pattern="Solid"/>
-  </Style>
-  <Style ss:ID="s69">
-   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
-   <Borders>
-    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
-   </Borders>
-   <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="11" ss:Color="#008000"/>
-   <Interior ss:Color="#C6EFCE" ss:Pattern="Solid"/>
-  </Style>
-  <Style ss:ID="s70">
-   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
-   <Borders>
-    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
-   </Borders>
-   <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="11" ss:Color="#008000"/>
-   <Interior ss:Color="#C6EFCE" ss:Pattern="Solid"/>
-  </Style>
-  <Style ss:ID="s71">
-   <Borders>
-    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
-   </Borders>
-  </Style>
-  <Style ss:ID="s72">
-   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
-   <Borders>
-    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
-   </Borders>
-   <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="11" ss:Color="#000000"/>
-  </Style>
-  <Style ss:ID="s73">
-   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
-   <Borders>
-    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
-   </Borders>
-   <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="11" ss:Color="#000000"/>
-  </Style>
- </Styles>
- <Worksheet ss:Name="数据库设计文档">
-  <Table ss:ExpandedColumnCount="7" ss:ExpandedRowCount="${tableList?size * 2 + columnSize + 20}" x:FullColumns="1"
-   x:FullRows="1" ss:DefaultRowHeight="13.8">
-   <Column ss:Index="2" ss:AutoFitWidth="0" ss:Width="142.80000000000001"/>
-   <Column ss:AutoFitWidth="0" ss:Width="141"/>
-   <Column ss:AutoFitWidth="0" ss:Width="61.8"/>
-   <Column ss:AutoFitWidth="0" ss:Width="119.4"/>
-   <Column ss:Index="7" ss:AutoFitWidth="0" ss:Width="90"/>
-   <#list tableList as table>
-  <Row ss:AutoFitHeight="0" ss:Height="25.049999999999997">
-    <Cell ss:MergeAcross="6" ss:StyleID="m2553513267088"><Data ss:Type="String">${table.tableName} ${table.remarks ! ''''}</Data></Cell>
-   </Row>
-  <Row ss:AutoFitHeight="0" ss:Height="14.55">
-    <Cell ss:StyleID="s69"><Data ss:Type="String">序号</Data></Cell>
-    <Cell ss:StyleID="s70"><Data ss:Type="String">字段</Data></Cell>
-    <Cell ss:StyleID="s70"><Data ss:Type="String">描述</Data></Cell>
-    <Cell ss:StyleID="s70"><Data ss:Type="String">主键</Data></Cell>
-    <Cell ss:StyleID="s70"><Data ss:Type="String">类型</Data></Cell>
-    <Cell ss:StyleID="s70"><Data ss:Type="String">是否为空</Data></Cell>
-    <Cell ss:StyleID="s70"><Data ss:Type="String">默认值</Data></Cell>
-   </Row>
-   <#if table.primaryKeyList??>
-    <#list table.primaryKeyList as primaryKey>
-   <Row ss:AutoFitHeight="0" ss:Height="16.95">
-    <Cell ss:StyleID="s71"><Data ss:Type="Number">${primaryKey_index + 1}</Data></Cell>
-    <Cell ss:StyleID="s72"><Data ss:Type="String">${primaryKey.columnName}</Data></Cell>
-    <Cell ss:StyleID="s73"><Data ss:Type="String">${primaryKey.remarks ! ''''}</Data></Cell>
-    <Cell ss:StyleID="s73"><Data ss:Type="String">Y</Data></Cell>
-    <Cell ss:StyleID="s73"><Data ss:Type="String">${primaryKey.typeName}(${(primaryKey.typeName == ''NUMBER'' && primaryKey.columnSize == 0 && primaryKey.decimalDigits == -127) ? string( ''*'' , primaryKey.columnSize)})</Data></Cell>
-    <Cell ss:StyleID="s73"><Data ss:Type="String">N</Data></Cell>
-    <Cell ss:StyleID="s73"><Data ss:Type="String">${primaryKey.columnDef ! ''''}</Data></Cell>
-   </Row>
+', 1, sysdate(), null, null, 0, null, 1);
+INSERT INTO db_code_template (template_id, name, language, template_type, filename_suffix, remark, template, create_user_id, create_time, update_user_id, update_time, delete_yn, seq, group_id) VALUES (1462799341453346, 'smart-boot saveUpdateDTO', 'text/x-java', 'TEMPLATE_CODE', 'SaveUpdateDTO', 'smart-boot 添加修改DTO', 'package ${packages}.pojo.dto;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+import java.io.Serializable;
+
+/**
+* ${mainTable.tableName} - ${(description)!''''}
+* @author GCCodeGenerator
+* ${.now}
+*/
+@Getter
+@Setter
+@ToString
+public class ${className}SaveUpdateDTO implements Serializable {
+
+
+    <#list mainTable.codeFormConfigList as item>
+    /**
+    * ${item.title}
+    */
+    <#list item.ruleList as rule>
+    <#if rule.ruleType="NOT_EMPTY">
+    @NotNull(message = "${rule.message}")
+    <#elseif rule.ruleType="EMAIL">
+    @Email(message = "${rule.message}")
+    <#elseif rule.ruleType="PHONE">
+    @Mobile(message = "${rule.message}")
+    </#if>
     </#list>
-   </#if>
-
-   <#if table.baseColumnList??>
-    <#list table.baseColumnList as column>
-      <Row ss:AutoFitHeight="0" ss:Height="16.95">
-    <Cell ss:StyleID="s71"><Data ss:Type="Number"><#if table.primaryKeyList??>${table.primaryKeyList?size + column_index + 1}<#else >${column_index + 1}</#if></Data></Cell>
-    <Cell ss:StyleID="s72"><Data ss:Type="String">${column.columnName}</Data></Cell>
-    <Cell ss:StyleID="s73"><Data ss:Type="String">${column.remarks ! ''''}</Data></Cell>
-    <Cell ss:StyleID="s73"><Data ss:Type="String"></Data></Cell>
-    <Cell ss:StyleID="s73"><Data ss:Type="String">${column.typeName}(${(column.typeName == ''NUMBER'' && column.columnSize == 0 && column.decimalDigits == -127) ? string( ''*'' , column.columnSize)})</Data></Cell>
-    <Cell ss:StyleID="s73"><Data ss:Type="String">${(column.nullable == 0) ? string(''N'', '''')}</Data></Cell>
-    <Cell ss:StyleID="s73"><Data ss:Type="String">${column.columnDef ! ''''}</Data></Cell>
-   </Row>
+    private ${item.simpleJavaType} ${item.javaProperty};
     </#list>
-   </#if>
-   </#list>
 
-  </Table>
-  <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">
-   <PageSetup>
-    <Header x:Margin="0.3"/>
-    <Footer x:Margin="0.3"/>
-    <PageMargins x:Bottom="0.75" x:Left="0.7" x:Right="0.7" x:Top="0.75"/>
-   </PageSetup>
-   <Unsynced/>
-   <Print>
-    <ValidPrinterInfo/>
-    <PaperSizeIndex>9</PaperSizeIndex>
-    <HorizontalResolution>600</HorizontalResolution>
-    <VerticalResolution>600</VerticalResolution>
-   </Print>
-   <Selected/>
-   <Panes>
-    <Pane>
-     <Number>3</Number>
-     <ActiveRow>2</ActiveRow>
-    </Pane>
-   </Panes>
-   <ProtectObjects>False</ProtectObjects>
-   <ProtectScenarios>False</ProtectScenarios>
-  </WorksheetOptions>
- </Worksheet>
-</Workbook>
-', 1, sysdate(), null, null, 0, null, 'template_db_dict', 1);
-
-
+}
+', 1, sysdate(), null, null, 0, null, 2);
+INSERT INTO db_code_template (template_id, name, language, template_type, filename_suffix, remark, template, create_user_id, create_time, update_user_id, update_time, delete_yn, seq, group_id) VALUES (1462843509571618, 'smart-boot UI 国际化', 'typescript', 'TEMPLATE_CODE', '', null, '/**
+ * ${description} 国际化信息
+ */
+export default {
+  trans: true,
+  key: ''${mainTable.i18nPrefix}'',
+  data: {
+		title: {
+	  <#list mainTable.codePageConfigList as item>
+	  <#if item.javaProperty!=''seq'' & item.javaProperty!=''remark'' & item.javaProperty!=''useYn'' & item.javaProperty!=''deleteYn'' & item.javaProperty!=''createUserId'' & item.javaProperty!=''createTime'' & item.javaProperty!=''updateUserId'' & item.javaProperty!=''updateTime''>
+			${item.javaProperty}: ''${item.title}'',
+	  </#if>
+	  </#list>
+    },
+		validate: {
+	  <#list mainTable.codeFormConfigList as item>
+	  <#if item.javaProperty!=''seq'' & item.javaProperty!=''remark'' & item.javaProperty!=''useYn'' & item.controlType!=''radio'' & item.controlType!=''checkbox'' & item.controlType!=''switch_type''>
+			${item.javaProperty}: ''<#if item.controlType="select" || item.controlType="date" || item.controlType="time" || item.controlType="datetime">请选择<#else>请输入</#if>${item.title}'',
+	  </#if>
+	  </#list>
+		},
+		rules: {
+	  <#list mainTable.codeFormConfigList as item>
+	  <#list item.ruleList as rule>
+	  <#if item.javaProperty!=''seq'' & item.javaProperty!=''remark'' & item.javaProperty!=''useYn''>
+			''${item.javaProperty}_${rule.ruleType}'': ''${rule.message}'',
+	  </#if>
+	  </#list>
+	  </#list>
+		},
+		search: {
+		<#list mainTable.codeSearchConfigList as item>
+		<#if item.javaProperty!=''seq'' & item.javaProperty!=''remark'' & item.javaProperty!=''useYn'' & item.controlType!=''radio'' & item.controlType!=''checkbox'' & item.controlType!=''switch_type''>
+			${item.javaProperty}: ''<#if item.controlType="select" || item.controlType="date" || item.controlType="time" || item.controlType="datetime">请选择<#else>请输入</#if>${item.title}'',
+		</#if>
+		</#list>
+		}
+  }
+}
+', 1, sysdate(), null, null, 0, null, 2);
 
 -- 模板分组表
 drop table if exists `db_code_template_group`;
@@ -2239,7 +2431,9 @@ create table db_code_template_group
 )
     comment '模板分组表';
 
-insert into db_code_template_group (group_id, group_name, seq, create_time, create_user_id, update_time, update_user_id) values (1, '系统内置模板', 1, sysdate(), 1, null, null);
+INSERT INTO db_code_template_group (group_id, group_name, seq, create_time, create_user_id, update_time, update_user_id) VALUES (1, '01-数据库字典模板', 10, sysdate(), 1, null, null);
+INSERT INTO db_code_template_group (group_id, group_name, seq, create_time, create_user_id, update_time, update_user_id) VALUES (2, '02-smart-boot模板', 20, sysdate(), 1, null, null);
+
 
 -- 模板用户组关联关系表
 drop table if exists `db_code_template_user_group`;
