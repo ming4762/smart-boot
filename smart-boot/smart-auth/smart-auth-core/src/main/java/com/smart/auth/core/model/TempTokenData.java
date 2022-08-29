@@ -3,7 +3,9 @@ package com.smart.auth.core.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
 import java.io.Serializable;
+import java.time.Instant;
 
 /**
  * 临时token缓存数据
@@ -14,6 +16,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 public class TempTokenData implements Serializable {
+    @Serial
     private static final long serialVersionUID = -9173549970442451354L;
 
     /**

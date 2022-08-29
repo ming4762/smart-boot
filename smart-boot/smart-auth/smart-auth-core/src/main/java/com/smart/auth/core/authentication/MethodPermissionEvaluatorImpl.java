@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * 自定义的方法权限认证其
+ * 自定义的方法权限认证
  * @author zhongming4762
  * 2020/1/24 10:53 上午
  */
