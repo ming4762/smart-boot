@@ -56,8 +56,7 @@ public class RateLimitRegistrar implements ImportBeanDefinitionRegistrar {
     @Nullable
     private String getDefaultServiceName(BeanDefinitionRegistry registry) {
         var hasRedisClass = ClassUtils.isPresent("com.smart.starter.redis.service.RedisRateLimitServiceImpl", null);
-        var classHasRedisServiceBean = registry.containsBeanDefinition("redisService");
-        if (hasRedisClass && classHasRedisServiceBean) {
+        if (hasRedisClass) {
             return REDIS_SERVICE_NAME;
         }
         var hasGuavaClass = ClassUtils.isPresent("com.smart.starter.cache.guava.limit.GuavaRateLimitServiceImpl", null);
@@ -66,4 +65,5 @@ public class RateLimitRegistrar implements ImportBeanDefinitionRegistrar {
         }
         return null;
     }
+
 }
