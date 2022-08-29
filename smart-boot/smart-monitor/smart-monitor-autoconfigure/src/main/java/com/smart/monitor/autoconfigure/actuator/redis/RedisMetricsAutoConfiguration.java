@@ -6,6 +6,7 @@ import com.smart.starter.redis.SmartRedisAutoConfiguration;
 import com.smart.starter.redis.service.RedisService;
 import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +19,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnClass(SmartMonitorActuatorRedis.class)
 @AutoConfigureAfter(SmartRedisAutoConfiguration.class)
+@ConditionalOnBean(RedisService.class)
 public class RedisMetricsAutoConfiguration {
 
     @Bean

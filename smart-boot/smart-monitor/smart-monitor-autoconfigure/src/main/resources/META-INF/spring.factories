@@ -1,4 +1,3 @@
-#配置自定义Starter的自动化配置
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.smart.monitor.autoconfigure.RestAutoConfiguration,\
   com.smart.monitor.autoconfigure.client.SmartMonitorClientAutoConfiguration,\
@@ -14,7 +13,8 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.smart.monitor.autoconfigure.actuator.redis.RedisEndpointAutoConfiguration,\
   com.smart.monitor.autoconfigure.actuator.redis.RedisMetricsAutoConfiguration,\
   com.smart.monitor.autoconfigure.actuator.logback.LogBackEndPointAutoConfiguration,\
-  com.smart.monitor.autoconfigure.client.HttpTraceEndpointAutoConfiguration
+  com.smart.monitor.autoconfigure.client.HttpTraceEndpointAutoConfiguration,\
+  com.smart.monitor.autoconfigure.actuator.redis.RedisActuatorValidateAutoConfiguration
 
 org.springframework.context.ApplicationListener=\
   com.smart.monitor.actuator.logback.listener.LogAppenderInitListener
