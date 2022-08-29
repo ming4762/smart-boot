@@ -19,6 +19,7 @@
             <groupId>com.smart</groupId>
             <artifactId>redis-spring-boot-starter</artifactId>
             <version>${project.parent.version}</version>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
