@@ -10,7 +10,7 @@ import com.smart.auth.core.utils.AuthUtils;
 import com.smart.auth.security.pojo.dto.TempTokenApplyDTO;
 import com.smart.commons.core.i18n.I18nUtils;
 import com.smart.commons.core.message.Result;
-import com.smart.commons.core.utils.Base64Utils;
+import com.smart.commons.core.utils.DigestUtils;
 import com.smart.commons.core.utils.IpUtils;
 import com.smart.commons.core.utils.JsonUtils;
 import io.swagger.annotations.ApiOperation;
@@ -81,7 +81,7 @@ public class AuthController {
         tempTokenData.setUserId(user.getUserId());
         tempTokenData.setIp(IpUtils.getIpAddr(request));
 
-        String key = Base64Utils.encode(JsonUtils.toJsonString(tempTokenData));
+        String key = DigestUtils.sha256(JsonUtils.toJsonString(tempTokenData), 1);
         // 默认有效期60秒
         this.authCache.put(key, tempTokenData, properties.getTimeout());
         return Result.success(key);
