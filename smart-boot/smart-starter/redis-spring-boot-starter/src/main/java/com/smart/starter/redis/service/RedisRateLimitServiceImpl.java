@@ -28,8 +28,8 @@ public class RedisRateLimitServiceImpl implements RateLimitService {
     public boolean acquire(@NonNull String key, long limit) {
         var limitStr = Long.valueOf(limit).toString();
         List<Long> result = this.redisService.getRedisTemplate()
-                .execute((RedisCallback<List<Long>>) connection -> connection.eval(LUA_SCRIPT.getBytes(StandardCharsets.UTF_8), ReturnType.MULTI, 1,
-                        key.getBytes(StandardCharsets.UTF_8), limitStr.getBytes(StandardCharsets.UTF_8), limitStr.getBytes(StandardCharsets.UTF_8), "60".getBytes(StandardCharsets.UTF_8)));
+                .execute((RedisCallback<List<Long>>) connection -> connection.scriptingCommands().eval(LUA_SCRIPT.getBytes(StandardCharsets.UTF_8), ReturnType.MULTI, 1,
+                        key.getBytes(StandardCharsets.UTF_8), limitStr.getBytes(StandardCharsets.UTF_8), limitStr.getBytes(StandardCharsets.UTF_8), "1".getBytes(StandardCharsets.UTF_8)));
         if (CollectionUtils.isEmpty(result)) {
             return false;
         }
