@@ -130,7 +130,7 @@ export default defineComponent({
   emits: ['change'],
   setup (props) {
     const route = useRoute()
-    const openKeys = ref([])
+    const openKeys = ref<Array<string>>([])
     const selectedKeys = computed(() => {
       return [route.fullPath]
     })
@@ -139,23 +139,30 @@ export default defineComponent({
         props.menuClick(menu.key)
       }
     }
+    /**
+     * 实现一次只打开一个菜单
+     * @param openKeyList 打开的菜单列表
+     */
+    const handleOpenChange = (openKeyList: Array<string>) => {
+      const latestOpenKey = openKeyList.find(key => openKeys.value.indexOf(key) === -1)
+      openKeys.value = latestOpenKey ? [latestOpenKey] : []
+    }
     return {
       openKeys,
       selectedKeys,
-      handleMenuSelect
+      handleMenuSelect,
+      handleOpenChange
     }
   },
   render () {
-    const { mode, theme, openKeys, selectedKeys, menus, handleMenuSelect, lang } = this
+    const { mode, theme, openKeys, selectedKeys, menus, handleMenuSelect, lang, handleOpenChange } = this
     const dynamicProps = {
       mode,
       theme,
       openKeys,
       selectedKeys,
       onSelect: handleMenuSelect,
-      onOpenChange: () => {
-        console.log('========')
-      }
+      onOpenChange: handleOpenChange
     }
     const menuItemVnodes = menus.map(item => {
       if (item.hidden) {
