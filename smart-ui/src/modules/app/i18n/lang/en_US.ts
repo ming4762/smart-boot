@@ -78,6 +78,9 @@ export default {
       notice: {
         logout: 'Are you sure you want to log out?'
       }
+    },
+    message: {
+      changeTheme: 'Switching topics'
     }
   }
 }

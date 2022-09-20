@@ -1,21 +1,17 @@
-import { defineComponent, inject, PropType } from 'vue'
-import { useStore } from 'vuex'
+import { defineComponent, inject, PropType, watch, computed, onMounted } from 'vue'
+import { useStore, Store } from 'vuex'
+import { useI18n } from 'vue-i18n'
 
+import { ConfigProvider, message } from 'ant-design-vue'
 import { NotificationOutlined } from '@ant-design/icons-vue'
-// @ts-ignore
-// import omit from 'ant-design-vue/es/_util/omit'
 
 import BlockCheckbox from './BlockCheckbox'
 import ThemeColor from './ThemeColor'
 import LayoutSetting, { renderLayoutSettingItem } from './LayoutChange'
-import { updateTheme, updateColorWeak } from '@/components/layouts/utils/dynamicTheme'
-
-// import { genStringToTheme } from '@/common/utils/utils'
 
 import VuePropTypes from '@/common/utils/VueTypes'
 
 import './SettingDrawer.less'
-import {use} from "vxe-table";
 
 export const setting = {
   theme: {
@@ -71,7 +67,7 @@ const getThemeList = (i18nRender: Function) => {
   const lightColorList = [{
     key: '#1890ff',
     color: '#1890ff',
-    theme: 'dark'
+    theme: 'light'
   }]
 
   if (list.find(function (item: any) {
@@ -136,17 +132,32 @@ const Body = defineComponent({
 
 const defaultI18nRender = (t: any) => t
 
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
-const handleChangeSetting = (key: string, value: any, hideMessageLoading: any) => {
-  if (key === 'primaryColor') {
-    // 更新主色调
-    updateTheme(value);
+/**
+ * 监控主色调变化
+ * @param store
+ * @param i18nRender
+ */
+const useThemePrimaryColor = (store: Store<any>, i18nRender: Function) => {
+  /**
+   * 设置颜色
+   * @param color
+   */
+  const handlerSetColor = (color: string) => {
+    ConfigProvider.config({
+      theme: {
+        primaryColor: color
+      }
+    })
   }
+  const computedPrimaryColor = computed(() => store.getters['app/appSetting'].primaryColor)
 
-  if (key === 'colorWeak') {
-    updateColorWeak(value);
-  }
+  onMounted(() => handlerSetColor(computedPrimaryColor.value))
+
+  watch(computedPrimaryColor, () => {
+    const hideMessage = message.loading(i18nRender('app.message.changeTheme'), 0)
+    handlerSetColor(computedPrimaryColor.value)
+    setTimeout(hideMessage, 200)
+  })
 }
 
 export default defineComponent({
@@ -155,9 +166,11 @@ export default defineComponent({
   emits: ['change'],
   setup () {
     const store = useStore()
+    const { t } = useI18n()
     const setShow = (showValue: boolean) => {
       store.commit('app/showHideSettingDrawer', showValue)
     }
+    useThemePrimaryColor(store, t)
     return {
       setShow
     }
@@ -183,7 +196,6 @@ export default defineComponent({
         type: type,
         value: value
       })
-      handleChangeSetting(type, value, false)
     }
     const i18n: any = this.i18nRender || inject('locale', defaultI18nRender)
     const themeList = getThemeList(i18n)
