@@ -78,6 +78,9 @@ export default {
       notice: {
         logout: '确定要登出吗？'
       }
+    },
+    message: {
+      changeTheme: '正在切换主题'
     }
   }
 }

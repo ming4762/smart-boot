@@ -40,7 +40,8 @@ const KEY_STORE_KEY: {[index: string]: string} = {
   fixedHeader: STORE_KEYS.APP_FIXED_HEADER,
   fixSiderbar: STORE_KEYS.APP_FIXED_SIDERBAR,
   buttonSize: STORE_KEYS.APP_BUTTON_SIZE,
-  tableSize: STORE_KEYS.APP_TABLE_SIZE
+  tableSize: STORE_KEYS.APP_TABLE_SIZE,
+  formSize: STORE_KEYS.APP_FORM_SIZE
 }
 
 const defaultLayout = StoreUtil.getStore(STORE_KEYS.APP_LAYOUT) || defaultSettings.layout

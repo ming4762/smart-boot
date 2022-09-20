@@ -6,7 +6,7 @@ export default {
   lang: 'zh-CN',
   title: 'Smart UI',
   layout: 'sidemenu',
-  primaryColor: '#F5222D',
+  primaryColor: '#1890ff',
   contentWidth: 'Fluid',
   navTheme: 'dark',
   // 锁定头部
