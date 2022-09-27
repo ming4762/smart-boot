@@ -1,10 +1,10 @@
 <template>
-  <div ref="containerRef" class="content-tabs" :style="{height: navHeight + 'px', 'line-height': `${navHeight - 2}px`}">
-    <div :style="computedRightButtonStyle" class="roll-nav roll-left direction-button">
+  <div ref="outContainerRef" class="content-tabs" :style="{height: navHeight + 'px', 'line-height': `${navHeight - 2}px`}">
+    <div :style="computedRightButtonStyle" class="roll-nav roll-left direction-button" @click="handleMoveLeft">
       <BackwardOutlined />
     </div>
-    <nav ref="tabContainerRef" class="page-tabs s-menu-tabs">
-      <div class="page-tabs-content" :style="computedTabContainerStyle">
+    <nav style="width: 12000px" class="page-tabs s-menu-tabs">
+      <div ref="tabContainerRef" class="page-tabs-content" :style="computedTabContainerStyle">
         <a
           v-for="(item, i) in dataList"
           :key="'navigation-menu_' + i"
@@ -29,7 +29,13 @@
         <CaretDownOutlined />
       </div>
       <template #overlay>
-        <slot name="dropdown-menu" />
+        <a-menu :selected-keys="[]" class="multi-drop-menu" @click="handleClickItem">
+          <a-menu-item key="location"><aim-outlined class="icon" />{{ i18nRender('app.multiTab.dropdownMenu.location') }} </a-menu-item>
+          <a-divider />
+          <a-menu-item key="closeAll"><close-outlined class="icon" />{{ i18nRender('app.multiTab.dropdownMenu.closeAll') }} </a-menu-item>
+          <a-menu-item key="closeOther"><close-circle-outlined class="icon" />{{ i18nRender('app.multiTab.dropdownMenu.closeOther') }} </a-menu-item>
+          <a-menu-item key="refreshCurrent"><reload-outlined class="icon" />{{ i18nRender('app.multiTab.dropdownMenu.refreshCurrent') }}</a-menu-item>
+        </a-menu>
       </template>
     </a-dropdown>
   </div>
@@ -38,69 +44,17 @@
 <script lang="ts">
 import {computed, defineComponent, PropType, ref, toRefs} from 'vue'
 
-import { BackwardOutlined, CaretDownOutlined, CloseCircleOutlined, ForwardOutlined } from '@ant-design/icons-vue'
+import {
+  AimOutlined,
+  BackwardOutlined,
+  CaretDownOutlined,
+  CloseCircleOutlined, CloseOutlined,
+  ForwardOutlined, ReloadOutlined
+} from '@ant-design/icons-vue'
 
-import XEUtils from 'xe-utils'
+import { useTabsMove, useTabContainerStyle } from './NavigationHooks'
 
-const useTabsMove = () => {
-  // tab margin
-  const marginLeft = ref(0)
-  const containerRef = ref()
-  const tabContainerRef = ref()
 
-  /**
-   * 向右移动事件
-   */
-  const handleMoveRight = () => {
-    const containerMarginLeft = marginLeft.value
-    // 排除中间区域宽度
-    const children = containerRef.value.children
-    const elementList: Array<Element> = []
-    for (let i=0; i<children.length; i++) {
-      elementList.push(children[i])
-    }
-    // 排除中间区域的按钮宽度
-    const buttonsWidth = XEUtils.sum(elementList
-        .filter((item: any) => item !== tabContainerRef.value)
-        .map((item: any) => item.clientWidth))
-    // tab 组 外层宽度
-    const tabContainerOuterWidth = containerRef.value.clientWidth - buttonsWidth
-    // tab 组事件宽度
-    const tabContainerWidth = tabContainerRef.value.children[0].clientWidth
-    if (tabContainerWidth <= tabContainerOuterWidth) {
-      // 如果实际宽度小于容器宽度 不做任何处理
-      return false
-    }
-    if (tabContainerWidth - containerMarginLeft <= tabContainerOuterWidth) {
-      // 减掉缩进的部分 小于容器宽度 不做处理
-      return false
-    }
-    // 获取所有的打开的菜单
-    const menuElementList: HTMLCollection = tabContainerRef.value.children[0].children
-    let sumLength = 0 - containerMarginLeft
-    for (let i=0; i<menuElementList.length; i++) {
-      const element = menuElementList[i]
-      if (sumLength + element.clientWidth > tabContainerOuterWidth) {
-        break
-      }
-      sumLength += element.clientWidth
-    }
-    marginLeft.value = sumLength
-  }
-
-  const computedTabContainerStyle = computed(() => {
-    return {
-      'margin-left': `${0 - marginLeft.value}px`
-    }
-  })
-
-  return {
-    containerRef,
-    tabContainerRef,
-    handleMoveRight,
-    computedTabContainerStyle
-  }
-}
 
 export const NavigationProps = {
   i18nRender: {
@@ -121,7 +75,10 @@ export default defineComponent({
     BackwardOutlined,
     CaretDownOutlined,
     CloseCircleOutlined,
-    ForwardOutlined
+    ForwardOutlined,
+    AimOutlined,
+    ReloadOutlined,
+    CloseOutlined
   },
   props: Object.assign({
     activeValue: String as PropType<string>,
@@ -135,7 +92,11 @@ export default defineComponent({
     }
   }, NavigationProps),
   setup (props) {
-    const { navHeight, lang } = toRefs(props)
+    const { navHeight, lang, activeValue, dataList } = toRefs(props)
+    // tab nav ref
+    const tabContainerRef = ref()
+    const firstElementRef = ref<Element|null>(null)
+    const tableMoveHook = useTabsMove(firstElementRef, tabContainerRef, activeValue, dataList)
     const contentHeight = computed(() => {
       return navHeight.value - 2
     })
@@ -146,7 +107,17 @@ export default defineComponent({
         width: pxValue
       }
     })
+    const handleClickItem = ({ key }: any) => {
+      switch (key) {
+        case 'location': {
+          tableMoveHook.locationCurrent()
+        }
+      }
+    }
     const handleRemove = (item: any) => {
+      if (item.path !== activeValue.value) {
+        // 删除的不是当前菜单
+      }
       if (props.tabRemove) {
         props.tabRemove(item)
       }
@@ -164,11 +135,13 @@ export default defineComponent({
     }
     return {
       handleRemove,
+      handleClickItem,
       handleClick,
       contentHeight,
       computedRightButtonStyle,
       getTitle,
-      ...useTabsMove()
+      ...tableMoveHook,
+      ...useTabContainerStyle(firstElementRef, tabContainerRef)
     }
   }
 })
@@ -181,6 +154,7 @@ export default defineComponent({
 .content-tabs {
   border-bottom: solid 2px #2f4050;
   position: relative;
+  overflow: hidden;
   background: #fafafa;
   .roll-nav {
     position: absolute;
@@ -197,11 +171,11 @@ export default defineComponent({
     right: 0;
     border-left: solid 1px #eee;
     &.s-menu-right {
-      right: 90px;
+      right: 85px;
     }
     // 更多操作按钮样式
     &.btn-group {
-      right: 5px;
+      //right: 5px;
       width: 85px;
       padding: 0 4px;
       cursor: pointer;
@@ -228,6 +202,7 @@ export default defineComponent({
     overflow: hidden;
     .page-tabs-content {
       float: left;
+      transition: margin-left 0.5s linear;
     }
   }
 }
@@ -269,5 +244,9 @@ export default defineComponent({
       color: red;
     }
   }
+}
+
+.icon {
+  margin-right: 5px;
 }
 </style>
