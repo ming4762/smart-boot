@@ -6,7 +6,7 @@ const Accept_Language ='Accept-Language'
  * 获取API地址
  */
 const getApiUrl = (): string => {
-  return import.meta.env.VITE_API_URL as string
+  return localStorage.getItem('API_URL') || import.meta.env.VITE_API_URL as string
 }
 
 // axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'

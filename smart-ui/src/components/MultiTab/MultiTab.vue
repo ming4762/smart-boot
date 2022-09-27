@@ -5,15 +5,6 @@
         :active-value="computedActiveValue"
         :lang="computedLang"
         v-bind="$props">
-        <template #dropdown-menu>
-          <a-menu :selected-keys="[]" class="multi-drop-menu" @click="handleClickItem">
-            <a-menu-item key="location"><aim-outlined class="icon" />{{ i18nRender('app.multiTab.dropdownMenu.location') }} </a-menu-item>
-            <a-divider />
-            <a-menu-item key="closeAll"><close-outlined class="icon" />{{ i18nRender('app.multiTab.dropdownMenu.closeAll') }} </a-menu-item>
-            <a-menu-item key="closeOther"><close-circle-outlined class="icon" />{{ i18nRender('app.multiTab.dropdownMenu.closeOther') }} </a-menu-item>
-            <a-menu-item key="refreshCurrent"><reload-outlined class="icon" />{{ i18nRender('app.multiTab.dropdownMenu.refreshCurrent') }}</a-menu-item>
-          </a-menu>
-        </template>
       </Navigation>
     </div>
   </div>
@@ -23,8 +14,6 @@
 import { defineComponent, PropType, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
-
-import { AimOutlined, ReloadOutlined, CloseOutlined, CloseCircleOutlined } from '@ant-design/icons-vue'
 
 import Navigation, { NavigationProps } from './Navigation.vue'
 
@@ -41,11 +30,7 @@ export const MultiTabProps = Object.assign({
 export default defineComponent({
   name: 'MultiTab',
   components: {
-    Navigation,
-    AimOutlined,
-    ReloadOutlined,
-    CloseOutlined,
-    CloseCircleOutlined
+    Navigation
   },
   props: MultiTabProps,
   setup () {
@@ -79,7 +64,5 @@ export default defineComponent({
     margin: 5px 0 !important;
   }
 }
-.icon {
-  margin-right: 5px;
-}
+
 </style>
