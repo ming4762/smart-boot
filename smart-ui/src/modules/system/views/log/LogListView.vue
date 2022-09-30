@@ -256,7 +256,7 @@ export default defineComponent({
           field: 'operationType',
           headerAlign: 'left',
           align: 'center',
-          width: 100
+          width: 120
         },
         {
           title: '{system.views.log.title.requestPath}',
@@ -266,7 +266,7 @@ export default defineComponent({
         {
           title: '{system.views.log.title.statusCode}',
           field: 'statusCode',
-          width: 100,
+          width: 120,
           headerAlign: 'left',
           align: 'center',
           slots: {

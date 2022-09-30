@@ -32,13 +32,13 @@
       <template #toolbar_buttons>
         <a-form layout="inline" style="margin-left: 10px">
           <a-form-item :label="$t('monitor.views.client.log.title.applicationCode')">
-            <a-select v-model:value="searchModel.applicationCode" style="width: 210px" show-search :size="formSizeConfig">
+            <a-select v-model:value="searchModel.applicationCode" style="width: 180px" show-search :size="formSizeConfig">
               <a-select-option value="">ALL</a-select-option>
               <a-select-option v-for="applicationName in applicationNameList" :key="'applicationName' + applicationName" :value="applicationName">{{ applicationName }}</a-select-option>
             </a-select>
           </a-form-item>
           <a-form-item :label="$t('monitor.views.client.log.title.clientId')">
-            <a-select v-model:value="searchModel.clientId" :size="formSizeConfig" style="width: 140px;">
+            <a-select v-model:value="searchModel.clientId" :size="formSizeConfig" style="width: 120px;">
               <a-select-option value="">ALL</a-select-option>
               <a-select-option v-for="clientId in clientIdList" :key="clientId" :value="clientId">{{ clientId }}</a-select-option>
             </a-select>
@@ -49,7 +49,7 @@
             </a-select>
           </a-form-item>
           <a-form-item :label="$t('monitor.views.client.log.title.timestamp')">
-            <a-range-picker v-model:value="searchModel.timestamp" :size="formSizeConfig" show-time style="width: 320px" />
+            <a-range-picker v-model:value="searchModel.timestamp" style="width: 320px" :size="formSizeConfig" show-time />
           </a-form-item>
 
           <a-form-item>
