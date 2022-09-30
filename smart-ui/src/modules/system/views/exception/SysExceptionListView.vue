@@ -21,23 +21,23 @@
       <template #toolbar_buttons>
         <a-form layout="inline" style="margin-left: 10px">
           <a-form-item :label="$t('system.views.exception.title.exceptionMessage')">
-            <a-input v-model:value="searchModel.exceptionMessage" :size="formSizeConfig" :placeholder="$t('system.views.exception.search.exceptionMessage')" />
+            <a-input v-model:value="searchModel.exceptionMessage" style="width: 130px" :size="formSizeConfig" :placeholder="$t('system.views.exception.search.exceptionMessage')" />
           </a-form-item>
           <a-form-item :label="$t('system.views.exception.title.requestIp')">
-            <a-input v-model:value="searchModel.requestIp" :size="formSizeConfig" :placeholder="$t('system.views.exception.search.requestIp')" />
+            <a-input v-model:value="searchModel.requestIp" style="width: 130px" :size="formSizeConfig" :placeholder="$t('system.views.exception.search.requestIp')" />
           </a-form-item>
           <a-form-item :label="$t('system.views.exception.title.serverIp')">
-            <a-input v-model:value="searchModel.serverIp" :size="formSizeConfig" :placeholder="$t('system.views.exception.search.serverIp')" />
+            <a-input v-model:value="searchModel.serverIp" style="width: 130px" :size="formSizeConfig" :placeholder="$t('system.views.exception.search.serverIp')" />
           </a-form-item>
           <a-form-item :label="$t('system.views.exception.title.userFeedback')">
-            <a-select v-model:value="searchModel.userFeedback" style="width: 120px" :size="formSizeConfig">
+            <a-select v-model:value="searchModel.userFeedback" style="width: 90px" :size="formSizeConfig">
               <a-select-option value="">ALL</a-select-option>
               <a-select-option value="true">{{ $t('common.form.yes') }}</a-select-option>
               <a-select-option value="false">{{ $t('common.form.no') }}</a-select-option>
             </a-select>
           </a-form-item>
           <a-form-item :label="$t('system.views.exception.title.resolved')">
-            <a-select v-model:value="searchModel.resolved" style="width: 120px" :size="formSizeConfig">
+            <a-select v-model:value="searchModel.resolved" style="width: 90px" :size="formSizeConfig">
               <a-select-option value="">ALL</a-select-option>
               <a-select-option value="true">{{ $t('common.form.yes') }}</a-select-option>
               <a-select-option value="false">{{ $t('common.form.no') }}</a-select-option>

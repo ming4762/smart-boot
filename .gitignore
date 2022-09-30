@@ -43,3 +43,5 @@ rebel.xml
 node_modules/
 
 package-lock.json
+
+smart-ui/dist/

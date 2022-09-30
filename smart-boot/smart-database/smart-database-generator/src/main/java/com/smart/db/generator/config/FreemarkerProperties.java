@@ -16,7 +16,7 @@ import java.util.List;
  * @author shizhongming
  * 2020/7/2 8:32 下午
  */
-@ConfigurationProperties("gc.freemarker")
+@ConfigurationProperties("smart.freemarker")
 @Getter
 @Setter
 public class FreemarkerProperties {

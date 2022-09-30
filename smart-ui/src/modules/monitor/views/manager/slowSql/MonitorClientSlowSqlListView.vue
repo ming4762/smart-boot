@@ -19,16 +19,16 @@
       <template #toolbar_buttons>
         <a-form layout="inline" style="margin-left: 10px">
           <a-form-item :label="$t('monitor.views.client.slowSql.title.applicationCode')">
-            <a-input v-model:value="searchModel.applicationCode" :size="formSizeConfig" :placeholder="$t('monitor.views.client.slowSql.validate.applicationCode')" />
+            <a-input v-model:value="searchModel.applicationCode" style="width: 120px" :size="formSizeConfig" :placeholder="$t('monitor.views.client.slowSql.validate.applicationCode')" />
           </a-form-item>
           <a-form-item :label="$t('monitor.views.client.slowSql.title.clientId')">
             <a-input v-model:value="searchModel.clientId" :size="formSizeConfig" style="width: 100px" :placeholder="$t('monitor.views.client.slowSql.validate.clientId')" />
           </a-form-item>
           <a-form-item :label="$t('monitor.views.client.slowSql.title.datasourceName')">
-            <a-input v-model:value="searchModel.datasourceName" :size="formSizeConfig" :placeholder="$t('monitor.views.client.slowSql.validate.datasourceName')" />
+            <a-input v-model:value="searchModel.datasourceName" style="width: 120px" :size="formSizeConfig" :placeholder="$t('monitor.views.client.slowSql.validate.datasourceName')" />
           </a-form-item>
           <a-form-item :label="$t('monitor.views.client.slowSql.title.timestamp')">
-            <a-range-picker v-model:value="searchModel.timestamp" show-time :placeholder="['Start Time', 'End Time']" />
+            <a-range-picker v-model:value="searchModel.timestamp" style="width: 320px" :size="formSizeConfig" show-time :placeholder="['Start Time', 'End Time']" />
           </a-form-item>
           <a-form-item>
             <a-button

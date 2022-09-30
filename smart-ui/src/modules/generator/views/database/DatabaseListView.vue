@@ -75,6 +75,7 @@
     </a-spin>
     <a-modal
       v-model:visible="addEditModalVisible"
+      style="width: 700px;"
       :title="isAdd ? $t('common.button.add') : $t('common.button.edit')"
       :confirm-loading="saveLoading"
       @ok="handleSave">
