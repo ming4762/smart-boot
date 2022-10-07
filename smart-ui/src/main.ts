@@ -10,9 +10,9 @@ import 'ant-design-vue/dist/antd.variable.min.css'
 import router from './router'
 import i18nCreator from './i18n'
 
-import { createPinia } from 'pinia'
-
 import systemInit from '@/modules/system/SystemInit'
+
+import store from './store'
 
 import themePluginConfig from './config/themePluginConfig'
 // @ts-ignore
@@ -26,7 +26,7 @@ import { useAppI18nStore } from '@/store/modules/AppStore2'
 
 const app = createApp(AppVue)
 
-app.use(createPinia())
+app.use(store)
 
 // 初始化系统模块
 systemInit(app)

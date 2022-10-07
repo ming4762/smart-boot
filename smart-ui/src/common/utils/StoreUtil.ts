@@ -9,7 +9,7 @@ export default class StoreUtil {
      * @param data 数据
      * @param type 存储类型
      */
-    public static setStore (key: string, data: any, type?: string): void {
+    public static setStore (key: string, data: any, type?: string |null): void {
         const dealData: any = {
             dataType: typeof data,
             content: data,
