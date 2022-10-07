@@ -1,10 +1,9 @@
 import router from '@/router'
-import store from '@/store'
-
 import NProgress from 'nprogress'
 
-import { getToken } from '@/common/auth/AuthUtils'
+import { useSystemMenuStore } from '@/modules/system/store'
 
+import { getToken } from '@/common/auth/AuthUtils'
 
 NProgress.configure({ showSpinner: false })
 
@@ -43,7 +42,7 @@ const whiteList = [
 ]
 
 router.beforeEach((to, from, next) => {
-
+  const systemMenuStore = useSystemMenuStore()
   NProgress.start()
   const token = getToken()
   if (whiteList.includes(to.path)) {
@@ -71,7 +70,7 @@ router.beforeEach((to, from, next) => {
   // 判断用户菜单列表是否包含Path
   const userMenuList: Array<any> = [{
     path: '/main'
-  }].concat(store.getters['app/userMenuList'] || [])
+  }].concat(systemMenuStore.userMenuList || [])
   const permissionPath = permissionMappingPaths[path] ? permissionMappingPaths[path] : path
   const validate = userMenuList.some(menu => menu.path === permissionPath)
   if (!validate) {

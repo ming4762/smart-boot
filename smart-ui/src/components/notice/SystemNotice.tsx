@@ -1,6 +1,6 @@
-import store from '@/store'
-
 import { message } from 'ant-design-vue'
+
+import { useSystemExceptionStore } from '@/modules/system/store'
 
 /**
  * 错误信息处理
@@ -28,5 +28,6 @@ export const successMessage = (msg: string) => {
  */
 const error500Handler = (e: any) => {
   const { exceptionNo } = e
-  store.commit('system/handleShowExceptionModal', exceptionNo)
+  const systemExceptionStore = useSystemExceptionStore()
+  systemExceptionStore.handleShowExceptionModal(exceptionNo)
 }

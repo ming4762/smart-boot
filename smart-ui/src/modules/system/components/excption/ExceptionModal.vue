@@ -25,11 +25,12 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, computed, Ref, ref} from 'vue'
-import { useStore } from 'vuex'
+import {defineComponent, ref} from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { CloseCircleOutlined } from '@ant-design/icons-vue'
+
+import { useSystemExceptionStore } from '@/modules/system/store'
 
 import ApiService from '@/common/utils/ApiService'
 import { successMessage } from '@/components/notice/SystemNotice'
@@ -40,18 +41,16 @@ export default defineComponent({
     CloseCircleOutlined
   },
   setup () {
-    const store = useStore()
     const { t } = useI18n()
+    const systemExceptionStore = useSystemExceptionStore()
 
-    const computedModalVisible = computed(() => store.getters['system/exception'].modalVisible)
-    const computedNoList: Ref<Array<number>> = computed(() => store.getters['system/exception'].noList)
     const model = ref<any>({})
     const submitLoading = ref(false)
     /**
      * 隐藏弹窗
      */
     const handleHideModal = () => {
-      store.commit('system/handleHideExceptionModal')
+      systemExceptionStore.handleHideExceptionModal()
     }
     /**
      * 提交操作
@@ -60,7 +59,7 @@ export default defineComponent({
       submitLoading.value = true
       try {
         await ApiService.postAjax('sys/exception/feedback', {
-          idList: computedNoList.value,
+          idList: systemExceptionStore.noList,
           ...model.value
         })
         handleHideModal()
@@ -72,9 +71,9 @@ export default defineComponent({
       }
     }
     return {
-      computedModalVisible,
+      computedModalVisible: systemExceptionStore.modalVisible,
       handleHideModal,
-      computedNoList,
+      computedNoList: systemExceptionStore.noList,
       model,
       handleSubmit,
       submitLoading

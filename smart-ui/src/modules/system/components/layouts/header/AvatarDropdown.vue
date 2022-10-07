@@ -56,6 +56,9 @@ import { useI18n } from 'vue-i18n'
 import { Modal, message } from 'ant-design-vue'
 import { LogoutOutlined, ExclamationCircleOutlined, LockOutlined, UserOutlined, SettingOutlined } from '@ant-design/icons-vue'
 
+import { useAppSettingStore } from '@/store/modules/AppStore2'
+import { useSystemLoginStore } from '@/modules/system/store'
+
 import ApiService from '@/common/utils/ApiService'
 import { createPassword, getCurrentUser } from '@/common/auth/AuthUtils'
 import { errorMessage } from '@/components/notice/SystemNotice'
@@ -183,9 +186,13 @@ export default defineComponent({
   },
   setup () {
     const { t } = useI18n()
+    const appSettingStore = useAppSettingStore()
+    const systemLoginStore = useSystemLoginStore()
     return {
       ...changePasswordHoop(t),
-      isDev: import.meta.env.DEV
+      isDev: import.meta.env.DEV,
+      appSettingStore,
+      systemLoginStore
     }
   },
   methods: {
@@ -206,20 +213,20 @@ export default defineComponent({
           break
         }
         case 'settingDrawer': {
-          this.$store.commit('app/showHideSettingDrawer', true)
+          this.appSettingStore.showHideSettingDrawer(true)
           break
         }
       }
     },
     handleLogout () {
-      const { $store, $router} = this
+      const { $router, systemLoginStore } = this
       Modal.confirm({
         title: this.$t('app.common.notice.logout'),
         icon: createVNode(ExclamationCircleOutlined),
         onOk () {
           return ApiService.postAjax('auth/logout')
             .finally(() => {
-              $store.dispatch('app/logout')
+              systemLoginStore.logout()
               $router.push('/user/login')
             })
         }

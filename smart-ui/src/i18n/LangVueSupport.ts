@@ -1,21 +1,24 @@
-import { computed, reactive } from 'vue'
-import { useStore } from 'vuex'
+import { reactive } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
+
+import { useAppI18nStore } from '@/store/modules/AppStore2'
 
 import defaultSetting from '@/config/defaultSetting'
 
 export default () => {
-  const store = useStore()
+  const appI18nStore = useAppI18nStore()
+  const { lang } = storeToRefs(appI18nStore)
   const i18n = useI18n()
   // 当前语言
-  const currentLang = computed(() => store.getters['app/lang'])
+  const currentLang = lang
   /**
    * 设置语言
    * @param lang 语言
    */
   const setLang = (lang: string) => {
     i18n.locale.value = lang
-    store.dispatch('app/setLang', lang)
+    appI18nStore.setLang(lang)
   }
   const languageList = reactive(defaultSetting.languageList)
   return {

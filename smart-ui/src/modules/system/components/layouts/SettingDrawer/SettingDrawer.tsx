@@ -1,6 +1,8 @@
-import { defineComponent, inject, PropType, watch, computed, onMounted } from 'vue'
-import { useStore, Store } from 'vuex'
+import { defineComponent, inject, PropType, watch, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { storeToRefs } from 'pinia'
+
+import { useAppSettingStore } from '@/store/modules/AppStore2'
 
 import { ConfigProvider, message } from 'ant-design-vue'
 import { NotificationOutlined } from '@ant-design/icons-vue'
@@ -134,10 +136,11 @@ const defaultI18nRender = (t: any) => t
 
 /**
  * 监控主色调变化
- * @param store
  * @param i18nRender
  */
-const useThemePrimaryColor = (store: Store<any>, i18nRender: Function) => {
+const useThemePrimaryColor = (i18nRender: Function) => {
+  const appSettingStore = useAppSettingStore()
+  const { primaryColor } = storeToRefs(appSettingStore)
   /**
    * 设置颜色
    * @param color
@@ -149,13 +152,11 @@ const useThemePrimaryColor = (store: Store<any>, i18nRender: Function) => {
       }
     })
   }
-  const computedPrimaryColor = computed(() => store.getters['app/appSetting'].primaryColor)
+  onMounted(() => handlerSetColor(appSettingStore.primaryColor))
 
-  onMounted(() => handlerSetColor(computedPrimaryColor.value))
-
-  watch(computedPrimaryColor, () => {
+  watch(primaryColor, () => {
     const hideMessage = message.loading(i18nRender('app.message.changeTheme'), 0)
-    handlerSetColor(computedPrimaryColor.value)
+    handlerSetColor(appSettingStore.primaryColor)
     setTimeout(hideMessage, 200)
   })
 }
@@ -165,12 +166,12 @@ export default defineComponent({
   props: SettingDrawerProps,
   emits: ['change'],
   setup () {
-    const store = useStore()
     const { t } = useI18n()
+    const appSettingStore = useAppSettingStore()
     const setShow = (showValue: boolean) => {
-      store.commit('app/showHideSettingDrawer', showValue)
+      appSettingStore.showHideSettingDrawer(showValue)
     }
-    useThemePrimaryColor(store, t)
+    useThemePrimaryColor(t)
     return {
       setShow
     }

@@ -1,5 +1,5 @@
 <template>
-  <div id="userLayout" :class="['user-layout-wrapper', isMobile && 'mobile']">
+  <div id="userLayout" :class="['user-layout-wrapper', appStateStore.isMobile && 'mobile']">
     <div class="container">
       <div class="user-layout-lang">
         <SelectLang class="select-lang-trigger" />
@@ -28,7 +28,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 
-import { deviceMixin } from '../../store/mixins/deviceMixin'
+import { useAppStateStore } from '@/store/modules/AppStore2'
 
 import SelectLang from '../SelectLang/SelectLang.vue'
 
@@ -37,7 +37,13 @@ export default defineComponent({
   components: {
     SelectLang
   },
-  mixins: [ deviceMixin ]
+  setup () {
+    const appStateStore = useAppStateStore()
+
+    return {
+      appStateStore
+    }
+  }
 })
 </script>
 

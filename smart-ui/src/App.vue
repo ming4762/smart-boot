@@ -7,10 +7,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, watch } from 'vue'
+import { defineComponent, watch, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
-import { useStore } from 'vuex'
+import { storeToRefs } from 'pinia'
+
+import AppUtils from '@/common/utils/AppUtils'
+
+import {useAppI18nStore, useAppStateStore } from '@/store/modules/AppStore2'
 
 import { domTitle, setDocumentTitle } from '@/common/utils/domUtil'
 import ApiService from '@/common/utils/ApiService'
@@ -56,22 +60,27 @@ export default defineComponent({
   setup () {
     const i18n = useI18n()
     const route = useRoute()
-    const store = useStore()
+    const appI18nStore = useAppI18nStore()
+    const appStateStore = useAppStateStore()
+
+    const { lang } = storeToRefs(appI18nStore)
+    const { globalLoading } = storeToRefs(appStateStore)
+
     const computedLocale = computed(() => {
-      return i18n.getLocaleMessage(store.getters['app/lang']).antLocale
+      return i18n.getLocaleMessage(lang.value).antLocale
     })
+
     domTitleVueSupport(route, i18n.locale, i18n.t)
 
     // 动态设置语言信息
-    const computedLang = computed(() => store.getters['app/lang'])
-    ApiService.setLang(computedLang.value)
-    watch(computedLang, () => {
-      ApiService.setLang(computedLang.value)
+    ApiService.setLang(lang.value)
+    watch(lang, () => {
+      ApiService.setLang(lang.value)
     })
 
     return {
       locale: computedLocale,
-      globalLoading: computed(() => store.getters['app/globalLoading'])
+      globalLoading
     }
   },
   watch: {

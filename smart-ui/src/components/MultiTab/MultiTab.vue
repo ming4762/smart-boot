@@ -13,7 +13,8 @@
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { useStore } from 'vuex'
+
+import { useAppI18nStore } from '@/store/modules/AppStore2'
 
 import Navigation, { NavigationProps } from './Navigation.vue'
 
@@ -35,13 +36,11 @@ export default defineComponent({
   props: MultiTabProps,
   setup () {
     const route = useRoute()
-    const store = useStore()
+    const appI18nStore = useAppI18nStore()
     const computedActiveValue = computed(() => {
       return route.fullPath
     })
-    const computedLang = computed(() => {
-      return store.getters['app/lang']
-    })
+    const computedLang = appI18nStore.lang
     const handleClickItem = ({ key }: any) => {
       switch (key) {
         case 'refreshCurrent': {
