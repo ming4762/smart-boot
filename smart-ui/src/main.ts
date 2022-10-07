@@ -8,8 +8,9 @@ import Antd from 'ant-design-vue'
 import 'ant-design-vue/dist/antd.variable.min.css'
 
 import router from './router'
-import i18n from './i18n'
-import store from './store'
+import i18nCreator from './i18n'
+
+import { createPinia } from 'pinia'
 
 import systemInit from '@/modules/system/SystemInit'
 
@@ -21,7 +22,22 @@ window['umi_plugin_ant_themeVar'] = themePluginConfig.theme
 import VXETable from 'vxe-table'
 import 'vxe-table/lib/style.css'
 
+import { useAppI18nStore } from '@/store/modules/AppStore2'
 
+const app = createApp(AppVue)
+
+app.use(createPinia())
+
+// 初始化系统模块
+systemInit(app)
+
+const appI18nStore = useAppI18nStore()
+
+const i18n = i18nCreator(appI18nStore)
+
+/**
+ * vxe-table国际化
+ */
 VXETable.setup({
   // @ts-ignore
   i18n: (key, args) => i18n.global.t(key, args),
@@ -37,14 +53,9 @@ const useVxe = (app: App) => {
   app.use(VXETable)
 }
 
-const app = createApp(AppVue)
-
-// 初始化系统模块
-systemInit(app)
-
 app.use(router)
   .use(Antd)
   .use(useVxe)
   .use(i18n)
-  .use(store)
   .mount('#app')
+

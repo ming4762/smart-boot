@@ -3,7 +3,7 @@
     :collapsed="collapsed"
     :media-query="query"
     :is-mobile="isMobile"
-    :open-menu-list="computedOpenMenuList"
+    :open-menu-list="openMenuList"
     :tab-remove="handleTabRemove"
     :lang="computedLang"
     :tab-click="handleTabClick"
@@ -48,19 +48,19 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, Ref, ref, watch } from 'vue'
+import { defineComponent, onMounted, ref, watch } from 'vue'
 import { errorMessage } from '@/components/notice/SystemNotice'
-import { Store, useStore } from 'vuex'
+import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { RouteLocationNormalized, Router, useRoute, useRouter } from 'vue-router'
 
 import { ReloadOutlined } from '@ant-design/icons-vue'
 import { notification } from 'ant-design-vue'
 
-import defaultSettings from '@/config/defaultSetting'
-import { TOGGLE_MOBILE_TYPE } from '@/modules/system/store/mutation-types'
+import { useAppSettingStore, useAppStateStore, useAppI18nStore } from '@/store/modules/AppStore2'
+import { useSystemMenuStore, useSystemExceptionStore } from '@/modules/system/store'
 
-import { STORE_APP_MUTATION } from '@/common/constants/CommonConstants'
+import defaultSettings from '@/config/defaultSetting'
 
 import ProLayout from '@/components/layouts/ProLayout'
 import RightContent from './header/RightContent.vue'
@@ -68,12 +68,14 @@ import SettingDrawer from './SettingDrawer/SettingDrawer'
 import ExceptionModal from '../excption/ExceptionModal.vue'
 
 import './BasicLayout.less'
-import TreeUtils from '@/common/utils/TreeUtils'
 
 import ApiService from '@/common/utils/ApiService'
 
-const MobileVueSupport = (collapsed: Ref<boolean>) => {
-  const store = useStore()
+const collapsedVueSupport = (appStateStore: any) => {
+  const handleCollapse = () => {
+    appStateStore.openCloseSidebar()
+  }
+  const { collapsed } = storeToRefs(appStateStore)
   const isMobile = ref(false)
   const query = ref({})
   const handleMediaQuery = (val: any) => {
@@ -84,38 +86,27 @@ const MobileVueSupport = (collapsed: Ref<boolean>) => {
     }
     if (!isMobile.value && val['screen-xs']) {
       isMobile.value = true
-      collapsed.value = false
+      appStateStore.collapsed = false
     }
   }
-  watch(isMobile, () => {
-    store.commit(TOGGLE_MOBILE_TYPE, isMobile.value)
-  })
   return {
+    collapsed: collapsed,
+    handleCollapse,
     isMobile,
     query,
     handleMediaQuery
   }
 }
 
-const collapsedVueSupport = () => {
-  const store = useStore()
-  const collapsed = computed(() => store.getters['app/appCollapsed'])
-  const handleCollapse = () => {
-    store.commit(`app/${STORE_APP_MUTATION.APP_COLLAPSED_SIDEBAR}`)
-  }
-  return {
-    collapsed,
-    handleCollapse
-  }
-}
+/**
+ * APP setting
+ */
+const settingVueSupport = () => {
+  const appSettingStore = useAppSettingStore()
 
-const settingVueSupport = (store: Store<any>) => {
-  const setting = computed(() => store.getters['app/appSetting'])
+  const setting = appSettingStore.appSetting
   const handleSettingChange = ({ type, value }: any) => {
-    store.commit(`app/${STORE_APP_MUTATION.CHANGE_SETTING}`, {
-      key: type,
-      value
-    })
+    appSettingStore.changeSetting(type, value)
   }
   return {
     setting,
@@ -125,49 +116,33 @@ const settingVueSupport = (store: Store<any>) => {
 /**
  * 加载用户菜单信息
  */
-const UserMenuVueSupport = (store : Store<any>) => {
+const UserMenuVueSupport = (route: RouteLocationNormalized, router: Router) => {
+  const systemMenuStore = useSystemMenuStore()
 
-  const userMenu = computed(() => {
-    const userMenuList = store.getters['app/userMenuList']
-    if (userMenuList === null || userMenuList === undefined) {
-      return []
-    }
-    return  TreeUtils.convertList2Tree(JSON.parse(JSON.stringify(userMenuList)), ['id', 'parentId'], '0') || []
-  })
-  return {
-    userMenu
-  }
-}
-/**
- * tab相关
- */
-const tabsVueSupport = (store: Store<any>, route: RouteLocationNormalized, router: Router) => {
-  // 打开的菜单信息
-  const computedOpenMenuList = computed(() => {
-    return store.getters['app/openMenuList']
-  })
   watch(route, () => {
-    store.dispatch('app/addMenu', route.fullPath)
+    systemMenuStore.addMenu(route.fullPath)
   })
-  // 页面初始加载，如果路径不是主页 则添加页面
+
   onMounted(() => {
-    store.dispatch('app/addMenu', '/main')
+    systemMenuStore.addMenu('/main')
     if (route.fullPath !== '/main') {
-      store.dispatch('app/addMenu', route.fullPath)
+      systemMenuStore.addMenu(route.fullPath)
     }
   })
   /**
    * 移除菜单
    */
   const handleTabRemove = (menu: any) => {
-    store.dispatch('app/removeMenu', menu.path)
+    systemMenuStore.removeMenu(menu.path)
   }
+
   const handleTabClick = (menu: any) => {
     router.push(menu.path)
-    // store.dispatch('app/addMenu', menu.id)
   }
+
   return {
-    computedOpenMenuList,
+    userMenu: systemMenuStore.userTreeMenu,
+    openMenuList: systemMenuStore.openMenuList,
     handleTabRemove,
     handleTabClick
   }
@@ -176,12 +151,12 @@ const tabsVueSupport = (store: Store<any>, route: RouteLocationNormalized, route
 /**
  * 异常信息谭
  */
-const useSystemException = (store: Store<any>) => {
-  // 异常modal显示装填
-  const exceptionModalVisible = computed(() => store.getters['system/exception'].modalVisible)
+const useSystemException = () => {
+  const systemExceptionStore = useSystemExceptionStore()
+  const { modalVisible } = storeToRefs(systemExceptionStore)
 
   return {
-    exceptionModalVisible
+    exceptionModalVisible: modalVisible
   }
 }
 
@@ -198,23 +173,22 @@ export default defineComponent({
     ExceptionModal
   },
   setup () {
-    const store = useStore()
     const route = useRoute()
     const router = useRouter()
 
-    const collapsedVue = collapsedVueSupport()
-    const mobileVue = MobileVueSupport(collapsedVue.collapsed)
-    const settingVue = settingVueSupport(store)
+    const appStateStore = useAppStateStore()
+    const appSettingStore = useAppSettingStore()
+    const { settingDrawerVisible } = storeToRefs(appSettingStore)
+
+    const collapsedVue = collapsedVueSupport(appStateStore)
+    const settingVue = settingVueSupport()
     const i18nRender = useI18n().t
-    const userMenuVue = UserMenuVueSupport(store)
-    const systemExceptionHook = useSystemException(store)
+    const userMenuVue = UserMenuVueSupport(route, router)
+    const systemExceptionHook = useSystemException()
 
-    // TODO:不显示tab，以下代码无意义，如何优化？
-    const tabsVue = tabsVueSupport(store, route, router)
+    const appI18nStore = useAppI18nStore()
+    const { lang } = storeToRefs(appI18nStore)
 
-    const computedLang = computed(() => {
-      return store.getters['app/lang']
-    })
 
     onMounted(async () => {
       try {
@@ -235,7 +209,6 @@ export default defineComponent({
     }
 
     return {
-      ...mobileVue,
       ...collapsedVue,
       ...settingVue,
       ...userMenuVue,
@@ -243,10 +216,9 @@ export default defineComponent({
       title: defaultSettings.title,
       isDev: import.meta.env.DEV,
       i18nRender,
-      ...tabsVue,
-      computedLang,
+      computedLang: lang,
       handleMenuClick,
-      settingDrawerVisible: computed(() => store.getters['app/settingDrawerVisible'])
+      settingDrawerVisible
     }
   }
 })

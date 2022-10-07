@@ -94,7 +94,8 @@
 import { defineComponent, ref, reactive, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { RouteRecord, useRouter } from 'vue-router'
-import { useStore } from 'vuex'
+
+import { useSystemLoginStore, useSystemMenuStore } from '@/modules/system/store'
 
 import { message } from 'ant-design-vue'
 import { UserOutlined, LockOutlined, MobileOutlined, MailOutlined }  from '@ant-design/icons-vue'
@@ -151,18 +152,20 @@ export default defineComponent({
   },
   setup() {
     const formRef = ref()
-    const store = useStore()
     const i18n = useI18n()
     const router = useRouter()
     const loginLoading = ref(false)
     const customActiveKey = ref('username')
     const captchaHook = useCaptcha()
 
+    const systemLoginStore = useSystemLoginStore()
+    const systemMenuStore = useSystemMenuStore()
+
     // 执行登出操作，防止直接跳转到登录页面未执行登录
     if (getToken()) {
       ApiService.postAjax('auth/logout')
         .finally(() => {
-          store.dispatch('app/logout')
+          systemLoginStore.logout()
         })
     }
     const loginModel = reactive({
@@ -270,7 +273,7 @@ export default defineComponent({
             }
           }
         ].concat(formatUserMenu)
-        store.dispatch('app/setUserMenu', allUserMenu)
+        systemMenuStore.setUserMenu(allUserMenu)
         // 设置route meta
         setRouteMeta(router.getRoutes(), allUserMenu)
         router.push('/')

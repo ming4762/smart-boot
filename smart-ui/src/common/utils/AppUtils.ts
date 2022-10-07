@@ -1,6 +1,4 @@
-import store from '@/store'
-
-import { STORE_APP_MUTATION } from '@/common/constants/CommonConstants'
+import { useAppStateStore } from '@/store/modules/AppStore2'
 
 export default class AppUtils {
 
@@ -9,6 +7,7 @@ export default class AppUtils {
    * @param loading 状态
    */
   public static globalLoading (loading: boolean): void {
-    store.commit(`app/${STORE_APP_MUTATION.GLOBAL_LOADING}`, loading)
+    const appStateStore = useAppStateStore()
+    appStateStore.setGlobalLoading(loading)
   }
 }
