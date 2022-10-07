@@ -9,21 +9,22 @@ import TreeUtils from '@/common/utils/TreeUtils'
 
 import { EVENT_SYMBOLS } from '@/common/constants/CommonConstants'
 
-const STORE_KEYS = {
-  OPEN_MENU_LIST: 'smart_app_open_menu',
-  APP_USER_MENU_LIST: 'smart_app_user_menu'
-}
+// const STORE_KEYS = {
+//   OPEN_MENU_LIST: 'smart_app_open_menu',
+//   APP_USER_MENU_LIST: 'smart_app_user_menu'
+// }
 
 /**
  * 系统菜单store
  */
 export const useSystemMenuStore = defineStore('systemMenu', {
+
   state: () => {
     return {
       // 打开的菜单
-      openMenuList: StoreUtil.getStore(STORE_KEYS.OPEN_MENU_LIST) as Array<any> || [],
+      openMenuList: [],
       // 用户菜单信息
-      userMenuList: StoreUtil.getStore(STORE_KEYS.APP_USER_MENU_LIST) as Array<any> || []
+      userMenuList: []
     }
   },
   getters: {
@@ -42,7 +43,7 @@ export const useSystemMenuStore = defineStore('systemMenu', {
      */
     setUserMenu (userMenuList: Array<any>) {
       this.userMenuList = userMenuList
-      StoreUtil.setStore(STORE_KEYS.APP_USER_MENU_LIST, userMenuList, StoreUtil.SESSION_TYPE)
+      // StoreUtil.setStore(STORE_KEYS.APP_USER_MENU_LIST, userMenuList, StoreUtil.SESSION_TYPE)
     },
     /**
      *
@@ -71,7 +72,7 @@ export const useSystemMenuStore = defineStore('systemMenu', {
           })
           if (!hasMenu) {
             this.openMenuList.push(menu)
-            StoreUtil.setStore(STORE_KEYS.OPEN_MENU_LIST, this.openMenuList, StoreUtil.SESSION_TYPE)
+            // StoreUtil.setStore(STORE_KEYS.OPEN_MENU_LIST, this.openMenuList, StoreUtil.SESSION_TYPE)
             if (menu.name !== 'main') {
               // 发布添加菜单事件
               publish(EVENT_SYMBOLS.SYSTEM_ADD_MENU, menu)
@@ -93,7 +94,7 @@ export const useSystemMenuStore = defineStore('systemMenu', {
             break
           }
         }
-        StoreUtil.setStore(STORE_KEYS.OPEN_MENU_LIST, this.openMenuList, StoreUtil.SESSION_TYPE)
+        // StoreUtil.setStore(STORE_KEYS.OPEN_MENU_LIST, this.openMenuList, StoreUtil.SESSION_TYPE)
         // 判断是否是当前菜单
         if (router.currentRoute.value.fullPath === menuKey) {
           const activeMenu = this.openMenuList.slice(-1)[0]
