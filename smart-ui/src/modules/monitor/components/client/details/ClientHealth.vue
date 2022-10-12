@@ -4,7 +4,9 @@
       <tr>
         <td colspan="2">
           <span style="font-weight: bold">Client</span>
-          <span class="status" :class="data.status === 'UP' ? 'up' : 'down'">{{ data.status }}</span>
+          <span class="status" :class="data.status === 'UP' ? 'up' : 'down'">
+            {{ data.status }}
+          </span>
         </td>
       </tr>
       <a-divider />
@@ -48,7 +50,7 @@ export default defineComponent({
       type: Number
     }
   },
-  setup (props) {
+  setup(props) {
     const { clientId, time } = toRefs(props)
     const data = ref<any>({})
     // 加载数据函数
@@ -65,13 +67,13 @@ export default defineComponent({
     }
   },
   computed: {
-    computedDetails () {
+    computedDetails() {
       const details = this.data.components
       if (!details) {
         return []
       }
       const result: Array<any> = []
-      Object.keys(details).forEach(key => {
+      Object.keys(details).forEach((key) => {
         const detailData = details[key]
         result.push({
           title: key,
@@ -93,7 +95,7 @@ export default defineComponent({
     font-weight: bold;
   }
   .up {
-    color: #4EC677;
+    color: #4ec677;
   }
   .down {
     color: red;

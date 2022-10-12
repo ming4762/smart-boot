@@ -1,4 +1,4 @@
-import { App } from 'vue'
+import type { App } from 'vue'
 
 import { hasPermission } from '@/common/auth/AuthUtils'
 
@@ -11,7 +11,7 @@ import './RouterPermission'
 /**
  * 初始化函数
  */
-export default function init (app: App) {
+export default function init(app: App) {
   initDirectivePermission(app)
   handleInitEvent()
 }
@@ -22,7 +22,7 @@ export default function init (app: App) {
  */
 const initDirectivePermission = (app: App) => {
   app.directive('permission', {
-    beforeMount (el, binding) {
+    beforeMount(el, binding) {
       const permission = binding.value
       const has = hasPermission(permission)
       if (!has) {

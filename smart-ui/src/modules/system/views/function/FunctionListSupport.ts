@@ -1,4 +1,5 @@
-import { onMounted, ref, reactive, Ref, createVNode } from 'vue'
+import { onMounted, ref, reactive, createVNode } from 'vue'
+import type { Ref } from 'vue'
 
 import ApiService from '@/common/utils/ApiService'
 import { errorMessage } from '@/components/notice/SystemNotice'
@@ -55,8 +56,16 @@ const defaultSaveModel = {
 
 const saveFormRules = (t: Function) => {
   return {
-    functionName: [{ required: true, message: t('system.views.function.validate.functionName'), trigger: 'blur' }],
-    functionType: [{ required: true, message: t('system.views.function.validate.functionType'), trigger: 'change' }]
+    functionName: [
+      { required: true, message: t('system.views.function.validate.functionName'), trigger: 'blur' }
+    ],
+    functionType: [
+      {
+        required: true,
+        message: t('system.views.function.validate.functionType'),
+        trigger: 'change'
+      }
+    ]
   }
 }
 
@@ -147,7 +156,7 @@ export const vueAddEdit = (loadData: any, t: Function) => {
    * @param keys
    */
   const setTypeDisabled = (keys: Array<string>) => {
-    Object.keys(functionTypes).forEach(key => {
+    Object.keys(functionTypes).forEach((key) => {
       functionTypes[key].disabled = keys.includes(key)
     })
   }
@@ -193,7 +202,10 @@ export const vueDelete = (loadData: any, gridRef: Ref, t: Function) => {
       icon: createVNode(ExclamationCircleOutlined),
       content: t('common.notice.deleteConfirm'),
       onOk: async () => {
-        await ApiService.postAjax('sys/function/batchDeleteById', selectRows.map(item => item.functionId))
+        await ApiService.postAjax(
+          'sys/function/batchDeleteById',
+          selectRows.map((item) => item.functionId)
+        )
         loadData()
       }
     })

@@ -19,18 +19,32 @@
           v-model:current-page="tablePage.currentPage"
           v-model:page-size="tablePage.pageSize"
           :page-sizes="[500, 1000, 2000, 5000]"
-          :layouts="['Sizes', 'PrevJump', 'PrevPage', 'Number', 'NextPage', 'NextJump', 'FullJump', 'Total']"
+          :layouts="[
+            'Sizes',
+            'PrevJump',
+            'PrevPage',
+            'Number',
+            'NextPage',
+            'NextJump',
+            'FullJump',
+            'Total'
+          ]"
           :total="tablePage.total"
-          @page-change="handlePageChange">
-        </vxe-pager>
+          @page-change="handlePageChange"></vxe-pager>
       </template>
       <template #toolbar_buttons>
         <a-form style="margin-left: 10px" layout="inline" :model="searchModel">
           <a-form-item>
-            <a-input v-model:value="searchModel.groupCode" :size="formSizeConfig" :placeholder="$t('system.views.userGroup.table.groupCode')" />
+            <a-input
+              v-model:value="searchModel.groupCode"
+              :size="formSizeConfig"
+              :placeholder="$t('system.views.userGroup.table.groupCode')" />
           </a-form-item>
           <a-form-item>
-            <a-input v-model:value="searchModel.groupName" :size="formSizeConfig" :placeholder="$t('system.views.userGroup.table.groupName')" />
+            <a-input
+              v-model:value="searchModel.groupName"
+              :size="formSizeConfig"
+              :placeholder="$t('system.views.userGroup.table.groupName')" />
           </a-form-item>
           <a-form-item :label="$t('system.views.userGroup.search.useYnTitle')">
             <a-select v-model:value="searchModel.useYn" style="width: 100px" :size="formSizeConfig">
@@ -40,16 +54,38 @@
             </a-select>
           </a-form-item>
           <a-form-item>
-            <a-button :size="buttonSizeConfig" @click="resetSearch">{{ $t('common.button.reset') }}</a-button>
-            <a-button :size="buttonSizeConfig" style="margin-left: 5px" type="primary" @click="loadData">{{ $t('common.button.search') }}</a-button>
+            <a-button :size="buttonSizeConfig" @click="resetSearch">
+              {{ $t('common.button.reset') }}
+            </a-button>
+            <a-button
+              :size="buttonSizeConfig"
+              style="margin-left: 5px"
+              type="primary"
+              @click="loadData">
+              {{ $t('common.button.search') }}
+            </a-button>
           </a-form-item>
         </a-form>
       </template>
       <template #toolbar_tools>
         <a-form layout="inline">
           <a-form-item>
-            <a-button v-permission="permissions.add" :size="buttonSizeConfig" type="primary" @click="handleShowAdd">{{ $t('common.button.add') }}</a-button>
-            <a-button v-permission="permissions.delete" :size="buttonSizeConfig" type="primary" style="margin-left: 5px" danger @click="handleDelete">{{ $t('common.button.delete') }}</a-button>
+            <a-button
+              v-permission="permissions.add"
+              :size="buttonSizeConfig"
+              type="primary"
+              @click="handleShowAdd">
+              {{ $t('common.button.add') }}
+            </a-button>
+            <a-button
+              v-permission="permissions.delete"
+              :size="buttonSizeConfig"
+              type="primary"
+              style="margin-left: 5px"
+              danger
+              @click="handleDelete">
+              {{ $t('common.button.delete') }}
+            </a-button>
           </a-form-item>
         </a-form>
       </template>
@@ -62,8 +98,14 @@
           </a-button>
           <template #overlay>
             <a-menu @click="({ key }) => handleActions(row, key)">
-              <a-menu-item key="edit" :disabled="!hasPermission(permissions.update)"><EditOutlined />{{ $t('common.button.edit') }}</a-menu-item>
-              <a-menu-item key="setUser" :disabled="!hasPermission(permissions.setUser)"><UserAddOutlined />{{ $t('system.views.userGroup.button.setUser') }}</a-menu-item>
+              <a-menu-item key="edit" :disabled="!hasPermission(permissions.update)">
+                <EditOutlined />
+                {{ $t('common.button.edit') }}
+              </a-menu-item>
+              <a-menu-item key="setUser" :disabled="!hasPermission(permissions.setUser)">
+                <UserAddOutlined />
+                {{ $t('system.views.userGroup.button.setUser') }}
+              </a-menu-item>
             </a-menu>
           </template>
         </a-dropdown>
@@ -78,16 +120,22 @@
         <a-form
           :rules="formRules"
           :model="addEditModel"
-          :label-col="{span: 5}"
-          :wrapper-col="{span: 18}">
+          :label-col="{ span: 5 }"
+          :wrapper-col="{ span: 18 }">
           <a-form-item name="groupCode" :label="$t('system.views.userGroup.table.groupCode')">
-            <a-input v-model:value="addEditModel.groupCode" :placeholder="$t('system.views.userGroup.validate.groupCode')" />
+            <a-input
+              v-model:value="addEditModel.groupCode"
+              :placeholder="$t('system.views.userGroup.validate.groupCode')" />
           </a-form-item>
           <a-form-item name="groupName" :label="$t('system.views.userGroup.table.groupName')">
-            <a-input v-model:value="addEditModel.groupName" :placeholder="$t('system.views.userGroup.validate.groupName')" />
+            <a-input
+              v-model:value="addEditModel.groupName"
+              :placeholder="$t('system.views.userGroup.validate.groupName')" />
           </a-form-item>
           <a-form-item :label="$t('common.table.remark')">
-            <a-input v-model:value="addEditModel.remark" :placeholder="$t('common.formValidate.remark')" />
+            <a-input
+              v-model:value="addEditModel.remark"
+              :placeholder="$t('common.formValidate.remark')" />
           </a-form-item>
           <a-form-item name="useYn" :label="$t('common.table.useYn')">
             <a-switch v-model:checked="addEditModel.useYn" />
@@ -108,7 +156,7 @@
         <a-transfer
           class="group-set-user"
           :target-keys="targetKeys"
-          :render="item => item.title"
+          :render="(item) => item.title"
           :data-source="allUserData"
           show-search
           @change="handleTransChange" />
@@ -138,12 +186,12 @@ import { tableUseYn } from '@/components/common/TableCommon'
 export default defineComponent({
   name: 'UserGroupView',
   components: {
-    EditOutlined, DownOutlined, UserAddOutlined
+    EditOutlined,
+    DownOutlined,
+    UserAddOutlined
   },
-  mixins: [
-    AuthMixins
-  ],
-  setup () {
+  mixins: [AuthMixins],
+  setup() {
     const gridRef = ref()
     const loadDataVue = vueLoadData()
     const addUpdateVue = vueAddUpdate(loadDataVue.loadData)
@@ -177,7 +225,7 @@ export default defineComponent({
       gridRef
     }
   },
-  data () {
+  data() {
     return {
       permissions: SystemPermissions.userGroup,
       toolbarConfig: {

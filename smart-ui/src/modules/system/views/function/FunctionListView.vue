@@ -15,8 +15,22 @@
       height="auto">
       <template #toolbar_buttons></template>
       <template #toolbar_tools>
-        <a-button v-permission="permissions.add" :size="buttonSizeConfig" type="primary" @click="() => handleShowAdd(null)">{{ $t('common.button.add') }}</a-button>
-        <a-button v-permission="permissions.delete" :size="buttonSizeConfig" style="margin-left: 5px" type="primary" danger @click="handleDelete">{{ $t('common.button.delete') }}</a-button>
+        <a-button
+          v-permission="permissions.add"
+          :size="buttonSizeConfig"
+          type="primary"
+          @click="() => handleShowAdd(null)">
+          {{ $t('common.button.add') }}
+        </a-button>
+        <a-button
+          v-permission="permissions.delete"
+          :size="buttonSizeConfig"
+          style="margin-left: 5px"
+          type="primary"
+          danger
+          @click="handleDelete">
+          {{ $t('common.button.delete') }}
+        </a-button>
       </template>
       <template #table-operation="{ row }">
         <a-dropdown>
@@ -26,8 +40,14 @@
           </a-button>
           <template #overlay>
             <a-menu @click="({ key }) => handleActions(row, key)">
-              <a-menu-item key="add" :disabled="!hasPermission(permissions.add) || row.functionType === '30'">{{ $t('common.button.add') }}</a-menu-item>
-              <a-menu-item key="edit" :disabled="!hasPermission(permissions.update)">{{ $t('common.button.edit') }}</a-menu-item>
+              <a-menu-item
+                key="add"
+                :disabled="!hasPermission(permissions.add) || row.functionType === '30'">
+                {{ $t('common.button.add') }}
+              </a-menu-item>
+              <a-menu-item key="edit" :disabled="!hasPermission(permissions.update)">
+                {{ $t('common.button.edit') }}
+              </a-menu-item>
             </a-menu>
           </template>
         </a-dropdown>
@@ -37,7 +57,9 @@
         <div v-else></div>
       </template>
       <template #table-functionType="{ row }">
-        <a-tag :color="getTagData(row.functionType).color">{{ getTagData(row.functionType).text }}</a-tag>
+        <a-tag :color="getTagData(row.functionType).color">
+          {{ getTagData(row.functionType).text }}
+        </a-tag>
       </template>
     </vxe-grid>
     <a-modal
@@ -56,7 +78,9 @@
             <a-input v-show="false" v-model:value="saveModel.parentId" />
           </a-form-item>
           <a-form-item name="functionName" :label="$t('system.views.function.table.functionName')">
-            <a-input v-model:value="saveModel.functionName" :placeholder="$t('system.views.function.validate.functionName')" />
+            <a-input
+              v-model:value="saveModel.functionName"
+              :placeholder="$t('system.views.function.validate.functionName')" />
           </a-form-item>
           <a-form-item name="functionType" :label="$t('system.views.function.table.functionType')">
             <a-radio-group v-model:value="saveModel.functionType">
@@ -70,16 +94,27 @@
             </a-radio-group>
           </a-form-item>
           <a-form-item name="i18nCode" :label="$t('system.views.function.table.i18nCode')">
-            <a-input v-model:value="saveModel.i18nCode" :placeholder="$t('system.views.function.validate.i18nCode')" />
+            <a-input
+              v-model:value="saveModel.i18nCode"
+              :placeholder="$t('system.views.function.validate.i18nCode')" />
           </a-form-item>
           <a-form-item name="icon" :label="$t('system.views.function.table.icon')">
-            <a-input v-model:value="saveModel.icon" :placeholder="$t('system.views.function.validate.icon')" />
+            <a-input
+              v-model:value="saveModel.icon"
+              :placeholder="$t('system.views.function.validate.icon')" />
           </a-form-item>
           <a-form-item name="url" label="url">
-            <a-input v-model:value="saveModel.url" :placeholder="$t('system.views.function.validate.url')" />
+            <a-input
+              v-model:value="saveModel.url"
+              :placeholder="$t('system.views.function.validate.url')" />
           </a-form-item>
-          <a-form-item name="httpMethod" :label="$t('system.views.function.table.httpMethod')" :placeholder="$t('system.views.function.validate.httpMethod')">
-            <a-select v-model:value="saveModel.httpMethod" :placeholder="$t('system.views.function.validate.httpMethod')">
+          <a-form-item
+            name="httpMethod"
+            :label="$t('system.views.function.table.httpMethod')"
+            :placeholder="$t('system.views.function.validate.httpMethod')">
+            <a-select
+              v-model:value="saveModel.httpMethod"
+              :placeholder="$t('system.views.function.validate.httpMethod')">
               <a-select-option value="GET">GET</a-select-option>
               <a-select-option value="POST">POST</a-select-option>
               <a-select-option value="PUT">PUT</a-select-option>
@@ -87,12 +122,16 @@
             </a-select>
           </a-form-item>
           <a-form-item name="permission" :label="$t('system.views.function.table.permission')">
-            <a-input v-model:value="saveModel.permission" :placeholder="$t('system.views.function.validate.permission')" />
+            <a-input
+              v-model:value="saveModel.permission"
+              :placeholder="$t('system.views.function.validate.permission')" />
           </a-form-item>
           <a-form-item name="menuIs" :label="$t('system.views.function.table.menuIs')">
             <a-switch v-model:checked="saveModel.menuIs" />
           </a-form-item>
-          <a-form-item name="internalOrExternal" :label="$t('system.views.function.table.internalOrExternal')">
+          <a-form-item
+            name="internalOrExternal"
+            :label="$t('system.views.function.table.internalOrExternal')">
             <a-switch v-model:checked="saveModel.internalOrExternal" />
           </a-form-item>
           <a-form-item name="dataRule" :label="$t('system.views.function.table.dataRule')">
@@ -129,7 +168,7 @@ export default defineComponent({
     DownOutlined
   },
   mixins: [AuthMixins],
-  setup () {
+  setup() {
     const gridRef = ref()
     const { t } = useI18n()
     const loadFunctionListVue = vueLoadFunctionList()
@@ -187,7 +226,7 @@ export default defineComponent({
       gridRef
     }
   },
-  data () {
+  data() {
     return {
       permissions: SystemPermissions.function,
       toolbarConfig: {
@@ -313,6 +352,4 @@ export default defineComponent({
 })
 </script>
 
-<style lang="less" scoped>
-
-</style>
+<style lang="less" scoped></style>

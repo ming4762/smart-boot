@@ -1,4 +1,4 @@
-import { RouteRecordRaw } from 'vue-router'
+import type { RouteRecordRaw } from 'vue-router'
 import BasicLayout from '@/modules/system/components/layouts/BasicLayout.vue'
 
 const monitorRouters: Array<RouteRecordRaw> = [
@@ -8,7 +8,8 @@ const monitorRouters: Array<RouteRecordRaw> = [
     children: [
       {
         path: 'monitor/manager/application',
-        component: () => import('@/modules/monitor/views/manager/application/MonitorApplicationListView.vue')
+        component: () =>
+          import('@/modules/monitor/views/manager/application/MonitorApplicationListView.vue')
       },
       // 客户端管理页面
       {
@@ -22,7 +23,8 @@ const monitorRouters: Array<RouteRecordRaw> = [
       },
       {
         path: 'monitor/manager/slowSql',
-        component: () => import('@/modules/monitor/views/manager/slowSql/MonitorClientSlowSqlListView.vue')
+        component: () =>
+          import('@/modules/monitor/views/manager/slowSql/MonitorClientSlowSqlListView.vue')
       },
       {
         path: 'monitor/manager/log',
@@ -30,7 +32,8 @@ const monitorRouters: Array<RouteRecordRaw> = [
       },
       {
         path: 'monitor/manager/httpTrace',
-        component: () => import('@/modules/monitor/views/manager/httpTrace/MonitorClientHttpTraceListView.vue')
+        component: () =>
+          import('@/modules/monitor/views/manager/httpTrace/MonitorClientHttpTraceListView.vue')
       }
     ]
   },
@@ -39,17 +42,18 @@ const monitorRouters: Array<RouteRecordRaw> = [
     name: 'Client',
     redirect: '/monitor/client/detail',
     component: () => import('@/modules/monitor/views/client/ClientMain.vue'),
-    props: route => ({ clientId: route.query.clientId }),
+    props: (route) => ({ clientId: route.query.clientId }),
     children: [
       {
         path: 'detail',
         component: () => import('@/modules/monitor/views/client/detail/ClientDetailPage.vue'),
-        props: route => ({ clientId: route.query.clientId })
+        props: (route) => ({ clientId: route.query.clientId })
       },
       {
         path: 'environment',
-        props: route => ({ clientId: route.query.clientId }),
-        component: () => import('@/modules/monitor/views/client/normal/environment/ClientEnvironmentPage.vue')
+        props: (route) => ({ clientId: route.query.clientId }),
+        component: () =>
+          import('@/modules/monitor/views/client/normal/environment/ClientEnvironmentPage.vue')
       },
       {
         path: 'beans',

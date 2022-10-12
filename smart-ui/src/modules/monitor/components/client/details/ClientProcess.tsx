@@ -1,4 +1,5 @@
-import { defineComponent, PropType, toRefs } from 'vue'
+import { defineComponent, toRefs } from 'vue'
+import type { PropType } from 'vue'
 
 import ClientCard from '../../common/ClientCard.vue'
 import { loadMetricsDataVue } from '@/modules/monitor/utils/ClientMetrisData'
@@ -21,14 +22,19 @@ export default defineComponent({
       required: true
     }
   },
-  setup (props) {
+  setup(props) {
     const { time, clientId } = toRefs(props)
-    const { computedData } = loadMetricsDataVue(clientId, time, ['process.uptime', 'process.cpu.usage', 'system.cpu.usage', 'system.cpu.count'])
+    const { computedData } = loadMetricsDataVue(clientId, time, [
+      'process.uptime',
+      'process.cpu.usage',
+      'system.cpu.usage',
+      'system.cpu.count'
+    ])
     return {
       computedData
     }
   },
-  data () {
+  data() {
     return {
       span: 6,
       itemStyle: {
@@ -36,12 +42,12 @@ export default defineComponent({
       }
     }
   },
-  render () {
+  render() {
     return (
       <client-card class="full-height" title="Process">
         <a-row>
           {
-            this.computedData.map(item => {
+            this.computedData.map((item) => {
               return (
                 <a-col style={this.itemStyle} span={this.span}>{item.statistic}</a-col>
               )

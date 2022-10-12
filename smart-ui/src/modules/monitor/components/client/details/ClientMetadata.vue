@@ -27,7 +27,7 @@ export default defineComponent({
      * 元数据计算属性
      * @returns {*|{}}
      */
-    computedMetadata () {
+    computedMetadata() {
       if (this.data && this.data.application) {
         const metadata = this.data.application.metadata || {}
         metadata.startupTime = new Date(this.data.application.startupTime)

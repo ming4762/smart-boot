@@ -1,4 +1,5 @@
-import { onMounted, reactive, ref, Ref, createVNode, computed } from 'vue'
+import { onMounted, reactive, ref, createVNode, computed } from 'vue'
+import type { Ref } from 'vue'
 
 import { Modal, message } from 'ant-design-vue'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
@@ -58,7 +59,10 @@ export const vueLoadDbDataSupport = (isSync: Ref, dbData: Ref, formModel: Ref, f
    * 加载数据库数据
    */
   const loadDbData = async () => {
-    if (StringUtils.hasLength(formModel.value.connectionId) && StringUtils.hasLength(formModel.value.tableName)) {
+    if (
+      StringUtils.hasLength(formModel.value.connectionId) &&
+      StringUtils.hasLength(formModel.value.tableName)
+    ) {
       dbDataLoading.value = true
       try {
         dbData.value = await ApiService.postAjax('db/connection/queryDbTable', {
@@ -115,7 +119,15 @@ export const vueLoadDbDataSupport = (isSync: Ref, dbData: Ref, formModel: Ref, f
  * @param editConfigData
  * @param choseTableList 附表信息
  */
-export const vueSaveConfigSupport = (t: Function, isSync: Ref, doLoadData: any, addEditModalVisible: Ref, dbData: Ref, editConfigData: Ref, choseTableList: Ref) => {
+export const vueSaveConfigSupport = (
+  t: Function,
+  isSync: Ref,
+  doLoadData: any,
+  addEditModalVisible: Ref,
+  dbData: Ref,
+  editConfigData: Ref,
+  choseTableList: Ref
+) => {
   const pageTableSettingRef = ref()
   const pageSearchSettingRef = ref()
   const pageFormSettingRef = ref()
@@ -139,15 +151,19 @@ export const vueSaveConfigSupport = (t: Function, isSync: Ref, doLoadData: any, 
    */
   const doSave = async () => {
     saveLoading.value = true
-    const saveData = Object.assign({
-      className: dbData.value.className,
-      remarks: dbData.value.remarks,
-      addendumTableList: choseTableList.value || []
-    }, formModel.value, {
-      codePageConfigList: pageTableSettingRef.value.getData(),
-      codeFormConfigList: pageFormSettingRef.value.getData(),
-      codeSearchConfigList: pageSearchSettingRef.value.getData()
-    })
+    const saveData = Object.assign(
+      {
+        className: dbData.value.className,
+        remarks: dbData.value.remarks,
+        addendumTableList: choseTableList.value || []
+      },
+      formModel.value,
+      {
+        codePageConfigList: pageTableSettingRef.value.getData(),
+        codeFormConfigList: pageFormSettingRef.value.getData(),
+        codeSearchConfigList: pageSearchSettingRef.value.getData()
+      }
+    )
     try {
       await ApiService.postAjax('db/code/main/save', saveData)
     } catch (e: any) {
@@ -195,7 +211,7 @@ export const vueSaveConfigSupport = (t: Function, isSync: Ref, doLoadData: any, 
     // 验证必填字段是否设置表单
     const pageFormSettingData = pageFormSettingVue.getData() as Array<any>
     const nonNullField: Array<any> = []
-    pageFormSettingData.forEach(item => {
+    pageFormSettingData.forEach((item) => {
       if (item.nullable === 0 && (item.visible === false || item.used === false)) {
         nonNullField.push(item.columnName)
       }
@@ -205,10 +221,10 @@ export const vueSaveConfigSupport = (t: Function, isSync: Ref, doLoadData: any, 
         title: t('common.notice.confirmSave'),
         icon: createVNode(ExclamationCircleOutlined),
         content: t('generator.views.code.message.saveConfirmContent', nonNullField.join(',')),
-        onCancel () {
+        onCancel() {
           return false
         },
-        onOk () {
+        onOk() {
           doSave()
         }
       })
@@ -252,7 +268,10 @@ export const vueCodeListDeleteSupport = (gridRef: Ref, t: Function, doLoadTableD
       cancelText: 'No',
       onOk: async () => {
         // 执行删除
-        await ApiService.postAjax('db/code/main/batchDeleteById', selectData.map(item => item.id))
+        await ApiService.postAjax(
+          'db/code/main/batchDeleteById',
+          selectData.map((item) => item.id)
+        )
         doLoadTableData()
       }
     })
@@ -265,7 +284,13 @@ export const vueCodeListDeleteSupport = (gridRef: Ref, t: Function, doLoadTableD
 /**
  * 修改操作
  */
-export const vueConfigEditSupport = (addEditModalVisible: Ref, formModel: Ref, loadDbData: any, editConfigData: Ref, choseTableList: Ref) => {
+export const vueConfigEditSupport = (
+  addEditModalVisible: Ref,
+  formModel: Ref,
+  loadDbData: any,
+  editConfigData: Ref,
+  choseTableList: Ref
+) => {
   // 配置数据加载状态
   const configDataLoading = ref(false)
   /**
@@ -282,7 +307,7 @@ export const vueConfigEditSupport = (addEditModalVisible: Ref, formModel: Ref, l
       editConfigData.value = result
       // 设置form参数
       const formModelValue: any = Object.assign({}, formModelI)
-      Object.keys(formModelValue).forEach(key => {
+      Object.keys(formModelValue).forEach((key) => {
         formModelValue[key] = result[key]
       })
       formModelValue.connectionId = formModelValue.connectionId + ''
@@ -352,7 +377,7 @@ export const loadTableData = () => {
       'tableName@like': searchModel.tableName,
       'type@=': searchModel.type
     }
-    const parameter: {[index: string]: any} = {
+    const parameter: { [index: string]: any } = {
       limit: tablePage.pageSize,
       page: tablePage.currentPage,
       parameter: searchParameter

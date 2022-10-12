@@ -54,13 +54,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, toRefs, onMounted, computed, ref } from 'vue'
+import { defineComponent, toRefs, onMounted, computed, ref } from 'vue'
+import type { PropType } from 'vue'
 
 import { FilterOutlined } from '@ant-design/icons-vue'
 
 import { loadActuator } from '@/modules/monitor/utils/ClientApiUtils'
 import { errorMessage } from '@/components/notice/SystemNotice'
-
 
 /**
  * 日志配置页面
@@ -76,7 +76,7 @@ export default defineComponent({
       required: true
     }
   },
-  setup (props) {
+  setup(props) {
     const isConfig = ref(false)
     const { clientId } = toRefs(props)
     const data = ref<any>({})
@@ -101,7 +101,7 @@ export default defineComponent({
         return []
       }
       const result: Array<any> = []
-      Object.keys(loggers).forEach(key => {
+      Object.keys(loggers).forEach((key) => {
         const loggerData = loggers[key]
         const searchValue = searchModel.value
         if (searchValue === '' || key.indexOf(searchValue) !== -1) {
@@ -161,7 +161,7 @@ export default defineComponent({
       isConfig
     }
   },
-  data () {
+  data() {
     return {
       columns: [
         {

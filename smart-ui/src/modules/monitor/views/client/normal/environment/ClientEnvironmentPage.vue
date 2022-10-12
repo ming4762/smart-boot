@@ -11,15 +11,13 @@
       </div>
       <a-spin :spinning="loading">
         <div v-if="searchWithMatch">
-          <ClientCard
-            title="Search Result">
+          <ClientCard title="Search Result">
             <KeyValueTable :columns="columns" :data="searchData" />
           </ClientCard>
         </div>
         <div v-else>
           <template v-for="property in envData.propertySources" :key="property.name">
-            <ClientCard
-              :title="property.name">
+            <ClientCard :title="property.name">
               <KeyValueTable :columns="columns" :data="createTableData(property.properties)" />
             </ClientCard>
             <br />
@@ -42,7 +40,7 @@ const createTableData = (properties: any) => {
   if (!properties) {
     return []
   }
-  return Object.keys(properties).map(key => {
+  return Object.keys(properties).map((key) => {
     return {
       key: key,
       value: properties[key].value
@@ -80,7 +78,7 @@ export default defineComponent({
       type: String
     }
   },
-  setup (props) {
+  setup(props) {
     const { clientId } = toRefs(props)
     const envData = ref([])
     const loading = ref(false)

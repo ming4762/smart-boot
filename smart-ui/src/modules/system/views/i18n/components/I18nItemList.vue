@@ -11,13 +11,33 @@
       :columns="columns">
       <template #table-tools>
         <div style="margin-right: 5px">
-          <a-button v-permission="permissions.add" style="margin-right: 5px;" type="primary" :size="buttonSizeConfig" @click="() => handleShowModal(true, null)">{{ $t('common.button.add') }}</a-button>
-          <a-button v-permission="permissions.delete" type="primary" danger :size="buttonSizeConfig" @click="handleDeleteByCheckbox">{{ $t('common.button.delete') }}</a-button>
+          <a-button
+            v-permission="permissions.add"
+            style="margin-right: 5px"
+            type="primary"
+            :size="buttonSizeConfig"
+            @click="() => handleShowModal(true, null)">
+            {{ $t('common.button.add') }}
+          </a-button>
+          <a-button
+            v-permission="permissions.delete"
+            type="primary"
+            danger
+            :size="buttonSizeConfig"
+            @click="handleDeleteByCheckbox">
+            {{ $t('common.button.delete') }}
+          </a-button>
         </div>
       </template>
 
       <template #table-operation="{ row }">
-        <a-button v-permission="permissions.update" :size="tableButtonSizeConfig" type="primary" @click.stop="() => handleShowModal(false, row.i18nItemId)">{{ $t('common.button.edit') }}</a-button>
+        <a-button
+          v-permission="permissions.update"
+          :size="tableButtonSizeConfig"
+          type="primary"
+          @click.stop="() => handleShowModal(false, row.i18nItemId)">
+          {{ $t('common.button.edit') }}
+        </a-button>
       </template>
     </vxe-grid>
 
@@ -34,10 +54,14 @@
           :wrapper-col="{ span: 17 }"
           :model="saveModel">
           <a-form-item name="locale" :label="$t('system.views.i18n.i18nItem.titleLocale')">
-            <a-input v-model:value="saveModel.locale" :placeholder="$t('system.views.i18n.i18nItem.localeValidate')" />
+            <a-input
+              v-model:value="saveModel.locale"
+              :placeholder="$t('system.views.i18n.i18nItem.localeValidate')" />
           </a-form-item>
           <a-form-item name="value" :label="$t('system.views.i18n.i18nItem.titleValue')">
-            <a-input v-model:value="saveModel.value" :placeholder="$t('system.views.i18n.i18nItem.valueValidate')" />
+            <a-input
+              v-model:value="saveModel.value"
+              :placeholder="$t('system.views.i18n.i18nItem.valueValidate')" />
           </a-form-item>
         </a-form>
       </a-spin>
@@ -46,7 +70,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, PropType, toRefs, Ref, watch } from 'vue'
+import { defineComponent, ref, toRefs, watch } from 'vue'
+import type { Ref } from 'vue'
+import type { PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import dayjs from 'dayjs'
@@ -108,7 +134,7 @@ const addEditVueSupport = (loadData: Function, i18nId: Ref) => {
       addEditModalVisible.value = true
       getLoading.value = true
       try {
-        saveModel.value = await ApiService.postAjax('sys/i18nItem/getById', id) || {}
+        saveModel.value = (await ApiService.postAjax('sys/i18nItem/getById', id)) || {}
       } finally {
         getLoading.value = false
       }
@@ -161,7 +187,7 @@ export default defineComponent({
   props: {
     i18nId: Number as PropType<number | null>
   },
-  setup (props) {
+  setup(props) {
     const gridRef = ref()
     const { t } = useI18n()
     const { i18nId } = toRefs(props)
@@ -170,16 +196,21 @@ export default defineComponent({
     /**
      * 删除操作
      */
-    const { handleDeleteByCheckbox } = useVxeDelete(gridRef, t, async (idList: Array<number>) => {
-      try {
-        await ApiService.postAjax('sys/i18nItem/batchDeleteById', idList)
-      } catch (e) {
-        errorMessage(e)
+    const { handleDeleteByCheckbox } = useVxeDelete(
+      gridRef,
+      t,
+      async (idList: Array<number>) => {
+        try {
+          await ApiService.postAjax('sys/i18nItem/batchDeleteById', idList)
+        } catch (e) {
+          errorMessage(e)
+        }
+      },
+      {
+        idField: 'i18nItemId',
+        listHandler: loadDataVue.loadData
       }
-    }, {
-      idField: 'i18nItemId',
-      listHandler: loadDataVue.loadData
-    })
+    )
 
     return {
       ...loadDataVue,
@@ -189,7 +220,7 @@ export default defineComponent({
       handleDeleteByCheckbox
     }
   },
-  data () {
+  data() {
     return {
       permissions: SystemPermissions.i18n,
       toolbarConfig: {
@@ -218,7 +249,7 @@ export default defineComponent({
           field: 'createTime',
           title: '{common.table.createTime}',
           width: 160,
-          formatter: ({cellValue}: any) => {
+          formatter: ({ cellValue }: any) => {
             if (cellValue) {
               return dayjs(cellValue).format('YYYY-MM-DD HH:mm:ss')
             }
@@ -242,10 +273,18 @@ export default defineComponent({
       ],
       rules: {
         locale: [
-          { required: true, message: this.$t('system.views.i18n.i18nItem.localeValidate'), trigger: 'blur' }
+          {
+            required: true,
+            message: this.$t('system.views.i18n.i18nItem.localeValidate'),
+            trigger: 'blur'
+          }
         ],
         value: [
-          { required: true, message: this.$t('system.views.i18n.i18nItem.valueValidate'), trigger: 'blur' }
+          {
+            required: true,
+            message: this.$t('system.views.i18n.i18nItem.valueValidate'),
+            trigger: 'blur'
+          }
         ]
       }
     }
@@ -253,6 +292,4 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

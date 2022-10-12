@@ -20,7 +20,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, toRefs, onMounted, ref, computed, watch } from 'vue'
+import { defineComponent, toRefs, onMounted, ref, computed, watch } from 'vue'
+import type { PropType } from 'vue'
 
 import { loadActuator } from '@/modules/monitor/utils/ClientApiUtils'
 

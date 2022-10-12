@@ -1,8 +1,5 @@
 <template>
-  <a-modal
-    :visible="computedModalVisible"
-    :footer="null"
-    @cancel="handleHideModal">
+  <a-modal :visible="computedModalVisible" :footer="null" @cancel="handleHideModal">
     <div class="exception-modal">
       <div class="exception-modal-body">
         <CloseCircleOutlined class="icon" />
@@ -18,7 +15,13 @@
       </div>
       <div class="exception-modal-button">
         <a-button @click="handleHideModal">{{ $t('common.button.cancel') }}</a-button>
-        <a-button type="primary" :loading="submitLoading" style="margin-left: 5px" @click="handleSubmit">{{ $t('common.button.submit') }}</a-button>
+        <a-button
+          type="primary"
+          :loading="submitLoading"
+          style="margin-left: 5px"
+          @click="handleSubmit">
+          {{ $t('common.button.submit') }}
+        </a-button>
       </div>
     </div>
   </a-modal>

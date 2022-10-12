@@ -14,7 +14,16 @@
         <vxe-pager
           v-bind="pageProps"
           :page-sizes="[500, 1000, 2000, 5000]"
-          :layouts="['Sizes', 'PrevJump', 'PrevPage', 'Number', 'NextPage', 'NextJump', 'FullJump', 'Total']" />
+          :layouts="[
+            'Sizes',
+            'PrevJump',
+            'PrevPage',
+            'Number',
+            'NextPage',
+            'NextJump',
+            'FullJump',
+            'Total'
+          ]" />
       </template>
       <template #toolbar_tools>
         <a-form layout="inline">
@@ -48,15 +57,13 @@
         </a-form>
       </template>
     </vxe-grid>
-    <a-modal
-      width="600px"
-      v-bind="modalProps">
+    <a-modal width="600px" v-bind="modalProps">
       <a-spin :spinning="spinning">
         <a-form
           ref="formRef"
           :rules="rules"
-          :label-col="{span: 6}"
-          :wrapper-col="{span: 17}"
+          :label-col="{ span: 6 }"
+          :wrapper-col="{ span: 17 }"
           v-bind="formProps">
           <a-row>
             <a-col :span="24">
@@ -83,9 +90,7 @@
               </a-form-item>
             </a-col>
             <a-col :span="24">
-              <a-form-item
-                :label="$t('common.table.seq')"
-                name="seq">
+              <a-form-item :label="$t('common.table.seq')" name="seq">
                 <a-input-number
                   v-model:value="formProps.model.seq"
                   style="width: 100%"
@@ -93,16 +98,12 @@
               </a-form-item>
             </a-col>
             <a-col :span="24">
-              <a-form-item
-                :label="$t('common.table.useYn')"
-                name="useYn">
+              <a-form-item :label="$t('common.table.useYn')" name="useYn">
                 <a-switch v-model:checked="formProps.model.useYn" />
               </a-form-item>
             </a-col>
             <a-col :span="24">
-              <a-form-item
-                :label="$t('common.table.remark')"
-                name="remark">
+              <a-form-item :label="$t('common.table.remark')" name="remark">
                 <a-input
                   v-model:value="formProps.model.remark"
                   :placeholder="$t('common.formValidate.remark')" />
@@ -116,7 +117,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref, toRefs, watch } from 'vue'
+import { defineComponent, ref, toRefs, watch } from 'vue'
+import type { PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import dayjs from 'dayjs'
@@ -137,7 +139,7 @@ export default defineComponent({
       default: null
     }
   },
-  setup (props) {
+  setup(props) {
     const { t } = useI18n()
     const gridRef = ref()
     const { dictCode } = toRefs(props)
@@ -171,9 +173,12 @@ export default defineComponent({
     /**
      * 查询数据hook
      */
-    const { tableProps, handleReset, pageProps, searchModel, loadData } = useVxeTable(handleLoadData, {
-      paging: true
-    })
+    const { tableProps, handleReset, pageProps, searchModel, loadData } = useVxeTable(
+      handleLoadData,
+      {
+        paging: true
+      }
+    )
     watch(dictCode, () => {
       loadData()
     })
@@ -213,7 +218,7 @@ export default defineComponent({
     })
 
     const handleDelete = async (idList: Array<any>) => {
-      const data = idList.map(item => {
+      const data = idList.map((item) => {
         return {
           dictCode: dictCode.value,
           dictItemCode: item
@@ -232,19 +237,21 @@ export default defineComponent({
         return false
       }
 
-      addEditHook.handleAddEdit(true, null)
-        .then(() => {
-          addEditHook.handleSetModel({
-            dictCode: dictCode.value,
-            ...addEditHook.formProps.value.model
-          })
+      addEditHook.handleAddEdit(true, null).then(() => {
+        addEditHook.handleSetModel({
+          dictCode: dictCode.value,
+          ...addEditHook.formProps.value.model
         })
+      })
     }
 
     /**
      * 删除hook
      */
-    const deleteHook = useVxeDelete(gridRef, t, handleDelete, { idField: 'dictItemCode', listHandler: loadData })
+    const deleteHook = useVxeDelete(gridRef, t, handleDelete, {
+      idField: 'dictItemCode',
+      listHandler: loadData
+    })
 
     return {
       gridRef,
@@ -259,7 +266,7 @@ export default defineComponent({
       handleShowAdd
     }
   },
-  data () {
+  data() {
     return {
       toolbarConfig: {
         slots: {
@@ -270,27 +277,21 @@ export default defineComponent({
         dictItemCode: [
           {
             required: true,
-            trigger: [
-              'blur'
-            ],
+            trigger: ['blur'],
             message: this.$t('system.views.dictItem.rules.dictItemCode_NOT_EMPTY')
           }
         ],
         dictItemName: [
           {
             required: true,
-            trigger: [
-              'blur'
-            ],
+            trigger: ['blur'],
             message: this.$t('system.views.dictItem.rules.dictItemName_NOT_EMPTY')
           }
         ],
         seq: [
           {
             required: true,
-            trigger: [
-              'blur'
-            ],
+            trigger: ['blur'],
             message: this.$t('common.formValidate.seq')
           }
         ]

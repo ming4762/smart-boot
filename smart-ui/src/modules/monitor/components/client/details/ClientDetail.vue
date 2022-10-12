@@ -37,7 +37,11 @@
       </a-col>
     </a-row>
 
-    <a-row v-if="hasActuator('metrics')" class="detail-span large" style="height: 400px" :gutter="gutter">
+    <a-row
+      v-if="hasActuator('metrics')"
+      class="detail-span large"
+      style="height: 400px"
+      :gutter="gutter">
       <a-col :span="12" style="padding-left: 0">
         <ClientMemoryHeap :client-id="clientId" :time="time" />
       </a-col>
@@ -84,19 +88,22 @@ export default defineComponent({
       type: String
     }
   },
-  setup (props) {
+  setup(props) {
     const { clientId } = toRefs(props)
 
     // 客户端数据
     const clientData = ref({})
     onMounted(async () => {
-      clientData.value = await ApiService.postAjax(`monitor/manager/client/getClientById/${clientId.value}`, 'false')
+      clientData.value = await ApiService.postAjax(
+        `monitor/manager/client/getClientById/${clientId.value}`,
+        'false'
+      )
     })
     // 设置定时执行任务
     const time = ref(0)
     const loopKey = 'monitor_detail'
     TimeTaskUtil.addLoop(MONITOR_DETAIL_LOOP_GROUP, loopKey, () => {
-      time.value ++
+      time.value++
     })
     onBeforeUnmount(() => TimeTaskUtil.removeLoop(MONITOR_DETAIL_LOOP_GROUP, loopKey))
 
@@ -107,7 +114,7 @@ export default defineComponent({
       hasActuator
     }
   },
-  data () {
+  data() {
     return {
       gutter: 16
     }

@@ -1,4 +1,5 @@
-import { computed, ref, Ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
+import type { Ref } from 'vue'
 import XEUtils from 'xe-utils'
 
 import { NodeItem } from '@/common/utils/LinkList'
@@ -54,8 +55,7 @@ const getActiveNode = (firstNode: NodeItem<Element>) => {
 /**
  * Tab 移动hook
  */
-export const useTabsMove = (firstElementRef: Ref<Element | null>, tabContainerRef: Ref, activeValue: Ref, dataRef: Ref) => {
-
+export const useTabsMove = (firstElementRef: Ref<Element | null>, tabContainerRef: Ref, activeValue: Ref) => {
   // 导航栏外层div ref
   const outContainerRef = ref()
 
@@ -65,14 +65,15 @@ export const useTabsMove = (firstElementRef: Ref<Element | null>, tabContainerRe
   const getTabContainerOuterWidth = () => {
     const children = outContainerRef.value.children
     const elementList: Array<Element> = []
-    for (let i=0; i<children.length; i++) {
+    for (let i = 0; i < children.length; i++) {
       elementList.push(children[i])
     }
     // 排除中间区域的按钮宽度
-    const buttonsWidth = XEUtils.sum(elementList
-      .filter((item: any) => item !== tabContainerRef.value.parentElement)
-      .map((item: any) => item.clientWidth))
-
+    const buttonsWidth = XEUtils.sum(
+      elementList
+        .filter((item: any) => item !== tabContainerRef.value.parentElement)
+        .map((item: any) => item.clientWidth)
+    )
     return outContainerRef.value.clientWidth - buttonsWidth
   }
 

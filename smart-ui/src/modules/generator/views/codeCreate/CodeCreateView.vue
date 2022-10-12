@@ -4,14 +4,8 @@
       <a-button type="primary" @click="handleDownloadAll">下载全部</a-button>
     </div>
     <a-tabs class="code-container">
-      <a-tab-pane
-        v-for="item in data"
-        :key="item.templateId"
-        :tab="item.templateName">
-        <Codemirror
-          read-only
-          :mode="item.language"
-          :code="item.code" />
+      <a-tab-pane v-for="item in data" :key="item.templateId" :tab="item.templateName">
+        <Codemirror read-only :mode="item.language" :code="item.code" />
       </a-tab-pane>
     </a-tabs>
   </div>
@@ -37,7 +31,7 @@ export default defineComponent({
   components: {
     Codemirror
   },
-  setup (props, { attrs }: any) {
+  setup(props, { attrs }: any) {
     const data = ref<Array<any>>([])
     const dataLoading = ref(false)
     /**
@@ -46,9 +40,12 @@ export default defineComponent({
     const loadData = async () => {
       dataLoading.value = true
       try {
-        data.value = await ApiService.postAjax('db/code/main/createCode', Object.assign({}, attrs, {
-          templateIdList: attrs.templateIdList.split(',')
-        }))
+        data.value = await ApiService.postAjax(
+          'db/code/main/createCode',
+          Object.assign({}, attrs, {
+            templateIdList: attrs.templateIdList.split(',')
+          })
+        )
       } catch (e) {
         errorMessage(e)
       } finally {
@@ -74,11 +71,11 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
-  .code-container {
-    height: calc(100% - 38px);
-    border: 1px solid gainsboro;
-    ::v-deep(.ant-tabs-content) {
-      height: calc(100% - 60px);
-    }
+.code-container {
+  height: calc(100% - 38px);
+  border: 1px solid gainsboro;
+  ::v-deep(.ant-tabs-content) {
+    height: calc(100% - 60px);
   }
+}
 </style>

@@ -24,7 +24,7 @@ export default defineComponent({
       type: String
     }
   },
-  setup (props) {
+  setup(props) {
     const { clientId } = toRefs(props)
     const data = ref({})
     // 加载数据函数
@@ -41,6 +41,4 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

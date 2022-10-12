@@ -1,4 +1,5 @@
-import { ref, onMounted, reactive, Ref, createVNode } from 'vue'
+import { ref, onMounted, reactive, createVNode } from 'vue'
+import type { Ref } from 'vue'
 
 import { message, Modal } from 'ant-design-vue'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
@@ -38,7 +39,7 @@ export const vueLoadData = () => {
     }
     // 自定义参数
     const customParameter: any = {}
-    Object.keys(searchModel.value).forEach(key => {
+    Object.keys(searchModel.value).forEach((key) => {
       const value = searchModel.value[key]
       if (value !== null && value !== '') {
         customParameter[key + '@like'] = value
@@ -90,16 +91,35 @@ const defaultAddEditModel = {
   project: ''
 }
 
-
 const createFormRules = (t: Function) => {
   return {
-    connectionName: [{ required: true, trigger: 'blur', message: t('generator.views.database.validate.connectionName') }],
-    databaseName: [{ required: true, trigger: 'blur', message: t('generator.views.database.validate.databaseName') }],
-    type: [{ required: true, trigger: 'blur', message: t('generator.views.database.validate.type') }],
-    project: [{ required: true, trigger: 'blur', message: t('generator.views.database.validate.project') }],
+    connectionName: [
+      {
+        required: true,
+        trigger: 'blur',
+        message: t('generator.views.database.validate.connectionName')
+      }
+    ],
+    databaseName: [
+      {
+        required: true,
+        trigger: 'blur',
+        message: t('generator.views.database.validate.databaseName')
+      }
+    ],
+    type: [
+      { required: true, trigger: 'blur', message: t('generator.views.database.validate.type') }
+    ],
+    project: [
+      { required: true, trigger: 'blur', message: t('generator.views.database.validate.project') }
+    ],
     url: [{ required: true, trigger: 'blur', message: t('generator.views.database.validate.url') }],
-    username: [{ required: true, trigger: 'blur', message: t('generator.views.database.validate.username') }],
-    password: [{ required: true, trigger: 'blur', message: t('generator.views.database.validate.password') }]
+    username: [
+      { required: true, trigger: 'blur', message: t('generator.views.database.validate.username') }
+    ],
+    password: [
+      { required: true, trigger: 'blur', message: t('generator.views.database.validate.password') }
+    ]
   }
 }
 
@@ -150,17 +170,16 @@ export const vueAddEdit = (loadData: any, formRef: Ref, t: Function) => {
    */
   const handleSave = () => {
     // 验证表单
-    formRef.value.validate()
-      .then(async () => {
-        saveLoading.value = true
-        try {
-          await ApiService.postAjax('db/connection/saveUpdate', addEditModel.value)
-          addEditModalVisible.value = false
-          loadData()
-        } finally {
-          saveLoading.value = false
-        }
-      })
+    formRef.value.validate().then(async () => {
+      saveLoading.value = true
+      try {
+        await ApiService.postAjax('db/connection/saveUpdate', addEditModel.value)
+        addEditModalVisible.value = false
+        loadData()
+      } finally {
+        saveLoading.value = false
+      }
+    })
   }
   return {
     saveLoading,
@@ -192,7 +211,9 @@ export const vueAction = (gridRef: Ref, loadData: any, t: Function) => {
     }
     // 判断是否有权限删除
     if (!isSuperAdmin()) {
-      const validateResult = selectRows.some((item: any) => item.createUserId !== getCurrentUserId())
+      const validateResult = selectRows.some(
+        (item: any) => item.createUserId !== getCurrentUserId()
+      )
       if (validateResult) {
         message.error(t('generator.views.database.message.deleteOwn'))
         return false
@@ -203,7 +224,10 @@ export const vueAction = (gridRef: Ref, loadData: any, t: Function) => {
       icon: createVNode(ExclamationCircleOutlined),
       content: t('common.notice.deleteChoose'),
       onOk: async () => {
-        await ApiService.postAjax('db/connection/batchDeleteById', selectRows.map((item: any) => item.id))
+        await ApiService.postAjax(
+          'db/connection/batchDeleteById',
+          selectRows.map((item: any) => item.id)
+        )
         loadData()
       }
     })
@@ -294,8 +318,10 @@ export const vueCreateDict = (row: Ref, t: Function) => {
     }
     try {
       const tempToken = await applyTempToken('db:connection:createDic', false)
-      selectTemplateIdList.forEach(templateId => {
-        const url = `${ApiService.getApiUrl()}public/db/createDic?connectionId=${row.value.id}&templateId=${templateId}&access-token=${tempToken}`
+      selectTemplateIdList.forEach((templateId) => {
+        const url = `${ApiService.getApiUrl()}public/db/createDic?connectionId=${
+          row.value.id
+        }&templateId=${templateId}&access-token=${tempToken}`
         window.open(url)
       })
     } catch (e) {

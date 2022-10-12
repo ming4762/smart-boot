@@ -1,4 +1,5 @@
-import { createPinia, PiniaPluginContext } from 'pinia'
+import { createPinia } from 'pinia'
+import type { PiniaPluginContext } from 'pinia'
 import { toRaw } from 'vue'
 
 import StoreUtil from '@/common/utils/StoreUtil'
@@ -6,13 +7,12 @@ import StoreUtil from '@/common/utils/StoreUtil'
 /**
  * 需要持久化的 store
  */
-const STORAGE_STORE_LIST: {[index: string]: string | null} = {
-  'systemMenu': StoreUtil.SESSION_TYPE,
-  'appSetting': null,
-  'appI18n': null,
-  'appState': null
+const STORAGE_STORE_LIST: { [index: string]: string | null } = {
+  systemMenu: StoreUtil.SESSION_TYPE,
+  appSetting: null,
+  appI18n: null,
+  appState: null
 }
-
 
 type Options = {
   key: string

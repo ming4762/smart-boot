@@ -1,6 +1,7 @@
-import { onMounted, watch, ref, computed, Ref } from 'vue'
+import { onMounted, watch, ref, computed } from 'vue'
+import type { Ref } from 'vue'
 
-import { Measurement, MeterData } from '@/modules/monitor/typing'
+import type { Measurement, MeterData } from '@/modules/monitor/typing'
 import { loadActuator } from '@/modules/monitor/utils/ClientApiUtils'
 import TimeUtils from '@/common/utils/TimeUtils'
 
@@ -11,7 +12,7 @@ const usageFormatter = (value: number) => {
 /**
  * 指标数据信息
  */
-const metricsMap: {[index: string]: MeterData} = {
+const metricsMap: { [index: string]: MeterData } = {
   'process.uptime': {
     key: 'process.uptime',
     name: 'Uptime',
@@ -213,8 +214,8 @@ const metricsMap: {[index: string]: MeterData} = {
 }
 
 interface MeterTag {
-  meter: string;
-  tag: string;
+  meter: string
+  tag: string
 }
 
 /**
@@ -222,7 +223,7 @@ interface MeterTag {
  * @param metrics
  */
 const convertMeterTag = (metrics: Array<string>): Array<MeterTag> => {
-  return metrics.map(meter => {
+  return metrics.map((meter) => {
     const meterTagArray = meter.split('?')
     const tag = meterTagArray.length > 1 ? meterTagArray[1] : ''
     return {
@@ -237,38 +238,39 @@ const convertMeterTag = (metrics: Array<string>): Array<MeterTag> => {
  * @param clientId 客户端ID
  * @param metrics 指标列表
  */
-export const loadMetricsData = async (clientId: string, metrics: Array<string>): Promise<Array<MeterData>> => {
+export const loadMetricsData = async (
+  clientId: string,
+  metrics: Array<string>
+): Promise<Array<MeterData>> => {
   // 分离tag
   const meterTags = convertMeterTag(metrics)
   // 获取所有指标
-  const metricsData: Array<MeterData> = meterTags.map(meterTag => {
+  const metricsData: Array<MeterData> = meterTags.map((meterTag) => {
     return Object.assign({}, metricsMap[meterTag.meter])
   })
-  const promiseList = meterTags.map(meterTag => {
+  const promiseList = meterTags.map((meterTag) => {
     let type = meterTag.meter
     if (meterTag.tag.length > 0) {
       type += `?${meterTag.tag}`
     }
     // 获取类型
-    return loadActuator(clientId, `metrics/${type}`)
-      .then((data: any) => {
-        return Promise.resolve(data.measurements)
-      })
+    return loadActuator(clientId, `metrics/${type}`).then((data: any) => {
+      return Promise.resolve(data.measurements)
+    })
   })
-  return Promise.all(promiseList)
-    .then(data => {
-      for (let i = 0; i < metricsData.length; i++) {
-        const measurements: Array<Measurement> = metricsData[i].measurements
-        for (let j = 0; j < measurements.length; j++) {
-          const item = data[i][j]
-          metricsData[i].measurements[j] = {
-            statistic: measurements[j].statistic === '' ? item.statistic : measurements[j].statistic,
-            value: item.value
-          }
+  return Promise.all(promiseList).then((data) => {
+    for (let i = 0; i < metricsData.length; i++) {
+      const measurements: Array<Measurement> = metricsData[i].measurements
+      for (let j = 0; j < measurements.length; j++) {
+        const item = data[i][j]
+        metricsData[i].measurements[j] = {
+          statistic: measurements[j].statistic === '' ? item.statistic : measurements[j].statistic,
+          value: item.value
         }
       }
-      return Promise.resolve(metricsData)
-    })
+    }
+    return Promise.resolve(metricsData)
+  })
 }
 
 /**
@@ -277,7 +279,11 @@ export const loadMetricsData = async (clientId: string, metrics: Array<string>):
  * @param time
  * @param metrics
  */
-export const loadMetricsDataVue = (clientId: Ref<string>, time: Ref<number>, metrics: Array<string>) => {
+export const loadMetricsDataVue = (
+  clientId: Ref<string>,
+  time: Ref<number>,
+  metrics: Array<string>
+) => {
   const meterData: Array<MeterData> = []
   const data = ref(meterData)
   const doLoadData = async () => {
@@ -287,11 +293,16 @@ export const loadMetricsDataVue = (clientId: Ref<string>, time: Ref<number>, met
   watch([time, clientId], doLoadData)
   const computedData = computed(() => {
     const result: Array<any> = []
-    data.value.forEach(item => {
-      item.measurements.forEach(measurement => {
-        result.push(Object.assign({
-          formatter: item.formatter
-        }, measurement))
+    data.value.forEach((item) => {
+      item.measurements.forEach((measurement) => {
+        result.push(
+          Object.assign(
+            {
+              formatter: item.formatter
+            },
+            measurement
+          )
+        )
       })
     })
     return result

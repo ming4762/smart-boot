@@ -10,13 +10,19 @@
         :data="data"
         :loading="tableLoading">
         <template #table-groupName="{ row }">
-          <div style="cursor:pointer;" @click="() => handleChangeGroup(row.groupId)">
+          <div style="cursor: pointer" @click="() => handleChangeGroup(row.groupId)">
             <ContextMenu event="contextmenu">
               {{ row.groupName }}
               <template #menu>
                 <a-menu @click="({ key, domEvent }) => handleMenuClick(key, row.groupId, domEvent)">
-                  <a-menu-item key="edit"><EditOutlined />&nbsp;&nbsp;{{ $t('common.button.edit') }}</a-menu-item>
-                  <a-menu-item key="delete"><DeleteOutlined />&nbsp;&nbsp;{{ $t('common.button.delete') }}</a-menu-item>
+                  <a-menu-item key="edit">
+                    <EditOutlined />
+                    &nbsp;&nbsp;{{ $t('common.button.edit') }}
+                  </a-menu-item>
+                  <a-menu-item key="delete">
+                    <DeleteOutlined />
+                    &nbsp;&nbsp;{{ $t('common.button.delete') }}
+                  </a-menu-item>
                 </a-menu>
               </template>
             </ContextMenu>
@@ -25,7 +31,14 @@
       </vxe-grid>
     </div>
     <div class="button-container">
-      <a-button v-permission="permissions.add" class="button" block type="primary" @click="() => handleShowModal(true, null)">{{ $t('common.button.add') }}</a-button>
+      <a-button
+        v-permission="permissions.add"
+        class="button"
+        block
+        type="primary"
+        @click="() => handleShowModal(true, null)">
+        {{ $t('common.button.add') }}
+      </a-button>
     </div>
 
     <a-modal
@@ -117,7 +130,7 @@ const addEditVueSupport = (loadData: Function) => {
   const saveLoading = ref(false)
   const getLoading = ref(false)
   const editModel = ref<any>({})
-  const computedTitle =computed(() => {
+  const computedTitle = computed(() => {
     return isAdd.value ? i18n('common.button.add') : i18n('common.button.edit')
   })
   const handleShowModal = async (add: boolean, groupId: number | null) => {
@@ -178,7 +191,7 @@ export default defineComponent({
     DeleteOutlined
   },
   emits: ['change'],
-  setup (props, { emit }) {
+  setup(props, { emit }) {
     const i18nRender = useI18n().t
     const listVue = ListVueSupport()
     const addEditVue = addEditVueSupport(listVue.loadTableData)
@@ -207,7 +220,7 @@ export default defineComponent({
       handleMenuClick
     }
   },
-  data () {
+  data() {
     return {
       permissions: SystemPermissions.i18n,
       columns: [
@@ -221,10 +234,19 @@ export default defineComponent({
       ],
       rules: {
         groupName: [
-          { required: true, message: this.$t('system.views.i18n.group.groupNameValidate'), trigger: 'blur' }
+          {
+            required: true,
+            message: this.$t('system.views.i18n.group.groupNameValidate'),
+            trigger: 'blur'
+          }
         ],
         seq: [
-          { required: true, message: this.$t('system.views.i18n.group.seq'), trigger: 'blur', type: 'number' }
+          {
+            required: true,
+            message: this.$t('system.views.i18n.group.seq'),
+            trigger: 'blur',
+            type: 'number'
+          }
         ]
       }
     }
@@ -243,7 +265,6 @@ export default defineComponent({
   text-align: center;
   .button {
     width: 90%;
-
   }
 }
 </style>

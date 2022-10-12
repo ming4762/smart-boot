@@ -4,7 +4,10 @@
       <GlobalOutlined :title="$t('system.lang.navBar')" />
     </span>
     <template #overlay>
-      <a-menu :selected-keys="[currentLang]" class="menu ant-pro-header-menu" @click="handleLangChange">
+      <a-menu
+        :selected-keys="[currentLang]"
+        class="menu ant-pro-header-menu"
+        @click="handleLangChange">
         <a-menu-item v-for="item in languageList" :key="item.key">
           <span role="img" :aria-label="item.name">{{ item.icon }}</span>
           {{ item.name }}
@@ -15,11 +18,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { defineComponent } from 'vue'
+import type { PropType } from 'vue'
 import { GlobalOutlined } from '@ant-design/icons-vue'
 
 import LangVueSupport from '@/i18n/LangVueSupport'
-
 
 export default defineComponent({
   name: 'SelectLang',
@@ -32,7 +35,7 @@ export default defineComponent({
       default: 'ant-pro-drop-down'
     }
   },
-  setup () {
+  setup() {
     const vueLangSupport = LangVueSupport()
     const handleLangChange = ({ key }: any) => {
       vueLangSupport.setLang(key)
@@ -45,6 +48,4 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

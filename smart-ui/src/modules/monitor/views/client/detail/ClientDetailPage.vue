@@ -1,6 +1,6 @@
 <template>
-  <div class="full-height" style="padding: 8px;">
-    <ClientDetail class="full-height" style="overflow: auto;" :client-id="clientId" />
+  <div class="full-height" style="padding: 8px">
+    <ClientDetail class="full-height" style="overflow: auto" :client-id="clientId" />
   </div>
 </template>
 
@@ -27,6 +27,4 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

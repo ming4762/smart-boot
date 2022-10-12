@@ -1,13 +1,14 @@
 <template>
-  <div class="full-height" style="padding: 10px;">
-    <div class="full-height" style="overflow:auto; background: white; padding: 10px">
+  <div class="full-height" style="padding: 10px">
+    <div class="full-height" style="overflow: auto; background: white; padding: 10px">
       <DbConnectionList :client-id="clientId" :db-name-list="dbNameList" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { defineComponent } from 'vue'
+import type { PropType } from 'vue'
 
 import { useLoadDbNameList } from '@/modules/monitor/utils/DruidPointUtils'
 
@@ -24,7 +25,7 @@ export default defineComponent({
       required: true
     }
   },
-  setup (props) {
+  setup(props) {
 
     return {
       ...useLoadDbNameList(props.clientId)

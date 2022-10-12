@@ -1,22 +1,13 @@
 <template>
-  <div ref="outContainerRef" class="content-tabs" :style="{height: navHeight + 'px', 'line-height': `${navHeight - 2}px`}">
+  <div ref="outContainerRef" class="content-tabs" :style="{ height: navHeight + 'px', 'line-height': `${navHeight - 2}px` }">
     <div :style="computedRightButtonStyle" class="roll-nav roll-left direction-button" @click="handleMoveLeft">
       <BackwardOutlined />
     </div>
     <nav style="width: 12000px" class="page-tabs s-menu-tabs">
       <div ref="tabContainerRef" class="page-tabs-content" :style="computedTabContainerStyle">
-        <a
-          v-for="(item, i) in dataList"
-          :key="'navigation-menu_' + i"
-          :class="['s-menu-tab', item.path === activeValue ? 'active' : '']"
-          href="javascript:"
-          @click="() => handleClick(item)">
+        <a v-for="(item, i) in dataList" :key="'navigation-menu_' + i" :class="['s-menu-tab', item.path === activeValue ? 'active' : '']" href="javascript:" @click="() => handleClick(item)">
           {{ getTitle(item) }}
-          <CloseCircleOutlined
-            v-if="i !== 0"
-            class="menu-close-icon"
-            :style="{color: '#CCCCCC'}"
-            @click.stop="($event) => handleRemove(item, $event)" />
+          <CloseCircleOutlined v-if="i !== 0" class="menu-close-icon" :style="{ color: '#CCCCCC' }" @click.stop="() => handleRemove(item, $event)" />
         </a>
       </div>
     </nav>
@@ -30,11 +21,23 @@
       </div>
       <template #overlay>
         <a-menu :selected-keys="[]" class="multi-drop-menu" @click="handleClickItem">
-          <a-menu-item key="location"><aim-outlined class="icon" />{{ i18nRender('app.multiTab.dropdownMenu.location') }} </a-menu-item>
+          <a-menu-item key="location">
+            <aim-outlined class="icon" />
+            {{ i18nRender('app.multiTab.dropdownMenu.location') }}
+          </a-menu-item>
           <a-divider />
-          <a-menu-item key="closeAll"><close-outlined class="icon" />{{ i18nRender('app.multiTab.dropdownMenu.closeAll') }} </a-menu-item>
-          <a-menu-item key="closeOther"><close-circle-outlined class="icon" />{{ i18nRender('app.multiTab.dropdownMenu.closeOther') }} </a-menu-item>
-          <a-menu-item key="refreshCurrent"><reload-outlined class="icon" />{{ i18nRender('app.multiTab.dropdownMenu.refreshCurrent') }}</a-menu-item>
+          <a-menu-item key="closeAll">
+            <close-outlined class="icon" />
+            {{ i18nRender('app.multiTab.dropdownMenu.closeAll') }}
+          </a-menu-item>
+          <a-menu-item key="closeOther">
+            <close-circle-outlined class="icon" />
+            {{ i18nRender('app.multiTab.dropdownMenu.closeOther') }}
+          </a-menu-item>
+          <a-menu-item key="refreshCurrent">
+            <reload-outlined class="icon" />
+            {{ i18nRender('app.multiTab.dropdownMenu.refreshCurrent') }}
+          </a-menu-item>
         </a-menu>
       </template>
     </a-dropdown>
@@ -42,19 +45,13 @@
 </template>
 
 <script lang="ts">
-import {computed, defineComponent, PropType, ref, toRefs} from 'vue'
+import { computed, defineComponent, ref, toRefs } from 'vue'
 
-import {
-  AimOutlined,
-  BackwardOutlined,
-  CaretDownOutlined,
-  CloseCircleOutlined, CloseOutlined,
-  ForwardOutlined, ReloadOutlined
-} from '@ant-design/icons-vue'
+import type { PropType } from 'vue'
+
+import { AimOutlined, BackwardOutlined, CaretDownOutlined, CloseCircleOutlined, CloseOutlined, ForwardOutlined, ReloadOutlined } from '@ant-design/icons-vue'
 
 import { useTabsMove, useTabContainerStyle } from './NavigationHooks'
-
-
 
 export const NavigationProps = {
   i18nRender: {
@@ -70,7 +67,7 @@ export const NavigationProps = {
 }
 
 export default defineComponent({
-  name: 'Navigation',
+  name: 'NavigationComponent',
   components: {
     BackwardOutlined,
     CaretDownOutlined,
@@ -80,23 +77,26 @@ export default defineComponent({
     ReloadOutlined,
     CloseOutlined
   },
-  props: Object.assign({
-    activeValue: String as PropType<string>,
-    dataList: {
-      type: Array as PropType<Array<any>>,
-      default: () => []
+  props: Object.assign(
+    {
+      activeValue: String as PropType<string>,
+      dataList: {
+        type: Array as PropType<Array<any>>,
+        default: () => []
+      },
+      lang: {
+        type: String as PropType<string>,
+        required: true
+      }
     },
-    lang: {
-      type: String as PropType<string>,
-      required: true
-    }
-  }, NavigationProps),
-  setup (props) {
+    NavigationProps
+  ),
+  setup(props) {
     const { navHeight, lang, activeValue, dataList } = toRefs(props)
     // tab nav ref
     const tabContainerRef = ref()
-    const firstElementRef = ref<Element|null>(null)
-    const tableMoveHook = useTabsMove(firstElementRef, tabContainerRef, activeValue, dataList)
+    const firstElementRef = ref<Element | null>(null)
+    const tableMoveHook = useTabsMove(firstElementRef, tabContainerRef, activeValue)
     const contentHeight = computed(() => {
       return navHeight.value - 2
     })
@@ -131,7 +131,7 @@ export default defineComponent({
       if (!menu.meta.locales) {
         return menu.meta.title
       }
-      return  menu.meta.locales[lang.value] || menu.meta.title
+      return menu.meta.locales[lang.value] || menu.meta.title
     }
     return {
       handleRemove,
@@ -149,7 +149,7 @@ export default defineComponent({
 
 <style lang="less" scoped>
 @hover-color: #777777;
-@hover-bg-color: #F2F2F2;
+@hover-bg-color: #f2f2f2;
 
 .content-tabs {
   border-bottom: solid 2px #2f4050;
@@ -179,7 +179,7 @@ export default defineComponent({
       width: 85px;
       padding: 0 4px;
       cursor: pointer;
-      background-color: #FFFFFF;
+      background-color: #ffffff;
       &:hover {
         color: @hover-color;
         background-color: @hover-bg-color;
@@ -224,8 +224,8 @@ export default defineComponent({
       background: #2f4050;
       color: #a7b1c2;
       &:hover {
-        color: #FFFFFF;
-        background-color: #2A3846;
+        color: #ffffff;
+        background-color: #2a3846;
       }
     }
     &:hover {
@@ -236,8 +236,8 @@ export default defineComponent({
 }
 
 .s-menu-tab {
-  -webkit-transition: all .3s ease-out 0s;
-  transition: all .3s ease-out 0s;
+  -webkit-transition: all 0.3s ease-out 0s;
+  transition: all 0.3s ease-out 0s;
   font-size: 12px;
   .menu-close-icon {
     :hover {

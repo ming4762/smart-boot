@@ -25,7 +25,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, PropType, ref, toRefs, onBeforeUnmount } from 'vue'
+import { defineComponent, onMounted, ref, toRefs, onBeforeUnmount } from 'vue'
+import type { PropType } from 'vue'
 
 import { loadActuator } from '@/modules/monitor/utils/ClientApiUtils'
 import { errorMessage } from '@/components/notice/SystemNotice'

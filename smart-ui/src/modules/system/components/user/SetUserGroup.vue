@@ -4,7 +4,7 @@
       <h3>{{ $t('system.views.userGroup.title') }}</h3>
     </a-layout-header>
     <a-divider style="margin: 0" />
-    <a-layout-content style="background: white;">
+    <a-layout-content style="background: white">
       <div class="full-height">
         <a-spin class="full-height" :spinning="dataLoading">
           <a-table
@@ -20,16 +20,24 @@
       </div>
     </a-layout-content>
     <a-divider style="margin: 0" />
-    <a-layout-footer style="height: 50px; text-align: center; padding: 10px 0; background: white;">
+    <a-layout-footer style="height: 50px; text-align: center; padding: 10px 0; background: white">
       <div style="padding: 0 5px">
-        <a-button :disabled="!saveButtonVisible" :loading="saveLoading" block type="primary" @click="handleSave">{{ $t('common.button.save') }}</a-button>
+        <a-button
+          :disabled="!saveButtonVisible"
+          :loading="saveLoading"
+          block
+          type="primary"
+          @click="handleSave">
+          {{ $t('common.button.save') }}
+        </a-button>
       </div>
     </a-layout-footer>
   </a-layout>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, PropType, reactive, ref, toRefs, watch } from 'vue'
+import { defineComponent, onMounted, reactive, ref, toRefs, watch } from 'vue'
+import type { PropType } from 'vue'
 
 import ApiService from '@/common/utils/ApiService'
 import { errorMessage } from '@/components/notice/SystemNotice'
@@ -50,7 +58,7 @@ export default defineComponent({
     },
     saveHandler: Function
   },
-  setup (props) {
+  setup(props) {
     const { selectKeys } = toRefs(props)
     // 数据加载状态
     const dataLoading = ref(false)
@@ -103,7 +111,7 @@ export default defineComponent({
       handleSave
     }
   },
-  data () {
+  data() {
     return {
       columns: [
         {
@@ -115,6 +123,4 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

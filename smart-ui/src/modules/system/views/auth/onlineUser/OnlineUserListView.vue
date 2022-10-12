@@ -10,7 +10,13 @@
       :toolbar-config="toolbarConfig"
       stripe>
       <template #table-operation="{ row }">
-        <a-button v-permission="'sys:auth:offline'" :size="tableButtonSizeConfig" type="primary" @click="() => handleOffline(row.username, null)">{{ $t('system.views.onlineUser.button.offline') }}</a-button>
+        <a-button
+          v-permission="'sys:auth:offline'"
+          :size="tableButtonSizeConfig"
+          type="primary"
+          @click="() => handleOffline(row.username, null)">
+          {{ $t('system.views.onlineUser.button.offline') }}
+        </a-button>
       </template>
       <template #table-expand="{ row }">
         <vxe-grid
@@ -21,17 +27,28 @@
           :data="row.userLoginDataList"
           stripe>
           <template #expand-table-operation="data">
-            <a-button v-permission="'sys:auth:offline'" :size="tableButtonSizeConfig" type="primary" @click="() => handleOffline(null, data.row.token)">{{ $t('system.views.onlineUser.button.offline') }}</a-button>
+            <a-button
+              v-permission="'sys:auth:offline'"
+              :size="tableButtonSizeConfig"
+              type="primary"
+              @click="() => handleOffline(null, data.row.token)">
+              {{ $t('system.views.onlineUser.button.offline') }}
+            </a-button>
           </template>
         </vxe-grid>
       </template>
       <template #toolbar_buttons>
         <a-form style="margin-left: 10px" layout="inline" :model="searchModel">
           <a-form-item>
-            <a-input v-model:value="searchModel.username" :size="formSizeConfig" :placeholder="$t('system.views.user.table.username')" />
+            <a-input
+              v-model:value="searchModel.username"
+              :size="formSizeConfig"
+              :placeholder="$t('system.views.user.table.username')" />
           </a-form-item>
           <a-form-item>
-            <a-button :size="buttonSizeConfig" type="primary" @click="loadData">{{ $t('common.button.search') }}</a-button>
+            <a-button :size="buttonSizeConfig" type="primary" @click="loadData">
+              {{ $t('common.button.search') }}
+            </a-button>
           </a-form-item>
         </a-form>
       </template>
@@ -41,7 +58,7 @@
 </template>
 
 <script lang="ts">
-import {createVNode, defineComponent, onMounted} from 'vue'
+import { createVNode, defineComponent, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { Modal, message } from 'ant-design-vue'
@@ -62,7 +79,10 @@ import dayjs from 'dayjs'
  */
 const doLoadData = async (parameter: any, searchParameter: any) => {
   try {
-    return await ApiService.postAjax('auth/listOnlineUser', Object.assign({}, parameter, searchParameter))
+    return await ApiService.postAjax(
+      'auth/listOnlineUser',
+      Object.assign({}, parameter, searchParameter)
+    )
   } catch (e) {
     errorMessage(e)
   }
@@ -70,7 +90,7 @@ const doLoadData = async (parameter: any, searchParameter: any) => {
 
 export default defineComponent({
   name: 'OnlineUserListView',
-  setup () {
+  setup() {
     const { t } = useI18n()
     // 表格信息
     const { tableProps, loadData, searchModel } = useVxeTable(doLoadData, {
@@ -107,7 +127,7 @@ export default defineComponent({
       handleOffline
     }
   },
-  data () {
+  data() {
     return {
       toolbarConfig: {
         slots: {
@@ -186,7 +206,11 @@ export default defineComponent({
           minWidth: 200
         },
         {
-          ...tableBooleanColumn(this.$t, '{system.views.onlineUser.title.bindIp}', 'bindIp').createColumn(),
+          ...tableBooleanColumn(
+            this.$t,
+            '{system.views.onlineUser.title.bindIp}',
+            'bindIp'
+          ).createColumn(),
           width: 120
         },
         {

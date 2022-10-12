@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 
 import ApiService from '@/common/utils/ApiService'
-import {errorMessage} from '@/components/notice/SystemNotice'
+import { errorMessage } from '@/components/notice/SystemNotice'
 
 /**
  * 显示日志详情

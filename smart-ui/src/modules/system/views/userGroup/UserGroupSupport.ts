@@ -1,4 +1,5 @@
-import { ref, onMounted, reactive, Ref, createVNode } from 'vue'
+import { ref, onMounted, reactive, createVNode } from 'vue'
+import type { Ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import ApiService from '@/common/utils/ApiService'

@@ -21,30 +21,66 @@
               v-model:current-page="tablePage.currentPage"
               v-model:page-size="tablePage.pageSize"
               :page-sizes="[500, 1000, 2000, 5000]"
-              :layouts="['Sizes', 'PrevJump', 'PrevPage', 'Number', 'NextPage', 'NextJump', 'FullJump', 'Total']"
+              :layouts="[
+                'Sizes',
+                'PrevJump',
+                'PrevPage',
+                'Number',
+                'NextPage',
+                'NextJump',
+                'FullJump',
+                'Total'
+              ]"
               :total="tablePage.total"
-              @page-change="handlePageChange">
-            </vxe-pager>
+              @page-change="handlePageChange"></vxe-pager>
           </template>
           <template #toolbar_buttons>
             <a-form style="margin-left: 5px" layout="inline" :model="searchModel">
               <a-form-item>
-                <a-input v-model:value="searchModel.roleName" :size="formSizeConfig" :placeholder="$t('system.views.role.table.roleName')" />
+                <a-input
+                  v-model:value="searchModel.roleName"
+                  :size="formSizeConfig"
+                  :placeholder="$t('system.views.role.table.roleName')" />
               </a-form-item>
               <a-form-item>
-                <a-input v-model:value="searchModel.roleCode" :size="formSizeConfig" :placeholder="$t('system.views.role.table.roleCode')" />
+                <a-input
+                  v-model:value="searchModel.roleCode"
+                  :size="formSizeConfig"
+                  :placeholder="$t('system.views.role.table.roleCode')" />
               </a-form-item>
               <a-form-item>
-                <a-button type="primary" :size="buttonSizeConfig" @click="resetSearch">{{ $t('common.button.reset') }}</a-button>
-                <a-button :size="buttonSizeConfig" style="margin-left: 5px" type="primary" @click="loadRoleList">{{ $t('common.button.search') }}</a-button>
+                <a-button type="primary" :size="buttonSizeConfig" @click="resetSearch">
+                  {{ $t('common.button.reset') }}
+                </a-button>
+                <a-button
+                  :size="buttonSizeConfig"
+                  style="margin-left: 5px"
+                  type="primary"
+                  @click="loadRoleList">
+                  {{ $t('common.button.search') }}
+                </a-button>
               </a-form-item>
             </a-form>
           </template>
           <template #toolbar_tools>
             <a-form layout="inline">
               <a-form-item>
-                <a-button v-permission="permissions.add" :size="buttonSizeConfig" type="primary" @click="handleShowAdd">{{ $t('common.button.add') }}</a-button>
-                <a-button v-permission="permissions.delete" :size="buttonSizeConfig" type="primary" style="margin-left: 5px" danger @click="handleDelete">{{ $t('common.button.delete') }}</a-button>
+                <a-button
+                  v-permission="permissions.add"
+                  :size="buttonSizeConfig"
+                  type="primary"
+                  @click="handleShowAdd">
+                  {{ $t('common.button.add') }}
+                </a-button>
+                <a-button
+                  v-permission="permissions.delete"
+                  :size="buttonSizeConfig"
+                  type="primary"
+                  style="margin-left: 5px"
+                  danger
+                  @click="handleDelete">
+                  {{ $t('common.button.delete') }}
+                </a-button>
               </a-form-item>
             </a-form>
           </template>
@@ -57,8 +93,12 @@
               </a-button>
               <template #overlay>
                 <a-menu @click="({ key }) => handleActions(row, key)">
-                  <a-menu-item key="edit" :disabled="!hasPermission(permissions.update)">{{ $t('common.button.edit') }}</a-menu-item>
-                  <a-menu-item key="setUser" :disabled="!hasPermission(permissions.setRoleUser)">{{ $t('system.views.role.button.setRoleUser') }}</a-menu-item>
+                  <a-menu-item key="edit" :disabled="!hasPermission(permissions.update)">
+                    {{ $t('common.button.edit') }}
+                  </a-menu-item>
+                  <a-menu-item key="setUser" :disabled="!hasPermission(permissions.setRoleUser)">
+                    {{ $t('system.views.role.button.setRoleUser') }}
+                  </a-menu-item>
                 </a-menu>
               </template>
             </a-dropdown>
@@ -78,19 +118,25 @@
         <a-form
           :rules="formRules"
           :model="addEditModel"
-          :label-col="{span: 4}"
-          :wrapper-col="{span: 19}">
+          :label-col="{ span: 4 }"
+          :wrapper-col="{ span: 19 }">
           <a-form-item name="roleName" :label="$t('system.views.role.table.roleName')">
-            <a-input v-model:value="addEditModel.roleName" :placeholder="$t('system.views.role.validate.roleName')" />
+            <a-input
+              v-model:value="addEditModel.roleName"
+              :placeholder="$t('system.views.role.validate.roleName')" />
           </a-form-item>
           <a-form-item name="roleCode" :label="$t('system.views.role.table.roleCode')">
-            <a-input v-model:value="addEditModel.roleCode" :placeholder="$t('system.views.role.validate.roleCode')" />
+            <a-input
+              v-model:value="addEditModel.roleCode"
+              :placeholder="$t('system.views.role.validate.roleCode')" />
           </a-form-item>
           <a-form-item name="useYn" :label="$t('common.table.useYn')">
             <a-switch v-model:checked="addEditModel.useYn" />
           </a-form-item>
           <a-form-item name="roleType" :label="$t('system.views.role.table.roleType')">
-            <a-input v-model:value="addEditModel.roleType" :placeholder="$t('system.views.role.validate.roleType')" />
+            <a-input
+              v-model:value="addEditModel.roleType"
+              :placeholder="$t('system.views.role.validate.roleType')" />
           </a-form-item>
           <a-form-item :label="$t('common.table.seq')">
             <a-input-number v-model:value="addEditModel.seq" />
@@ -107,7 +153,7 @@
       <a-spin :spinning="getUserLoading">
         <a-transfer
           class="group-set-user"
-          :render="item => item.title"
+          :render="(item) => item.title"
           :target-keys="targetKeysModel"
           :data-source="allUserData"
           @change="handleTransChange" />
@@ -124,7 +170,7 @@ import { message, Modal } from 'ant-design-vue'
 import { ExclamationCircleOutlined, DownOutlined } from '@ant-design/icons-vue'
 import dayjs from 'dayjs'
 
-import { VxeTableInstance } from 'vxe-table'
+import type { VxeTableInstance } from 'vxe-table'
 import AuthMixins from '@/modules/system/mixins/AuthMixins'
 import { SystemPermissions } from '@/modules/system/constants/SystemConstants'
 
@@ -136,8 +182,6 @@ import ApiService from '@/common/utils/ApiService'
 import { tableUseYn } from '@/components/common/TableCommon'
 import SizeConfigHoops from '@/components/config/SizeConfigHooks'
 
-
-
 /**
  * 角色管理页面
  */
@@ -148,7 +192,7 @@ export default defineComponent({
     DownOutlined
   },
   mixins: [AuthMixins],
-  setup () {
+  setup() {
     const { t } = useI18n()
     const gridRef = ref({} as VxeTableInstance)
     // 当前行
@@ -194,7 +238,10 @@ export default defineComponent({
         icon: createVNode(ExclamationCircleOutlined),
         content: t('common.notice.deleteConfirm'),
         onOk: async () => {
-          await ApiService.postAjax('sys/role/batchDeleteById', selectRows.map(item => item.roleId))
+          await ApiService.postAjax(
+            'sys/role/batchDeleteById',
+            selectRows.map((item) => item.roleId)
+          )
           loadRoleDataVue.loadRoleList()
         }
       })
@@ -211,7 +258,7 @@ export default defineComponent({
       ...SizeConfigHoops()
     }
   },
-  data () {
+  data() {
     return {
       permissions: SystemPermissions.role,
       toolbarConfig: {

@@ -5,11 +5,7 @@
         <RedisInfoCharts :data="data" :client-id="clientId" />
       </div>
       <div class="grid-container">
-        <RedisInfoGrid
-          stripe
-          highlight-hover-row
-          border
-          :data="data" />
+        <RedisInfoGrid stripe highlight-hover-row border :data="data" />
       </div>
     </div>
   </div>
@@ -42,7 +38,7 @@ export default defineComponent({
       type: String
     }
   },
-  setup (props) {
+  setup(props) {
     const data = ref<Array<any>>([])
     /**
      * 加载redis信息
