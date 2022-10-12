@@ -8,7 +8,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref, onMounted, reactive, computed } from 'vue'
+import { defineComponent, ref, onMounted, reactive, computed } from 'vue'
+import type { PropType } from 'vue'
 
 const closeEvents = ['click', 'dblclick', 'contextmenu']
 
@@ -23,7 +24,7 @@ export default defineComponent({
       required: true
     }
   },
-  setup (props) {
+  setup(props) {
     const divRef = ref()
     const visible = ref(false)
     // 菜单位置
@@ -38,7 +39,7 @@ export default defineComponent({
         menuPosition.y = event.clientY
         event.preventDefault()
       })
-      closeEvents.forEach(item => {
+      closeEvents.forEach((item: any) => {
         document.addEventListener(item, (event: any) => {
           if (props.event !== item || event.target !== divRef.value) {
             visible.value = false

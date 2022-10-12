@@ -1,6 +1,6 @@
 const hasOwnProperty = Object.prototype.hasOwnProperty
 
-export function isShallowEqual (paramA: any | undefined, paramB: any | undefined) {
+export function isShallowEqual(paramA: any | undefined, paramB: any | undefined) {
   if ((paramA === undefined && paramB !== undefined) || (paramA !== undefined && paramB === undefined)) {
     return false
   }
@@ -17,7 +17,7 @@ export function isShallowEqual (paramA: any | undefined, paramB: any | undefined
   return true
 }
 
-export function isQueriesEqual (queryA: any | undefined, queryB: any | undefined) {
+export function isQueriesEqual(queryA: any | undefined, queryB: any | undefined) {
   if ((queryA === undefined && queryB !== undefined) || (queryA !== undefined && queryB === undefined)) {
     return false
   }
@@ -29,8 +29,7 @@ export function isQueriesEqual (queryA: any | undefined, queryB: any | undefined
   }
 
   for (let i = 0; i < keysA.length; i++) {
-    if (!hasOwnProperty.call(queryB, keysA[i]) ||
-      !isShallowEqual(queryA[keysA[i]], queryB[keysA[i]])) {
+    if (!hasOwnProperty.call(queryB, keysA[i]) || !isShallowEqual(queryA[keysA[i]], queryB[keysA[i]])) {
       return false
     }
   }

@@ -10,7 +10,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, toRefs, computed } from 'vue'
+import { defineComponent, toRefs, computed } from 'vue'
+import type { PropType } from 'vue'
 
 /**
  * 左右布局
@@ -26,7 +27,7 @@ export default defineComponent({
       default: '240px'
     }
   },
-  setup (props) {
+  setup(props) {
     const { rightWidth } = toRefs(props)
     const computedStyle = computed(() => {
       if (rightWidth.value.endsWith('px')) {
@@ -54,6 +55,4 @@ export default defineComponent({
 })
 </script>
 
-<style lang="less" scoped>
-
-</style>
+<style lang="less" scoped></style>

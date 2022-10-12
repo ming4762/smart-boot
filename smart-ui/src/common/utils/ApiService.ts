@@ -1,12 +1,12 @@
 import axios from 'axios'
 
-const Accept_Language ='Accept-Language'
+const Accept_Language = 'Accept-Language'
 
 /**
  * 获取API地址
  */
 const getApiUrl = (): string => {
-  return localStorage.getItem('API_URL') || import.meta.env.VITE_API_URL as string
+  return localStorage.getItem('API_URL') || (import.meta.env.VITE_API_URL as string)
 }
 
 // axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'
@@ -16,12 +16,10 @@ export const API_SERVICE = axios.create({
   timeout: 100000
 })
 
-
 /**
  * API工具类
  */
 export default class ApiService {
-
   public static POST = 'POST'
 
   public static GET = 'GET'
@@ -38,12 +36,11 @@ export default class ApiService {
     return getApiUrl()
   }
 
-
-  public static getLang (): string | null {
+  public static getLang(): string | null {
     return this.apiLang
   }
 
-  public static setLang (lang: string) {
+  public static setLang(lang: string) {
     this.apiLang = lang
   }
 
@@ -54,7 +51,7 @@ export default class ApiService {
    * @param parameter 参数
    * @param customParameter 自定义参数
    */
-  public static ajax (url: string, ajaxType: string, parameter?: {[index: string]: any}, customParameter?: {[index: string]: any}) {
+  public static ajax(url: string, ajaxType: string, parameter?: { [index: string]: any }, customParameter?: { [index: string]: any }) {
     const params = customParameter || {}
     if (!params.headers) {
       params.headers = {}
@@ -140,10 +137,10 @@ export default class ApiService {
     // 创建formData
     const formData = new FormData()
     if (parameter) {
-      Object.keys(parameter).forEach(key => {
+      Object.keys(parameter).forEach((key) => {
         const value = parameter[key]
         if (value) {
-          formData.append(key,value)
+          formData.append(key, value)
         }
       })
     }

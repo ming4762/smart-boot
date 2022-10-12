@@ -2,8 +2,8 @@
  * handler存储
  */
 type HandlerStore = {
-  delay: number,
-  lookup: number,
+  delay: number
+  lookup: number
   data: Map<string, Function>
 }
 
@@ -20,7 +20,7 @@ export default class TimeTaskUtil {
    * @param delay 延迟事件
    * @param parameter
    */
-  public static loop (targetFunction: Function, times = -1, delay: number, ...parameter: any[]): number {
+  public static loop(targetFunction: Function, times = -1, delay: number, ...parameter: any[]): number {
     let num = 0
     const loop = setInterval(() => {
       // 执行目标函数
@@ -42,7 +42,7 @@ export default class TimeTaskUtil {
    * 移除循环组
    * @param group
    */
-  public static removeLoopGroup (group: string) {
+  public static removeLoopGroup(group: string) {
     const groupData = handlerGroupStore.get(group)
     if (groupData) {
       handlerGroupStore.delete(group)
@@ -56,7 +56,7 @@ export default class TimeTaskUtil {
    * @param group
    * @param key
    */
-  public static removeLoop (group: string, key: string) {
+  public static removeLoop(group: string, key: string) {
     const groupData = handlerGroupStore.get(group)
     if (groupData) {
       groupData.data.delete(key)
@@ -69,7 +69,7 @@ export default class TimeTaskUtil {
    * @param key 循环key
    * @param handler 执行函数
    */
-  public static addLoop (group: string, key: string, handler: Function) {
+  public static addLoop(group: string, key: string, handler: Function) {
     const groupData = handlerGroupStore.get(group)
     if (!groupData) {
       throw new Error('请先添加循环分组')
@@ -82,7 +82,7 @@ export default class TimeTaskUtil {
    * @param group
    * @param delay
    */
-  public static addLoopGroup (group: string, delay: number) {
+  public static addLoopGroup(group: string, delay: number) {
     let groupData = handlerGroupStore.get(group)
     if (!groupData) {
       groupData = {
@@ -105,7 +105,7 @@ export default class TimeTaskUtil {
    * @param groupData
    * @private
    */
-  private static execute (groupData: HandlerStore) {
+  private static execute(groupData: HandlerStore) {
     groupData.data.forEach((value) => {
       value()
     })

@@ -18,13 +18,13 @@ export const smartProviderProps = {
 export default defineComponent({
   name: 'SmartProvider',
   props: smartProviderProps,
-  setup (props) {
+  setup(props) {
     const propRef: any = toRefs(props)
-    Object.keys(propRef).forEach(key => {
+    Object.keys(propRef).forEach((key) => {
       provide(key, propRef[key])
     })
   },
-  render () {
+  render() {
     return this.$slots.default!()
   }
 })

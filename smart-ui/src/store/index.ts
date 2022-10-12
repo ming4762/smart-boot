@@ -19,7 +19,6 @@ type Options = {
 }
 
 const storagePlugin = (options: Options) => {
-  console.log(options)
   return ({ store }: PiniaPluginContext) => {
     const id = store.$id
     if (Object.keys(STORAGE_STORE_LIST).includes(id)) {

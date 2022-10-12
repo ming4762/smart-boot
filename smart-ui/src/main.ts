@@ -1,4 +1,5 @@
-import { createApp, App } from 'vue'
+import { createApp } from 'vue'
+import type { App } from 'vue'
 import AppVue from './App.vue'
 
 import './style/index.less'
@@ -58,4 +59,3 @@ app.use(router)
   .use(useVxe)
   .use(i18n)
   .mount('#app')
-

@@ -6,11 +6,10 @@ const tableButtonSizeMap: any = {
   mini: 'small'
 }
 
-
 /**
  * 尺寸配置
  */
-export default function() {
+export default function () {
   const tableSizeConfig = inject('tableSize')
   const buttonSizeConfig = inject('buttonSize')
   const formSizeConfig = inject('formSize')
@@ -25,6 +24,3 @@ export default function() {
     tableButtonSizeConfig
   }
 }
-
-
-

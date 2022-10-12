@@ -2,7 +2,6 @@
  * 树形工具类
  */
 export default class TreeUtils {
-
   public static CHILDREN = 'children'
   public static HAS_CHILD = 'hasChild'
   public static HAS_PARENT = 'hasParent'
@@ -13,7 +12,7 @@ export default class TreeUtils {
    * @param treeCode 标识ID 和parentId
    * @param topParentCode 顶级节点的parentId
    */
-  public static convertList2Tree (list: any[], treeCode: string[], topParentCode?: any): any[] | null {
+  public static convertList2Tree(list: any[], treeCode: string[], topParentCode?: any): any[] | null {
     if (list == null) {
       return null
     }
@@ -21,7 +20,7 @@ export default class TreeUtils {
       topParentCode = '0'
     }
     const treeList: any[] = []
-    if(treeCode.length !== 2) {
+    if (treeCode.length !== 2) {
       console.error('请指明treeCode', treeCode)
     }
     const code = treeCode[0]
@@ -44,12 +43,9 @@ export default class TreeUtils {
           parent[this.HAS_CHILD] = true
           // 设置节点含有上级
           value[this.HAS_PARENT] = true
-
         }
       }
     }
     return treeList
   }
-
-
 }
