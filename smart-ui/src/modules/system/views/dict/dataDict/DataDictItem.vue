@@ -305,9 +305,9 @@ export default defineComponent({
         },
         {
           field: 'dictCode',
-          hidden: true,
+          fixed: 'left',
           title: '{system.views.dictItem.title.dictCode}',
-          width: 120
+          width: 160
         },
         {
           field: 'dictItemCode',
@@ -317,7 +317,6 @@ export default defineComponent({
         },
         {
           field: 'dictItemName',
-          fixed: 'left',
           title: '{system.views.dictItem.title.dictItemName}',
           width: 180
         },
