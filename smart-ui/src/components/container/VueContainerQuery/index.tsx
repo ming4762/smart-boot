@@ -1,12 +1,11 @@
-import { defineComponent, PropType, getCurrentInstance, watch, toRefs } from 'vue'
-import { ComponentInternalInstance } from '@vue/runtime-core'
+import { defineComponent, getCurrentInstance, watch, toRefs } from 'vue'
+import type { ComponentInternalInstance, PropType } from 'vue'
 
 import { vueContainerQueryVueSupport } from './Base'
 
 import { isQueriesEqual } from './utils'
 
-const kErrMsg = '<vue-Container-query> can only render' +
-  ' one, and exactly one child component'
+const kErrMsg = '<vue-Container-query> can only render' + ' one, and exactly one child component'
 
 /**
  * vue-container-query vue3重写
@@ -22,7 +21,7 @@ export default defineComponent({
       type: Object as PropType<object>
     }
   },
-  setup (props, { slots }) {
+  setup(props, { slots }) {
     const { query, initialSize } = toRefs(props)
     const { emit } = getCurrentInstance() as ComponentInternalInstance
     const handleChange = (params: any) => {

@@ -10,7 +10,7 @@ const TOKEN_KEY = 'smart_authorization'
 const REQUEST_TOKEN_KEY = 'Authorization'
 
 // API_SERVICE 添加token
-API_SERVICE.interceptors.request.use(config => {
+API_SERVICE.interceptors.request.use((config) => {
   const token = getToken()
   if (token) {
     if (!config.headers) {
@@ -20,7 +20,6 @@ API_SERVICE.interceptors.request.use(config => {
   }
   return config
 })
-
 
 /**
  * 保存token信息
@@ -88,7 +87,11 @@ export const hasPermission = (permission: string | null | undefined): boolean =>
   }
   if (permission) {
     const permissions = getUserPermission()
-    if (!permissions || permissions.length === 0 || !permissions.includes(permission)) {
+    if (
+      !permissions ||
+      permissions.length === 0 ||
+      !permissions.includes(permission)
+    ) {
       hasPermission = false
     }
   }

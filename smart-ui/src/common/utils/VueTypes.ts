@@ -1,10 +1,10 @@
-import { PropType } from 'vue'
+import type { PropType } from 'vue'
 // @ts-ignore
 import isPlainObject from 'lodash/isPlainObject'
 import { toType, isInteger, warn, isArray, isFunction, getType, validateType } from './utils'
 
 const VuePropTypes = {
-  get any () {
+  get any() {
     return toType('any', {
       type: null
     })
@@ -16,37 +16,37 @@ const VuePropTypes = {
     }).def!(currentDefaults.func)
   },
 
-  get bool () {
+  get bool() {
     return toType('boolean', {
       type: Boolean as PropType<boolean>
     }).def(currentDefaults.bool)
   },
 
-  get string () {
+  get string() {
     return toType('string', {
       type: String as PropType<string>
     }).def(currentDefaults.string)
   },
 
-  get number () {
+  get number() {
     return toType('number', {
       type: Number as PropType<number>
     }).def(currentDefaults.number)
   },
 
-  get array () {
+  get array() {
     return toType('array', {
       type: Array as PropType<Array<any>>
     }).def(currentDefaults.array)
   },
 
-  getObject () {
+  getObject() {
     return toType('object', {
       type: Object as PropType<object>
     }).def(currentDefaults.object)
   },
 
-  get integer () {
+  get integer() {
     return toType('integer', {
       type: Number as PropType<number>,
       validator: (value: any) => {
@@ -55,7 +55,7 @@ const VuePropTypes = {
     })
   },
 
-  get symbol () {
+  get symbol() {
     return toType('symbol', {
       type: null,
       validator: (value: any) => {
@@ -64,7 +64,7 @@ const VuePropTypes = {
     })
   },
 
-  custom (validatorFn: Function) {
+  custom(validatorFn: Function) {
     // eslint-disable-next-line prefer-rest-params
     const warnMsg = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'custom validation failed'
 
@@ -82,7 +82,7 @@ const VuePropTypes = {
     })
   },
 
-  oneOf (arr: Array<any>) {
+  oneOf(arr: Array<any>) {
     if (!isArray(arr)) {
       throw new TypeError('[VueTypes error]: You must provide an array as argument')
     }
@@ -101,16 +101,16 @@ const VuePropTypes = {
         if (!valid) warn(msg)
         return valid
       }
-    });
+    })
   },
 
-  instanceOf (instanceConstructor: any) {
+  instanceOf(instanceConstructor: any) {
     return toType('instanceOf', {
       type: instanceConstructor
     })
   },
 
-  oneOfType (arr: Array<any>) {
+  oneOfType(arr: Array<any>) {
     if (!isArray(arr)) {
       throw new TypeError('[VueTypes error]: You must provide an array as argument')
     }

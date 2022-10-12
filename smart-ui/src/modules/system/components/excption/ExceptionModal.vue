@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, ref} from 'vue'
+import { defineComponent, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { CloseCircleOutlined } from '@ant-design/icons-vue'
@@ -40,7 +40,7 @@ export default defineComponent({
   components: {
     CloseCircleOutlined
   },
-  setup () {
+  setup() {
     const { t } = useI18n()
     const systemExceptionStore = useSystemExceptionStore()
 
@@ -85,7 +85,7 @@ export default defineComponent({
 <style lang="less" scoped>
 .exception-modal {
   &:after {
-    content:"";
+    content: '';
     display: block;
     clear: both;
   }

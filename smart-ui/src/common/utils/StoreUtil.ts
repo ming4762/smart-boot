@@ -2,7 +2,7 @@
  * 存储工具类
  */
 export default class StoreUtil {
-    public static SESSION_TYPE = 'session'
+  public static SESSION_TYPE = 'session'
     /**
      * 数据存储到strong
      * @param key 数据的key

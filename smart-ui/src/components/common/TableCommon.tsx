@@ -83,7 +83,4 @@ const tableUseYn = (t: Function) => {
   }
 }
 
-export  {
-  tableUseYn,
-  tableDeleteYn
-}
+export { tableUseYn, tableDeleteYn }

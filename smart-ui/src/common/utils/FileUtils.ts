@@ -7,7 +7,7 @@ export default class FileUtils {
    * @param filename
    * @param text
    */
-  public static createAndDownload (filename: string, text: string): void {
+  public static createAndDownload(filename: string, text: string): void {
     const element = document.createElement('a')
     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text))
     element.setAttribute('download', filename)

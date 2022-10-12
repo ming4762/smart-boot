@@ -1,5 +1,5 @@
 export class NodeItem<T> {
-  value: T;
+  value: T
 
   prev: NodeItem<T> | null
 

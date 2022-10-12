@@ -1,20 +1,21 @@
-import {ref, reactive, computed, Ref, createVNode} from 'vue'
+import { ref, reactive, computed, createVNode } from 'vue'
+import type { Ref } from 'vue'
 import { message, Modal } from 'ant-design-vue'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
 
-type Params = { page?: number; limit?: number, sortName?: string, sortOrder?: string }
+type Params = { page?: number; limit?: number; sortName?: string; sortOrder?: string }
 
-type Data = { total: number, rows: Array<any> } | Array<any>
+type Data = { total: number; rows: Array<any> } | Array<any>
 
 /**
  * 参数类型
  */
 type Parameter = {
-  defaultPageSize?: number;
-  paging: boolean,
-  defaultSorter?: { sortName: string, sortOrder: string },
+  defaultPageSize?: number
+  paging: boolean
+  defaultSorter?: { sortName: string; sortOrder: string }
   // 搜索参数
-  defaultParameter?: {[index: string]: any}
+  defaultParameter?: { [index: string]: any }
 }
 
 /**
@@ -22,17 +23,19 @@ type Parameter = {
  * @param service 加载数据服务
  * @param parameter hook 参数
  */
-export const useVxeTable = (service: (params: Params, searchParameter: any) => Promise<Data>, parameter: Parameter = { paging: true } ) => {
+export const useVxeTable = (service: (params: Params, searchParameter: any) => Promise<Data>, parameter: Parameter = { paging: true }) => {
   // 数据加载状态
   const loading = ref(false)
   // 表格数据
   const data = ref<Array<any>>([])
   // 分页数据
-  const tablePage: any = parameter.paging ? reactive({
-    total: 0,
-    currentPage: 1,
-    pageSize: parameter.defaultPageSize || 500
-  }) : {}
+  const tablePage: any = parameter.paging
+    ? reactive({
+        total: 0,
+        currentPage: 1,
+        pageSize: parameter.defaultPageSize || 500
+      })
+    : {}
   const searchModel = ref<any>(Object.assign({}, parameter.defaultParameter || {}))
   // 排序数据
   const sortData: any = reactive(parameter.defaultSorter || {})
@@ -90,7 +93,6 @@ export const useVxeTable = (service: (params: Params, searchParameter: any) => P
   const handleResetPage = () => {
     tablePage.currentPage = 1
   }
-
 
   /**
    * 排序变化时触发
@@ -153,7 +155,14 @@ type AddEditParameter = {
  * @param i18nRender 国际化函数
  * @param parameter 参数
  */
-export const useAddEdit = (gridRef: Ref, loadHandler: (id: any) => Promise<any>, listHandler: Function | null, saveHandler: (model: any) => Promise<void>, i18nRender: Function, parameter: AddEditParameter = {}) => {
+export const useAddEdit = (
+  gridRef: Ref,
+  loadHandler: (id: any) => Promise<any>,
+  listHandler: Function | null,
+  saveHandler: (model: any) => Promise<void>,
+  i18nRender: Function,
+  parameter: AddEditParameter = {}
+) => {
   const formRef = ref()
   // 是否是加载状态
   const isAdd = ref(false)
@@ -268,7 +277,7 @@ export const useAddEdit = (gridRef: Ref, loadHandler: (id: any) => Promise<any>,
 }
 
 type DeleteParameter = {
-  idField: string,
+  idField: string
   listHandler?: Function
 }
 
@@ -276,7 +285,6 @@ type DeleteParameter = {
  * 删除操作
  */
 export const useVxeDelete = (gridRef: Ref, i18nRender: Function, deleteHandler: (idList: Array<any>) => Promise<void>, parameter: DeleteParameter) => {
-
   const doDelete = (idList: Array<any>) => {
     Modal.confirm({
       title: i18nRender('common.button.confirm'),

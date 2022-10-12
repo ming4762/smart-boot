@@ -11,10 +11,7 @@ import { defineComponent, watch, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
-
-import AppUtils from '@/common/utils/AppUtils'
-
-import {useAppI18nStore, useAppStateStore } from '@/store/modules/AppStore2'
+import { useAppI18nStore, useAppStateStore } from '@/store/modules/AppStore2'
 
 import { domTitle, setDocumentTitle } from '@/common/utils/domUtil'
 import ApiService from '@/common/utils/ApiService'
@@ -23,7 +20,7 @@ const domTitleVueSupport = (route: any, locale: any, i18nRender: Function) => {
   watch([route, locale], () => {
     const matchedList = route.matched
     let matchedMeta = null
-    for (let i = matchedList.length - 1; i>= 0; i--) {
+    for (let i = matchedList.length - 1; i >= 0; i--) {
       const matched = matchedList[i]
       if (matched.meta.locales) {
         matchedMeta = matched.meta
@@ -35,7 +32,7 @@ const domTitleVueSupport = (route: any, locale: any, i18nRender: Function) => {
     } else {
       let metaTitle = null
       const matchedList = route.matched
-      for (let i = matchedList.length - 1; i>= 0; i--) {
+      for (let i = matchedList.length - 1; i >= 0; i--) {
         const matched = matchedList[i]
         if (matched.meta.title) {
           metaTitle = matched.meta.title
@@ -57,7 +54,7 @@ const domTitleVueSupport = (route: any, locale: any, i18nRender: Function) => {
 }
 
 export default defineComponent({
-  setup () {
+  setup() {
     const i18n = useI18n()
     const route = useRoute()
     const appI18nStore = useAppI18nStore()
@@ -84,7 +81,7 @@ export default defineComponent({
     }
   },
   watch: {
-    globalLoading () {
+    globalLoading() {
       console.log(this.globalLoading)
     }
   }

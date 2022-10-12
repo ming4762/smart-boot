@@ -24,12 +24,15 @@ const initialize = (props: any) => {
   const { code, options, mode, theme, readOnly } = toRefs(props)
   const textareaRef = ref()
   onMounted(() => {
-    coder = CodeMirror.fromTextArea(textareaRef.value, Object.assign({}, options.value, {
-      // 主题，对应主题库 JS 需要提前引入
-      theme: theme.value,
-      mode: mode.value,
-      readOnly: readOnly.value
-    }))
+    coder = CodeMirror.fromTextArea(
+      textareaRef.value,
+      Object.assign({}, options.value, {
+        // 主题，对应主题库 JS 需要提前引入
+        theme: theme.value,
+        mode: mode.value,
+        readOnly: readOnly.value
+      })
+    )
     // 设置初始值
     coder.setValue(code.value)
   })
@@ -104,7 +107,7 @@ export default defineComponent({
       default: false
     }
   },
-  setup (props) {
+  setup(props) {
     const initializeVue = initialize(props)
     // 编辑器实例
     return {
@@ -115,9 +118,9 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
-  .codemirror-container {
-    ::v-deep(.CodeMirror) {
-      height: 100%;
-    }
+.codemirror-container {
+  ::v-deep(.CodeMirror) {
+    height: 100%;
   }
+}
 </style>
