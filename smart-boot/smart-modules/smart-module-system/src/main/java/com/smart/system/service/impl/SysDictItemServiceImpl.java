@@ -6,6 +6,7 @@ import com.google.common.collect.Lists;
 import com.smart.crud.service.BaseServiceImpl;
 import com.smart.system.pojo.dto.dict.SysDictItemIdDTO;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import com.smart.system.service.SysDictItemService;
 import com.smart.system.mapper.SysDictItemMapper;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -36,5 +38,22 @@ public class SysDictItemServiceImpl extends BaseServiceImpl<SysDictItemMapper, S
             this.remove(queryWrapper);
         });
         return true;
+    }
+
+    @Override
+    protected boolean isAdd(@NonNull SysDictItemPO entity) {
+        if (StringUtils.isAllBlank(entity.getDictCode(), entity.getDictItemCode())) {
+            return true;
+        }
+        return this.list(
+                new QueryWrapper<SysDictItemPO>().lambda()
+                        .eq(SysDictItemPO::getDictCode, entity.getDictCode())
+                        .eq(SysDictItemPO::getDictItemCode, entity.getDictItemCode())
+        ).isEmpty();
+    }
+
+    @Override
+    public SysDictItemPO getById(Serializable id) {
+        throw new UnsupportedOperationException("多主键，不支持通过ID查询");
     }
 }
