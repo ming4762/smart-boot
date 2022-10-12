@@ -1,7 +1,6 @@
-import { RouteRecordRaw } from 'vue-router'
+import type { RouteRecordRaw } from 'vue-router'
 import UserLayout from '../components/layouts/UserLayout.vue'
 import BasicLayout from '../components/layouts/BasicLayout.vue'
-
 
 const topRouters: Array<RouteRecordRaw> = [
   {

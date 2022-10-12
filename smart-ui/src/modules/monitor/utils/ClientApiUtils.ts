@@ -14,8 +14,8 @@ export const loadActuator = (
   type: string,
   urlHandler: Function | undefined | null = (url: string): string => url,
   method = 'GET',
-  parameter?: {[index: string]: any},
-  customParameter?: {[index: string]: any}
+  parameter?: { [index: string]: any },
+  customParameter?: { [index: string]: any }
 ): Promise<any | void> => {
   let url = `/monitor/client/${clientId}/actuator/${type}`
   url = urlHandler ? urlHandler(url) : url
@@ -37,8 +37,8 @@ export const downActuator = (
   type: string,
   urlHandler: Function | undefined | null = (url: string): string => url,
   method = 'GET',
-  parameter?: {[index: string]: any},
-  customParameter?: {[index: string]: any}
+  parameter?: { [index: string]: any },
+  customParameter?: { [index: string]: any }
 ): Promise<any | void> => {
   let url = `/monitor/clientDownload/${clientId}/actuator/${type}`
   url = urlHandler ? urlHandler(url) : url
@@ -53,7 +53,6 @@ export const downActuator = (
 export const getActuatorUrl = (clientId: string, type: string): string => {
   return `monitor/client/${clientId}/actuator/${type}`
 }
-
 
 /**
  * 加载所有端点

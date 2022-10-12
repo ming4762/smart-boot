@@ -34,7 +34,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, getCurrentInstance, watch, toRefs, computed, PropType } from 'vue'
+import { defineComponent, ref, getCurrentInstance, watch, toRefs, computed } from 'vue'
+import type { PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { message } from 'ant-design-vue'

@@ -21,17 +21,22 @@
       </div>
     </template>
 
-    <template #headerContentRender>
-    </template>
+    <template #headerContentRender></template>
 
     <template #rightContentRender>
-      <RightContent :is-mobile="isMobile" :theme="setting.theme" :top-menu="setting.layout === 'topmenu'" />
+      <RightContent
+        :is-mobile="isMobile"
+        :theme="setting.theme"
+        :top-menu="setting.layout === 'topmenu'" />
     </template>
 
-    <SettingDrawer v-if="isDev" :visible="settingDrawerVisible" :i18n-render="i18nRender" :settings="setting" @change="handleSettingChange">
-      <div style="margin: 12px 0;">
-        This is SettingDrawer custom footer content.
-      </div>
+    <SettingDrawer
+      v-if="isDev"
+      :visible="settingDrawerVisible"
+      :i18n-render="i18nRender"
+      :settings="setting"
+      @change="handleSettingChange">
+      <div style="margin: 12px 0">This is SettingDrawer custom footer content.</div>
     </SettingDrawer>
     <router-view v-slot="{ Component, route }">
       <transition name="fade" mode="out-in">
@@ -52,7 +57,8 @@ import { defineComponent, onMounted, ref, watch } from 'vue'
 import { errorMessage } from '@/components/notice/SystemNotice'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
-import { RouteLocationNormalized, Router, useRoute, useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
+import type { RouteLocationNormalized, Router } from 'vue-router'
 
 import { ReloadOutlined } from '@ant-design/icons-vue'
 import { notification } from 'ant-design-vue'
@@ -172,7 +178,7 @@ export default defineComponent({
     SettingDrawer,
     ExceptionModal
   },
-  setup () {
+  setup() {
     const route = useRoute()
     const router = useRouter()
 
@@ -188,7 +194,6 @@ export default defineComponent({
 
     const appI18nStore = useAppI18nStore()
     const { lang } = storeToRefs(appI18nStore)
-
 
     onMounted(async () => {
       try {

@@ -1,4 +1,5 @@
-import { defineComponent, PropType, toRefs, computed, createVNode } from 'vue'
+import { defineComponent, toRefs, computed, createVNode } from 'vue'
+import type { PropType } from 'vue'
 import VuePropsTypes from '@/common/utils/VueTypes'
 import RouteMenu, { RouteMenuProps } from './RouteMenu'
 import './SideMenu.less'

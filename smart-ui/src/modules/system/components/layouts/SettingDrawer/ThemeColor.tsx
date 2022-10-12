@@ -1,4 +1,5 @@
-import { defineComponent, inject, PropType } from 'vue'
+import { defineComponent, inject } from 'vue'
+import type { PropType } from 'vue'
 import { genThemeToString } from '@/common/utils/utils'
 
 import { CheckOutlined } from '@ant-design/icons-vue'
@@ -8,12 +9,12 @@ import './ThemeColor.less'
 const baseClassName = 'theme-color'
 
 const Tag = defineComponent({
-  name: 'Tag',
+  name: 'TagComponent',
   props: {
     color: String as PropType<string>,
     check: Boolean as PropType<boolean>
   },
-  render () {
+  render() {
     const { color, check } = this
     const divProps = {
       style: {
@@ -41,7 +42,7 @@ export default defineComponent({
   emits: ['change'],
   render () {
     const { title, colors, value, i18nRender } = this
-    const colorList = colors  === void 0 ? [] : colors
+    const colorList = colors === void 0 ? [] : colors
     const i18n: any = i18nRender || inject('locale')
     const handleChange = (key: string) => {
       this.$emit('change', key)

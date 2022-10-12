@@ -1,5 +1,5 @@
-import { defineComponent, PropType, computed, toRefs, inject, getCurrentInstance } from 'vue'
-import { ComponentInternalInstance } from '@vue/runtime-core'
+import { defineComponent, computed, toRefs, inject, getCurrentInstance } from 'vue'
+import type { PropType, ComponentInternalInstance } from 'vue'
 
 import { CheckOutlined } from '@ant-design/icons-vue'
 
@@ -21,15 +21,18 @@ export default defineComponent({
     const { emit } = getCurrentInstance() as ComponentInternalInstance
     const i18n: any = (i18nRender ? i18nRender.value : null) || inject('locale')
     const computedItems = computed(() => {
-      return list.value || [{
-        key: 'sidemenu',
-        url: '/src/modules/system/assets/settingDrawer/layout_side.svg',
-        title: i18n('system.setting.sidemenu')
-      }, {
-        key: 'topmenu',
-        url: 'src/modules/system/assets/settingDrawer/layout_top.svg',
-        title: i18n('system.setting.topmenu')
-      }]
+      return list.value || [
+          {
+            key: 'sidemenu',
+            url: '/src/modules/system/assets/settingDrawer/layout_side.svg',
+            title: i18n('system.setting.sidemenu')
+          },
+          {
+            key: 'topmenu',
+            url: 'src/modules/system/assets/settingDrawer/layout_top.svg',
+            title: i18n('system.setting.topmenu')
+          }
+        ]
     })
     const handleChange = (key: string) => {
       emit('change', key)
@@ -39,7 +42,7 @@ export default defineComponent({
       handleChange
     }
   },
-  render () {
+  render() {
     const { value } = this
     return (
       <div class={baseClassName}>

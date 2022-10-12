@@ -31,7 +31,7 @@ export default defineComponent({
     I18nList,
     I18nItemList
   },
-  setup () {
+  setup() {
     const groupId = ref<number>()
     const i18nId = ref<number>()
     return {

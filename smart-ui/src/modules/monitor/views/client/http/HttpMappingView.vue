@@ -17,8 +17,15 @@
                     <template #renderItem="detailData">
                       <a-list-item>
                         <div style="overflow: hidden; width: 100%">
-                          <div style="width: 100px; display: inline-block; font-weight: bold">{{ detailData.item.label }}</div>
-                          <div style="display: inline-block; width: calc(100% - 100px); word-wrap: break-word">
+                          <div style="width: 100px; display: inline-block; font-weight: bold">
+                            {{ detailData.item.label }}
+                          </div>
+                          <div
+                            style="
+                              display: inline-block;
+                              width: calc(100% - 100px);
+                              word-wrap: break-word;
+                            ">
                             <span>{{ detailData.item.value }}</span>
                           </div>
                         </div>
@@ -34,10 +41,7 @@
 
       <div class="title" style="margin-top: 5px">Servlets</div>
       <div class="servlets-container">
-        <a-table
-          :columns="servletsColumns"
-          :pagination="false"
-          :data-source="computedServletsData">
+        <a-table :columns="servletsColumns" :pagination="false" :data-source="computedServletsData">
           <template #bodyCell="{ column, text }">
             <template v-if="column.dataIndex === 'mappings'">
               <code>{{ text.join(',') }}</code>
@@ -48,10 +52,7 @@
 
       <div class="title" style="margin-top: 15px">Filters</div>
       <div class="filter-container">
-        <a-table
-          :data-source="computedFilterData"
-          :pagination="false"
-          :columns="filterColumns">
+        <a-table :data-source="computedFilterData" :pagination="false" :columns="filterColumns">
           <template #bodyCell="{ column, text }">
             <template v-if="column.dataIndex === 'urlPatternMappings'">
               <code>{{ text.join(',') }}</code>
@@ -81,7 +82,7 @@ export default defineComponent({
       type: String
     }
   },
-  setup (props) {
+  setup(props) {
     const dataLoading = ref(false)
     const actuatorData = ref<any>({})
     /**
@@ -91,7 +92,7 @@ export default defineComponent({
       if (actuatorData.value.contexts) {
         return actuatorData.value.contexts.application.mappings.dispatcherServlets.dispatcherServlet
       }
-      return  []
+      return []
     })
     /**
      * servlets 表格数据
@@ -100,14 +101,14 @@ export default defineComponent({
       if (actuatorData.value.contexts) {
         return actuatorData.value.contexts.application.mappings.servlets
       }
-      return  []
+      return []
     })
 
     const computedFilterData = computed(() => {
       if (actuatorData.value.contexts) {
         return actuatorData.value.contexts.application.mappings.servletFilters
       }
-      return  []
+      return []
     })
     /**
      * 加载数据函数
@@ -131,7 +132,7 @@ export default defineComponent({
       computedFilterData
     }
   },
-  data () {
+  data() {
     return {
       servletsColumns: [
         {
@@ -175,7 +176,7 @@ export default defineComponent({
     }
   },
   methods: {
-    getPredicateList (item: any) {
+    getPredicateList(item: any) {
       if (item.details == null) {
         return [item.predicate]
       }
@@ -185,20 +186,28 @@ export default defineComponent({
      * 获取详细数据
      * @param item 每一项的数据
      */
-    getDetailData (item: any) {
+    getDetailData(item: any) {
       const data: Array<any> = []
       const { details, handler } = item
       if (details && details.requestMappingConditions) {
-        if (details.requestMappingConditions.methods && details.requestMappingConditions.methods.length > 0) {
+        if (
+          details.requestMappingConditions.methods &&
+          details.requestMappingConditions.methods.length > 0
+        ) {
           data.push({
             label: 'Methods',
             value: details.requestMappingConditions.methods.join(',')
           })
         }
-        if (details.requestMappingConditions.produces && details.requestMappingConditions.produces.length > 0) {
+        if (
+          details.requestMappingConditions.produces &&
+          details.requestMappingConditions.produces.length > 0
+        ) {
           data.push({
             label: 'Produces',
-            value: details.requestMappingConditions.produces.map((produce: any) => produce.mediaType).join(',')
+            value: details.requestMappingConditions.produces
+              .map((produce: any) => produce.mediaType)
+              .join(',')
           })
         }
       }
@@ -225,7 +234,7 @@ export default defineComponent({
     background: #f5f5f5;
     font-size: 0.875em;
     font-weight: 400;
-    padding: .25em .5em .25em;
+    padding: 0.25em 0.5em 0.25em;
   }
   .dispatcher-left {
     width: 370px;

@@ -25,20 +25,24 @@ const i18nCreator = (appI18nStore: any) => {
     legacy: false,
     locale: appI18nStore.lang,
     messages: {
-      'zh-CN': merge({},
+      'zh-CN': merge(
+        {},
         systemI18n.zh_CN,
         appI18n.zh_CN,
         generatorI18n.zh_CN,
         monitorI18n.zh_CN,
         vxeTableZhCN,
-        { antLocale: zhCN }),
-      'en-US': merge({},
+        { antLocale: zhCN }
+      ),
+      'en-US': merge(
+        {},
         systemI18n.en_US,
         appI18n.en_US,
         generatorI18n.en_US,
         monitorI18n.en_US,
         vxeTableEnUS,
-        { antLocale: enUS })
+        { antLocale: enUS }
+      )
     }
   })
 }

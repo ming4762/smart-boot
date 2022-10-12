@@ -1,4 +1,5 @@
-import { onMounted, reactive, Ref, ref, createVNode } from 'vue'
+import { onMounted, reactive, ref, createVNode } from 'vue'
+import type { Ref } from 'vue'
 
 import { message, Modal } from 'ant-design-vue'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
@@ -37,12 +38,14 @@ export const userOperationHoops = (tableRef: Ref, t: Function, loadData: Functio
       return false
     }
     Modal.confirm({
-      title: t('system.views.user.validate.setUserUseYn', { useYn: useYn ? t('common.button.use') : t('common.button.noUse') }),
+      title: t('system.views.user.validate.setUserUseYn', {
+        useYn: useYn ? t('common.button.use') : t('common.button.noUse')
+      }),
       icon: createVNode(ExclamationCircleOutlined),
       onOk: async () => {
         try {
           await ApiService.postAjax('system/user/setUseYn', {
-            idList: userList.map(item => item.userId),
+            idList: userList.map((item) => item.userId),
             useYn
           })
           // 重新加载数据
@@ -74,7 +77,7 @@ export const userOperationHoops = (tableRef: Ref, t: Function, loadData: Functio
       title: t('common.notice.deleteConfirm'),
       icon: createVNode(ExclamationCircleOutlined),
       onOk: async () => {
-        const userIdList = userList.map(item => item.userId)
+        const userIdList = userList.map((item) => item.userId)
         try {
           await ApiService.postAjax('sys/user/batchDeleteById', userIdList)
           loadData()
@@ -202,24 +205,21 @@ export const vueAddEdit = (loadData: any) => {
   const isAdd = ref(false)
 
   /*
-     * 点击保存触发
-     */
+   * 点击保存触发
+   */
   const handleOk = async () => {
     saveLoading.value = true
-    formRef.value
-      .validate()
-      .then(async () => {
-        try {
-          await ApiService.postAjax('sys/user/saveUpdate', addEditModel.value)
-          loadData()
-          modalVisible.value = false
-        } catch (e) {
-          // TODO:待处理
-          errorMessage(e)
-        } finally {
-          saveLoading.value = false
-        }
-      })
+    formRef.value.validate().then(async () => {
+      try {
+        await ApiService.postAjax('sys/user/saveUpdate', addEditModel.value)
+        loadData()
+        modalVisible.value = false
+      } catch (e) {
+        errorMessage(e)
+      } finally {
+        saveLoading.value = false
+      }
+    })
   }
   // 保存
   const handleShowSave = () => {
@@ -270,13 +270,13 @@ export const useCreateAccount = (tableRef: Ref, t: Function) => {
       return false
     }
     // 判断是否有用户已经删除
-    const hasDelete = userList.some(item => item.deleteYn === true)
+    const hasDelete = userList.some((item) => item.deleteYn === true)
     if (hasDelete) {
       message.warn(t('system.views.user.message.deleteUserNotCreateAccount'))
       return false
     }
     // 判断是否有停用用户
-    const hasNoUse = userList.some(item => item.useYn === false)
+    const hasNoUse = userList.some((item) => item.useYn === false)
     if (hasNoUse) {
       message.warn(t('system.views.user.message.noUseUserNotCreateAccount'))
       return false
@@ -286,7 +286,10 @@ export const useCreateAccount = (tableRef: Ref, t: Function) => {
       icon: createVNode(ExclamationCircleOutlined),
       onOk: async () => {
         try {
-          await ApiService.postAjax('sys/user/createAccount', userList.map(item => item.userId))
+          await ApiService.postAjax(
+            'sys/user/createAccount',
+            userList.map((item) => item.userId)
+          )
           message.success(t('system.views.user.message.createAccountSuccess'))
         } catch (e) {
           errorMessage(e)

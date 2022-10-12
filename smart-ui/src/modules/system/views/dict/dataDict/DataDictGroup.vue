@@ -53,17 +53,24 @@
       </template>
       <template #dictCode-filter="{ column, $panel }">
         <div style="padding: 5px">
-          <a-input v-model:value="column.filters[0].data" @change="$panel.changeOption($event, !!column.filters[0].data, column.filters[0])" />
+          <a-input
+            v-model:value="column.filters[0].data"
+            @change="$panel.changeOption($event, !!column.filters[0].data, column.filters[0])" />
         </div>
       </template>
       <template #dictName-filter="{ column, $panel }">
         <div style="padding: 5px">
-          <a-input v-model:value="column.filters[0].data" @change="$panel.changeOption($event, !!column.filters[0].data, column.filters[0])" />
+          <a-input
+            v-model:value="column.filters[0].data"
+            @change="$panel.changeOption($event, !!column.filters[0].data, column.filters[0])" />
         </div>
       </template>
       <template #useYn-filter="{ column, $panel }">
         <div style="padding: 5px">
-          <a-select v-model:value="column.filters[0].data" style="width: 100px" @change="$panel.changeOption($event, !!column.filters[0].data, column.filters[0])">
+          <a-select
+            v-model:value="column.filters[0].data"
+            style="width: 100px"
+            @change="$panel.changeOption($event, !!column.filters[0].data, column.filters[0])">
             <a-select-option value="">ALL</a-select-option>
             <a-select-option :value="true">YES</a-select-option>
             <a-select-option :value="false">NO</a-select-option>
@@ -71,29 +78,35 @@
         </div>
       </template>
     </vxe-grid>
-    <a-modal
-      v-bind="modalProps">
+    <a-modal v-bind="modalProps">
       <a-spin :spinning="spinning">
         <a-form
           ref="formRef"
-          :label-col="{span: 5}"
+          :label-col="{ span: 5 }"
           :rules="rules"
-          :wrapper-col="{span: 18}"
+          :wrapper-col="{ span: 18 }"
           v-bind="formProps">
           <a-row>
             <a-col :span="24">
               <a-form-item :label="$t('system.views.dictGroup.title.dictCode')" name="dictCode">
-                <a-input v-model:value="formProps.model.dictCode" :placeholder="$t('system.views.dictGroup.validate.dictCode')" />
+                <a-input
+                  v-model:value="formProps.model.dictCode"
+                  :placeholder="$t('system.views.dictGroup.validate.dictCode')" />
               </a-form-item>
             </a-col>
             <a-col :span="24">
               <a-form-item :label="$t('system.views.dictGroup.title.dictName')" name="dictName">
-                <a-input v-model:value="formProps.model.dictName" :placeholder="$t('system.views.dictGroup.validate.dictName')" />
+                <a-input
+                  v-model:value="formProps.model.dictName"
+                  :placeholder="$t('system.views.dictGroup.validate.dictName')" />
               </a-form-item>
             </a-col>
             <a-col :span="24">
               <a-form-item :label="$t('common.table.seq')" name="seq">
-                <a-input-number v-model:value="formProps.model.seq" style="width: 100%" :placeholder="$t('common.formValidate.seq')" />
+                <a-input-number
+                  v-model:value="formProps.model.seq"
+                  style="width: 100%"
+                  :placeholder="$t('common.formValidate.seq')" />
               </a-form-item>
             </a-col>
             <a-col :span="24">
@@ -122,10 +135,9 @@ import { tableUseYn } from '@/components/common/TableCommon'
 
 export default defineComponent({
   name: 'SysDictListView',
-  components: {
-  },
+  components: {},
   emits: ['code-change'],
-  setup (props, { emit }) {
+  setup(props, { emit }) {
     const { t } = useI18n()
     const gridRef = ref()
 
@@ -136,7 +148,7 @@ export default defineComponent({
      */
     const handleLoadData = async (params: any, searchParameter: any) => {
       const parameter: any = {}
-      Object.keys(searchParameter).forEach(key => {
+      Object.keys(searchParameter).forEach((key) => {
         let symbol = 'like'
         if (key === 'useYn') {
           symbol = '='
@@ -159,9 +171,12 @@ export default defineComponent({
     /**
      * 查询数据hook
      */
-    const { tableProps, loadData, handleReset, pageProps, searchModel } = useVxeTable(handleLoadData, {
-      paging: true
-    })
+    const { tableProps, loadData, handleReset, pageProps, searchModel } = useVxeTable(
+      handleLoadData,
+      {
+        paging: true
+      }
+    )
 
     /**
      * 添加保存hook
@@ -173,7 +188,10 @@ export default defineComponent({
         seq: 1
       }
     })
-    const deleteHook = useVxeDelete(gridRef, t, handleDelete, { idField: 'dictCode', listHandler: loadData })
+    const deleteHook = useVxeDelete(gridRef, t, handleDelete, {
+      idField: 'dictCode',
+      listHandler: loadData
+    })
 
     /**
      * 按钮操作
@@ -223,7 +241,7 @@ export default defineComponent({
       handleCurrentChange
     }
   },
-  data () {
+  data() {
     return {
       toolbarConfig: {
         slots: {
@@ -238,27 +256,21 @@ export default defineComponent({
           {
             required: true,
             message: this.$t('system.views.dictGroup.validate.dictCode'),
-            trigger: [
-              'blur'
-            ]
+            trigger: ['blur']
           }
         ],
         dictName: [
           {
             required: true,
             message: this.$t('system.views.dictGroup.validate.dictName'),
-            trigger: [
-              'blur'
-            ]
+            trigger: ['blur']
           }
         ],
         seq: [
           {
             required: true,
             message: this.$t('common.formValidate.seq'),
-            trigger: [
-              'blur'
-            ]
+            trigger: ['blur']
           }
         ]
       },
@@ -273,7 +285,7 @@ export default defineComponent({
           title: '{system.views.dictGroup.title.dictCode}',
           field: 'dictCode',
           width: 180,
-          filters: [{data: ''}],
+          filters: [{ data: '' }],
           slots: {
             filter: 'dictCode-filter'
           },
@@ -283,7 +295,7 @@ export default defineComponent({
           title: '{system.views.dictGroup.title.dictName}',
           field: 'dictName',
           minWidth: 180,
-          filters: [{data: ''}],
+          filters: [{ data: '' }],
           slots: {
             filter: 'dictName-filter'
           }
@@ -299,7 +311,10 @@ export default defineComponent({
           sortable: true,
           width: 120,
           filterMultiple: false,
-          filters: [{label: 'YES', data: true}, {label: 'NO', data: false}]
+          filters: [
+            { label: 'YES', data: true },
+            { label: 'NO', data: false }
+          ]
         }
       ]
     }

@@ -78,7 +78,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, PropType, watch, toRefs, onMounted, Ref } from 'vue'
+import { defineComponent, ref, watch, toRefs, onMounted } from 'vue'
+import type { Ref, PropType } from 'vue'
 
 import { MenuOutlined } from '@ant-design/icons-vue'
 

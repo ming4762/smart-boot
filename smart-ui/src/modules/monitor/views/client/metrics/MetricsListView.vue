@@ -11,19 +11,16 @@
     <!--  tag选择  -->
     <div class="tag-container">
       <div v-if="tagList.length > 0">
-        <a-row
-          v-for="tag in tagList"
-          :key="tag.tag"
-          class="tag-row">
+        <a-row v-for="tag in tagList" :key="tag.tag" class="tag-row">
           <a-col :span="5" class="tag-title">
             <span>{{ tag.tag }}</span>
           </a-col>
           <a-col :span="19">
-            <a-select class="tag-select" :value="tagModel[tag.tag]" @change="(value) => handleTagChange(tag.tag, value)">
-              <a-select-option
-                v-for="item in tag.values"
-                :key="item"
-                :value="item">
+            <a-select
+              class="tag-select"
+              :value="tagModel[tag.tag]"
+              @change="(value) => handleTagChange(tag.tag, value)">
+              <a-select-option v-for="item in tag.values" :key="item" :value="item">
                 {{ item }}
               </a-select-option>
             </a-select>
@@ -45,7 +42,7 @@
         v-for="(meter, i) in selectMeterList"
         :key="meter.name"
         class="full-width"
-        :style="{marginBottom: i === selectMeterList.length - 1 ? '' : '20px'}">
+        :style="{ marginBottom: i === selectMeterList.length - 1 ? '' : '20px' }">
         <thead>
           <tr>
             <th class="metrics-label">{{ meter.name }}</th>
@@ -71,9 +68,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr
-            v-for="tag in meter.tags"
-            :key="meter.name + tag">
+          <tr v-for="tag in meter.tags" :key="meter.name + tag">
             <td class="metrics-label">
               <span>{{ createTagTitle(tag) }}</span>
             </td>
@@ -119,13 +114,21 @@ export default defineComponent({
       type: String
     }
   },
-  setup (props) {
-
+  setup(props) {
     const { meterList, currentMeter } = useLoadMeterList(props.clientId)
 
     const { tagList, meterMeasurementsMap } = useLoadMeterTagList(props.clientId, currentMeter)
 
-    const { tagModel, handleTagChange, handleAddMeter, selectMeterList, loadMeterData, handleRemoveMeter, meterDataMap, handleChangeType } = useShowMeterData(props.clientId, currentMeter)
+    const {
+      tagModel,
+      handleTagChange,
+      handleAddMeter,
+      selectMeterList,
+      loadMeterData,
+      handleRemoveMeter,
+      meterDataMap,
+      handleChangeType
+    } = useShowMeterData(props.clientId, currentMeter)
 
     const getMeterStatisticData = (meter: any, tag: any, statistic: string) => {
       const key = `${meter.name}/${JSON.stringify(tag)}`
@@ -186,12 +189,12 @@ export default defineComponent({
     }
   },
   methods: {
-    createTagTitle (tag: any) {
+    createTagTitle(tag: any) {
       const keys = Object.keys(tag)
       if (keys.length === 0) {
         return '(没有标签)'
       }
-      return keys.map(item => `${item}:${tag[item]}`).join('\n')
+      return keys.map((item) => `${item}:${tag[item]}`).join('\n')
     }
   }
 })
@@ -228,7 +231,8 @@ export default defineComponent({
         font-size: 16px;
       }
     }
-    th, td {
+    th,
+    td {
       border-bottom: 1px solid #dbdbdb;
       padding: 0.5em 0.75em;
     }
@@ -242,7 +246,6 @@ export default defineComponent({
     width: 1px;
   }
   .metrics-statistic {
-
   }
 }
 </style>

@@ -15,17 +15,31 @@
         <vxe-pager
           v-bind="pageProps"
           :page-sizes="[500, 1000, 2000, 5000]"
-          :layouts="['Sizes', 'PrevJump', 'PrevPage', 'Number', 'NextPage', 'NextJump', 'FullJump', 'Total']" />
+          :layouts="[
+            'Sizes',
+            'PrevJump',
+            'PrevPage',
+            'Number',
+            'NextPage',
+            'NextJump',
+            'FullJump',
+            'Total'
+          ]" />
       </template>
       <template #toolbar_buttons>
         <a-form layout="inline" style="margin-left: 10px">
           <a-form-item :label="$t('system.views.file.title.fileName')">
-            <a-input v-model:value="searchModel.fileName" :size="formSizeConfig" :placeholder="$t('system.views.file.validate.fileName')" />
+            <a-input
+              v-model:value="searchModel.fileName"
+              :size="formSizeConfig"
+              :placeholder="$t('system.views.file.validate.fileName')" />
           </a-form-item>
-          <a-form-item :label="$t('system.views.file.title.type')">
-          </a-form-item>
+          <a-form-item :label="$t('system.views.file.title.type')"></a-form-item>
           <a-form-item :label="$t('system.views.file.title.handlerType')">
-            <a-input v-model:value="searchModel.handlerType" :size="formSizeConfig" :placeholder="$t('system.views.file.validate.handlerType')" />
+            <a-input
+              v-model:value="searchModel.handlerType"
+              :size="formSizeConfig"
+              :placeholder="$t('system.views.file.validate.handlerType')" />
           </a-form-item>
           <a-form-item>
             <a-button
@@ -35,17 +49,13 @@
               @click="loadData">
               {{ $t('common.button.search') }}
             </a-button>
-            <a-button
-              :size="buttonSizeConfig"
-              style="margin-left: 5px"
-              @click="handleReset">
+            <a-button :size="buttonSizeConfig" style="margin-left: 5px" @click="handleReset">
               {{ $t('common.button.reset') }}
             </a-button>
           </a-form-item>
         </a-form>
       </template>
-      <template #table-operation="{ row }">
-      </template>
+      <template #table-operation="{ row }"></template>
     </vxe-grid>
   </div>
 </template>
@@ -63,10 +73,8 @@ import { handleLoadData, handleDelete } from './SysFileHook'
 
 export default defineComponent({
   name: 'SysFileListView',
-  components: {
-
-  },
-  setup () {
+  components: {},
+  setup() {
     const { t } = useI18n()
     const gridRef = ref()
 
@@ -80,7 +88,10 @@ export default defineComponent({
     /**
      * 删除hook
      */
-    const deleteHook = useVxeDelete(gridRef, t, handleDelete, { idField: 'fileId', listHandler: loadData })
+    const deleteHook = useVxeDelete(gridRef, t, handleDelete, {
+      idField: 'fileId',
+      listHandler: loadData
+    })
 
     onMounted(loadData)
     return {
@@ -93,10 +104,9 @@ export default defineComponent({
       loadData
     }
   },
-  data () {
+  data() {
     return {
-      columnConfig: {
-      },
+      columnConfig: {},
       toolbarConfig: {
         slots: {
           buttons: 'toolbar_buttons'

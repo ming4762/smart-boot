@@ -16,7 +16,6 @@ const key = 'shutdownNotify'
  * shut down
  */
 export const useShutdown = (clientId: string) => {
-
   const shutdownLoading = ref(false)
   const shutdownCloseTime = ref(10)
 
@@ -77,7 +76,10 @@ export const useLoadApplication = (clientId: string) => {
   })
   onMounted(async () => {
     try {
-      applicationData.value = await ApiService.postAjax('monitor/manager/client/getApplicationByClientId', clientId)
+      applicationData.value = await ApiService.postAjax(
+        'monitor/manager/client/getApplicationByClientId',
+        clientId
+      )
       document.title = applicationData.value.name
     } catch (e) {
       errorMessage(e)
@@ -86,7 +88,7 @@ export const useLoadApplication = (clientId: string) => {
   const computedApplicationName = computed(() => {
     if (!applicationData.value.name || applicationData.value.name == '') {
       document.title = ''
-      return  ''
+      return ''
     }
     const name = `${applicationData.value.name} [${applicationData.value.applicationCode}]`
     document.title = name
@@ -106,7 +108,7 @@ const refreshTimes = () => {
     key: -1,
     value: '不刷新'
   })
-  times.forEach(item => {
+  times.forEach((item) => {
     result.push({
       key: item,
       value: item + 'S'
@@ -134,4 +136,3 @@ export const useRefreshClient = () => {
     refreshTimeModel
   }
 }
-

@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, ref} from 'vue'
+import { defineComponent, ref } from 'vue'
 
 import LeftRightLayout from '@/components/layouts/LeftRightLayout.vue'
 
@@ -25,7 +25,7 @@ export default defineComponent({
     DataDictGroup,
     DataDictItem
   },
-  setup () {
+  setup() {
     const dictCode = ref<string | null>(null)
 
     const handleCodeChange = (code: string | null) => {
@@ -39,6 +39,4 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

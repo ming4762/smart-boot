@@ -9,7 +9,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref, toRefs, onMounted } from 'vue'
+import { defineComponent, ref, toRefs, onMounted } from 'vue'
+import type { PropType } from 'vue'
 
 import ApiService from '@/common/utils/ApiService'
 import { errorMessage } from '@/components/notice/SystemNotice'
@@ -25,7 +26,7 @@ export default defineComponent({
     }
   },
   emits: ['templateChange'],
-  setup (props, content) {
+  setup(props, content) {
     const { templateType } = toRefs(props)
     // 所有模板数据
     const transDataSource = ref([])

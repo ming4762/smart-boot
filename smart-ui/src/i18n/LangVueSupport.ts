@@ -29,9 +29,9 @@ export default () => {
 }
 
 type I18nTransfer = {
-  trans: boolean,
-  key: string,
-  data: {[index: string]: any}
+  trans: boolean
+  key: string
+  data: { [index: string]: any }
 }
 
 /**
@@ -43,10 +43,10 @@ export const transferI18n = (data: I18nTransfer | any) => {
   }
   const keySplit = data.key.split('.')
   let object = {}
-  for (let i=keySplit.length-1; i>=0; i--) {
+  for (let i = keySplit.length - 1; i >= 0; i--) {
     const key = keySplit[i]
     const itemData: any = {}
-    if (i === keySplit.length-1) {
+    if (i === keySplit.length - 1) {
       itemData[key] = data.data
     } else {
       itemData[key] = object

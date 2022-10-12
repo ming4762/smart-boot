@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, ref, onMounted, toRefs } from 'vue'
+import { defineComponent, ref, onMounted, toRefs } from 'vue'
 
 import { loadActuator } from '@/modules/monitor/utils/ClientApiUtils'
 import { errorMessage } from '@/components/notice/SystemNotice'
@@ -69,7 +69,7 @@ export default defineComponent({
       type: String
     }
   },
-  setup (props) {
+  setup(props) {
     const tableRef = ref()
     const { clientId } = toRefs(props)
     const searchValue = ref('')
@@ -83,7 +83,9 @@ export default defineComponent({
       if (searchValue.value.trim() === '') {
         filterDataList.value = dataList
       } else {
-        filterDataList.value = dataList.filter(item => item.name.indexOf(searchValue.value.trim()) >= 0)
+        filterDataList.value = dataList.filter(
+          (item) => item.name.indexOf(searchValue.value.trim()) >= 0
+        )
       }
     }
 
@@ -100,12 +102,14 @@ export default defineComponent({
         dataLoading.value = true
         const data = await loadActuator(clientId.value, 'beans')
         const beans = data.contexts.application.beans
-        dataList = Object.keys(beans).map(key => {
-          return {
-            name: key,
-            data: beans[key]
-          }
-        }).sort((a, b) => a.name.localeCompare(b.name))
+        dataList = Object.keys(beans)
+          .map((key) => {
+            return {
+              name: key,
+              data: beans[key]
+            }
+          })
+          .sort((a, b) => a.name.localeCompare(b.name))
         filterDataList.value = dataList
       } catch (e) {
         errorMessage(e)
@@ -124,10 +128,10 @@ export default defineComponent({
       tableRef
     }
   },
-  data () {
+  data() {
     return {
       expandConfig: {
-        visibleMethod () {
+        visibleMethod() {
           return false
         }
       },
@@ -161,10 +165,10 @@ export default defineComponent({
     }
   },
   methods: {
-    convertDetail (row: any) {
+    convertDetail(row: any) {
       const data = row.data
       const dataList: Array<any> = []
-      Object.keys(data).forEach(key => {
+      Object.keys(data).forEach((key) => {
         const value = data[key]
         if (value !== null && beansMapping[key]) {
           if (key === 'aliases') {

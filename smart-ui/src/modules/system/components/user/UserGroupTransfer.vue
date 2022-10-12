@@ -12,7 +12,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, PropType, toRefs, computed } from 'vue'
+import { defineComponent, onMounted, ref, toRefs, computed } from 'vue'
+import type { PropType } from 'vue'
 
 import ApiService from '@/common/utils/ApiService'
 import { errorMessage } from '@/components/notice/SystemNotice'
@@ -32,7 +33,7 @@ export default defineComponent({
     }
   },
   emits: ['update:targetKeys'],
-  setup (props, { emit }) {
+  setup(props, { emit }) {
     const { height } = toRefs(props)
 
     const computedStyle = computed(() => {
@@ -41,7 +42,7 @@ export default defineComponent({
           height: height.value
         }
       }
-      return  {}
+      return {}
     })
 
     const dataSource = ref<Array<any>>([])

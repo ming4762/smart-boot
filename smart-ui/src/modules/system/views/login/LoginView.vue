@@ -38,7 +38,12 @@
               <a-row :gutter="16">
                 <a-col :span="16">
                   <a-form-item name="captcha">
-                    <a-input v-model:value="loginModel.captcha" size="large" type="text" :placeholder="$t('system.login.login-captcha')" @pressEnter="handleLogin">
+                    <a-input
+                      v-model:value="loginModel.captcha"
+                      size="large"
+                      type="text"
+                      :placeholder="$t('system.login.login-captcha')"
+                      @pressEnter="handleLogin">
                       <template #prefix>
                         <MailOutlined :style="{ color: 'rgba(0,0,0,.25)' }" />
                       </template>
@@ -48,7 +53,10 @@
                 <a-col :span="8">
                   <a-tooltip>
                     <template #title>{{ $t('system.login.captchaRefreshTooltip') }}</template>
-                    <img style="height: 40px" :src="computedCaptchaUrl" @click="handleChangeCaptcha" />
+                    <img
+                      style="height: 40px"
+                      :src="computedCaptchaUrl"
+                      @click="handleChangeCaptcha" />
                   </a-tooltip>
                 </a-col>
               </a-row>
@@ -69,7 +77,11 @@
             <a-row :gutter="16">
               <a-col class="gutter-row" :span="16">
                 <a-form-item name="phoneCode">
-                  <a-input v-model:value="loginModel.phoneCode" size="large" type="text" :placeholder="$t('system.login.login-phone-code-validate')">
+                  <a-input
+                    v-model:value="loginModel.phoneCode"
+                    size="large"
+                    type="text"
+                    :placeholder="$t('system.login.login-phone-code-validate')">
                     <template #prefix>
                       <MailOutlined :style="{ color: 'rgba(0,0,0,.25)' }" />
                     </template>
@@ -77,13 +89,21 @@
                 </a-form-item>
               </a-col>
               <a-col class="gutter-row" :span="8">
-                <a-button class="getCaptcha" :disabled="state.smsButtonActive" size="large" @click="handleSendSms">{{ computedSmsButtonText }}</a-button>
+                <a-button
+                  class="getCaptcha"
+                  :disabled="state.smsButtonActive"
+                  size="large"
+                  @click="handleSendSms">
+                  {{ computedSmsButtonText }}
+                </a-button>
               </a-col>
             </a-row>
           </a-tab-pane>
         </a-tabs>
         <a-form-item>
-          <a-button size="large" :loading="loginLoading" block type="primary" @click="handleLogin">{{ $t('system.login.login-button') }}</a-button>
+          <a-button size="large" :loading="loginLoading" block type="primary" @click="handleLogin">
+            {{ $t('system.login.login-button') }}
+          </a-button>
         </a-form-item>
       </a-form>
     </div>
@@ -93,15 +113,23 @@
 <script lang="ts">
 import { defineComponent, ref, reactive, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { RouteRecord, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
+import type { RouteRecord } from 'vue-router'
 
 import { useSystemLoginStore, useSystemMenuStore } from '@/modules/system/store'
 
 import { message } from 'ant-design-vue'
-import { UserOutlined, LockOutlined, MobileOutlined, MailOutlined }  from '@ant-design/icons-vue'
+import { UserOutlined, LockOutlined, MobileOutlined, MailOutlined } from '@ant-design/icons-vue'
 
 import ApiService from '@/common/utils/ApiService'
-import { saveUser, saveUserPermission, saveUserRole, saveToken, getToken, createPassword } from '@/common/auth/AuthUtils'
+import {
+  saveUser,
+  saveUserPermission,
+  saveUserRole,
+  saveToken,
+  getToken,
+  createPassword
+} from '@/common/auth/AuthUtils'
 import defaultSettings from '@/config/defaultSetting'
 import { generateUUID } from '@/common/utils/KeyGenerator'
 
@@ -110,12 +138,12 @@ import { generateUUID } from '@/common/utils/KeyGenerator'
  */
 const setRouteMeta = (routes: Array<RouteRecord>, menuList: Array<any>) => {
   const pathMetaMap = new Map()
-  menuList.forEach(menu => {
+  menuList.forEach((menu) => {
     if (menu.path) {
       pathMetaMap.set(menu.path, menu.meta)
     }
   })
-  routes.forEach(route => {
+  routes.forEach((route) => {
     const path = route.path
     const menuMeta = pathMetaMap.get(path)
     if (menuMeta) {
@@ -163,10 +191,9 @@ export default defineComponent({
 
     // 执行登出操作，防止直接跳转到登录页面未执行登录
     if (getToken()) {
-      ApiService.postAjax('auth/logout')
-        .finally(() => {
-          systemLoginStore.logout()
-        })
+      ApiService.postAjax('auth/logout').finally(() => {
+        systemLoginStore.logout()
+      })
     }
     const loginModel = reactive({
       username: '',
@@ -210,7 +237,10 @@ export default defineComponent({
      */
     const handleLogin = async (e: Event) => {
       e.preventDefault()
-      const fields = customActiveKey.value === 'username' ? ['username', 'password', 'captcha'] : ['phone', 'phoneCode']
+      const fields =
+        customActiveKey.value === 'username'
+          ? ['username', 'password', 'captcha']
+          : ['phone', 'phoneCode']
       try {
         await formRef.value.validate(fields)
       } catch (e) {
@@ -236,14 +266,17 @@ export default defineComponent({
       loginLoading.value = true
 
       try {
-        const { user, token, roles, permissions } = await ApiService.postForm('auth/login', requestParameter)
+        const { user, token, roles, permissions } = await ApiService.postForm(
+          'auth/login',
+          requestParameter
+        )
         saveUser(user)
         saveUserRole(roles)
         saveUserPermission(permissions)
         saveToken(token)
-        const languageList = defaultSettings.languageList.map(item => item.key)
+        const languageList = defaultSettings.languageList.map((item) => item.key)
         // 加载菜单信息
-        const loadMenus = await ApiService.postAjax('sys/user/listUserMenu', languageList) || []
+        const loadMenus = (await ApiService.postAjax('sys/user/listUserMenu', languageList)) || []
         const formatUserMenu = loadMenus.map((item: any) => {
           const { functionName, functionType, icon, url, functionId, parentId, locales } = item
           return {
@@ -296,20 +329,32 @@ export default defineComponent({
       loginLoading
     }
   },
-  data () {
+  data() {
     return {
       rules: {
         username: [
-          { required: true, message: this.$t('system.login.login-username-validate'), trigger: 'blur' }
+          {
+            required: true,
+            message: this.$t('system.login.login-username-validate'),
+            trigger: 'blur'
+          }
         ],
         password: [
-          { required: true, message: this.$t('system.login.login-password-validate'), trigger: 'blur' }
+          {
+            required: true,
+            message: this.$t('system.login.login-password-validate'),
+            trigger: 'blur'
+          }
         ],
         phone: [
           { required: true, message: this.$t('system.login.login-phone-validate'), trigger: 'blur' }
         ],
         phoneCode: [
-          { required: true, message: this.$t('system.login.login-phone-code-validate'), trigger: 'blur' }
+          {
+            required: true,
+            message: this.$t('system.login.login-phone-code-validate'),
+            trigger: 'blur'
+          }
         ],
         captcha: [
           { required: true, message: this.$t('system.login.login-captcha'), trigger: 'blur' }
@@ -320,7 +365,7 @@ export default defineComponent({
 })
 </script>
 
-<style lang='less' scoped>
+<style lang="less" scoped>
 .login-main {
   padding-top: 160px;
   .form-container {
@@ -335,5 +380,4 @@ export default defineComponent({
     }
   }
 }
-
 </style>

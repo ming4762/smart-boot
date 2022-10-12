@@ -2,16 +2,14 @@
   <ClientCard class="full-height client-card" title="Memory Heap">
     <a-row style="margin-top: 10px">
       <a-col class="center" :span="8">
-        <div style="width: 11px; height: 11px; display: inline-block; background: #3ba272"> </div>
-        <div style="display: inline-block; ">已用</div>
+        <div style="width: 11px; height: 11px; display: inline-block; background: #3ba272"></div>
+        <div style="display: inline-block">已用</div>
       </a-col>
       <a-col class="center" :span="8">
-        <div style="width: 11px; height: 11px; display: inline-block; background: #fc8452"> </div>
-        <div style="display: inline-block; ">当前可用</div>
+        <div style="width: 11px; height: 11px; display: inline-block; background: #fc8452"></div>
+        <div style="display: inline-block">当前可用</div>
       </a-col>
-      <a-col class="center" :span="8">
-        最大
-      </a-col>
+      <a-col class="center" :span="8">最大</a-col>
     </a-row>
     <a-row style="margin-top: 5px">
       <a-col class="center" :span="8">{{ currentUsed }} MB</a-col>
@@ -27,7 +25,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, toRefs, ref, watch } from 'vue'
+import { defineComponent, toRefs, ref, watch } from 'vue'
+import type { PropType } from 'vue'
 
 import { Echarts } from 'vue-echart5'
 import { loadMetricsDataVue } from '@/modules/monitor/utils/ClientMetrisData'
@@ -36,13 +35,13 @@ import ClientCard from '@/modules/monitor/components/common/ClientCard.vue'
 import dayjs from 'dayjs'
 
 const createOption = (data: Array<any>) => {
-  const xdata = data.map(item => {
+  const xdata = data.map((item) => {
     return item.time
   })
-  const dataLive = data.map(item => {
+  const dataLive = data.map((item) => {
     return item.data[0].value
   })
-  const dataDaemon = data.map(item => {
+  const dataDaemon = data.map((item) => {
     return item.data[1].value
   })
   return {
@@ -65,7 +64,6 @@ const createOption = (data: Array<any>) => {
     },
     color: ['#fc8452', '#3ba272'],
     series: [
-
       {
         data: dataDaemon,
         type: 'line',
@@ -85,7 +83,7 @@ const createOption = (data: Array<any>) => {
 }
 
 const converToMb = (value: number) => {
-  return Math.floor(value / 1024 / 1024 * 100) /100
+  return Math.floor((value / 1024 / 1024) * 100) / 100
 }
 
 export default defineComponent({
@@ -104,10 +102,14 @@ export default defineComponent({
       required: true
     }
   },
-  setup (props) {
+  setup(props) {
     const chartRef = ref()
     const { time, clientId } = toRefs(props)
-    const { computedData } = loadMetricsDataVue(clientId, time, ['jvm.memory.used', 'jvm.memory.committed', 'jvm.memory.max'])
+    const { computedData } = loadMetricsDataVue(clientId, time, [
+      'jvm.memory.used',
+      'jvm.memory.committed',
+      'jvm.memory.max'
+    ])
     const allData = ref<Array<any>>([])
 
     const currentUsed = ref(0)
@@ -124,7 +126,7 @@ export default defineComponent({
         }
         allData.value.push({
           time: dayjs().format('HH:mm:ss'),
-          data: computedData.value.map(item => {
+          data: computedData.value.map((item) => {
             return Object.assign(item, {
               value: converToMb(item.value)
             })
@@ -147,11 +149,11 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
-  .client-card ::v-deep(.ant-card-body) {
-    height: calc(100% - 58px);
-    padding: 0;
-  }
-  .center {
-    text-align: center;
-  }
+.client-card ::v-deep(.ant-card-body) {
+  height: calc(100% - 58px);
+  padding: 0;
+}
+.center {
+  text-align: center;
+}
 </style>

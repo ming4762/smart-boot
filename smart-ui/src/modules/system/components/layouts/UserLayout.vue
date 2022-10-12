@@ -37,7 +37,7 @@ export default defineComponent({
   components: {
     SelectLang
   },
-  setup () {
+  setup() {
     const appStateStore = useAppStateStore()
 
     return {
@@ -105,7 +105,7 @@ export default defineComponent({
 
           .title {
             font-size: 33px;
-            color: rgba(0, 0, 0, .85);
+            color: rgba(0, 0, 0, 0.85);
             font-family: Avenir, 'Helvetica Neue', Arial, Helvetica, sans-serif;
             font-weight: 600;
             position: relative;

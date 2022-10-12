@@ -16,28 +16,55 @@
         <vxe-pager
           v-bind="pageProps"
           :page-sizes="[500, 1000, 2000, 5000]"
-          :layouts="['Sizes', 'PrevJump', 'PrevPage', 'Number', 'NextPage', 'NextJump', 'FullJump', 'Total']" />
+          :layouts="[
+            'Sizes',
+            'PrevJump',
+            'PrevPage',
+            'Number',
+            'NextPage',
+            'NextJump',
+            'FullJump',
+            'Total'
+          ]" />
       </template>
       <template #toolbar_buttons>
         <a-form layout="inline" style="margin-left: 10px">
           <a-form-item :label="$t('system.views.exception.title.exceptionMessage')">
-            <a-input v-model:value="searchModel.exceptionMessage" style="width: 130px" :size="formSizeConfig" :placeholder="$t('system.views.exception.search.exceptionMessage')" />
+            <a-input
+              v-model:value="searchModel.exceptionMessage"
+              style="width: 130px"
+              :size="formSizeConfig"
+              :placeholder="$t('system.views.exception.search.exceptionMessage')" />
           </a-form-item>
           <a-form-item :label="$t('system.views.exception.title.requestIp')">
-            <a-input v-model:value="searchModel.requestIp" style="width: 130px" :size="formSizeConfig" :placeholder="$t('system.views.exception.search.requestIp')" />
+            <a-input
+              v-model:value="searchModel.requestIp"
+              style="width: 130px"
+              :size="formSizeConfig"
+              :placeholder="$t('system.views.exception.search.requestIp')" />
           </a-form-item>
           <a-form-item :label="$t('system.views.exception.title.serverIp')">
-            <a-input v-model:value="searchModel.serverIp" style="width: 130px" :size="formSizeConfig" :placeholder="$t('system.views.exception.search.serverIp')" />
+            <a-input
+              v-model:value="searchModel.serverIp"
+              style="width: 130px"
+              :size="formSizeConfig"
+              :placeholder="$t('system.views.exception.search.serverIp')" />
           </a-form-item>
           <a-form-item :label="$t('system.views.exception.title.userFeedback')">
-            <a-select v-model:value="searchModel.userFeedback" style="width: 90px" :size="formSizeConfig">
+            <a-select
+              v-model:value="searchModel.userFeedback"
+              style="width: 90px"
+              :size="formSizeConfig">
               <a-select-option value="">ALL</a-select-option>
               <a-select-option value="true">{{ $t('common.form.yes') }}</a-select-option>
               <a-select-option value="false">{{ $t('common.form.no') }}</a-select-option>
             </a-select>
           </a-form-item>
           <a-form-item :label="$t('system.views.exception.title.resolved')">
-            <a-select v-model:value="searchModel.resolved" style="width: 90px" :size="formSizeConfig">
+            <a-select
+              v-model:value="searchModel.resolved"
+              style="width: 90px"
+              :size="formSizeConfig">
               <a-select-option value="">ALL</a-select-option>
               <a-select-option value="true">{{ $t('common.form.yes') }}</a-select-option>
               <a-select-option value="false">{{ $t('common.form.no') }}</a-select-option>
@@ -51,10 +78,7 @@
               @click="loadData">
               {{ $t('common.button.search') }}
             </a-button>
-            <a-button
-              :size="buttonSizeConfig"
-              style="margin-left: 5px"
-              @click="handleReset">
+            <a-button :size="buttonSizeConfig" style="margin-left: 5px" @click="handleReset">
               {{ $t('common.button.reset') }}
             </a-button>
           </a-form-item>
@@ -68,17 +92,16 @@
           </a-button>
           <template #overlay>
             <a-menu @click="({ key }) => handleActions(row, key)">
-              <a-menu-item key="showStackTrace" :disabled="!hasPermission('sys:exception:query')">{{ $t('system.views.exception.title.showStackTrace') }}</a-menu-item>
+              <a-menu-item key="showStackTrace" :disabled="!hasPermission('sys:exception:query')">
+                {{ $t('system.views.exception.title.showStackTrace') }}
+              </a-menu-item>
             </a-menu>
           </template>
         </a-dropdown>
       </template>
     </vxe-grid>
 
-    <a-modal
-      v-model:visible="stackTraceModalVisible"
-      width="800px"
-      title="堆栈信息">
+    <a-modal v-model:visible="stackTraceModalVisible" width="800px" title="堆栈信息">
       <a-spin :spinning="stackTraceLoading">
         <div style="overflow: auto">
           <div style="white-space: pre">
@@ -92,7 +115,6 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue'
-// import { useI18n } from 'vue-i18n'
 
 import { DownOutlined } from '@ant-design/icons-vue'
 import dayjs from 'dayjs'
@@ -108,21 +130,23 @@ export default defineComponent({
   components: {
     DownOutlined
   },
-  setup () {
-    // const { t } = useI18n()
+  setup() {
     const gridRef = ref()
 
     const showStackTrackHook = useShowStackTrace()
     /**
      * 查询数据hook
      */
-    const { tableProps, handleReset, pageProps, loadData, searchModel } = useVxeTable(handleLoadData, {
-      paging: true,
-      defaultParameter: {
-        userFeedback: '',
-        resolved: ''
+    const { tableProps, handleReset, pageProps, loadData, searchModel } = useVxeTable(
+      handleLoadData,
+      {
+        paging: true,
+        defaultParameter: {
+          userFeedback: '',
+          resolved: ''
+        }
       }
-    })
+    )
     /**
      * 按钮操作
      * @param row 行数据
@@ -151,10 +175,9 @@ export default defineComponent({
       hasPermission
     }
   },
-  data () {
+  data() {
     return {
-      columnConfig: {
-      },
+      columnConfig: {},
       toolbarConfig: {
         slots: {
           buttons: 'toolbar_buttons'
@@ -212,7 +235,11 @@ export default defineComponent({
           width: 150
         },
         {
-          ...tableBooleanColumn(this.$t, '{system.views.exception.title.userFeedback}', 'userFeedback').createColumn(),
+          ...tableBooleanColumn(
+            this.$t,
+            '{system.views.exception.title.userFeedback}',
+            'userFeedback'
+          ).createColumn(),
           width: 120,
           sortable: true
         },
@@ -233,7 +260,11 @@ export default defineComponent({
           width: 150
         },
         {
-          ...tableBooleanColumn(this.$t, '{system.views.exception.title.resolved}', 'resolved').createColumn(),
+          ...tableBooleanColumn(
+            this.$t,
+            '{system.views.exception.title.resolved}',
+            'resolved'
+          ).createColumn(),
           width: 120,
           sortable: true
         },

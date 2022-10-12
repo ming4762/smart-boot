@@ -7,7 +7,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { defineComponent } from 'vue'
+import type { PropType } from 'vue'
 
 import { useLoadDbNameList } from '@/modules/monitor/utils/DruidPointUtils'
 
@@ -24,7 +25,7 @@ export default defineComponent({
       required: true
     }
   },
-  setup (props) {
+  setup(props) {
     return {
       ...useLoadDbNameList(props.clientId)
     }
@@ -32,6 +33,4 @@ export default defineComponent({
 })
 </script>
 
-<style lang="less" scoped>
-
-</style>
+<style lang="less" scoped></style>

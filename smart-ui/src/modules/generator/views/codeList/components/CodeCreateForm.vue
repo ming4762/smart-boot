@@ -36,7 +36,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs, watch, PropType, ref, onMounted } from 'vue'
+import { defineComponent, reactive, toRefs, watch, ref, onMounted } from 'vue'
+import type { PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { message } from 'ant-design-vue'

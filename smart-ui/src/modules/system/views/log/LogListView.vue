@@ -5,7 +5,10 @@
         <a-row>
           <a-col :span="6">
             <a-form-item :label="$t('system.views.log.title.operation')">
-              <a-input v-model:value="searchModel.operation" style="width: 140px" :size="formSizeConfig" />
+              <a-input
+                v-model:value="searchModel.operation"
+                style="width: 140px"
+                :size="formSizeConfig" />
             </a-form-item>
           </a-col>
           <a-col :span="6">
@@ -27,12 +30,18 @@
           </a-col>
           <a-col :span="6">
             <a-form-item :label="$t('system.views.log.title.createUserId')">
-              <a-input v-model:value="searchModel.createUserId" style="width: 120px" :size="formSizeConfig" />
+              <a-input
+                v-model:value="searchModel.createUserId"
+                style="width: 120px"
+                :size="formSizeConfig" />
             </a-form-item>
           </a-col>
           <a-col :span="6">
             <a-form-item :label="$t('system.views.log.title.statusCode')">
-              <a-input v-model:value="searchModel.statusCode" style="width: 100px" :size="formSizeConfig" />
+              <a-input
+                v-model:value="searchModel.statusCode"
+                style="width: 100px"
+                :size="formSizeConfig" />
             </a-form-item>
           </a-col>
         </a-row>
@@ -63,14 +72,22 @@
           </a-col>
           <a-col :span="6">
             <a-form-item>
-              <a-button :size="buttonSizeConfig" @click="handleReset">{{ $t('common.button.reset') }}</a-button>
-              <a-button :size="buttonSizeConfig" style="margin-left: 5px" type="primary" @click="loadData">{{ $t('common.button.search') }}</a-button>
+              <a-button :size="buttonSizeConfig" @click="handleReset">
+                {{ $t('common.button.reset') }}
+              </a-button>
+              <a-button
+                :size="buttonSizeConfig"
+                style="margin-left: 5px"
+                type="primary"
+                @click="loadData">
+                {{ $t('common.button.search') }}
+              </a-button>
             </a-form-item>
           </a-col>
         </a-row>
       </a-form>
     </div>
-    <div style="height: calc(100% - 90px);">
+    <div style="height: calc(100% - 90px)">
       <vxe-grid
         v-bind="tableProps"
         height="auto"
@@ -84,16 +101,34 @@
           <vxe-pager
             v-bind="pageProps"
             :page-sizes="[500, 1000, 2000, 5000]"
-            :layouts="['Sizes', 'PrevJump', 'PrevPage', 'Number', 'NextPage', 'NextJump', 'FullJump', 'Total']" />
+            :layouts="[
+              'Sizes',
+              'PrevJump',
+              'PrevPage',
+              'Number',
+              'NextPage',
+              'NextJump',
+              'FullJump',
+              'Total'
+            ]" />
         </template>
         <template #table-operation="{ row }">
-          <a-button type="link" :size="tableButtonSizeConfig" @click="() => handleShowDetails(row.logId)">{{ $t('common.title.details') }}</a-button>
+          <a-button
+            type="link"
+            :size="tableButtonSizeConfig"
+            @click="() => handleShowDetails(row.logId)">
+            {{ $t('common.title.details') }}
+          </a-button>
         </template>
         <template #table-statusCode="{ row }">
-          <a-tag :color="(row.statusCode >= 200 && row.statusCode < 300) ? '#2db7f5' : '#f50'">{{ row.statusCode }}</a-tag>
+          <a-tag :color="row.statusCode >= 200 && row.statusCode < 300 ? '#2db7f5' : '#f50'">
+            {{ row.statusCode }}
+          </a-tag>
         </template>
         <template #table-useTime="{ row }">
-          <a-tag v-if="row.useTime !== null" :color="getUseTimeTagColor(row.useTime)">{{ row.useTime }}</a-tag>
+          <a-tag v-if="row.useTime !== null" :color="getUseTimeTagColor(row.useTime)">
+            {{ row.useTime }}
+          </a-tag>
         </template>
       </vxe-grid>
     </div>
@@ -102,28 +137,55 @@
       width="1000px"
       :title="$t('common.title.details')">
       <template #footer>
-        <a-button type="primary" @click="handleCloseDetails">{{ $t('common.title.close') }}</a-button>
+        <a-button type="primary" @click="handleCloseDetails">
+          {{ $t('common.title.close') }}
+        </a-button>
       </template>
       <a-spin :spinning="getDetailLoading">
         <a-descriptions bordered>
-          <a-descriptions-item :label="$t('system.views.log.title.operationType')">{{ detailsData.operationType }}</a-descriptions-item>
-          <a-descriptions-item :label="$t('system.views.log.title.requestPath')">{{ detailsData.requestPath }}</a-descriptions-item>
+          <a-descriptions-item :label="$t('system.views.log.title.operationType')">
+            {{ detailsData.operationType }}
+          </a-descriptions-item>
+          <a-descriptions-item :label="$t('system.views.log.title.requestPath')">
+            {{ detailsData.requestPath }}
+          </a-descriptions-item>
           <a-descriptions-item :label="$t('system.views.log.title.statusCode')">
-            <a-tag :color="(detailsData.statusCode >= 200 && detailsData.statusCode < 300) ? '#2db7f5' : '#f50'">{{ detailsData.statusCode }}</a-tag>
+            <a-tag
+              :color="
+                detailsData.statusCode >= 200 && detailsData.statusCode < 300 ? '#2db7f5' : '#f50'
+              ">
+              {{ detailsData.statusCode }}
+            </a-tag>
           </a-descriptions-item>
 
-          <a-descriptions-item :label="$t('system.views.log.title.operation')" :span="2">{{ detailsData.operation }}</a-descriptions-item>
-          <a-descriptions-item :label="$t('system.views.log.title.logSource')">{{ detailsData.logSource }}</a-descriptions-item>
+          <a-descriptions-item :label="$t('system.views.log.title.operation')" :span="2">
+            {{ detailsData.operation }}
+          </a-descriptions-item>
+          <a-descriptions-item :label="$t('system.views.log.title.logSource')">
+            {{ detailsData.logSource }}
+          </a-descriptions-item>
 
-          <a-descriptions-item :label="$t('system.views.log.title.createTime')" :span="2">{{ detailsData.createTime }}</a-descriptions-item>
-          <a-descriptions-item :label="$t('system.views.log.title.ip')">{{ detailsData.ip }}</a-descriptions-item>
+          <a-descriptions-item :label="$t('system.views.log.title.createTime')" :span="2">
+            {{ detailsData.createTime }}
+          </a-descriptions-item>
+          <a-descriptions-item :label="$t('system.views.log.title.ip')">
+            {{ detailsData.ip }}
+          </a-descriptions-item>
 
-          <a-descriptions-item :label="$t('system.views.log.title.method')" :span="2">{{ detailsData.method }}</a-descriptions-item>
-          <a-descriptions-item :label="$t('system.views.log.title.useTime')">{{ detailsData.useTime }}</a-descriptions-item>
+          <a-descriptions-item :label="$t('system.views.log.title.method')" :span="2">
+            {{ detailsData.method }}
+          </a-descriptions-item>
+          <a-descriptions-item :label="$t('system.views.log.title.useTime')">
+            {{ detailsData.useTime }}
+          </a-descriptions-item>
 
-          <a-descriptions-item :label="$t('system.views.log.title.params')" :span="3">{{ detailsData.params }}</a-descriptions-item>
+          <a-descriptions-item :label="$t('system.views.log.title.params')" :span="3">
+            {{ detailsData.params }}
+          </a-descriptions-item>
 
-          <a-descriptions-item :label="$t('system.views.log.title.result')" :span="3">{{ detailsData.result }}</a-descriptions-item>
+          <a-descriptions-item :label="$t('system.views.log.title.result')" :span="3">
+            {{ detailsData.result }}
+          </a-descriptions-item>
         </a-descriptions>
       </a-spin>
     </a-modal>
@@ -148,7 +210,7 @@ const parameterEq = ['statusCode', 'operationType']
 
 const doLoadData = async (parameter: any, searchParameter: any) => {
   const params: any = {}
-  Object.keys(searchParameter).forEach(key => {
+  Object.keys(searchParameter).forEach((key) => {
     const value = searchParameter[key]
     if (value) {
       if (parameterLike.includes(key)) {
@@ -179,7 +241,7 @@ const doLoadData = async (parameter: any, searchParameter: any) => {
 
 export default defineComponent({
   name: 'LogListView',
-  setup () {
+  setup() {
     const { tableProps, loadData, searchModel, pageProps, handleReset } = useVxeTable(doLoadData, {
       defaultSorter: {
         sortOrder: 'desc',
@@ -218,7 +280,7 @@ export default defineComponent({
       getUseTimeTagColor
     }
   },
-  data () {
+  data() {
     return {
       columns: [
         {

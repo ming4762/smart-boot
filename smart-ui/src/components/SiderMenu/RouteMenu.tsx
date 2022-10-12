@@ -1,4 +1,5 @@
-import { defineComponent, PropType, ref, createVNode, computed } from 'vue'
+import { defineComponent, ref, createVNode, computed } from 'vue'
+import type { PropType } from 'vue'
 import * as icons from '@ant-design/icons-vue'
 
 import { useRoute } from 'vue-router'

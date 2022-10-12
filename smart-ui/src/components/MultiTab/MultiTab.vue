@@ -11,19 +11,23 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed } from 'vue'
+import { defineComponent, computed } from 'vue'
+import type { PropType } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { useAppI18nStore } from '@/store/modules/AppStore2'
 
 import Navigation, { NavigationProps } from './Navigation.vue'
 
-export const MultiTabProps = Object.assign({
-  dataList: {
-    type: Array as PropType<Array<any>>,
-    default: () => []
-  }
-}, NavigationProps)
+export const MultiTabProps = Object.assign(
+  {
+    dataList: {
+      type: Array as PropType<Array<any>>,
+      default: () => []
+    }
+  },
+  NavigationProps
+)
 
 /**
  * 菜单栏组件
@@ -34,7 +38,7 @@ export default defineComponent({
     Navigation
   },
   props: MultiTabProps,
-  setup () {
+  setup() {
     const route = useRoute()
     const appI18nStore = useAppI18nStore()
     const computedActiveValue = computed(() => {
@@ -63,5 +67,4 @@ export default defineComponent({
     margin: 5px 0 !important;
   }
 }
-
 </style>

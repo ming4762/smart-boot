@@ -40,7 +40,7 @@ export const vueLoadRoleData = () => {
     const customParameter: any = {
       QUERY_CREATE_UPDATE_USER: true
     }
-    Object.keys(searchModel.value).forEach(key => {
+    Object.keys(searchModel.value).forEach((key) => {
       const value = searchModel.value[key]
       if (value !== null && value !== '') {
         customParameter[key + '@like'] = value
@@ -88,12 +88,8 @@ export const vueLoadRoleData = () => {
  * 添加修改编码验证规则
  */
 const addEditFormRules = {
-  roleName: [
-    { required: true, trigger: 'blur', message: '请输入角色名称' }
-  ],
-  roleCode: [
-    { required: true, trigger: 'blur', message: '请输入角色编码' }
-  ]
+  roleName: [{ required: true, trigger: 'blur', message: '请输入角色名称' }],
+  roleCode: [{ required: true, trigger: 'blur', message: '请输入角色编码' }]
 }
 
 const defaultAddEditModel = {
@@ -200,7 +196,7 @@ export const vueSetUser = () => {
       }
       // 查询角色对应的用户信息
       const result: Array<any> = await ApiService.postAjax('sys/user/listUserByRoleId', [roleId])
-      targetKeysModel.value = result.map(item => item.userId + '')
+      targetKeysModel.value = result.map((item) => item.userId + '')
     } finally {
       getUserLoading.value = false
     }

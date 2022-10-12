@@ -23,29 +23,63 @@
                   v-model:current-page="tablePage.currentPage"
                   v-model:page-size="tablePage.pageSize"
                   :page-sizes="[500, 1000, 2000, 5000]"
-                  :layouts="['Sizes', 'PrevJump', 'PrevPage', 'Number', 'NextPage', 'NextJump', 'FullJump', 'Total']"
+                  :layouts="[
+                    'Sizes',
+                    'PrevJump',
+                    'PrevPage',
+                    'Number',
+                    'NextPage',
+                    'NextJump',
+                    'FullJump',
+                    'Total'
+                  ]"
                   :total="tablePage.total"
-                  @page-change="handlePageChange">
-                </vxe-pager>
+                  @page-change="handlePageChange"></vxe-pager>
               </template>
               <template #toolbar_tools>
-                <a-button :size="buttonSizeConfig" type="primary" @click="handleShowAdd">{{ $t('common.button.add') }}</a-button>
-                <a-button :size="buttonSizeConfig" style="margin-left: 5px" type="primary" danger @click="handleDelete">{{ $t('common.button.delete') }}</a-button>
+                <a-button :size="buttonSizeConfig" type="primary" @click="handleShowAdd">
+                  {{ $t('common.button.add') }}
+                </a-button>
+                <a-button
+                  :size="buttonSizeConfig"
+                  style="margin-left: 5px"
+                  type="primary"
+                  danger
+                  @click="handleDelete">
+                  {{ $t('common.button.delete') }}
+                </a-button>
               </template>
               <template #toolbar_buttons>
                 <a-form layout="inline" :model="searchModel">
                   <a-form-item>
-                    <a-input v-model:value="searchModel.connectionName" :size="formSizeConfig" :placeholder="$t('generator.views.database.table.connectionName')" />
+                    <a-input
+                      v-model:value="searchModel.connectionName"
+                      :size="formSizeConfig"
+                      :placeholder="$t('generator.views.database.table.connectionName')" />
                   </a-form-item>
                   <a-form-item>
-                    <a-input v-model:value="searchModel.databaseName" :size="formSizeConfig" :placeholder="$t('generator.views.database.table.databaseName')" />
+                    <a-input
+                      v-model:value="searchModel.databaseName"
+                      :size="formSizeConfig"
+                      :placeholder="$t('generator.views.database.table.databaseName')" />
                   </a-form-item>
                   <a-form-item>
-                    <a-input v-model:value="searchModel.project" :size="formSizeConfig" :placeholder="$t('generator.views.database.table.project')" />
+                    <a-input
+                      v-model:value="searchModel.project"
+                      :size="formSizeConfig"
+                      :placeholder="$t('generator.views.database.table.project')" />
                   </a-form-item>
                   <a-form-item>
-                    <a-button :size="buttonSizeConfig" type="primary" @click="resetSearch">{{ $t('common.button.reset') }}</a-button>
-                    <a-button :size="buttonSizeConfig" style="margin-left: 5px" type="primary" @click="loadData">{{ $t('common.button.search') }}</a-button>
+                    <a-button :size="buttonSizeConfig" type="primary" @click="resetSearch">
+                      {{ $t('common.button.reset') }}
+                    </a-button>
+                    <a-button
+                      :size="buttonSizeConfig"
+                      style="margin-left: 5px"
+                      type="primary"
+                      @click="loadData">
+                      {{ $t('common.button.search') }}
+                    </a-button>
                   </a-form-item>
                 </a-form>
               </template>
@@ -58,9 +92,17 @@
                   </a-button>
                   <template #overlay>
                     <a-menu @click="({ key }) => handleActions(row, key)">
-                      <a-menu-item key="edit" :disabled="getEditDisable(row)">{{ $t('common.button.edit') }}</a-menu-item>
-                      <a-menu-item key="testConnected">{{ $t('generator.views.database.button.testConnected') }}</a-menu-item>
-                      <a-menu-item key="createDic" :disabled="!hasPermission('db:connection:createDic')">{{ $t('generator.views.database.button.createDic') }}</a-menu-item>
+                      <a-menu-item key="edit" :disabled="getEditDisable(row)">
+                        {{ $t('common.button.edit') }}
+                      </a-menu-item>
+                      <a-menu-item key="testConnected">
+                        {{ $t('generator.views.database.button.testConnected') }}
+                      </a-menu-item>
+                      <a-menu-item
+                        key="createDic"
+                        :disabled="!hasPermission('db:connection:createDic')">
+                        {{ $t('generator.views.database.button.createDic') }}
+                      </a-menu-item>
                     </a-menu>
                   </template>
                 </a-dropdown>
@@ -68,40 +110,70 @@
             </vxe-grid>
           </div>
         </a-layout-content>
-        <a-layout-sider theme="light" style="margin-left: 5px" class="layout-user-group" width="200px">
-          <SetUserGroup :save-button-visible="saveButtonVisible" :save-handler="handleSetGroup" :select-keys="selectGroupIds" />
+        <a-layout-sider
+          theme="light"
+          style="margin-left: 5px"
+          class="layout-user-group"
+          width="200px">
+          <SetUserGroup
+            :save-button-visible="saveButtonVisible"
+            :save-handler="handleSetGroup"
+            :select-keys="selectGroupIds" />
         </a-layout-sider>
       </a-layout>
     </a-spin>
     <a-modal
       v-model:visible="addEditModalVisible"
-      style="width: 700px;"
+      style="width: 700px"
       :title="isAdd ? $t('common.button.add') : $t('common.button.edit')"
       :confirm-loading="saveLoading"
       @ok="handleSave">
-      <a-form ref="formRef" :model="addEditModel" :rules="formRules" :label-col="labelCol" :wrapper-col="wrapperCol">
-        <a-form-item name="connectionName" :label="$t('generator.views.database.table.connectionName')">
-          <a-input v-model:value="addEditModel.connectionName" :placeholder="$t('generator.views.database.validate.connectionName')" />
+      <a-form
+        ref="formRef"
+        :model="addEditModel"
+        :rules="formRules"
+        :label-col="labelCol"
+        :wrapper-col="wrapperCol">
+        <a-form-item
+          name="connectionName"
+          :label="$t('generator.views.database.table.connectionName')">
+          <a-input
+            v-model:value="addEditModel.connectionName"
+            :placeholder="$t('generator.views.database.validate.connectionName')" />
         </a-form-item>
         <a-form-item name="databaseName" :label="$t('generator.views.database.table.databaseName')">
-          <a-input v-model:value="addEditModel.databaseName" :placeholder="$t('generator.views.database.validate.databaseName')" />
+          <a-input
+            v-model:value="addEditModel.databaseName"
+            :placeholder="$t('generator.views.database.validate.databaseName')" />
         </a-form-item>
         <a-form-item name="type" :label="$t('generator.views.database.table.type')">
-          <a-select v-model:value="addEditModel.type" :placeholder="$t('generator.views.database.validate.type')">
-            <a-select-option v-for="item in dbType" :key="item" :value="item">{{ item }}</a-select-option>
+          <a-select
+            v-model:value="addEditModel.type"
+            :placeholder="$t('generator.views.database.validate.type')">
+            <a-select-option v-for="item in dbType" :key="item" :value="item">
+              {{ item }}
+            </a-select-option>
           </a-select>
         </a-form-item>
         <a-form-item name="project" :label="$t('generator.views.database.table.project')">
-          <a-input v-model:value="addEditModel.project" :placeholder="$t('generator.views.database.validate.project')" />
+          <a-input
+            v-model:value="addEditModel.project"
+            :placeholder="$t('generator.views.database.validate.project')" />
         </a-form-item>
         <a-form-item name="url" :label="$t('generator.views.database.table.url')">
-          <a-input v-model:value="addEditModel.url" :placeholder="$t('generator.views.database.validate.url')" />
+          <a-input
+            v-model:value="addEditModel.url"
+            :placeholder="$t('generator.views.database.validate.url')" />
         </a-form-item>
         <a-form-item name="username" :label="$t('generator.views.database.table.username')">
-          <a-input v-model:value="addEditModel.username" :placeholder="$t('generator.views.database.validate.username')" />
+          <a-input
+            v-model:value="addEditModel.username"
+            :placeholder="$t('generator.views.database.validate.username')" />
         </a-form-item>
         <a-form-item name="password" :label="$t('generator.views.database.table.password')">
-          <a-input-password v-model:value="addEditModel.password" :placeholder="$t('generator.views.database.validate.password')" />
+          <a-input-password
+            v-model:value="addEditModel.password"
+            :placeholder="$t('generator.views.database.validate.password')" />
         </a-form-item>
         <a-form-item name="tableSchema" :label="$t('generator.views.database.table.tableSchema')">
           <a-input v-model:value="addEditModel.tableSchema" />
@@ -127,7 +199,13 @@ import { useI18n } from 'vue-i18n'
 
 import { DownOutlined } from '@ant-design/icons-vue'
 
-import { vueLoadData, vueAddEdit, vueAction, vueSetUserGroup, vueCreateDict } from './DatabaseListSupport'
+import {
+  vueLoadData,
+  vueAddEdit,
+  vueAction,
+  vueSetUserGroup,
+  vueCreateDict
+} from './DatabaseListSupport'
 
 import TemplateSelected from './components/TemplateSelected.vue'
 import SetUserGroup from '@/modules/system/components/user/SetUserGroup.vue'
@@ -146,7 +224,7 @@ export default defineComponent({
     DownOutlined,
     SetUserGroup
   },
-  setup () {
+  setup() {
     const templateSelectedRef = ref()
     const gridRef = ref()
     const formRef = ref()
@@ -199,7 +277,7 @@ export default defineComponent({
       ...sizeConfigHoops
     }
   },
-  data () {
+  data() {
     return {
       dbType: ['MYSQL', 'SQL_SERVER', 'ORACLE'],
       labelCol: {
@@ -318,7 +396,7 @@ export default defineComponent({
     }
   },
   methods: {
-    hasPermission (permission: string) {
+    hasPermission(permission: string) {
       return isSuperAdmin() || hasPermission(permission)
     }
   }

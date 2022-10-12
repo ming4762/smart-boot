@@ -19,7 +19,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, toRefs, ref, onMounted, watch, computed, onBeforeUnmount } from 'vue'
+import { defineComponent, toRefs, ref, onMounted, watch, computed, onBeforeUnmount } from 'vue'
+import type { PropType } from 'vue'
 
 import { loadActuator } from '@/modules/monitor/utils/ClientApiUtils'
 import TimeTaskUtil from '@/common/utils/TimeTaskUtil'

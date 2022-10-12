@@ -19,7 +19,16 @@
           v-model:current-page="tablePage.currentPage"
           v-model:page-size="tablePage.pageSize"
           :page-sizes="[500, 1000, 2000, 5000]"
-          :layouts="['Sizes', 'PrevJump', 'PrevPage', 'Number', 'NextPage', 'NextJump', 'FullJump', 'Total']"
+          :layouts="[
+            'Sizes',
+            'PrevJump',
+            'PrevPage',
+            'Number',
+            'NextPage',
+            'NextJump',
+            'FullJump',
+            'Total'
+          ]"
           :total="tablePage.total"
           @page-change="handlePageChange" />
       </template>
@@ -31,8 +40,13 @@
           </a-button>
           <template #overlay>
             <a-menu @click="({ key }) => handleActions(row, key)">
-              <a-menu-item key="edit" :disabled="!hasPermission(permissions.update)"><edit-outlined /> {{ $t('common.button.edit') }}</a-menu-item>
-              <a-menu-item key="showAccount" :disabled="!hasPermission('sys:account:query')">{{ $t('system.views.user.button.showAccount') }}</a-menu-item>
+              <a-menu-item key="edit" :disabled="!hasPermission(permissions.update)">
+                <edit-outlined />
+                {{ $t('common.button.edit') }}
+              </a-menu-item>
+              <a-menu-item key="showAccount" :disabled="!hasPermission('sys:account:query')">
+                {{ $t('system.views.user.button.showAccount') }}
+              </a-menu-item>
             </a-menu>
           </template>
         </a-dropdown>
@@ -40,26 +54,52 @@
       <template #toolbar_buttons>
         <a-form style="margin-left: 10px" layout="inline" :model="searchModel">
           <a-form-item>
-            <a-input v-model:value="searchModel.username" style="width: 110px" :size="formSizeConfig" :placeholder="$t('system.views.user.table.username')" />
+            <a-input
+              v-model:value="searchModel.username"
+              style="width: 110px"
+              :size="formSizeConfig"
+              :placeholder="$t('system.views.user.table.username')" />
           </a-form-item>
           <a-form-item>
-            <a-input v-model:value="searchModel.fullName" style="width: 110px" :size="formSizeConfig" :placeholder="$t('system.views.user.table.fullName')" />
+            <a-input
+              v-model:value="searchModel.fullName"
+              style="width: 110px"
+              :size="formSizeConfig"
+              :placeholder="$t('system.views.user.table.fullName')" />
           </a-form-item>
           <a-form-item>
-            <a-input v-model:value="searchModel.email" style="width: 110px" :size="formSizeConfig" :placeholder="$t('system.views.user.table.email')" />
+            <a-input
+              v-model:value="searchModel.email"
+              style="width: 110px"
+              :size="formSizeConfig"
+              :placeholder="$t('system.views.user.table.email')" />
           </a-form-item>
           <a-form-item :label="$t('common.table.useYn')">
-            <a-select v-model:value="searchModel.useYn" :size="formSizeConfig" style="width: 80px" :placeholder="$t('common.table.useYn')">
-              <a-select-option v-for="item in ynList" :key="item.key" :value="item.key">{{ item.value }}</a-select-option>
+            <a-select
+              v-model:value="searchModel.useYn"
+              :size="formSizeConfig"
+              style="width: 80px"
+              :placeholder="$t('common.table.useYn')">
+              <a-select-option v-for="item in ynList" :key="item.key" :value="item.key">
+                {{ item.value }}
+              </a-select-option>
             </a-select>
           </a-form-item>
           <a-form-item :label="$t('common.table.deleteYn')">
-            <a-select v-model:value="searchModel.deleteYn" :size="formSizeConfig" style="width: 80px" :placeholder="$t('common.table.deleteYn')">
-              <a-select-option v-for="item in ynList" :key="item.key" :value="item.key">{{ item.value }}</a-select-option>
+            <a-select
+              v-model:value="searchModel.deleteYn"
+              :size="formSizeConfig"
+              style="width: 80px"
+              :placeholder="$t('common.table.deleteYn')">
+              <a-select-option v-for="item in ynList" :key="item.key" :value="item.key">
+                {{ item.value }}
+              </a-select-option>
             </a-select>
           </a-form-item>
           <a-form-item>
-            <a-button :size="buttonSizeConfig" type="primary" @click="loadData">{{ $t('common.button.search') }}</a-button>
+            <a-button :size="buttonSizeConfig" type="primary" @click="loadData">
+              {{ $t('common.button.search') }}
+            </a-button>
           </a-form-item>
         </a-form>
       </template>
@@ -119,15 +159,26 @@
       :confirm-loading="saveLoading"
       @ok="handleOk">
       <a-spin :spinning="formLoading">
-        <a-form ref="formRef" :rules="rules" :label-col="{span: 4}" :wrapper-col="{span: 19}" :model="addEditModel">
+        <a-form
+          ref="formRef"
+          :rules="rules"
+          :label-col="{ span: 4 }"
+          :wrapper-col="{ span: 19 }"
+          :model="addEditModel">
           <a-form-item name="username" :label="$t('system.views.user.table.username')">
-            <a-input v-model:value="addEditModel.username" :placeholder="$t('system.views.user.validate.username')" />
+            <a-input
+              v-model:value="addEditModel.username"
+              :placeholder="$t('system.views.user.validate.username')" />
           </a-form-item>
           <a-form-item name="fullName" :label="$t('system.views.user.table.fullName')">
-            <a-input v-model:value="addEditModel.fullName" :placeholder="$t('system.views.user.validate.fullName')" />
+            <a-input
+              v-model:value="addEditModel.fullName"
+              :placeholder="$t('system.views.user.validate.fullName')" />
           </a-form-item>
           <a-form-item :label="$t('system.views.user.table.email')">
-            <a-input v-model:value="addEditModel.email" :placeholder="$t('system.views.user.validate.email')" />
+            <a-input
+              v-model:value="addEditModel.email"
+              :placeholder="$t('system.views.user.validate.email')" />
           </a-form-item>
           <a-form-item name="userType" :label="$t('system.views.user.table.userType')">
             <a-radio-group v-model:value="addEditModel.userType">
@@ -136,7 +187,9 @@
             </a-radio-group>
           </a-form-item>
           <a-form-item :label="$t('system.views.user.table.mobile')">
-            <a-input v-model:value="addEditModel.mobile" :placeholder="$t('system.views.user.validate.mobile')" />
+            <a-input
+              v-model:value="addEditModel.mobile"
+              :placeholder="$t('system.views.user.validate.mobile')" />
           </a-form-item>
           <a-form-item :label="$t('common.table.seq')">
             <a-input-number v-model:value="addEditModel.seq" :default-value="1" />
@@ -166,7 +219,6 @@ import SizeConfigHoops from '@/components/config/SizeConfigHooks'
 import { hasPermission } from '@/common/auth/AuthUtils'
 import UserAccountUpdateModal from './account/UserAccountUpdateModal.vue'
 
-
 export default defineComponent({
   name: 'UserListPage',
   components: {
@@ -174,7 +226,7 @@ export default defineComponent({
     DownOutlined,
     EditOutlined
   },
-  setup () {
+  setup() {
     const tableRef = ref()
     const userAccountRef = ref()
     const { t } = useI18n()
@@ -191,7 +243,9 @@ export default defineComponent({
      */
     const handleSetYn = (ident: string, userId: number, checked: boolean) => {
       // TODO:国际化
-      const content = `确定要${ident === 'use_yn' ? (checked ? '启用' : '停用') : (checked ? '删除' : '启用')}该用户吗`
+      const content = `确定要${
+        ident === 'use_yn' ? (checked ? '启用' : '停用') : checked ? '删除' : '启用'
+      }该用户吗`
       Modal.confirm({
         title: '确认',
         content: content,
@@ -232,7 +286,7 @@ export default defineComponent({
       userAccountRef
     }
   },
-  data () {
+  data() {
     return {
       toolbarConfig: {
         slots: {
@@ -348,10 +402,18 @@ export default defineComponent({
       ],
       rules: {
         username: [
-          { required: true, message: this.$t('system.views.user.validate.username'), trigger: 'blur' }
+          {
+            required: true,
+            message: this.$t('system.views.user.validate.username'),
+            trigger: 'blur'
+          }
         ],
         fullName: [
-          { required: true, message: this.$t('system.views.user.validate.fullName'), trigger: 'blur' }
+          {
+            required: true,
+            message: this.$t('system.views.user.validate.fullName'),
+            trigger: 'blur'
+          }
         ]
       },
       ynList: [

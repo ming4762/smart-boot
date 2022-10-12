@@ -3,7 +3,7 @@
  */
 export default {
   // 语言：默认中文
-  lang: 'zh-CN',
+  lang: 'en-US',
   title: 'Smart UI',
   layout: 'sidemenu',
   primaryColor: '#1890ff',

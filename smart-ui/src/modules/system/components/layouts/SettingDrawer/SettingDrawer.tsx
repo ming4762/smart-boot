@@ -1,4 +1,5 @@
-import { defineComponent, inject, PropType, watch, onMounted } from 'vue'
+import { defineComponent, inject, watch, onMounted } from 'vue'
+import type { PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 

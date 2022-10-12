@@ -13,9 +13,9 @@
  * 404错误页面
  */
 export default {
-  name: 'Exception404',
+  name: 'Exception404Conponent',
   methods: {
-    toHome () {
+    toHome() {
       this.$router.push({
         path: '/'
       })

@@ -9,11 +9,20 @@
           <a-form layout="inline">
             <a-form-item label="刷新时间：">
               <a-select v-model:value="refreshTimeModel" style="width: 120px">
-                <a-select-option v-for="item in refreshTimes" :key="item.key" :value="item.key">{{ item.value }}</a-select-option>
+                <a-select-option v-for="item in refreshTimes" :key="item.key" :value="item.key">
+                  {{ item.value }}
+                </a-select-option>
               </a-select>
             </a-form-item>
             <a-form-item>
-              <a-button v-if="actuators.shutdown" v-permission="'monitor:client:shutdown'" type="primary" danger @click="handleShutdown">Shutdown</a-button>
+              <a-button
+                v-if="actuators.shutdown"
+                v-permission="'monitor:client:shutdown'"
+                type="primary"
+                danger
+                @click="handleShutdown">
+                Shutdown
+              </a-button>
             </a-form-item>
           </a-form>
         </div>
@@ -39,7 +48,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, reactive } from 'vue'
+import { defineComponent, reactive } from 'vue'
+import type { PropType } from 'vue'
 
 import { useShutdown, useLoadApplication, useRefreshClient } from './ClientMainHook'
 
@@ -48,16 +58,16 @@ import { useActuator } from '../../components/hooks/ClientActuatorHooks'
 import LayoutSide from '@/modules/monitor/components/layout/LayoutSide.vue'
 
 interface Data {
-  icon: string;
-  path?: string;
-  actuator?: string;
+  icon: string
+  path?: string
+  actuator?: string
 }
 
 interface Menu {
-  id: string;
-  data: Data;
-  text: string;
-  children: Array<Menu>;
+  id: string
+  data: Data
+  text: string
+  children: Array<Menu>
 }
 
 const menuList: Array<Menu> = [
@@ -116,7 +126,7 @@ const menuList: Array<Menu> = [
       actuator: 'druidDatasource'
     },
     text: 'Druid',
-    children:[
+    children: [
       {
         id: '2-1',
         data: {
@@ -223,9 +233,7 @@ export default defineComponent({
       required: true
     }
   },
-  setup (props) {
-
-
+  setup(props) {
     const shutDownHook = useShutdown(props.clientId)
     /**
      * 加载应用信息

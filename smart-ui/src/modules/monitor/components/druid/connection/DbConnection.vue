@@ -22,7 +22,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, onMounted, toRefs, ref } from 'vue'
+import { defineComponent, onMounted, toRefs, ref } from 'vue'
+import type { PropType } from 'vue'
 
 import { loadActuator } from '@/modules/monitor/utils/ClientApiUtils'
 

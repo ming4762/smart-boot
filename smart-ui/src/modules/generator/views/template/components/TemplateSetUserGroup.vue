@@ -4,7 +4,7 @@
       <h3>{{ $t('generator.views.template.title.userGroup') }}</h3>
     </a-layout-header>
     <a-divider style="margin: 0" />
-    <a-layout-content style="background: white;">
+    <a-layout-content style="background: white">
       <div class="full-height">
         <a-spin class="full-height" :spinning="dataLoading">
           <a-table
@@ -20,16 +20,24 @@
       </div>
     </a-layout-content>
     <a-divider style="margin: 0" />
-    <a-layout-footer style="height: 50px; text-align: center; padding: 10px 0; background: white;">
+    <a-layout-footer style="height: 50px; text-align: center; padding: 10px 0; background: white">
       <div style="padding: 0 5px">
-        <a-button :disabled="!saveButtonVisible" :loading="saveLoading" block type="primary" @click="handleSave">{{ $t('common.button.save') }}</a-button>
+        <a-button
+          :disabled="!saveButtonVisible"
+          :loading="saveLoading"
+          block
+          type="primary"
+          @click="handleSave">
+          {{ $t('common.button.save') }}
+        </a-button>
       </div>
     </a-layout-footer>
   </a-layout>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, toRefs, onMounted, ref, reactive, watch, computed } from 'vue'
+import { defineComponent, toRefs, onMounted, ref, reactive, watch, computed } from 'vue'
+import type { PropType } from 'vue'
 
 import ApiService from '@/common/utils/ApiService'
 import { isSuperAdmin, getCurrentUserId } from '@/common/auth/AuthUtils'
@@ -47,7 +55,7 @@ export default defineComponent({
       default: null
     }
   },
-  setup (props) {
+  setup(props) {
     const { template } = toRefs(props)
     const dataLoading = ref(false)
     // 保存状态
@@ -69,7 +77,7 @@ export default defineComponent({
       }
       const currentUserId = getCurrentUserId
       const templateValue: any = template.value
-      return templateValue ? (templateValue.createUserId === currentUserId) : false
+      return templateValue ? templateValue.createUserId === currentUserId : false
     })
     /**
      * 加载所有用户组数据
@@ -97,8 +105,11 @@ export default defineComponent({
       }
       try {
         dataLoading.value = true
-        const result: Array<any> = await ApiService.postAjax('db/code/template/listUserGroupByTemplate', templateValue.templateId)
-        rowSelection.selectedRowKeys = result.map(item => item.groupId)
+        const result: Array<any> = await ApiService.postAjax(
+          'db/code/template/listUserGroupByTemplate',
+          templateValue.templateId
+        )
+        rowSelection.selectedRowKeys = result.map((item) => item.groupId)
       } finally {
         dataLoading.value = false
       }
@@ -134,7 +145,7 @@ export default defineComponent({
       saveButtonVisible
     }
   },
-  data () {
+  data() {
     return {
       columns: [
         {
@@ -146,6 +157,4 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

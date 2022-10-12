@@ -12,32 +12,53 @@
       stripe
       @current-change="handleCurrentChange">
       <template #table-buttons>
-        <a-form
-          style="margin-left: 5px"
-          layout="inline">
+        <a-form style="margin-left: 5px" layout="inline">
           <a-form-item :label="$t('system.views.i18n.i18n.titleI18nCode')">
             <a-input v-model:value="searchModel.i18nCode" size="small" />
           </a-form-item>
           <a-form-item>
-            <a-button :size="buttonSizeConfig" type="primary" @click="loadData">{{ $t('common.button.search') }}</a-button>
+            <a-button :size="buttonSizeConfig" type="primary" @click="loadData">
+              {{ $t('common.button.search') }}
+            </a-button>
           </a-form-item>
         </a-form>
       </template>
       <template #table-tools>
         <div style="margin-right: 5px">
-          <a-button v-permission="permissions.reload" type="primary" :size="buttonSizeConfig" @click="handleReload">
+          <a-button
+            v-permission="permissions.reload"
+            type="primary"
+            :size="buttonSizeConfig"
+            @click="handleReload">
             {{ $t('system.views.i18n.i18n.button.reload') }}
           </a-button>
-          <a-button v-permission="permissions.add" type="primary" class="button-margin" :size="buttonSizeConfig" @click="() => handleShowModal(true, null)">
+          <a-button
+            v-permission="permissions.add"
+            type="primary"
+            class="button-margin"
+            :size="buttonSizeConfig"
+            @click="() => handleShowModal(true, null)">
             {{ $t('common.button.add') }}
           </a-button>
-          <a-button v-permission="permissions.delete" type="primary" danger class="button-margin" :size="buttonSizeConfig" @click="handleDeleteByCheckbox">
+          <a-button
+            v-permission="permissions.delete"
+            type="primary"
+            danger
+            class="button-margin"
+            :size="buttonSizeConfig"
+            @click="handleDeleteByCheckbox">
             {{ $t('common.button.delete') }}
           </a-button>
         </div>
       </template>
-      <template #table-operation="{row}">
-        <a-button v-permission="permissions.update" :size="tableButtonSizeConfig" type="primary" @click.stop="() => handleShowModal(false, row.i18nId)">{{ $t('common.button.edit') }}</a-button>
+      <template #table-operation="{ row }">
+        <a-button
+          v-permission="permissions.update"
+          :size="tableButtonSizeConfig"
+          type="primary"
+          @click.stop="() => handleShowModal(false, row.i18nId)">
+          {{ $t('common.button.edit') }}
+        </a-button>
       </template>
 
       <template #pager>
@@ -64,24 +85,27 @@
           :wrapper-col="{ span: 17 }"
           :model="addEditModel">
           <a-form-item name="platform" :label="$t('system.views.i18n.i18n.titlePlatform')">
-            <a-select
-              v-model:value="addEditModel.platform">
-              <a-select-option
-                v-for="item in platformList"
-                :key="item.key"
-                :value="item.key">
+            <a-select v-model:value="addEditModel.platform">
+              <a-select-option v-for="item in platformList" :key="item.key" :value="item.key">
                 {{ $t(item.label) }}
               </a-select-option>
             </a-select>
           </a-form-item>
           <a-form-item name="i18nCode" :label="$t('system.views.i18n.i18n.titleI18nCode')">
-            <a-input v-model:value="addEditModel.i18nCode" :placeholder="$t('system.views.i18n.i18n.platformValidate')" />
+            <a-input
+              v-model:value="addEditModel.i18nCode"
+              :placeholder="$t('system.views.i18n.i18n.platformValidate')" />
           </a-form-item>
           <a-form-item name="remark" :label="$t('common.table.remark')">
-            <a-input v-model:value="addEditModel.remark" :placeholder="$t('common.formValidate.remark')" />
+            <a-input
+              v-model:value="addEditModel.remark"
+              :placeholder="$t('common.formValidate.remark')" />
           </a-form-item>
           <a-form-item name="seq" :label="$t('common.table.seq')">
-            <a-input-number v-model:value="addEditModel.seq" style="width: 100%;" :placeholder="$t('common.formValidate.seq')" />
+            <a-input-number
+              v-model:value="addEditModel.seq"
+              style="width: 100%"
+              :placeholder="$t('common.formValidate.seq')" />
           </a-form-item>
         </a-form>
       </a-spin>
@@ -90,7 +114,9 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, PropType, Ref, ref, toRefs, onMounted, watch, reactive, createVNode} from 'vue'
+import { defineComponent, ref, toRefs, onMounted, watch, reactive, createVNode } from 'vue'
+import type { Ref } from 'vue'
+import type { PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { message, Modal } from 'ant-design-vue'
@@ -134,7 +160,7 @@ const loadDataVueSupport = (groupId: Ref<number | undefined>, emit: Function) =>
       if (groupId && groupId.value) {
         parameter['groupId@='] = groupId.value
       }
-      Object.keys(searchModel).forEach(key => {
+      Object.keys(searchModel).forEach((key) => {
         const value = searchModel[key]
         if (value && value.trim() !== '') {
           parameter[`${key}@like`] = value
@@ -283,7 +309,7 @@ export default defineComponent({
     groupId: Number as PropType<number>
   },
   emits: ['change'],
-  setup (props, { emit }) {
+  setup(props, { emit }) {
     const gridRef = ref()
     const { t } = useI18n()
     const { groupId } = toRefs(props)
@@ -292,16 +318,21 @@ export default defineComponent({
     const handleCurrentChange = ({ row }: any) => {
       loadDataVue.currentChange(row.i18nId)
     }
-    const { handleDeleteByCheckbox } = useVxeDelete(gridRef, t, async (idList: Array<number>) => {
-      try {
-        await ApiService.postAjax('sys/i18n/batchDeleteById', idList)
-      } catch (e) {
-        errorMessage(e)
+    const { handleDeleteByCheckbox } = useVxeDelete(
+      gridRef,
+      t,
+      async (idList: Array<number>) => {
+        try {
+          await ApiService.postAjax('sys/i18n/batchDeleteById', idList)
+        } catch (e) {
+          errorMessage(e)
+        }
+      },
+      {
+        idField: 'i18nId',
+        listHandler: loadDataVue.loadData
       }
-    }, {
-      idField: 'i18nId',
-      listHandler: loadDataVue.loadData
-    } )
+    )
     return {
       ...loadDataVue,
       ...SizeConfigHoops(),
@@ -311,7 +342,7 @@ export default defineComponent({
       handleDeleteByCheckbox
     }
   },
-  data () {
+  data() {
     return {
       permissions: SystemPermissions.i18n,
       toolbarConfig: {
@@ -346,7 +377,7 @@ export default defineComponent({
           field: 'createTime',
           title: '{common.table.createTime}',
           width: 160,
-          formatter: ({cellValue}: any) => {
+          formatter: ({ cellValue }: any) => {
             if (cellValue) {
               return dayjs(cellValue).format('YYYY-MM-DD HH:mm:ss')
             }
@@ -362,7 +393,7 @@ export default defineComponent({
           field: 'updateTime',
           title: '{common.table.updateTime}',
           width: 160,
-          formatter: ({cellValue}: any) => {
+          formatter: ({ cellValue }: any) => {
             if (cellValue) {
               return dayjs(cellValue).format('YYYY-MM-DD HH:mm:ss')
             }
@@ -396,13 +427,26 @@ export default defineComponent({
       ],
       rules: {
         platform: [
-          { required: true, message: this.$t('system.views.i18n.i18n.platformValidate'), trigger: 'change' }
+          {
+            required: true,
+            message: this.$t('system.views.i18n.i18n.platformValidate'),
+            trigger: 'change'
+          }
         ],
         i18nCode: [
-          { required: true, message: this.$t('system.views.i18n.i18n.i18nCodeValidate'), trigger: 'blur' }
+          {
+            required: true,
+            message: this.$t('system.views.i18n.i18n.i18nCodeValidate'),
+            trigger: 'blur'
+          }
         ],
         seq: [
-          { required: true, message: this.$t('common.formValidate.seq'), trigger: 'blur', type: 'number' }
+          {
+            required: true,
+            message: this.$t('common.formValidate.seq'),
+            trigger: 'blur',
+            type: 'number'
+          }
         ]
       }
     }

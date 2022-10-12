@@ -1,18 +1,14 @@
 <template>
-  <a-select
-    :size="formSizeConfig"
-    v-bind="$attrs">
-    <a-select-option
-      v-for="item in data"
-      :key="item.key"
-      :value="item.key">
+  <a-select :size="formSizeConfig" v-bind="$attrs">
+    <a-select-option v-for="item in data" :key="item.key" :value="item.key">
       {{ item.value }}
     </a-select-option>
   </a-select>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, PropType } from 'vue'
+import { defineComponent, ref, onMounted } from 'vue'
+import type { PropType } from 'vue'
 
 import ApiService from '@/common/utils/ApiService'
 
@@ -25,16 +21,24 @@ export default defineComponent({
   props: {
     parameter: {
       type: Object as PropType<any>,
-      default: () => { return {} }
+      default: () => {
+        return {}
+      }
     }
   },
-  setup (props) {
+  setup(props) {
     const data = ref<Array<any>>([])
     const sizeConfigHoops = SizeConfigHoops()
     const loadData = async () => {
-      const result = await ApiService.postAjax('/db/connection/listByAuth', Object.assign({
-        sortName: 'seq'
-      }, props.parameter))
+      const result = await ApiService.postAjax(
+        '/db/connection/listByAuth',
+        Object.assign(
+          {
+            sortName: 'seq'
+          },
+          props.parameter
+        )
+      )
       data.value = result.map((item: any) => {
         return {
           key: item.id + '',
@@ -51,6 +55,4 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

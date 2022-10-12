@@ -1,3 +1,1 @@
-export const useLoadDataHook = () => {
-
-}
+export const useLoadDataHook = () => {}

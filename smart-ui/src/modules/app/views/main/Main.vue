@@ -5,10 +5,8 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 export default defineComponent({
-  name: 'Main'
+  name: 'MainComponent'
 })
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -1,4 +1,5 @@
-import { ref, onMounted, Ref, watch, reactive } from 'vue'
+import { ref, onMounted, watch, reactive } from 'vue'
+import type { Ref } from 'vue'
 
 import { errorMessage } from '@/components/notice/SystemNotice'
 import { loadActuator } from '@/modules/monitor/utils/ClientApiUtils'
@@ -59,7 +60,10 @@ export const useLoadMeterTagList = (clientId: string, currentMeter: Ref<string>)
    */
   const loadMeterTagList = async () => {
     try {
-      const { availableTags, measurements } = await loadActuator(clientId, `metrics/${currentMeter.value}`)
+      const { availableTags, measurements } = await loadActuator(
+        clientId,
+        `metrics/${currentMeter.value}`
+      )
       tagList.value = availableTags
       if (!meterMeasurementsMap[currentMeter.value]) {
         meterMeasurementsMap[currentMeter.value] = measurements.map((item: any) => item.statistic)
@@ -99,7 +103,7 @@ export const useShowMeterData = (clientId: string, currentMeter: Ref) => {
   const handleAddMeter = () => {
     const meterName = currentMeter.value
     // 获取meter数据
-    const meterData = selectMeterList.value.filter(item => item.name === meterName)
+    const meterData = selectMeterList.value.filter((item) => item.name === meterName)
     if (meterData.length === 0) {
       selectMeterList.value.push({
         name: meterName,
@@ -125,13 +129,13 @@ export const useShowMeterData = (clientId: string, currentMeter: Ref) => {
    */
   const handleRemoveMeter = (meterName: string, removeTag: any) => {
     const result: Array<any> = []
-    selectMeterList.value.forEach(meter => {
+    selectMeterList.value.forEach((meter) => {
       if (meter.name !== meterName) {
         result.push(meter)
       } else {
         const { tags } = meter
         if (tags.length > 0) {
-          for (let i=0; i<tags.length; i++) {
+          for (let i = 0; i < tags.length; i++) {
             const tag = tags[i]
             if (JSON.stringify(tag) === JSON.stringify(removeTag)) {
               tags.splice(i, 1)
@@ -155,38 +159,37 @@ export const useShowMeterData = (clientId: string, currentMeter: Ref) => {
     StoreUtil.setStore(meter_key, selectMeterList.value)
   }
 
-
   /**
    * 加载meter数据
    */
   const loadMeterData = () => {
     const promiseList: Array<Promise<any>> = []
-    selectMeterList.value.forEach(({name, tags}: any) => {
+    selectMeterList.value.forEach(({ name, tags }: any) => {
       tags.forEach((tag: any) => {
         const key = `${name}/${JSON.stringify(tag)}`
         const tagParameter = Object.keys(tag)
-          .map(item => `${item}:${tag[item]}`)
+          .map((item) => `${item}:${tag[item]}`)
           .join(',')
         // 加载数据
         promiseList.push(
-          loadActuator(clientId, `metrics/${name}?tag=${encodeURI(tagParameter)}`)
-            .then(({ measurements }) => {
+          loadActuator(clientId, `metrics/${name}?tag=${encodeURI(tagParameter)}`).then(
+            ({ measurements }) => {
               return {
                 key: key,
                 data: measurements
               }
-            })
+            }
+          )
         )
       })
     })
-    Promise.all(promiseList)
-      .then((data) => {
-        // 将data转为map
-        meterDataMap.clear()
-        data.forEach(({ key, data }: any) => {
-          meterDataMap.set(key, data)
-        })
+    Promise.all(promiseList).then((data) => {
+      // 将data转为map
+      meterDataMap.clear()
+      data.forEach(({ key, data }: any) => {
+        meterDataMap.set(key, data)
       })
+    })
   }
 
   /**
@@ -195,9 +198,9 @@ export const useShowMeterData = (clientId: string, currentMeter: Ref) => {
    * @param statistic
    * @param type
    */
-  const handleChangeType= (meterName: string, statistic: string, type: string) => {
+  const handleChangeType = (meterName: string, statistic: string, type: string) => {
     // 获取meter
-    const meterList = selectMeterList.value.filter(item => item.name === meterName)
+    const meterList = selectMeterList.value.filter((item) => item.name === meterName)
     if (meterList.length > 0) {
       const meter = meterList[0]
       meter.types[statistic] = type

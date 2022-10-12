@@ -25,8 +25,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, getCurrentInstance, PropType } from 'vue'
-import { VxeTableInstance, VxeTableDefines } from 'vxe-table'
+import { defineComponent, ref, getCurrentInstance } from 'vue'
+import type { PropType } from 'vue'
+import type { VxeTableInstance, VxeTableDefines } from 'vxe-table'
 import { message } from 'ant-design-vue'
 
 import { ruleList } from './PageSettingSupport'

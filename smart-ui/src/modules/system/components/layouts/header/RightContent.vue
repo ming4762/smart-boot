@@ -6,7 +6,8 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, toRefs } from 'vue'
+import { computed, defineComponent, toRefs } from 'vue'
+import type { PropType } from 'vue'
 
 import SelectLang from '../../SelectLang/SelectLang.vue'
 import AvatarDropdown from './AvatarDropdown.vue'
@@ -37,12 +38,12 @@ export default defineComponent({
       required: true
     }
   },
-  setup (props) {
+  setup(props) {
     const { isMobile, theme, topMenu } = toRefs(props)
     const computedWrpClass = computed(() => {
       return {
         'ant-pro-global-header-index-right': true,
-        [`ant-pro-global-header-index-${(isMobile.value || !topMenu.value) ? 'light' : theme.value}`]: true
+        [`ant-pro-global-header-index-${isMobile.value || !topMenu.value ? 'light' : theme.value}`]: true
       }
     })
     const currentUser = computed(() => {
@@ -57,6 +58,4 @@ export default defineComponent({
 })
 </script>
 
-<style lang="less" scoped>
-
-</style>
+<style lang="less" scoped></style>

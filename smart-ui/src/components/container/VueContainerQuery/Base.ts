@@ -1,8 +1,8 @@
-import { Ref, getCurrentInstance, ref, onMounted, onUnmounted } from 'vue'
+import { getCurrentInstance, ref, onMounted, onUnmounted } from 'vue'
 
 import matchQueries from 'container-query-toolkit/lib/matchQueries'
 import ContainerQueryCore from './ContainerQueryCore'
-import { ComponentInternalInstance } from '@vue/runtime-core'
+import type { ComponentInternalInstance, Ref } from 'vue'
 
 
 const vueContainerQueryVueSupport = (initialSize: Ref, query: Ref, handleChange: Function) => {

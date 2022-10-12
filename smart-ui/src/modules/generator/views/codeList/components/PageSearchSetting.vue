@@ -103,7 +103,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, PropType, Ref, ref, toRefs, watch } from 'vue'
+import { defineComponent, onMounted, ref, toRefs, watch } from 'vue'
+import type { Ref, PropType } from 'vue'
 
 import { MenuOutlined, PlusOutlined } from '@ant-design/icons-vue'
 

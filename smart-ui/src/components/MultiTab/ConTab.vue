@@ -37,7 +37,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, toRefs, computed, ref } from 'vue'
+import { defineComponent, toRefs, computed, ref } from 'vue'
+import type { PropType } from 'vue'
 
 import { CaretDownOutlined } from '@ant-design/icons-vue'
 

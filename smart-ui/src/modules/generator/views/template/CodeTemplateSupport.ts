@@ -1,4 +1,5 @@
-import {onMounted, reactive, Ref, ref} from 'vue'
+import { onMounted, reactive, ref } from 'vue'
+import type { Ref } from 'vue'
 import ApiService from '@/common/utils/ApiService'
 import { extensionLanguageMap } from '@/modules/generator/views/codeCreate/CodeCreateSupport'
 import { errorMessage } from '@/components/notice/SystemNotice'
@@ -152,26 +153,25 @@ export const vueAddEdit = (loadData: any, t: Function, groudIdRef: Ref) => {
    */
   const handleSave = () => {
     // 表单验证
-    saveFormRef.value.validate()
-      .then(async () => {
-        // 获取代码内容
-        const template = codemirror.value.getCode()
-        const saveModel = Object.assign({}, formModel.value, {
-          template,
-          groupId: groudIdRef.value
-        })
-        saveLoading.value = true
-        try {
-          await ApiService.postAjax('db/code/template/saveUpdate', saveModel)
-        } catch (e) {
-          errorMessage(e)
-          return false
-        } finally {
-          saveLoading.value = false
-        }
-        addEditModalVisible.value = false
-        loadData()
+    saveFormRef.value.validate().then(async () => {
+      // 获取代码内容
+      const template = codemirror.value.getCode()
+      const saveModel = Object.assign({}, formModel.value, {
+        template,
+        groupId: groudIdRef.value
       })
+      saveLoading.value = true
+      try {
+        await ApiService.postAjax('db/code/template/saveUpdate', saveModel)
+      } catch (e) {
+        errorMessage(e)
+        return false
+      } finally {
+        saveLoading.value = false
+      }
+      addEditModalVisible.value = false
+      loadData()
+    })
   }
   /**
    * 当前行变更事件
@@ -216,8 +216,8 @@ export const vueAddEdit = (loadData: any, t: Function, groudIdRef: Ref) => {
     handleShowTemplate,
     isAdd,
     isShow,
-    handleShowAdd () {
-      if ((!groudIdRef.value) || groudIdRef.value === '') {
+    handleShowAdd() {
+      if (!groudIdRef.value || groudIdRef.value === '') {
         message.warn(t('generator.views.template.notice.choseGroup'))
         return false
       }

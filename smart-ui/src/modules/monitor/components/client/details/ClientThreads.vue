@@ -27,7 +27,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, toRefs, watch, PropType } from 'vue'
+import { defineComponent, ref, toRefs, watch } from 'vue'
+import type { PropType } from 'vue'
 
 import { Echarts } from 'vue-echart5'
 

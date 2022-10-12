@@ -3,5 +3,7 @@
   "semi": false,
   "trailingComma": "none",
   "endOfLine": "auto",
-  "printWidth": 200
+  "printWidth": 100,
+  "htmlWhitespaceSensitivity": "ignore",
+  "bracketSameLine": true
 }

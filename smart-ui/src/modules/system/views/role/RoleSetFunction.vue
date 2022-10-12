@@ -14,16 +14,24 @@
       </a-spin>
     </a-layout-content>
     <a-divider style="margin: 0" />
-    <a-layout-footer style="height: 50px; text-align: center; padding: 10px 0; background: white;">
+    <a-layout-footer style="height: 50px; text-align: center; padding: 10px 0; background: white">
       <div style="padding: 0 5px">
-        <a-button v-permission="permissions.setFunction" :loading="saveLoading" block type="primary" @click="handleSave">{{ $t('common.button.save') }}</a-button>
+        <a-button
+          v-permission="permissions.setFunction"
+          :loading="saveLoading"
+          block
+          type="primary"
+          @click="handleSave">
+          {{ $t('common.button.save') }}
+        </a-button>
       </div>
     </a-layout-footer>
   </a-layout>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, PropType, toRefs, watch } from 'vue'
+import { defineComponent, ref, onMounted, toRefs, watch } from 'vue'
+import type { PropType } from 'vue'
 
 import { message } from 'ant-design-vue'
 
@@ -43,7 +51,7 @@ export default defineComponent({
       default: null
     }
   },
-  setup (props) {
+  setup(props) {
     const { roleId } = toRefs(props)
     // 树形控件数据
     const functionTreeData = ref<Array<any>>([])
@@ -58,13 +66,18 @@ export default defineComponent({
       dataLoading.value = true
       try {
         const result: Array<any> = await ApiService.postAjax('sys/function/list', { sortName: 'seq' })
-        functionTreeData.value = TreeUtils.convertList2Tree(result.map(({ functionId, functionName, parentId }: any) => {
-          return {
-            key: functionId,
-            title: functionName,
-            parentId: parentId
-          }
-        }), ['key', 'parentId'], 0) || []
+        functionTreeData.value =
+          TreeUtils.convertList2Tree(
+            result.map(({ functionId, functionName, parentId }: any) => {
+              return {
+                key: functionId,
+                title: functionName,
+                parentId: parentId
+              }
+            }),
+            ['key', 'parentId'],
+            0
+          ) || []
       } finally {
         dataLoading.value = false
       }
@@ -76,7 +89,10 @@ export default defineComponent({
       if (roleId.value !== null) {
         dataLoading.value = true
         try {
-          checkedKeysModel.value = await ApiService.postAjax('sys/role/listFunctionId', roleId.value)
+          checkedKeysModel.value = await ApiService.postAjax(
+            'sys/role/listFunctionId',
+            roleId.value
+          )
         } finally {
           dataLoading.value = false
         }
@@ -115,6 +131,4 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

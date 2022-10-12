@@ -16,8 +16,14 @@
               {{ row.groupName }}
               <template #menu>
                 <a-menu @click="({ key, domEvent }) => handleMenuClick(key, row.groupId, domEvent)">
-                  <a-menu-item key="edit"><EditOutlined />&nbsp;&nbsp;{{ $t('common.button.edit') }}</a-menu-item>
-                  <a-menu-item key="delete"><DeleteOutlined />&nbsp;&nbsp;{{ $t('common.button.delete') }}</a-menu-item>
+                  <a-menu-item key="edit">
+                    <EditOutlined />
+                    &nbsp;&nbsp;{{ $t('common.button.edit') }}
+                  </a-menu-item>
+                  <a-menu-item key="delete">
+                    <DeleteOutlined />
+                    &nbsp;&nbsp;{{ $t('common.button.delete') }}
+                  </a-menu-item>
                 </a-menu>
               </template>
             </ContextMenu>
@@ -26,11 +32,12 @@
       </vxe-grid>
     </div>
     <div class="button-container">
-      <a-button class="button" block type="primary" @click="() => handleAddEdit(true, null)">{{ $t('common.button.add') }}</a-button>
+      <a-button class="button" block type="primary" @click="() => handleAddEdit(true, null)">
+        {{ $t('common.button.add') }}
+      </a-button>
     </div>
 
-    <a-modal
-      v-bind="modalProps">
+    <a-modal v-bind="modalProps">
       <a-spin :spinning="spinning">
         <a-form
           v-bind="formProps"
@@ -38,10 +45,15 @@
           :label-col="{ span: 6 }"
           :wrapper-col="{ span: 17 }">
           <a-form-item :label="$t('generator.views.template.title.templateGroup')" name="groupName">
-            <a-input v-model:value="formProps.model.groupName" :placeholder="$t('generator.views.template.validate.templateGroup')" />
+            <a-input
+              v-model:value="formProps.model.groupName"
+              :placeholder="$t('generator.views.template.validate.templateGroup')" />
           </a-form-item>
           <a-form-item :label="$t('generator.views.template.title.seq')" name="seq">
-            <a-input-number v-model:value="formProps.model.seq" style="width: 100%" :placeholder="$t('generator.views.template.validate.seq')" />
+            <a-input-number
+              v-model:value="formProps.model.seq"
+              style="width: 100%"
+              :placeholder="$t('generator.views.template.validate.seq')" />
           </a-form-item>
         </a-form>
       </a-spin>
@@ -50,7 +62,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, onMounted, ref} from 'vue'
+import { defineComponent, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons-vue'
@@ -67,7 +79,7 @@ const handleLoadData = async () => {
         groupName: 'ALL'
       }
     ]
-    return result.concat(await ApiService.postAjax('db/code/template/listGroup') || [])
+    return result.concat((await ApiService.postAjax('db/code/template/listGroup')) || [])
   } catch (e) {
     errorMessage(e)
     throw e
@@ -107,22 +119,30 @@ const handleDelete = async (idList: Array<any>) => {
 export default defineComponent({
   name: 'TemplateGroup',
   components: {
-    EditOutlined, DeleteOutlined,
+    EditOutlined,
+    DeleteOutlined,
     ContextMenu
   },
   emits: ['change'],
-  setup () {
+  setup() {
     const { t } = useI18n()
     const gridRef = ref()
     const { tableProps, loadData } = useVxeTable(handleLoadData, {
       paging: false
     })
     // 编辑
-    const { modalProps, handleAddEdit, spinning, formProps, formRef } = useAddEdit(gridRef, handleGet, loadData, handleSaveUpdate, t, {
-      defaultModel: {
-        seq: 1
+    const { modalProps, handleAddEdit, spinning, formProps, formRef } = useAddEdit(
+      gridRef,
+      handleGet,
+      loadData,
+      handleSaveUpdate,
+      t,
+      {
+        defaultModel: {
+          seq: 1
+        }
       }
-    })
+    )
 
     const { handleDeleteById } = useVxeDelete(gridRef, t, handleDelete, {
       idField: 'groupId',
@@ -156,7 +176,7 @@ export default defineComponent({
       formRef
     }
   },
-  data () {
+  data() {
     return {
       columns: [
         {
@@ -169,16 +189,25 @@ export default defineComponent({
       ],
       rules: {
         groupName: [
-          { required: true, message: this.$t('generator.views.template.validate.templateGroup'), trigger: 'blur' }
+          {
+            required: true,
+            message: this.$t('generator.views.template.validate.templateGroup'),
+            trigger: 'blur'
+          }
         ],
         seq: [
-          { required: true, message: this.$t('generator.views.template.validate.seq'), trigger: 'blur', type: 'number' }
+          {
+            required: true,
+            message: this.$t('generator.views.template.validate.seq'),
+            trigger: 'blur',
+            type: 'number'
+          }
         ]
       }
     }
   },
   methods: {
-    handleChange ({ row }: any) {
+    handleChange({ row }: any) {
       this.$emit('change', row.groupId)
     }
   }
@@ -196,7 +225,6 @@ export default defineComponent({
   text-align: center;
   .button {
     width: 90%;
-
   }
 }
 </style>
