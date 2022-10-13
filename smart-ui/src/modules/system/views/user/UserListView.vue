@@ -181,10 +181,11 @@
               :placeholder="$t('system.views.user.validate.email')" />
           </a-form-item>
           <a-form-item name="userType" :label="$t('system.views.user.table.userType')">
-            <a-radio-group v-model:value="addEditModel.userType">
-              <a-radio value="10">{{ $t('system.views.user.form.systemUser') }}</a-radio>
-              <a-radio value="20">{{ $t('system.views.user.form.businessUser') }}</a-radio>
-            </a-radio-group>
+            <a-select v-model:value="addEditModel.userType">
+              <a-select-option v-for="item in userTypeList" :key="'userType_' + item.dictItemCode" :value="item.dictItemCode">
+                {{ item.dictItemName }}
+              </a-select-option>
+            </a-select>
           </a-form-item>
           <a-form-item :label="$t('system.views.user.table.mobile')">
             <a-input
@@ -209,7 +210,13 @@ import { useI18n } from 'vue-i18n'
 import { Modal } from 'ant-design-vue'
 import { DownOutlined, EditOutlined } from '@ant-design/icons-vue'
 
-import { vueLoadData, vueAddEdit, userOperationHoops, useCreateAccount } from './UserListSupport'
+import {
+  vueLoadData,
+  vueAddEdit,
+  userOperationHoops,
+  useCreateAccount,
+  useLoadUserType
+} from './UserListSupport'
 
 import ApiService from '@/common/utils/ApiService'
 import { SystemPermissions } from '../../constants/SystemConstants'
@@ -283,7 +290,8 @@ export default defineComponent({
       ...useCreateAccount(tableRef, t),
       handleActions,
       hasPermission,
-      userAccountRef
+      userAccountRef,
+      ...useLoadUserType()
     }
   },
   data() {

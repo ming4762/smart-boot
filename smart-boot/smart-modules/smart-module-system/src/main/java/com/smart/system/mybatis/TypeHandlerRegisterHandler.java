@@ -21,8 +21,7 @@ public class TypeHandlerRegisterHandler implements InitializingBean {
             FunctionTypeTypeHandler.class,
             LogSourceTypeHandler.class,
             MaxConnectionsPolicyTypeHandler.class,
-            UserAccountStatusTypeHandler.class,
-            UserTypeTypeHandler.class
+            UserAccountStatusTypeHandler.class
     );
 
     private final SqlSessionFactory sqlSessionFactory;

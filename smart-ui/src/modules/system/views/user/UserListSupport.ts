@@ -185,7 +185,7 @@ export const vueLoadData = () => {
  * 默认的添加修改表单数据
  */
 const defaultAddEditModel = {
-  userType: '20',
+  userType: 'SYSTEM_USER',
   seq: 1
 }
 /**
@@ -234,6 +234,8 @@ export const vueAddEdit = (loadData: any) => {
     formLoading.value = true
     try {
       addEditModel.value = await ApiService.postAjax('sys/user/getById', id)
+    } catch (e) {
+      errorMessage(e)
     } finally {
       formLoading.value = false
     }
@@ -300,5 +302,26 @@ export const useCreateAccount = (tableRef: Ref, t: Function) => {
 
   return {
     handleCreateAccount
+  }
+}
+
+/**
+ * 加载用户类型
+ */
+export const useLoadUserType = () => {
+  const userTypeList = ref<Array<any>>([])
+  onMounted(async () => {
+    try {
+      userTypeList.value = await ApiService.postAjax('sys/dictItem/list', {
+        'dictCode@=': 'SYSTEM_USER_TYPE',
+        sortName: 'seq',
+        sortOrder: 'asc'
+      })
+    } catch (e) {
+      errorMessage(e)
+    }
+  })
+  return {
+    userTypeList
   }
 }

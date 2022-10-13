@@ -1,8 +1,6 @@
 package com.smart.system.pojo.dto.user;
 
-import com.smart.commons.validate.constraints.Contain;
 import com.smart.commons.validate.constraints.Mobile;
-import com.smart.system.constants.UserTypeEnum;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -52,7 +50,6 @@ public class UserSaveUpdateDTO implements Serializable {
     /**
      * 用户类型（10：系统用户，20：业务用户）
      */
-    @Contain(message = "用户类型错误", allowClass = UserTypeEnum.class)
     @NotNull(message = "用户类型不能为空")
     private String userType;
 
