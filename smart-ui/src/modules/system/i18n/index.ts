@@ -32,8 +32,14 @@ import log_zh_CN from '../views/log/lang/zh_CN'
 import log_en_US from '../views/log/lang/en_US'
 
 // 数据字典国际化
-import { dictGroupI18n as dictGroupI18n_zh , dictItemI18n as dictItemI18n_zh } from '../views/dict/dataDict/lang/zh_CN'
-import { dictGroupI18n as dictGroupI18n_en , dictItemI18n as dictItemI18n_en } from '../views/dict/dataDict/lang/en_US'
+import {
+  dictGroupI18n as dictGroupI18n_zh,
+  dictItemI18n as dictItemI18n_zh
+} from '../views/dict/dataDict/lang/zh_CN'
+import {
+  dictGroupI18n as dictGroupI18n_en,
+  dictItemI18n as dictItemI18n_en
+} from '../views/dict/dataDict/lang/en_US'
 
 //异常信息国际化
 import exception_zh_CN from '../views/exception/lang/zh_CN'
@@ -43,9 +49,13 @@ import exception_en_US from '../views/exception/lang/en_US'
 import file_zh_CN from '../views/file/lang/zh-CN'
 import file_en_US from '../views/file/lang/en-US'
 
+// 部门管理国际化
+import dept_zh_CN from '../views/dept/lang/zh-CN'
+import dept_en_US from '../views/dept/lang/en-US'
 
 export default {
-  zh_CN: merge({},
+  zh_CN: merge(
+    {},
     systemZhCN,
     transferI18n(function_zh_CN),
     i18n_zh_CN,
@@ -58,9 +68,11 @@ export default {
     transferI18n(dictGroupI18n_zh),
     transferI18n(dictItemI18n_zh),
     transferI18n(exception_zh_CN),
-    transferI18n(file_zh_CN)
+    transferI18n(file_zh_CN),
+    transferI18n(dept_zh_CN)
   ),
-  en_US: merge({},
+  en_US: merge(
+    {},
     systemEnUS,
     transferI18n(function_en_US),
     i18n_en_US,
@@ -73,6 +85,7 @@ export default {
     transferI18n(dictGroupI18n_en),
     transferI18n(dictItemI18n_en),
     transferI18n(exception_en_US),
-    transferI18n(file_en_US)
+    transferI18n(file_en_US),
+    transferI18n(dept_en_US)
   )
 }

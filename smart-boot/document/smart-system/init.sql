@@ -9,7 +9,7 @@ create table sys_user
     password       varchar(255)         not null comment '密码',
     email          varchar(255)         null comment '邮箱',
     mobile         varchar(50)          null comment '手机',
-    user_type      char(2)              not null comment '用户类型（10：系统用户，20：业务用户）',
+    user_type      varchar(50)          not null comment '用户类型（10：系统用户，20：业务用户）',
     create_user_id bigint               not null comment '创建人员ID',
     create_time    datetime             not null comment '创建时间',
     update_user_id int                  null comment '更新人员ID',
@@ -22,7 +22,7 @@ create table sys_user
 )
     comment '系统用户表';
 
-INSERT INTO sys_user (user_id, username, full_name, password, email, mobile, user_type, create_user_id, create_time, update_user_id, update_time, seq, delete_yn, use_yn) VALUES (1, 'admin', '超级管理员', 'b877bef66e0ffbf77d18118f3281644f73b6d2994c197a6ac9afa4b3e385748e', null, null, '10', 1, sysdate(), null, null, 1, 0, 1);
+INSERT INTO sys_user (user_id, username, full_name, password, email, mobile, user_type, create_user_id, create_time, update_user_id, update_time, seq, delete_yn, use_yn) VALUES (1, 'admin', '超级管理员', 'b877bef66e0ffbf77d18118f3281644f73b6d2994c197a6ac9afa4b3e385748e', null, null, 'SYSTEM_USER', 1, sysdate(), null, null, 1, 0, 1);
 
 -- 人员账户信息
 drop table if exists `sys_user_account`;
@@ -119,6 +119,11 @@ INSERT INTO sys_function (function_id, parent_id, function_name, function_type, 
 INSERT INTO sys_function (function_id, parent_id, function_name, function_type, i18n_code, seq, create_time, create_user_id, update_time, update_user_id, url, permission, is_menu, internal_or_external, data_rule, http_method, remark, icon) VALUES (22, 2, '角色管理', '20', '{menu.system.role.manager}', 120, sysdate(), 1, null, null, '/sys/roleList', null, 1, 0, 0, null, null, 'UserSwitchOutlined');
 INSERT INTO sys_function (function_id, parent_id, function_name, function_type, i18n_code, seq, create_time, create_user_id, update_time, update_user_id, url, permission, is_menu, internal_or_external, data_rule, http_method, remark, icon) VALUES (23, 2, '功能管理', '20', '{menu.system.function.manager}', 130, sysdate(), 1, null, null, '/sys/functionList', null, 1, 0, 0, null, null, 'AppstoreOutlined');
 INSERT INTO sys_function (function_id, parent_id, function_name, function_type, i18n_code, seq, create_time, create_user_id, update_time, update_user_id, url, permission, is_menu, internal_or_external, data_rule, http_method, remark, icon) VALUES (24, 2, '用户组管理', '20', '{menu.system.userGroup.manager}', 115, sysdate(), 1, null, null, '/sys/userGroupList', null, 1, 0, 0, null, null, 'UsergroupAddOutlined');
+INSERT INTO sys_function (function_id, parent_id, function_name, function_type, i18n_code, seq, create_time, create_user_id, update_time, update_user_id, url, permission, is_menu, internal_or_external, data_rule, http_method, remark, icon) VALUES (26, 2, '部门管理', '20', '{menu.system.dept.manager}', 130, sysdate(), 1, null, null, '/sys/dept', null, 1, 0, 0, null, null, 'UsergroupAddOutlined');
+INSERT INTO sys_function (function_id, parent_id, function_name, function_type, i18n_code, seq, create_time, create_user_id, update_time, update_user_id, url, permission, is_menu, internal_or_external, data_rule, http_method, remark, icon) VALUES (261, 26, '查询部门信息', '30', null, 10, sysdate(), 1, null, null, null, 'sys:dept:query', 1, 0, 0, 'POST', null, null);
+INSERT INTO sys_function (function_id, parent_id, function_name, function_type, i18n_code, seq, create_time, create_user_id, update_time, update_user_id, url, permission, is_menu, internal_or_external, data_rule, http_method, remark, icon) VALUES (262, 26, '添加部门信息', '30', null, 20, sysdate(), 1, null, null, null, 'sys:dept:save', 1, 0, 0, 'POST', null, null);
+INSERT INTO sys_function (function_id, parent_id, function_name, function_type, i18n_code, seq, create_time, create_user_id, update_time, update_user_id, url, permission, is_menu, internal_or_external, data_rule, http_method, remark, icon) VALUES (263, 26, '修改部门信息', '30', null, 30, sysdate(), 1, null, null, null, 'sys:dept:update', 1, 0, 0, 'POST', null, null);
+INSERT INTO sys_function (function_id, parent_id, function_name, function_type, i18n_code, seq, create_time, create_user_id, update_time, update_user_id, url, permission, is_menu, internal_or_external, data_rule, http_method, remark, icon) VALUES (264, 26, '删除部门信息', '30', null, 40, sysdate(), 1, null, null, null, 'sys:dept:update', 1, 0, 0, 'POST', null, null);
 INSERT INTO sys_function (function_id, parent_id, function_name, function_type, i18n_code, seq, create_time, create_user_id, update_time, update_user_id, url, permission, is_menu, internal_or_external, data_rule, http_method, remark, icon) VALUES (25, 2, '国际化管理', '20', '{menu.system.i18n.manager}', 140, sysdate(), 1, null, null, '/sys/i18n', null, 1, 0, 0, null, null, 'TranslationOutlined');
 INSERT INTO sys_function (function_id, parent_id, function_name, function_type, i18n_code, seq, create_time, create_user_id, update_time, update_user_id, url, permission, is_menu, internal_or_external, data_rule, http_method, remark, icon) VALUES (211, 21, '添加用户', '30', null, 10, sysdate(), 1, null, 1, null, 'sys:user:save', 1, 0, 0, 'POST', null, null);
 INSERT INTO sys_function (function_id, parent_id, function_name, function_type, i18n_code, seq, create_time, create_user_id, update_time, update_user_id, url, permission, is_menu, internal_or_external, data_rule, http_method, remark, icon) VALUES (212, 21, '删除用户', '30', null, 20, sysdate(), 1, null, null, null, 'sys:user:delete', 1, 0, 0, 'POST', null, null);
@@ -283,6 +288,7 @@ INSERT INTO sys_i18n (i18n_id, platform, i18n_code, group_id, remark, create_use
 INSERT INTO sys_i18n (i18n_id, platform, i18n_code, group_id, remark, create_user_id, update_time, update_user_id, use_yn, delete_yn, seq, create_time) VALUES (1450876638068770, 'backstage', 'menu.system.function.manager', 1450875996340258, null, 1, null, null, 1, 0, 40, sysdate());
 INSERT INTO sys_i18n (i18n_id, platform, i18n_code, group_id, remark, create_user_id, update_time, update_user_id, use_yn, delete_yn, seq, create_time) VALUES (1450876661137442, 'backstage', 'menu.system.userGroup.manager', 1450875996340258, null, 1, null, null, 1, 0, 50, sysdate());
 INSERT INTO sys_i18n (i18n_id, platform, i18n_code, group_id, remark, create_user_id, update_time, update_user_id, use_yn, delete_yn, seq, create_time) VALUES (1450876688400418, 'backstage', 'menu.system.i18n.manager', 1450875996340258, null, 1, null, null, 1, 0, 60, sysdate());
+INSERT INTO sys_i18n (i18n_id, platform, i18n_code, group_id, remark, create_user_id, update_time, update_user_id, use_yn, delete_yn, seq, create_time) VALUES (1450876688400419, 'backstage', 'menu.system.dept.manager', 1450875996340258, null, 1, null, null, 1, 0, 70, sysdate());
 INSERT INTO sys_i18n (i18n_id, platform, i18n_code, group_id, remark, create_user_id, update_time, update_user_id, use_yn, delete_yn, seq, create_time) VALUES (1453368287428642, 'backstage', 'message.validate.useYn.idList.notNull', 1453367953981474, null, 1, null, null, 1, 0, 10, sysdate());
 INSERT INTO sys_i18n (i18n_id, platform, i18n_code, group_id, remark, create_user_id, update_time, update_user_id, use_yn, delete_yn, seq, create_time) VALUES (1453368310497314, 'backstage', 'message.validate.useYn.status.notNull', 1453367953981474, null, 1, null, null, 1, 0, 20, sysdate());
 INSERT INTO sys_i18n (i18n_id, platform, i18n_code, group_id, remark, create_user_id, update_time, update_user_id, use_yn, delete_yn, seq, create_time) VALUES (1455943906754594, 'backstage', 'auth.error.userNotFoundError', 1449074421137442, null, 1, null, null, 1, 0, 17, sysdate());
@@ -363,6 +369,8 @@ INSERT INTO sys_i18n_item (i18n_item_id, locale, value, create_time, create_user
 INSERT INTO sys_i18n_item (i18n_item_id, locale, value, create_time, create_user_id, use_yn, delete_yn, i18n_id) VALUES (1450877132996642, 'zh-CN', '用户组管理', sysdate(), 1, 1, 0, 1450876661137442);
 INSERT INTO sys_i18n_item (i18n_item_id, locale, value, create_time, create_user_id, use_yn, delete_yn, i18n_id) VALUES (1455944166801442, 'en-US', 'I18N Manager', sysdate(), 1, 1, 0, 1450876688400418);
 INSERT INTO sys_i18n_item (i18n_item_id, locale, value, create_time, create_user_id, use_yn, delete_yn, i18n_id) VALUES (1455944103886882, 'zh-CN', '国际化管理', sysdate(), 1, 1, 0, 1450876688400418);
+INSERT INTO sys_i18n_item (i18n_item_id, locale, value, create_time, create_user_id, use_yn, delete_yn, i18n_id) VALUES (1455944166801443, 'en-US', 'Dept Manager', sysdate(), 1, 1, 0, 1450876688400419);
+INSERT INTO sys_i18n_item (i18n_item_id, locale, value, create_time, create_user_id, use_yn, delete_yn, i18n_id) VALUES (1455944103886883, 'zh-CN', '部门管理', sysdate(), 1, 1, 0, 1450876688400419);
 INSERT INTO sys_i18n_item (i18n_item_id, locale, value, create_time, create_user_id, use_yn, delete_yn, i18n_id) VALUES (1453368434229282, 'en-US', 'ID cannot be empty', sysdate(), 1, 1, 0, 1453368287428642);
 INSERT INTO sys_i18n_item (i18n_item_id, locale, value, create_time, create_user_id, use_yn, delete_yn, i18n_id) VALUES (1453368346148898, 'zh-CN', 'ID不能为空', sysdate(), 1, 1, 0, 1453368287428642);
 INSERT INTO sys_i18n_item (i18n_item_id, locale, value, create_time, create_user_id, use_yn, delete_yn, i18n_id) VALUES (1453368524406818, 'en-US', 'Start stop status cannot be empty', sysdate(), 1, 1, 0, 1453368310497314);
@@ -514,6 +522,15 @@ create table sys_dict_item
     primary key (dict_code, dict_item_code)
 )
     comment '字典序表';
+
+INSERT INTO sys_dict (dict_code, dict_name, seq, use_yn, delete_yn, create_user_id, create_time, update_user_id, update_time) VALUES ('SYSTEM_USER_TYPE', '系统用户类型', 1, 1, 0, 1, sysdate(), null, null);
+INSERT INTO sys_dict_item (dict_code, dict_item_code, dict_item_name, seq, remark, use_yn, delete_yn, create_user_id, create_time, update_user_id, update_time) VALUES ('SYSTEM_USER_TYPE', 'BUSINESS_USER', '业务用户', 2, null, 1, 0, 1, sysdate(), null, null);
+INSERT INTO sys_dict_item (dict_code, dict_item_code, dict_item_name, seq, remark, use_yn, delete_yn, create_user_id, create_time, update_user_id, update_time) VALUES ('SYSTEM_USER_TYPE', 'SYSTEM_USER', '系统用户', 1, null, 1, 0, 1, sysdate(), null, null);
+INSERT INTO sys_dict (dict_code, dict_name, seq, use_yn, delete_yn, create_user_id, create_time, update_user_id, update_time) VALUES ('SYSTEM_DEPT_TYPE', '系统部门类型', 1, 1, 0, 1, sysdate(), null, null);
+INSERT INTO sys_dict_item (dict_code, dict_item_code, dict_item_name, seq, remark, use_yn, delete_yn, create_user_id, create_time, update_user_id, update_time) VALUES ('SYSTEM_DEPT_TYPE', 'COMPANY', '公司', 10, null, 1, 0, 1, sysdate(), null, null);
+INSERT INTO sys_dict_item (dict_code, dict_item_code, dict_item_name, seq, remark, use_yn, delete_yn, create_user_id, create_time, update_user_id, update_time) VALUES ('SYSTEM_DEPT_TYPE', 'SUBSIDIARY', '子公司', 20, null, 1, 0, 1, sysdate(), null, null);
+INSERT INTO sys_dict_item (dict_code, dict_item_code, dict_item_name, seq, remark, use_yn, delete_yn, create_user_id, create_time, update_user_id, update_time) VALUES ('SYSTEM_DEPT_TYPE', 'DEPARTMENT', '部门', 30, null, 1, 0, 1, sysdate(), null, null);
+
 
 -- 菜单访问记录表
 drop table if exists `sys_menu_access_log`;

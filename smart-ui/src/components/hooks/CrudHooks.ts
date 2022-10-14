@@ -1,4 +1,4 @@
-import { ref, reactive, computed, createVNode } from 'vue'
+import { ref, reactive, computed, createVNode, watch } from 'vue'
 import type { Ref } from 'vue'
 import { message, Modal } from 'ant-design-vue'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
@@ -251,7 +251,6 @@ export const useAddEdit = (
   const handleCancel = () => {
     modalVisible.value = false
   }
-
   return {
     modalProps: computed(() => {
       return {
@@ -272,7 +271,8 @@ export const useAddEdit = (
     handleAddEdit,
     handleEditByCheckbox,
     formRef,
-    handleSetModel
+    handleSetModel,
+    formModel: addEditModel
   }
 }
 

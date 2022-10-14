@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smart.system.mapper.SysDeptMapper">
+    <sql id="columnList">
+        <!--   部门ID 主键  索引   -->
+        dept_id,
+        <!--   上级ID      -->
+        parent_id,
+        <!--   部门编码      -->
+        dept_code,
+        <!--   部门类型      -->
+        dept_type,
+        <!--   部门名称      -->
+        dept_name,
+        <!--   邮箱      -->
+        email,
+        <!--   负责人      -->
+        director,
+        <!--   启用状态      -->
+        use_yn,
+        <!--   删除状态      -->
+        delete_yn,
+        <!--   创建人ID      -->
+        create_user_id,
+        <!--   创建时间      -->
+        create_time,
+        <!--   更新人员ID      -->
+        update_user_id,
+        <!--   更新时间      -->
+        update_time,
+        <!--   需要      -->
+        seq,
+        <!--   电话      -->
+        phone,
+        <!--   备注      -->
+        remark
+    </sql>
+
+    <resultMap id="commonResultMap" type="com.smart.system.model.SysDeptPO">
+        <!--   部门ID 主键  索引   -->
+        <id column="dept_id" property="deptId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   上级ID      -->
+        <result column="parent_id" property="parentId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   部门编码      -->
+        <result column="dept_code" property="deptCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   部门类型      -->
+        <result column="dept_type" property="deptType" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   部门名称      -->
+        <result column="dept_name" property="deptName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   邮箱      -->
+        <result column="email" property="email" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   负责人      -->
+        <result column="director" property="director" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   启用状态      -->
+        <result column="use_yn" property="useYn" javaType="java.lang.Boolean" jdbcType="BIT"/>
+        <!--   删除状态      -->
+        <result column="delete_yn" property="deleteYn" javaType="java.lang.Boolean" jdbcType="BIT"/>
+        <!--   创建人ID      -->
+        <result column="create_user_id" property="createUserId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   创建时间      -->
+        <result column="create_time" property="createTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+        <!--   更新人员ID      -->
+        <result column="update_user_id" property="updateUserId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   更新时间      -->
+        <result column="update_time" property="updateTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+        <!--   需要      -->
+        <result column="seq" property="seq" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        <!--   电话      -->
+        <result column="phone" property="phone" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   备注      -->
+        <result column="remark" property="remark" javaType="java.lang.String" jdbcType="VARCHAR"/>
+    </resultMap>
+</mapper>
