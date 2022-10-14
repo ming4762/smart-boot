@@ -78,6 +78,11 @@ const topRouters: Array<RouteRecordRaw> = [
         name: 'system_file',
         path: 'sys/file',
         component: () => import('@/modules/system/views/file/SysFileListView.vue')
+      },
+      {
+        name: 'system_dept',
+        path: 'sys/dept',
+        component: () => import('@/modules/system/views/dept/SysDeptTreeList.vue')
       }
     ]
   }
