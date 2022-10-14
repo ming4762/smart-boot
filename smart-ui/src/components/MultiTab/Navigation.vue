@@ -1,17 +1,35 @@
 <template>
-  <div ref="outContainerRef" class="content-tabs" :style="{ height: navHeight + 'px', 'line-height': `${navHeight - 2}px` }">
-    <div :style="computedRightButtonStyle" class="roll-nav roll-left direction-button" @click="handleMoveLeft">
+  <div
+    ref="outContainerRef"
+    class="content-tabs"
+    :style="{ height: navHeight + 'px', 'line-height': `${navHeight - 2}px` }">
+    <div
+      :style="computedRightButtonStyle"
+      class="roll-nav roll-left direction-button"
+      @click="handleMoveLeft">
       <BackwardOutlined />
     </div>
     <nav style="width: 12000px" class="page-tabs s-menu-tabs">
       <div ref="tabContainerRef" class="page-tabs-content" :style="computedTabContainerStyle">
-        <a v-for="(item, i) in dataList" :key="'navigation-menu_' + i" :class="['s-menu-tab', item.path === activeValue ? 'active' : '']" href="javascript:" @click="() => handleClick(item)">
+        <a
+          v-for="(item, i) in dataList"
+          :key="'navigation-menu_' + i"
+          :class="['s-menu-tab', item.path === activeValue ? 'active' : '']"
+          href="javascript:"
+          @click="() => handleClick(item)">
           {{ getTitle(item) }}
-          <CloseCircleOutlined v-if="i !== 0" class="menu-close-icon" :style="{ color: '#CCCCCC' }" @click.stop="() => handleRemove(item, $event)" />
+          <CloseCircleOutlined
+            v-if="i !== 0"
+            class="menu-close-icon"
+            :style="{ color: '#CCCCCC' }"
+            @click.stop="() => handleRemove(item, $event)" />
         </a>
       </div>
     </nav>
-    <div :style="computedRightButtonStyle" class="roll-nav roll-right direction-button s-menu-right" @click="handleMoveRight">
+    <div
+      :style="computedRightButtonStyle"
+      class="roll-nav roll-right direction-button s-menu-right"
+      @click="handleMoveRight">
       <ForwardOutlined />
     </div>
     <a-dropdown>
@@ -49,7 +67,15 @@ import { computed, defineComponent, ref, toRefs } from 'vue'
 
 import type { PropType } from 'vue'
 
-import { AimOutlined, BackwardOutlined, CaretDownOutlined, CloseCircleOutlined, CloseOutlined, ForwardOutlined, ReloadOutlined } from '@ant-design/icons-vue'
+import {
+  AimOutlined,
+  BackwardOutlined,
+  CaretDownOutlined,
+  CloseCircleOutlined,
+  CloseOutlined,
+  ForwardOutlined,
+  ReloadOutlined
+} from '@ant-design/icons-vue'
 
 import { useTabsMove, useTabContainerStyle } from './NavigationHooks'
 
@@ -92,7 +118,7 @@ export default defineComponent({
     NavigationProps
   ),
   setup(props) {
-    const { navHeight, lang, activeValue, dataList } = toRefs(props)
+    const { navHeight, lang, activeValue } = toRefs(props)
     // tab nav ref
     const tabContainerRef = ref()
     const firstElementRef = ref<Element | null>(null)
@@ -128,6 +154,7 @@ export default defineComponent({
       }
     }
     const getTitle = (menu: any) => {
+      console.log(menu)
       if (!menu.meta.locales) {
         return menu.meta.title
       }
