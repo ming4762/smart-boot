@@ -4,8 +4,7 @@
       <Navigation
         :active-value="computedActiveValue"
         :lang="computedLang"
-        v-bind="$props">
-      </Navigation>
+        v-bind="$props"></Navigation>
     </div>
   </div>
 </template>
@@ -44,7 +43,7 @@ export default defineComponent({
     const computedActiveValue = computed(() => {
       return route.fullPath
     })
-    const computedLang = appI18nStore.lang
+    const computedLang = computed(() => appI18nStore.lang)
     const handleClickItem = ({ key }: any) => {
       switch (key) {
         case 'refreshCurrent': {
