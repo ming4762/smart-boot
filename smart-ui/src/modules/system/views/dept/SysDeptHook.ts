@@ -89,7 +89,6 @@ export const useAddChild = (
       message.error(t('system.views.dept.message.selectDeptError'))
       return false
     }
-    console.log(currentDeptCode.value)
     // 设置上级编码
     parentFieldVisible.value = true
     addEditHandler(true, null)
