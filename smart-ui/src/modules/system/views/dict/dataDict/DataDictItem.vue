@@ -176,7 +176,11 @@ export default defineComponent({
     const { tableProps, handleReset, pageProps, searchModel, loadData } = useVxeTable(
       handleLoadData,
       {
-        paging: true
+        paging: true,
+        defaultSorter: {
+          sortName: 'seq',
+          sortOrder: 'asc'
+        }
       }
     )
     watch(dictCode, () => {

@@ -170,8 +170,7 @@ export default defineComponent({
       {
         idField: 'deptId',
         defaultModel: {
-          seq: 1,
-          deptType: 'COMPANY'
+          seq: 1
         }
       }
     )
