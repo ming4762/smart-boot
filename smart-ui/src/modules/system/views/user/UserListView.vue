@@ -45,6 +45,7 @@
                 {{ $t('common.button.edit') }}
               </a-menu-item>
               <a-menu-item key="showAccount" :disabled="!hasPermission('sys:account:query')">
+                <user-outlined />
                 {{ $t('system.views.user.button.showAccount') }}
               </a-menu-item>
             </a-menu>
@@ -182,7 +183,10 @@
           </a-form-item>
           <a-form-item name="userType" :label="$t('system.views.user.table.userType')">
             <a-select v-model:value="addEditModel.userType">
-              <a-select-option v-for="item in userTypeList" :key="'userType_' + item.dictItemCode" :value="item.dictItemCode">
+              <a-select-option
+                v-for="item in userTypeList"
+                :key="'userType_' + item.dictItemCode"
+                :value="item.dictItemCode">
                 {{ item.dictItemName }}
               </a-select-option>
             </a-select>
@@ -208,7 +212,7 @@ import { defineComponent, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { Modal } from 'ant-design-vue'
-import { DownOutlined, EditOutlined } from '@ant-design/icons-vue'
+import { DownOutlined, EditOutlined, UserOutlined } from '@ant-design/icons-vue'
 
 import {
   vueLoadData,
@@ -231,7 +235,8 @@ export default defineComponent({
   components: {
     UserAccountUpdateModal,
     DownOutlined,
-    EditOutlined
+    EditOutlined,
+    UserOutlined
   },
   setup() {
     const tableRef = ref()
@@ -249,12 +254,20 @@ export default defineComponent({
      * @returns {Promise<void>}
      */
     const handleSetYn = (ident: string, userId: number, checked: boolean) => {
-      // TODO:国际化
-      const content = `确定要${
-        ident === 'use_yn' ? (checked ? '启用' : '停用') : checked ? '删除' : '启用'
-      }该用户吗`
+      console.log('===================')
+      const content = t('system.views.user.message.deleteValidate', {
+        msg:
+          ident === 'use_yn'
+            ? checked
+              ? t('common.form.use')
+              : t('common.form.noUse')
+            : checked
+            ? t('common.button.delete')
+            : t('common.form.use')
+      })
+      console.log(content)
       Modal.confirm({
-        title: '确认',
+        title: t('common.button.confirm'),
         content: content,
         onOk: async () => {
           await ApiService.postAjax('monitor/user/setYn', {
@@ -284,7 +297,6 @@ export default defineComponent({
       ...userOperationVue,
       ...loadDataVue,
       ...SizeConfigHoops(),
-      handleSetYn,
       ...addEditVue,
       permissions: SystemPermissions.user,
       ...useCreateAccount(tableRef, t),

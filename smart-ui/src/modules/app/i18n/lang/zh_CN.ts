@@ -56,7 +56,9 @@ export default {
       editSuccess: '修改成功',
       deleteSuccess: '删除成功',
       deleteFail: '删除失败',
-      submitSuccess: '提交成功'
+      submitSuccess: '提交成功',
+      use: '启用',
+      noUse: '停用'
     }
   },
   app: {

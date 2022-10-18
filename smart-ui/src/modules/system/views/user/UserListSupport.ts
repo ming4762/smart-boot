@@ -39,7 +39,7 @@ export const userOperationHoops = (tableRef: Ref, t: Function, loadData: Functio
     }
     Modal.confirm({
       title: t('system.views.user.validate.setUserUseYn', {
-        useYn: useYn ? t('common.button.use') : t('common.button.noUse')
+        msg: useYn ? t('common.message.use') : t('common.message.noUse')
       }),
       icon: createVNode(ExclamationCircleOutlined),
       onOk: async () => {
@@ -313,7 +313,9 @@ export const useLoadUserType = () => {
   onMounted(async () => {
     try {
       userTypeList.value = await ApiService.postAjax('sys/dictItem/list', {
-        'dictCode@=': 'SYSTEM_USER_TYPE',
+        parameter: {
+          'dictCode@=': 'SYSTEM_USER_TYPE'
+        },
         sortName: 'seq',
         sortOrder: 'asc'
       })

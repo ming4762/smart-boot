@@ -53,7 +53,9 @@ export default {
         message: {
           deleteUserNotCreateAccount: '已删除用户不能创建账户',
           noUseUserNotCreateAccount: '未启用用户不能创建账户',
-          createAccountSuccess: '创建账户成功'
+          createAccountSuccess: '创建账户成功',
+          deleteValidate: '确定要{msg}该用户吗？',
+          noAccount: '该用户未创建账户'
         }
       }
     }

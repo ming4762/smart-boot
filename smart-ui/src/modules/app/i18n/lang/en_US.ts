@@ -56,7 +56,9 @@ export default {
       editSuccess: 'Edit success',
       deleteSuccess: 'Delete successfully',
       deleteFail: 'Deletion failed',
-      submitSuccess: 'Submit successfully'
+      submitSuccess: 'Submit successfully',
+      use: 'enable',
+      noUse: 'deactivate'
     }
   },
   app: {

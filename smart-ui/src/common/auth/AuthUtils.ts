@@ -49,7 +49,7 @@ export const getCurrentUser = (): any | null => {
  */
 export const getCurrentUserId = (): number | null => {
   const user = getCurrentUser()
-  return user && user.userId || null
+  return (user && user.userId) || null
 }
 
 export const saveUserPermission = (permissions: Array<string>): void => {
@@ -87,11 +87,7 @@ export const hasPermission = (permission: string | null | undefined): boolean =>
   }
   if (permission) {
     const permissions = getUserPermission()
-    if (
-      !permissions ||
-      permissions.length === 0 ||
-      !permissions.includes(permission)
-    ) {
+    if (!permissions || permissions.length === 0 || !permissions.includes(permission)) {
       hasPermission = false
     }
   }

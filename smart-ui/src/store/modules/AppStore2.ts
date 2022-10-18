@@ -70,10 +70,10 @@ export const useAppSettingStore = defineStore('appSetting', {
     }
   },
   getters: {
-    appSetting: state => state
+    appSetting: (state) => state
   },
   actions: {
-    changeSetting (key: string, value: any) {
+    changeSetting(key: string, value: any) {
       // @ts-ignore
       if (key && typeof this[key] !== 'undefined') {
         // @ts-ignore
@@ -94,7 +94,7 @@ export const useAppSettingStore = defineStore('appSetting', {
      * 显示关闭SettingDrawer
      * @param show
      */
-    showHideSettingDrawer (show: boolean) {
+    showHideSettingDrawer(show: boolean) {
       this.settingDrawerVisible = show
     }
   }
@@ -110,8 +110,8 @@ export const useAppI18nStore = defineStore('appI18n', {
     }
   },
   actions: {
-    setLang (lang: string) {
-      return new Promise<void>(resolve => {
+    setLang(lang: string) {
+      return new Promise<void>((resolve) => {
         this.lang = lang
         // StoreUtil.setStore(STORE_KEYS.APP_LANGUAGE, lang)
         resolve()
@@ -138,13 +138,13 @@ export const useAppStateStore = defineStore('appState', {
      * 开启关闭全局加载状态
      * @param loading
      */
-    setGlobalLoading (loading: boolean) {
+    setGlobalLoading(loading: boolean) {
       this.globalLoading = loading
     },
     /**
      * 打开关闭侧边栏
      */
-    openCloseSidebar () {
+    openCloseSidebar() {
       this.collapsed = !this.collapsed
       // StoreUtil.setStore(STORE_KEYS.APP_SIDEBAR_STATUS, this.collapsed)
     }
