@@ -2,6 +2,7 @@ package com.smart.auth.extensions.jwt;
 
 import com.google.common.collect.Lists;
 import com.smart.auth.core.authentication.RestAuthenticationProvider;
+import com.smart.auth.core.handler.AuthHandlerBuilder;
 import com.smart.auth.core.handler.SecurityLogoutHandler;
 import com.smart.auth.core.properties.AuthProperties;
 import com.smart.auth.core.service.AuthCache;
@@ -31,8 +32,6 @@ import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.util.Assert;
 
-import java.util.*;
-import java.util.stream.Collectors;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -52,6 +51,8 @@ public class AuthJwtSecurityConfigurer extends SecurityConfigurerAdapter<Default
     public static final String LOGIN_URL = "/auth/login";
 
     private final ServiceProvider serviceProvider = new ServiceProvider();
+
+    private AuthHandlerBuilder handlerBuilder = new AuthHandlerBuilder();
 
     private JwtService jwtService;
 
@@ -121,6 +122,15 @@ public class AuthJwtSecurityConfigurer extends SecurityConfigurerAdapter<Default
     }
 
     /**
+     * 创建handler Builder
+     * @return handler Builder
+     */
+    public AuthJwtSecurityConfigurer authHandlerBuilder(AuthHandlerBuilder builder) {
+        this.handlerBuilder = builder;
+        return this;
+    }
+
+    /**
      * 创建jwt 拦截器链
      * @return 拦截器链
      */
@@ -145,12 +155,13 @@ public class AuthJwtSecurityConfigurer extends SecurityConfigurerAdapter<Default
         jwtLoginFilter.setFilterProcessesUrl(this.getLoginUrl());
         this.postProcess(jwtLoginFilter);
         // 设置登录成功handler
-        AuthenticationSuccessHandler successHandler = this.serviceProvider.authenticationSuccessHandler;
+
+        AuthenticationSuccessHandler successHandler = this.handlerBuilder.getAuthenticationSuccessHandler();
         if (successHandler != null) {
             jwtLoginFilter.setAuthenticationSuccessHandler(successHandler);
         }
         // 设置登录失败handler
-        AuthenticationFailureHandler failHandler = this.serviceProvider.authenticationFailureHandler;
+        AuthenticationFailureHandler failHandler = this.handlerBuilder.getAuthenticationFailureHandler();
         if (failHandler != null) {
             jwtLoginFilter.setAuthenticationFailureHandler(failHandler);
         }
@@ -163,13 +174,13 @@ public class AuthJwtSecurityConfigurer extends SecurityConfigurerAdapter<Default
      */
     private JwtLogoutFilter jwtLogoutFilter() {
         // 创建LogoutHandler
-        List<LogoutHandler> logoutHandlerList = this.serviceProvider.logoutHandlers;
+        List<LogoutHandler> logoutHandlerList = this.handlerBuilder.getLogoutHandlers();
         if (CollectionUtils.isEmpty(logoutHandlerList)) {
             logoutHandlerList = Lists.newArrayList(this.getBean(SecurityLogoutHandler.class, null));
         }
         // 添加登出通知类
         logoutHandlerList.add(this.postProcess(new LogoutSuccessEventPublishingLogoutHandler()));
-        final JwtLogoutFilter logoutFilter = new JwtLogoutFilter(this.getBean(LogoutSuccessHandler.class, this.serviceProvider.logoutSuccessHandler), logoutHandlerList.toArray(new LogoutHandler[]{}));
+        final JwtLogoutFilter logoutFilter = new JwtLogoutFilter(this.getBean(LogoutSuccessHandler.class, this.handlerBuilder.getLogoutSuccessHandler()), logoutHandlerList.toArray(new LogoutHandler[]{}));
         logoutFilter.setFilterProcessesUrl(this.getLogoutUrl());
         return logoutFilter;
     }
@@ -228,13 +239,6 @@ public class AuthJwtSecurityConfigurer extends SecurityConfigurerAdapter<Default
 
         private String logoutUrl;
 
-        private AuthenticationSuccessHandler authenticationSuccessHandler;
-
-        private AuthenticationFailureHandler authenticationFailureHandler;
-
-        private LogoutSuccessHandler logoutSuccessHandler;
-
-        private List<LogoutHandler> logoutHandlers;
 
         /**
          * 是否绑定IP
@@ -282,45 +286,6 @@ public class AuthJwtSecurityConfigurer extends SecurityConfigurerAdapter<Default
             return this;
         }
 
-        /**
-         * 设置登录成功执行器
-         * @param authenticationSuccessHandler 登录成功
-         * @return this
-         */
-        public ServiceProvider authenticationSuccessHandler(AuthenticationSuccessHandler authenticationSuccessHandler) {
-            this.authenticationSuccessHandler = authenticationSuccessHandler;
-            return this;
-        }
-
-        /**
-         * 设置登出handlers
-         * @param logoutHandlers  logoutHandlers
-         * @return this
-         */
-        public ServiceProvider logoutHandlers(List<LogoutHandler> logoutHandlers) {
-            this.logoutHandlers = logoutHandlers;
-            return this;
-        }
-
-        /**
-         * 设置登录失败handler
-         * @param authenticationFailureHandler 登录失败handler
-         * @return this
-         */
-        public ServiceProvider authenticationFailureHandler(AuthenticationFailureHandler authenticationFailureHandler) {
-            this.authenticationFailureHandler = authenticationFailureHandler;
-            return this;
-        }
-
-        /**
-         * 设置登出成功handler
-         * @param logoutSuccessHandler  登出成功handler
-         * @return this
-         */
-        public ServiceProvider logoutSuccessHandler(LogoutSuccessHandler logoutSuccessHandler) {
-            this.logoutSuccessHandler = logoutSuccessHandler;
-            return this;
-        }
     }
 
 }

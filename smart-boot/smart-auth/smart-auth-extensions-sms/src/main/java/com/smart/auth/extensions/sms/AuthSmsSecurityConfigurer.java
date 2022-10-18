@@ -32,7 +32,7 @@ import java.util.Optional;
 public class AuthSmsSecurityConfigurer extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
 
     private final ServiceProvider serviceProvider = new ServiceProvider();
-    private final AuthHandlerBuilder handlerBuilder = new AuthHandlerBuilder();
+    private AuthHandlerBuilder handlerBuilder = new AuthHandlerBuilder();
 
     private static final String SMS_CREATE_CODE = "createCode";
 
@@ -49,7 +49,7 @@ public class AuthSmsSecurityConfigurer extends SecurityConfigurerAdapter<Default
     }
 
     @Override
-    public void configure(HttpSecurity builder) throws Exception {
+    public void configure(HttpSecurity builder) {
         builder
                 .authenticationProvider(this.getBean(SmsAuthenticationProvider.class, this.serviceProvider.authenticationProvider))
                 .addFilterBefore(this.createLoginFilter(), BasicAuthenticationFilter.class);
@@ -116,8 +116,9 @@ public class AuthSmsSecurityConfigurer extends SecurityConfigurerAdapter<Default
      * 创建handler Builder
      * @return handler Builder
      */
-    public AuthHandlerBuilder authHandlerBuilder() {
-        return this.handlerBuilder;
+    public AuthSmsSecurityConfigurer authHandlerBuilder(AuthHandlerBuilder builder) {
+        this.handlerBuilder = builder;
+        return this;
     }
 
     /**
