@@ -1,7 +1,10 @@
 import { ref } from 'vue'
 
+import { message } from 'ant-design-vue'
+
 import ApiService from '@/common/utils/ApiService'
 import { errorMessage, successMessage } from '@/components/notice/SystemNotice'
+import AppUtils from '@/common/utils/AppUtils'
 
 /**
  * 显示账户hook
@@ -19,7 +22,8 @@ export const useShowAccount = (t: Function) => {
    */
   const show = (id: number) => {
     userId.value = id
-    modalVisible.value = true
+    userData.value = {}
+    accountData.value = {}
     handleLoadUserAccount()
   }
 
@@ -27,13 +31,16 @@ export const useShowAccount = (t: Function) => {
    * 加载账户信息
    */
   const handleLoadUserAccount = async () => {
-    dataLoading.value = true
+    AppUtils.globalLoading(true)
     try {
-      const result = await ApiService.postAjax('sys/user/getById', userId.value);
+      const result = await ApiService.postAjax('sys/user/getById', userId.value)
       if (result) {
         userData.value = result
         if (result.userAccount) {
           accountData.value = result.userAccount
+          modalVisible.value = true
+        } else {
+          message.error(t('system.views.user.message.noAccount'))
         }
       } else {
         userData.value = {}
@@ -42,7 +49,7 @@ export const useShowAccount = (t: Function) => {
     } catch (e) {
       errorMessage(e)
     } finally {
-      dataLoading.value = false
+      AppUtils.globalLoading(false)
     }
   }
 
@@ -73,4 +80,3 @@ export const useShowAccount = (t: Function) => {
     saveLoading
   }
 }
-

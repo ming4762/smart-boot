@@ -18,22 +18,27 @@ import { EVENT_SYMBOLS } from '@/common/constants/CommonConstants'
  * 系统菜单store
  */
 export const useSystemMenuStore = defineStore('systemMenu', {
-
   state: () => {
     return {
       // 打开的菜单
-      openMenuList: [],
+      openMenuList: [] as Array<any>,
       // 用户菜单信息
-      userMenuList: []
+      userMenuList: [] as Array<any>
     }
   },
   getters: {
-    userTreeMenu: state => {
+    userTreeMenu: (state) => {
       const userMenuList = state.userMenuList
       if (userMenuList === null || userMenuList === undefined) {
         return []
       }
-      return TreeUtils.convertList2Tree(JSON.parse(JSON.stringify(userMenuList)), ['id', 'parentId'], '0') || []
+      return (
+        TreeUtils.convertList2Tree(
+          JSON.parse(JSON.stringify(userMenuList)),
+          ['id', 'parentId'],
+          '0'
+        ) || []
+      )
     }
   },
   actions: {
@@ -41,16 +46,15 @@ export const useSystemMenuStore = defineStore('systemMenu', {
      * 设置用户菜单列表
      * @param userMenuList
      */
-    setUserMenu (userMenuList: Array<any>) {
+    setUserMenu(userMenuList: Array<any>) {
       this.userMenuList = userMenuList
-      // StoreUtil.setStore(STORE_KEYS.APP_USER_MENU_LIST, userMenuList, StoreUtil.SESSION_TYPE)
     },
     /**
      *
      * @param menuKey
      */
-    addMenu (menuKey: string) {
-      return new Promise<void>(resolve => {
+    addMenu(menuKey: string) {
+      return new Promise<void>((resolve) => {
         // 获取菜单信息
         let menu: any = null
         for (const item of this.userMenuList) {
@@ -85,9 +89,9 @@ export const useSystemMenuStore = defineStore('systemMenu', {
      * 移除菜单
      * @param menuKey
      */
-    removeMenu (menuKey: string) {
-      return new Promise<void>(resolve => {
-        for (let i=0; i<this.openMenuList.length; i++) {
+    removeMenu(menuKey: string) {
+      return new Promise<void>((resolve) => {
+        for (let i = 0; i < this.openMenuList.length; i++) {
           const menu = this.openMenuList[i]
           if (menu.path === menuKey) {
             this.openMenuList.splice(i, 1)
@@ -110,15 +114,14 @@ export const useSystemMenuStore = defineStore('systemMenu', {
  * 系统登录登出store
  */
 export const useSystemLoginStore = defineStore('systemLoginStore', {
-
   actions: {
     /**
      * 登出操作
      */
-    logout () {
+    logout() {
       const systemMenuStore = useSystemMenuStore()
-      return new Promise<void>(resolve => {
-        systemMenuStore.$patch(state => {
+      return new Promise<void>((resolve) => {
+        systemMenuStore.$patch((state) => {
           state.openMenuList = []
           state.userMenuList = []
         })

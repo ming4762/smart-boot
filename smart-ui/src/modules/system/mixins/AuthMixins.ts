@@ -8,7 +8,7 @@ export default defineComponent({
      * 判断是否拥有权限
      * @param permission
      */
-    hasPermission (permission: string): boolean {
+    hasPermission(permission: string): boolean {
       return hasPermission(permission)
     }
   }

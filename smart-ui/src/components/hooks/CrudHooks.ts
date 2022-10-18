@@ -1,4 +1,4 @@
-import { ref, reactive, computed, createVNode, watch } from 'vue'
+import { ref, reactive, computed, createVNode } from 'vue'
 import type { Ref } from 'vue'
 import { message, Modal } from 'ant-design-vue'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
@@ -23,7 +23,10 @@ type Parameter = {
  * @param service 加载数据服务
  * @param parameter hook 参数
  */
-export const useVxeTable = (service: (params: Params, searchParameter: any) => Promise<Data>, parameter: Parameter = { paging: true }) => {
+export const useVxeTable = (
+  service: (params: Params, searchParameter: any) => Promise<Data>,
+  parameter: Parameter = { paging: true }
+) => {
   // 数据加载状态
   const loading = ref(false)
   // 表格数据
@@ -219,7 +222,6 @@ export const useAddEdit = (
       message.error(i18nRender('common.notice.choseOne'))
       return false
     }
-    console.log(selectRows)
     handleAddEdit(false, selectRows[0][parameter.idField!])
   }
 
@@ -284,7 +286,12 @@ type DeleteParameter = {
 /**
  * 删除操作
  */
-export const useVxeDelete = (gridRef: Ref, i18nRender: Function, deleteHandler: (idList: Array<any>) => Promise<void>, parameter: DeleteParameter) => {
+export const useVxeDelete = (
+  gridRef: Ref,
+  i18nRender: Function,
+  deleteHandler: (idList: Array<any>) => Promise<void>,
+  parameter: DeleteParameter
+) => {
   const doDelete = (idList: Array<any>) => {
     Modal.confirm({
       title: i18nRender('common.button.confirm'),

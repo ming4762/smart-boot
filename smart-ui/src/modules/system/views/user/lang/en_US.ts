@@ -48,13 +48,15 @@ export default {
           mobile: 'Please enter mobile',
           selectUser: 'Please select user',
           sysUserNoDelete: 'System user cannot delete!',
-          setUserUseYn: 'Are you sure you want to {userYn} user？',
+          setUserUseYn: 'Are you sure you want to {msg} user？',
           createAccountConfirm: 'Are you sure you want to create account?'
         },
         message: {
           deleteUserNotCreateAccount: 'Deleted user cannot create account',
           noUseUserNotCreateAccount: 'Disabled user cannot create account',
-          createAccountSuccess: 'Account created successfully'
+          createAccountSuccess: 'Account created successfully',
+          deleteValidate: 'Are you sure you want to {msg} this user?',
+          noAccount: 'The user has not created an account'
         }
       }
     }
