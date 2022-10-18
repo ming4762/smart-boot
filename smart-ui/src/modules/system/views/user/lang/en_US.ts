@@ -49,7 +49,8 @@ export default {
           selectUser: 'Please select user',
           sysUserNoDelete: 'System user cannot delete!',
           setUserUseYn: 'Are you sure you want to {msg} user？',
-          createAccountConfirm: 'Are you sure you want to create account?'
+          createAccountConfirm: 'Are you sure you want to create account?',
+          noSysUserUpdatePermission: 'Operation failed, no permission to modify system user!'
         },
         message: {
           deleteUserNotCreateAccount: 'Deleted user cannot create account',

@@ -1,4 +1,4 @@
-import { defineComponent, ref, createVNode, computed } from 'vue'
+import { defineComponent, ref, createVNode, computed, watch, toRefs } from 'vue'
 import type { PropType } from 'vue'
 import * as icons from '@ant-design/icons-vue'
 
@@ -41,7 +41,9 @@ export const RouteMenuProps = {
  */
 const renderMenu = (menu: any, lang: string) => {
   if (menu && !menu.hidden) {
-    return menu.children && menu.children.length > 0 ? renderSubMenu(menu, lang) : renderMenuItem(menu, lang)
+    return menu.children && menu.children.length > 0
+      ? renderSubMenu(menu, lang)
+      : renderMenuItem(menu, lang)
   }
   return null
 }
@@ -59,9 +61,7 @@ const renderSubMenu = (menu: any, lang: string) => {
           // 渲染图标
           renderMenuIcon(menu.meta.icon)
         }
-        {
-          renderMenuTitle(menu.meta, lang)
-        }
+        {renderMenuTitle(menu.meta, lang)}
       </span>
     )
   }
@@ -98,13 +98,7 @@ const getI18nTitle = (menuMeta: any, lang: string) => {
  * 渲染菜单标题
  */
 const renderMenuTitle = (menuMeta: any, lang: string) => {
-  return (
-    <span>
-      {
-        getI18nTitle(menuMeta, lang)
-      }
-    </span>
-  )
+  return <span>{getI18nTitle(menuMeta, lang)}</span>
 }
 
 /**
@@ -115,12 +109,8 @@ const renderMenuTitle = (menuMeta: any, lang: string) => {
 const renderMenuItem = (menu: any, lang: string) => {
   return (
     <a-menu-item key={menu.path}>
-      {
-        renderMenuIcon(menu.meta.icon)
-      }
-      {
-        renderMenuTitle(menu.meta, lang)
-      }
+      {renderMenuIcon(menu.meta.icon)}
+      {renderMenuTitle(menu.meta, lang)}
     </a-menu-item>
   )
 }
@@ -129,7 +119,7 @@ export default defineComponent({
   name: 'RouteMenu',
   props: RouteMenuProps,
   emits: ['change'],
-  setup (props) {
+  setup(props) {
     const route = useRoute()
     const openKeys = ref<Array<string>>([])
     const selectedKeys = computed(() => {
@@ -145,9 +135,15 @@ export default defineComponent({
      * @param openKeyList 打开的菜单列表
      */
     const handleOpenChange = (openKeyList: Array<string>) => {
-      const latestOpenKey = openKeyList.find(key => openKeys.value.indexOf(key) === -1)
+      const latestOpenKey = openKeyList.find((key) => openKeys.value.indexOf(key) === -1)
       openKeys.value = latestOpenKey ? [latestOpenKey] : []
     }
+    const propsRef = toRefs(props)
+    console.log(props)
+    watch(props, () => {
+      console.log('================')
+    })
+    console.log('==============')
     return {
       openKeys,
       selectedKeys,
@@ -155,7 +151,7 @@ export default defineComponent({
       handleOpenChange
     }
   },
-  render () {
+  render() {
     const { mode, theme, openKeys, selectedKeys, menus, handleMenuSelect, lang, handleOpenChange } = this
     const dynamicProps = {
       mode,
@@ -165,18 +161,16 @@ export default defineComponent({
       onSelect: handleMenuSelect,
       onOpenChange: handleOpenChange
     }
-    const menuItemVnodes = menus.map(item => {
+    const menuItemVnodes = menus.map((item) => {
       if (item.hidden) {
         return null
       }
       return renderMenu(item, lang)
     })
-    return (
-      <a-menu {...dynamicProps}>
-        {
-          menuItemVnodes
-        }
-      </a-menu>
-    )
+    return <a-menu {...dynamicProps}>
+      {
+        menuItemVnodes
+      }
+    </a-menu>
   }
 })

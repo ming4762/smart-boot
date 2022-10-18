@@ -67,18 +67,24 @@ export const defaultRenderLogoAntTitle = (props: any) => {
   if (menuHeaderRender === false) {
     return null
   }
-  const logoDom = defaultRenderLogo(logo || 'https://gw.alipayobjects.com/zos/antfincdn/PmY%24TNNDBI/logo.svg')
-  const titleDom = createVNode('h1', null, [ title ])
+  const logoDom = defaultRenderLogo(
+    logo || 'https://gw.alipayobjects.com/zos/antfincdn/PmY%24TNNDBI/logo.svg'
+  )
+  const titleDom = createVNode('h1', null, [title])
   if (menuHeaderRender) {
-    return isFun(menuHeaderRender) && menuHeaderRender(logoDom, props.collapsed ? null : titleDom, props) || menuHeaderRender;
+    return (
+      (isFun(menuHeaderRender) &&
+        menuHeaderRender(logoDom, props.collapsed ? null : titleDom, props)) ||
+      menuHeaderRender
+    )
   }
-  return createVNode('span', null,[logoDom, titleDom])
+  return createVNode('span', null, [logoDom, titleDom])
 }
 
 export default defineComponent({
   name: 'SiderMenu',
   props: SiderMenuProps,
-  setup (props) {
+  setup(props) {
     const { fixSiderbar, theme } = toRefs(props)
     const computedSiderClass = computed(() => {
       const result = ['ant-pro-sider-menu-sider']
@@ -94,41 +100,58 @@ export default defineComponent({
       computedSiderClass
     }
   },
-  render () {
-    const { logo, siderWidth, theme, collapsible, collapsed, computedSiderClass, title, menuHeaderRender, menuRender, menus, mode, i18nRender, menuClick, lang } = this
+  render() {
+    const {
+      logo,
+      siderWidth,
+      theme,
+      collapsible,
+      collapsed,
+      computedSiderClass,
+      title,
+      menuHeaderRender,
+      menuRender,
+      menus,
+      mode,
+      i18nRender,
+      menuClick,
+      lang
+    } = this
     const headerDom = defaultRenderLogoAntTitle({
       logo,
       title,
       menuHeaderRender,
       collapsed
     })
+    console.log('--------------')
     return (
-      <a-layout-sider { ...{
-        breakpoint: 'lg',
-        trigger: null,
-        width: siderWidth,
-        theme,
-        collapsible,
-        collapsed
-      } } class={ computedSiderClass }>
-        <div class="ant-pro-sider-menu-logo" id="logo">
-          <router-link to="/">
-            { headerDom }
-          </router-link>
-        </div>
-      {
-        /*  渲染侧边栏*/
-        // @ts-ignore
-        menuRender && (isFun(menuRender) && menuRender(this.$props) || menuRender) || createVNode(RouteMenu, {
-          collapsed,
-          menus,
-          mode,
+      <a-layout-sider
+        {...{
+          breakpoint: 'lg',
+          trigger: null,
+          width: siderWidth,
           theme,
-          i18nRender,
-          menuClick,
-          lang
-        })
-      }
+          collapsible,
+          collapsed
+        }}
+        class={computedSiderClass}>
+        <div class="ant-pro-sider-menu-logo" id="logo">
+          <router-link to="/">{headerDom}</router-link>
+        </div>
+        {
+          /*  渲染侧边栏*/
+          // @ts-ignore
+          (menuRender && ((isFun(menuRender) && menuRender(this.$props)) || menuRender)) ||
+            createVNode(RouteMenu, {
+              collapsed,
+              menus,
+              mode,
+              theme,
+              i18nRender,
+              menuClick,
+              lang
+            })
+        }
       </a-layout-sider>
     )
   }

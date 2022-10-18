@@ -6,17 +6,26 @@ import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
 
 import ApiService from '@/common/utils/ApiService'
 import { errorMessage } from '@/components/notice/SystemNotice'
+import { SYS_USER_TYPE } from '@/modules/system/constants/SystemConstants'
 
 /**
  * 用户操作
  */
-export const userOperationHoops = (tableRef: Ref, t: Function, loadData: Function) => {
+export const userOperationHoops = (tableRef: Ref, t: Function, loadData: Function, hasPermissionUpdateSystemUser: boolean) => {
   // 获取选中的用户IDList
   const getSelectUserList = (): Array<any> => tableRef.value.getCheckboxRecords()
   const validateMessage = (userIdList: Array<number>) => {
     if (userIdList.length === 0) {
       message.warn(t('system.views.user.validate.selectUser'))
       return false
+    }
+    if (!hasPermissionUpdateSystemUser) {
+      // 如果没有修改系统用户的权限，判断用户中是否有系统用户
+      const hasSysUser = userIdList.some(({ userType }: any) => userType === SYS_USER_TYPE)
+      if (hasSysUser) {
+        message.error(t('system.views.user.validate.noSysUserUpdatePermission'))
+        return false
+      }
     }
     return true
   }
@@ -32,11 +41,11 @@ export const userOperationHoops = (tableRef: Ref, t: Function, loadData: Functio
       return false
     }
     // 验证是否包含系统用户
-    const sysUserValidate = userList.some((item: any) => item.userType === '10')
-    if (sysUserValidate) {
-      message.error(t('system.views.user.validate.sysUserNoDelete'))
-      return false
-    }
+    // const sysUserValidate = userList.some((item: any) => item.userType === SYS_USER_TYPE)
+    // if (sysUserValidate) {
+    //   message.error(t('system.views.user.validate.sysUserNoDelete'))
+    //   return false
+    // }
     Modal.confirm({
       title: t('system.views.user.validate.setUserUseYn', {
         msg: useYn ? t('common.message.use') : t('common.message.noUse')
@@ -44,7 +53,7 @@ export const userOperationHoops = (tableRef: Ref, t: Function, loadData: Functio
       icon: createVNode(ExclamationCircleOutlined),
       onOk: async () => {
         try {
-          await ApiService.postAjax('system/user/setUseYn', {
+          await ApiService.postAjax('sys/user/setUseYn', {
             idList: userList.map((item) => item.userId),
             useYn
           })
@@ -68,7 +77,7 @@ export const userOperationHoops = (tableRef: Ref, t: Function, loadData: Functio
       return false
     }
     // 验证是否包含系统用户
-    const sysUserValidate = userList.some((item: any) => item.userType === '10')
+    const sysUserValidate = userList.some((item: any) => item.userType === SYS_USER_TYPE)
     if (sysUserValidate) {
       message.error(t('system.views.user.validate.sysUserNoDelete'))
       return false
@@ -185,7 +194,6 @@ export const vueLoadData = () => {
  * 默认的添加修改表单数据
  */
 const defaultAddEditModel = {
-  userType: 'SYSTEM_USER',
   seq: 1
 }
 /**
@@ -257,8 +265,9 @@ export const vueAddEdit = (loadData: any) => {
  * 创建用户账户hook
  * @param tableRef
  * @param t
+ * @param hasPermissionUpdateSystemUser
  */
-export const useCreateAccount = (tableRef: Ref, t: Function) => {
+export const useCreateAccount = (tableRef: Ref, t: Function, hasPermissionUpdateSystemUser: boolean) => {
   // 获取选中的用户IDList
   const getSelectUserList = (): Array<any> => tableRef.value.getCheckboxRecords()
 
@@ -270,6 +279,14 @@ export const useCreateAccount = (tableRef: Ref, t: Function) => {
     if (userList.length === 0) {
       message.warn(t('system.views.user.validate.selectUser'))
       return false
+    }
+    if (!hasPermissionUpdateSystemUser) {
+      // 如果没有修改系统用户的权限，判断用户中是否有系统用户
+      const hasSysUser = userList.some(({ userType }: any) => userType === SYS_USER_TYPE)
+      if (hasSysUser) {
+        message.error(t('system.views.user.validate.noSysUserUpdatePermission'))
+        return false
+      }
     }
     // 判断是否有用户已经删除
     const hasDelete = userList.some((item) => item.deleteYn === true)

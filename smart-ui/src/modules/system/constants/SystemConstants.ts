@@ -7,8 +7,8 @@ export const SystemPermissions = {
     delete: 'sys:user:delete',
     update: 'sys:user:update',
     setRole: 'sys:user:setRole',
-    useYn: 'sys:user:useYn',
-    createAccount: 'sys:user:createAccount'
+    useYn: 'sys:user:setUseYn',
+    createAccount: 'sys:account:add'
   },
   role: {
     add: 'sys:role:save',
@@ -38,3 +38,8 @@ export const SystemPermissions = {
     offline: 'sys:auth.offline'
   }
 }
+
+/**
+ * 系统用户标识
+ */
+export const SYS_USER_TYPE = 'SYSTEM_USER'

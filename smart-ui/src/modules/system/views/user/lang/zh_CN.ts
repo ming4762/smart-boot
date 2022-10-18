@@ -48,7 +48,8 @@ export default {
           selectUser: '请选择用户',
           sysUserNoDelete: '系统用户不能删除！',
           setUserUseYn: '确定要{useYn}用户吗？',
-          createAccountConfirm: '确定要创建账户吗？'
+          createAccountConfirm: '确定要创建账户吗？',
+          noSysUserUpdatePermission: '操作失败，无修改系统用户权限！'
         },
         message: {
           deleteUserNotCreateAccount: '已删除用户不能创建账户',
