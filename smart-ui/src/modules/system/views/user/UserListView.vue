@@ -40,11 +40,15 @@
           </a-button>
           <template #overlay>
             <a-menu @click="({ key }) => handleActions(row, key)">
-              <a-menu-item key="edit" :disabled="!hasPermission(permissions.update)">
+              <a-menu-item
+                key="edit"
+                :disabled="!hasPermission(permissions.update) || !hasSystemUserUpdate(row.userType)">
                 <edit-outlined />
                 {{ $t('common.button.edit') }}
               </a-menu-item>
-              <a-menu-item key="showAccount" :disabled="!hasPermission('sys:account:query')">
+              <a-menu-item
+                key="showAccount"
+                :disabled="!hasPermission('sys:account:query') || !hasSystemUserUpdate(row.userType)">
                 <user-outlined />
                 {{ $t('system.views.user.button.showAccount') }}
               </a-menu-item>
@@ -124,14 +128,6 @@
               {{ $t('common.button.use') }}
             </a-button>
             <a-button
-              v-permission="permissions.createAccount"
-              :size="buttonSizeConfig"
-              class="button-margin"
-              type="primary"
-              @click="handleCreateAccount">
-              {{ $t('system.views.user.button.createAccount') }}
-            </a-button>
-            <a-button
               v-permission="permissions.useYn"
               danger
               class="button-margin"
@@ -139,6 +135,14 @@
               type="primary"
               @click="() => handleSetUseYn(false)">
               {{ $t('common.button.noUse') }}
+            </a-button>
+            <a-button
+              v-permission="permissions.createAccount"
+              :size="buttonSizeConfig"
+              class="button-margin"
+              type="primary"
+              @click="handleCreateAccount">
+              {{ $t('system.views.user.button.createAccount') }}
             </a-button>
             <a-button
               v-permission="permissions.delete"
@@ -183,6 +187,9 @@
           </a-form-item>
           <a-form-item name="userType" :label="$t('system.views.user.table.userType')">
             <a-select v-model:value="addEditModel.userType">
+              <a-select-option v-if="hasPermissionUpdateSystemUser" :value="SYS_USER_TYPE">
+                系统用户
+              </a-select-option>
               <a-select-option
                 v-for="item in userTypeList"
                 :key="'userType_' + item.dictItemCode"
@@ -208,11 +215,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import { Modal } from 'ant-design-vue'
 import { DownOutlined, EditOutlined, UserOutlined } from '@ant-design/icons-vue'
+
+import { SYS_USER_TYPE } from '../../constants/SystemConstants'
 
 import {
   vueLoadData,
@@ -222,7 +230,6 @@ import {
   useLoadUserType
 } from './UserListSupport'
 
-import ApiService from '@/common/utils/ApiService'
 import { SystemPermissions } from '../../constants/SystemConstants'
 import dayjs from 'dayjs'
 import { tableUseYn, tableDeleteYn } from '@/components/common/TableCommon'
@@ -242,43 +249,23 @@ export default defineComponent({
     const tableRef = ref()
     const userAccountRef = ref()
     const { t } = useI18n()
+    /**
+     * 是否有修改系统用户的权限
+     */
+    const hasPermissionUpdateSystemUser = hasPermission('sys:systemUser:update')
+    const hasSystemUserUpdate = (type: string) => {
+      return hasPermissionUpdateSystemUser || type !== SYS_USER_TYPE
+    }
     const loadDataVue = vueLoadData()
     const addEditVue = vueAddEdit(loadDataVue.loadData)
     // 用户操作hoops
-    const userOperationVue = userOperationHoops(tableRef, t, loadDataVue.loadData)
-    /**
-     * 设置激活状态
-     * @param ident
-     * @param userId
-     * @param checked
-     * @returns {Promise<void>}
-     */
-    const handleSetYn = (ident: string, userId: number, checked: boolean) => {
-      console.log('===================')
-      const content = t('system.views.user.message.deleteValidate', {
-        msg:
-          ident === 'use_yn'
-            ? checked
-              ? t('common.form.use')
-              : t('common.form.noUse')
-            : checked
-            ? t('common.button.delete')
-            : t('common.form.use')
-      })
-      console.log(content)
-      Modal.confirm({
-        title: t('common.button.confirm'),
-        content: content,
-        onOk: async () => {
-          await ApiService.postAjax('monitor/user/setYn', {
-            field: ident,
-            yn: checked,
-            id: userId
-          })
-          loadDataVue.loadData()
-        }
-      })
-    }
+    const userOperationVue = userOperationHoops(
+      tableRef,
+      t,
+      loadDataVue.loadData,
+      hasPermissionUpdateSystemUser
+    )
+
     const handleActions = (row: any, key: string) => {
       const { userId } = row
       switch (key) {
@@ -292,22 +279,35 @@ export default defineComponent({
         }
       }
     }
+    const { userTypeList } = useLoadUserType()
+    const userTypeMap = computed(() => {
+      const result: { [index: string]: string } = {}
+      result[SYS_USER_TYPE] = '系统用户'
+      for (let userType of userTypeList.value) {
+        result[userType.dictItemCode] = userType.dictItemName
+      }
+      return result
+    })
     return {
       tableRef,
+      hasPermissionUpdateSystemUser,
+      hasSystemUserUpdate,
       ...userOperationVue,
       ...loadDataVue,
       ...SizeConfigHoops(),
       ...addEditVue,
       permissions: SystemPermissions.user,
-      ...useCreateAccount(tableRef, t),
+      ...useCreateAccount(tableRef, t, hasPermissionUpdateSystemUser),
       handleActions,
       hasPermission,
       userAccountRef,
-      ...useLoadUserType()
+      userTypeList,
+      userTypeMap
     }
   },
   data() {
     return {
+      SYS_USER_TYPE,
       toolbarConfig: {
         slots: {
           buttons: 'toolbar_buttons',
@@ -339,6 +339,14 @@ export default defineComponent({
           field: 'fullName',
           width: 120,
           fixed: 'left'
+        },
+        {
+          title: '{system.views.user.table.userType}',
+          field: 'userType',
+          width: 120,
+          formatter: ({ cellValue }: any) => {
+            return this.userTypeMap[cellValue]
+          }
         },
         {
           title: '{system.views.user.table.email}',
