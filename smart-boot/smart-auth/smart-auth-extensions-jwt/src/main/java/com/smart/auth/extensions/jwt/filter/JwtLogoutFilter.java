@@ -16,4 +16,6 @@ public class JwtLogoutFilter extends LogoutFilter {
     public JwtLogoutFilter(LogoutSuccessHandler logoutSuccessHandler, LogoutHandler... handlers) {
         super(logoutSuccessHandler, handlers);
     }
+
+
 }
