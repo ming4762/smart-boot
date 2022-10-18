@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -35,13 +36,12 @@ import java.util.Objects;
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final List<JwtStore> jwtStoreList;
+    private List<JwtStore> jwtStoreList;
 
     private final JwtContext jwtContext;
 
-    public JwtAuthenticationFilter(JwtContext jwtContext, List<JwtStore> jwtStoreList) {
+    public JwtAuthenticationFilter(JwtContext jwtContext) {
         this.jwtContext = jwtContext;
-        this.jwtStoreList = jwtStoreList;
     }
 
     @Override
@@ -73,4 +73,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return Objects.equals(this.jwtContext.getAuthProperties().getDevelopment(), Boolean.TRUE) || AuthCheckUtils.checkIgnores(request, this.jwtContext.getAuthProperties().getIgnores());
     }
 
+    @Autowired
+    public void setJwtStoreList(List<JwtStore> jwtStoreList) {
+        this.jwtStoreList = jwtStoreList;
+    }
 }

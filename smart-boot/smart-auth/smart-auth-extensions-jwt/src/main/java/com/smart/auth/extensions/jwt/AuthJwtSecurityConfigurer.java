@@ -2,7 +2,6 @@ package com.smart.auth.extensions.jwt;
 
 import com.google.common.collect.Lists;
 import com.smart.auth.core.authentication.RestAuthenticationProvider;
-import com.smart.auth.core.handler.AuthHandlerBuilder;
 import com.smart.auth.core.handler.SecurityLogoutHandler;
 import com.smart.auth.core.properties.AuthProperties;
 import com.smart.auth.core.service.AuthCache;
@@ -12,13 +11,10 @@ import com.smart.auth.extensions.jwt.filter.JwtAuthenticationFilter;
 import com.smart.auth.extensions.jwt.filter.JwtLoginFilter;
 import com.smart.auth.extensions.jwt.filter.JwtLogoutFilter;
 import com.smart.auth.extensions.jwt.service.JwtService;
-import com.smart.auth.extensions.jwt.store.JwtStore;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.Ordered;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.DefaultSecurityFilterChain;
@@ -35,7 +31,9 @@ import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.util.Assert;
 
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * JWT配置类
@@ -52,8 +50,6 @@ public class AuthJwtSecurityConfigurer extends SecurityConfigurerAdapter<Default
     public static final String LOGIN_URL = "/auth/login";
 
     private final ServiceProvider serviceProvider = new ServiceProvider();
-
-    private final AuthHandlerBuilder handlerBuilder = new AuthHandlerBuilder();
 
     private JwtService jwtService;
 
@@ -107,7 +103,7 @@ public class AuthJwtSecurityConfigurer extends SecurityConfigurerAdapter<Default
                 // 添加登录 登出过滤器
                 .addFilterAfter(this.createJwtFilterChainProxy(), BasicAuthenticationFilter.class)
                 // 添加认证过滤器
-                .addFilterAfter(new JwtAuthenticationFilter(this.jwtContext, this.getJwtStore()), ExceptionTranslationFilter.class);
+                .addFilterAfter(this.postProcess(new JwtAuthenticationFilter(this.jwtContext)), ExceptionTranslationFilter.class);
     }
 
     /**
@@ -121,16 +117,6 @@ public class AuthJwtSecurityConfigurer extends SecurityConfigurerAdapter<Default
         this.initBean();
         // 创建上下文
         this.jwtContext = this.createJwtContext();
-    }
-
-    protected List<JwtStore> getJwtStore() {
-        if (this.serviceProvider.applicationContext == null) {
-            return new ArrayList<>(0);
-        }
-        return Arrays.stream(this.serviceProvider.applicationContext.getBeanNamesForType(JwtStore.class))
-                .map(item -> this.serviceProvider.applicationContext.getBean(item, JwtStore.class))
-                .sorted(Comparator.comparingInt(Ordered::getOrder))
-                .toList();
     }
 
     /**
@@ -156,11 +142,17 @@ public class AuthJwtSecurityConfigurer extends SecurityConfigurerAdapter<Default
     private JwtLoginFilter jwtLoginFilter() {
         final JwtLoginFilter jwtLoginFilter = new JwtLoginFilter(this.jwtContext, this.serviceProvider.bindIp);
         jwtLoginFilter.setFilterProcessesUrl(this.getLoginUrl());
-        jwtLoginFilter.setAuthenticationManager(this.getBean(AuthenticationManager.class, null));
+        this.postProcess(jwtLoginFilter);
         // 设置登录成功handler
-        jwtLoginFilter.setAuthenticationSuccessHandler(this.getBean(AuthenticationSuccessHandler.class, this.handlerBuilder.getAuthenticationSuccessHandler()));
+        var successHandler = this.serviceProvider.authenticationSuccessHandler;
+        if (successHandler != null) {
+            jwtLoginFilter.setAuthenticationSuccessHandler(successHandler);
+        }
         // 设置登录失败handler
-        jwtLoginFilter.setAuthenticationFailureHandler(this.getBean(AuthenticationFailureHandler.class, this.handlerBuilder.getAuthenticationFailureHandler()));
+        var failHandler = this.serviceProvider.authenticationFailureHandler;
+        if (failHandler != null) {
+            jwtLoginFilter.setAuthenticationFailureHandler(failHandler);
+        }
         return jwtLoginFilter;
     }
 
@@ -170,13 +162,13 @@ public class AuthJwtSecurityConfigurer extends SecurityConfigurerAdapter<Default
      */
     private JwtLogoutFilter jwtLogoutFilter() {
         // 创建LogoutHandler
-        List<LogoutHandler> logoutHandlerList = this.handlerBuilder.getLogoutHandlers();
+        List<LogoutHandler> logoutHandlerList = this.serviceProvider.logoutHandlers;
         if (CollectionUtils.isEmpty(logoutHandlerList)) {
             logoutHandlerList = Lists.newArrayList(this.getBean(SecurityLogoutHandler.class, null));
         }
         // 添加登出通知类
         logoutHandlerList.add(this.postProcess(new LogoutSuccessEventPublishingLogoutHandler()));
-        final JwtLogoutFilter logoutFilter = new JwtLogoutFilter(this.getBean(LogoutSuccessHandler.class, this.handlerBuilder.getLogoutSuccessHandler()), logoutHandlerList.toArray(new LogoutHandler[]{}));
+        final JwtLogoutFilter logoutFilter = new JwtLogoutFilter(this.getBean(LogoutSuccessHandler.class, this.serviceProvider.logoutSuccessHandler), logoutHandlerList.toArray(new LogoutHandler[]{}));
         logoutFilter.setFilterProcessesUrl(this.getLogoutUrl());
         return logoutFilter;
     }
@@ -195,14 +187,6 @@ public class AuthJwtSecurityConfigurer extends SecurityConfigurerAdapter<Default
      */
     public ServiceProvider serviceProvider() {
         return this.serviceProvider;
-    }
-
-    /**
-     * 创建handler Builder
-     * @return handler Builder
-     */
-    public AuthHandlerBuilder authHandlerBuilder() {
-        return this.handlerBuilder;
     }
 
     /**
@@ -242,6 +226,14 @@ public class AuthJwtSecurityConfigurer extends SecurityConfigurerAdapter<Default
         private String loginUrl;
 
         private String logoutUrl;
+
+        private AuthenticationSuccessHandler authenticationSuccessHandler;
+
+        private AuthenticationFailureHandler authenticationFailureHandler;
+
+        private LogoutSuccessHandler logoutSuccessHandler;
+
+        private List<LogoutHandler> logoutHandlers;
 
         /**
          * 是否绑定IP
@@ -289,7 +281,45 @@ public class AuthJwtSecurityConfigurer extends SecurityConfigurerAdapter<Default
             return this;
         }
 
-    }
+        /**
+         * 设置登录成功执行器
+         * @param authenticationSuccessHandler 登录成功
+         * @return this
+         */
+        public ServiceProvider authenticationSuccessHandler(AuthenticationSuccessHandler authenticationSuccessHandler) {
+            this.authenticationSuccessHandler = authenticationSuccessHandler;
+            return this;
+        }
 
+        /**
+         * 设置登出handlers
+         * @param logoutHandlers  logoutHandlers
+         * @return this
+         */
+        public ServiceProvider logoutHandlers(List<LogoutHandler> logoutHandlers) {
+            this.logoutHandlers = logoutHandlers;
+            return this;
+        }
+
+        /**
+         * 设置登录失败handler
+         * @param authenticationFailureHandler 登录失败handler
+         * @return this
+         */
+        public ServiceProvider authenticationFailureHandler(AuthenticationFailureHandler authenticationFailureHandler) {
+            this.authenticationFailureHandler = authenticationFailureHandler;
+            return this;
+        }
+
+        /**
+         * 设置登出成功handler
+         * @param logoutSuccessHandler  登出成功handler
+         * @return this
+         */
+        public ServiceProvider logoutSuccessHandler(LogoutSuccessHandler logoutSuccessHandler) {
+            this.logoutSuccessHandler = logoutSuccessHandler;
+            return this;
+        }
+    }
 
 }
