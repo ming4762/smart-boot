@@ -10,6 +10,9 @@ export default {
     lang: {
       navBar: 'Set lang'
     },
+    login: {
+      noLogin: 'No login or login timeout, please login again!'
+    },
     main: {
       account: {
         userAccount: {

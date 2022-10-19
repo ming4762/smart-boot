@@ -4,10 +4,11 @@ import NProgress from 'nprogress'
 import { useSystemMenuStore } from '@/modules/system/store'
 
 import { getToken } from '@/common/auth/AuthUtils'
+import { LOGIN_PATH } from '@/modules/system/constants/SystemConstants'
 
 NProgress.configure({ showSpinner: false })
 
-const loginPath = '/user/login'
+const loginPath = LOGIN_PATH
 
 const error404Path = '/error/404'
 
