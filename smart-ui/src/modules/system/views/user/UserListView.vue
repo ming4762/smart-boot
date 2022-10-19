@@ -156,6 +156,11 @@
           </a-form-item>
         </a-form>
       </template>
+      <template #table-userType="{ row }">
+        <span>
+          {{ userTypeMap[row.userType] }}
+        </span>
+      </template>
     </vxe-grid>
     <a-modal
       v-model:visible="modalVisible"
@@ -204,7 +209,41 @@
               :placeholder="$t('system.views.user.validate.mobile')" />
           </a-form-item>
           <a-form-item :label="$t('common.table.seq')">
-            <a-input-number v-model:value="addEditModel.seq" :default-value="1" />
+            <a-input-number
+              style="width: 100%"
+              v-model:value="addEditModel.seq"
+              :default-value="1" />
+          </a-form-item>
+          <a-form-item name="deptId" :label="$t('system.views.user.form.dept')">
+            <a-tree-select
+              :tree-data="deptTreeData"
+              :field-names="deptTreeFieldNames"
+              :placeholder="$t('system.views.user.validate.selectDept')"
+              show-search
+              allow-clear
+              :disabled="dataScopeDisable"
+              v-model:value="addEditModel.deptId" />
+          </a-form-item>
+          <a-form-item
+            name="dataScopeList"
+            :rules="[
+              {
+                required: needCheckDataScope,
+                message: $t('system.views.user.validate.selectDataScope')
+              }
+            ]"
+            :label="$t('system.views.user.form.dataScope')">
+            <a-select
+              mode="multiple"
+              :disabled="dataScopeDisable"
+              v-model:value="addEditModel.dataScopeList">
+              <a-select-option
+                v-for="item in dataScopeList"
+                :key="'data-scope_' + item.key"
+                :value="item.key">
+                {{ $t(item.value) }}
+              </a-select-option>
+            </a-select>
           </a-form-item>
         </a-form>
       </a-spin>
@@ -215,12 +254,12 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue'
+import { computed, defineComponent, ref, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { DownOutlined, EditOutlined, UserOutlined } from '@ant-design/icons-vue'
 
-import { SYS_USER_TYPE } from '../../constants/SystemConstants'
+import { SYS_USER_TYPE, DATA_SCOPE } from '../../constants/SystemConstants'
 
 import {
   vueLoadData,
@@ -236,6 +275,7 @@ import { tableUseYn, tableDeleteYn } from '@/components/common/TableCommon'
 import SizeConfigHoops from '@/components/config/SizeConfigHooks'
 import { hasPermission } from '@/common/auth/AuthUtils'
 import UserAccountUpdateModal from './account/UserAccountUpdateModal.vue'
+import { useLoadDeptTreeData } from '@/modules/system/hooks/dept/SysDeptHooks'
 
 export default defineComponent({
   name: 'UserListPage',
@@ -257,7 +297,7 @@ export default defineComponent({
       return hasPermissionUpdateSystemUser || type !== SYS_USER_TYPE
     }
     const loadDataVue = vueLoadData()
-    const addEditVue = vueAddEdit(loadDataVue.loadData)
+    const addEditVue = vueAddEdit(loadDataVue.loadData, t)
     // 用户操作hoops
     const userOperationVue = userOperationHoops(
       tableRef,
@@ -302,7 +342,9 @@ export default defineComponent({
       hasPermission,
       userAccountRef,
       userTypeList,
-      userTypeMap
+      userTypeMap,
+      dataScopeList: reactive(DATA_SCOPE),
+      ...useLoadDeptTreeData()
     }
   },
   data() {
@@ -313,6 +355,11 @@ export default defineComponent({
           buttons: 'toolbar_buttons',
           tools: 'toolbar_tools'
         }
+      },
+      deptTreeFieldNames: {
+        children: 'children',
+        label: 'deptName',
+        value: 'deptId'
       },
       sortConfig: {
         defaultSort: {
@@ -344,8 +391,8 @@ export default defineComponent({
           title: '{system.views.user.table.userType}',
           field: 'userType',
           width: 120,
-          formatter: ({ cellValue }: any) => {
-            return (this.userTypeMap as any)[cellValue]
+          slots: {
+            default: 'table-userType'
           }
         },
         {
@@ -441,6 +488,13 @@ export default defineComponent({
             required: true,
             message: this.$t('system.views.user.validate.fullName'),
             trigger: 'blur'
+          }
+        ],
+        userType: [
+          {
+            required: true,
+            message: this.$t('system.views.user.validate.selectUserType'),
+            trigger: 'change'
           }
         ]
       },

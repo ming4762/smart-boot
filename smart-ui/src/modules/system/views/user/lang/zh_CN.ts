@@ -2,9 +2,17 @@ export default {
   system: {
     views: {
       user: {
+        title: {
+          dataAll: '所有数据权限',
+          dataDept: '部门数据权限',
+          dataDeptAll: '部门及下级部门数据权限',
+          dataPersonal: '个人数据权限'
+        },
         form: {
           systemUser: '系统用户',
-          businessUser: '业务用户'
+          businessUser: '业务用户',
+          dept: '所属部门',
+          dataScope: '数据权限范围'
         },
         table: {
           username: '用户名',
@@ -49,7 +57,10 @@ export default {
           sysUserNoDelete: '系统用户不能删除！',
           setUserUseYn: '确定要{useYn}用户吗？',
           createAccountConfirm: '确定要创建账户吗？',
-          noSysUserUpdatePermission: '操作失败，无修改系统用户权限！'
+          noSysUserUpdatePermission: '操作失败，无修改系统用户权限！',
+          selectDept: '请选择部门',
+          selectDataScope: '请选择数据权限',
+          selectUserType: '请选择用户类型'
         },
         message: {
           deleteUserNotCreateAccount: '已删除用户不能创建账户',

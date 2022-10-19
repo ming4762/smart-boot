@@ -3,7 +3,7 @@ package com.smart.system.service;
 import com.smart.crud.service.BaseService;
 import com.smart.system.constants.UserAccountStatusEnum;
 import com.smart.system.model.SysUserAccountPO;
-import com.smart.system.pojo.vo.SysOnlineUserVO;
+import com.smart.system.pojo.vo.user.SysOnlineUserVO;
 import org.springframework.lang.NonNull;
 
 import java.util.List;

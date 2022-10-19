@@ -43,3 +43,13 @@ export const SystemPermissions = {
  * 系统用户标识
  */
 export const SYS_USER_TYPE = 'SYSTEM_USER'
+
+/**
+ * 数据权限
+ */
+export const DATA_SCOPE = [
+  { key: 'DATA_ALL', value: 'system.views.user.title.dataAll' },
+  { key: 'DATA_DEPT', value: 'system.views.user.title.dataDept' },
+  { key: 'DATA_DEPT_AND_CHILD', value: 'system.views.user.title.dataDeptAll' },
+  { key: 'DATA_PERSONAL', value: 'system.views.user.title.dataPersonal' }
+]

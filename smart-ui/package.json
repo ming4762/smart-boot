@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "ant-design-vue": "^3.2.13",
-    "axios": "^0.24.0",
+    "axios": "^1.1.3",
     "codemirror": "^5.65.0",
     "container-query-toolkit": "^0.1.3",
     "crypto-js": "^4.1.1",

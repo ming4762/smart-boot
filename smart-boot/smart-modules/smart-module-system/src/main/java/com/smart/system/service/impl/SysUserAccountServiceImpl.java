@@ -15,7 +15,7 @@ import com.smart.system.mapper.SysUserAccountMapper;
 import com.smart.system.mapper.SysUserMapper;
 import com.smart.system.model.SysUserAccountPO;
 import com.smart.system.model.SysUserPO;
-import com.smart.system.pojo.vo.SysOnlineUserVO;
+import com.smart.system.pojo.vo.user.SysOnlineUserVO;
 import com.smart.system.service.SysUserAccountService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;

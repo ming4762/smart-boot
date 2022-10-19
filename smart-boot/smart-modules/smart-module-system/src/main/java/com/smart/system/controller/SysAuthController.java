@@ -16,7 +16,7 @@ import com.smart.system.pojo.dbo.SysUserWthAccountBO;
 import com.smart.system.pojo.dto.ChangePasswordDTO;
 import com.smart.system.pojo.dto.auth.OfflineDTO;
 import com.smart.system.pojo.dto.auth.OnlineUserQueryDTO;
-import com.smart.system.pojo.vo.SysOnlineUserVO;
+import com.smart.system.pojo.vo.user.SysOnlineUserVO;
 import com.smart.system.service.SysUserAccountService;
 import com.smart.system.service.SysUserService;
 import io.swagger.v3.oas.annotations.Operation;
