@@ -1,6 +1,6 @@
 import { message } from 'ant-design-vue'
 
-import { useSystemExceptionStore } from '@/modules/system/store'
+import { useSystemExceptionStore, useSystemLoginStore } from '@/modules/system/store'
 
 /**
  * 错误信息处理
@@ -12,6 +12,9 @@ export const errorMessage = (e: any) => {
   switch (code) {
     case 500:
       error500Handler(e)
+      break
+    case 401:
+      error401Handler()
       break
     default:
       message.error(e.message)
@@ -30,4 +33,12 @@ const error500Handler = (e: any) => {
   const { exceptionNo } = e
   const systemExceptionStore = useSystemExceptionStore()
   systemExceptionStore.handleShowExceptionModal(exceptionNo)
+}
+
+/**
+ * 401未登录错误处理
+ */
+const error401Handler = () => {
+  const store = useSystemLoginStore()
+  store.waringNoLogin()
 }

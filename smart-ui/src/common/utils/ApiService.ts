@@ -9,8 +9,6 @@ const getApiUrl = (): string => {
   return localStorage.getItem('API_URL') || (import.meta.env.VITE_API_URL as string)
 }
 
-// axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'
-
 export const API_SERVICE = axios.create({
   baseURL: getApiUrl(),
   timeout: 100000
@@ -51,7 +49,12 @@ export default class ApiService {
    * @param parameter 参数
    * @param customParameter 自定义参数
    */
-  public static ajax(url: string, ajaxType: string, parameter?: { [index: string]: any }, customParameter?: { [index: string]: any }) {
+  public static ajax(
+    url: string,
+    ajaxType: string,
+    parameter?: { [index: string]: any },
+    customParameter?: { [index: string]: any }
+  ) {
     const params = customParameter || {}
     if (!params.headers) {
       params.headers = {}
@@ -59,14 +62,13 @@ export default class ApiService {
         params.headers['Content-Type'] = 'application/json;charset=UTF-8'
       }
     }
-    return this.request(url, ajaxType, parameter, params)
-      .then((result: any) => {
-        const data = result.data
-        if (data.success === false) {
-          return Promise.reject(data)
-        }
-        return data.data
-      })
+    return this.request(url, ajaxType, parameter, params).then((result: any) => {
+      const data = result.data
+      if (data.success === false) {
+        return Promise.reject(data)
+      }
+      return data.data
+    })
   }
 
   /**
@@ -76,11 +78,15 @@ export default class ApiService {
    * @param parameter 参数
    * @param customParameter 自定义参数
    */
-  public static download (url: string, ajaxType: string, parameter?: {[index: string]: any}, customParameter?: {[index: string]: any}) {
-    return this.request(url, ajaxType, parameter, customParameter)
-      .then((result: any) => {
-        return result.data
-      })
+  public static download(
+    url: string,
+    ajaxType: string,
+    parameter?: { [index: string]: any },
+    customParameter?: { [index: string]: any }
+  ) {
+    return this.request(url, ajaxType, parameter, customParameter).then((result: any) => {
+      return result.data
+    })
   }
 
   /**
@@ -91,14 +97,22 @@ export default class ApiService {
    * @param customParameter 自定义参数
    * @private
    */
-  public static request(url: string, method: string, parameter?: {[index: string]: any}, customParameter?: {[index: string]: any}) {
-    const serverParameter: any = Object.assign({
-      method: method,
-      url: url,
-      data: parameter || {},
-      headers: {},
-      validateStatus: (status: number) => status >= 200 && status < 300
-    }, customParameter)
+  public static request(
+    url: string,
+    method: string,
+    parameter?: { [index: string]: any },
+    customParameter?: { [index: string]: any }
+  ) {
+    const serverParameter: any = Object.assign(
+      {
+        method: method,
+        url: url,
+        data: parameter || {},
+        headers: {},
+        validateStatus: (status: number) => status >= 200 && status < 300
+      },
+      customParameter
+    )
 
     const lang = this.getLang()
     if (lang) {
@@ -145,25 +159,27 @@ export default class ApiService {
       })
     }
     // 创建请求参数
-    const serverParameter = Object.assign({
-      method: this.POST,
-      url: url,
-      headers: {},
-      data: formData,
-      validateStatus: (status: number) => status >= 200 && status < 300
-    }, customParameter)
+    const serverParameter = Object.assign(
+      {
+        method: this.POST,
+        url: url,
+        headers: {},
+        data: formData,
+        validateStatus: (status: number) => status >= 200 && status < 300
+      },
+      customParameter
+    )
     const lang = this.getLang()
     if (lang) {
       serverParameter.headers[Accept_Language] = lang
     }
-    return API_SERVICE(serverParameter)
-      .then((result: any) => {
-        const data = result.data
-        if (data.success === false) {
-          return Promise.reject(data)
-        }
-        return data.data
-      })
+    return API_SERVICE(serverParameter).then((result: any) => {
+      const data = result.data
+      if (data.success === false) {
+        return Promise.reject(data)
+      }
+      return data.data
+    })
   }
 
   /**
@@ -173,7 +189,12 @@ export default class ApiService {
    * @param parameter 参数信息
    * @param customParameter 自定义参数信息
    */
-  public static postWithFiles(url: string, fileList: Array<File>, parameter?: any, customParameter?: any) {
+  public static postWithFiles(
+    url: string,
+    fileList: Array<File>,
+    parameter?: any,
+    customParameter?: any
+  ) {
     // 创建formData
     const formData = new FormData()
     fileList.forEach((file) => {
@@ -181,32 +202,32 @@ export default class ApiService {
     })
     // 添加其他参数
     if (parameter) {
-      Object.keys(parameter)
-        .forEach(key => {
-          if (parameter[key])
-            formData.append(key, parameter[key])
-        })
+      Object.keys(parameter).forEach((key) => {
+        if (parameter[key]) formData.append(key, parameter[key])
+      })
     }
     // 创建请求参数
-    const serverParameter = Object.assign({
-      method: this.POST,
-      url: url,
-      headers: {},
-      data: formData,
-      validateStatus: (status: number) => status >= 200 && status < 300
-    }, customParameter)
+    const serverParameter = Object.assign(
+      {
+        method: this.POST,
+        url: url,
+        headers: {},
+        data: formData,
+        validateStatus: (status: number) => status >= 200 && status < 300
+      },
+      customParameter
+    )
 
     const lang = this.getLang()
     if (lang) {
       serverParameter.headers[Accept_Language] = lang
     }
-    return API_SERVICE(serverParameter)
-      .then((result: any) => {
-        const data = result.data
-        if (data.success === false) {
-          return Promise.reject(data)
-        }
-        return data.data
-      })
+    return API_SERVICE(serverParameter).then((result: any) => {
+      const data = result.data
+      if (data.success === false) {
+        return Promise.reject(data)
+      }
+      return data.data
+    })
   }
 }

@@ -10,6 +10,9 @@ export default {
     lang: {
       navBar: '设置语言'
     },
+    login: {
+      noLogin: '未登录或登录超时，请重新登录！'
+    },
     main: {
       account: {
         userAccount: {

@@ -49,6 +49,7 @@
     </router-view>
 
     <ExceptionModal />
+    <loginMessageModal />
   </pro-layout>
 </template>
 
@@ -72,6 +73,7 @@ import ProLayout from '@/components/layouts/ProLayout'
 import RightContent from './header/RightContent.vue'
 import SettingDrawer from './SettingDrawer/SettingDrawer'
 import ExceptionModal from '../excption/ExceptionModal.vue'
+import loginMessageModal from '@/modules/system/views/login/LoginMessageModal'
 
 import './BasicLayout.less'
 
@@ -176,7 +178,8 @@ export default defineComponent({
     ReloadOutlined,
     RightContent,
     SettingDrawer,
-    ExceptionModal
+    ExceptionModal,
+    loginMessageModal
   },
   setup() {
     const route = useRoute()

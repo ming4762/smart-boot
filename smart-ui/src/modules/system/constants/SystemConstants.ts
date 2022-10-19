@@ -53,3 +53,8 @@ export const DATA_SCOPE = [
   { key: 'DATA_DEPT_AND_CHILD', value: 'system.views.user.title.dataDeptAll' },
   { key: 'DATA_PERSONAL', value: 'system.views.user.title.dataPersonal' }
 ]
+
+/**
+ * 登录页
+ */
+export const LOGIN_PATH = '/user/login'

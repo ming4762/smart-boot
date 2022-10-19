@@ -74,6 +74,8 @@ import { defineComponent, createVNode, ref, reactive } from 'vue'
 import type { PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 
+import { LOGIN_PATH } from '@/modules/system/constants/SystemConstants'
+
 import { Modal, message } from 'ant-design-vue'
 import {
   LogoutOutlined,
@@ -288,9 +290,8 @@ export default defineComponent({
         title: this.$t('app.common.notice.logout'),
         icon: createVNode(ExclamationCircleOutlined),
         onOk() {
-          return ApiService.postAjax('auth/logout').finally(() => {
-            systemLoginStore.logout()
-            $router.push('/user/login')
+          return systemLoginStore.logout().then(() => {
+            $router.push(LOGIN_PATH)
           })
         }
       })

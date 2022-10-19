@@ -8,6 +8,7 @@ import { publish } from '@/common/utils/PublishUtils'
 import TreeUtils from '@/common/utils/TreeUtils'
 
 import { EVENT_SYMBOLS } from '@/common/constants/CommonConstants'
+import ApiService from '@/common/utils/ApiService'
 
 // const STORE_KEYS = {
 //   OPEN_MENU_LIST: 'smart_app_open_menu',
@@ -114,20 +115,40 @@ export const useSystemMenuStore = defineStore('systemMenu', {
  * 系统登录登出store
  */
 export const useSystemLoginStore = defineStore('systemLoginStore', {
+  state: () => {
+    return {
+      // 未登录modal显示状态
+      noLoginModalVisible: false
+    }
+  },
   actions: {
+    /**
+     * 警告未登录
+     */
+    waringNoLogin() {
+      this.noLoginModalVisible = true
+    },
+    hideWarningNoLogin() {
+      this.noLoginModalVisible = false
+    },
     /**
      * 登出操作
      */
     logout() {
-      const systemMenuStore = useSystemMenuStore()
-      return new Promise<void>((resolve) => {
-        systemMenuStore.$patch((state) => {
-          state.openMenuList = []
-          state.userMenuList = []
-        })
-        StoreUtil.clearSession()
-        resolve()
+      return ApiService.postAjax('auth/logout').finally(() => {
+        this.clearLoginMessage()
       })
+    },
+    /**
+     * 清除登录信息
+     */
+    clearLoginMessage() {
+      const systemMenuStore = useSystemMenuStore()
+      systemMenuStore.$patch((state) => {
+        state.openMenuList = []
+        state.userMenuList = []
+      })
+      StoreUtil.clearSession()
     }
   }
 })
