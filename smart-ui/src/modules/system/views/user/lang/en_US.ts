@@ -1,11 +1,18 @@
-
 export default {
   system: {
     views: {
       user: {
+        title: {
+          dataAll: 'All permissions',
+          dataDept: 'Dept permission',
+          dataDeptAll: 'Dept and children permission',
+          dataPersonal: 'Personal data permission'
+        },
         form: {
           systemUser: 'System user',
-          businessUser: 'Business user'
+          businessUser: 'Business user',
+          dept: 'Department',
+          dataScope: 'Data scope'
         },
         table: {
           username: 'Username',
@@ -50,7 +57,10 @@ export default {
           sysUserNoDelete: 'System user cannot delete!',
           setUserUseYn: 'Are you sure you want to {msg} user？',
           createAccountConfirm: 'Are you sure you want to create account?',
-          noSysUserUpdatePermission: 'Operation failed, no permission to modify system user!'
+          noSysUserUpdatePermission: 'Operation failed, no permission to modify system user!',
+          selectDept: 'Please select dept',
+          selectDataScope: 'Please select data scope',
+          selectUserType: 'Please select user type'
         },
         message: {
           deleteUserNotCreateAccount: 'Deleted user cannot create account',

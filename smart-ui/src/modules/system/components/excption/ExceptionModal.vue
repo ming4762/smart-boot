@@ -1,5 +1,9 @@
 <template>
-  <a-modal :visible="computedModalVisible" :footer="null" @cancel="handleHideModal">
+  <a-modal
+    :z-index="10000"
+    :visible="computedModalVisible"
+    :footer="null"
+    @cancel="handleHideModal">
     <div class="exception-modal">
       <div class="exception-modal-body">
         <CloseCircleOutlined class="icon" />
@@ -30,6 +34,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { storeToRefs } from 'pinia'
 
 import { CloseCircleOutlined } from '@ant-design/icons-vue'
 
@@ -46,6 +51,7 @@ export default defineComponent({
   setup() {
     const { t } = useI18n()
     const systemExceptionStore = useSystemExceptionStore()
+    const { modalVisible, noList } = storeToRefs(systemExceptionStore)
 
     const model = ref<any>({})
     const submitLoading = ref(false)
@@ -62,7 +68,7 @@ export default defineComponent({
       submitLoading.value = true
       try {
         await ApiService.postAjax('sys/exception/feedback', {
-          idList: systemExceptionStore.noList,
+          idList: noList.value,
           ...model.value
         })
         handleHideModal()
@@ -74,9 +80,9 @@ export default defineComponent({
       }
     }
     return {
-      computedModalVisible: systemExceptionStore.modalVisible,
+      computedModalVisible: modalVisible,
       handleHideModal,
-      computedNoList: systemExceptionStore.noList,
+      computedNoList: noList,
       model,
       handleSubmit,
       submitLoading

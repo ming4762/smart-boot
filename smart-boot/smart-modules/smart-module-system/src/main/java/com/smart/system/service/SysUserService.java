@@ -10,6 +10,7 @@ import com.smart.system.model.SysUserPO;
 import com.smart.system.pojo.dbo.SysUserWthAccountBO;
 import com.smart.system.pojo.dto.user.UserSetRoleDTO;
 import com.smart.system.pojo.vo.SysFunctionListVO;
+import com.smart.system.pojo.vo.user.SysUserWithDataScopeDTO;
 import org.springframework.lang.NonNull;
 
 import java.util.List;
@@ -104,4 +105,18 @@ public interface SysUserService extends BaseService<SysUserPO> {
      * @return 角色权限信息
      */
     UserRolePermission queryUserRolePermission(@NonNull Long userId, @NonNull List<FunctionTypeEnum> types);
+
+    /**
+     * 添加/更新用户(带有数据权限)
+     * @param parameter 参数
+     * @return 是否保存成功
+     */
+    boolean saveUpdateWithDataScope(SysUserWithDataScopeDTO parameter);
+
+    /**
+     * 查询用户及数据权限信息
+     * @param userId 用户ID
+     * @return SysUserWithDataScopeVO
+     */
+    SysUserWithDataScopeDTO getByIdWithDataScope(Long userId);
 }

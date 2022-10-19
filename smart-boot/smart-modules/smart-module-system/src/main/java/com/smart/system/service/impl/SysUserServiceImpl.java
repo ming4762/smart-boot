@@ -14,10 +14,12 @@ import com.smart.commons.core.i18n.I18nUtils;
 import com.smart.commons.core.utils.DigestUtils;
 import com.smart.crud.constants.CrudCommonEnum;
 import com.smart.crud.constants.UserPropertyEnum;
+import com.smart.crud.datapermission.DataPermissionScope;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.crud.service.BaseServiceImpl;
 import com.smart.crud.service.UserSetterService;
 import com.smart.system.constants.FunctionTypeEnum;
+import com.smart.system.constants.UserDeptIdentEnum;
 import com.smart.system.mapper.SysUserGroupRoleMapper;
 import com.smart.system.mapper.SysUserGroupUserMapper;
 import com.smart.system.mapper.SysUserMapper;
@@ -25,7 +27,8 @@ import com.smart.system.model.*;
 import com.smart.system.pojo.dbo.SysUserWthAccountBO;
 import com.smart.system.pojo.dto.user.UserSetRoleDTO;
 import com.smart.system.pojo.vo.SysFunctionListVO;
-import com.smart.system.pojo.vo.SysUserListVO;
+import com.smart.system.pojo.vo.user.SysUserListVO;
+import com.smart.system.pojo.vo.user.SysUserWithDataScopeDTO;
 import com.smart.system.service.*;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -53,6 +56,8 @@ import java.util.stream.Stream;
 @Slf4j
 public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO> implements SysUserService {
 
+    private static final String SYSTEM_USER_TYPE = "SYSTEM_USER";
+
     /**
      * 密码加密盐值
      */
@@ -69,6 +74,8 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
 
     private final SysUserRoleService sysUserRoleService;
 
+    private final SysUserDeptService sysUserDeptService;
+
     private final SysUserGroupUserMapper sysUserGroupUserMapper;
 
     private final SysUserGroupRoleMapper sysUserGroupRoleMapper;
@@ -83,13 +90,14 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
 
     private final SysUserAccountService sysUserAccountService;
 
-    public SysUserServiceImpl(SysUserRoleService sysUserRoleService, SysUserGroupUserMapper sysUserGroupUserMapper, SysUserGroupRoleMapper sysUserGroupRoleMapper, SysRoleFunctionService sysRoleFunctionService, UserSetterService userSetterService, SysUserAccountService sysUserAccountService) {
+    public SysUserServiceImpl(SysUserRoleService sysUserRoleService, SysUserGroupUserMapper sysUserGroupUserMapper, SysUserGroupRoleMapper sysUserGroupRoleMapper, SysRoleFunctionService sysRoleFunctionService, UserSetterService userSetterService, SysUserAccountService sysUserAccountService, SysUserDeptService sysUserDeptService) {
         this.sysUserRoleService = sysUserRoleService;
         this.sysUserGroupUserMapper = sysUserGroupUserMapper;
         this.sysUserGroupRoleMapper = sysUserGroupRoleMapper;
         this.sysRoleFunctionService = sysRoleFunctionService;
         this.userSetterService = userSetterService;
         this.sysUserAccountService = sysUserAccountService;
+        this.sysUserDeptService = sysUserDeptService;
     }
 
     @Override
@@ -497,4 +505,68 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         return this.baseMapper.listUserWithAccount(parameter);
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean saveUpdateWithDataScope(SysUserWithDataScopeDTO parameter) {
+        // 获取操作人ID
+        var userId = AuthUtils.getNonNullCurrentUserId();
+        // 更新用户
+        var userModel = new SysUserPO();
+        BeanUtils.copyProperties(parameter, userModel);
+
+        // 判断是否是系统用户，系统用户没有数据权限
+        if (SYSTEM_USER_TYPE.equals(userModel.getUserType())) {
+            return this.saveOrUpdateWithAllUser(userModel, userId);
+        }
+
+        var dataScopeModel = new SysUserDeptPO();
+        dataScopeModel.setUserId(userModel.getUserId());
+        dataScopeModel.setDeptId(parameter.getDeptId());
+        // 设置标识位
+        dataScopeModel.setIdent(UserDeptIdentEnum.USER_DEPT);
+        // 将数据权限数组转为逗号分隔字符串
+        dataScopeModel.setDataScope(
+                parameter.getDataScopeList().stream()
+                        .map(Enum::toString)
+                        .collect(Collectors.joining(","))
+        );
+        // 删除之前的部门数据权限
+        this.sysUserDeptService.remove(
+                new QueryWrapper<SysUserDeptPO>().lambda()
+                        .eq(SysUserDeptPO::getUserId, userModel.getUserId())
+                        .eq(SysUserDeptPO::getIdent, UserDeptIdentEnum.USER_DEPT)
+        );
+        // 执行更新操作
+        return this.saveOrUpdateWithAllUser(userModel, userId) &&
+                this.sysUserDeptService.saveOrUpdateWithAllUser(dataScopeModel, userId);
+    }
+
+    @Override
+    public SysUserWithDataScopeDTO getByIdWithDataScope(Long userId) {
+        var sysUser = this.getById(userId);
+        if (sysUser == null) {
+            return null;
+        }
+        var vo = new SysUserWithDataScopeDTO();
+        BeanUtils.copyProperties(sysUser, vo);
+        // 查询用户数据权限
+        var deptList = this.sysUserDeptService.list(
+                new QueryWrapper<SysUserDeptPO>().lambda()
+                        .select(SysUserDeptPO::getDeptId, SysUserDeptPO::getDataScope, SysUserDeptPO::getUserId)
+                        .eq(SysUserDeptPO::getUserId, userId)
+                        .eq(SysUserDeptPO::getIdent, UserDeptIdentEnum.USER_DEPT)
+        );
+        if (CollectionUtils.isEmpty(deptList)) {
+            return vo;
+        }
+        var dept = deptList.get(0);
+        vo.setDeptId(dept.getDeptId());
+        vo.setDataScopeList(
+                Arrays.stream(dept.getDataScope().split(","))
+                        .filter(StringUtils::isNotBlank)
+                        .map(DataPermissionScope::valueOf)
+                        .collect(Collectors.toList())
+        );
+        return vo;
+    }
 }

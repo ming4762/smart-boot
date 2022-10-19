@@ -14,16 +14,17 @@ import com.smart.commons.core.message.Result;
 import com.smart.commons.core.utils.TreeUtils;
 import com.smart.crud.controller.BaseController;
 import com.smart.crud.query.PageSortQuery;
-import com.smart.system.model.SysFunctionPO;
-import com.smart.system.model.SysUserAccountPO;
-import com.smart.system.model.SysUserPO;
-import com.smart.system.model.SysUserRolePO;
+import com.smart.system.constants.UserDeptIdentEnum;
+import com.smart.system.model.*;
 import com.smart.system.pojo.dto.common.UseYnSetDTO;
 import com.smart.system.pojo.dto.user.UserAccountSaveDTO;
+import com.smart.system.pojo.dto.user.UserSaveWithDataScopeDTO;
 import com.smart.system.pojo.dto.user.UserSetRoleDTO;
 import com.smart.system.pojo.dto.user.UserUpdateDTO;
 import com.smart.system.pojo.vo.SysFunctionListVO;
+import com.smart.system.pojo.vo.user.SysUserWithDataScopeDTO;
 import com.smart.system.service.SysUserAccountService;
+import com.smart.system.service.SysUserDeptService;
 import com.smart.system.service.SysUserRoleService;
 import com.smart.system.service.SysUserService;
 import io.swagger.annotations.Api;
@@ -60,9 +61,12 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
 
     private final SysUserAccountService sysUserAccountService;
 
-    public SysUserController(SysUserRoleService sysUserRoleService, SysUserAccountService sysUserAccountService) {
+    private final SysUserDeptService sysUserDeptService;
+
+    public SysUserController(SysUserRoleService sysUserRoleService, SysUserAccountService sysUserAccountService, SysUserDeptService sysUserDeptService) {
         this.sysUserRoleService = sysUserRoleService;
         this.sysUserAccountService = sysUserAccountService;
+        this.sysUserDeptService = sysUserDeptService;
     }
 
     /**
@@ -80,11 +84,26 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
         return Result.success(this.service.saveOrUpdateWithAllUser(model, 1L));
     }
 
+    @PostMapping("saveUpdateWithDataScope")
+    @Operation(summary = "添加/更新用户(带有数据权限)")
+    @Log(value = "添加/更新用户(带有数据权限)", type = LogOperationTypeEnum.UPDATE)
+    @PreAuthorize("hasPermission('sys:user', 'save') or hasPermission('sys:user', 'update')")
+    public Result<Boolean> saveUpdateWithDataScope(@RequestBody @Valid SysUserWithDataScopeDTO parameter) {
+        return Result.success(this.service.saveUpdateWithDataScope(parameter));
+    }
+
     @PostMapping("getById")
     @ApiOperation("通过ID查询")
     @Override
     public Result<SysUserPO> getById(@RequestBody Serializable id) {
         return super.getById(id);
+    }
+
+
+    @PostMapping("getByIdWithDataScope")
+    @Operation(summary = "通过ID查询用户信息和用户数据权限信息")
+    public Result<SysUserWithDataScopeDTO> getByIdWithDataScope(@RequestBody Long userId) {
+        return Result.success(this.service.getByIdWithDataScope(userId));
     }
 
     @Override
@@ -247,5 +266,21 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
         SysUserAccountPO account = new SysUserAccountPO();
         BeanUtils.copyProperties(parameter, account);
         return Result.success(this.sysUserAccountService.updateById(account));
+    }
+
+    @PostMapping("queryUserDeptPermission")
+    @Operation(summary = "查询用户部门数据权限信息")
+    @PreAuthorize("hasPermission('sys:user', 'query')")
+    public Result<SysUserDeptPO> queryUserDeptPermission(@RequestBody Long userId) {
+        var dataList = this.sysUserDeptService.list(
+                new QueryWrapper<SysUserDeptPO>().lambda()
+                        .select(SysUserDeptPO::getDeptId, SysUserDeptPO::getDataScope, SysUserDeptPO::getUserId)
+                        .eq(SysUserDeptPO::getUserId, userId)
+                        .eq(SysUserDeptPO::getIdent, UserDeptIdentEnum.USER_DEPT)
+        );
+        if (CollectionUtils.isEmpty(dataList)) {
+            return Result.success();
+        }
+        return Result.success(dataList.get(0));
     }
 }

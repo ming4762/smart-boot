@@ -1,4 +1,4 @@
-package com.smart.system.pojo.vo;
+package com.smart.system.pojo.vo.user;
 
 import com.smart.auth.core.constants.AuthTypeEnum;
 import com.smart.auth.core.constants.LoginTypeEnum;

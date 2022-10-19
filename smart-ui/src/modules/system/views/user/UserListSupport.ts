@@ -1,4 +1,4 @@
-import { onMounted, reactive, ref, createVNode } from 'vue'
+import { onMounted, reactive, ref, createVNode, computed, watch } from 'vue'
 import type { Ref } from 'vue'
 
 import { message, Modal } from 'ant-design-vue'
@@ -11,7 +11,12 @@ import { SYS_USER_TYPE } from '@/modules/system/constants/SystemConstants'
 /**
  * 用户操作
  */
-export const userOperationHoops = (tableRef: Ref, t: Function, loadData: Function, hasPermissionUpdateSystemUser: boolean) => {
+export const userOperationHoops = (
+  tableRef: Ref,
+  t: Function,
+  loadData: Function,
+  hasPermissionUpdateSystemUser: boolean
+) => {
   // 获取选中的用户IDList
   const getSelectUserList = (): Array<any> => tableRef.value.getCheckboxRecords()
   const validateMessage = (userIdList: Array<number>) => {
@@ -200,11 +205,11 @@ const defaultAddEditModel = {
  * 添加修改
  * @param loadData
  */
-export const vueAddEdit = (loadData: any) => {
+export const vueAddEdit = (loadData: any, t: Function) => {
   const formRef = ref()
   // 添加修改 modal显示状态
   const modalVisible = ref(false)
-  const addEditModel = ref(Object.assign({}, defaultAddEditModel))
+  const addEditModel = ref<any>(Object.assign({}, defaultAddEditModel))
   // 保存加载状态
   const saveLoading = ref(false)
   // form加载状态
@@ -212,14 +217,34 @@ export const vueAddEdit = (loadData: any) => {
   // 是否添加
   const isAdd = ref(false)
 
+  // 数据权限是否可编辑，系统用户不可编辑数据权限
+  const dataScopeDisable = computed(() => {
+    return addEditModel.value.userType === SYS_USER_TYPE
+  })
+  // 是否需要检查dataScope是否填写
+  const needCheckDataScope = ref(false)
+  watch(
+    addEditModel,
+    ({ userType, deptId }: any) => {
+      if (userType === SYS_USER_TYPE) {
+        needCheckDataScope.value = false
+      } else {
+        needCheckDataScope.value = deptId !== undefined && deptId !== null
+      }
+    },
+    {
+      deep: true
+    }
+  )
   /*
    * 点击保存触发
    */
   const handleOk = async () => {
-    saveLoading.value = true
     formRef.value.validate().then(async () => {
       try {
-        await ApiService.postAjax('sys/user/saveUpdate', addEditModel.value)
+        saveLoading.value = true
+        await ApiService.postAjax('sys/user/saveUpdateWithDataScope', addEditModel.value)
+        message.success(t('common.message.saveSuccess'))
         loadData()
         modalVisible.value = false
       } catch (e) {
@@ -240,12 +265,16 @@ export const vueAddEdit = (loadData: any) => {
     isAdd.value = false
     modalVisible.value = true
     formLoading.value = true
+    addEditModel.value = Object.assign({}, defaultAddEditModel)
     try {
-      addEditModel.value = await ApiService.postAjax('sys/user/getById', id)
+      addEditModel.value = await ApiService.postAjax('sys/user/getByIdWithDataScope', id)
     } catch (e) {
       errorMessage(e)
     } finally {
       formLoading.value = false
+    }
+    if (addEditModel.value.dataScopeList === null) {
+      addEditModel.value.dataScopeList = []
     }
   }
   return {
@@ -257,7 +286,9 @@ export const vueAddEdit = (loadData: any) => {
     isAdd,
     handleOk,
     handleShowSave,
-    handleShowUpdate
+    handleShowUpdate,
+    dataScopeDisable,
+    needCheckDataScope
   }
 }
 
@@ -267,7 +298,11 @@ export const vueAddEdit = (loadData: any) => {
  * @param t
  * @param hasPermissionUpdateSystemUser
  */
-export const useCreateAccount = (tableRef: Ref, t: Function, hasPermissionUpdateSystemUser: boolean) => {
+export const useCreateAccount = (
+  tableRef: Ref,
+  t: Function,
+  hasPermissionUpdateSystemUser: boolean
+) => {
   // 获取选中的用户IDList
   const getSelectUserList = (): Array<any> => tableRef.value.getCheckboxRecords()
 

@@ -63,10 +63,17 @@ public class SysDeptServiceImpl extends BaseServiceImpl<SysDeptMapper, SysDeptPO
     @Transactional(rollbackFor = Exception.class)
     public boolean removeByIds(Collection<?> idList) {
         var parentIds = new HashSet<Long>((Collection<? extends Long>) idList);
-        var deleteIds = new HashSet<Long>();
-        this.queryAllChildId(parentIds, deleteIds);
+        var deleteIds = this.queryAllChildIds(parentIds);
         deleteIds.addAll(parentIds);
         return super.removeByIds(deleteIds);
+    }
+
+    @NonNull
+    @Override
+    public Set<Long> queryAllChildIds(@NonNull Set<Long> parentIds) {
+        var childIds = new HashSet<Long>();
+        this.queryAllChildId(parentIds, childIds);
+        return childIds;
     }
 
     /**

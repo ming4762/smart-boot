@@ -1,4 +1,4 @@
-package com.smart.system.pojo.vo;
+package com.smart.system.pojo.vo.user;
 
 import com.smart.crud.model.BaseUser;
 import com.smart.crud.model.CreateUpdateUserSetter;
