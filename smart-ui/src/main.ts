@@ -3,6 +3,7 @@ import type { App } from 'vue'
 import AppVue from './App.vue'
 
 import './style/index.less'
+import 'nprogress/nprogress.css'
 
 import Antd from 'ant-design-vue'
 // 引入antd css

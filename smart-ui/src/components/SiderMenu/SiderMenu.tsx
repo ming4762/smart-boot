@@ -123,7 +123,6 @@ export default defineComponent({
       menuHeaderRender,
       collapsed
     })
-    console.log('--------------')
     return (
       <a-layout-sider
         {...{

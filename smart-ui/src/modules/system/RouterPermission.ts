@@ -44,7 +44,6 @@ const whiteList = [
 router.beforeEach((to, from, next) => {
   const systemMenuStore = useSystemMenuStore()
   NProgress.start()
-  const token = getToken()
   if (whiteList.includes(to.path)) {
     next()
     return
@@ -54,12 +53,14 @@ router.beforeEach((to, from, next) => {
     next({
       path: error404Path
     })
+    return
   }
+  const token = getToken()
   if (token === null || token === undefined) {
     const toPath = to.path
     next({
       path: `${loginPath}`,
-      query:{
+      query: {
         redirect: toPath
       }
     })
@@ -68,11 +69,13 @@ router.beforeEach((to, from, next) => {
   const redirectPath = (from.query && from.query.redirect) as string | null
   const path = redirectPath || to.path
   // 判断用户菜单列表是否包含Path
-  const userMenuList: Array<any> = [{
-    path: '/main'
-  }].concat(systemMenuStore.userMenuList || [])
+  const userMenuList: Array<any> = [
+    {
+      path: '/main'
+    }
+  ].concat(systemMenuStore.userMenuList || [])
   const permissionPath = permissionMappingPaths[path] ? permissionMappingPaths[path] : path
-  const validate = userMenuList.some(menu => menu.path === permissionPath)
+  const validate = userMenuList.some((menu) => menu.path === permissionPath)
   if (!validate) {
     next({
       path: error403Path

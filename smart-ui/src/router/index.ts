@@ -15,7 +15,6 @@ const routes: Array<RouteRecordRaw> = [
   ...monitorRouters
 ]
 
-
 const router = createRouter({
   history: createWebHashHistory(),
   routes

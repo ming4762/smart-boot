@@ -79,11 +79,6 @@ export default defineComponent({
       locale: computedLocale,
       globalLoading
     }
-  },
-  watch: {
-    globalLoading() {
-      console.log(this.globalLoading)
-    }
   }
 })
 </script>
