@@ -1,4 +1,4 @@
-import { defineComponent, ref, createVNode, computed, watch, toRefs } from 'vue'
+import { defineComponent, ref, createVNode, computed } from 'vue'
 import type { PropType } from 'vue'
 import * as icons from '@ant-design/icons-vue'
 
@@ -138,12 +138,6 @@ export default defineComponent({
       const latestOpenKey = openKeyList.find((key) => openKeys.value.indexOf(key) === -1)
       openKeys.value = latestOpenKey ? [latestOpenKey] : []
     }
-    const propsRef = toRefs(props)
-    console.log(props)
-    watch(props, () => {
-      console.log('================')
-    })
-    console.log('==============')
     return {
       openKeys,
       selectedKeys,

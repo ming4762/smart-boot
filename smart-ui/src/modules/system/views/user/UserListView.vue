@@ -345,7 +345,7 @@ export default defineComponent({
           field: 'userType',
           width: 120,
           formatter: ({ cellValue }: any) => {
-            return this.userTypeMap[cellValue]
+            return (this.userTypeMap as any)[cellValue]
           }
         },
         {
