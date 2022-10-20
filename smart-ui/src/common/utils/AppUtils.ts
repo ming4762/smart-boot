@@ -1,4 +1,4 @@
-import { useAppStateStore } from '@/store/modules/AppStore2'
+import { useAppStateStore } from '@/modules/app/store'
 
 export default class AppUtils {
   /**

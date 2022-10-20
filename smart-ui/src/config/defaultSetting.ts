@@ -1,3 +1,4 @@
+import { NoPermissionModeEnum } from '@/common/enums'
 /**
  * 默认配置信息
  */
@@ -19,6 +20,8 @@ export default {
   formSize: 'small',
   // 是否打开菜单TAB拦
   hasMultiTab: true,
+  // 无权限显示状态，默认不可操作
+  noPermissionMode: NoPermissionModeEnum.disabled,
   languageList: [
     {
       key: 'zh-CN',

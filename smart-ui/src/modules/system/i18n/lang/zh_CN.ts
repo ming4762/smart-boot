@@ -50,7 +50,12 @@ export default {
       },
       themeColor: '主题色',
       navigationMode: '导航模式',
-      otherSettings: '其他设置',
+      otherSettings: {
+        title: '其他设置',
+        noPermissionMode: '无权限设置',
+        noPermissionModeMessage: '修改无权限设置成功',
+        noPermissionModeDescription: '刷新页面后生效'
+      },
       sizeSettings: {
         title: '尺寸设置',
         buttonSize: '按钮尺寸',

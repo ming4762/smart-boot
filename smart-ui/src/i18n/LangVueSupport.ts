@@ -2,7 +2,7 @@ import { reactive } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 
-import { useAppI18nStore } from '@/store/modules/AppStore2'
+import { useAppI18nStore } from '@/modules/app/store'
 
 import defaultSetting from '@/config/defaultSetting'
 

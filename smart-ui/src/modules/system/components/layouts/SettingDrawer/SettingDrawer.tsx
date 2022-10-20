@@ -1,9 +1,10 @@
-import { defineComponent, inject, watch, onMounted } from 'vue'
+import { defineComponent, inject, watch, onMounted, reactive } from 'vue'
 import type { PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
+import { notification } from 'ant-design-vue'
 
-import { useAppSettingStore } from '@/store/modules/AppStore2'
+import { useAppSettingStore } from '@/modules/app/store'
 
 import { ConfigProvider, message } from 'ant-design-vue'
 import { NotificationOutlined } from '@ant-design/icons-vue'
@@ -13,6 +14,7 @@ import ThemeColor from './ThemeColor'
 import LayoutSetting, { renderLayoutSettingItem } from './LayoutChange'
 
 import VuePropTypes from '@/common/utils/VueTypes'
+import { NoPermissionModeEnum } from '@/common/enums'
 
 import './SettingDrawer.less'
 
@@ -49,85 +51,98 @@ export const SettingDrawerProps = {
 
 const baseClassName = 'ant-pro-setting-drawer'
 
-
 const getThemeList = (i18nRender: Function) => {
   // @ts-ignore
-  const list = window.umi_plugin_ant_themeVar || [];
-  const themeList: Array<any> = [{
-    key: 'light',
-    url: '/src/modules/system/assets/settingDrawer/menu_light.svg',
-    title: i18nRender('system.setting.pageStyle.light')
-  }, {
-    key: 'dark',
-    url: '/src/modules/system/assets/settingDrawer/layout_side.svg',
-    title: i18nRender('system.setting.pageStyle.dark')
-  }]
-  const darkColorList = [{
-    key: '#1890ff',
-    color: '#1890ff',
-    theme: 'dark'
-  }]
-  const lightColorList = [{
-    key: '#1890ff',
-    color: '#1890ff',
-    theme: 'light'
-  }]
+  const list = window.umi_plugin_ant_themeVar || []
+  const themeList: Array<any> = [
+    {
+      key: 'light',
+      url: '/src/modules/system/assets/settingDrawer/menu_light.svg',
+      title: i18nRender('system.setting.pageStyle.light')
+    },
+    {
+      key: 'dark',
+      url: '/src/modules/system/assets/settingDrawer/layout_side.svg',
+      title: i18nRender('system.setting.pageStyle.dark')
+    }
+  ]
+  const darkColorList = [
+    {
+      key: '#1890ff',
+      color: '#1890ff',
+      theme: 'dark'
+    }
+  ]
+  const lightColorList = [
+    {
+      key: '#1890ff',
+      color: '#1890ff',
+      theme: 'light'
+    }
+  ]
 
-  if (list.find(function (item: any) {
-    return item.theme === 'dark';
-  })) {
+  if (
+    list.find(function (item: any) {
+      return item.theme === 'dark'
+    })
+  ) {
     themeList.push({
       // disable click
       disable: true,
       key: 'realDark',
       url: '/src/modules/system/assets/settingDrawer/real_dark.svg',
       title: i18nRender('system.setting.pageStyle.realdark')
-    });
+    })
   } // insert  theme color List
 
-
   list.forEach(function (item: any) {
-    const color = (item.modifyVars || {})['@primary-color'];
+    const color = (item.modifyVars || {})['@primary-color']
 
     if (item.theme === 'dark' && color) {
-      darkColorList.push(Object.assign({
-        color: color
-      }, item));
+      darkColorList.push(
+        Object.assign(
+          {
+            color: color
+          },
+          item
+        )
+      )
     }
 
     if (!item.theme || item.theme === 'light') {
-      lightColorList.push(Object.assign({
-        color: color
-      }, item));
+      lightColorList.push(
+        Object.assign(
+          {
+            color: color
+          },
+          item
+        )
+      )
     }
-  });
+  })
   return {
     colorList: {
       dark: darkColorList,
       light: lightColorList
     },
     themeList: themeList
-  };
+  }
 }
 
 const Body = defineComponent({
-  name: 'Body',
+  name: 'SettingBody',
   props: {
     title: {
       type: String as PropType<string>,
       default: ''
     }
   },
-  render () {
+  render() {
     const { title } = this
     return (
       <div style="margin-botton: 24">
-        <h3 class={`${baseClassName}-title`}>
-          { title }
-        </h3>
-        {
-          this.$slots.default && this.$slots.default()
-        }
+        <h3 class={`${baseClassName}-title`}>{title}</h3>
+        {this.$slots.default && this.$slots.default()}
       </div>
     )
   }
@@ -166,7 +181,7 @@ export default defineComponent({
   name: 'SettingDrawer',
   props: SettingDrawerProps,
   emits: ['change'],
-  setup () {
+  setup() {
     const { t } = useI18n()
     const appSettingStore = useAppSettingStore()
     const setShow = (showValue: boolean) => {
@@ -174,11 +189,12 @@ export default defineComponent({
     }
     useThemePrimaryColor(t)
     return {
-      setShow
+      setShow,
+      noPermissionModeList: reactive(Object.keys(NoPermissionModeEnum))
     }
   },
-  render () {
-    const { setShow, settings } = this
+  render() {
+    const { setShow, settings, noPermissionModeList } = this
     const theme = settings.theme === void 0 ? 'dark' : settings.theme
     const primaryColor = settings.primaryColor === void 0 ? 'daybreak' : settings.primaryColor
     const layout = settings.layout === void 0 ? 'sidemenu' : settings.layout
@@ -187,6 +203,7 @@ export default defineComponent({
     const fixSiderbar = settings.fixSiderbar === void 0 ? false : settings.fixSiderbar
     const hasMultiTab = settings.hasMultiTab === void 0 ? false : settings.hasMultiTab
     const isTopMenu = layout === 'topmenu'
+    console.log(settings.noPermissionMode)
     const drawerProps = {
       width: 300,
       placement: 'right',
@@ -210,21 +227,24 @@ export default defineComponent({
               onChange={(val: string) => changeSetting('theme', val)}
               i18nRender={i18n}
               value={theme}
-              list={themeList.themeList}/>
+              list={themeList.themeList}
+            />
           </Body>
           <ThemeColor
             i18nRender={i18n}
             value={primaryColor === void 0 ? 'daybreak' : primaryColor}
             colors={themeList.colorList[theme === 'reakDark' ? 'dark' : 'light']}
             onChange={(color) => changeSetting('primaryColor', color)}
-            title={i18n('system.setting.themeColor')} />
-          <a-divider/>
+            title={i18n('system.setting.themeColor')}
+          />
+          <a-divider />
           <Body title={i18n('system.setting.navigationMode')}>
             <BlockCheckbox
               // @ts-ignore
               onChange={(value1: any) => changeSetting('layout', value1)}
               value={layout}
-              i18nRender={i18n}/>
+              i18nRender={i18n}
+            />
           </Body>
           <LayoutSetting
             contentWidth={contentWidth}
@@ -233,79 +253,110 @@ export default defineComponent({
             fixSiderbar={isTopMenu ? false : fixSiderbar}
             layout={layout}
             onChange={(data: any) => changeSetting(data.type, data.value)}
-            i18nRender={i18n}/>
-          <a-divider/>
+            i18nRender={i18n}
+          />
+          <a-divider />
           <Body title={i18n('system.setting.sizeSettings.title')}>
             <a-list
-              renderItem={({item}: any) => renderLayoutSettingItem(item)}
+              renderItem={({ item }: any) => renderLayoutSettingItem(item)}
               dataSource={[
                 {
                   title: i18n('system.setting.sizeSettings.buttonSize'),
-                  action: <a-select
-                    value={settings.buttonSize}
-                    style="width: 80px"
-                    onSelect={(value: string) => changeSetting('buttonSize', value)}
-                    size="small">
-                    <a-select-option value="middle">middle</a-select-option>
-                    <a-select-option value="large">large</a-select-option>
-                    <a-select-option value="small">small</a-select-option>
-                  </a-select>
+                  action: (
+                    <a-select
+                      value={settings.buttonSize}
+                      style="width: 80px"
+                      onSelect={(value: string) => changeSetting('buttonSize', value)}
+                      size="small">
+                      <a-select-option value="middle">middle</a-select-option>
+                      <a-select-option value="large">large</a-select-option>
+                      <a-select-option value="small">small</a-select-option>
+                    </a-select>
+                  )
                 },
                 {
                   title: i18n('system.setting.sizeSettings.tableSize'),
-                  action: <a-select
-                    value={settings.tableSize}
-                    style="width: 80px"
-                    onSelect={(value: string) => changeSetting('tableSize', value)}
-                    size="small">
-                    <a-select-option value="medium">medium</a-select-option>
-                    <a-select-option value="small">small</a-select-option>
-                    <a-select-option value="mini">mini</a-select-option>
-                  </a-select>
+                  action: (
+                    <a-select
+                      value={settings.tableSize}
+                      style="width: 80px"
+                      onSelect={(value: string) => changeSetting('tableSize', value)}
+                      size="small">
+                      <a-select-option value="medium">medium</a-select-option>
+                      <a-select-option value="small">small</a-select-option>
+                      <a-select-option value="mini">mini</a-select-option>
+                    </a-select>
+                  )
                 },
                 {
                   title: i18n('system.setting.sizeSettings.formSize'),
-                  action: <a-select
-                    value={settings.formSize}
-                    style="width: 80px"
-                    onSelect={(value: string) => changeSetting('formSize', value)}
-                    size="small">
-                    <a-select-option value="large">large</a-select-option>
-                    <a-select-option value="default">default</a-select-option>
-                    <a-select-option value="small">small</a-select-option>
-                  </a-select>
+                  action: (
+                    <a-select
+                      value={settings.formSize}
+                      style="width: 80px"
+                      onSelect={(value: string) => changeSetting('formSize', value)}
+                      size="small">
+                      <a-select-option value="large">large</a-select-option>
+                      <a-select-option value="default">default</a-select-option>
+                      <a-select-option value="small">small</a-select-option>
+                    </a-select>
+                  )
                 }
               ]}
-              split={false}/>
+              split={false}
+            />
           </Body>
-          <a-divider/>
-          <Body title={i18n('system.setting.otherSettings')}>
+          <a-divider />
+          <Body title={i18n('system.setting.otherSettings.title')}>
             <a-list
-              renderItem={({item}: any) => renderLayoutSettingItem(item)}
+              renderItem={({ item }: any) => renderLayoutSettingItem(item)}
               dataSource={[
                 {
                   title: i18n('system.setting.weakmode'),
-                  action: <a-switch
-                    checked={colorWeak}
-                    onChange={(checked: boolean) => changeSetting('colorWeak', checked)}
-                    size="small"/>
+                  action: (
+                    <a-switch
+                      checked={colorWeak}
+                      onChange={(checked: boolean) => changeSetting('colorWeak', checked)}
+                      size="small"
+                    />
+                  )
+                },
+                {
+                  title: i18n('system.setting.otherSettings.noPermissionMode'),
+                  action: (
+                    <a-select
+                      size="small"
+                      style="width: 90px"
+                      onChange={(value: any) => {
+                        notification.success({
+                          message: i18n('system.setting.otherSettings.noPermissionModeMessage'),
+                          description: i18n('system.setting.otherSettings.noPermissionModeDescription')
+                        })
+                        changeSetting('noPermissionMode', value)
+                      }}
+                      value={settings.noPermissionMode}>
+                      {
+                        noPermissionModeList.map(item => {
+                          return <a-select-option value={item}>{item}</a-select-option>
+                        })
+                      }
+                    </a-select>
+                  )
                 }
               ]}
-              split={false}/>
+              split={false}
+            />
           </Body>
-          {
-            hideHintAlert && hideCopyButton ? null : <a-divider/>
-          }
-          {
-            hideHintAlert ? null : <a-alert
+          {hideHintAlert && hideCopyButton ? null : <a-divider />}
+          {hideHintAlert ? null : (
+            <a-alert
               message={i18n('system.setting.production.hint')}
               showIcon={true}
-              icon={(
-                <NotificationOutlined />
-              )}
-              style={{'margin-bottom': '16px'}}
-              type="warning"/>
-          }
+              icon={<NotificationOutlined />}
+              style={{ 'margin-bottom': '16px' }}
+              type="warning"
+            />
+          )}
           {
             // hideCopyButton ? null : <CopyToClipboard
             //   onCopy={() => message.success(i18n('system.setting.copyinfo'))}
@@ -317,16 +368,11 @@ export default defineComponent({
             // </CopyToClipboard>
           }
           <div class={`${baseClassName}-content-footer`}>
-            {
-              this.$slots.default && this.$slots.default()
-            }
+            {this.$slots.default && this.$slots.default()}
           </div>
         </div>
       )
     }
-    return (
-      <a-drawer v-slots={slots} style="z-index:999" {...drawerProps}>
-      </a-drawer>
-    )
+    return <a-drawer v-slots={slots} style="z-index:999" {...drawerProps}></a-drawer>
   }
 })

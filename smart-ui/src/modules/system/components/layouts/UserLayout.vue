@@ -28,7 +28,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 
-import { useAppStateStore } from '@/store/modules/AppStore2'
+import { useAppStateStore } from '@/modules/app/store'
 
 import SelectLang from '../SelectLang/SelectLang.vue'
 

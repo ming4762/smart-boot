@@ -11,7 +11,7 @@ import { defineComponent, watch, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
-import { useAppI18nStore, useAppStateStore } from '@/store/modules/AppStore2'
+import { useAppI18nStore, useAppStateStore } from '@/modules/app/store'
 
 import { domTitle, setDocumentTitle } from '@/common/utils/domUtil'
 import ApiService from '@/common/utils/ApiService'

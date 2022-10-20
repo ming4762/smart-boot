@@ -2,43 +2,10 @@ import { defineStore } from 'pinia'
 
 import defaultSettings from '@/config/defaultSetting'
 
-// const STORE_KEYS = {
-//   APP_LAYOUT: 'smart_app_layout',
-//   APP_CONTENT_WIDTH_TYPE: 'smart_app_content_width',
-//   APP_THEME: 'smart_app_theme',
-//   APP_PRIMARY_COLOR: 'smart_app_primary_color',
-//   APP_FIXED_HEADER: 'smart_app_fixed_header',
-//   APP_FIXED_SIDERBAR: 'smart_app_fixed_sidebar',
-//   APP_COLOR_WEAK: 'smart_app_color_weak',
-//   APP_BUTTON_SIZE: 'smart_app_button_size',
-//   APP_TABLE_SIZE: 'smart_app_table_size',
-//   APP_FORM_SIZE: 'smart_app_form_size',
-//   APP_HAS_MULTI_TAB: 'smart_app_hasMultiTab',
-//
-//   APP_LANGUAGE: 'smart_app_lang',
-//
-//   // 侧边栏开启状态
-//   APP_SIDEBAR_STATUS: 'smart_app_sidebar_status'
-// }
-
-// const KEY_STORE_KEY: {[index: string]: string} = {
-//   layout: STORE_KEYS.APP_LAYOUT,
-//   contentWidthType: STORE_KEYS.APP_CONTENT_WIDTH_TYPE,
-//   theme: STORE_KEYS.APP_THEME,
-//   primaryColor: STORE_KEYS.APP_PRIMARY_COLOR,
-//   fixedHeader: STORE_KEYS.APP_FIXED_HEADER,
-//   fixSiderbar: STORE_KEYS.APP_FIXED_SIDERBAR,
-//   buttonSize: STORE_KEYS.APP_BUTTON_SIZE,
-//   tableSize: STORE_KEYS.APP_TABLE_SIZE,
-//   formSize: STORE_KEYS.APP_FORM_SIZE
-// }
-
 const CONTENT_WIDTH_TYPE = {
   Fluid: 'Fluid',
   Fixed: 'Fixed'
 }
-
-// const defaultLayout = StoreUtil.getStore(STORE_KEYS.APP_LAYOUT) || defaultSettings.layout
 
 /**
  * APP setting store
@@ -64,6 +31,7 @@ export const useAppSettingStore = defineStore('appSetting', {
       // 表单尺寸
       formSize: defaultSettings.formSize,
       hasMultiTab: defaultSettings.hasMultiTab,
+      noPermissionMode: defaultSettings.noPermissionMode,
 
       // 系统设置显示状态
       settingDrawerVisible: false
@@ -85,7 +53,6 @@ export const useAppSettingStore = defineStore('appSetting', {
           } else {
             this.fixSiderbar = false
             this.contentWidthType = CONTENT_WIDTH_TYPE.Fixed
-            // StoreUtil.setStore(STORE_KEYS.APP_FIXED_SIDERBAR, false)
           }
         }
       }

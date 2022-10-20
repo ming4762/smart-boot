@@ -14,7 +14,7 @@ import { defineComponent, computed } from 'vue'
 import type { PropType } from 'vue'
 import { useRoute } from 'vue-router'
 
-import { useAppI18nStore } from '@/store/modules/AppStore2'
+import { useAppI18nStore } from '@/modules/app/store'
 
 import Navigation, { NavigationProps } from './Navigation.vue'
 

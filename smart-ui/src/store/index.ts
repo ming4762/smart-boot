@@ -39,8 +39,10 @@ const storagePlugin = (options: Options) => {
 
 const store = createPinia()
 
-store.use(storagePlugin({
-  key: 'smart_store'
-}))
+store.use(
+  storagePlugin({
+    key: 'smart_store'
+  })
+)
 
 export default store

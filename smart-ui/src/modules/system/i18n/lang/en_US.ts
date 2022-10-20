@@ -50,7 +50,12 @@ export default {
       },
       themeColor: 'Theme color',
       navigationMode: 'Navigation mode',
-      otherSettings: 'Other settings',
+      otherSettings: {
+        title: 'Other setting',
+        noPermissionMode: 'No permission mode',
+        noPermissionModeMessage: 'Successfully modified the mode of no permission',
+        noPermissionModeDescription: 'Takes effect after the page is refreshed'
+      },
       sizeSettings: {
         title: 'Size setting',
         buttonSize: 'Button size',
