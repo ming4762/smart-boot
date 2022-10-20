@@ -64,7 +64,7 @@ import type { RouteLocationNormalized, Router } from 'vue-router'
 import { ReloadOutlined } from '@ant-design/icons-vue'
 import { notification } from 'ant-design-vue'
 
-import { useAppSettingStore, useAppStateStore, useAppI18nStore } from '@/store/modules/AppStore2'
+import { useAppSettingStore, useAppStateStore, useAppI18nStore } from '@/modules/app/store'
 import { useSystemMenuStore, useSystemExceptionStore } from '@/modules/system/store'
 
 import defaultSettings from '@/config/defaultSetting'

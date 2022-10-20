@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-import { useAppSettingStore } from '@/store/modules/AppStore2'
+import { useAppSettingStore } from '@/modules/app/store'
 import router from '@/router'
 
 import StoreUtil from '@/common/utils/StoreUtil'

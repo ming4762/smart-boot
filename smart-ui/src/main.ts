@@ -24,7 +24,7 @@ window['umi_plugin_ant_themeVar'] = themePluginConfig.theme
 import VXETable from 'vxe-table'
 import 'vxe-table/lib/style.css'
 
-import { useAppI18nStore } from '@/store/modules/AppStore2'
+import { useAppI18nStore } from '@/modules/app/store'
 
 const app = createApp(AppVue)
 

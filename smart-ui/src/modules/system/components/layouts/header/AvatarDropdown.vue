@@ -85,7 +85,7 @@ import {
   SettingOutlined
 } from '@ant-design/icons-vue'
 
-import { useAppSettingStore } from '@/store/modules/AppStore2'
+import { useAppSettingStore } from '@/modules/app/store'
 import { useSystemLoginStore } from '@/modules/system/store'
 
 import ApiService from '@/common/utils/ApiService'

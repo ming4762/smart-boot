@@ -5,6 +5,8 @@ import { hasPermission } from '@/common/auth/AuthUtils'
 import { subscribe } from '@/common/utils/PublishUtils'
 import { EVENT_SYMBOLS } from '@/common/constants/CommonConstants'
 import ApiService from '@/common/utils/ApiService'
+import { useAppSettingStore } from '@/modules/app/store'
+import { NoPermissionModeEnum } from '@/common/enums'
 
 import './RouterPermission'
 
@@ -21,13 +23,19 @@ export default function init(app: App) {
  * @param app
  */
 const initDirectivePermission = (app: App) => {
+  const appSettingStore = useAppSettingStore()
   app.directive('permission', {
     beforeMount(el, binding) {
       const permission = binding.value
       const has = hasPermission(permission)
       if (!has) {
+        const noPermissionMode = appSettingStore.noPermissionMode
         if (el.type === 'button') {
-          el.disabled = true
+          if (noPermissionMode === NoPermissionModeEnum.disabled) {
+            el.disabled = true
+          } else if (noPermissionMode === NoPermissionModeEnum.hide) {
+            el.style.display = 'none'
+          }
         }
         // TODO:其他情况未处理
       }
