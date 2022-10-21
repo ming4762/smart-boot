@@ -32,38 +32,40 @@
       @click="handleMoveRight">
       <ForwardOutlined />
     </div>
-    <a-dropdown>
-      <div class="btn-group roll-nav roll-right">
-        <span>{{ i18nRender('app.multiTab.closeOperation') }}</span>
-        <CaretDownOutlined />
-      </div>
-      <template #overlay>
-        <a-menu :selected-keys="[]" class="multi-drop-menu" @click="handleClickItem">
-          <a-menu-item key="location">
-            <aim-outlined class="icon" />
-            {{ i18nRender('app.multiTab.dropdownMenu.location') }}
-          </a-menu-item>
-          <a-divider />
-          <a-menu-item key="closeAll">
-            <close-outlined class="icon" />
-            {{ i18nRender('app.multiTab.dropdownMenu.closeAll') }}
-          </a-menu-item>
-          <a-menu-item key="closeOther">
-            <close-circle-outlined class="icon" />
-            {{ i18nRender('app.multiTab.dropdownMenu.closeOther') }}
-          </a-menu-item>
-          <a-menu-item key="refreshCurrent">
-            <reload-outlined class="icon" />
-            {{ i18nRender('app.multiTab.dropdownMenu.refreshCurrent') }}
-          </a-menu-item>
-        </a-menu>
-      </template>
-    </a-dropdown>
+    <div class="menu-container">
+      <a-dropdown>
+        <div class="btn-group roll-nav roll-right">
+          <span>{{ i18nRender('app.multiTab.closeOperation') }}</span>
+          <CaretDownOutlined />
+        </div>
+        <template #overlay>
+          <a-menu :selected-keys="[]" class="multi-drop-menu" @click="handleClickItem">
+            <a-menu-item key="location">
+              <aim-outlined class="icon" />
+              {{ i18nRender('app.multiTab.dropdownMenu.location') }}
+            </a-menu-item>
+            <a-divider />
+            <a-menu-item key="closeAll">
+              <close-outlined class="icon" />
+              {{ i18nRender('app.multiTab.dropdownMenu.closeAll') }}
+            </a-menu-item>
+            <a-menu-item key="closeOther">
+              <close-circle-outlined class="icon" />
+              {{ i18nRender('app.multiTab.dropdownMenu.closeOther') }}
+            </a-menu-item>
+            <a-menu-item key="refreshCurrent">
+              <reload-outlined class="icon" />
+              {{ i18nRender('app.multiTab.dropdownMenu.refreshCurrent') }}
+            </a-menu-item>
+          </a-menu>
+        </template>
+      </a-dropdown>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, toRefs } from 'vue'
+import { computed, defineComponent, ref, toRefs, onRenderTriggered, onRenderTracked } from 'vue'
 
 import type { PropType } from 'vue'
 
@@ -159,6 +161,12 @@ export default defineComponent({
       }
       return menu.meta.locales[lang.value] || menu.meta.title
     }
+    onRenderTracked((event) => {
+      console.log(event)
+    })
+    onRenderTriggered((event) => {
+      console.log(event)
+    })
     return {
       handleRemove,
       handleClickItem,
@@ -194,7 +202,7 @@ export default defineComponent({
     border-right: solid 1px #eee;
   }
   .roll-right {
-    right: 0;
+    right: 5px;
     border-left: solid 1px #eee;
     &.s-menu-right {
       right: 85px;
@@ -274,5 +282,13 @@ export default defineComponent({
 
 .icon {
   margin-right: 5px;
+}
+.menu-container {
+  position: absolute;
+  right: 0;
+  width: 90px;
+  height: 100%;
+  top: 0;
+  background: #ffffff;
 }
 </style>
