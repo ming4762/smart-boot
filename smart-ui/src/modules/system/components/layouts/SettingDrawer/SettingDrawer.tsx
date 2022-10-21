@@ -203,7 +203,6 @@ export default defineComponent({
     const fixSiderbar = settings.fixSiderbar === void 0 ? false : settings.fixSiderbar
     const hasMultiTab = settings.hasMultiTab === void 0 ? false : settings.hasMultiTab
     const isTopMenu = layout === 'topmenu'
-    console.log(settings.noPermissionMode)
     const drawerProps = {
       width: 300,
       placement: 'right',
