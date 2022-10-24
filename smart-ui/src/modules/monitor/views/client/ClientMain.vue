@@ -235,7 +235,6 @@ export default defineComponent({
   },
   setup(props) {
     const shutDownHook = useShutdown(props.clientId)
-    console.log(props)
     /**
      * 加载应用信息
      */
