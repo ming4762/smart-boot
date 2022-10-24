@@ -91,13 +91,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, onBeforeUnmount } from 'vue'
 
 import { DeleteFilled } from '@ant-design/icons-vue'
 
 import { useLoadMeterList, useLoadMeterTagList, useShowMeterData } from './MetricsListHook'
 import UnitUtils from '@/common/utils/UnitUtils'
 import TimeUtils from '@/common/utils/TimeUtils'
+import TimeTaskUtil from '@/common/utils/TimeTaskUtil'
+import { MONITOR_DETAIL_LOOP_GROUP } from '@/modules/monitor/constants/MonitorConstants'
 
 /**
  * 指标列表页面
@@ -171,6 +173,10 @@ export default defineComponent({
       }
       return formatValue
     }
+
+    onBeforeUnmount(() => {
+      TimeTaskUtil.removeLoop(MONITOR_DETAIL_LOOP_GROUP, 'loadMeterData')
+    })
 
     return {
       meterList,
