@@ -13,19 +13,43 @@
       highlight-hover-row
       stripe>
       <template #table-status="{ row }">
-        <CheckCircleTwoTone v-if="row.status === 'UP'" :style="{ 'font-size': '18px' }" two-tone-color="#52c41a" />
-        <WarningTwoTone v-else :style="{ 'font-size': '18px' }" two-tone-color="#eb2f96" />
+        <CheckCircleTwoTone
+          v-if="row.status === 'UP'"
+          :style="{ 'font-size': '18px' }"
+          two-tone-color="#52c41a" />
+        <a-tooltip v-else>
+          <WarningTwoTone :style="{ 'font-size': '18px' }" two-tone-color="#eb2f96" />
+          <template #title>
+            <span>{{ row.status + ': ' + row.errorMessage }}</span>
+          </template>
+        </a-tooltip>
       </template>
       <template #table-clientUrl="{ row }">
         <a target="_blank" :href="row.application.clientUrl">{{ row.application.clientUrl }}</a>
       </template>
       <template #table-option="{ row }">
-        <a-button type="primary" :size="tableButtonSizeConfig" @click="() => handleShowDetail(row)">详情</a-button>
+        <a-button
+          :disabled="row.status !== 'UP'"
+          type="primary"
+          :size="tableButtonSizeConfig"
+          @click="() => handleShowDetail(row)">
+          详情
+        </a-button>
         <a-dropdown>
           <template #overlay>
             <a-menu @click="({ key }) => handleMenuClick(key, row)">
-              <a-menu-item key="heapdump" :disabled="!hasPermission(permissions.heapdump)"><download-outlined />下载内存转储</a-menu-item>
-              <a-menu-item key="threaddump" :disabled="!hasPermission(permissions.threaddump)"><download-outlined />下载线程转储</a-menu-item>
+              <a-menu-item
+                key="heapdump"
+                :disabled="!hasPermission(permissions.heapdump) || row.status !== 'UP'">
+                <download-outlined />
+                下载内存转储
+              </a-menu-item>
+              <a-menu-item
+                key="threaddump"
+                :disabled="!hasPermission(permissions.threaddump) || row.status !== 'UP'">
+                <download-outlined />
+                下载线程转储
+              </a-menu-item>
             </a-menu>
           </template>
           <a-button :size="tableButtonSizeConfig" style="margin-left: 5px">
@@ -41,9 +65,14 @@
           </a-form-item>
           <a-form-item label="Status">
             <a-form-item>
-              <a-select v-model:value="searchModel.status" :size="formSizeConfig" style="width: 120px" placeholder="请选择">
+              <a-select
+                v-model:value="searchModel.status"
+                :size="formSizeConfig"
+                style="width: 120px"
+                placeholder="请选择">
                 <a-select-option value="ALL">ALL</a-select-option>
                 <a-select-option value="UP">UP</a-select-option>
+                <a-select-option value="ERROR">ERROR</a-select-option>
                 <a-select-option value="DOWN">DOWN</a-select-option>
               </a-select>
             </a-form-item>
@@ -54,7 +83,9 @@
         <a-form layout="inline">
           <a-form-item label="刷新时间：">
             <a-select v-model:value="refreshTimeModel" style="width: 120px">
-              <a-select-option v-for="item in refreshTimes" :key="item.key" :value="item.key">{{ item.value }}</a-select-option>
+              <a-select-option v-for="item in refreshTimes" :key="item.key" :value="item.key">
+                {{ item.value }}
+              </a-select-option>
             </a-select>
           </a-form-item>
         </a-form>
@@ -64,10 +95,15 @@
 </template>
 
 <script lang="ts">
-import {computed, defineComponent, onMounted} from 'vue'
+import { computed, defineComponent, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
-import { WarningTwoTone, CheckCircleTwoTone, DownOutlined, DownloadOutlined } from '@ant-design/icons-vue'
+import {
+  WarningTwoTone,
+  CheckCircleTwoTone,
+  DownOutlined,
+  DownloadOutlined
+} from '@ant-design/icons-vue'
 
 import SizeConfigHooks from '@/components/config/SizeConfigHooks'
 import dayjs from 'dayjs'
@@ -94,10 +130,8 @@ export default defineComponent({
     DownOutlined,
     DownloadOutlined
   },
-  mixins: [
-    AuthMixins
-  ],
-  setup () {
+  mixins: [AuthMixins],
+  setup() {
     const router = useRouter()
 
     /**
@@ -115,10 +149,19 @@ export default defineComponent({
       }
       const searchModelValue = searchModel.value
       return dataList.filter((item: any) => {
-        if (searchModelValue.applicationName && searchModelValue.applicationName.trim() !== '' && (item.application.applicationName.indexOf(searchModelValue.applicationName) < 0)) {
+        if (
+          searchModelValue.applicationName &&
+          searchModelValue.applicationName.trim() !== '' &&
+          item.application.applicationName.indexOf(searchModelValue.applicationName) < 0
+        ) {
           return false
         }
-        return !(searchModelValue.status && searchModelValue.status.trim() !== '' && searchModelValue.status !== 'ALL' && item.status !== searchModelValue.status);
+        return !(
+          searchModelValue.status &&
+          searchModelValue.status.trim() !== '' &&
+          searchModelValue.status !== 'ALL' &&
+          item.status !== searchModelValue.status
+        )
       })
     })
 
@@ -144,9 +187,8 @@ export default defineComponent({
      */
     const handleMenuClick = (key: string, { id, application }: any) => {
       if (key === 'heapdump') {
-        downActuator(id.value, key)
-            .then(result => {
-              fileDownload(result, 'heapdump' )
+        downActuator(id.value, key).then((result) => {
+          fileDownload(result, 'heapdump')
         })
       } else if (key === 'threaddump') {
         // 下载内存转储
@@ -165,7 +207,7 @@ export default defineComponent({
       computedData
     }
   },
-  data () {
+  data() {
     return {
       permissions,
       toolbarConfig: {
@@ -254,6 +296,4 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

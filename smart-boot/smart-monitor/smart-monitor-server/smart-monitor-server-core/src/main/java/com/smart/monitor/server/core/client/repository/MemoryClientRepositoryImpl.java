@@ -143,6 +143,17 @@ public class MemoryClientRepositoryImpl extends AbstractClientRepositoryImpl {
     }
 
     @Override
+    public void error(ClientId id, String errorMessage) {
+        this.compute(id, (clientId, repositoryData) -> {
+            if (repositoryData != null) {
+                repositoryData.setStatus(ClientStatusEnum.ERROR);
+                repositoryData.setErrorMessage(errorMessage);
+            }
+            return repositoryData;
+        });
+    }
+
+    @Override
     public void updateTimestamp(ClientId clientId) {
         this.compute(clientId, (id, repositoryData) -> {
             if (repositoryData != null) {

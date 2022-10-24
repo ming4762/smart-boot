@@ -75,10 +75,16 @@ export const useLoadApplication = (clientId: string) => {
     applicationCode: ''
   })
   onMounted(async () => {
+    console.log(clientId)
     try {
       applicationData.value = await ApiService.postAjax(
         'monitor/manager/client/getApplicationByClientId',
-        clientId
+        clientId,
+        {
+          headers: {
+            'Content-Type': 'text/plain'
+          }
+        }
       )
       document.title = applicationData.value.name
     } catch (e) {

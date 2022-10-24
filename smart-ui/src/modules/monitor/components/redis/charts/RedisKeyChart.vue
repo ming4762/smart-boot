@@ -5,7 +5,8 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, PropType, watch, toRefs, ref} from 'vue'
+import { defineComponent, watch, toRefs, ref } from 'vue'
+import type { PropType } from 'vue'
 
 import { Echarts } from 'vue-echart5'
 import ClientCard from '@/modules/monitor/components/common/ClientCard.vue'
@@ -13,10 +14,10 @@ import ClientCard from '@/modules/monitor/components/common/ClientCard.vue'
 import dayjs from 'dayjs'
 
 const createChartOption = (data: Array<any>) => {
-  const xdata = data.map(item => {
+  const xdata = data.map((item) => {
     return item.time
   })
-  const keyData = data.map(item => {
+  const keyData = data.map((item) => {
     return item.data
   })
   return {
@@ -57,7 +58,7 @@ export default defineComponent({
       default: () => {}
     }
   },
-  setup (props) {
+  setup(props) {
     const { data } = toRefs(props)
     const chartRef = ref<any>()
 
