@@ -5,7 +5,8 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, PropType, ref, toRefs, watch} from 'vue'
+import {defineComponent, ref, toRefs, watch} from 'vue'
+import type { PropType } from 'vue'
 
 import dayjs from 'dayjs'
 

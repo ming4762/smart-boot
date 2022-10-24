@@ -1,8 +1,5 @@
 <template>
-  <vxe-grid
-    v-bind="$attrs"
-    :data="data"
-    :columns="columns"></vxe-grid>
+  <vxe-grid v-bind="$attrs" :data="data" :columns="columns"></vxe-grid>
 </template>
 
 <script lang="ts">
@@ -20,7 +17,7 @@ export default defineComponent({
       default: () => []
     }
   },
-  data () {
+  data() {
     return {
       columns: [
         {

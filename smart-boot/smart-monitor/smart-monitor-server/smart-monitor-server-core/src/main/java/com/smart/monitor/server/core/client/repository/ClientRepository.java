@@ -119,6 +119,13 @@ public interface ClientRepository {
     void up(ClientId id);
 
     /**
+     * 客户端错误
+     * @param id 客户端ID
+     * @param errorMessage 客户端信息
+     */
+    void error(ClientId id, String errorMessage);
+
+    /**
      * 更新时间戳
      * @param clientId 客户端
      */

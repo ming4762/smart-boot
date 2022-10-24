@@ -1,5 +1,6 @@
 package com.smart.monitor.server.core.monitor.status;
 
+import com.smart.commons.core.message.Result;
 import com.smart.commons.core.utils.JsonUtils;
 import com.smart.monitor.server.common.constants.ClientStatusEnum;
 import com.smart.monitor.server.common.model.ClientData;
@@ -52,6 +53,8 @@ public class HealthStatusMonitor implements StatusMonitor {
         log.debug("start check client health, application name: {}, client id: {}", repositoryData.getApplication().getApplicationName(), repositoryData.getId().getValue());
         String[] healthData = new String[1];
         long startTimestamp = System.nanoTime();
+        var isError = false;
+        var errorMessage = "";
         try {
             this.clientWebProxy.forward(repositoryData.getId(), data -> ClientWebProxy.ForwardRequest.builder()
                     .uri(ClientUrlEnum.HEALTH.getUrl())
@@ -60,13 +63,29 @@ public class HealthStatusMonitor implements StatusMonitor {
                     result -> healthData[0] = result, false, String.class
             );
         } catch (Exception e) {
+            isError = true;
+            errorMessage = e.getMessage();
             log.warn("client health monitor error, application name: {}, client id: {}, error message: {}", repositoryData.getApplication().getApplicationName(), repositoryData.getId().getValue(), e.getMessage());
             // 发布状态检测失败事件
-            this.monitorEventPublisher.publishEvent(new ClientHealthCheckErrorEvent(repositoryData, new ClientHealthCheckEventData(TimeUnit.NANOSECONDS.toMicros(System.nanoTime() - startTimestamp), e.getMessage(), null), this));
         }
         ClientHealthResult health = null;
-        if (healthData[0] != null) {
-            health = JsonUtils.parse(healthData[0], ClientHealthResult.class);
+        try {
+            if (healthData[0] != null) {
+                health = JsonUtils.parse(healthData[0], ClientHealthResult.class);
+            }
+        } catch (Exception e) {
+            isError = true;
+            try {
+                var result = JsonUtils.parse(healthData[0], Result.class);
+                errorMessage = result.getMessage();
+            } catch (Exception e1) {
+                errorMessage = e1.getMessage();
+            }
+        }
+        if (isError) {
+            this.monitorEventPublisher.publishEvent(new ClientHealthCheckErrorEvent(repositoryData, new ClientHealthCheckEventData(TimeUnit.NANOSECONDS.toMicros(System.nanoTime() - startTimestamp), errorMessage, null), this));
+            this.clientRepository.error(repositoryData.getId(), errorMessage);
+            return false;
         }
         if (health != null) {
             ClientHealthCheckEventData eventData = new ClientHealthCheckEventData(TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTimestamp), null, health);

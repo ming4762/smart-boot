@@ -29,7 +29,8 @@
 </template>
 
 <script lang="ts">
-import {computed, defineComponent, PropType, ref, toRefs} from 'vue'
+import { computed, defineComponent, ref, toRefs } from 'vue'
+import type { PropType } from 'vue'
 
 import TimeTaskUtil from '@/common/utils/TimeTaskUtil'
 import { MONITOR_DETAIL_LOOP_GROUP } from '@/modules/monitor/constants/MonitorConstants'
@@ -41,7 +42,6 @@ import RedisCpuChart from './charts/RedisCpuChart.vue'
 import RedisClientChart from './charts/RedisClientChart.vue'
 import RedisOpsPerChart from './charts/RedisOpsPerChart.vue'
 import RedisInOutKpsChart from './charts/RedisInOutKpsChart.vue'
-
 
 export default defineComponent({
   name: 'RedisInfoCharts',
@@ -63,7 +63,7 @@ export default defineComponent({
       required: true
     }
   },
-  setup (props) {
+  setup(props) {
     const { clientId, data } = toRefs(props)
     const time = ref(0)
     TimeTaskUtil.addLoop(MONITOR_DETAIL_LOOP_GROUP, 'redisKeyMeter', () => time.value++)
@@ -74,7 +74,7 @@ export default defineComponent({
      * 内存使用情况
      */
     const computedMemoryData = computed(() => {
-      const memory = data.value.filter(item => item.key === 'used_memory_rss')
+      const memory = data.value.filter((item) => item.key === 'used_memory_rss')
       if (memory && memory.length > 0) {
         return parseInt(memory[0].value)
       }
@@ -85,7 +85,7 @@ export default defineComponent({
      * redis cpu
      */
     const computedCpuSysData = computed(() => {
-      const cpuData = data.value.filter(item => item.key === 'used_cpu_sys')
+      const cpuData = data.value.filter((item) => item.key === 'used_cpu_sys')
       if (cpuData && cpuData.length > 0) {
         return parseFloat(cpuData[0].value)
       }
@@ -93,7 +93,7 @@ export default defineComponent({
     })
 
     const computedConnectedClientsData = computed(() => {
-      const cpuData = data.value.filter(item => item.key === 'connected_clients')
+      const cpuData = data.value.filter((item) => item.key === 'connected_clients')
       if (cpuData && cpuData.length > 0) {
         return parseInt(cpuData[0].value)
       }
@@ -101,7 +101,7 @@ export default defineComponent({
     })
 
     const computedOpsPerData = computed(() => {
-      const cpuData = data.value.filter(item => item.key === 'instantaneous_ops_per_sec')
+      const cpuData = data.value.filter((item) => item.key === 'instantaneous_ops_per_sec')
       if (cpuData && cpuData.length > 0) {
         return parseInt(cpuData[0].value)
       }
@@ -109,8 +109,8 @@ export default defineComponent({
     })
 
     const computedInputOutputData = computed(() => {
-      const inputData = data.value.filter(item => item.key === 'instantaneous_input_kbps')
-      const outputData = data.value.filter(item => item.key === 'instantaneous_ops_per_sec')
+      const inputData = data.value.filter((item) => item.key === 'instantaneous_input_kbps')
+      const outputData = data.value.filter((item) => item.key === 'instantaneous_ops_per_sec')
 
       return {
         input: inputData.length > 0 ? inputData[0].value : 0,
@@ -128,7 +128,7 @@ export default defineComponent({
       computedInputOutputData
     }
   },
-  data () {
+  data() {
     return {
       gutter: 16
     }
