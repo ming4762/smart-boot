@@ -75,7 +75,6 @@ export const useLoadApplication = (clientId: string) => {
     applicationCode: ''
   })
   onMounted(async () => {
-    console.log(clientId)
     try {
       applicationData.value = await ApiService.postAjax(
         'monitor/manager/client/getApplicationByClientId',
