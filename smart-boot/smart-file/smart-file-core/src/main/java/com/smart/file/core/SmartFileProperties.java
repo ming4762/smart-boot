@@ -16,7 +16,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class SmartFileProperties {
 
     /**
-     * 文件存储基础路径
+     * 本地磁盘存储路径
      */
     private String basePath;
 

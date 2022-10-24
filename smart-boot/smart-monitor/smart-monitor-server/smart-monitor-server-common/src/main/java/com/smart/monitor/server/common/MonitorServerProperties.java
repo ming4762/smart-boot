@@ -19,13 +19,19 @@ import java.util.Objects;
 @Setter
 public class MonitorServerProperties implements InitializingBean {
 
-
+    /**
+     * 客户端配置
+     */
     private Client client = new Client();
 
-    private Manager manager = new Manager();
-
+    /**
+     * 实践通知配置信息
+     */
     private Notify notify = new Notify();
 
+    /**
+     * 数据同步配置
+     */
     private DataSync dataSync = new DataSync();
 
     @Override
@@ -52,6 +58,9 @@ public class MonitorServerProperties implements InitializingBean {
     @Getter
     @Setter
     public static class DataSyncLog {
+        /**
+         * 是否开启客户端日志同步功能，默认关闭
+         */
         private boolean enabled = false;
     }
 
@@ -73,15 +82,6 @@ public class MonitorServerProperties implements InitializingBean {
          * 默认的客户端连接token信息
          */
         private String defaultToken;
-    }
-
-    @Getter
-    @Setter
-    public static class Manager {
-        /**
-         * 是否开启开发模式
-         */
-        private Boolean develop = false;
     }
 
     /**
