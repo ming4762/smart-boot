@@ -66,6 +66,7 @@ import ClientProcess from './ClientProcess'
 import ClientGc from './ClientGc.vue'
 import ClientThreads from './ClientThreads.vue'
 import ClientMemoryHeap from './ClientMemoryHeap.vue'
+import { errorMessage } from '@/components/notice/SystemNotice'
 
 /**
  * 客户端详情
@@ -94,10 +95,14 @@ export default defineComponent({
     // 客户端数据
     const clientData = ref({})
     onMounted(async () => {
-      clientData.value = await ApiService.postAjax(
-        `monitor/manager/client/getClientById/${clientId.value}`,
-        'false'
-      )
+      try {
+        clientData.value = await ApiService.postAjax(
+          `monitor/manager/client/getClientById/${clientId.value}`,
+          'false'
+        )
+      } catch (e) {
+        errorMessage(e)
+      }
     })
     // 设置定时执行任务
     const time = ref(0)

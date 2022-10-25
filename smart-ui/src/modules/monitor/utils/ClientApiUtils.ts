@@ -1,4 +1,5 @@
 import ApiService from '@/common/utils/ApiService'
+import { errorMessage } from '@/components/notice/SystemNotice'
 
 /**
  * 端点API
@@ -19,8 +20,12 @@ export const loadActuator = (
 ): Promise<any | void> => {
   let url = `/monitor/client/${clientId}/actuator/${type}`
   url = urlHandler ? urlHandler(url) : url
-
-  return ApiService.ajax(url, method, parameter, customParameter)
+  try {
+    return ApiService.ajax(url, method, parameter, customParameter)
+  } catch (e) {
+    errorMessage(e)
+    throw e
+  }
 }
 
 /**
