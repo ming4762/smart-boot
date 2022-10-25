@@ -44,6 +44,7 @@
         </div>
       </a-layout>
     </a-layout>
+    <loginMessageModal close />
   </a-layout>
 </template>
 
@@ -56,6 +57,7 @@ import { useShutdown, useLoadApplication, useRefreshClient } from './ClientMainH
 import { useActuator } from '../../components/hooks/ClientActuatorHooks'
 
 import LayoutSide from '@/modules/monitor/components/layout/LayoutSide.vue'
+import loginMessageModal from '@/modules/system/views/login/LoginMessageModal'
 
 interface Data {
   icon: string
@@ -225,7 +227,8 @@ const menuList: Array<Menu> = [
 export default defineComponent({
   name: 'ClientMain',
   components: {
-    LayoutSide
+    LayoutSide,
+    loginMessageModal
   },
   props: {
     clientId: {
