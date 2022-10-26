@@ -2,6 +2,8 @@ package com.smart.auth.security;
 
 import com.smart.auth.core.authentication.AuthenticationFailureEventInitializer;
 import com.smart.auth.core.authentication.MethodPermissionEvaluatorImpl;
+import com.smart.auth.core.authentication.url.DefaultUrlAuthenticationProviderImpl;
+import com.smart.auth.core.authentication.url.UrlAuthenticationProvider;
 import com.smart.auth.core.beans.DefaultUrlMappingProvider;
 import com.smart.auth.core.beans.UrlMappingProvider;
 import com.smart.auth.core.handler.AuthLoginFailureHandler;
@@ -14,8 +16,8 @@ import com.smart.auth.security.config.AuthMethodSecurityConfig;
 import com.smart.auth.security.userdetails.DefaultUserDetailsServiceImpl;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -24,6 +26,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.DefaultAuthenticationEventPublisher;
+import org.springframework.security.authorization.method.AuthorizationManagerBeforeMethodInterceptor;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -84,7 +87,7 @@ public class AuthSecurity2AutoConfiguration {
      * @return 方法级权限认证器
      */
     @Bean
-    @ConditionalOnProperty(prefix = "smart.auth", name = "method", havingValue = "true")
+    @ConditionalOnBean(AuthorizationManagerBeforeMethodInterceptor.class)
     @ConditionalOnMissingBean(PermissionEvaluator.class)
     public PermissionEvaluator permissionEvaluator(AuthProperties authProperties) {
         return new MethodPermissionEvaluatorImpl(authProperties);
@@ -112,5 +115,16 @@ public class AuthSecurity2AutoConfiguration {
     @ConditionalOnMissingBean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) {
         return configuration.getAuthenticationManager();
+    }
+
+    /**
+     * 创建URL权限认证器
+     * @param urlMappingProvider URL映射
+     * @return UrlAuthenticationProvider
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    public UrlAuthenticationProvider defaultUrlAuthenticationProviderImpl(UrlMappingProvider urlMappingProvider) {
+        return new DefaultUrlAuthenticationProviderImpl(urlMappingProvider);
     }
 }

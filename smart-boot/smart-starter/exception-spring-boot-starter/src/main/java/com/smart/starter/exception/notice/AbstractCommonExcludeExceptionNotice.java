@@ -5,6 +5,7 @@ import com.smart.commons.core.exception.BusinessException;
 import com.smart.commons.core.i18n.I18nException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.lang.NonNull;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
@@ -29,7 +30,8 @@ public abstract class AbstractCommonExcludeExceptionNotice extends AbstractExcep
                 ConstraintViolationException.class,
                 // 业务异常不通知
                 BusinessException.class,
-                I18nException.class
+                I18nException.class,
+                AccessDeniedException.class
         );
     }
 }

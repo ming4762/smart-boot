@@ -5,12 +5,11 @@ import com.smart.auth.core.handler.RestAuthenticationEntryPoint;
 import com.smart.auth.core.matcher.ExtensionPathMatcher;
 import com.smart.auth.core.properties.AuthProperties;
 import lombok.SneakyThrows;
-import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.http.HttpMethod;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
+import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
 
 /**
  * 默认的web配置器
@@ -31,24 +30,20 @@ public class AuthWebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .cors()
                 .and()
-                .authorizeRequests()
-                .antMatchers(HttpMethod.OPTIONS)
-                .permitAll()
-                .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(new RestAuthenticationEntryPoint())
                 .accessDeniedHandler(new AuthAccessDeniedHandler());
-        this.ignore(http);
+//        this.ignore(http);
         // 开发模式不拦截
-        if (BooleanUtils.isTrue(this.authProperties.getDevelopment())) {
-            http.authorizeRequests().anyRequest().permitAll();
-        }
+//        if (BooleanUtils.isTrue(this.authProperties.getDevelopment())) {
+//            http.authorizeHttpRequests().anyRequest().permitAll();
+//        }
     }
 
     @SneakyThrows(Exception.class)
     public void ignore(HttpSecurity http) {
         var ignoreConfig = this.authProperties.getIgnores();
-        var registry = http.authorizeRequests();
+        var registry = http.authorizeHttpRequests();
         // 忽略 GET
         ignoreConfig.getGet().forEach(url -> this.doIgnore(registry, url, HttpMethod.GET));
         // 忽略 post
@@ -69,7 +64,7 @@ public class AuthWebSecurityConfigurerAdapter {
         ignoreConfig.getPattern().forEach(url -> this.doIgnore(registry, url, null));
     }
 
-    private void doIgnore(@NonNull ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry registry, @NonNull String url, @Nullable HttpMethod httpMethod) {
+    private void doIgnore(@NonNull AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry registry, @NonNull String url, @Nullable HttpMethod httpMethod) {
         var matcher = httpMethod == null ? new ExtensionPathMatcher(url) : new ExtensionPathMatcher(httpMethod, url);
         registry.requestMatchers(matcher).permitAll();
     }

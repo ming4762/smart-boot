@@ -16,7 +16,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <spring-boot.version>3.0.0-M5</spring-boot.version>
+        <spring-boot.version>3.0.0-RC1</spring-boot.version>
         <spring-cloud.version>2022.0.0-M4</spring-cloud.version>
 
         <guava.version>31.1-jre</guava.version>
