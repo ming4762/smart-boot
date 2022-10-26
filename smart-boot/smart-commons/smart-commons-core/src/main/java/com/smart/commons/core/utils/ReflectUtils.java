@@ -1,13 +1,16 @@
 package com.smart.commons.core.utils;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -38,6 +41,11 @@ public final class ReflectUtils {
             log.error(e.getMessage(), e);
             return null;
         }
+    }
+
+    @SneakyThrows({IllegalAccessException.class, InvocationTargetException.class, NoSuchMethodException.class})
+    public static void setFieldValue(final Object bean, final String name, final Object value) {
+        PropertyUtils.setProperty(bean, name, value);
     }
 
     /**
@@ -73,5 +81,16 @@ public final class ReflectUtils {
         if (Objects.nonNull(superClass)) {
             getAllFields(superClass, fields);
         }
+    }
+
+    /**
+     * 获取指定类的属性
+     * @param clazz 类
+     * @return Field列表
+     */
+    public static List<Field> getField(@NonNull Class<?> clazz) {
+        return Arrays.stream(clazz.getDeclaredFields())
+                .filter(ReflectUtils:: isNotStatic)
+                .collect(Collectors.toList());
     }
 }

@@ -2,8 +2,10 @@ package com.smart.monitor.server.common.model;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.lang.NonNull;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -13,10 +15,12 @@ import java.io.Serializable;
  */
 @EqualsAndHashCode
 @Getter
+@NoArgsConstructor
 public final class ClientId implements Serializable, Comparable<ClientId> {
+    @Serial
     private static final long serialVersionUID = 517098121163098598L;
 
-    private final String value;
+    private String value;
 
     private ClientId(@NonNull String value) {
         this.value = value;

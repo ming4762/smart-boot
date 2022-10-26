@@ -2,7 +2,6 @@ package com.smart.monitor.autoconfigure.server;
 
 import com.smart.commons.core.spring.EnableRest;
 import com.smart.monitor.server.common.MonitorServerProperties;
-import com.smart.monitor.server.common.client.ClientManagerProvider;
 import com.smart.monitor.server.core.SmartMonitorServer;
 import com.smart.monitor.server.core.client.ClientIdGenerator;
 import com.smart.monitor.server.core.client.ClientProcessor;
@@ -63,13 +62,12 @@ public class MonitorServerAutoConfiguration {
 
     /**
      * 创建客户端仓库
-     * @param clientIdGenerator 客户端ID生成接口
      * @return 客户端仓库
      */
     @Bean
     @ConditionalOnMissingBean
-    public ClientRepository clientRepository(ClientIdGenerator clientIdGenerator , ClientManagerProvider clientManagerProvider) {
-        return new MemoryClientRepositoryImpl(clientIdGenerator, clientManagerProvider);
+    public ClientRepository clientRepository() {
+        return new MemoryClientRepositoryImpl();
     }
 
     /**

@@ -1,15 +1,10 @@
 package com.smart.monitor.server.core.client.repository;
 
-import com.smart.monitor.core.model.Application;
-import com.smart.monitor.server.common.client.ClientManagerProvider;
 import com.smart.monitor.server.common.constants.ClientStatusEnum;
 import com.smart.monitor.server.common.model.ClientData;
 import com.smart.monitor.server.common.model.ClientId;
-import com.smart.monitor.server.common.model.ClientManagerData;
-import com.smart.monitor.server.core.client.ClientIdGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -28,32 +23,15 @@ import java.util.stream.Collectors;
 @Slf4j
 public class MemoryClientRepositoryImpl extends AbstractClientRepositoryImpl {
 
-    private final ClientIdGenerator clientIdGenerator;
-
-    private final ClientManagerProvider clientManagerProvider;
-
     /**
      * 存储客户端信息
      */
     private final Map<ClientId, ClientData> repositoryDataMap = new ConcurrentHashMap<>();
 
-    public MemoryClientRepositoryImpl(ClientIdGenerator clientIdGenerator, ClientManagerProvider clientManagerProvider) {
-        this.clientIdGenerator = clientIdGenerator;
-        this.clientManagerProvider = clientManagerProvider;
-    }
 
-    @Nullable
     @Override
-    public ClientData save(@NonNull Application application) {
-        final ClientManagerData clientManager = this.clientManagerProvider.getByName(application.getApplicationName());
-        if (clientManager == null) {
-            log.warn("client is not manager，please manager it，application code: {}", application.getApplicationName());
-            return null;
-        }
-        final ClientId clientId = this.clientIdGenerator.create(application);
-        final ClientData data = new ClientData(application, clientId, clientManager);
-        this.repositoryDataMap.put(clientId, data);
-        return data;
+    public void save(@NonNull ClientData data) {
+        this.repositoryDataMap.put(data.getId(), data);
     }
 
     @NonNull
@@ -67,6 +45,11 @@ public class MemoryClientRepositoryImpl extends AbstractClientRepositoryImpl {
     }
 
     @Override
+    public Collection<ClientData> findAll() {
+        return this.repositoryDataMap.values();
+    }
+
+    @Override
     public ClientData findById(@NonNull ClientId clientId, boolean active) {
         final ClientData repositoryData = this.repositoryDataMap.get(clientId);
         if (repositoryData == null) {
@@ -76,6 +59,11 @@ public class MemoryClientRepositoryImpl extends AbstractClientRepositoryImpl {
             return null;
         }
         return repositoryData;
+    }
+
+    @Override
+    public ClientData findById(@NonNull ClientId clientId) {
+        return this.repositoryDataMap.get(clientId);
     }
 
     @NonNull
@@ -164,8 +152,7 @@ public class MemoryClientRepositoryImpl extends AbstractClientRepositoryImpl {
         });
     }
 
-
-    private Collection<ClientData> getActiveList(Collection<ClientData> repositoryDatas) {
+    protected Collection<ClientData> getActiveList(Collection<ClientData> repositoryDatas) {
         return repositoryDatas.stream().filter(this::isActive).collect(Collectors.toList());
     }
 }

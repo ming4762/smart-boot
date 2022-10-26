@@ -82,6 +82,11 @@ public class MonitorServerProperties implements InitializingBean {
          * 默认的客户端连接token信息
          */
         private String defaultToken;
+
+        /**
+         * 存储到缓存中的key
+         */
+        private String storeKey = "SMART_MONITOR_CLIENT_STORE";
     }
 
     /**

@@ -2,6 +2,7 @@ package com.smart.auth.extensions.jwt.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serial;
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 @Setter
+@NoArgsConstructor
 public class JwtData implements Serializable {
 
     @Serial

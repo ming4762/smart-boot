@@ -156,7 +156,7 @@ public class RedisServiceImpl implements RedisService {
     @Override
     public List<Object> matchKeys(@NonNull Object patternKey) {
         List<Object> result = new LinkedList<>();
-        try (Cursor<byte[]> scan = this.scan(patternKey, null)) {
+        try (Cursor<byte[]> scan = this.scan(patternKey, 1000)) {
             while (scan.hasNext()) {
                 result.add(this.redisTemplate.getKeySerializer().deserialize(scan.next()));
             }
@@ -175,7 +175,7 @@ public class RedisServiceImpl implements RedisService {
      * @param count 获取数量
      * @return 扫描对象
      */
-    private Cursor<byte[]> scan(@NonNull Object patternKey, Integer count) {
+    protected Cursor<byte[]> scan(@NonNull Object patternKey, Integer count) {
         // 创建扫描参数
         ScanOptions.ScanOptionsBuilder builder = ScanOptions.scanOptions()
                 .match("*" + patternKey);
