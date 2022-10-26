@@ -1,6 +1,5 @@
 package com.smart.monitor.server.core.client.repository;
 
-import com.smart.monitor.core.model.Application;
 import com.smart.monitor.server.common.model.ClientData;
 import com.smart.monitor.server.common.model.ClientId;
 import org.springframework.lang.NonNull;
@@ -19,11 +18,9 @@ public interface ClientRepository {
 
     /**
      * 保存
-     * @param application 客户端信息
-     * @return 客户端存储信息
+     * @param data 客户端信息
      */
-    @Nullable
-    ClientData save(@NonNull Application application);
+    void save(@NonNull ClientData data);
 
     /**
      * 查询所有
@@ -35,13 +32,19 @@ public interface ClientRepository {
 
 
     /**
-     * 查询所有
+     * 查询所有激活的客户端
      * @return 所有客户端信息
      */
     @NonNull
-    default Collection<ClientData> findAll() {
+    default Collection<ClientData> findAllActive() {
         return this.findAll(true);
     }
+
+    /**
+     * 查询所有客户端
+     * @return 所有客户端
+     */
+    Collection<ClientData> findAll();
 
     /**
      * 通过ID查询
@@ -57,9 +60,7 @@ public interface ClientRepository {
      * @param clientId 客户端ID
      * @return 客户端信息
      */
-    default ClientData findById(@NonNull ClientId clientId) {
-        return this.findById(clientId, true);
-    }
+    ClientData findById(@NonNull ClientId clientId);
 
 
     /**

@@ -15,3 +15,4 @@ com.smart.monitor.autoconfigure.actuator.logback.LogBackEndPointAutoConfiguratio
 com.smart.monitor.autoconfigure.client.HttpTraceEndpointAutoConfiguration
 com.smart.monitor.autoconfigure.actuator.redis.RedisActuatorValidateAutoConfiguration
 com.smart.monitor.autoconfigure.client.SmartMonitorClientEndPointAuthAutoConfiguration
+com.smart.monitor.autoconfigure.server.MonitorServerRedisClientRepositoryAutoConfiguration

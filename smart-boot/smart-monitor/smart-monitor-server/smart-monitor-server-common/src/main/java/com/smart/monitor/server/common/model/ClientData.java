@@ -1,10 +1,10 @@
 package com.smart.monitor.server.common.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.smart.commons.core.utils.json.InstantJson;
 import com.smart.monitor.core.model.Application;
 import com.smart.monitor.server.common.constants.ClientStatusEnum;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.lang.NonNull;
 
@@ -22,6 +22,8 @@ import java.util.Set;
  */
 @Getter
 @Setter
+@EqualsAndHashCode
+@NoArgsConstructor
 public final class ClientData implements Serializable {
 
     @Serial
@@ -29,18 +31,16 @@ public final class ClientData implements Serializable {
     /**
      * 时间戳
      */
-    @JsonSerialize(using = InstantJson.InstantSerializer.class)
     private Instant timestamp = Instant.now();
 
     /**
      * 刷新时间戳
      */
-    @JsonSerialize(using = InstantJson.InstantSerializer.class)
     private Instant refreshTime;
 
     private Application application;
 
-    private final ClientId id;
+    private ClientId id;
 
     /**
      * 状态监测时间间隔
