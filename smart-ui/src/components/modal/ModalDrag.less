@@ -1,0 +1,41 @@
+.modal-diag {
+  .top-button-container {
+    position: absolute;
+    right: 0;
+    top: 0;
+    button {
+      border: 0;
+      height: 54px;
+      padding: 0;
+      width: 35px;
+    }
+    button[ant-click-animating-without-extra-node]:after {
+      border: 0 none;
+      opacity: 0;
+      animation:none 0 ease 0 1 normal;
+    }
+  }
+  &.modal-fullscreen {
+    width: 100% !important;
+    margin: 0;
+    max-width: 100%;
+    padding: 0;
+    top: 0;
+    height: 100%;
+    .ant-modal-content {
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh);
+    }
+    .ant-modal-body {
+      flex: 1;
+    }
+  }
+}
+
+
+.modal-container {
+  .ant-modal-close {
+    display: none;
+  }
+}
