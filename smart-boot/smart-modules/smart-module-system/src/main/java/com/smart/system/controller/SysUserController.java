@@ -18,7 +18,6 @@ import com.smart.system.constants.UserDeptIdentEnum;
 import com.smart.system.model.*;
 import com.smart.system.pojo.dto.common.UseYnSetDTO;
 import com.smart.system.pojo.dto.user.UserAccountSaveDTO;
-import com.smart.system.pojo.dto.user.UserSaveWithDataScopeDTO;
 import com.smart.system.pojo.dto.user.UserSetRoleDTO;
 import com.smart.system.pojo.dto.user.UserUpdateDTO;
 import com.smart.system.pojo.vo.SysFunctionListVO;
