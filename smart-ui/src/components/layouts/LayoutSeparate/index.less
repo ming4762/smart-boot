@@ -1,0 +1,23 @@
+.smart-layout-separate {
+  display: flex;
+  // 上下布局
+  &.column-flex-direction {
+    flex-direction: column;
+  }
+  // 左右布局
+  &.row-flex-direction {
+    flex-direction: row;
+  }
+  // 分割线左右布局
+  .row-divider {
+    .ant-divider-vertical {
+      height: 100%;
+      margin: 0 5px;
+    }
+  }
+  .column-divider {
+    .ant-divider-horizontal {
+      margin: 5px 0;
+    }
+  }
+}

@@ -37,13 +37,12 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
-  .tab-container {
-    ::v-deep(.ant-tabs-content) {
-      height: 100%;
-    }
-    ::v-deep(.ant-tabs-nav) {
-      padding: 0 10px;
-    }
+.tab-container {
+  ::v-deep(.ant-tabs-content) {
+    height: 100%;
   }
-
+  ::v-deep(.ant-tabs-nav) {
+    padding: 0 10px;
+  }
+}
 </style>
