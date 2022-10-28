@@ -19,5 +19,10 @@ public enum CrudCommonEnum {
     /**
      * 指定字段
      */
-    ASSIGN_FIELD
+    ASSIGN_FIELD,
+
+    /**
+     * 数据权限参数
+     */
+    DATA_PERMISSION;
 }

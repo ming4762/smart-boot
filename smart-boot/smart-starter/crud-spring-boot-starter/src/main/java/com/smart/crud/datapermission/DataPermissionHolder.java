@@ -9,12 +9,16 @@ public class DataPermissionHolder {
 
     private static final ThreadLocal<String> THREAD_LOCAL = new ThreadLocal<>();
 
-    public void setSql(String sql) {
+    public static void setSql(String sql) {
         THREAD_LOCAL.remove();
         THREAD_LOCAL.set(sql);
     }
 
-    public String getSql() {
+    public static String getSql() {
         return THREAD_LOCAL.get();
+    }
+
+    public static void clear() {
+        THREAD_LOCAL.remove();
     }
 }

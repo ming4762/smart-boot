@@ -1,6 +1,7 @@
 package com.smart.crud.datapermission;
 
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 import java.util.Set;
 
@@ -12,28 +13,23 @@ import java.util.Set;
 public interface UserDataScopeProvider {
 
     /**
-     * 获取当前用户的数据权限范围
-     * @return 数据权限范围
+     * 获取用户数据权限
+     * @return UserDataScope
      */
-    @NonNull
-    Set<String> getCurrentUserDataScope();
-
-    /**
-     * 获取用户的部门ID
-     * @return 部门ID
-     */
-    Long getUserDeptId();
-
-    /**
-     * 获取用户ID
-     * @return 用户ID
-     */
-    Long getUserId();
+    @Nullable
+    UserDataScope getUserUserDataScope();
 
     /**
      * 获取用户部门及下级部门ID
+     * @param deptId 部门ID
      * @return 用户部门及下级部门ID
      */
-    Set<Long> getUserAllDeptId();
+    @NonNull
+    Set<Long> getUserAllDeptId(@NonNull Long deptId);
 
+    /**
+     * 是否是超级管理员
+     * @return 是否是超级管理员
+     */
+    boolean isSuperAdmin();
 }
