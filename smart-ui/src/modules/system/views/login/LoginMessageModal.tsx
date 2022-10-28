@@ -29,6 +29,7 @@ export default defineComponent({
         Modal.confirm({
           title: 'Confirm',
           icon: createVNode(ExclamationCircleOutlined),
+          zIndex: 10000,
           content: t('system.login.noLogin'),
           onCancel() {
             systemLoginStore.hideWarningNoLogin()

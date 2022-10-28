@@ -75,18 +75,25 @@ const useModalMove = (
 
 /**
  * 可拖拽放大Modal
- * 目前能实现放大缩小功能
+ * @author shizhongming
  */
 export default defineComponent({
   name: 'ModalDrag',
   props: {
+    // 标题，也可通过slot:title设置，slot优先级高
     title: {
       type: String as PropType<string>
     },
+    /**
+     * 是否默认全屏
+     */
     defaultFullscreen: {
       type: Boolean as PropType<boolean>,
       default: false
     },
+    /**
+     * 显示状态支持v-model
+     */
     visible: {
       type: Boolean as PropType<boolean>,
       default: false
@@ -104,7 +111,7 @@ export default defineComponent({
     const isFullscreen = ref(props.defaultFullscreen)
     const titleRef = ref<HTMLElement | null>(null)
     // 拖动是否初始化
-    const isDragIniting = ref(false)
+    const isDragInit = ref(false)
     /**
      * 开启关闭全屏
      * @param status 状态
@@ -164,7 +171,7 @@ export default defineComponent({
       default: slots.default
     }
     watch(draggable, (value) => {
-      if (value && !isDragIniting.value) {
+      if (value && !isDragInit.value) {
         const { transformStyle } = useModalMove(titleRef, isFullscreen, draggable)
         // 添加拖拽支持
         modalSlots.modalRender = ({ originVNode }: any) => (

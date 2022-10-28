@@ -89,7 +89,7 @@ export default defineComponent({
       handleOk
     }
   },
-  data () {
+  data() {
     return {
       vxeColumns: [
         {
@@ -127,7 +127,7 @@ export default defineComponent({
         },
         {
           title: '事务执行',
-          field: 'Txn',
+          field: 'InTransactionCount',
           width: 100
         },
         {
@@ -138,7 +138,7 @@ export default defineComponent({
         },
         {
           title: '更新行数',
-          field: 'UpdateCount',
+          field: 'EffectedRowCount',
           width: 120,
           sortable: true
         },

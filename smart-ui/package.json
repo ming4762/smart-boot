@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.1.4",
+    "@types/lodash": "^4.14.186",
     "@types/node": "^16.11.56",
     "@types/pubsub-js": "^1.8.3",
     "@vitejs/plugin-vue": "^3.0.3",
