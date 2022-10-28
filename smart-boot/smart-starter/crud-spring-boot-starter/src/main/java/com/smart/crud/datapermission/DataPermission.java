@@ -19,13 +19,13 @@ public @interface DataPermission {
      * 部门字段所在表别名
      * @return 别名
      */
-    String deptAlias() default "";
+    String deptAlias();
 
     /**
      * 用户字段表别名
      * @return 别名
      */
-    String userAlias() default "";
+    String userAlias();
 
     /**
      * 是否使用自动注入SQL的方式

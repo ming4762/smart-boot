@@ -144,7 +144,6 @@ public final class LogAspect {
      * @param time 用时
      * @param result 执行结果
      */
-    @SuppressWarnings("rawtypes")
     private void saveLog(ProceedingJoinPoint point, long time, Object result, Exception exception) {
         try {
             final Signature signature = point.getSignature();
