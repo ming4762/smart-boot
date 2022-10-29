@@ -4,8 +4,8 @@ import com.google.common.collect.Lists;
 import com.smart.auth.core.properties.AuthProperties;
 import com.smart.auth.core.secret.data.AccessTokenStoreData;
 import com.smart.auth.core.userdetails.RestUserDetails;
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.lang.NonNull;
+import org.springframework.util.CollectionUtils;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -39,7 +39,7 @@ public abstract class AbstractAccessTokenStore implements AccessTokenStore {
         dataList.add(new AccessTokenStoreData.AccessTokenStoreDataItem(accessToken, Instant.now()));
         if (hasKey) {
             List<AccessTokenStoreData.AccessTokenStoreDataItem> cacheList = this.get(cacheKey).getAccessTokenList();
-            if (CollectionUtils.isNotEmpty(cacheList)) {
+            if (!CollectionUtils.isEmpty(cacheList)) {
                 AccessTokenStoreData.AccessTokenStoreDataItem cache = cacheList.get(0);
                 dataList.add(new AccessTokenStoreData.AccessTokenStoreDataItem(cache.getAccessToken(), Instant.now()));
             }
@@ -64,7 +64,7 @@ public abstract class AbstractAccessTokenStore implements AccessTokenStore {
         }
         List<AccessTokenStoreData.AccessTokenStoreDataItem> validateList = new ArrayList<>();
         List<AccessTokenStoreData.AccessTokenStoreDataItem> dataList = storeData.getAccessTokenList();
-        if (CollectionUtils.isNotEmpty(dataList)) {
+        if (!CollectionUtils.isEmpty(dataList)) {
             AccessTokenStoreData.AccessTokenStoreDataItem first = dataList.get(0);
             // 判断是否超时（正常来说不会超时，因为有缓存超时设置）
             if (!first.getCreateTime().plus(this.properties.getAccessTokenTimeout()).isBefore(Instant.now())) {

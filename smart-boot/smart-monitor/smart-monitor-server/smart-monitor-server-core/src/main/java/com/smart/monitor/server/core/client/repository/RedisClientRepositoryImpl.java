@@ -6,9 +6,9 @@ import com.smart.monitor.server.common.model.ClientData;
 import com.smart.monitor.server.common.model.ClientId;
 import com.smart.starter.redis.service.RedisService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+import org.springframework.util.CollectionUtils;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -212,7 +212,7 @@ public class RedisClientRepositoryImpl extends AbstractClientRepositoryImpl {
         applicationNameList.forEach(name -> {
             var idHashKey = this.getIdHashKey(name);
             var ids = (Set<String>) this.redisService.hashGet(this.storeKey, idHashKey);
-            if (CollectionUtils.isNotEmpty(ids)) {
+            if (!CollectionUtils.isEmpty(ids)) {
                 clientIds.addAll(ids);
             }
         });

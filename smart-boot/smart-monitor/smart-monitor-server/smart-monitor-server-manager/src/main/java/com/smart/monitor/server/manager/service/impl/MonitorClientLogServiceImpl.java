@@ -10,9 +10,9 @@ import com.smart.monitor.server.manager.model.MonitorClientLogPO;
 import com.smart.monitor.server.manager.service.MonitorApplicationService;
 import com.smart.monitor.server.manager.service.MonitorClientLogService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;

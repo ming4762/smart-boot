@@ -7,8 +7,8 @@ import com.smart.document.service.ExcelService;
 import com.smart.module.document.pojo.dto.excel.ExcelFillWithCodeData;
 import com.smart.module.document.service.DocumentExcelService;
 import lombok.SneakyThrows;
-import org.apache.commons.collections4.MapUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -59,7 +59,7 @@ public class DefaultDocumentExcelServiceImpl implements DocumentExcelService {
         Map<String, Object> templateData = Maps.newHashMap();
         templateData.put("data", data.getData());
         // 处理条形码
-        if (MapUtils.isNotEmpty(data.getBarcodeMap())) {
+        if (!CollectionUtils.isEmpty(data.getBarcodeMap())) {
             Map<String, byte[]> barcodeMap = new HashMap<>(data.getBarcodeMap().size());
             data.getBarcodeMap().forEach((key, value) -> {
                 try (ByteArrayOutputStream barcodeStream = new ByteArrayOutputStream()) {
@@ -72,7 +72,7 @@ public class DefaultDocumentExcelServiceImpl implements DocumentExcelService {
             templateData.put("barcodeMap", barcodeMap);
         }
         // 处理二维码
-        if (MapUtils.isNotEmpty(data.getQrcodeMap())) {
+        if (!CollectionUtils.isEmpty(data.getQrcodeMap())) {
             Map<String, byte[]> qrcodeMap = new HashMap<>(data.getQrcodeMap().size());
             data.getQrcodeMap().forEach((key, value) -> {
                 try (ByteArrayOutputStream qrcodeStream = new ByteArrayOutputStream()) {

@@ -4,12 +4,12 @@ import com.smart.monitor.server.common.model.ClientData;
 import com.smart.monitor.server.common.sync.MonitorDataSync;
 import com.smart.monitor.server.core.client.repository.ClientRepository;
 import com.smart.monitor.server.core.task.TaskSchedulerProvider;
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.Ordered;
 import org.springframework.lang.NonNull;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.util.CollectionUtils;
 
 import java.time.Duration;
 import java.util.Arrays;
@@ -43,7 +43,7 @@ public class DataSyncDispatcher implements ApplicationListener<ApplicationReadyE
                 .map(name -> event.getApplicationContext().getBean(name, MonitorDataSync.class))
                 .sorted(Comparator.comparing(Ordered::getOrder))
                 .toList();
-        if (CollectionUtils.isNotEmpty(monitorDataSyncList)) {
+        if (!CollectionUtils.isEmpty(monitorDataSyncList)) {
             this.taskSchedulerProvider.getTaskScheduler()
                     .scheduleWithFixedDelay(() -> this.doSync(monitorDataSyncList), Duration.ofSeconds(60));
         }

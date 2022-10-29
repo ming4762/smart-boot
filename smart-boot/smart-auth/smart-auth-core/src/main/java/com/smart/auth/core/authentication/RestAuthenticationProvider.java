@@ -8,7 +8,6 @@ import com.smart.auth.core.i18n.AuthI18nMessage;
 import com.smart.auth.core.model.RestUserDetailsImpl;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.commons.core.i18n.I18nUtils;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
@@ -17,6 +16,7 @@ import org.springframework.security.authentication.dao.AbstractUserDetailsAuthen
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsChecker;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -48,7 +48,7 @@ public class RestAuthenticationProvider extends AbstractUserDetailsAuthenticatio
             throw new BadCredentialsException(I18nUtils.get(AuthI18nMessage.USERNAME_PASSWORD_ERROR, user.getLoginFailTime() + 1));
         }
         List<String> ipWhiteList = user.getIpWhiteList();
-        if (CollectionUtils.isNotEmpty(ipWhiteList) && !ipWhiteList.contains(user.getLoginIp())) {
+        if (!CollectionUtils.isEmpty(ipWhiteList) && !ipWhiteList.contains(user.getLoginIp())) {
             throw new IpBindAuthenticationException(I18nUtils.get(AuthI18nMessage.ACCOUNT_IP_NOT_IN_WHITELIST));
         }
     }

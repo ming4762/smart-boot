@@ -15,6 +15,7 @@
 	<properties>
 	</properties>
 
+<!--	TODO: 存在漏洞依赖待修复-->
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.security.extensions</groupId>
