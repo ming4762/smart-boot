@@ -17,12 +17,12 @@ import com.smart.system.model.SysUserAccountPO;
 import com.smart.system.model.SysUserPO;
 import com.smart.system.pojo.vo.user.SysOnlineUserVO;
 import com.smart.system.service.SysUserAccountService;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -67,7 +67,7 @@ public class SysUserAccountServiceImpl extends BaseServiceImpl<SysUserAccountMap
             SysOnlineUserVO onlineUser = new SysOnlineUserVO();
             BeanUtils.copyProperties(user, onlineUser);
             List<RestUserDetails> userDetailsList = restUserDetailsMap.get(user.getUserId());
-            if (CollectionUtils.isNotEmpty(userDetailsList)) {
+            if (!CollectionUtils.isEmpty(userDetailsList)) {
                 onlineUser.setUserLoginDataList(
                         userDetailsList.stream().map(userDetail -> {
                             SysOnlineUserVO.UserLoginData loginData = new SysOnlineUserVO.UserLoginData();
@@ -115,15 +115,25 @@ public class SysUserAccountServiceImpl extends BaseServiceImpl<SysUserAccountMap
         // 验证用户是否已经删除
         List<SysUserPO> deleteUser = userList.stream()
                 .filter(item -> Boolean.TRUE.equals(item.getDeleteYn()))
+<<<<<<< HEAD
                 .collect(Collectors.toList());
         if (CollectionUtils.isNotEmpty(deleteUser)) {
+=======
+                .toList();
+        if (!CollectionUtils.isEmpty(deleteUser)) {
+>>>>>>> d3a0b4a (安全性更新：移除 commons-beans   commons-collections)
             throw new I18nException(SystemI18nMessage.SYSTEM_ACCOUNT_HAS_DELETE_ERROR, deleteUser.stream().map(SysUserPO::getUsername).collect(Collectors.joining(",")));
         }
         // 验证用户是否未启用
         List<SysUserPO> noUserList = userList.stream()
                 .filter(item -> Boolean.FALSE.equals(item.getUseYn()))
+<<<<<<< HEAD
                 .collect(Collectors.toList());
         if (CollectionUtils.isNotEmpty(noUserList)) {
+=======
+                .toList();
+        if (!CollectionUtils.isEmpty(noUserList)) {
+>>>>>>> d3a0b4a (安全性更新：移除 commons-beans   commons-collections)
             throw new I18nException(SystemI18nMessage.SYSTEM_ACCOUNT_HAS_NO_USE_ERROR, noUserList.stream().map(SysUserPO::getUsername).collect(Collectors.joining(",")));
         }
         Map<Long, SysUserPO> userMap = userList.stream()
@@ -134,7 +144,7 @@ public class SysUserAccountServiceImpl extends BaseServiceImpl<SysUserAccountMap
                 .select(SysUserAccountPO :: getUserId)
                 .in(SysUserAccountPO :: getUserId, userMap.keySet())
         );
-        if (CollectionUtils.isNotEmpty(existAccountList)) {
+        if (!CollectionUtils.isEmpty(existAccountList)) {
             // 账户已经存在抛出异常
             throw new I18nException(
                     SystemI18nMessage.SYSTEM_ACCOUNT_EXIST_ERROR,

@@ -16,12 +16,12 @@ import com.smart.system.pojo.vo.SysRoleListVO;
 import com.smart.system.service.SysRoleFunctionService;
 import com.smart.system.service.SysRoleService;
 import com.smart.system.service.SysUserRoleService;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,7 +77,7 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRoleMapper, SysRolePO
                 .eq(SysRoleFunctionPO :: getRoleId, parameter.getRoleId())
         );
         // 保存
-        if (CollectionUtils.isNotEmpty(parameter.getFunctionIdList())) {
+        if (!CollectionUtils.isEmpty(parameter.getFunctionIdList())) {
             return this.sysRoleFunctionService.saveBatchWithUser(
                 parameter.getFunctionIdList().stream().map(item -> {
                     final SysRoleFunctionPO sysRoleFunction = new SysRoleFunctionPO();

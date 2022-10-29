@@ -1,13 +1,9 @@
 package com.smart.commons.core.utils;
 
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.beanutils.PropertyUtils;
 import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
@@ -25,27 +21,6 @@ public final class ReflectUtils {
 
     private ReflectUtils() {
         throw new IllegalStateException("Utility class");
-    }
-
-    /**
-     * 通过对象属性名获取属性值
-     * @param value 对象
-     * @param fieldName 属性名
-     * @return 属性值
-     */
-    @Nullable
-    public static Object getFieldValue(@NonNull Object value, @NonNull String fieldName) {
-        try {
-            return PropertyUtils.getProperty(value, fieldName);
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            return null;
-        }
-    }
-
-    @SneakyThrows({IllegalAccessException.class, InvocationTargetException.class, NoSuchMethodException.class})
-    public static void setFieldValue(final Object bean, final String name, final Object value) {
-        PropertyUtils.setProperty(bean, name, value);
     }
 
     /**

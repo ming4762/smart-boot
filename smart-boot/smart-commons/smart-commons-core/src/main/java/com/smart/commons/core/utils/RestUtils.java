@@ -1,9 +1,9 @@
 package com.smart.commons.core.utils;
 
-import org.apache.commons.collections.MapUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.http.*;
 import org.springframework.lang.NonNull;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.RestTemplate;
 
@@ -28,7 +28,7 @@ public class RestUtils {
 
     public static <T> ResponseEntity<T> rest(@NonNull String url, @NonNull HttpMethod httpMethod, Map<String, String> headers, Object parameter, @NonNull Class<T> clazz, Object ...uriVariables) {
         final HttpHeaders httpHeaders = new HttpHeaders();
-        if (MapUtils.isNotEmpty(headers)) {
+        if (!CollectionUtils.isEmpty(headers)) {
             headers.forEach(httpHeaders :: add);
         }
         final HttpEntity<?> httpEntity = new HttpEntity<>(parameter, httpHeaders);
@@ -47,7 +47,7 @@ public class RestUtils {
     public static void download(@NonNull String url, @NonNull HttpMethod httpMethod, Map<String, String> headers, Object parameter, OutputStream outputStream, Object ...uriVariables) {
         RequestCallback requestCallback = request -> {
             request.getHeaders().setAccept(Arrays.asList(MediaType.APPLICATION_OCTET_STREAM, MediaType.ALL));
-            if (MapUtils.isNotEmpty(headers)) {
+            if (!CollectionUtils.isEmpty(headers)) {
                 headers.forEach((key, value) -> request.getHeaders().add(key, value));
             }
             if (parameter != null) {

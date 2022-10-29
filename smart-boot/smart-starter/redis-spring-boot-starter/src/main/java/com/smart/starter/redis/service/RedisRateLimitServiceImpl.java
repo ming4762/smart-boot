@@ -1,10 +1,10 @@
 package com.smart.starter.redis.service;
 
 import com.smart.commons.core.lock.limit.RateLimitService;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.data.redis.connection.ReturnType;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.lang.NonNull;
+import org.springframework.util.CollectionUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;

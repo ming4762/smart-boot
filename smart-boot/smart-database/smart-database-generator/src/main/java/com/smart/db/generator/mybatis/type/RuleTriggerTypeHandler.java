@@ -1,12 +1,12 @@
 package com.smart.db.generator.mybatis.type;
 
 import com.smart.db.generator.constants.RuleTriggerEnum;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.MappedJdbcTypes;
 import org.springframework.lang.NonNull;
+import org.springframework.util.CollectionUtils;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
@@ -29,7 +29,7 @@ public class RuleTriggerTypeHandler extends BaseTypeHandler<List<RuleTriggerEnum
 
     @Override
     public void setNonNullParameter(PreparedStatement ps, int i, List<RuleTriggerEnum> parameter, JdbcType jdbcType) throws SQLException {
-        if (CollectionUtils.isNotEmpty(parameter)) {
+        if (!CollectionUtils.isEmpty(parameter)) {
             final String value = parameter.stream()
                     .map(Enum::name)
                     .collect(Collectors.joining(SPLIT));

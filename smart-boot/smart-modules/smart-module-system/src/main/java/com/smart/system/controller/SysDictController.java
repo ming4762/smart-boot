@@ -9,10 +9,10 @@ import com.smart.crud.query.IdParameter;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.system.model.SysDictPO;
 import com.smart.system.service.SysDictService;
-import io.swagger.annotations.ApiOperation;
-import org.apache.commons.collections.CollectionUtils;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,7 +33,7 @@ public class SysDictController extends BaseController<SysDictService, SysDictPO>
 
     @Override
     @PostMapping("list")
-    @ApiOperation(value = "查询角色列表（支持分页、实体类属性查询）")
+    @Operation(summary = "查询角色列表（支持分页、实体类属性查询）")
     public Result<Object> list(@RequestBody @NonNull PageSortQuery parameter) {
         return super.list(parameter);
     }

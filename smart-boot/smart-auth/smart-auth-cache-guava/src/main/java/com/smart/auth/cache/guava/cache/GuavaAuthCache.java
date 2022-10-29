@@ -3,8 +3,8 @@ package com.smart.auth.cache.guava.cache;
 import com.smart.auth.core.properties.AuthProperties;
 import com.smart.auth.core.service.AbstractAuthCache;
 import com.smart.starter.cache.guava.GuavaCacheService;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.lang.NonNull;
+import org.springframework.util.CollectionUtils;
 
 import java.time.Duration;
 import java.util.*;

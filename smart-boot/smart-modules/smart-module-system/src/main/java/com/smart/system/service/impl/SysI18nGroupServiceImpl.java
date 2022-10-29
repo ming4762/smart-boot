@@ -7,9 +7,9 @@ import com.smart.system.model.SysI18nGroupPO;
 import com.smart.system.model.SysI18nPO;
 import com.smart.system.service.SysI18nGroupService;
 import com.smart.system.service.SysI18nService;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -42,7 +42,7 @@ public class SysI18nGroupServiceImpl extends BaseServiceImpl<SysI18nGroupMapper,
                 .in(SysI18nPO :: getGroupId, idList)
         ).stream().map(SysI18nPO :: getI18nId)
                 .collect(Collectors.toSet());
-        if (CollectionUtils.isNotEmpty(i18nIds)) {
+        if (!CollectionUtils.isEmpty(i18nIds)) {
             this.sysI18nService.removeByIds(i18nIds);
         }
         return super.removeByIds(idList);

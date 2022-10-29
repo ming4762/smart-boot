@@ -13,11 +13,11 @@ import com.smart.monitor.server.manager.pojo.dto.MonitorApplicationSaveUpdateDTO
 import com.smart.monitor.server.manager.pojo.dto.MonitorApplicationSetUserGroupDTO;
 import com.smart.monitor.server.manager.service.MonitorApplicationService;
 import com.smart.monitor.server.manager.service.MonitorUserGroupApplicationService;
-import io.swagger.annotations.ApiOperation;
-import org.apache.commons.collections.CollectionUtils;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

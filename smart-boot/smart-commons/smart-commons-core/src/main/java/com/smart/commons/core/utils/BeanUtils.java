@@ -1,7 +1,7 @@
 package com.smart.commons.core.utils;
 
 import lombok.SneakyThrows;
-import org.apache.commons.collections.CollectionUtils;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -1,13 +1,13 @@
 package com.smart.db.analysis.utils;
 
 import com.google.common.collect.Lists;
+import com.smart.commons.core.utils.PropertyUtils;
 import com.smart.db.analysis.annotation.DatabaseField;
 import com.smart.db.analysis.constants.ExceptionConstant;
 import com.smart.db.analysis.converter.AutoConverter;
 import com.smart.db.analysis.converter.Converter;
 import com.smart.db.analysis.exception.SmartDatabaseException;
 import lombok.SneakyThrows;
-import org.apache.commons.beanutils.PropertyUtils;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.lang.NonNull;
 

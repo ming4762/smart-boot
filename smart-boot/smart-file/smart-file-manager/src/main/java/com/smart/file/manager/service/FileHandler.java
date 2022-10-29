@@ -11,7 +11,6 @@ import com.smart.file.manager.pojo.bo.SysFileBO;
 import com.smart.file.manager.pojo.dto.SaveFileDTO;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
@@ -23,6 +22,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
@@ -195,7 +195,7 @@ public class FileHandler implements ApplicationContextAware, InitializingBean {
     public boolean batchDeleteFile(@NonNull Collection<Serializable> fileIds) {
         if (!fileIds.isEmpty()) {
             final List<SysFilePO> fileList = this.sysFileService.listByIds(fileIds);
-            if (CollectionUtils.isNotEmpty(fileList)) {
+            if (!CollectionUtils.isEmpty(fileList)) {
                 this.sysFileService.removeByIds(fileIds);
                 // 删除实际文件
                 fileList.stream()

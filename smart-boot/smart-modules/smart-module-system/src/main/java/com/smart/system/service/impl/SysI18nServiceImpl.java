@@ -12,11 +12,11 @@ import com.smart.system.pojo.dbo.I18nCodeValueBO;
 import com.smart.system.pojo.vo.SysI18nUserVO;
 import com.smart.system.service.SysI18nItemService;
 import com.smart.system.service.SysI18nService;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.io.Serializable;
 import java.util.Collection;

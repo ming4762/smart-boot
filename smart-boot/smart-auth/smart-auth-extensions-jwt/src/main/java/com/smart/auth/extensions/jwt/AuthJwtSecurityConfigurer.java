@@ -13,7 +13,6 @@ import com.smart.auth.extensions.jwt.filter.JwtLoginFilter;
 import com.smart.auth.extensions.jwt.filter.JwtLogoutFilter;
 import com.smart.auth.extensions.jwt.service.JwtService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
@@ -31,6 +30,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Objects;

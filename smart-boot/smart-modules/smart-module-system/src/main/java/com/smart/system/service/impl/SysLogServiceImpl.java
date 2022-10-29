@@ -10,10 +10,10 @@ import com.smart.system.mapper.SysLogMapper;
 import com.smart.system.model.SysLogPO;
 import com.smart.system.pojo.vo.SysLogListVO;
 import com.smart.system.service.SysLogService;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;

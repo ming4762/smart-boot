@@ -24,10 +24,10 @@ import com.smart.db.generator.service.DbConnectionService;
 import com.smart.system.service.SysUserGroupUserService;
 import lombok.NonNull;
 import lombok.SneakyThrows;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Objects;
@@ -101,7 +101,7 @@ public class DbConnectionServiceImpl extends BaseServiceImpl<DbConnectionMapper,
         List<Long> groupIdList = this.sysUserGroupUserService.listGroupIdByUserId(Lists.newArrayList(AuthUtils.getNonNullCurrentUserId())).get(AuthUtils.getNonNullCurrentUserId());
         // 查询用户组对应的连接信息
         final Set<Long> connectionIds = Sets.newHashSet();
-        if (CollectionUtils.isNotEmpty(groupIdList)) {
+        if (!CollectionUtils.isEmpty(groupIdList)) {
             connectionIds.addAll(
                     this.dbCodeConnectionUserGroupService.list(
                             new QueryWrapper<DbCodeConnectionUserGroupPO>().lambda()
@@ -114,7 +114,7 @@ public class DbConnectionServiceImpl extends BaseServiceImpl<DbConnectionMapper,
         }
         queryWrapper.lambda().and(wrapper -> {
             wrapper.eq(DbConnectionPO :: getCreateUserId, AuthUtils.getNonNullCurrentUserId());
-            if (CollectionUtils.isNotEmpty(connectionIds)) {
+            if (!CollectionUtils.isEmpty(connectionIds)) {
                 wrapper.or(query -> query.in(DbConnectionPO :: getId, connectionIds));
             }
         });

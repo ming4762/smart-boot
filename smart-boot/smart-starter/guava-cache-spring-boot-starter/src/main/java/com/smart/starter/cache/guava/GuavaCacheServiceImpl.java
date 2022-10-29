@@ -5,9 +5,9 @@ import com.google.common.cache.CacheBuilder;
 import com.smart.starter.cache.guava.data.CacheObject;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import org.springframework.util.CollectionUtils;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -175,7 +175,7 @@ public class GuavaCacheServiceImpl implements GuavaCacheService {
     @Override
     public void matchDelete(@NonNull Object prefixKey) {
         List<Object> keys = this.matchKeys(prefixKey);
-        if (CollectionUtils.isNotEmpty(keys)) {
+        if (CollectionUtils.isEmpty(keys)) {
             this.batchDelete(keys);
         }
     }
