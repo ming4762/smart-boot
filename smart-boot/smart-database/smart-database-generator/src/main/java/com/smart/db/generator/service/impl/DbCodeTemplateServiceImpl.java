@@ -18,10 +18,10 @@ import com.smart.db.generator.pojo.vo.template.DbCodeTemplateListVO;
 import com.smart.db.generator.service.DbCodeTemplateService;
 import com.smart.db.generator.service.DbCodeTemplateUserGroupService;
 import com.smart.system.service.SysUserGroupUserService;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -59,7 +59,7 @@ public class DbCodeTemplateServiceImpl extends BaseServiceImpl<DbCodeTemplateMap
             // 3、创建者
             queryWrapper.lambda().and(query -> {
                 query.eq(DbCodeTemplatePO :: getCreateUserId, user.getUserId());
-                if (CollectionUtils.isNotEmpty(templateIdList)) {
+                if (!CollectionUtils.isEmpty(templateIdList)) {
                     query.or(queryOr -> queryOr.in(DbCodeTemplatePO :: getTemplateId, templateIdList));
                 }
             });
@@ -101,7 +101,7 @@ public class DbCodeTemplateServiceImpl extends BaseServiceImpl<DbCodeTemplateMap
                 new QueryWrapper<DbCodeTemplateUserGroupPO>().lambda()
                 .eq(DbCodeTemplateUserGroupPO :: getTemplateId, parameter.getTemplateId())
         );
-        if (CollectionUtils.isNotEmpty(parameter.getGroupIdList())) {
+        if (!CollectionUtils.isEmpty(parameter.getGroupIdList())) {
             final List<DbCodeTemplateUserGroupPO> templateUserGroupList = parameter.getGroupIdList().stream()
                     .map(item -> new DbCodeTemplateUserGroupPO(parameter.getTemplateId(), item))
                     .toList();

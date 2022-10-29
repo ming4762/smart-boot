@@ -4,16 +4,15 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.common.collect.Lists;
 import com.smart.crud.service.BaseServiceImpl;
+import com.smart.system.mapper.SysDictItemMapper;
+import com.smart.system.model.SysDictItemPO;
 import com.smart.system.pojo.dto.dict.SysDictItemIdDTO;
-import org.apache.commons.collections.CollectionUtils;
+import com.smart.system.service.SysDictItemService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
-
-import com.smart.system.model.SysDictItemPO;
-import com.smart.system.service.SysDictItemService;
-import com.smart.system.mapper.SysDictItemMapper;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.io.Serializable;
 import java.util.List;

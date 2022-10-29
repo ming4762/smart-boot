@@ -4,7 +4,6 @@ import com.smart.commons.core.data.Tree;
 import com.smart.kettle.core.model.RepositoryDirectoryData;
 import com.smart.kettle.core.model.RepositoryElementMetaData;
 import lombok.SneakyThrows;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.pentaho.di.core.KettleEnvironment;
 import org.pentaho.di.core.exception.KettleException;
@@ -22,6 +21,7 @@ import org.pentaho.di.repository.kdr.KettleDatabaseRepository;
 import org.pentaho.di.trans.Trans;
 import org.pentaho.di.trans.TransMeta;
 import org.springframework.lang.NonNull;
+import org.springframework.util.CollectionUtils;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -258,7 +258,7 @@ public class KettleActuator {
         tree.setId(repositoryDirectoryData.getId().getId());
         tree.setParentId(repositoryDirectoryData.getParentId() == null ? "0" : repositoryDirectoryData.getParentId().getId());
         // 使用递归构建树
-        if (CollectionUtils.isNotEmpty(repositoryDirectoryInterface.getChildren())) {
+        if (!CollectionUtils.isEmpty(repositoryDirectoryInterface.getChildren())) {
             tree.setChildren(
                     repositoryDirectoryInterface.getChildren().stream().map(item -> loadRepositoryData(repository, item, hasDeleted)).toList()
             );

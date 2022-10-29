@@ -11,10 +11,10 @@ import com.smart.monitor.server.manager.model.MonitorApplicationPO;
 import com.smart.monitor.server.manager.pojo.vo.MonitorApplicationUserVO;
 import com.smart.monitor.server.manager.service.MonitorApplicationService;
 import com.smart.monitor.server.manager.service.MonitorUserGroupApplicationService;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

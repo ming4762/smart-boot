@@ -2,9 +2,9 @@ package com.smart.auth.cache.redis;
 
 import com.smart.auth.core.service.AbstractAuthCache;
 import com.smart.starter.redis.service.RedisService;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+import org.springframework.util.CollectionUtils;
 
 import java.time.Duration;
 import java.util.*;

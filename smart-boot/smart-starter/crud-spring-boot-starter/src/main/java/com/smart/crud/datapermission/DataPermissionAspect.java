@@ -3,11 +3,11 @@ package com.smart.crud.datapermission;
 import com.smart.crud.constants.CrudCommonEnum;
 import com.smart.crud.query.CommonQuery;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+import org.springframework.util.CollectionUtils;
 
 import java.util.stream.Collectors;
 

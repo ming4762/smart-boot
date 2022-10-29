@@ -6,9 +6,9 @@ import com.smart.auth.core.properties.AuthProperties;
 import com.smart.auth.core.service.AuthCache;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.auth.extensions.jwt.data.JwtData;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
+import org.springframework.util.CollectionUtils;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

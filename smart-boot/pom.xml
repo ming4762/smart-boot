@@ -51,7 +51,6 @@
     <modules>
         <module>smart-auth</module>
         <module>smart-autoconfigure</module>
-        <module>smart-cloud</module>
         <module>smart-commons</module>
         <module>smart-database</module>
         <module>smart-document</module>
@@ -120,12 +119,6 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-collections4</artifactId>
                 <version>${commons-collections4.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>commons-beanutils</groupId>
-                <artifactId>commons-beanutils</artifactId>
-                <version>${commons-beanutils.version}</version>
             </dependency>
 
             <dependency>

@@ -11,6 +11,7 @@ import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.auth.core.utils.AuthUtils;
 import com.smart.commons.core.i18n.I18nUtils;
 import com.smart.commons.core.utils.DigestUtils;
+import com.smart.commons.core.utils.PropertyUtils;
 import com.smart.crud.constants.CrudCommonEnum;
 import com.smart.crud.constants.UserPropertyEnum;
 import com.smart.crud.datapermission.DataPermissionScope;
@@ -31,8 +32,6 @@ import com.smart.system.pojo.vo.user.SysUserWithDataScopeDTO;
 import com.smart.system.service.*;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +39,7 @@ import org.springframework.context.NoSuchMessageException;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
@@ -276,7 +276,6 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
      * @param resource 原
      * @param <T> 目标类型
      */
-    @SneakyThrows({IllegalAccessException.class, InvocationTargetException.class, NoSuchMethodException.class})
     private <T> void setWithUser(@NonNull List<T> resource, boolean withCreateUser, boolean withUpdateUser) {
         if (resource.isEmpty()) {
             return;
@@ -353,7 +352,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
                 .select(SysFunctionPO::getUrl, SysFunctionPO::getPermission, SysFunctionPO::getHttpMethod)
                 .in(SysFunctionPO :: getFunctionId, functionIds)
                 .orderByAsc(SysFunctionPO :: getSeq);
-        if (CollectionUtils.isNotEmpty(types)) {
+        if (!CollectionUtils.isEmpty(types)) {
             queryWrapper.in(SysFunctionPO :: getFunctionType, types.stream().map(FunctionTypeEnum::getValue).toList());
         }
         var permissions = this.sysFunctionService.list(queryWrapper).stream()
@@ -406,7 +405,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         final LambdaQueryWrapper<SysFunctionPO> queryWrapper = new QueryWrapper<SysFunctionPO>().lambda()
                 .in(SysFunctionPO :: getFunctionId, functionIds)
                 .orderByAsc(SysFunctionPO :: getSeq);
-        if (CollectionUtils.isNotEmpty(types)) {
+        if (!CollectionUtils.isEmpty(types)) {
             queryWrapper.in(SysFunctionPO :: getFunctionType, types.stream().map(FunctionTypeEnum::getValue).toList());
         }
         return this.sysFunctionService.list(queryWrapper);
@@ -423,7 +422,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
             SysFunctionListVO vo = new SysFunctionListVO();
             BeanUtils.copyProperties(item, vo);
             // 获取国际化信息
-            if (CollectionUtils.isNotEmpty(localeList) && StringUtils.isNotBlank(item.getI18nCode()) && item.getI18nCode().startsWith(I18N_LEFT) && item.getI18nCode().endsWith(I18N_RIGHT)) {
+            if (!CollectionUtils.isEmpty(localeList) && StringUtils.isNotBlank(item.getI18nCode()) && item.getI18nCode().startsWith(I18N_LEFT) && item.getI18nCode().endsWith(I18N_RIGHT)) {
                 String i18nCode = item.getI18nCode().replace(I18N_LEFT, "").replace(I18N_RIGHT, "");
                 vo.setLocales(
                         localeList.stream().collect(Collectors.toMap(Locale::toLanguageTag, locale -> {
@@ -453,7 +452,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
                 new QueryWrapper<SysUserRolePO>().lambda().eq(SysUserRolePO :: getUserId, parameter.getUserId())
         );
         // 保存用户角色关系
-        if (CollectionUtils.isNotEmpty(parameter.getRoleIdList())) {
+        if (!CollectionUtils.isEmpty(parameter.getRoleIdList())) {
             this.sysUserRoleService.saveBatchWithUser(
                     parameter.getRoleIdList().stream().map(roleId -> SysUserRolePO.builder()
                             .roleId(roleId)

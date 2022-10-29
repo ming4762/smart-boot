@@ -8,9 +8,9 @@ import com.smart.system.model.SysDictItemPO;
 import com.smart.system.model.SysDictPO;
 import com.smart.system.service.SysDictItemService;
 import com.smart.system.service.SysDictService;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;

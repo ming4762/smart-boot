@@ -9,12 +9,12 @@ import com.smart.system.mapper.SysFunctionMapper;
 import com.smart.system.model.SysFunctionPO;
 import com.smart.system.pojo.vo.SysFunctionListVO;
 import com.smart.system.service.SysFunctionService;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Collection;
 import java.util.List;

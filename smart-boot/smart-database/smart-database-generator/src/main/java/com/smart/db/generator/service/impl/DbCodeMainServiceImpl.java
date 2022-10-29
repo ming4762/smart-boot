@@ -21,13 +21,13 @@ import com.smart.db.generator.pojo.vo.*;
 import com.smart.db.generator.service.*;
 import com.smart.system.model.SysUserPO;
 import com.smart.system.service.SysUserService;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 
 import java.io.Serializable;
 import java.io.StringWriter;
@@ -221,7 +221,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
         // 保存表关联信息
         final List<DbCodeRelatedTablePO> relatedTableList = Lists.newArrayList();
         model.getCodeSearchConfigList().forEach(search -> {
-            if (CollectionUtils.isNotEmpty(search.getSelectTableList())) {
+            if (!CollectionUtils.isEmpty(search.getSelectTableList())) {
                 relatedTableList.addAll(search.getSelectTableList().stream().map(table -> {
                     final DbCodeRelatedTablePO dbCodeRelatedTable = new DbCodeRelatedTablePO();
                     BeanUtils.copyProperties(table, dbCodeRelatedTable);
@@ -255,7 +255,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
         // 保存表关联信息
         final List<DbCodeRelatedTablePO> relatedTableList = Lists.newArrayList();
         model.getCodeFormConfigList().forEach(item -> {
-            if (CollectionUtils.isNotEmpty(item.getSelectTableList())) {
+            if (!CollectionUtils.isEmpty(item.getSelectTableList())) {
                 relatedTableList.addAll(item.getSelectTableList().stream().map(table -> {
                     final DbCodeRelatedTablePO dbCodeRelatedTable = new DbCodeRelatedTablePO();
                     BeanUtils.copyProperties(table, dbCodeRelatedTable);
@@ -272,7 +272,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
         // 保存rule配置
         final List<DbCodeRuleConfigPO> ruleConfigList = Lists.newArrayList();
         model.getCodeFormConfigList().forEach(item -> {
-            if (CollectionUtils.isNotEmpty(item.getRuleList())) {
+            if (!CollectionUtils.isEmpty(item.getRuleList())) {
                 final AtomicInteger ruleSeq = new AtomicInteger();
                 ruleConfigList.addAll(item.getRuleList().stream().map(rule -> {
                     final DbCodeRuleConfigPO dbCodeRuleConfig = new DbCodeRuleConfigPO();
@@ -300,7 +300,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
         final AtomicInteger right = new AtomicInteger(1);
         final AtomicInteger row = new AtomicInteger(1);
         // 保存按钮配置
-        if (CollectionUtils.isNotEmpty(model.getLeftButtonList())) {
+        if (!CollectionUtils.isEmpty(model.getLeftButtonList())) {
             codeButtonConfigList.addAll(
                     model.getLeftButtonList().stream().map(item ->
                             DbCodeButtonConfigPO.builder()
@@ -312,7 +312,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
                     ).toList()
             );
         }
-        if (CollectionUtils.isNotEmpty(model.getRightButtonList())) {
+        if (!CollectionUtils.isEmpty(model.getRightButtonList())) {
             codeButtonConfigList.addAll(
                     model.getRightButtonList().stream().map(item ->
                             DbCodeButtonConfigPO.builder()
@@ -324,7 +324,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
                     ).toList()
             );
         }
-        if (CollectionUtils.isNotEmpty(model.getRowButtonList())) {
+        if (!CollectionUtils.isEmpty(model.getRowButtonList())) {
             codeButtonConfigList.addAll(
                     model.getRowButtonList().stream().map(item ->
                             DbCodeButtonConfigPO.builder()
@@ -409,7 +409,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
                     .orderByAsc(DbCodeRelatedTablePO :: getSeq)
             );
             final List<Long> relatedTableIdList = relatedTableList.stream().map(DbCodeRelatedTablePO :: getAddendumId).toList();
-            if (CollectionUtils.isNotEmpty(relatedTableIdList)) {
+            if (!CollectionUtils.isEmpty(relatedTableIdList)) {
                 final Map<Long, DbCodeMainPO> dbCodeMainIdMap = this.listByIds(relatedTableIdList)
                         .stream().collect(Collectors.toMap(DbCodeMainPO :: getId, item -> item));
                 result.setRelatedTableList(relatedTableList.stream().map(item -> {
@@ -518,7 +518,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
             BeanUtils.copyProperties(item, dbCodeFormConfigTemplate);
             // 获取关联表信息
             final List<DbTemplateCodeTableDTO> relatedTableList = relatedTableMap.get(dbCodeFormConfigTemplate.getId());
-            if (CollectionUtils.isNotEmpty(relatedTableList)) {
+            if (!CollectionUtils.isEmpty(relatedTableList)) {
                 if (relatedTableList.size() > 1) {
                     throw new BaseException("系统发生未知错误，下拉表格只能设置一个");
                 }
@@ -551,7 +551,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
             BeanUtils.copyProperties(item, dbCodeSearchConfigTemplate);
             // 获取关联表信息
             final List<DbTemplateCodeTableDTO> relatedTableList = relatedTableMap.get(dbCodeSearchConfigTemplate.getId());
-            if (CollectionUtils.isNotEmpty(relatedTableList)) {
+            if (!CollectionUtils.isEmpty(relatedTableList)) {
                 if (relatedTableList.size() > 1) {
                     throw new BaseException("系统发生未知错误，下拉表格只能设置一个");
                 }

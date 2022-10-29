@@ -6,10 +6,10 @@ import com.smart.starter.redis.constants.RedisInfoParameterEnum;
 import com.smart.starter.redis.constants.RedisInfoResultEnum;
 import com.smart.starter.redis.model.RedisInfo;
 import com.smart.starter.redis.service.RedisService;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 import org.springframework.boot.actuate.endpoint.annotation.Selector;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;

@@ -13,6 +13,7 @@ public final class ExceptionUtils {
         throw new IllegalStateException("Utility class");
     }
 
+    @SuppressWarnings("unchecked")
     public static <E extends Exception> void doThrow(Exception e) throws E {
         throw (E)e;
     }

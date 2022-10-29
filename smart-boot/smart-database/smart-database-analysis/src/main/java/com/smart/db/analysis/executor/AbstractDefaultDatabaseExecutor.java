@@ -19,14 +19,13 @@ import com.smart.db.analysis.utils.CacheUtils;
 import com.smart.db.analysis.utils.DatabaseUtils;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.Field;
 import java.sql.*;
@@ -372,7 +371,7 @@ public abstract class AbstractDefaultDatabaseExecutor implements DatabaseExecuto
         ) {
             final List<TableRemarkDO> tableRemarkList = DatabaseUtils.resultSetToModel(rs, TableRemarkDO.class, this.getDatabaseMapping(TableRemarkDO.class));
             // 转为map
-            if (CollectionUtils.isNotEmpty(tableRemarkList)) {
+            if (!CollectionUtils.isEmpty(tableRemarkList)) {
                 Map<String, String> tableRemarkMap = tableRemarkList.stream()
                         .collect(Collectors.toMap(TableRemarkDO :: getTableName, TableRemarkDO :: getRemark));
                 // 遍历设置备注
@@ -404,7 +403,7 @@ public abstract class AbstractDefaultDatabaseExecutor implements DatabaseExecuto
                 ResultSet rs = psmt.executeQuery()
                 ) {
             final List<ColumnRemarkDO> columnRemarkList = DatabaseUtils.resultSetToModel(rs, ColumnRemarkDO.class, this.getDatabaseMapping(ColumnRemarkDO.class));
-            if (CollectionUtils.isNotEmpty(columnRemarkList)) {
+            if (!CollectionUtils.isEmpty(columnRemarkList)) {
                 Map<String, String> columnRemarkMap = columnRemarkList.stream()
                         .collect(Collectors.toMap(item -> item.getTableName() + item.getColumnName(), ColumnRemarkDO::getRemark));
                 columnList.forEach(column -> column.setRemarks(columnRemarkMap.get(column.getTableName() + column.getColumnName())));
@@ -423,7 +422,7 @@ public abstract class AbstractDefaultDatabaseExecutor implements DatabaseExecuto
      */
     @SneakyThrows(SQLException.class)
     private PreparedStatement setInParameter(@NonNull Connection connection, @NonNull String commentSql, @NonNull Collection<String> parameterList) {
-        if (CollectionUtils.isNotEmpty(parameterList) && commentSql.contains(IN_PLACEHOLDER)) {
+        if (!CollectionUtils.isEmpty(parameterList) && commentSql.contains(IN_PLACEHOLDER)) {
             commentSql = commentSql.replace(IN_PLACEHOLDER, String.format(" (%s) ", parameterList.stream().map(item -> "?").collect(Collectors.joining(","))));
         }
         final PreparedStatement preparedStatement = connection.prepareStatement(commentSql);
@@ -441,7 +440,7 @@ public abstract class AbstractDefaultDatabaseExecutor implements DatabaseExecuto
      */
     protected Map<String, Field> getDatabaseMapping(Class<? extends AbstractDatabaseBaseDO> clazz) {
         final Map<String, Field> fieldMap = CacheUtils.getFieldMapping(clazz);
-        if (MapUtils.isEmpty(fieldMap)) {
+        if (CollectionUtils.isEmpty(fieldMap)) {
             throw new SmartDatabaseException(ExceptionConstant.DATABASE_FILE_MAPPING_NOT_FOUND, clazz.getName());
         }
         return fieldMap;

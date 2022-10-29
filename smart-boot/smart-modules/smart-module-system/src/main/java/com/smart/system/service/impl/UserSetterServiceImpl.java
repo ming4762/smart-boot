@@ -8,8 +8,8 @@ import com.smart.crud.model.UserSetter;
 import com.smart.crud.service.UserSetterService;
 import com.smart.system.mapper.SysUserMapper;
 import com.smart.system.model.SysUserPO;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Map;

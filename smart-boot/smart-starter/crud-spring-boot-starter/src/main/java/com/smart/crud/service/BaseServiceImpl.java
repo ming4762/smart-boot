@@ -20,11 +20,11 @@ import com.smart.crud.utils.CrudPageHelper;
 import com.smart.crud.utils.CrudUtils;
 import com.smart.crud.utils.PageCache;
 import lombok.SneakyThrows;
-import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
@@ -254,7 +254,7 @@ public abstract class BaseServiceImpl<K extends CrudBaseMapper<T>, T extends Bas
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean saveBatchWithUser(@NonNull List<T> modelList, Long userId) {
-        if (CollectionUtils.isNotEmpty(modelList)) {
+        if (!CollectionUtils.isEmpty(modelList)) {
             modelList.forEach(item -> {
                 this.setCreateUserId(item, userId);
                 this.setCreateTime(item);
@@ -273,7 +273,7 @@ public abstract class BaseServiceImpl<K extends CrudBaseMapper<T>, T extends Bas
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean updateBatchWithUserById(@NonNull List<T> modelList, Long userId) {
-        if (CollectionUtils.isNotEmpty(modelList)) {
+        if (!CollectionUtils.isEmpty(modelList)) {
             modelList.forEach(item -> {
                 this.setUpdateTime(item);
                 this.setUpdateUserId(item, userId);
@@ -319,28 +319,40 @@ public abstract class BaseServiceImpl<K extends CrudBaseMapper<T>, T extends Bas
      * @param model 实体类
      * @param userId 用户ID
      */
-    @SneakyThrows({IllegalAccessException.class, InvocationTargetException.class, NoSuchMethodException.class})
+    @SneakyThrows({IllegalAccessException.class, InvocationTargetException.class})
     protected void setCreateUserId(T model, Long userId) {
-        PropertyUtils.setProperty(model, UserPropertyEnum.CREATE_USER_ID.getName(), userId);
+        var descriptor = BeanUtils.getPropertyDescriptor(this.getEntityClass(), UserPropertyEnum.CREATE_USER_ID.getName());
+        if (descriptor != null) {
+            descriptor.getWriteMethod().invoke(model, userId);
+        }
     }
 
     /**
      * 设置创建时间
      * @param model 实体类
      */
-    @SneakyThrows({IllegalAccessException.class, InvocationTargetException.class, NoSuchMethodException.class})
+    @SneakyThrows({IllegalAccessException.class, InvocationTargetException.class})
     protected void setCreateTime(T model) {
-        PropertyUtils.setProperty(model, UserPropertyEnum.CREATE_TIME.getName(), LocalDateTime.now());
+        var descriptor = BeanUtils.getPropertyDescriptor(this.getEntityClass(), UserPropertyEnum.CREATE_TIME.getName());
+        if (descriptor != null) {
+            descriptor.getWriteMethod().invoke(model, LocalDateTime.now());
+        }
     }
 
-    @SneakyThrows({IllegalAccessException.class, InvocationTargetException.class, NoSuchMethodException.class})
+    @SneakyThrows({IllegalAccessException.class, InvocationTargetException.class})
     protected void setUpdateUserId(T model, Long userId) {
-        PropertyUtils.setProperty(model, UserPropertyEnum.UPDATE_USER_ID.getName(), userId);
+        var descriptor = BeanUtils.getPropertyDescriptor(this.getEntityClass(), UserPropertyEnum.UPDATE_USER_ID.getName());
+        if (descriptor != null) {
+            descriptor.getWriteMethod().invoke(model, userId);
+        }
     }
 
-    @SneakyThrows({IllegalAccessException.class, InvocationTargetException.class, NoSuchMethodException.class})
+    @SneakyThrows({IllegalAccessException.class, InvocationTargetException.class})
     protected void setUpdateTime(T model) {
-        PropertyUtils.setProperty(model, UserPropertyEnum.UPDATE_TIME.getName(), LocalDateTime.now());
+        var descriptor = BeanUtils.getPropertyDescriptor(this.getEntityClass(), UserPropertyEnum.UPDATE_TIME.getName());
+        if (descriptor != null) {
+            descriptor.getWriteMethod().invoke(model, LocalDateTime.now());
+        }
     }
 
     /**
