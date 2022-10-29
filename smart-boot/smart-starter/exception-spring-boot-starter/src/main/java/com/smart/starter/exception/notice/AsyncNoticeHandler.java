@@ -2,12 +2,12 @@ package com.smart.starter.exception.notice;
 
 import com.smart.auth.core.userdetails.RestUserDetails;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.lang.NonNull;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
@@ -34,7 +34,7 @@ public class AsyncNoticeHandler implements ApplicationContextAware {
      */
     public void noticeException(Exception e, long exceptionNo, RestUserDetails user, HttpServletRequest request) {
         // 执行通知
-        if (CollectionUtils.isNotEmpty(exceptionNoticeList)) {
+        if (!CollectionUtils.isEmpty(exceptionNoticeList)) {
             exceptionNoticeList.forEach(item -> {
                 try {
                     item.notice(e, exceptionNo, user, request);

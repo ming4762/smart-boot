@@ -5,12 +5,12 @@ import com.smart.auth.extensions.appsecret.constants.AppsecretHttpStatus;
 import com.smart.auth.extensions.appsecret.exception.AuthAppsecretException;
 import com.smart.auth.extensions.appsecret.service.AppSecretService;
 import com.smart.commons.core.i18n.I18nUtils;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 

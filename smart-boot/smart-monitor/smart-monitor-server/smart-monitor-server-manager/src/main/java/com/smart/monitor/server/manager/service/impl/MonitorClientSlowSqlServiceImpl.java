@@ -14,12 +14,12 @@ import com.smart.monitor.server.manager.model.MonitorClientSlowSqlPO;
 import com.smart.monitor.server.manager.service.MonitorApplicationService;
 import com.smart.monitor.server.manager.service.MonitorClientSlowSqlService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;

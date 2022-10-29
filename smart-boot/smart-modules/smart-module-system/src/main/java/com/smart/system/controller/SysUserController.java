@@ -251,7 +251,7 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
     @Log(value = "创建账户", type = LogOperationTypeEnum.ADD)
     @PreAuthorize("hasPermission('sys:account', 'add')")
     public Result<Boolean> createAccount(@RequestBody List<Long> userIdList) {
-        if (org.apache.commons.collections4.CollectionUtils.isEmpty(userIdList)) {
+        if (CollectionUtils.isEmpty(userIdList)) {
             return Result.success(false);
         }
         return Result.success(this.sysUserAccountService.createAccount(userIdList));

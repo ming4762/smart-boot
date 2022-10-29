@@ -5,8 +5,8 @@ import com.alibaba.druid.stat.DruidDataSourceStatManager;
 import com.alibaba.druid.stat.DruidStatManagerFacade;
 import com.alibaba.druid.util.DruidDataSourceUtils;
 import lombok.NonNull;
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.lang.Nullable;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.sql.DataSource;
@@ -56,7 +56,7 @@ public class DruidUtils {
         List<Map<String, Object>> datasourceList = datasourceList().stream()
                 .filter(item -> name.equals(item.get("Name")))
                 .collect(Collectors.toList());
-        if (CollectionUtils.isNotEmpty(datasourceList)) {
+        if (!CollectionUtils.isEmpty(datasourceList)) {
             return datasourceList.get(0);
         }
         return new HashMap<>(0);
