@@ -78,7 +78,7 @@ export default {
     },
     common: {
       notice: {
-        logout: 'Are you sure you want to log out?'
+        logout: 'Are you sure you want to logout?'
       }
     },
     message: {

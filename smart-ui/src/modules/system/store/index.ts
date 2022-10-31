@@ -135,9 +135,14 @@ export const useSystemLoginStore = defineStore('systemLoginStore', {
      * 登出操作
      */
     logout() {
-      return ApiService.postAjax('auth/logout').finally(() => {
-        this.clearLoginMessage()
-      })
+      return ApiService.postAjax('auth/logout')
+        .catch((e) => {
+          // do nothing
+          console.log(e)
+        })
+        .finally(() => {
+          this.clearLoginMessage()
+        })
     },
     /**
      * 清除登录信息
