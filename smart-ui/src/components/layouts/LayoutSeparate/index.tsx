@@ -1,8 +1,7 @@
-import { defineComponent, computed, toRefs, ref, watch, watchEffect } from 'vue'
+import { defineComponent, computed, toRefs, ref, watch } from 'vue'
 import type { PropType, Ref, StyleValue } from 'vue'
-import { useDraggable } from '@vueuse/core'
 
-import { isFinite, endsWith, replace, parseInt, toNumber, throttle } from 'lodash'
+import { isFinite, endsWith, replace, parseInt, toNumber } from 'lodash'
 
 import './index.less'
 
@@ -35,117 +34,129 @@ export default defineComponent({
     // 尺寸，如果是number类型，按照百分比分隔
     firstSize: {
       type: [Number, String] as PropType<number | string>,
-      default: 50
+      default: 50,
+      validator(value: string | number) {
+        if (!isFinite(value)) {
+          // @ts-ignore
+          return endsWith(value, '%') || endsWith(value, 'px')
+        }
+        return true
+      }
+    },
+    lineStyle: {
+      type: [Object, String] as PropType<StyleValue | string>,
+      default: () => {
+        return {
+          'border-left': '1px solid rgba(0,0,0,.06)'
+        }
+      }
+    },
+    highLineStyle: {
+      type: [Object, String] as PropType<StyleValue | string>,
+      default: () => {
+        return {
+          'border-left': '2px solid rgb(24, 144, 255)'
+        }
+      }
     }
   },
   setup(props, { slots }) {
-    const { layout, draggable, firstSize } = toRefs(props)
+    const { layout, draggable, firstSize, lineStyle, highLineStyle } = toRefs(props)
+    // 是否是左右布局
+    const isLeftRight = computed(() => layout.value === Layout.LEFT_RIGHT_LAYOUT)
     // 拖拽是否初始化
-    const dragInit = ref(false)
     const dividerRef = ref<HTMLElement | null>(null)
-    let dragVue: any = {}
-    // 启动拖拽
-    watchEffect(() => {
-      if (draggable.value && !dragInit.value) {
-        dragVue = useDrag(dividerRef)
-      }
-    })
+    const dragVue = useDrag(isLeftRight, draggable)
+
     /**
      * 外层DIV class 计算属性
      */
-    const computedClass = computed(() => {
+    const computedContainerClassList = computed(() => {
       // 外层DIV容器class
       const containerClassList = ['smart-layout-separate']
-      // 分割线样式
-      const dividerClassList: Array<string> = []
-      if (layout.value === Layout.LEFT_RIGHT_LAYOUT) {
-        containerClassList.push('row-flex-direction')
-        dividerClassList.push('row-divider')
+      if (isLeftRight.value) {
+        containerClassList.push('left-right-layout')
       } else {
-        containerClassList.push('column-flex-direction')
-        dividerClassList.push('column-divider')
+        containerClassList.push('top-bottom-layout')
       }
-      return {
-        containerClassList,
-        dividerClassList
-      }
+      return containerClassList
     })
     /**
-     * 分割线样式计算属性
+     * 分割线class
      */
-    const computedDividerStyle = computed<StyleValue>(() => {
-      // 分隔线样式
-      if (draggable.value === false) {
-        return {}
+    const computedLineClass = computed(() => {
+      // 分割线样式
+      const dividerClassList: Array<string> = ['drag-line']
+      // 添加高亮设置
+      if (dragVue.isMouseDown && dragVue.isMouseDown.value === true) {
+        dividerClassList.push('high-light')
       }
-      let cursor = 'n-resize'
-      if (draggable.value) {
-        if (layout.value === Layout.LEFT_RIGHT_LAYOUT) {
-          cursor = 'e-resize'
-        }
-      }
-      return {
-        cursor
-      }
+      return dividerClassList
     })
+
+    /**
+     * layout样式计算属性
+     */
     const layoutStyle = computed(() => {
+      const { xLength, yLength } = dragVue
       const firstStyle: StyleValue = {}
-      const secondStyle: StyleValue = {}
       const firstSizeValue = firstSize.value
       let firstValue = ''
-      let secondValue = ''
-      if (isFinite(firstSizeValue) || isFinite(toNumber(firstValue))) {
+      const addValue = isLeftRight.value ? xLength.value : yLength.value
+      if (isFinite(firstSizeValue) || isFinite(toNumber(firstSizeValue))) {
         // 按照百分比处理
-        firstValue = firstSizeValue + '%'
+        firstValue = toNumber(firstSizeValue) + addValue + 'px'
         // @ts-ignore
-        secondValue = 100 - firstSizeValue + '%'
       } else {
+        // @ts-ignore
         if (endsWith(firstSizeValue, '%')) {
-          const firstSize = parseInt(replace(firstSizeValue, '%'))
-          firstValue = firstSize + '%'
-          secondValue = 100 - firstSize + '%'
-        } else {
           // @ts-ignore
-          firstValue = firstSizeValue
+          const firstSize = parseInt(replace(firstSizeValue, '%'))
+          firstValue = `calc(${firstSize}% ${addValue > 0 ? '+' : '-'} ${Math.abs(addValue)}px)`
+          // @ts-ignore
+        } else if (endsWith(firstSizeValue, 'px')) {
+          // @ts-ignore
+          const firstSize = parseInt(replace(firstSizeValue, 'px'))
+          firstValue = firstSize + addValue + 'px'
         }
       }
-      if (layout.value === Layout.LEFT_RIGHT_LAYOUT) {
+      if (isLeftRight.value) {
         firstStyle.width = firstValue
-        if (secondValue !== '') {
-          secondStyle.width = secondValue
-        }
       } else {
         firstStyle.height = firstValue
-        if (secondValue !== '') {
-          secondStyle.height = secondValue
-        }
-      }
-      if (secondValue === '') {
-        secondStyle.flex = 1
       }
       return {
         firstStyle,
-        secondStyle
+        secondStyle: {
+          flex: 1
+        }
       }
     })
 
     return () => {
-      console.log(layoutStyle.value.secondStyle)
+      const { onLineMouseDown, dragLineStyle } = dragVue
       const { first, second } = slots
       return (
-        <div class={computedClass.value.containerClassList}>
+        <div class={computedContainerClassList.value}>
           {/* 第一块区域，左或者上 */}
-          <div style={layoutStyle.value.firstStyle}>{first ? first() : ''}</div>
-          <div
-            ref={dividerRef}
-            style={computedDividerStyle.value}
-            class={computedClass.value.dividerClassList}>
-            <a-divider
-              type={layout.value === Layout.LEFT_RIGHT_LAYOUT ? 'vertical' : 'horizontal'}
-            />
+          <div class="first-container" style={layoutStyle.value.firstStyle}>
+            <div class="full-height first-outer">{first ? first() : ''}</div>
+            {/* 分割线 */}
+            <div
+              ref={dividerRef}
+              style={dragLineStyle && dragLineStyle.value}
+              onMousedown={(e) => draggable.value && onLineMouseDown && onLineMouseDown(e)}
+              class={computedLineClass.value}>
+              <a-divider
+                style={props.lineStyle}
+                type={isLeftRight.value ? 'vertical' : 'horizontal'}
+              />
+            </div>
           </div>
           {/* 第二块区域，右或者下 */}
-          <div style={layoutStyle.value.secondStyle}>{second ? second() : ''}</div>
+          <div class="second-container" style={layoutStyle.value.secondStyle}>
+            {second ? second() : ''}
+          </div>
         </div>
       )
     }
@@ -154,11 +165,95 @@ export default defineComponent({
 
 /**
  * 支持拖拽
+ * @param isLeftRight 是否是左右布局
+ * @param draggable
  */
-const useDrag = (targetRef: Ref<HTMLElement | null>) => {
-  const { x, y, isDragging } = useDraggable(targetRef)
-  watch([x, y], throttle(() => {
-    console.log(isDragging)
-  }, 500))
-  return {}
+const useDrag = (isLeftRight: Ref<boolean>, draggable: Ref<boolean>) => {
+  // 鼠标是否按下
+  const isMouseDown = ref(false)
+  // 鼠标拖动时 lined XY坐标
+  const lineDownX = ref(0)
+  const lineDownY = ref(0)
+  // 初始化状态的 x y位置
+  let initX = -1
+  let initY = -1
+  let lineDefaultX = -1
+  let lineDefaultY = -1
+  // 分割线样式
+  const dragLineStyle = ref<StyleValue>()
+  // 左右方向移动距离
+  const xLength = ref(0)
+  // Y方向移动距离
+  const yLength = ref(0)
+
+  /**
+   * 重置函数
+   */
+  const reset = () => {
+    initX = -1
+    initY = -1
+    lineDefaultX = -1
+    lineDefaultY = -1
+    lineDownX.value = 0
+    lineDownY.value = 0
+    xLength.value = 0
+    yLength.value = 0
+  }
+
+  watch([isLeftRight, draggable], reset)
+
+  /**
+   * 监控 x y 变化改变line样式
+   */
+  watch([lineDownX, lineDownY], () => {
+    if (lineDefaultX === -1 || lineDefaultY === -1) {
+      return
+    }
+    if (isLeftRight.value) {
+      dragLineStyle.value = {
+        right: lineDefaultX - lineDownX.value - 5 + 'px'
+      }
+    } else {
+      dragLineStyle.value = {
+        bottom: lineDefaultY - lineDownY.value - 5 + 'px'
+      }
+    }
+  })
+  /**
+   * 分割线鼠标点击事件
+   */
+  const onLineMouseDown = (downE: MouseEvent) => {
+    if (initX === -1) {
+      initX = downE.clientX
+    }
+    if (initY === -1) {
+      initY = downE.clientY
+    }
+
+    lineDefaultX = downE.clientX
+    lineDefaultY = downE.clientY
+
+    isMouseDown.value = true
+    document.onmousemove = (e) => {
+      lineDownX.value = e.clientX
+      lineDownY.value = e.clientY
+    }
+    document.onmouseup = (e) => {
+      xLength.value = e.clientX - initX
+      yLength.value = e.clientY - initY
+
+      dragLineStyle.value = {}
+      isMouseDown.value = false
+      // 移除响应事件
+      document.onmousemove = null
+      document.onmouseup = null
+    }
+  }
+  return {
+    onLineMouseDown,
+    isMouseDown,
+    dragLineStyle,
+    xLength,
+    yLength
+  }
 }
