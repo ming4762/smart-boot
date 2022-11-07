@@ -3,9 +3,12 @@ package com.smart.auth.core.properties;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.lang.NonNull;
 
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.List;
 
@@ -17,9 +20,9 @@ import java.util.List;
 @ConfigurationProperties(prefix = "smart.auth")
 @Getter
 @Setter
-public class AuthProperties {
+public class AuthProperties implements InitializingBean {
 
-    private String jwtKey = "smart-boot-auth";
+    private String jwtKey = "smart-boot-auth_123789460_security";
 
     private String prefix = "smart-session";
 
@@ -51,6 +54,13 @@ public class AuthProperties {
      * appsecret 配置
      */
     private AppsecretProperties appsecret = new AppsecretProperties();
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        if (StringUtils.isBlank(this.getJwtKey()) || this.getJwtKey().getBytes(StandardCharsets.UTF_8).length < 32) {
+            throw new IllegalArgumentException("jwt key长度不能小于32位");
+        }
+    }
 
     /**
      * 临时令牌配置

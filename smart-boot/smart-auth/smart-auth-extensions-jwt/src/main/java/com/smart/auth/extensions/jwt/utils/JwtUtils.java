@@ -4,10 +4,7 @@ import com.smart.auth.core.constants.AuthTypeEnum;
 import com.smart.auth.core.constants.LoginTypeEnum;
 import com.smart.auth.core.model.*;
 import com.smart.auth.core.userdetails.RestUserDetails;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.ConvertUtils;
@@ -20,6 +17,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.BadCredentialsException;
 
 import javax.servlet.http.HttpServletRequest;
+import java.security.Key;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -69,13 +67,13 @@ public class JwtUtils {
      * @param userDetails 用户信息
      * @return jwt
      */
-    public static String createJwt(RestUserDetails userDetails, String key) {
+    public static String createJwt(RestUserDetails userDetails, Key key) {
         final Date now = new Date();
         final JwtBuilder builder = Jwts.builder()
                 .setId(userDetails.getUserId().toString())
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(now)
-                .signWith(SignatureAlgorithm.HS256, key)
+                .signWith(key, SignatureAlgorithm.HS256)
                 .claim(ROLE_KEY, userDetails.getRoles())
                 .claim(PERMISSION_KEY, userDetails.getPermissions())
                 .claim(USER_KEY, userDetails);
@@ -89,10 +87,11 @@ public class JwtUtils {
      * @param jwt JWT
      * @return {@link Claims}
      */
-    public static Claims parseJwt(String jwt, String key) {
-        return Jwts.parser()
+    public static Claims parseJwt(String jwt, Key key) {
+        JwtParser jwtParser = Jwts.parserBuilder()
                 .setSigningKey(key)
-                .parseClaimsJws(jwt)
+                .build();
+        return jwtParser.parseClaimsJws(jwt)
                 .getBody();
     }
 
@@ -102,7 +101,7 @@ public class JwtUtils {
      * @param key key
      * @return 用户名
      */
-    public static String getUsername(String jwt, String key) {
+    public static String getUsername(String jwt, Key key) {
         return parseJwt(jwt, key).getSubject();
     }
 
@@ -113,7 +112,7 @@ public class JwtUtils {
      * @return 用户信息
      */
     @SuppressWarnings("unchecked")
-    public static RestUserDetailsImpl getUser(String jwt, String key) {
+    public static RestUserDetailsImpl getUser(String jwt, Key key) {
         try {
             final Claims claims = parseJwt(jwt, key);
             final RestUserDetailsImpl restUserDetails = new RestUserDetailsImpl();

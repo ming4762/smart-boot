@@ -18,8 +18,8 @@
 
         <spring-boot.version>2.6.2</spring-boot.version>
 
-        <guava.version>30.0-jre</guava.version>
-        <jjwt.version>0.9.1</jjwt.version>
+        <guava.version>31.1-jre</guava.version>
+        <jjwt.version>0.11.5</jjwt.version>
         <opensaml.version>2.6.4</opensaml.version>
         <commons-collections4.version>4.4</commons-collections4.version>
         <commons-beanutils.version>1.9.4</commons-beanutils.version>
@@ -104,11 +104,6 @@
                 <version>${commons-vfs2.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>io.jsonwebtoken</groupId>
-                <artifactId>jjwt</artifactId>
-                <version>${jjwt.version}</version>
-            </dependency>
 
             <dependency>
                 <groupId>org.opensaml</groupId>
@@ -272,6 +267,22 @@
                 <groupId>org.eclipse</groupId>
                 <artifactId>org.eclipse.jface</artifactId>
                 <version>${org.eclipse.jface.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-api</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-impl</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-jackson</artifactId>
+                <version>${jjwt.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
