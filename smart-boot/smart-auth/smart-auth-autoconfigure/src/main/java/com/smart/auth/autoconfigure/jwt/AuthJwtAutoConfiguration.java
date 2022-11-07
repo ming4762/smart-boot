@@ -70,8 +70,7 @@ public class AuthJwtAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(JwtDecoder.class)
     public JwtDecoder jwtDecoder(AuthProperties authProperties) throws IOException {
-        InputStream pubKeyInputStream = this.getKeyInputStream(authProperties.getJwt().getPublicKey());
-        try (pubKeyInputStream) {
+        try (InputStream pubKeyInputStream = this.getKeyInputStream(authProperties.getJwt().getPublicKey())) {
             return NimbusJwtDecoder.withPublicKey((RSAPublicKey) RsaUtils.generaPublicKey(pubKeyInputStream)).build();
         }
     }
@@ -79,10 +78,10 @@ public class AuthJwtAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(JwtEncoder.class)
     public JwtEncoder jwtEncoder(AuthProperties authProperties) throws IOException {
-        InputStream pubKeyInputStream = this.getKeyInputStream(authProperties.getJwt().getPublicKey());
-        InputStream priKeyInputStream = this.getKeyInputStream(authProperties.getJwt().getPrivateKey());
-
-        try (pubKeyInputStream; priKeyInputStream) {
+        try (
+                InputStream pubKeyInputStream = this.getKeyInputStream(authProperties.getJwt().getPublicKey());
+                InputStream priKeyInputStream = this.getKeyInputStream(authProperties.getJwt().getPrivateKey());
+                ) {
             JWK jwk = new RSAKey.Builder((RSAPublicKey) RsaUtils.generaPublicKey(pubKeyInputStream))
                     .privateKey(RsaUtils.generaPrivateKey(priKeyInputStream))
                     .build();

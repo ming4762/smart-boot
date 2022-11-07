@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -17,7 +16,6 @@ import java.util.List;
 @Getter
 @Setter
 public class ExceptionFeedbackDTO implements Serializable {
-    @Serial
     private static final long serialVersionUID = 5580343384344548420L;
 
     private List<Long> idList;

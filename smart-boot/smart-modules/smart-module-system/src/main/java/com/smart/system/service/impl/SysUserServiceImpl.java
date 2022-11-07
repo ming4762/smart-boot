@@ -31,7 +31,6 @@ import com.smart.system.pojo.vo.SysFunctionListVO;
 import com.smart.system.pojo.vo.user.SysUserListVO;
 import com.smart.system.pojo.vo.user.SysUserWithDataScopeDTO;
 import com.smart.system.service.*;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -43,7 +42,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -129,7 +127,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         SysUserListVO vo = new SysUserListVO();
         BeanUtils.copyProperties(user, vo);
 
-        List<SysUserListVO> voList = List.of(vo);
+        List<SysUserListVO> voList = Lists.newArrayList(vo);
         // 查询创建人和审批人
         this.userSetterService.setCreateUpdateUser(voList);
         // 查询账户信息
@@ -277,10 +275,6 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
      * @param resource 原
      * @param <T> 目标类型
      */
-<<<<<<< HEAD
-    @SneakyThrows
-=======
->>>>>>> d3a0b4a (安全性更新：移除 commons-beans   commons-collections)
     private <T> void setWithUser(@NonNull List<T> resource, boolean withCreateUser, boolean withUpdateUser) {
         if (resource.isEmpty()) {
             return;
@@ -342,9 +336,9 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         userRolePermission.setRoleCodes(
                 sysRoleList.stream().map(SysRolePO::getRoleCode).collect(Collectors.toSet())
         );
-        var roleIds = sysRoleList.stream().map(SysRolePO::getRoleId).collect(Collectors.toSet());
+        Set<Long> roleIds = sysRoleList.stream().map(SysRolePO::getRoleId).collect(Collectors.toSet());
         // 2、查询角色对应的功能ID
-        var functionIds = this.sysRoleFunctionService.list(
+        Set<Long> functionIds = this.sysRoleFunctionService.list(
                 new QueryWrapper<SysRoleFunctionPO>().lambda()
                         .select(SysRoleFunctionPO :: getFunctionId)
                         .in(SysRoleFunctionPO :: getRoleId, roleIds)
@@ -353,16 +347,16 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
             return userRolePermission;
         }
         //3、查询function列表
-        var queryWrapper = new QueryWrapper<SysFunctionPO>().lambda()
+        LambdaQueryWrapper<SysFunctionPO> queryWrapper = new QueryWrapper<SysFunctionPO>().lambda()
                 .select(SysFunctionPO::getUrl, SysFunctionPO::getPermission, SysFunctionPO::getHttpMethod)
                 .in(SysFunctionPO :: getFunctionId, functionIds)
                 .orderByAsc(SysFunctionPO :: getSeq);
         if (!CollectionUtils.isEmpty(types)) {
-            queryWrapper.in(SysFunctionPO :: getFunctionType, types.stream().map(FunctionTypeEnum::getValue).toList());
+            queryWrapper.in(SysFunctionPO :: getFunctionType, types.stream().map(FunctionTypeEnum::getValue).collect(Collectors.toList()));
         }
-        var permissions = this.sysFunctionService.list(queryWrapper).stream()
+        Set<Permission> permissions = this.sysFunctionService.list(queryWrapper).stream()
                 .flatMap(item -> {
-                    var url = item.getUrl();
+                    String url = item.getUrl();
                     if (StringUtils.isNotBlank(url)) {
                         return Arrays.stream(url.split(";"))
                                 .map(uriItem -> Permission.builder()
@@ -410,13 +404,8 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         final LambdaQueryWrapper<SysFunctionPO> queryWrapper = new QueryWrapper<SysFunctionPO>().lambda()
                 .in(SysFunctionPO :: getFunctionId, functionIds)
                 .orderByAsc(SysFunctionPO :: getSeq);
-<<<<<<< HEAD
-        if (CollectionUtils.isNotEmpty(types)) {
-            queryWrapper.in(SysFunctionPO :: getFunctionType, types.stream().map(FunctionTypeEnum::getValue).collect(Collectors.toList()));
-=======
         if (!CollectionUtils.isEmpty(types)) {
-            queryWrapper.in(SysFunctionPO :: getFunctionType, types.stream().map(FunctionTypeEnum::getValue).toList());
->>>>>>> d3a0b4a (安全性更新：移除 commons-beans   commons-collections)
+            queryWrapper.in(SysFunctionPO :: getFunctionType, types.stream().map(FunctionTypeEnum::getValue).collect(Collectors.toList()));
         }
         return this.sysFunctionService.list(queryWrapper);
     }
@@ -517,9 +506,9 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
     @Transactional(rollbackFor = Exception.class)
     public boolean saveUpdateWithDataScope(SysUserWithDataScopeDTO parameter) {
         // 获取操作人ID
-        var userId = AuthUtils.getNonNullCurrentUserId();
+        Long userId = AuthUtils.getNonNullCurrentUserId();
         // 更新用户
-        var userModel = new SysUserPO();
+        SysUserPO userModel = new SysUserPO();
         BeanUtils.copyProperties(parameter, userModel);
 
         // 判断是否是系统用户，系统用户没有数据权限
@@ -527,7 +516,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
             return this.saveOrUpdateWithAllUser(userModel, userId);
         }
 
-        var dataScopeModel = new SysUserDeptPO();
+        SysUserDeptPO dataScopeModel = new SysUserDeptPO();
         dataScopeModel.setUserId(userModel.getUserId());
         dataScopeModel.setDeptId(parameter.getDeptId());
         // 设置标识位
@@ -551,14 +540,14 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
 
     @Override
     public SysUserWithDataScopeDTO getByIdWithDataScope(Long userId) {
-        var sysUser = this.getById(userId);
+        SysUserPO sysUser = this.getById(userId);
         if (sysUser == null) {
             return null;
         }
-        var vo = new SysUserWithDataScopeDTO();
+        SysUserWithDataScopeDTO vo = new SysUserWithDataScopeDTO();
         BeanUtils.copyProperties(sysUser, vo);
         // 查询用户数据权限
-        var deptList = this.sysUserDeptService.list(
+        List<SysUserDeptPO> deptList = this.sysUserDeptService.list(
                 new QueryWrapper<SysUserDeptPO>().lambda()
                         .select(SysUserDeptPO::getDeptId, SysUserDeptPO::getDataScope, SysUserDeptPO::getUserId)
                         .eq(SysUserDeptPO::getUserId, userId)
@@ -567,7 +556,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         if (CollectionUtils.isEmpty(deptList)) {
             return vo;
         }
-        var dept = deptList.get(0);
+        SysUserDeptPO dept = deptList.get(0);
         vo.setDeptId(dept.getDeptId());
         vo.setDataScopeList(
                 Arrays.stream(dept.getDataScope().split(","))

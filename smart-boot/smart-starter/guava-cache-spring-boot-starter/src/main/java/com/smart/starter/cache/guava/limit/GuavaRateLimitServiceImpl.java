@@ -1,6 +1,7 @@
 package com.smart.starter.cache.guava.limit;
 
 import com.google.common.util.concurrent.RateLimiter;
+import com.smart.commons.core.lock.limit.RateLimit;
 import com.smart.commons.core.lock.limit.RateLimitService;
 import org.springframework.lang.NonNull;
 
@@ -22,8 +23,8 @@ public class GuavaRateLimitServiceImpl implements RateLimitService {
 
     @Override
     public boolean acquire(@NonNull String key, long limit) {
-        var limiterKey = key + SPLIT + limit;
-        var limiter = this.getLimiter(limiterKey, limit);
+        String limiterKey = key + SPLIT + limit;
+        RateLimiter limiter = this.getLimiter(limiterKey, limit);
         return limiter.tryAcquire();
     }
 

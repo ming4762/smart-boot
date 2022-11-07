@@ -10,8 +10,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.io.Serial;
-
 /**
  * 用户实体类
  * @author jackson
@@ -23,7 +21,6 @@ import java.io.Serial;
 @ToString
 public class SysUserPO extends BaseModelUserTime implements BaseUser {
 
-    @Serial
     private static final long serialVersionUID = -671533082313767123L;
 
     /**

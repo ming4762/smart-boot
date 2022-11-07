@@ -9,6 +9,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -34,18 +35,18 @@ public class DataPermissionAspect {
             // 超级管理员不拦截
             return;
         }
-        var deptAlias = dataPermission.deptAlias();
-        var userAlias = dataPermission.userAlias();
+        String deptAlias = dataPermission.deptAlias();
+        String userAlias = dataPermission.userAlias();
         // 获取用户的数据权限范围
-        var userDataScope = this.provider.getUserUserDataScope();
+        UserDataScope userDataScope = this.provider.getUserUserDataScope();
         if (userDataScope == null || CollectionUtils.isEmpty(userDataScope.getScopes())) {
             // 没有设置数据权限不拦截
             return;
         }
-        var deptAliasSql = StringUtils.isBlank(deptAlias) ? "" : deptAlias + ".";
-        var userAliasSql = StringUtils.isBlank(userAlias) ? "" : userAlias + ".";
-        var sql = new StringBuilder();
-        for (var scope : userDataScope.getScopes()) {
+        String deptAliasSql = StringUtils.isBlank(deptAlias) ? "" : deptAlias + ".";
+        String userAliasSql = StringUtils.isBlank(userAlias) ? "" : userAlias + ".";
+        StringBuilder sql = new StringBuilder();
+        for (DataPermissionScope scope : userDataScope.getScopes()) {
             if (scope.equals(DataPermissionScope.DATA_ALL)) {
                 // 如果是所有数据权限，则不加限制
                 sql = new StringBuilder();
@@ -64,8 +65,8 @@ public class DataPermissionAspect {
                 );
             }
             if (scope.equals(DataPermissionScope.DATA_DEPT_AND_CHILD) && deptAlias != null) {
-                var deptIds = this.provider.getUserAllDeptId(userDataScope.getDeptId());
-                var inSql = CollectionUtils.isEmpty(deptIds) ? "-1" : deptIds.stream()
+                Set<Long> deptIds = this.provider.getUserAllDeptId(userDataScope.getDeptId());
+                String inSql = CollectionUtils.isEmpty(deptIds) ? "-1" : deptIds.stream()
                         .map(Object::toString)
                         .collect(Collectors.joining(", "));
                 sql.append(
@@ -78,7 +79,7 @@ public class DataPermissionAspect {
             if (dataPermission.autoInjection()) {
                 DataPermissionHolder.setSql(sql.toString());
             }
-            var param = point.getArgs().length > 0 ? point.getArgs()[0] : null;
+            Object param = point.getArgs().length > 0 ? point.getArgs()[0] : null;
             if (param instanceof CommonQuery) {
                 ((CommonQuery) param).getParameter().put(CrudCommonEnum.DATA_PERMISSION.name(), sql.toString());
             }

@@ -1,7 +1,5 @@
 package com.smart.i18n.resolver;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -11,7 +9,10 @@ import org.springframework.lang.NonNull;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.i18n.AbstractLocaleResolver;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author ShiZhongMing
@@ -53,6 +54,6 @@ public class DelegateLocaleResolver extends AbstractLocaleResolver implements Ap
                 .filter(item -> !StringUtils.equals(item, DispatcherServlet.LOCALE_RESOLVER_BEAN_NAME))
                 .map(item -> applicationContext.getBean(item, SmartLocaleResolver.class))
                 .sorted(Comparator.comparingInt(Ordered::getOrder))
-                .toList();
+                .collect(Collectors.toList());
     }
 }

@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -20,7 +19,6 @@ import java.io.Serializable;
 @Getter
 @Setter
 public class UserAccountSaveDTO implements Serializable {
-    @Serial
     private static final long serialVersionUID = -3760196266685002568L;
 
     private Long userId;

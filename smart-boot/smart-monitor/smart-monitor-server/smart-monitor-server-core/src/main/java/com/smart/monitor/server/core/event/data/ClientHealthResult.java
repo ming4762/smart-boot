@@ -4,7 +4,6 @@ import com.smart.monitor.server.common.constants.ClientStatusEnum;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.util.Map;
 
@@ -17,7 +16,6 @@ import java.util.Map;
 @Setter
 public class ClientHealthResult implements Serializable {
 
-    @Serial
     private static final long serialVersionUID = 61680201916305190L;
     /**
      * 状态

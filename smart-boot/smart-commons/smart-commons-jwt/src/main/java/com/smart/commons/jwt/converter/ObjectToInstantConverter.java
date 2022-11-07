@@ -26,11 +26,11 @@ public class ObjectToInstantConverter implements GenericConverter {
         if (source == null || source instanceof Instant) {
             return source;
         }
-        if (source instanceof Date date) {
-            return date.toInstant();
+        if (source instanceof Date) {
+            return ((Date)source).toInstant();
         }
-        if (source instanceof Number number) {
-            return Instant.ofEpochSecond(number.longValue());
+        if (source instanceof Number) {
+            return Instant.ofEpochSecond(((Number)source).longValue());
         }
         try {
             return Instant.ofEpochSecond(Long.parseLong(source.toString()));

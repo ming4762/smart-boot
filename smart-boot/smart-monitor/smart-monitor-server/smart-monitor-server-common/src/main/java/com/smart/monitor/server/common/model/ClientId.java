@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.NonNull;
 
-import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -17,7 +16,6 @@ import java.io.Serializable;
 @Getter
 @NoArgsConstructor
 public final class ClientId implements Serializable, Comparable<ClientId> {
-    @Serial
     private static final long serialVersionUID = 517098121163098598L;
 
     private String value;

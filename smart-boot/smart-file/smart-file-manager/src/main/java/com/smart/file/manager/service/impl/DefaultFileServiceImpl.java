@@ -1,12 +1,21 @@
 package com.smart.file.manager.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import com.smart.auth.core.utils.AuthUtils;
+import com.smart.commons.core.exception.BaseException;
 import com.smart.crud.service.BaseServiceImpl;
+import com.smart.file.core.SmartFileProperties;
+import com.smart.file.core.exception.SmartFileException;
+import com.smart.file.core.service.ActualFileService;
+import com.smart.file.manager.constants.FileTypeEnum;
 import com.smart.file.manager.mapper.SysFileMapper;
 import com.smart.file.manager.model.SysFilePO;
+import com.smart.file.manager.pojo.bo.SysFileBO;
+import com.smart.file.manager.pojo.dto.SaveFileDTO;
 import com.smart.file.manager.service.SysFileService;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-<<<<<<< HEAD
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
@@ -27,8 +36,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
-=======
->>>>>>> 22d0df4 (文件管理模块重构，优化使用体验)
 
 /**
  * 文件处理层实现类
@@ -36,9 +43,8 @@ import java.util.stream.Collectors;
  * 2020/1/27 7:50 下午
  */
 @Slf4j
-public class DefaultFileServiceImpl extends BaseServiceImpl<SysFileMapper, SysFilePO> implements SysFileService {
+public class DefaultFileServiceImpl extends BaseServiceImpl<SysFileMapper, SysFilePO> implements SysFileService, ApplicationContextAware, InitializingBean {
 
-<<<<<<< HEAD
     private Map<String, ActualFileService> actualFileServiceMap;
 
     private final SmartFileProperties fileProperties;
@@ -292,6 +298,5 @@ public class DefaultFileServiceImpl extends BaseServiceImpl<SysFileMapper, SysFi
     public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }
-=======
->>>>>>> 22d0df4 (文件管理模块重构，优化使用体验)
+
 }

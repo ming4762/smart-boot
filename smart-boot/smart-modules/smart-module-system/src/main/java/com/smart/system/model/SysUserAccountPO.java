@@ -10,7 +10,6 @@ import com.smart.system.mybatis.type.MaxConnectionsPolicyTypeHandler;
 import com.smart.system.mybatis.type.UserAccountStatusTypeHandler;
 import lombok.*;
 
-import java.io.Serial;
 import java.time.LocalDateTime;
 
 /**
@@ -26,7 +25,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SysUserAccountPO extends BaseModel {
-    @Serial
     private static final long serialVersionUID = -8246582845593471040L;
 
     @TableId

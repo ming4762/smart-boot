@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -17,7 +16,6 @@ import java.io.Serializable;
 @Setter
 @ToString
 public class UserSaveWithDataScopeDTO implements Serializable {
-    @Serial
     private static final long serialVersionUID = -6750189929943910845L;
 
     private UserUpdateDTO user;

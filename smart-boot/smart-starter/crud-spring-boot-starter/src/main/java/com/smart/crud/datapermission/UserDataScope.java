@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.lang.NonNull;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.util.Set;
 
@@ -16,7 +15,6 @@ import java.util.Set;
 @Getter
 @AllArgsConstructor
 public class UserDataScope implements Serializable {
-    @Serial
     private static final long serialVersionUID = 7039352615243076821L;
 
     private Long userId;

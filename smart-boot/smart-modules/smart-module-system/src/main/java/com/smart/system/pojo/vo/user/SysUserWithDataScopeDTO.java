@@ -2,13 +2,12 @@ package com.smart.system.pojo.vo.user;
 
 import com.smart.crud.datapermission.DataPermissionScope;
 import com.smart.system.model.SysUserPO;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.io.Serial;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -21,7 +20,6 @@ import java.util.List;
 @Setter
 @ToString
 public class SysUserWithDataScopeDTO extends SysUserPO {
-    @Serial
     private static final long serialVersionUID = -7021384417582166698L;
 
     @NotNull(message = "请选择部门")

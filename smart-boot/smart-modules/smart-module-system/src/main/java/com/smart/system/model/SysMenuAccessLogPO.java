@@ -7,8 +7,6 @@ import com.smart.crud.model.BaseModelCreateUserTime;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serial;
-
 /**
  * 菜单访问记录表
  * @author ShiZhongMing
@@ -19,7 +17,6 @@ import java.io.Serial;
 @Getter
 @Setter
 public class SysMenuAccessLogPO extends BaseModelCreateUserTime {
-    @Serial
     private static final long serialVersionUID = -3804315353319882684L;
 
     @TableId(type = IdType.ASSIGN_ID)

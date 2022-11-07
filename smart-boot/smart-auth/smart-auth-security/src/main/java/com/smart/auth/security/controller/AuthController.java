@@ -13,7 +13,7 @@ import com.smart.commons.core.message.Result;
 import com.smart.commons.core.utils.DigestUtils;
 import com.smart.commons.core.utils.IpUtils;
 import com.smart.commons.core.utils.JsonUtils;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -46,7 +46,7 @@ public class AuthController {
      * @return 是否登录
      */
     @PostMapping("auth/isLogin")
-    @ApiOperation(value = "判断是否登录")
+    @Operation(summary = "判断是否登录")
     public Result<Boolean> isLogin() {
         RestUserDetails restUserDetails = AuthUtils.getCurrentUser();
         return Result.success(ObjectUtils.isNotEmpty(restUserDetails));
@@ -57,7 +57,7 @@ public class AuthController {
      * @param parameter 注册数据
      * @return 临时token
      */
-    @ApiOperation(value = "申请临时token")
+    @Operation(summary = "申请临时token")
     @PostMapping("auth/tempToken/apply")
     public Result<String> applyTempToken(@RequestBody @Valid TempTokenApplyDTO parameter, HttpServletRequest request) {
         // 获取配置信息

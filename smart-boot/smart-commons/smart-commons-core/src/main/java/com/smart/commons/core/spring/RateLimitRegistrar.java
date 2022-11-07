@@ -2,6 +2,7 @@ package com.smart.commons.core.spring;
 
 import com.smart.commons.core.exception.SystemException;
 import com.smart.commons.core.lock.limit.RateLimitAspect;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -28,10 +29,10 @@ public class RateLimitRegistrar implements ImportBeanDefinitionRegistrar {
 
     @Override
     public void registerBeanDefinitions(@NonNull AnnotationMetadata importingClassMetadata, @NonNull BeanDefinitionRegistry registry, @NonNull BeanNameGenerator importBeanNameGenerator) {
-        var attributes = AnnotationAttributes.fromMap(importingClassMetadata.getAnnotationAttributes(EnableRateLimit.class.getName()));
+        AnnotationAttributes attributes = AnnotationAttributes.fromMap(importingClassMetadata.getAnnotationAttributes(EnableRateLimit.class.getName()));
         if (attributes != null) {
             // 获取 rateLimitService name
-            var serviceName = attributes.getString("service");
+            String serviceName = attributes.getString("service");
             if (!StringUtils.hasText(serviceName)) {
                 // 如果没有指定serviceName，则自动获取serviceName
                 serviceName = this.getDefaultServiceName(registry);
@@ -40,9 +41,9 @@ public class RateLimitRegistrar implements ImportBeanDefinitionRegistrar {
                 throw new SystemException("未找到RateLimit服务类，请检查serviceName是否正确，serviceName：" + serviceName);
             }
             // 构建 BeanDefinition
-            var builder = BeanDefinitionBuilder.genericBeanDefinition(RateLimitAspect.class);
+            BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(RateLimitAspect.class);
             builder.addPropertyValue("rateLimitService", new RuntimeBeanReference(serviceName));
-            var beanDefinition = builder.getBeanDefinition();
+            BeanDefinition beanDefinition = builder.getBeanDefinition();
             // 进行注册
             registry.registerBeanDefinition(importBeanNameGenerator.generateBeanName(beanDefinition, registry), beanDefinition);
         }
@@ -55,11 +56,11 @@ public class RateLimitRegistrar implements ImportBeanDefinitionRegistrar {
      */
     @Nullable
     private String getDefaultServiceName(BeanDefinitionRegistry registry) {
-        var hasRedisClass = ClassUtils.isPresent("com.smart.starter.redis.service.RedisRateLimitServiceImpl", null);
+        boolean hasRedisClass = ClassUtils.isPresent("com.smart.starter.redis.service.RedisRateLimitServiceImpl", null);
         if (hasRedisClass) {
             return REDIS_SERVICE_NAME;
         }
-        var hasGuavaClass = ClassUtils.isPresent("com.smart.starter.cache.guava.limit.GuavaRateLimitServiceImpl", null);
+        boolean hasGuavaClass = ClassUtils.isPresent("com.smart.starter.cache.guava.limit.GuavaRateLimitServiceImpl", null);
         if (hasGuavaClass) {
             return GUAVA_SERVICE_NAME;
         }

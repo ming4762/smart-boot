@@ -4,7 +4,6 @@ import com.smart.document.code.constants.CodeConstants;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -16,7 +15,6 @@ import java.io.Serializable;
 @Getter
 @Setter
 public class BaseCodeConfig implements Serializable {
-    @Serial
     private static final long serialVersionUID = 4769100352058779401L;
 
     private int width;

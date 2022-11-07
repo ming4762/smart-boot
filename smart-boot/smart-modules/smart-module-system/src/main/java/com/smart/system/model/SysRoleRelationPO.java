@@ -5,8 +5,6 @@ import com.smart.system.constants.RoleRelationTypeEnum;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serial;
-
 /**
  * 角色关系表
  * @author ShiZhongMing
@@ -16,7 +14,6 @@ import java.io.Serial;
 @Getter
 @Setter
 public class SysRoleRelationPO extends BaseModelCreateUserTime {
-    @Serial
     private static final long serialVersionUID = -3101700604215505813L;
 
     private Long roleId;

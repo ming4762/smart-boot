@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.lang.NonNull;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
@@ -26,7 +25,6 @@ import java.util.Set;
 @NoArgsConstructor
 public final class ClientData implements Serializable {
 
-    @Serial
     private static final long serialVersionUID = 4944979208990091705L;
     /**
      * 时间戳

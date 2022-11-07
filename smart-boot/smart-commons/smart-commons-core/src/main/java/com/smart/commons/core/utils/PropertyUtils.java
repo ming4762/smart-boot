@@ -4,6 +4,7 @@ import lombok.SneakyThrows;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
 
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 
 /**
@@ -24,7 +25,7 @@ public class PropertyUtils {
      */
     @SneakyThrows({IllegalAccessException.class, IllegalArgumentException.class, InvocationTargetException.class})
     public static void setProperty(final Object bean, final String name, final Object value) {
-        var descriptor = BeanUtils.getPropertyDescriptor(bean.getClass(), name);
+        PropertyDescriptor descriptor = BeanUtils.getPropertyDescriptor(bean.getClass(), name);
         if (descriptor != null) {
             descriptor.getWriteMethod().invoke(bean, value);
         }
@@ -38,7 +39,7 @@ public class PropertyUtils {
      */
     @SneakyThrows({IllegalAccessException.class, IllegalArgumentException.class, InvocationTargetException.class})
     public static Object getProperty(@NonNull Object bean, @NonNull String fieldName) {
-        var descriptor = BeanUtils.getPropertyDescriptor(bean.getClass(), fieldName);
+        PropertyDescriptor descriptor = BeanUtils.getPropertyDescriptor(bean.getClass(), fieldName);
         if (descriptor != null) {
             return descriptor.getReadMethod().invoke(bean);
         }

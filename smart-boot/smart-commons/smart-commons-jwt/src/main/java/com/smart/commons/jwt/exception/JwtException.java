@@ -1,7 +1,5 @@
 package com.smart.commons.jwt.exception;
 
-import java.io.Serial;
-
 /**
  * @author ShiZhongMing
  * 2022/8/8
@@ -9,7 +7,6 @@ import java.io.Serial;
  */
 public class JwtException extends RuntimeException {
 
-    @Serial
     private static final long serialVersionUID = -2648792509314004892L;
 
     public JwtException(String message) {

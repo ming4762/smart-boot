@@ -3,7 +3,6 @@ package com.smart.system.pojo.dto.log;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -15,7 +14,6 @@ import java.io.Serializable;
 @Getter
 @Setter
 public class SysMenuAccessLogSaveDTO implements Serializable {
-    @Serial
     private static final long serialVersionUID = -8443354901251492910L;
 
     private Long functionId;

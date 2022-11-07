@@ -58,7 +58,8 @@ public class DefaultUserDetailsServiceImpl implements UserDetailsService, SmsUse
         // 添加权限
         grantedAuthoritySet.addAll(
                 userRolePermission.getPermissions().stream()
-                        .map(PermissionGrantedAuthority::new).toList()
+                        .map(PermissionGrantedAuthority::new)
+                        .collect(Collectors.toList())
         );
         // 查询用户角色信息
         final RestUserDetailsImpl restUserDetails = createByUser(user);

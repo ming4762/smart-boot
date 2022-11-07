@@ -27,11 +27,11 @@ public class DataPermissionAutoConfiguration implements InitializingBean {
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
-        var interceptor = new DataPermissionExecutorInterceptor();
+    public void afterPropertiesSet() {
+        DataPermissionExecutorInterceptor interceptor = new DataPermissionExecutorInterceptor();
 
-        for (var factory : this.sqlSessionFactoryList) {
-            var configuration = factory.getConfiguration();
+        for (SqlSessionFactory factory : this.sqlSessionFactoryList) {
+            org.apache.ibatis.session.Configuration configuration = factory.getConfiguration();
             if (!this.containsInterceptor(configuration, interceptor)) {
                 configuration.addInterceptor(interceptor);
             }

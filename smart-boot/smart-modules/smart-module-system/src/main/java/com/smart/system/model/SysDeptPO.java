@@ -7,7 +7,6 @@ import com.smart.crud.model.BaseModel;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serial;
 import java.time.LocalDateTime;
 
 /**
@@ -20,7 +19,6 @@ import java.time.LocalDateTime;
 @TableName("sys_dept")
 public class SysDeptPO extends BaseModel {
 
-    @Serial
     private static final long serialVersionUID = 8885082382210229000L;
     /**
     * dept_id - 部门ID

@@ -5,10 +5,11 @@ import com.smart.auth.core.handler.SecurityLogoutHandler;
 import com.smart.auth.core.utils.AuthUtils;
 import com.smart.auth.extensions.jwt.store.CacheJwtStore;
 import com.smart.auth.extensions.jwt.utils.JwtUtils;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.Authentication;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author ShiZhongMing

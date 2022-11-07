@@ -61,7 +61,7 @@ public class GuavaAuthCache extends AbstractAuthCache<String, Object> {
     @Override
     @NonNull
     public Set<Object> batchGet(@NonNull Collection<String> keys) {
-        var prefixKeys = keys.stream().map(this::getKey).collect(Collectors.toSet());
+        Set<String> prefixKeys = keys.stream().map(this::getKey).collect(Collectors.toSet());
         List<Object> cacheList = this.cacheService.batchGet(new ArrayList<>(prefixKeys));
         return cacheList == null ? new HashSet<>(0) : new HashSet<>(cacheList);
     }

@@ -8,8 +8,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serial;
-
 /**
  * @author ShiZhongMing
  * 2022/10/17
@@ -20,7 +18,6 @@ import java.io.Serial;
 @EqualsAndHashCode(callSuper = true)
 @TableName("sys_user_dept")
 public class SysUserDeptPO extends BaseModelUserTime {
-    @Serial
     private static final long serialVersionUID = 1882267700344552707L;
 
     @TableId

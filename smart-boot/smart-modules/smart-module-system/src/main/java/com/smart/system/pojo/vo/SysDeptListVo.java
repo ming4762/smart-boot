@@ -6,8 +6,6 @@ import com.smart.system.model.SysDeptPO;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serial;
-
 /**
  * @author ShiZhongMing
  * 2022/10/13
@@ -17,7 +15,6 @@ import java.io.Serial;
 @Setter
 public class SysDeptListVo extends SysDeptPO implements CreateUpdateUserSetter {
 
-    @Serial
     private static final long serialVersionUID = -2370358811334567841L;
 
     private BaseUser createUser;

@@ -48,7 +48,7 @@ public class RsaUtils {
      */
     @SneakyThrows
     public static void saveKey(@NonNull Key key, OutputStream outputStream) {
-        var encoded = key.getEncoded();
+        byte[] encoded = key.getEncoded();
 
         String base64 = Base64Utils.encode(encoded);
 
@@ -82,7 +82,7 @@ public class RsaUtils {
      */
     @SneakyThrows
     public static PublicKey generaPublicKey(String pubKeyBase64) {
-        var pubKeyByte = Base64Utils.decode(pubKeyBase64);
+        byte[] pubKeyByte = Base64Utils.decode(pubKeyBase64);
         X509EncodedKeySpec keySpec = new X509EncodedKeySpec(pubKeyByte);
 
         return KeyFactory.getInstance(ALGORITHM).generatePublic(keySpec);
@@ -105,7 +105,7 @@ public class RsaUtils {
      */
     @SneakyThrows
     public static PrivateKey generaPrivateKey(String priKeyBase64) {
-        var pubKeyByte = Base64Utils.decode(priKeyBase64);
+        byte[] pubKeyByte = Base64Utils.decode(priKeyBase64);
         PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(pubKeyByte);
 
         return KeyFactory.getInstance(ALGORITHM).generatePrivate(keySpec);

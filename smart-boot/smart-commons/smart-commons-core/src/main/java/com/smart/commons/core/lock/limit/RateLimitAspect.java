@@ -5,6 +5,7 @@ import com.smart.commons.core.exception.SystemException;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
@@ -31,14 +32,14 @@ public class RateLimitAspect {
 
     @Around("limiterPointCut()")
     public Object around(ProceedingJoinPoint point) throws Throwable {
-        var signature = point.getSignature();
+        Signature signature = point.getSignature();
 
-        if (signature instanceof MethodSignature methodSignature) {
-            var rateLimit = AnnotationUtils.getAnnotation(methodSignature.getMethod(), RateLimit.class);
+        if (signature instanceof MethodSignature) {
+            RateLimit rateLimit = AnnotationUtils.getAnnotation(((MethodSignature)signature).getMethod(), RateLimit.class);
             if (rateLimit == null) {
                 throw new SystemException("系统发生未知错误");
             }
-            var result = this.rateLimitService.acquire(rateLimit.value(), rateLimit.limit());
+            boolean result = this.rateLimitService.acquire(rateLimit.value(), rateLimit.limit());
             if (!result) {
                 log.warn("超出最大访问速度，触发限流，限流key：{}，每秒最大访问次数：{}", rateLimit.value(), rateLimit.limit());
                 throw new RateLimitException(rateLimit.message());

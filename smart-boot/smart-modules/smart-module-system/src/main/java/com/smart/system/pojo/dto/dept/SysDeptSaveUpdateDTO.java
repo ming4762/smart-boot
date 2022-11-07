@@ -1,11 +1,10 @@
 package com.smart.system.pojo.dto.dept;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.io.Serial;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -18,8 +17,6 @@ import java.io.Serializable;
 @ToString
 public class SysDeptSaveUpdateDTO implements Serializable {
 
-
-    @Serial
     private static final long serialVersionUID = 5782485832116711926L;
     /**
     * 部门ID

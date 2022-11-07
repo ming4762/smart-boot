@@ -1,5 +1,6 @@
 package com.smart.i18n.reader;
 
+import com.google.common.collect.Lists;
 import com.smart.i18n.utils.YamlUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class YmlBasenameResourceReader extends AbstractBasenameResourceReader {
 
-    private static final List<String> EXTENSIONS = List.of(".yml", ".yaml");
+    private static final List<String> EXTENSIONS = Lists.newArrayList(".yml", ".yaml");
 
 
     @Override

@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-r
 /**
  * 异步通知
  * @author shizhongming

@@ -3,7 +3,6 @@ package com.smart.auth.core.model;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,7 +17,6 @@ import java.util.Set;
 @Setter
 public class UserRolePermission implements Serializable {
 
-    @Serial
     private static final long serialVersionUID = -3632192598130979878L;
 
     public UserRolePermission() {

@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.io.Serial;
 import java.time.LocalDateTime;
 
 /**
@@ -21,7 +20,6 @@ import java.time.LocalDateTime;
 @Setter
 public class SysUserWthAccountBO extends SysUserPO {
 
-    @Serial
     private static final long serialVersionUID = -314839324747456457L;
     /**
      * 登录失败次数

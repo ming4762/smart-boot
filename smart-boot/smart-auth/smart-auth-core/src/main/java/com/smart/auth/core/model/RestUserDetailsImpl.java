@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -26,7 +25,6 @@ import java.util.stream.Collectors;
 @Setter
 @NoArgsConstructor
 public class RestUserDetailsImpl implements RestUserDetails, Serializable {
-    @Serial
     private static final long serialVersionUID = -6184955894751051086L;
 
     @Getter

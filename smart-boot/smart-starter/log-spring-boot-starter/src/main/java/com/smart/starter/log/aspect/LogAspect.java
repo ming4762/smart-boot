@@ -169,8 +169,8 @@ public final class LogAspect {
                 // 判断是否有异常信息
                 if (exception != null) {
                     errorMessage = exception.toString();
-                    if (exception instanceof BaseException baseException) {
-                        code = baseException.getCode();
+                    if (exception instanceof BaseException) {
+                        code = ((BaseException)exception).getCode();
                     } else {
                         code = 500;
                     }

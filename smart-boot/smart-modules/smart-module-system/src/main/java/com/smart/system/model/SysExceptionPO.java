@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.smart.crud.model.BaseModel;
 import lombok.*;
 
-import java.io.Serial;
 import java.time.LocalDateTime;
 
 /**
@@ -20,7 +19,6 @@ import java.time.LocalDateTime;
 @Builder
 public class SysExceptionPO extends BaseModel {
 
-    @Serial
     private static final long serialVersionUID = 7787263755804968717L;
     /**
     * id - id

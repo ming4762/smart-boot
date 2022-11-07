@@ -3,8 +3,6 @@ package com.smart.commons.jwt;
 import com.smart.commons.jwt.claim.ClaimNames;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-
-import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.LinkedHashMap;
@@ -19,8 +17,6 @@ import java.util.function.Consumer;
 @EqualsAndHashCode
 public class Jwt implements Serializable {
 
-    @Serial
-    private static final long serialVersionUID = 1057633528718217240L;
     @Getter
     private final String tokenValue;
 
