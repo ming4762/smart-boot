@@ -1,6 +1,6 @@
 package com.smart.auth.extensions.appsecret.sign;
 
-import com.google.common.hash.Hashing;
+import com.smart.commons.core.utils.DigestUtils;
 
 import java.nio.charset.StandardCharsets;
 
@@ -13,6 +13,6 @@ public class DefaultSignProviderImpl implements SignProvider {
     public String sign(AppsecretSignModel parameter) {
         // 构建字符串
         String signStr = String.format("accessToken=%s&noncestr=%s&timestamp=%s&url=%s", parameter.getAccessToken(), parameter.getNoncestr(), parameter.getTimestamp(), parameter.getUrl());
-        return Hashing.sha256().newHasher().putString(signStr, StandardCharsets.UTF_8).hash().toString();
+        return DigestUtils.sha256(signStr, 1);
     }
 }

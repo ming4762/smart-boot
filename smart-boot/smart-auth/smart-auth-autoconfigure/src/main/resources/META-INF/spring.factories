@@ -3,7 +3,7 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.smart.auth.autoconfigure.jwt.AuthJwtAutoConfiguration,\
   com.smart.auth.autoconfigure.jwt.AuthJwtGuavaCacheAutoConfiguration,\
   com.smart.auth.autoconfigure.jwt.AuthJwtRedisCacheAutoConfiguration,\
-  com.smart.auth.autoconfigure.GcAuthAutoConfiguration,\
+  com.smart.auth.autoconfigure.SmartAuthAutoConfiguration,\
   com.smart.auth.autoconfigure.sms.AuthSmsAutoConfiguration,\
   com.smart.auth.autoconfigure.secret.AuthAppsecretAutoConfiguration,\
   com.smart.auth.autoconfigure.secret.AuthAppsecretGuavaStoreAutoConfiguration,\

@@ -35,7 +35,7 @@ public class AuthCaptchaSecurityConfigurer extends SecurityConfigurerAdapter<Def
     }
 
     @Override
-    public void init(HttpSecurity builder) throws Exception {
+    public void init(HttpSecurity builder) {
         builder.addFilterBefore(new AuthCaptchaFilter(Optional.ofNullable(this.serviceProvider.createUrl).orElse(CREATE_URL), this.serviceProvider.loginUrls, this.getBean(AuthCache.class, null)), BasicAuthenticationFilter.class);
     }
 

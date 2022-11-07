@@ -5,8 +5,8 @@ import com.smart.auth.core.matcher.ExtensionPathMatcher;
 import com.smart.auth.core.properties.AuthProperties;
 import org.springframework.http.HttpMethod;
 import org.springframework.lang.NonNull;
-
 import javax.servlet.http.HttpServletRequest;
+
 import java.util.Objects;
 import java.util.Set;
 

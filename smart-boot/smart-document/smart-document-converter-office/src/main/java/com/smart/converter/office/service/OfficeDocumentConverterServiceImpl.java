@@ -72,7 +72,7 @@ public class OfficeDocumentConverterServiceImpl implements DocumentConverterServ
         // 判断文件扩展名-写文件
         String fromFilePath = Files.createTempDirectory(TEMP_DIR) + File.separator + UUID.randomUUID() + "." + fromFormat.name();
         try (
-                FileOutputStream sourceOutputStream = new FileOutputStream(fromFilePath);
+                FileOutputStream sourceOutputStream = new FileOutputStream(fromFilePath)
                 ) {
             IOUtils.copy(inputStream, sourceOutputStream);
         }

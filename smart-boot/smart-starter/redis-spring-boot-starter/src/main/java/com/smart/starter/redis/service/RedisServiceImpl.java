@@ -77,7 +77,7 @@ public class RedisServiceImpl implements RedisService {
         this.redisTemplate.executePipelined((RedisCallback<Object>) connection -> {
             RedisSerializer keySerializer = this.redisTemplate.getKeySerializer();
             RedisSerializer valueSerializer = this.redisTemplate.getValueSerializer();
-            keyValues.forEach((key, value) -> connection.set(keySerializer.serialize(key), valueSerializer.serialize(value), Expiration.from(timeout),  RedisStringCommands.SetOption.UPSERT));
+            keyValues.forEach((key, value) -> connection.stringCommands().set(keySerializer.serialize(key), valueSerializer.serialize(value), Expiration.from(timeout),  RedisStringCommands.SetOption.UPSERT));
             return null;
         });
     }
@@ -112,7 +112,7 @@ public class RedisServiceImpl implements RedisService {
         this.redisTemplate.executePipelined((RedisCallback<Object>) connection -> {
             RedisSerializer keySerializer = this.redisTemplate.getKeySerializer();
             RedisSerializer valueSerializer = this.redisTemplate.getValueSerializer();
-            keyValues.forEach((key, value) -> connection.set(keySerializer.serialize(key), valueSerializer.serialize(value), Expiration.milliseconds(expireTime.toEpochMilli() - System.currentTimeMillis()),  RedisStringCommands.SetOption.UPSERT));
+            keyValues.forEach((key, value) -> connection.stringCommands().set(keySerializer.serialize(key), valueSerializer.serialize(value), Expiration.milliseconds(expireTime.toEpochMilli() - System.currentTimeMillis()),  RedisStringCommands.SetOption.UPSERT));
             return null;
         });
     }
@@ -187,16 +187,16 @@ public class RedisServiceImpl implements RedisService {
         final RedisConnectionFactory factory = this.redisTemplate.getConnectionFactory();
         Assert.notNull(factory, "获取redis连接失败");
         final RedisConnection redisConnection = factory.getConnection();
-        return redisConnection.scan(scanOptions);
+        return redisConnection.keyCommands().scan(scanOptions);
     }
 
     @Override
     public Properties info(@Nullable RedisInfoParameterEnum parameter) {
         RedisConnection redisConnection = this.redisTemplate.getRequiredConnectionFactory().getConnection();
         if (parameter == null) {
-            return redisConnection.info();
+            return redisConnection.serverCommands().info();
         }
-        return redisConnection.info(parameter.getParameter());
+        return redisConnection.serverCommands().info(parameter.getParameter());
     }
 
     @Override

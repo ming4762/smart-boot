@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
  * @since 1.0.7
  */
 @Configuration(proxyBeanMethods = false)
-public class GcAuthAutoConfiguration {
+public class SmartAuthAutoConfiguration {
 
     /**
      * 创建认证事件监听器

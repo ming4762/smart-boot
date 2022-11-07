@@ -173,17 +173,17 @@ public class SysUserAccountServiceImpl extends BaseServiceImpl<SysUserAccountMap
                 .eq(SysUserAccountPO :: getUserId, userAccount.getUserId())
                 .set(SysUserAccountPO::getAccountStatus, UserAccountStatusEnum.NORMAL);
         switch (userAccount.getAccountStatus()) {
-            case LONG_TIME_LOCKED: {
+            case LONG_TIME_LOCKED -> {
                 // 长时间未登录锁定解锁
                 updateWrapper.set(SysUserAccountPO::getLastLoginTime, LocalDateTime.now());
                 break;
             }
-            case LONG_TIME_PASSWORD_MODIFY_LOCKED: {
+            case LONG_TIME_PASSWORD_MODIFY_LOCKED -> {
                 // 长时间密码未修改锁定解锁
                 updateWrapper.set(SysUserAccountPO::getPasswordModifyTime, LocalDateTime.now());
                 break;
             }
-            default: {
+            default -> {
                 // do noting
             }
         }
