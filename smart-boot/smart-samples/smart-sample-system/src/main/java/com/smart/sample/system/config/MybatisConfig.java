@@ -3,8 +3,6 @@ package com.smart.sample.system.config;
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceBuilder;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import com.github.pagehelper.PageInterceptor;
-
-import com.smart.commons.core.constants.MapperPackageConstants;
 import com.smart.crud.mybatis.spring.CrudMybatisSqlSessionFactoryBean;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -53,11 +51,10 @@ public class MybatisConfig {
 
     @Bean
     public CrudMybatisSqlSessionFactoryBean crudMybatisSqlSessionFactoryBean(@Qualifier("systemDatasource") DataSource dataSource) throws IOException {
-        var mybatisSqlSessionFactoryBean = new CrudMybatisSqlSessionFactoryBean();
+        CrudMybatisSqlSessionFactoryBean mybatisSqlSessionFactoryBean = new CrudMybatisSqlSessionFactoryBean();
         mybatisSqlSessionFactoryBean.setDataSource(dataSource);
         mybatisSqlSessionFactoryBean.setMapperLocations(matchMapperLocations());
         mybatisSqlSessionFactoryBean.setPlugins(this.createPageHelperPlugins());
-
         return mybatisSqlSessionFactoryBean;
     }
 
