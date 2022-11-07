@@ -26,11 +26,7 @@
 	</properties>
 
 	<dependencies>
-		<dependency>
-			<groupId>com.smart</groupId>
-			<artifactId>smart-autoconfigure</artifactId>
-			<version>${project.parent.version}</version>
-		</dependency>
+
 	</dependencies>
 
 

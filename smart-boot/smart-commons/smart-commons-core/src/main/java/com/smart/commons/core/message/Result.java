@@ -5,7 +5,6 @@ import com.smart.commons.core.exception.BusinessException;
 import com.smart.commons.core.http.HttpStatus;
 import com.smart.commons.core.http.IHttpStatus;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
