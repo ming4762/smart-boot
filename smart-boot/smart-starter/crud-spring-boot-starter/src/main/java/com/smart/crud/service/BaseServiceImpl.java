@@ -41,7 +41,6 @@ public abstract class BaseServiceImpl<K extends CrudBaseMapper<T>, T extends Bas
 
     private static final String KEY_PROPERTY_NULL_ERROR = "error: can not execute. because can not find column for id from entity!";
 
-
     @Override
     protected Class<T> currentModelClass() {
         return (Class<T>) ReflectionKit.getSuperClassGenericType(getClass(), 1);

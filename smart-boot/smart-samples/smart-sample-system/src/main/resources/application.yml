@@ -18,4 +18,4 @@ spring:
 logging:
   level:
     root: info
-    com.gc: debug
+    com.smart: debug

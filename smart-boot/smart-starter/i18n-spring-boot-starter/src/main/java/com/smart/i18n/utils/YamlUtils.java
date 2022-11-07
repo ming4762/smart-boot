@@ -49,9 +49,9 @@ public class YamlUtils {
     private static void convertInOneLayer(Map<String, Object> data, String parentKey, Map<String, Object> result) {
         data.forEach((key, value) -> {
             String nextKey = StringUtils.hasText(parentKey) ? key : String.join(".", parentKey, key);
-            if (value instanceof Map) {
+            if (value instanceof Map mapData) {
                 // 继续执行
-                convertInOneLayer((Map<String, Object>) value, nextKey, result);
+                convertInOneLayer(mapData, nextKey, result);
             } else {
                 // 没有下一级添加到结果内容
                 result.put(nextKey, value);

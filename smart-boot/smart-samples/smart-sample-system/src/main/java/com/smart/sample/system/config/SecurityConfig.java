@@ -22,11 +22,9 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig extends AuthWebSecurityConfigurerAdapter {
 
-
     public SecurityConfig(AuthProperties authProperties) {
         super(authProperties);
     }
-
     @SneakyThrows
     @Bean
     public SecurityFilterChain securityFilterChainConfig(HttpSecurity http, ApplicationContext applicationContext) {
@@ -52,9 +50,4 @@ public class SecurityConfig extends AuthWebSecurityConfigurerAdapter {
         return http.build();
     }
 
-    @Override
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizerConfigure() {
-        return super.webSecurityCustomizerConfigure();
-    }
 }
