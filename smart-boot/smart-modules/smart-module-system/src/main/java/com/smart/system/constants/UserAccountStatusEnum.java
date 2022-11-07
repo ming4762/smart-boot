@@ -1,6 +1,5 @@
 package com.smart.system.constants;
 
-import com.baomidou.mybatisplus.annotation.IEnum;
 import lombok.Getter;
 
 /**
@@ -10,7 +9,7 @@ import lombok.Getter;
  * @since 1.0.7
  */
 @Getter
-public enum UserAccountStatusEnum implements IEnum<String> {
+public enum UserAccountStatusEnum {
 
     /**
      * 10:正常
