@@ -238,7 +238,7 @@ public final class CrudUtils {
                 // 获取符号
                 final String symbol = keySplit.length > 1 ? keySplit[1] : null;
                 if (StringUtils.isEmpty(symbol)) {
-                    log.warn("参数无效，为找到符号，key:{}", key);
+                    log.warn("参数无效，未找到符号，key:{}", key);
                 } else {
                     final String dbFieldName = getDbField(clazz, keySplit[0]);
                     if (dbFieldName == null) {
