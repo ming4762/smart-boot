@@ -7,9 +7,10 @@ import com.smart.auth.core.properties.AuthProperties;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.http.HttpMethod;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 
 /**
  * 默认的web配置器
@@ -25,38 +26,6 @@ public class AuthWebSecurityConfigurerAdapter {
         this.authProperties = authProperties;
     }
 
-    public WebSecurityCustomizer webSecurityCustomizerConfigure() {
-        return web -> {
-            WebSecurity and = web.ignoring().and();
-
-            // 忽略 GET
-            this.authProperties.getIgnores().getGet().forEach(url -> and.ignoring().requestMatchers(new ExtensionPathMatcher(HttpMethod.GET, url)));
-
-            // 忽略 POST
-            this.authProperties.getIgnores().getPost().forEach(url -> and.ignoring().requestMatchers(new ExtensionPathMatcher(HttpMethod.POST, url)));
-
-            // 忽略 DELETE
-            this.authProperties.getIgnores().getDelete().forEach(url -> and.ignoring().requestMatchers(new ExtensionPathMatcher(HttpMethod.DELETE, url)));
-
-            // 忽略 PUT
-            this.authProperties.getIgnores().getPut().forEach(url -> and.ignoring().requestMatchers(new ExtensionPathMatcher(HttpMethod.PUT, url)));
-
-            // 忽略 HEAD
-            this.authProperties.getIgnores().getHead().forEach(url -> and.ignoring().requestMatchers(new ExtensionPathMatcher(HttpMethod.HEAD, url)));
-
-            // 忽略 PATCH
-            this.authProperties.getIgnores().getPatch().forEach(url -> and.ignoring().requestMatchers(new ExtensionPathMatcher(HttpMethod.PATCH, url)));
-
-            // 忽略 OPTIONS
-            this.authProperties.getIgnores().getOptions().forEach(url -> and.ignoring().requestMatchers(new ExtensionPathMatcher(HttpMethod.OPTIONS, url)));
-
-            // 忽略 TRACE
-            this.authProperties.getIgnores().getTrace().forEach(url -> and.ignoring().requestMatchers(new ExtensionPathMatcher(HttpMethod.TRACE, url)));
-            // 按照请求格式忽略
-            this.authProperties.getIgnores().getPattern().forEach(url -> and.ignoring().requestMatchers(new ExtensionPathMatcher(url)));
-        };
-    }
-
     @SneakyThrows
     protected void configure(HttpSecurity http) {
         http.csrf().disable()
@@ -69,10 +38,39 @@ public class AuthWebSecurityConfigurerAdapter {
                 .exceptionHandling()
                 .authenticationEntryPoint(new RestAuthenticationEntryPoint())
                 .accessDeniedHandler(new AuthAccessDeniedHandler());
+        this.ignore(http);
         // 开发模式不拦截
         if (BooleanUtils.isTrue(this.authProperties.getDevelopment())) {
             http.authorizeRequests().anyRequest().permitAll();
         }
+    }
 
+    @SneakyThrows
+    public void ignore(HttpSecurity http) {
+        AuthProperties.IgnoreConfig ignoreConfig = this.authProperties.getIgnores();
+        ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry registry = http.authorizeRequests();
+        // 忽略 GET
+        ignoreConfig.getGet().forEach(url -> this.doIgnore(registry, url, HttpMethod.GET));
+        // 忽略 post
+        ignoreConfig.getPost().forEach(url -> this.doIgnore(registry, url, HttpMethod.POST));
+        // 忽略 DELETE
+        ignoreConfig.getDelete().forEach(url -> this.doIgnore(registry, url, HttpMethod.DELETE));
+        // 忽略 PUT
+        ignoreConfig.getPut().forEach(url -> this.doIgnore(registry, url, HttpMethod.PUT));
+        // 忽略 HEAD
+        ignoreConfig.getHead().forEach(url -> this.doIgnore(registry, url, HttpMethod.HEAD));
+        // 忽略 PATCH
+        ignoreConfig.getPatch().forEach(url -> this.doIgnore(registry, url, HttpMethod.PATCH));
+        // 忽略 OPTIONS
+        ignoreConfig.getOptions().forEach(url -> this.doIgnore(registry, url, HttpMethod.OPTIONS));
+        // 忽略 TRACE
+        ignoreConfig.getTrace().forEach(url -> this.doIgnore(registry, url, HttpMethod.TRACE));
+        // 按照请求格式忽略
+        ignoreConfig.getPattern().forEach(url -> this.doIgnore(registry, url, null));
+    }
+
+    private void doIgnore(@NonNull ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry registry, @NonNull String url, @Nullable HttpMethod httpMethod) {
+        ExtensionPathMatcher matcher = httpMethod == null ? new ExtensionPathMatcher(url) : new ExtensionPathMatcher(httpMethod, url);
+        registry.requestMatchers(matcher).permitAll();
     }
 }

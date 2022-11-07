@@ -1,7 +1,6 @@
 package com.smart.commons.core.utils;
 
 import com.smart.commons.core.message.Result;
-import org.springframework.http.MediaType;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
