@@ -35,6 +35,10 @@ import log_en_US from '../views/log/lang/en_US'
 import { dictGroupI18n as dictGroupI18n_zh , dictItemI18n as dictItemI18n_zh } from '../views/dict/dataDict/lang/zh_CN'
 import { dictGroupI18n as dictGroupI18n_en , dictItemI18n as dictItemI18n_en } from '../views/dict/dataDict/lang/en_US'
 
+//异常信息国际化
+import exception_zh_CN from '../views/exception/lang/zh_CN'
+import exception_en_US from '../views/exception/lang/en_US'
+
 export default {
   zh_CN: merge({},
     systemZhCN,
@@ -47,7 +51,8 @@ export default {
     onlineUser_zh_CN,
     log_zh_CN,
     transferI18n(dictGroupI18n_zh),
-    transferI18n(dictItemI18n_zh)
+    transferI18n(dictItemI18n_zh),
+    transferI18n(exception_zh_CN)
   ),
   en_US: merge({},
     systemEnUS,
@@ -60,6 +65,7 @@ export default {
     onlineUser_en_US,
     log_en_US,
     transferI18n(dictGroupI18n_en),
-    transferI18n(dictItemI18n_en)
+    transferI18n(dictItemI18n_en),
+    transferI18n(exception_en_US)
   )
 }

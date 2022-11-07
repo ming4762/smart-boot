@@ -1,5 +1,8 @@
 export default {
   system: {
+    common: {
+      exceptionTitle: 'An error occurred in the system. Please submit the error and contact the administrator'
+    },
     pageTitle: {
       login: 'Login',
       main: 'Main'

@@ -69,6 +69,11 @@ const topRouters: Array<RouteRecordRaw> = [
         name: 'data_dict',
         path: 'sys/dataDict',
         component: () => import('@/modules/system/views/dict/dataDict/DataDictListView.vue')
+      },
+      {
+        name: 'system_exception',
+        path: 'sys/exception',
+        component: () => import('@/modules/system/views/exception/SysExceptionListView.vue')
       }
     ]
   }

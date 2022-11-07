@@ -11,7 +11,9 @@ export default {
       noUse: 'No use',
       save: 'Save',
       look: 'Look',
-      download: 'Download'
+      download: 'Download',
+      cancel: 'Cancel',
+      submit: 'Submit'
     },
     title: {
       details: 'Details',
@@ -27,7 +29,8 @@ export default {
     },
     formValidate: {
       seq: 'Please enter serial number',
-      remark: 'Please enter remark'
+      remark: 'Please enter remark',
+      enter: 'Please enter message'
     },
     table: {
       createTime: 'Creation time',
@@ -52,7 +55,8 @@ export default {
       saveSuccess: 'Saved successfully',
       editSuccess: 'Edit success',
       deleteSuccess: 'Delete successfully',
-      deleteFail: 'Deletion failed'
+      deleteFail: 'Deletion failed',
+      submitSuccess: 'Submit successfully'
     }
   },
   app: {

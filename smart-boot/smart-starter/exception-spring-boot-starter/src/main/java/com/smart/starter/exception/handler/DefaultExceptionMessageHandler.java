@@ -1,5 +1,6 @@
 package com.smart.starter.exception.handler;
 
+import com.smart.commons.core.message.ExceptionResult;
 import com.smart.commons.core.message.Result;
 import com.smart.starter.exception.processor.ExceptionMessageProcessor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,14 +30,20 @@ public class DefaultExceptionMessageHandler implements ExceptionMessageHandler, 
     @Override
     public Object message(Exception e, long exceptionNo, HttpServletRequest request) {
         ExceptionMessageProcessor processor =  messageProcessorMap.get(e.getClass());
+        Object result;
         if (Objects.isNull(processor)) {
             processor = messageProcessorMap.get(Exception.class);
         }
         if (Objects.nonNull(processor)) {
-            return processor.message(e, exceptionNo, request);
+            result = processor.message(e, exceptionNo, request);
+        } else  {
+            log.error("系统发生未知异常", e);
+            result = Result.failure("系统发生未知异常", e.toString());
         }
-        log.error("系统发生未知异常", e);
-        return Result.failure("系统发生未知异常", e.toString());
+        if (result instanceof Result<?>) {
+            result = ExceptionResult.build((Result<?>)result, exceptionNo);
+        }
+        return result;
     }
 
 

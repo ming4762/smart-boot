@@ -11,7 +11,9 @@ export default {
       noUse: '停用',
       save: '保存',
       look: '查看',
-      download: '下载'
+      download: '下载',
+      cancel: '取消',
+      submit: '提交'
     },
     title: {
       details: '详情',
@@ -27,7 +29,8 @@ export default {
     },
     formValidate: {
       seq: '请输入序号',
-      remark: '请输入备注'
+      remark: '请输入备注',
+      enter: '请输入内容'
     },
     table: {
       createTime: '创建时间',
@@ -52,7 +55,8 @@ export default {
       saveSuccess: '保存成功',
       editSuccess: '修改成功',
       deleteSuccess: '删除成功',
-      deleteFail: '删除失败'
+      deleteFail: '删除失败',
+      submitSuccess: '提交成功'
     }
   },
   app: {

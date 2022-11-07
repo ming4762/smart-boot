@@ -1,5 +1,8 @@
 export default {
   system: {
+    common: {
+      exceptionTitle: '系统发生错误，请提交错误，并联系管理员'
+    },
     pageTitle: {
       login: '登录',
       main: '主页'
