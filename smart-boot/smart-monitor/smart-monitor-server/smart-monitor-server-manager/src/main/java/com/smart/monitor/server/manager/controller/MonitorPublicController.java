@@ -6,7 +6,7 @@ import com.smart.auth.core.annotation.TempToken;
 import com.smart.monitor.server.manager.model.MonitorClientLogPO;
 import com.smart.monitor.server.manager.pojo.dto.LogDownloadDTO;
 import com.smart.monitor.server.manager.service.MonitorClientLogService;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,7 +36,7 @@ public class MonitorPublicController {
     }
 
     @SneakyThrows
-    @ApiOperation("下载日志")
+    @Operation(summary = "下载日志")
     @GetMapping("downloadFilterUser")
     @TempToken(resource = "monitor:client:log")
     public void downloadFilterUser(LogDownloadDTO parameter, HttpServletResponse response) {

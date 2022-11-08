@@ -1,6 +1,6 @@
 package com.smart.system.pojo.dto.i18n;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -14,7 +14,7 @@ import java.io.Serializable;
  * 2021/11/12
  * @since 1.0.7
  */
-@ApiModel("国际化组保存/修改实体")
+@Tag(name = "国际化组保存/修改实体")
 @Getter
 @Setter
 @ToString

@@ -17,7 +17,7 @@ import com.smart.system.pojo.dto.i18n.SysI18nGroupSaveUpdateDTO;
 import com.smart.system.pojo.dto.i18n.SysI18nSaveUpdateDTO;
 import com.smart.system.service.SysI18nGroupService;
 import com.smart.system.service.SysI18nService;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DuplicateKeyException;
@@ -52,7 +52,7 @@ public class SysI18nController extends BaseController<SysI18nService, SysI18nPO>
     }
 
     @PostMapping("listGroup")
-    @ApiOperation("查询国际化组信息")
+    @Operation(summary = "查询国际化组信息")
     public Result<List<SysI18nGroupPO>> listGroup() {
         return Result.success(
                 this.sysI18nGroupService.list(
@@ -63,7 +63,7 @@ public class SysI18nController extends BaseController<SysI18nService, SysI18nPO>
     }
 
     @PostMapping("saveOrUpdateGroup")
-    @ApiOperation("保存/更新国际化组")
+    @Operation(summary = "保存/更新国际化组")
     @Log(value = "保存/更新国际化组", type = LogOperationTypeEnum.UPDATE)
     @PreAuthorize("hasPermission('sys:i18n', 'save') or hasPermission('sys:i18n', 'update')")
     public Result<Boolean> saveOrUpdateGroup(@RequestBody @Valid SysI18nGroupSaveUpdateDTO parameter) {
@@ -73,7 +73,7 @@ public class SysI18nController extends BaseController<SysI18nService, SysI18nPO>
     }
 
     @PostMapping("deleteGroup")
-    @ApiOperation("删除国际化组")
+    @Operation(summary = "删除国际化组")
     @Log(value = "删除国际化组", type = LogOperationTypeEnum.DELETE)
     @PreAuthorize("hasPermission('sys:i18n', 'delete')")
     public Result<Boolean> deleteGroup(@RequestBody List<Long> idList) {
@@ -81,27 +81,27 @@ public class SysI18nController extends BaseController<SysI18nService, SysI18nPO>
     }
 
     @PostMapping("getGroupById")
-    @ApiOperation("通过ID查询国际化组")
+    @Operation(summary = "通过ID查询国际化组")
     public Result<SysI18nGroupPO> getGroupById(@RequestBody Long groupId) {
         return Result.success(this.sysI18nGroupService.getById(groupId));
     }
 
     @Override
     @PostMapping("list")
-    @ApiOperation("查询国际化信息")
+    @Operation(summary = "查询国际化信息")
     public Result<Object> list(@RequestBody @NonNull PageSortQuery parameter) {
         return super.list(parameter);
     }
 
     @PostMapping("getById")
-    @ApiOperation("通过ID查询国际化信息")
+    @Operation(summary = "通过ID查询国际化信息")
     @Override
     public Result<SysI18nPO> getById(@RequestBody Serializable id) {
         return super.getById(id);
     }
 
     @PostMapping("saveUpdate")
-    @ApiOperation("保存/更新国际化信息")
+    @Operation(summary = "保存/更新国际化信息")
     @Log(value = "保存/更新国际化信息", type = LogOperationTypeEnum.UPDATE)
     @PreAuthorize("hasPermission('sys:i18n', 'save') or hasPermission('sys:i18n', 'update')")
     public Result<Boolean> saveUpdate(@RequestBody @Valid SysI18nSaveUpdateDTO parameter) {
@@ -115,7 +115,7 @@ public class SysI18nController extends BaseController<SysI18nService, SysI18nPO>
     }
 
     @PostMapping("batchDeleteById")
-    @ApiOperation("删除国际化信息")
+    @Operation(summary = "删除国际化信息")
     @Log(value = "删除国际化信息", type = LogOperationTypeEnum.DELETE)
     @PreAuthorize("hasPermission('sys:i18n', 'delete')")
     @Override
@@ -124,7 +124,7 @@ public class SysI18nController extends BaseController<SysI18nService, SysI18nPO>
     }
 
     @PostMapping("reload")
-    @ApiOperation("刷新国际化信息")
+    @Operation(summary = "刷新国际化信息")
     @PreAuthorize("hasPermission('sys:i18n', 'reload')")
     public Result<Boolean> reload() {
         this.messageSource.reload();

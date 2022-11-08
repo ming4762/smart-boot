@@ -35,7 +35,7 @@ public class SysFunctionController extends BaseController<SysFunctionService, Sy
     @Override
     @PostMapping("batchDeleteById")
     @Log(value = "通过ID批量删除功能", type = LogOperationTypeEnum.DELETE)
-    @ApiOperation(value = "通过ID批量删除功能", httpMethod = "POST")
+    @Operation(summary = "通过ID批量删除功能", method = "POST")
     @PreAuthorize("hasPermission('sys:function', 'delete')")
     public Result<Boolean> batchDeleteById(@RequestBody List<Serializable> idList) {
         if (CollectionUtils.isEmpty(idList)) {
@@ -46,14 +46,14 @@ public class SysFunctionController extends BaseController<SysFunctionService, Sy
 
     @PostMapping("getById")
     @Override
-    @ApiOperation(value = "通过ID获取", httpMethod = "POST")
+    @Operation(summary = "通过ID获取", method = "POST")
     public Result<SysFunctionPO> getById(@RequestBody Serializable id) {
         return super.getById(id);
     }
 
     @Override
     @PostMapping("saveUpdate")
-    @ApiOperation(value = "添加修改功能")
+    @Operation(summary = "添加修改功能")
     @Log(value = "添加保存功能", type = LogOperationTypeEnum.UPDATE)
     @PreAuthorize("hasPermission('sys:function', 'save') or hasPermission('sys:function', 'update')")
     public Result<Boolean> saveUpdate(@RequestBody SysFunctionPO model) {
@@ -62,7 +62,7 @@ public class SysFunctionController extends BaseController<SysFunctionService, Sy
 
     @Override
     @PostMapping("list")
-    @ApiOperation(value = "查询功能列表（支持分页、实体类属性查询）")
+    @Operation(summary = "查询功能列表（支持分页、实体类属性查询）")
     public Result<Object> list(@RequestBody @NonNull PageSortQuery parameter) {
         return super.list(parameter);
     }

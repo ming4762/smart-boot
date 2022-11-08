@@ -1,7 +1,6 @@
 package com.smart.monitor.server.manager.pojo.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -16,10 +15,10 @@ import java.io.Serializable;
 @ToString
 @Getter
 @Setter
-@ApiModel("查询client id dto")
+@Schema(name = "查询client id dto")
 public class ClientIdQueryDTO implements Serializable {
     private static final long serialVersionUID = 6167882977654809522L;
 
-    @ApiModelProperty("应用名称")
+    @Schema(name = "应用名称")
     private String applicationName;
 }

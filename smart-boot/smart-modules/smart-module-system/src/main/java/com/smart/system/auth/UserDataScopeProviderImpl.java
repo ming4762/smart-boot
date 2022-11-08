@@ -1,6 +1,7 @@
 package com.smart.system.auth;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.google.common.collect.ImmutableSet;
 import com.smart.auth.core.utils.AuthUtils;
 import com.smart.crud.datapermission.DataPermissionScope;
 import com.smart.crud.datapermission.UserDataScope;
@@ -13,6 +14,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -35,8 +37,8 @@ public class UserDataScopeProviderImpl implements UserDataScopeProvider {
 
     @Override
     public UserDataScope getUserUserDataScope() {
-        var userId = AuthUtils.getNonNullCurrentUserId();
-        var dataList = this.sysUserDeptService.list(
+        Long userId = AuthUtils.getNonNullCurrentUserId();
+        List<SysUserDeptPO> dataList = this.sysUserDeptService.list(
                 new QueryWrapper<SysUserDeptPO>().lambda()
                         .select(SysUserDeptPO::getUserId, SysUserDeptPO::getDeptId, SysUserDeptPO::getIdent)
                         .eq(SysUserDeptPO::getUserId, userId)
@@ -45,7 +47,7 @@ public class UserDataScopeProviderImpl implements UserDataScopeProvider {
         if (dataList.isEmpty()) {
             return null;
         }
-        var userDept = dataList.get(0);
+        SysUserDeptPO userDept = dataList.get(0);
         return new UserDataScope(userId, userDept.getDeptId(),
                 Arrays.stream(userDept.getDataScope().split(","))
                         .map(DataPermissionScope::valueOf)
@@ -56,7 +58,7 @@ public class UserDataScopeProviderImpl implements UserDataScopeProvider {
     @NonNull
     @Override
     public Set<Long> getUserAllDeptId(@NonNull Long deptId) {
-        var deptIds = this.sysDeptService.queryAllChildIds(Set.of(deptId));
+        Set<Long> deptIds = this.sysDeptService.queryAllChildIds(ImmutableSet.of(deptId));
         deptIds.add(deptId);
         return deptIds;
     }

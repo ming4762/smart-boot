@@ -409,7 +409,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
                     .orderByAsc(DbCodeRelatedTablePO :: getSeq)
             );
 
-            final List<Long> relatedTableIdList = relatedTableList.stream().map(DbCodeRelatedTablePO :: getAddendumId).toList();
+            final List<Long> relatedTableIdList = relatedTableList.stream().map(DbCodeRelatedTablePO :: getAddendumId).collect(Collectors.toList());
             if (!CollectionUtils.isEmpty(relatedTableIdList)) {
                 final Map<Long, DbCodeMainPO> dbCodeMainIdMap = this.listByIds(relatedTableIdList)
                         .stream().collect(Collectors.toMap(DbCodeMainPO :: getId, item -> item));

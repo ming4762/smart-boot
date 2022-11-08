@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 /**
  * 客户端日志同步类
@@ -68,7 +69,7 @@ public class MonitorClientLogSync implements MonitorDataSync {
                 .level(item.getLevel())
                 .logText(LogbackLogUtils.convertToLogText(item))
                 .createTime(currentTime)
-                .build()).toList();
+                .build()).collect(Collectors.toList());
         this.monitorClientLogService.saveBatch(logList);
         return logList.size();
     }

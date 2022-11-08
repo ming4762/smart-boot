@@ -1,7 +1,6 @@
 package com.smart.module.document.pojo.dto.excel;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -18,7 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-@ApiModel("填充多sheetExcel(带有条形码&二维码)参数")
+@Schema(name = "填充多sheetExcel(带有条形码&二维码)参数")
 public class ExcelMultiSheetDTO {
 
     /**
@@ -30,12 +29,12 @@ public class ExcelMultiSheetDTO {
     /**
      * sheet名字
      */
-    @ApiModelProperty(value = "sheet名字列表（sheet名字不能与模板sheet名字相同）")
+    @Schema(name = "sheet名字列表（sheet名字不能与模板sheet名字相同）")
     private List<String> sheetNameList;
 
     /**
      * 数据列表
      */
-    @ApiModelProperty(value = "填充数据列表", required = true)
+    @Schema(name = "填充数据列表", required = true)
     private List<ExcelFillWithCodeData> dataList;
 }

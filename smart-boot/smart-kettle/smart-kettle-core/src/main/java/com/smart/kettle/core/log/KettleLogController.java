@@ -182,11 +182,25 @@ public class KettleLogController {
      * 获取全局的job日志表名称
      */
     private String getGlobalJobLogTableName(JobLogType logType) {
-        return switch (logType) {
-            case JOB_LOG -> this.logDatabaseProperties.getJobLogTableName();
-            case JOB_ENTRY_LOG -> this.logDatabaseProperties.getJobEntryLogTableName();
-            case JOB_CHANNEL_LOG -> this.logDatabaseProperties.getChannelLogTableName();
-        };
+        String result = "";
+        switch (logType) {
+            case JOB_LOG: {
+                result = this.logDatabaseProperties.getJobLogTableName();
+                break;
+            }
+            case JOB_ENTRY_LOG: {
+                result = this.logDatabaseProperties.getJobEntryLogTableName();
+                break;
+            }
+            case JOB_CHANNEL_LOG: {
+                result = this.logDatabaseProperties.getChannelLogTableName();
+                break;
+            }
+            default: {
+                // do nothing
+            }
+        }
+        return result;
     }
 
     /**

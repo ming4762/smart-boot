@@ -12,7 +12,7 @@ import com.smart.db.generator.pojo.dto.DbTemplateUserGroupSaveDTO;
 import com.smart.db.generator.service.DbCodeTemplateGroupService;
 import com.smart.db.generator.service.DbCodeTemplateService;
 import com.smart.db.generator.service.DbCodeTemplateUserGroupService;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -118,7 +118,7 @@ public class DbCodeTemplateController extends BaseController<DbCodeTemplateServi
      * @return 分组列表
      */
     @PostMapping("listGroup")
-    @ApiOperation("查询分组列表")
+    @Operation(summary = "查询分组列表")
     public Result<List<DbCodeTemplateGroupPO>> listGroup() {
         return Result.success(
                 this.templateGroupService.list(
@@ -135,20 +135,20 @@ public class DbCodeTemplateController extends BaseController<DbCodeTemplateServi
      * @return DbCodeTemplateGroupPO
      */
     @PostMapping("getGroupById")
-    @ApiOperation("通过ID查询模板分组")
+    @Operation(summary = "通过ID查询模板分组")
     public Result<DbCodeTemplateGroupPO> getGroupById(@RequestBody Long groupId) {
         return Result.success(this.templateGroupService.getById(groupId));
     }
 
     @PostMapping("saveUpdateGroup")
-    @ApiOperation("保存模板分组")
+    @Operation(summary = "保存模板分组")
     @PreAuthorize("hasPermission('db:templateGroup', 'save') or hasPermission('db:templateGroup', 'update')")
     public Result<Boolean> saveUpdateGroup(@RequestBody DbCodeTemplateGroupPO templateGroup) {
         return Result.success(this.templateGroupService.saveOrUpdateWithAllUser(templateGroup, AuthUtils.getCurrentUserId()));
     }
 
     @PostMapping("deleteGroupById")
-    @ApiOperation("通过ID删除模板分组")
+    @Operation(summary = "通过ID删除模板分组")
     @PreAuthorize("hasPermission('db:templateGroup', 'delete')")
     public Result<Boolean> deleteGroupById(@RequestBody List<Long> idList) {
         return Result.success(this.templateGroupService.removeByIds(idList));

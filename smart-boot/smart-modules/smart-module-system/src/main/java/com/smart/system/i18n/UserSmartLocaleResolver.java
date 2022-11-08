@@ -3,11 +3,11 @@ package com.smart.system.i18n;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.auth.core.utils.AuthUtils;
 import com.smart.i18n.resolver.SmartLocaleResolver;
-import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
 import java.util.Objects;
 

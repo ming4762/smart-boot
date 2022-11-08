@@ -9,5 +9,4 @@ import com.smart.monitor.server.manager.model.MonitorClientLogPO;
 * 2022-3-3
 */
 public interface MonitorClientLogService extends BaseService<MonitorClientLogPO> {
-
 }

@@ -5,6 +5,7 @@ import com.smart.monitor.server.common.model.ClientData;
 import org.springframework.lang.NonNull;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 /**
  * @author ShiZhongMing
@@ -23,6 +24,6 @@ public abstract class AbstractClientRepositoryImpl implements ClientRepository {
     }
 
     protected Collection<ClientData> getActiveList(Collection<ClientData> repositoryDatas) {
-        return repositoryDatas.stream().filter(this::isActive).toList();
+        return repositoryDatas.stream().filter(this::isActive).collect(Collectors.toList());
     }
 }

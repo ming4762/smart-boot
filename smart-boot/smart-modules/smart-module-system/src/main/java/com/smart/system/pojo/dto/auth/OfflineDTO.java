@@ -1,7 +1,7 @@
 package com.smart.system.pojo.dto.auth;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,13 +18,13 @@ import java.io.Serializable;
 @Setter
 @ToString
 @EqualsAndHashCode
-@ApiModel("用户离线参数")
+@Tag(name = "用户离线参数")
 public class OfflineDTO implements Serializable {
 
     private static final long serialVersionUID = 16332489185546505L;
-    @ApiModelProperty("用户名")
+    @Schema(title = "用户名")
     private String username;
 
-    @ApiModelProperty("token")
+    @Schema(title = "token")
     private String token;
 }

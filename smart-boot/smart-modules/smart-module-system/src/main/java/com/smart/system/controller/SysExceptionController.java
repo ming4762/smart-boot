@@ -7,7 +7,6 @@ import com.smart.system.model.SysExceptionPO;
 import com.smart.system.pojo.dto.exception.ExceptionFeedbackDTO;
 import com.smart.system.service.SysExceptionService;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.validation.Valid;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.io.Serializable;
 
 /**

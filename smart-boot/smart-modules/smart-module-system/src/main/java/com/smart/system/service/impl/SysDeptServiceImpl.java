@@ -1,6 +1,7 @@
 package com.smart.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.google.common.collect.ImmutableList;
 import com.smart.crud.constants.CrudCommonEnum;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.crud.service.BaseServiceImpl;
@@ -35,17 +36,17 @@ public class SysDeptServiceImpl extends BaseServiceImpl<SysDeptMapper, SysDeptPO
 
     @Override
     public List<? extends SysDeptPO> list(@NonNull QueryWrapper<SysDeptPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
-        var userList = super.list(queryWrapper, parameter, paging);
+        List<? extends SysDeptPO> userList = super.list(queryWrapper, parameter, paging);
         if (userList.isEmpty()) {
             return userList;
         }
         // 转为volist
-        var voList = userList.stream()
+        List<SysDeptListVo> voList = userList.stream()
                 .map(item -> {
-                    var vo = new SysDeptListVo();
+                    SysDeptListVo vo = new SysDeptListVo();
                     BeanUtils.copyProperties(item, vo);
                     return vo;
-                }).toList();
+                }).collect(Collectors.toList());
         if (Boolean.TRUE.equals(parameter.getParameter().get(CrudCommonEnum.QUERY_CREATE_UPDATE_USER.name()))) {
             // 查询创建 修改人
             this.userSetterService.setCreateUpdateUser(voList);
@@ -61,9 +62,9 @@ public class SysDeptServiceImpl extends BaseServiceImpl<SysDeptMapper, SysDeptPO
     @SuppressWarnings("unchecked")
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean removeByIds(Collection<?> idList) {
-        var parentIds = new HashSet<Long>((Collection<? extends Long>) idList);
-        var deleteIds = this.queryAllChildIds(parentIds);
+    public boolean removeByIds(Collection<? extends Serializable> idList) {
+        Set<Long> parentIds = new HashSet<>((Collection<? extends Long>) idList);
+        Set<Long> deleteIds = this.queryAllChildIds(parentIds);
         deleteIds.addAll(parentIds);
         return super.removeByIds(deleteIds);
     }
@@ -71,7 +72,7 @@ public class SysDeptServiceImpl extends BaseServiceImpl<SysDeptMapper, SysDeptPO
     @NonNull
     @Override
     public Set<Long> queryAllChildIds(@NonNull Set<Long> parentIds) {
-        var childIds = new HashSet<Long>();
+        Set<Long> childIds = new HashSet<>();
         this.queryAllChildId(parentIds, childIds);
         return childIds;
     }
@@ -86,7 +87,7 @@ public class SysDeptServiceImpl extends BaseServiceImpl<SysDeptMapper, SysDeptPO
             return;
         }
         // 查询下级编码
-        var ids = this.list(
+        Set<Long> ids = this.list(
                 new QueryWrapper<SysDeptPO>().lambda()
                         .select(SysDeptPO::getDeptId)
                         .in(SysDeptPO::getParentId, idList)
@@ -104,14 +105,14 @@ public class SysDeptServiceImpl extends BaseServiceImpl<SysDeptMapper, SysDeptPO
      */
     @Override
     public SysDeptPO getById(Serializable id) {
-        var dept = super.getById(id);
+        SysDeptPO dept = super.getById(id);
         if (dept == null) {
             return null;
         }
-        var vo = new SysDeptListVo();
+        SysDeptListVo vo = new SysDeptListVo();
         BeanUtils.copyProperties(dept, vo);
         // 查询创建人更新人信息
-        this.userSetterService.setCreateUpdateUser(List.of(vo));
+        this.userSetterService.setCreateUpdateUser(ImmutableList.of(vo));
         // 查询上级
         if (vo.getParentId() != 0) {
             vo.setParentDept(super.getById(vo.getParentId()));

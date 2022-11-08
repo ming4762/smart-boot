@@ -1,6 +1,6 @@
 package com.smart.module.document.pojo.dto.excel;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -16,7 +16,7 @@ import java.util.Map;
 @Getter
 @Setter
 @ToString
-@ApiModel("excel填充数据")
+@Schema(name = "excel填充数据")
 public class ExcelFillDataDTO {
 
     @NotNull(message = "模板编码不能为空")

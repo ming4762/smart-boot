@@ -36,12 +36,12 @@ public class SysDictItemController extends BaseController<SysDictItemService, Sy
 
     @Override
     @PostMapping("list")
-    @ApiOperation(value = "查询角色列表（支持分页、实体类属性查询）")
+    @Operation(summary = "查询角色列表（支持分页、实体类属性查询）")
     public Result<Object> list(@RequestBody @NonNull PageSortQuery parameter) {
         return super.list(parameter);
     }
 
-    @ApiOperation(value = "添加修改字典序表")
+    @Operation(summary = "添加修改字典序表")
     @PostMapping("saveUpdate")
     @Log(value = "添加修改字典序表", type = LogOperationTypeEnum.UPDATE)
     @PreAuthorize("hasPermission('sys:dictItem', 'save') or hasPermission('sys:dictItem', 'update')")
@@ -51,7 +51,7 @@ public class SysDictItemController extends BaseController<SysDictItemService, Sy
         return Result.success(this.service.saveOrUpdateWithAllUser(model, AuthUtils.getCurrentUserId()));
     }
 
-    @ApiOperation(value = "通过ID批量删除字典序表")
+    @Operation(summary = "通过ID批量删除字典序表")
     @PostMapping("batchDelete")
     @PreAuthorize("hasPermission('sys:dictItem', 'delete')")
     @Log(value = "通过ID批量删除字典序表", type = LogOperationTypeEnum.DELETE)
@@ -62,7 +62,7 @@ public class SysDictItemController extends BaseController<SysDictItemService, Sy
         return Result.success(this.service.batchDelete(idList));
     }
 
-    @ApiOperation(value = "通过ID查询")
+    @Operation(summary = "通过ID查询")
     @PostMapping("get")
     public Result<SysDictItemPO> get(@RequestBody SysDictItemIdDTO id) {
         List<SysDictItemPO> data = this.service.list(

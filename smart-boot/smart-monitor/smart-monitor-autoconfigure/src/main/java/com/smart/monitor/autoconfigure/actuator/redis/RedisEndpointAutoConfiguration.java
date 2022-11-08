@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration(proxyBeanMethods = false)
 @AutoConfigureAfter(SmartRedisAutoConfiguration.class)
-@ConditionalOnClass(SmartMonitorActuatorRedis.class)
+@ConditionalOnClass({SmartMonitorActuatorRedis.class})
 @ConditionalOnAvailableEndpoint(endpoint = RedisInfoEndPoint.class)
 @ConditionalOnBean(RedisService.class)
 public class RedisEndpointAutoConfiguration {

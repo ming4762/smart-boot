@@ -206,33 +206,6 @@ public class AuthUserServiceImpl implements AuthUserService {
      */
     @Override
     public UserRolePermission queryRolePermission(@NonNull AuthUser authUser) {
-        return this.sysUserService.queryUserRolePermission(authUser.getUserId(), List.of(FunctionTypeEnum.FUNCTION));
-    }
-
-    /**
-     * 查询权限列表
-     * @param authUser 用户信息
-     * @return 权限列表
-     */
-    @Override
-    public Set<Permission> listPermission(@NonNull AuthUser authUser) {
-        return this.sysUserService.listUserFunction(authUser.getUserId(), ImmutableList.of(FunctionTypeEnum.FUNCTION))
-                .stream()
-                .flatMap(item -> {
-                    String url = item.getUrl();
-                    if (StringUtils.isNotBlank(url)) {
-                        return Arrays.stream(url.split(";"))
-                                .map(uriItem -> Permission.builder()
-                                        .method(item.getHttpMethod())
-                                        .url(uriItem)
-                                        .authority(item.getPermission())
-                                        .build());
-                    }
-                    return Stream.of(Permission.builder()
-                            .method(item.getHttpMethod())
-                            .url(item.getUrl())
-                            .authority(item.getPermission())
-                            .build());
-                }).collect(Collectors.toSet());
+        return this.sysUserService.queryUserRolePermission(authUser.getUserId(), ImmutableList.of(FunctionTypeEnum.FUNCTION));
     }
 }

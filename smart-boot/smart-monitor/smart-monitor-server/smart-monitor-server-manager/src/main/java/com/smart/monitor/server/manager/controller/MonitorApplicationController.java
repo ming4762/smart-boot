@@ -46,12 +46,12 @@ public class MonitorApplicationController extends BaseController<MonitorApplicat
 
     @Override
     @PostMapping("list")
-    @ApiOperation(value = "查询角色列表（支持分页、实体类属性查询）")
+    @Operation(summary = "查询角色列表（支持分页、实体类属性查询）")
     public Result<Object> list(@RequestBody @NonNull PageSortQuery parameter) {
         return super.list(parameter);
     }
 
-    @ApiOperation(value = "添加修改应用管理表")
+    @Operation(summary = "添加修改应用管理表")
     @PostMapping("saveUpdate")
     @PreAuthorize("hasPermission('monitor:application', 'save') or hasPermission('monitor:application', 'update')")
     @Log(value = "添加修改应用管理表", type = LogOperationTypeEnum.UPDATE)
@@ -62,7 +62,7 @@ public class MonitorApplicationController extends BaseController<MonitorApplicat
     }
 
     @Override
-    @ApiOperation(value = "通过ID批量删除应用管理表")
+    @Operation(summary = "通过ID批量删除应用管理表")
     @PostMapping("batchDeleteById")
     @Log(value = "通过ID批量删除应用管理表", type = LogOperationTypeEnum.DELETE)
     @PreAuthorize("hasPermission('monitor:application', 'delete')")
@@ -74,14 +74,14 @@ public class MonitorApplicationController extends BaseController<MonitorApplicat
     }
 
     @Override
-    @ApiOperation(value = "通过ID查询")
+    @Operation(summary = "通过ID查询")
     @PostMapping("getById")
     public Result<MonitorApplicationPO> getById(@RequestBody Serializable id) {
         return super.getById(id);
     }
 
     @PostMapping("listUserGroupById")
-    @ApiOperation(value = "查询应用关联的用户组ID")
+    @Operation(summary = "查询应用关联的用户组ID")
     public Result<List<Long>> listUserGroupById(@RequestBody Long id) {
         return Result.success(
                 this.monitorUserGroupApplicationService.list(
@@ -94,14 +94,14 @@ public class MonitorApplicationController extends BaseController<MonitorApplicat
 
     @PreAuthorize("hasPermission('monitor:application', 'setUserGroup')")
     @PostMapping("setUserGroup")
-    @ApiOperation(value = "设置应用关联的用户组")
+    @Operation(summary = "设置应用关联的用户组")
     @Log(value = "设置应用关联的用户组", type = LogOperationTypeEnum.UPDATE, saveResult = true)
     public Result<Boolean> setUserGroup(@RequestBody MonitorApplicationSetUserGroupDTO parameter) {
         return Result.success(this.monitorUserGroupApplicationService.setUserGroup(parameter));
     }
 
     @PostMapping("listUserApplicationName")
-    @ApiOperation(value = "获取用户关联的应用名称列表")
+    @Operation(summary = "获取用户关联的应用名称列表")
     public Result<List<String>> listUserApplicationName() {
         return Result.success(this.service.listApplicationNameByUser(AuthUtils.getNonNullCurrentUserId()));
     }

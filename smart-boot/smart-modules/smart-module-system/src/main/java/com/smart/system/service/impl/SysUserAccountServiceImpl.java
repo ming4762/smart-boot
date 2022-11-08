@@ -115,25 +115,15 @@ public class SysUserAccountServiceImpl extends BaseServiceImpl<SysUserAccountMap
         // 验证用户是否已经删除
         List<SysUserPO> deleteUser = userList.stream()
                 .filter(item -> Boolean.TRUE.equals(item.getDeleteYn()))
-<<<<<<< HEAD
                 .collect(Collectors.toList());
-        if (CollectionUtils.isNotEmpty(deleteUser)) {
-=======
-                .toList();
         if (!CollectionUtils.isEmpty(deleteUser)) {
->>>>>>> d3a0b4a (安全性更新：移除 commons-beans   commons-collections)
             throw new I18nException(SystemI18nMessage.SYSTEM_ACCOUNT_HAS_DELETE_ERROR, deleteUser.stream().map(SysUserPO::getUsername).collect(Collectors.joining(",")));
         }
         // 验证用户是否未启用
         List<SysUserPO> noUserList = userList.stream()
                 .filter(item -> Boolean.FALSE.equals(item.getUseYn()))
-<<<<<<< HEAD
                 .collect(Collectors.toList());
-        if (CollectionUtils.isNotEmpty(noUserList)) {
-=======
-                .toList();
         if (!CollectionUtils.isEmpty(noUserList)) {
->>>>>>> d3a0b4a (安全性更新：移除 commons-beans   commons-collections)
             throw new I18nException(SystemI18nMessage.SYSTEM_ACCOUNT_HAS_NO_USE_ERROR, noUserList.stream().map(SysUserPO::getUsername).collect(Collectors.joining(",")));
         }
         Map<Long, SysUserPO> userMap = userList.stream()
@@ -184,17 +174,17 @@ public class SysUserAccountServiceImpl extends BaseServiceImpl<SysUserAccountMap
                 .set(SysUserAccountPO::getLockTime, null)
                 .set(SysUserAccountPO::getAccountStatus, UserAccountStatusEnum.NORMAL.getValue());
         switch (userAccount.getAccountStatus()) {
-            case LONG_TIME_LOCKED -> {
+            case LONG_TIME_LOCKED: {
                 // 长时间未登录锁定解锁
                 updateWrapper.set(SysUserAccountPO::getLastLoginTime, LocalDateTime.now());
                 break;
             }
-            case LONG_TIME_PASSWORD_MODIFY_LOCKED -> {
+            case LONG_TIME_PASSWORD_MODIFY_LOCKED: {
                 // 长时间密码未修改锁定解锁
                 updateWrapper.set(SysUserAccountPO::getPasswordModifyTime, LocalDateTime.now());
                 break;
             }
-            default -> {
+            default: {
                 // do noting
             }
         }

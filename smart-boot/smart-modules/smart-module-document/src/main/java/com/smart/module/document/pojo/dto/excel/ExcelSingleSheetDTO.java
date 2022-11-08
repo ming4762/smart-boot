@@ -1,7 +1,6 @@
 package com.smart.module.document.pojo.dto.excel;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -16,7 +15,7 @@ import javax.validation.constraints.NotNull;
  */
 @Getter
 @Setter
-@ApiModel(value = "填充单一sheetExcel(带有条形码&二维码)参数")
+@Schema(name = "填充单一sheetExcel(带有条形码&二维码)参数")
 @ToString
 public class ExcelSingleSheetDTO {
 
@@ -24,12 +23,12 @@ public class ExcelSingleSheetDTO {
      * 模板编码
      */
     @NotNull(message = "模板编码不能为空")
-    @ApiModelProperty(value = "模板编码", required = true)
+    @Schema(name = "模板编码", required = true)
     private String templateCode;
 
     /**
      * 填充数据
      */
-    @ApiModelProperty(value = "填充数据")
+    @Schema(name = "填充数据")
     private ExcelFillWithCodeData data;
 }

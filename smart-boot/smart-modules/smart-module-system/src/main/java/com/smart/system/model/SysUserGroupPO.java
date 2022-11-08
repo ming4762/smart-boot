@@ -4,8 +4,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.smart.crud.model.BaseModelUserTime;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull;
 @TableName("sys_user_group")
 @Getter
 @Setter
-@ApiModel(value = "用户组实体", description = "用户组实体")
+@Tag(name = "用户组实体", description = "用户组实体")
 public class SysUserGroupPO extends BaseModelUserTime {
 
 
@@ -34,14 +34,14 @@ public class SysUserGroupPO extends BaseModelUserTime {
     /**
      * 用户组名称
      */
-    @ApiModelProperty(value = "用户组名称", required = true)
+    @Schema(name = "用户组名称", required = true)
     @NotNull(message = "用户组名称不能为空")
     private String groupName;
 
     /**
      * 用户组编码
      */
-    @ApiModelProperty(value = "用户组编码", required = true)
+    @Schema(name = "用户组编码", required = true)
     @NotNull(message = "用户组编码不能为空")
     private String groupCode;
 
@@ -58,6 +58,6 @@ public class SysUserGroupPO extends BaseModelUserTime {
     /**
      * 是否启用
      */
-    @ApiModelProperty(value = "启用")
+    @Schema(name = "启用")
     private Boolean useYn;
 }

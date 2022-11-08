@@ -9,19 +9,21 @@ import com.smart.file.manager.service.FileHandler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
-import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author ShiZhongMing
@@ -80,12 +82,12 @@ public class FileController {
             @RequestParam(value = "type", required = false) String type
     ) {
         if (multipartFileList.isEmpty()) {
-            return Result.success(List.of());
+            return Result.success(new ArrayList<>(0));
         }
         return Result.success(
                 multipartFileList.stream()
                         .map(item -> this.fileHandler.saveFile(item, type))
-                        .toList()
+                        .collect(Collectors.toList())
         );
     }
 

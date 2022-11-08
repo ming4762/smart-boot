@@ -2,8 +2,7 @@ package com.smart.module.document.pojo.dto.excel;
 
 import com.smart.document.model.code.BarcodeGeneratorData;
 import com.smart.document.model.code.QrcodeGeneratorData;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,15 +15,15 @@ import java.util.Map;
  */
 @Getter
 @Setter
-@ApiModel("excel填充数据（带条形码&二维码）")
+@Schema(name = "excel填充数据（带条形码&二维码）")
 public class ExcelFillWithCodeData {
 
-    @ApiModelProperty("填充数据")
+    @Schema(name = "填充数据")
     private Map<String, Object> data;
 
-    @ApiModelProperty("条形码")
+    @Schema(name = "条形码")
     private Map<String, BarcodeGeneratorData> barcodeMap;
 
-    @ApiModelProperty("二维码")
+    @Schema(name = "二维码")
     private Map<String, QrcodeGeneratorData> qrcodeMap;
 }

@@ -1,5 +1,6 @@
 package com.smart.monitor.server.core.client.repository;
 
+import com.google.common.collect.ImmutableList;
 import com.smart.monitor.server.common.MonitorServerProperties;
 import com.smart.monitor.server.common.constants.ClientStatusEnum;
 import com.smart.monitor.server.common.model.ClientData;
@@ -14,6 +15,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 /**
  * @author ShiZhongMing
@@ -44,9 +46,9 @@ public class RedisClientRepositoryImpl extends AbstractClientRepositoryImpl {
     public void save(@NonNull ClientData data) {
         this.redisService.hashPut(this.storeKey, data.getId().getValue(), data);
         // 保存name - id关系
-        var idHashKey = this.getIdHashKey(data.getApplication().getApplicationName());
+        String idHashKey = this.getIdHashKey(data.getApplication().getApplicationName());
 
-        var ids = (Set<String>) this.redisService.hashGet(this.storeKey, idHashKey);
+        Set<String> ids = (Set<String>) this.redisService.hashGet(this.storeKey, idHashKey);
         if (ids == null) {
             ids = new HashSet<>(1);
         }
@@ -63,18 +65,18 @@ public class RedisClientRepositoryImpl extends AbstractClientRepositoryImpl {
 
     @Override
     public Collection<ClientData> findAll() {
-        var allData = this.redisService.hashEntries(this.storeKey);
+        Map<Object, Object> allData = this.redisService.hashEntries(this.storeKey);
         return allData.keySet().stream()
                 .filter(item -> !item.toString().contains(KEY_SPLIT))
                 .map(item -> (ClientData) allData.get(item))
-                .toList();
+                .collect(Collectors.toList());
     }
 
 
     @Nullable
     @Override
     public ClientData findById(@NonNull ClientId clientId, boolean active) {
-        var data = this.findById(clientId);
+        ClientData data = this.findById(clientId);
         if (data == null) {
             return null;
         }
@@ -95,7 +97,7 @@ public class RedisClientRepositoryImpl extends AbstractClientRepositoryImpl {
     @NonNull
     @Override
     public Collection<ClientData> findByName(@NonNull String name, boolean active) {
-        return this.findByName(List.of(name), active);
+        return this.findByName(ImmutableList.of(name), active);
     }
 
     @NonNull
@@ -105,14 +107,14 @@ public class RedisClientRepositoryImpl extends AbstractClientRepositoryImpl {
             return new ArrayList<>(0);
         }
         // 1、获取名字对应的ID
-        var clientIds = this.getClientIdsByName(codeList);
+        Set<String> clientIds = this.getClientIdsByName(codeList);
         // 2、查询列表
         if (clientIds.isEmpty()) {
             return new ArrayList<>(0);
         }
-        var clientDataList = clientIds.stream()
+        List<ClientData> clientDataList = clientIds.stream()
                 .map(id -> (ClientData) this.redisService.hashGet(this.storeKey, id))
-                .toList();
+                .collect(Collectors.toList());
         // 3、active
         if (active) {
             return this.getActiveList(clientDataList);
@@ -123,16 +125,16 @@ public class RedisClientRepositoryImpl extends AbstractClientRepositoryImpl {
     @Override
     public ClientData remove(@NonNull ClientId clientId) {
         // 1、查询信息
-        var clientData = (ClientData) this.redisService.hashGet(this.storeKey, clientId.getValue());
+        ClientData clientData = (ClientData) this.redisService.hashGet(this.storeKey, clientId.getValue());
         if (clientData == null) {
             return null;
         }
         // 2、删除信息
-        var deleteKeys = new ArrayList<>();
+        List<Object> deleteKeys = new ArrayList<>();
         deleteKeys.add(clientId.getValue());
         // 3、删除id信息
-        var idHashKey = this.getIdHashKey(clientData.getApplication().getApplicationName());
-        var ids = (Set<String>) this.redisService.hashGet(this.storeKey, idHashKey);
+        String idHashKey = this.getIdHashKey(clientData.getApplication().getApplicationName());
+        Set<String> ids = (Set<String>) this.redisService.hashGet(this.storeKey, idHashKey);
         ids.remove(clientId.getValue());
         if (!ids.isEmpty()) {
             this.redisService.hashPut(this.storeKey, idHashKey, ids);
@@ -145,8 +147,8 @@ public class RedisClientRepositoryImpl extends AbstractClientRepositoryImpl {
 
     @Override
     public ClientData compute(ClientId id, BiFunction<ClientId, ClientData, ClientData> function) {
-        var repositoryData = this.findById(id);
-        var clientData = function.apply(id, repositoryData);
+        ClientData repositoryData = this.findById(id);
+        ClientData clientData = function.apply(id, repositoryData);
         if (clientData == null) {
             return null;
         }
@@ -165,14 +167,14 @@ public class RedisClientRepositoryImpl extends AbstractClientRepositoryImpl {
 
     @Override
     public void removeByCode(String name) {
-        var deleteKeys = this.getClientIdsByName(List.of(name));
+        Set<String> deleteKeys = this.getClientIdsByName(ImmutableList.of(name));
         deleteKeys.add(this.getIdHashKey(name));
         this.redisService.hashDelete(this.storeKey, new ArrayList<>(deleteKeys));
     }
 
     @Override
     public void down(ClientId clientId) {
-        var clientData = this.findById(clientId);
+        ClientData clientData = this.findById(clientId);
         if (clientData != null) {
             clientData.setStatus(ClientStatusEnum.DOWN);
             this.updateClientData(clientData);
@@ -181,7 +183,7 @@ public class RedisClientRepositoryImpl extends AbstractClientRepositoryImpl {
 
     @Override
     public void up(ClientId id) {
-        var clientData = this.findById(id);
+        ClientData clientData = this.findById(id);
         if (clientData != null) {
             clientData.setStatus(ClientStatusEnum.UP);
             this.updateClientData(clientData);
@@ -190,7 +192,7 @@ public class RedisClientRepositoryImpl extends AbstractClientRepositoryImpl {
 
     @Override
     public void error(ClientId id, String errorMessage) {
-        var clientData = this.findById(id);
+        ClientData clientData = this.findById(id);
         if (clientData != null) {
             clientData.setStatus(ClientStatusEnum.ERROR);
             clientData.setErrorMessage(errorMessage);
@@ -200,7 +202,7 @@ public class RedisClientRepositoryImpl extends AbstractClientRepositoryImpl {
 
     @Override
     public void updateTimestamp(ClientId clientId) {
-        var clientData = this.findById(clientId);
+        ClientData clientData = this.findById(clientId);
         if (clientData != null) {
             clientData.setTimestamp(Instant.now());
             this.updateClientData(clientData);
@@ -208,10 +210,10 @@ public class RedisClientRepositoryImpl extends AbstractClientRepositoryImpl {
     }
 
     protected Set<String> getClientIdsByName(List<String> applicationNameList) {
-        var clientIds = new HashSet<String>();
+        Set<String> clientIds = new HashSet<>();
         applicationNameList.forEach(name -> {
-            var idHashKey = this.getIdHashKey(name);
-            var ids = (Set<String>) this.redisService.hashGet(this.storeKey, idHashKey);
+            String idHashKey = this.getIdHashKey(name);
+            Set<String> ids = (Set<String>) this.redisService.hashGet(this.storeKey, idHashKey);
             if (!CollectionUtils.isEmpty(ids)) {
                 clientIds.addAll(ids);
             }

@@ -16,8 +16,8 @@ import com.smart.db.generator.pojo.dto.DbTableQueryDTO;
 import com.smart.db.generator.pojo.vo.connection.DbConnectionTestVO;
 import com.smart.db.generator.service.DbCodeConnectionUserGroupService;
 import com.smart.db.generator.service.DbConnectionService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("db/connection")
-@Api(value = "数据库连接管理", tags = "代码生成器")
+@Tag(name = "数据库连接管理")
 public class DbConnectionController extends BaseController<DbConnectionService, DbConnectionPO> {
 
     private final DbCodeConnectionUserGroupService dbCodeConnectionUserGroupService;
@@ -48,7 +48,7 @@ public class DbConnectionController extends BaseController<DbConnectionService, 
 
     @Override
     @PostMapping("save")
-    @ApiOperation("保存")
+    @Operation(summary = "保存")
     @PreAuthorize("hasPermission('db:connection', 'save')")
     public Result<Boolean> save(@RequestBody DbConnectionPO model) {
         return super.save(model);
@@ -56,7 +56,7 @@ public class DbConnectionController extends BaseController<DbConnectionService, 
 
     @Override
     @PostMapping("saveUpdate")
-    @ApiOperation("保存修改操作")
+    @Operation(summary = "保存修改操作")
     @Log(value = "保存修改数据库连接信息", type = LogOperationTypeEnum.UPDATE)
     @PreAuthorize("hasPermission('db:connection', 'update') or hasPermission('db:connection', 'update')")
     public Result<Boolean> saveUpdate(@RequestBody DbConnectionPO model) {
@@ -65,7 +65,7 @@ public class DbConnectionController extends BaseController<DbConnectionService, 
 
     @Override
     @PostMapping("update")
-    @ApiOperation("更新")
+    @Operation(summary = "更新")
     @PreAuthorize("hasPermission('db:connection', 'update')")
     public Result<Boolean> update(@RequestBody DbConnectionPO model) {
         return super.update(model);
@@ -73,13 +73,13 @@ public class DbConnectionController extends BaseController<DbConnectionService, 
 
     @Override
     @PostMapping("batchDeleteById")
-    @ApiOperation("通过ID批量删除")
+    @Operation(summary = "通过ID批量删除")
     @PreAuthorize("hasPermission('db:connection', 'delete')")
     public Result<Boolean> batchDeleteById(@RequestBody List<Serializable> idList) {
         return super.batchDeleteById(idList);
     }
 
-    @ApiOperation("查询列表")
+    @Operation(summary = "查询列表")
     @Override
     @PostMapping("list")
     public Result<Object> list(@RequestBody @NonNull PageSortQuery parameter) {
@@ -87,14 +87,14 @@ public class DbConnectionController extends BaseController<DbConnectionService, 
     }
 
     @Override
-    @ApiOperation("通过ID查询")
+    @Operation(summary = "通过ID查询")
     @PostMapping("getById")
     public Result<DbConnectionPO> getById(@RequestBody Serializable id) {
         return super.getById(id);
     }
 
     @PostMapping("queryDbTable")
-    @ApiOperation("通过数据库表信息")
+    @Operation(summary = "通过数据库表信息")
     public Result<TableViewBO> queryDbTable(@RequestBody @Valid DbTableQueryDTO parameter) {
         return Result.success(this.service.queryDbTable(parameter));
     }
@@ -105,7 +105,7 @@ public class DbConnectionController extends BaseController<DbConnectionService, 
      * @return 用户组ID列表
      */
     @PostMapping("listUserGroupId")
-    @ApiOperation("查询用户组ID")
+    @Operation(summary = "查询用户组ID")
     public Result<List<Long>> listUserGroupId(@RequestBody Long connectionId) {
         List<Long> userGroupIdList = this.dbCodeConnectionUserGroupService.list(
                 new QueryWrapper<DbCodeConnectionUserGroupPO>().lambda()
@@ -117,7 +117,7 @@ public class DbConnectionController extends BaseController<DbConnectionService, 
     }
 
     @PostMapping("setUserGroup")
-    @ApiOperation("设置用户组")
+    @Operation(summary = "设置用户组")
     @PreAuthorize("hasPermission('db:connection', 'setUserGroup')")
     @Log(value = "数据库连接设置用户组", type = LogOperationTypeEnum.UPDATE)
     public Result<Boolean> setUserGroup(@RequestBody @Valid DbConnectionSetUserGroupDTO parameter) {

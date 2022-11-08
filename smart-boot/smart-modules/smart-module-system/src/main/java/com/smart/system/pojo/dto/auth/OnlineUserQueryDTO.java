@@ -1,7 +1,7 @@
 package com.smart.system.pojo.dto.auth;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,10 +19,10 @@ import java.io.Serializable;
 @Setter
 @ToString
 @EqualsAndHashCode
-@ApiModel(value = "查询在线用户参数")
+@Tag(name = "查询在线用户参数")
 public class OnlineUserQueryDTO implements Serializable {
 
     private static final long serialVersionUID = 7731927759841756765L;
-    @ApiModelProperty("用户名")
+    @Schema(name = "用户名")
     private String username;
 }

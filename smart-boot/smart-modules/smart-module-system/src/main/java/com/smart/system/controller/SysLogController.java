@@ -5,7 +5,7 @@ import com.smart.crud.controller.BaseController;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.system.model.SysLogPO;
 import com.smart.system.service.SysLogService;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,7 +26,7 @@ public class SysLogController extends BaseController<SysLogService, SysLogPO> {
 
     @Override
     @PostMapping("list")
-    @ApiOperation(value = "查询日志信息", httpMethod = "POST")
+    @Operation(summary = "查询日志信息", method = "POST")
     @PreAuthorize("hasPermission('sys:log', 'query')")
     public Result<Object> list(@RequestBody @NonNull PageSortQuery parameter) {
         return super.list(parameter);
@@ -34,7 +34,7 @@ public class SysLogController extends BaseController<SysLogService, SysLogPO> {
 
     @Override
     @PostMapping("getById")
-    @ApiOperation(value = "通过ID查询日志信息", httpMethod = "POST")
+    @Operation(summary = "通过ID查询日志信息", method = "POST")
     @PreAuthorize("hasPermission('sys:log', 'query')")
     public Result<SysLogPO> getById(@RequestBody Serializable id) {
         return super.getById(id);

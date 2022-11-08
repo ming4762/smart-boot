@@ -39,7 +39,7 @@ public class SysDictController extends BaseController<SysDictService, SysDictPO>
     }
 
     @Override
-    @ApiOperation(value = "添加修改系统字典表")
+    @Operation(summary = "添加修改系统字典表")
     @PostMapping("saveUpdate")
     @Log(value = "添加修改系统字典表", type = LogOperationTypeEnum.UPDATE)
     @PreAuthorize("hasPermission('sys:dict', 'save') or hasPermission('sys:dict', 'update')")
@@ -48,7 +48,7 @@ public class SysDictController extends BaseController<SysDictService, SysDictPO>
     }
 
     @Override
-    @ApiOperation(value = "通过ID批量删除系统字典表")
+    @Operation(summary = "通过ID批量删除系统字典表")
     @PostMapping("batchDeleteById")
     @Log(value = "通过ID批量删除系统字典表", type = LogOperationTypeEnum.DELETE)
     @PreAuthorize("hasPermission('sys:dict', 'delete')")
@@ -59,7 +59,7 @@ public class SysDictController extends BaseController<SysDictService, SysDictPO>
         return super.batchDeleteById(idList);
     }
 
-    @ApiOperation(value = "通过ID查询")
+    @Operation(summary = "通过ID查询")
     @PostMapping("getById")
     public Result<SysDictPO> getById(@RequestBody @Valid IdParameter parameter) {
         return super.getById(parameter.getId());

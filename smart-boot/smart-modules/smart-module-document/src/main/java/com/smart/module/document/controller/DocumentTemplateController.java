@@ -7,8 +7,8 @@ import com.smart.crud.query.PageSortQuery;
 import com.smart.module.document.model.DocumentTemplatePO;
 import com.smart.module.document.pojo.dto.template.DocumentTemplateSaveUpdateDTO;
 import com.smart.module.document.service.DocumentTemplateService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,7 +28,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("document/template")
-@Api(value = "模板管理接口", tags = "模板管理接口")
+@Tag(name = "模板管理接口", description = "模板管理接口")
 public class DocumentTemplateController extends BaseController<DocumentTemplateService, DocumentTemplatePO> {
 
     /**
@@ -37,7 +37,7 @@ public class DocumentTemplateController extends BaseController<DocumentTemplateS
      * @return 保存结果
      */
     @PostMapping("saveUpdate")
-    @ApiOperation("上传/修改模板")
+    @Operation(summary = "上传/修改模板")
     public Result<Boolean> saveUpdate(@Valid DocumentTemplateSaveUpdateDTO parameter) throws IOException {
         DocumentTemplatePO model = new DocumentTemplatePO();
         BeanUtils.copyProperties(parameter, model);
@@ -51,21 +51,21 @@ public class DocumentTemplateController extends BaseController<DocumentTemplateS
 
     @Override
     @PostMapping("batchDeleteById")
-    @ApiOperation("批量删除模板")
+    @Operation(summary = "批量删除模板")
     public Result<Boolean> batchDeleteById(@RequestBody List<Serializable> idList) {
         return super.batchDeleteById(idList);
     }
 
     @Override
     @PostMapping("list")
-    @ApiOperation("查询模板列表")
+    @Operation(summary = "查询模板列表")
     public Result<Object> list(@NonNull @RequestBody PageSortQuery parameter) {
         return super.list(parameter);
     }
 
     @Override
     @PostMapping("getById")
-    @ApiOperation("通过ID查询模板")
+    @Operation(summary = "通过ID查询模板")
     public Result<DocumentTemplatePO> getById(@RequestBody Serializable id) {
         return super.getById(id);
     }

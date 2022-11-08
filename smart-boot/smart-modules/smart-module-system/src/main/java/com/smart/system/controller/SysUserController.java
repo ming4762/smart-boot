@@ -52,7 +52,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("sys/user")
-@Api(value = "用户管理", tags = "系统模块")
+@Tag(name = "用户管理", description = "系统模块")
 @NonUrlCheck
 public class SysUserController extends BaseController<SysUserService, SysUserPO> {
 
@@ -74,7 +74,7 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
      * @return 是否保存成功
      */
     @PostMapping("saveUpdate")
-    @ApiOperation("添加/更新用户")
+    @Operation(summary = "添加/更新用户")
     @Log(value = "添加/更新用户", type = LogOperationTypeEnum.UPDATE)
     @PreAuthorize("hasPermission('sys:user', 'save') or hasPermission('sys:user', 'update')")
     public Result<Boolean> saveUpdate(@RequestBody @Valid UserUpdateDTO parameter) {
@@ -92,7 +92,7 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
     }
 
     @PostMapping("getById")
-    @ApiOperation("通过ID查询")
+    @Operation(summary = "通过ID查询")
     @Override
     public Result<SysUserPO> getById(@RequestBody Serializable id) {
         return super.getById(id);
@@ -107,7 +107,7 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
 
     @Override
     @PostMapping("save")
-    @ApiOperation("添加用户")
+    @Operation(summary = "添加用户")
     @Log(value = "添加用户", type = LogOperationTypeEnum.ADD)
     @PreAuthorize("hasPermission('sys:user', 'save')")
     public Result<Boolean> save(@RequestBody @Valid SysUserPO model) {
@@ -116,7 +116,7 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
 
     @Override
     @PostMapping("update")
-    @ApiOperation("更新用户")
+    @Operation(summary = "更新用户")
     @Log(value = "更新用户", type = LogOperationTypeEnum.UPDATE)
     @PreAuthorize("hasPermission('sys:user', 'update')")
     public Result<Boolean> update(@RequestBody SysUserPO model) {
@@ -125,7 +125,7 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
 
 
     @PostMapping("list")
-    @ApiOperation(value = "查询用户列表（支持分页、实体类属性查询）")
+    @Operation(summary = "查询用户列表（支持分页、实体类属性查询）")
     @Override
     public Result<Object> list(@RequestBody @NonNull PageSortQuery parameter) {
         return super.list(parameter);
@@ -137,7 +137,7 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
      * @return 是否删除成功
      */
     @PreAuthorize("hasPermission('sys:user', 'delete')")
-    @ApiOperation(value = "通过ID批量删除用户")
+    @Operation(summary = "通过ID批量删除用户")
     @PostMapping("batchDeleteById")
     @Log(value = "通过ID批量删除用户", type = LogOperationTypeEnum.DELETE)
     @Override
@@ -152,7 +152,7 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
      * 查询用户菜单信息
      * @return 用户菜单
      */
-    @ApiOperation(value = "查询用户菜单信息")
+    @Operation(summary = "查询用户菜单信息")
     @PostMapping("listUserMenu")
     public Result<List<SysFunctionListVO>> listUserMenu(@RequestBody List<Locale> localeList) {
         return Result.success(this.service.listCurrentUserMenu(localeList));
@@ -162,7 +162,7 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
      * 查询用户菜单树
      * @return 用户菜单树
      */
-    @ApiOperation(value = "查询用户菜单树")
+    @Operation(summary = "查询用户菜单树")
     @PostMapping("listUserMenuTree")
     public Result<List<Tree<SysFunctionPO>>> listUserMenuTree(@RequestBody List<Locale> localeList) {
         final List<SysFunctionListVO> sysFunctionList = this.service.listCurrentUserMenu(localeList);
@@ -187,7 +187,7 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
      * @param userId 用户ID
      * @return 角色ID
      */
-    @ApiOperation(value = "查询角色ID列表")
+    @Operation(summary = "查询角色ID列表")
     @PostMapping("listRoleId")
     public Result<Set<Long>> listRoleId(@RequestBody Long userId) {
         if (Objects.isNull(userId)) {
@@ -206,7 +206,7 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
     @PostMapping("setRole")
     @Log(value = "设置角色", type = LogOperationTypeEnum.UPDATE)
     @PreAuthorize("hasPermission('sys:user', 'setRole')")
-    @ApiOperation(value = "设置角色")
+    @Operation(summary = "设置角色")
     public Result<Boolean> setRole(@RequestBody @Valid UserSetRoleDTO parameter) {
         return Result.success(this.service.setRole(parameter));
     }
@@ -217,7 +217,7 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
      * @return 用户信息
      */
     @PostMapping("listUserByRoleId")
-    @ApiOperation(value = "通过角色ID查询用户信息")
+    @Operation(summary = "通过角色ID查询用户信息")
     public Result<List<SysUserPO>> listUserByRoleId(@RequestBody List<Long> roleIdList) {
         return Result.success(this.service.listUserByRoleId(roleIdList));
     }
@@ -230,7 +230,7 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
      */
     @PostMapping("setUseYn")
     @Log(value = "设置用户启停状态", type = LogOperationTypeEnum.UPDATE)
-    @ApiOperation(value = "设置用户启停状态")
+    @Operation(summary = "设置用户启停状态")
     @PreAuthorize("hasPermission('sys:user', 'setUseYn')")
     public Result<Boolean> setUseYn(@RequestBody @Valid UseYnSetDTO parameter) {
         Lists.partition(parameter.getIdList(), 500).forEach(list -> this.service.update(
@@ -271,7 +271,7 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
     @Operation(summary = "查询用户部门数据权限信息")
     @PreAuthorize("hasPermission('sys:user', 'query')")
     public Result<SysUserDeptPO> queryUserDeptPermission(@RequestBody Long userId) {
-        var dataList = this.sysUserDeptService.list(
+        List<SysUserDeptPO> dataList = this.sysUserDeptService.list(
                 new QueryWrapper<SysUserDeptPO>().lambda()
                         .select(SysUserDeptPO::getDeptId, SysUserDeptPO::getDataScope, SysUserDeptPO::getUserId)
                         .eq(SysUserDeptPO::getUserId, userId)

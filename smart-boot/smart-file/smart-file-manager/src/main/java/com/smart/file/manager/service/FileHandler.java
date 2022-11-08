@@ -204,7 +204,7 @@ public class FileHandler implements ApplicationContextAware, InitializingBean {
                                 value.stream()
                                         .map(SysFilePO :: getDbId)
                                         .filter(StringUtils :: isNotEmpty)
-                                        .toList()
+                                        .collect(Collectors.toList())
                         ));
             }
             return true;

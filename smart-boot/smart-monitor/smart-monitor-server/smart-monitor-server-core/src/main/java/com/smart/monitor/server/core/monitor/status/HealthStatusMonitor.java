@@ -53,8 +53,8 @@ public class HealthStatusMonitor implements StatusMonitor {
         log.debug("start check client health, application name: {}, client id: {}", repositoryData.getApplication().getApplicationName(), repositoryData.getId().getValue());
         String[] healthData = new String[1];
         long startTimestamp = System.nanoTime();
-        var isError = false;
-        var errorMessage = "";
+        boolean isError = false;
+        String errorMessage = "";
         try {
             this.clientWebProxy.forward(repositoryData.getId(), data -> ClientWebProxy.ForwardRequest.builder()
                     .uri(ClientUrlEnum.HEALTH.getUrl())
@@ -76,7 +76,7 @@ public class HealthStatusMonitor implements StatusMonitor {
         } catch (Exception e) {
             isError = true;
             try {
-                var result = JsonUtils.parse(healthData[0], Result.class);
+                Result result = JsonUtils.parse(healthData[0], Result.class);
                 errorMessage = result.getMessage();
             } catch (Exception e1) {
                 errorMessage = e1.getMessage();

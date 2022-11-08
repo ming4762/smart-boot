@@ -1,5 +1,6 @@
 package com.smart.system.mybatis;
 
+import com.google.common.collect.Lists;
 import com.smart.system.mybatis.type.*;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.type.TypeHandler;
@@ -17,7 +18,7 @@ import java.util.List;
 @Component
 public class TypeHandlerRegisterHandler implements InitializingBean {
 
-    private static final List<Class<? extends TypeHandler<?>>> TYPE_HANDLER_CLASS = List.of(
+    private static final List<Class<? extends TypeHandler<?>>> TYPE_HANDLER_CLASS = Lists.newArrayList(
             FunctionTypeTypeHandler.class,
             LogSourceTypeHandler.class,
             MaxConnectionsPolicyTypeHandler.class,

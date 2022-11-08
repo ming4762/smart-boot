@@ -1,6 +1,6 @@
 package com.smart.document.model.code;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,14 +17,15 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
+@Schema(subTypes = {BarcodeGeneratorData.class, QrcodeGeneratorData.class})
 public abstract class AbstractCodeGeneratorData {
 
-    @ApiModelProperty(value = "宽度", example = "200")
+    @Schema(name = "宽度", example = "200")
     private Integer width;
 
-    @ApiModelProperty(value = "高度", example = "100")
+    @Schema(name = "高度", example = "100")
     private Integer height;
 
-    @ApiModelProperty(value = "边距", example = "10")
+    @Schema(name = "边距", example = "10")
     private Integer margin;
 }

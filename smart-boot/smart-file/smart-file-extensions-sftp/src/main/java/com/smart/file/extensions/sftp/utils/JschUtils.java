@@ -66,13 +66,8 @@ public class JschUtils {
         }
         // 获取路径列表
         final List<String> paths = Arrays.stream(path.split(PATH_SPLIT))
-<<<<<<< HEAD:smart-boot/smart-file/smart-file-extensions-nfs/src/main/java/com/smart/file/extensions/nfs/utils/JcraftUtils.java
                 .collect(Collectors.toList());
-        return JcraftUtils.createDirectories(channelSftp, paths);
-=======
-                .toList();
         return JschUtils.createDirectories(channelSftp, paths);
->>>>>>> 22d0df4 (文件管理模块重构，优化使用体验):smart-boot/smart-file/smart-file-extensions-sftp/src/main/java/com/smart/file/extensions/sftp/utils/JschUtils.java
     }
 
     /**
