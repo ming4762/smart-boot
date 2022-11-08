@@ -1,7 +1,7 @@
 <template>
   <div class="full-height">
 <!--    <div>这是主页</div>-->
-    <LayoutSeparate first-size="40" draggable style="background: white" layout="leftRight" class="full-height">
+    <LayoutSeparate :show-line="false" first-size="40%" draggable style="background: white" layout="leftRight" class="full-height">
       <template #first>
         <div class="full-height" style="width: 200px; background: white">123</div>
       </template>

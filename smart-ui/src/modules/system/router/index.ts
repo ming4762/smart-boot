@@ -37,7 +37,7 @@ const topRouters: Array<RouteRecordRaw> = [
       {
         name: 'system_roleList',
         path: 'sys/roleList',
-        component: () => import('@/modules/system/views/role/RoleListView.vue')
+        component: () => import('@/modules/system/views/role/RoleManagerView.vue')
       },
       {
         path: 'sys/i18n',

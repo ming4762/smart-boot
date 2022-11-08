@@ -43,11 +43,15 @@ export default defineComponent({
         return true
       }
     },
+    showLine: {
+      type: Boolean as PropType<boolean>,
+      default: true
+    },
     lineStyle: {
       type: [Object, String] as PropType<StyleValue | string>,
       default: () => {
         return {
-          'border-left': '1px solid rgba(0,0,0,.06)'
+          'border-left': '1px solid rgba(0,0,0,0.2)'
         }
       }
     },
@@ -61,7 +65,7 @@ export default defineComponent({
     }
   },
   setup(props, { slots }) {
-    const { layout, draggable, firstSize, lineStyle, highLineStyle } = toRefs(props)
+    const { layout, draggable, firstSize, showLine } = toRefs(props)
     // 是否是左右布局
     const isLeftRight = computed(() => layout.value === Layout.LEFT_RIGHT_LAYOUT)
     // 拖拽是否初始化
@@ -133,6 +137,22 @@ export default defineComponent({
       }
     })
 
+    const computedFirstContainerClass = computed(() => {
+      const classList = ['full-height']
+      if (showLine.value) {
+        classList.push('first-outer')
+      }
+      return classList
+    })
+
+    const computedSecondContainerClass = computed(() => {
+      const classList = []
+      if (showLine.value) {
+        classList.push('second-outer')
+      }
+      return classList
+    })
+
     return () => {
       const { onLineMouseDown, dragLineStyle } = dragVue
       const { first, second } = slots
@@ -140,21 +160,25 @@ export default defineComponent({
         <div class={computedContainerClassList.value}>
           {/* 第一块区域，左或者上 */}
           <div class="first-container" style={layoutStyle.value.firstStyle}>
-            <div class="full-height first-outer">{first ? first() : ''}</div>
+            <div class={computedFirstContainerClass.value}>{first ? first() : ''}</div>
             {/* 分割线 */}
-            <div
-              ref={dividerRef}
-              style={dragLineStyle && dragLineStyle.value}
-              onMousedown={(e) => draggable.value && onLineMouseDown && onLineMouseDown(e)}
-              class={computedLineClass.value}>
-              <a-divider
-                style={props.lineStyle}
-                type={isLeftRight.value ? 'vertical' : 'horizontal'}
-              />
-            </div>
+            {props.showLine ? (
+              <div
+                ref={dividerRef}
+                style={dragLineStyle && dragLineStyle.value}
+                onMousedown={(e) => draggable.value && onLineMouseDown && onLineMouseDown(e)}
+                class={computedLineClass.value}>
+                <a-divider
+                  style={props.lineStyle}
+                  type={isLeftRight.value ? 'vertical' : 'horizontal'}
+                />
+              </div>
+            ) : (
+              ''
+            )}
           </div>
           {/* 第二块区域，右或者下 */}
-          <div class="second-container" style={layoutStyle.value.secondStyle}>
+          <div class={computedSecondContainerClass.value} style={layoutStyle.value.secondStyle}>
             {second ? second() : ''}
           </div>
         </div>
