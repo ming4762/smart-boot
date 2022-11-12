@@ -30,4 +30,6 @@ public class SysFunctionListVO extends SysFunctionPO implements CreateUpdateUser
      * 2021-11-12
      */
     private Map<String, String> locales;
+
+    private SysFunctionPO parent;
 }

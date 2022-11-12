@@ -10,11 +10,6 @@ import TreeUtils from '@/common/utils/TreeUtils'
 import { EVENT_SYMBOLS } from '@/common/constants/CommonConstants'
 import ApiService from '@/common/utils/ApiService'
 
-// const STORE_KEYS = {
-//   OPEN_MENU_LIST: 'smart_app_open_menu',
-//   APP_USER_MENU_LIST: 'smart_app_user_menu'
-// }
-
 /**
  * 系统菜单store
  */
