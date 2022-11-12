@@ -65,7 +65,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, toRefs, onRenderTriggered, onRenderTracked } from 'vue'
+import { computed, defineComponent, ref, toRefs } from 'vue'
 
 import type { PropType } from 'vue'
 
@@ -161,12 +161,6 @@ export default defineComponent({
       }
       return menu.meta.locales[lang.value] || menu.meta.title
     }
-    onRenderTracked((event) => {
-      console.log(event)
-    })
-    onRenderTriggered((event) => {
-      console.log(event)
-    })
     return {
       handleRemove,
       handleClickItem,

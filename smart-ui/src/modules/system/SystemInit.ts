@@ -7,6 +7,7 @@ import { EVENT_SYMBOLS } from '@/common/constants/CommonConstants'
 import ApiService from '@/common/utils/ApiService'
 import { useAppSettingStore } from '@/modules/app/store'
 import { NoPermissionModeEnum } from '@/common/enums'
+import initRouterTabs from './router/RouterTabs'
 
 import './RouterPermission'
 
@@ -16,6 +17,7 @@ import './RouterPermission'
 export default function init(app: App) {
   initDirectivePermission(app)
   handleInitEvent()
+  initRouterTabs()
 }
 
 /**

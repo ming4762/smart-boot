@@ -103,6 +103,9 @@ export const vueAddEdit = (loadData: any, t: Function) => {
   const saveModel = ref<any>({})
   const formRules = reactive(saveFormRules(t))
   const functionTypes: any = reactive(defaultFunctionTypes(t))
+  const formRef = ref()
+  // 显示数据model，不传送到后台
+  const showDataModel = ref<any>({})
   /**
    * 显示编辑
    */
@@ -113,8 +116,29 @@ export const vueAddEdit = (loadData: any, t: Function) => {
     setTypeDisabled(['catalogue', 'menu', 'function'])
     // 加载数据
     getLoading.value = true
+    saveModel.value = {}
+    showDataModel.value = {}
     try {
-      saveModel.value = await ApiService.postAjax('sys/function/getById', row.functionId)
+      const getModel = await ApiService.postAjax('sys/function/getById', row.functionId)
+      if (getModel !== null) {
+        saveModel.value = getModel.function
+        // 设置上级显示
+        const { parent, createUser, updateUser } = getModel
+        if (parent === null) {
+          showDataModel.value.parentName = t('system.views.function.common.rootCatalogue')
+        } else {
+          showDataModel.value.parentName = parent.functionName
+        }
+        // 创建人/更新人
+        if (createUser !== null) {
+          showDataModel.value.createUser = createUser.fullName
+        }
+        if (updateUser !== null) {
+          showDataModel.value.updateUser = updateUser.fullName
+        }
+        showDataModel.value.createTime = getModel.function.createTime
+        showDataModel.value.updateTime = getModel.function.updateTime
+      }
     } finally {
       getLoading.value = false
     }
@@ -129,7 +153,7 @@ export const vueAddEdit = (loadData: any, t: Function) => {
     saveModel.value = Object.assign({}, defaultSaveModel)
     if (row !== null) {
       saveModel.value.parentId = row.functionId
-      saveModel.value.parentName = row.functionName
+      showDataModel.value.parentName = row.functionName
       const functionType = row.functionType
       switch (functionType) {
         case 'CATALOG': {
@@ -147,7 +171,7 @@ export const vueAddEdit = (loadData: any, t: Function) => {
         }
       }
     } else {
-      saveModel.value.parentName = t('system.views.function.common.rootCatalogue')
+      showDataModel.value.parentName = t('system.views.function.common.rootCatalogue')
       setTypeDisabled(['function'])
     }
   }
@@ -164,6 +188,12 @@ export const vueAddEdit = (loadData: any, t: Function) => {
    * 执行保存操作
    */
   const handleSave = async () => {
+    try {
+      await formRef.value.validateFields()
+    } catch (e) {
+      console.log(e)
+      return false
+    }
     saveLoading.value = true
     try {
       await ApiService.postAjax('sys/function/saveUpdate', saveModel.value)
@@ -185,7 +215,9 @@ export const vueAddEdit = (loadData: any, t: Function) => {
     getLoading,
     saveModel,
     formRules,
-    functionTypes
+    functionTypes,
+    showDataModel,
+    formRef
   }
 }
 

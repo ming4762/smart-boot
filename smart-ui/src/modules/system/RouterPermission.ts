@@ -75,9 +75,11 @@ router.beforeEach((to, from, next) => {
       path: '/main'
     }
   ].concat(systemMenuStore.userMenuList || [])
+  // 判断用户是否有权限访问路径
   const permissionPath = permissionMappingPaths[path] ? permissionMappingPaths[path] : path
   const validate = userMenuList.some((menu) => menu.path === permissionPath)
   if (!validate) {
+    // 无权限跳转到403
     next({
       path: error403Path
     })

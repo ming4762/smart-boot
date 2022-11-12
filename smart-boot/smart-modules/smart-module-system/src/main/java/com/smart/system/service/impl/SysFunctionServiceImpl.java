@@ -1,13 +1,16 @@
 package com.smart.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.google.common.collect.ImmutableList;
 import com.smart.crud.constants.CrudCommonEnum;
+import com.smart.crud.model.CreateUpdateUserSetter;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.crud.service.BaseServiceImpl;
 import com.smart.crud.service.UserSetterService;
 import com.smart.system.mapper.SysFunctionMapper;
 import com.smart.system.model.SysFunctionPO;
 import com.smart.system.pojo.vo.SysFunctionListVO;
+import com.smart.system.pojo.vo.function.SysFunctionVO;
 import com.smart.system.service.SysFunctionService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,12 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.Collection;
 import java.util.List;
+<<<<<<< HEAD
+=======
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+>>>>>>> b295335 (系统模块：功能管理页面完善)
 
 /**
  * @author jackson
@@ -52,9 +61,58 @@ public class SysFunctionServiceImpl extends BaseServiceImpl<SysFunctionMapper, S
                     return vo;
                 }).toList();
         if (Boolean.TRUE.equals(parameter.getParameter().get(CrudCommonEnum.QUERY_CREATE_UPDATE_USER.name()))) {
-            this.userSetterService.setCreateUpdateUser(functionVoList);
+            this.queryCreateUpdateUser(functionVoList);
         }
         return functionVoList;
+    }
+
+    @Override
+    public SysFunctionVO getUserAndParentById(Long functionId) {
+        SysFunctionPO function = this.getById(functionId);
+        if (function == null) {
+            return null;
+        }
+        SysFunctionVO vo = new SysFunctionVO();
+        vo.setFunction(function);
+        List<SysFunctionVO> voList = ImmutableList.of(vo);
+        this.queryCreateUpdateUser(voList);
+        this.queryParent(voList);
+        return voList.get(0);
+    }
+
+    /**
+     * 查询创建人更新人信息
+     * @param functionVoList voList
+     */
+    protected void queryCreateUpdateUser(List<? extends CreateUpdateUserSetter> functionVoList) {
+        if (CollectionUtils.isEmpty(functionVoList)) {
+            return;
+        }
+        this.userSetterService.setCreateUpdateUser(functionVoList);
+    }
+
+    /**
+     * 查询上级信息
+     * @param functionVoList voList
+     */
+    protected void queryParent(List<SysFunctionVO> functionVoList) {
+        if (CollectionUtils.isEmpty(functionVoList)) {
+            return;
+        }
+        // 查询上级ID和本级ID
+        Set<Long> parentIds = functionVoList.stream().map(item -> item.getFunction().getParentId())
+                .filter(item -> item != 0)
+                .collect(Collectors.toSet());
+
+        Map<Long, SysFunctionPO> parentMap = this.listByIds(parentIds).stream()
+                .collect(Collectors.toMap(SysFunctionPO::getFunctionId, item -> item));
+
+        for (SysFunctionVO vo : functionVoList) {
+            Long functionId = vo.getFunction().getParentId();
+            if (parentMap.containsKey(functionId)) {
+                vo.setParent(parentMap.get(functionId));
+            }
+        }
     }
 
     @Autowired

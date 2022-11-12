@@ -30,6 +30,7 @@ export const useAppSettingStore = defineStore('appSetting', {
       tableSize: defaultSettings.tableSize,
       // 表单尺寸
       formSize: defaultSettings.formSize,
+      // 是否有Tab栏
       hasMultiTab: defaultSettings.hasMultiTab,
       noPermissionMode: defaultSettings.noPermissionMode,
 

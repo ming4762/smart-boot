@@ -4,7 +4,7 @@ import { message } from 'ant-design-vue'
 
 import ApiService from '@/common/utils/ApiService'
 import { errorMessage, successMessage } from '@/components/notice/SystemNotice'
-import AppUtils from '@/common/utils/AppUtils'
+import { globalLoading } from '@/modules/app/utils/AppUtils'
 
 /**
  * 显示账户hook
@@ -31,7 +31,7 @@ export const useShowAccount = (t: Function) => {
    * 加载账户信息
    */
   const handleLoadUserAccount = async () => {
-    AppUtils.globalLoading(true)
+    globalLoading(true)
     try {
       const result = await ApiService.postAjax('sys/user/getById', userId.value)
       if (result) {
@@ -49,7 +49,7 @@ export const useShowAccount = (t: Function) => {
     } catch (e) {
       errorMessage(e)
     } finally {
-      AppUtils.globalLoading(false)
+      globalLoading(false)
     }
   }
 

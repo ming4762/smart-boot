@@ -8,6 +8,7 @@ import com.smart.commons.core.message.Result;
 import com.smart.crud.controller.BaseController;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.system.model.SysFunctionPO;
+import com.smart.system.pojo.vo.function.SysFunctionVO;
 import com.smart.system.service.SysFunctionService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.lang.NonNull;
@@ -45,10 +46,9 @@ public class SysFunctionController extends BaseController<SysFunctionService, Sy
     }
 
     @PostMapping("getById")
-    @Override
     @Operation(summary = "通过ID获取", method = "POST")
-    public Result<SysFunctionPO> getById(@RequestBody Serializable id) {
-        return super.getById(id);
+    public Result<SysFunctionVO> getById(@RequestBody Long id) {
+        return Result.success(this.service.getUserAndParentById(id));
     }
 
     @Override
