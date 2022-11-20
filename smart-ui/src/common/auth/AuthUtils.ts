@@ -5,6 +5,7 @@ import sha256 from 'crypto-js/sha256'
 
 const USER_KEY = 'smart_auth_user'
 const PERMISSION_KEY = 'smart_auth_permission'
+const MENU_PERMISSION_KEY = 'smart_auth_menu_permission'
 const ROLE_KEY = 'smart_auth_role'
 const TOKEN_KEY = 'smart_authorization'
 const REQUEST_TOKEN_KEY = 'Authorization'
@@ -54,6 +55,21 @@ export const getCurrentUserId = (): number | null => {
 
 export const saveUserPermission = (permissions: Array<string>): void => {
   StoreUtil.setStore(PERMISSION_KEY, permissions, StoreUtil.SESSION_TYPE)
+}
+
+/**
+ * 保存菜单权限
+ * @param permissions 菜单权限
+ */
+export const saveMenuPermission = (permissions: Array<string>) => {
+  StoreUtil.setStore(MENU_PERMISSION_KEY, permissions, StoreUtil.SESSION_TYPE)
+}
+
+/**
+ * 获取菜单权限
+ */
+export const getMenuPermission = (): Array<string> => {
+  return StoreUtil.getStore(MENU_PERMISSION_KEY)
 }
 
 export const getUserPermission = (): Array<string> => {

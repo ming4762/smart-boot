@@ -41,10 +41,16 @@
     <router-view v-slot="{ Component, route }">
       <transition name="fade" mode="out-in">
         <!--    TODO: keep-alive 热更新报错，使用该方式临时处理    -->
-        <keep-alive v-if="!isDev">
-          <component :is="Component" :key="route.name" />
+<!--        <keep-alive v-if="!isDev">-->
+        <keep-alive>
+          <component
+            :is="Component"
+            :key="(route.query && route.query.menuId) || (route.meta && route.meta.menuId)" />
         </keep-alive>
-        <component :is="Component" v-else :key="route.name" />
+<!--        <component-->
+<!--          :is="Component"-->
+<!--          v-else-->
+<!--          :key="(route.query && route.query.menuId) || (route.meta && route.meta.menuId)" />-->
       </transition>
     </router-view>
 
@@ -54,7 +60,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, watch } from 'vue'
+import { defineComponent, onMounted, ref } from 'vue'
 import { errorMessage } from '@/components/notice/SystemNotice'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
@@ -127,27 +133,21 @@ const settingVueSupport = () => {
 const UserMenuVueSupport = (route: RouteLocationNormalized, router: Router) => {
   const systemMenuStore = useSystemMenuStore()
 
-  watch(route, () => {
-    systemMenuStore.addMenu(route.fullPath)
-  })
-
-  onMounted(() => {
-    systemMenuStore.addMenu('/main')
-    if (route.fullPath !== '/main') {
-      systemMenuStore.addMenu(route.fullPath)
-    }
-  })
   /**
    * 移除菜单
    */
   const handleTabRemove = (menu: any) => {
-    systemMenuStore.removeMenu(menu.path)
+    systemMenuStore.removeMenu(menu)
   }
 
   const handleTabClick = (menu: any) => {
-    router.push(menu.path)
+    router.push({
+      path: menu.path,
+      query: {
+        menuId: menu.menuId
+      }
+    })
   }
-
   return {
     userMenu: systemMenuStore.userTreeMenu,
     openMenuList: systemMenuStore.openMenuList,
@@ -184,7 +184,6 @@ export default defineComponent({
   setup() {
     const route = useRoute()
     const router = useRouter()
-
     const appStateStore = useAppStateStore()
     const appSettingStore = useAppSettingStore()
     const { settingDrawerVisible } = storeToRefs(appSettingStore)
@@ -213,7 +212,13 @@ export default defineComponent({
     })
     // 监控添加菜单事件
     const handleMenuClick = (menuId: string) => {
-      router.push(menuId)
+      const pathParams = menuId.split('&&')
+      router.push({
+        path: pathParams[0],
+        query: {
+          menuId: pathParams[1]
+        }
+      })
     }
 
     return {

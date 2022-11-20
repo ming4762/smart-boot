@@ -108,7 +108,7 @@ const renderMenuTitle = (menuMeta: any, lang: string) => {
  */
 const renderMenuItem = (menu: any, lang: string) => {
   return (
-    <a-menu-item key={menu.path}>
+    <a-menu-item key={menu.path + '&&' + menu.meta.menuId}>
       {renderMenuIcon(menu.meta.icon)}
       {renderMenuTitle(menu.meta, lang)}
     </a-menu-item>
@@ -123,7 +123,9 @@ export default defineComponent({
     const route = useRoute()
     const openKeys = ref<Array<string>>([])
     const selectedKeys = computed(() => {
-      return [route.fullPath]
+      return [
+        route.path + '&&' + (route.query && route.query.menuId) || (route.meta && route.meta.menuId)
+      ]
     })
     const handleMenuSelect = (menu: any) => {
       if (props.menuClick) {

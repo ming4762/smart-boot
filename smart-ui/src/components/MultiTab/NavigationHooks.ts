@@ -24,7 +24,7 @@ const getMenusWidth = (firstNode: NodeItem<Element>) => {
   let sumWidth = currentNode.value.clientWidth + 1
   while (currentNode.next !== null) {
     currentNode = currentNode.next
-    sumWidth += (currentNode.value.clientWidth + 1)
+    sumWidth += currentNode.value.clientWidth + 1
   }
   return sumWidth
 }
@@ -152,7 +152,6 @@ export const useTabsMove = (firstElementRef: Ref<Element | null>, tabContainerRe
     firstElementRef.value = result
   }
 
-
   /**
    * 获取菜单节点
    */
@@ -160,7 +159,7 @@ export const useTabsMove = (firstElementRef: Ref<Element | null>, tabContainerRe
     const htmlCollection: HTMLCollection = tabContainerRef.value.children
     const firstNode: NodeItem<Element> = new NodeItem(htmlCollection[0], null, null)
     let currentNode = firstNode
-    for (let i=1; i<htmlCollection.length; i++) {
+    for (let i = 1; i < htmlCollection.length; i++) {
       const nodeItem = new NodeItem(htmlCollection[i], currentNode, null)
       currentNode.next = nodeItem
       currentNode = nodeItem

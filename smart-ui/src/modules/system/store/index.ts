@@ -10,6 +10,18 @@ import TreeUtils from '@/common/utils/TreeUtils'
 import { EVENT_SYMBOLS } from '@/common/constants/CommonConstants'
 import ApiService from '@/common/utils/ApiService'
 
+export const mainMenuMeta = {
+  type: 'MENU',
+  title: '{system.pageTitle.main}',
+  locales: {
+    'zh-CN': '主页',
+    'en-US': 'Main'
+  },
+  menuId: '0',
+  tab: true,
+  path: '/main'
+}
+
 /**
  * 系统菜单store
  */
@@ -17,7 +29,7 @@ export const useSystemMenuStore = defineStore('systemMenu', {
   state: () => {
     return {
       // 打开的菜单
-      openMenuList: [] as Array<any>,
+      openMenuList: [mainMenuMeta] as Array<any>,
       // 用户菜单信息
       userMenuList: [] as Array<any>
     }
@@ -46,10 +58,27 @@ export const useSystemMenuStore = defineStore('systemMenu', {
       this.userMenuList = userMenuList
     },
     /**
+     * 添加菜单
+     * @param menuMeta
+     */
+    async addMenu(menuMeta: any) {
+      // 判断menu是否已经打开
+      const hasOpen = this.openMenuList.some((item: any) => {
+        return item.menuId === menuMeta.menuId
+      })
+      if (!hasOpen) {
+        this.openMenuList.push(menuMeta)
+        if (menuMeta.menuId !== '0') {
+          // 发布添加菜单事件，main菜单（id=0）不执行此操作
+          publish(EVENT_SYMBOLS.SYSTEM_ADD_MENU, menuMeta)
+        }
+      }
+    },
+    /**
      *
      * @param menuKey
      */
-    addMenu(menuKey: string) {
+    addMenu2(menuKey: string) {
       return new Promise<void>((resolve) => {
         // 获取菜单信息
         let menu: any = null
@@ -81,11 +110,27 @@ export const useSystemMenuStore = defineStore('systemMenu', {
         }
       })
     },
+    async removeMenu(menuMeta: any) {
+      for (let i = 0; i < this.openMenuList.length; i++) {
+        const menu = this.openMenuList[i]
+        if (menu.menuId === menuMeta.menuId) {
+          this.openMenuList.splice(i, 1)
+          break
+        }
+      }
+      // 判断是否是当前菜单
+      if (router.currentRoute.value.meta.id === menuMeta.id) {
+        const activeMenu = this.openMenuList.slice(-1)[0]
+        // todo:待完善，菜单ID未设置
+        router.push(activeMenu.path)
+      }
+      return true
+    },
     /**
      * 移除菜单
      * @param menuKey
      */
-    removeMenu(menuKey: string) {
+    removeMenu2(menuKey: string) {
       return new Promise<void>((resolve) => {
         for (let i = 0; i < this.openMenuList.length; i++) {
           const menu = this.openMenuList[i]

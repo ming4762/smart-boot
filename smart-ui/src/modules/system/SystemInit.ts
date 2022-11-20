@@ -8,6 +8,7 @@ import ApiService from '@/common/utils/ApiService'
 import { useAppSettingStore } from '@/modules/app/store'
 import { NoPermissionModeEnum } from '@/common/enums'
 import initRouterTabs from './router/RouterTabs'
+import useSetRouteMeta from '@/modules/system/router/RouteMetaSet'
 
 import './RouterPermission'
 
@@ -18,6 +19,7 @@ export default function init(app: App) {
   initDirectivePermission(app)
   handleInitEvent()
   initRouterTabs()
+  useSetRouteMeta()
 }
 
 /**
@@ -52,7 +54,7 @@ const handleInitEvent = () => {
   // 订阅添加菜单事件
   subscribe(EVENT_SYMBOLS.SYSTEM_ADD_MENU, (key: string | symbol, menu: any) => {
     ApiService.postAjax('sys/menuAccessLog/save', {
-      functionId: menu.id
+      functionId: menu.menuId
     })
   })
 }
