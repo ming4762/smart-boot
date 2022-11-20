@@ -114,9 +114,9 @@
 import { defineComponent, ref, reactive, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
-import type { RouteRecord } from 'vue-router'
 
-import { useSystemLoginStore, useSystemMenuStore } from '@/modules/system/store'
+import { useSystemLoginStore, useSystemMenuStore, mainMenuMeta } from '@/modules/system/store'
+import useSetRouteMeta from '@/modules/system/router/RouteMetaSet'
 
 import { message } from 'ant-design-vue'
 import { UserOutlined, LockOutlined, MobileOutlined, MailOutlined } from '@ant-design/icons-vue'
@@ -128,32 +128,11 @@ import {
   saveUserRole,
   saveToken,
   getToken,
-  createPassword
+  createPassword,
+  saveMenuPermission
 } from '@/common/auth/AuthUtils'
 import defaultSettings from '@/config/defaultSetting'
 import { generateUUID } from '@/common/utils/KeyGenerator'
-
-/**
- * 设置路由元数据
- */
-const setRouteMeta = (routes: Array<RouteRecord>, menuList: Array<any>) => {
-  const pathMetaMap = new Map()
-  menuList.forEach((menu) => {
-    if (menu.path) {
-      pathMetaMap.set(menu.path, menu.meta)
-    }
-  })
-  routes.forEach((route) => {
-    const path = route.path
-    const menuMeta = pathMetaMap.get(path)
-    if (menuMeta) {
-      route.meta = {
-        ...menuMeta,
-        title: route.meta.title
-      }
-    }
-  })
-}
 
 const useCaptcha = () => {
   const captchaKey = ref<string>(generateUUID())
@@ -276,8 +255,16 @@ export default defineComponent({
         saveToken(token)
         const languageList = defaultSettings.languageList.map((item) => item.key)
         // 加载菜单信息
-        const loadMenus = (await ApiService.postAjax('sys/user/listUserMenu', languageList)) || []
-        const formatUserMenu = loadMenus.map((item: any) => {
+        const loadMenus = (await ApiService.postAjax('sys/user/listUserMenu', languageList)) as Array<any> || []
+        const menuPermissionList: Array<string> = []
+        loadMenus.forEach((item: any) => {
+          const { permission } = item
+          if (permission) {
+            menuPermissionList.push(permission)
+          }
+        })
+        saveMenuPermission(menuPermissionList)
+        const formatUserMenu: Array<any> = loadMenus.map((item: any) => {
           const { functionName, functionType, icon, url, functionId, parentId, locales } = item
           return {
             id: functionId.toString(),
@@ -288,27 +275,24 @@ export default defineComponent({
               title: functionName,
               type: functionType,
               icon,
-              locales
+              locales,
+              menuId: functionId.toString(),
+              tab: true,
+              path: url
             }
           }
         })
-        const allUserMenu = [
+        const allUserMenu: Array<any> = [
           {
             id: 'main',
             name: 'main',
             path: '/main',
-            meta: {
-              title: '{system.pageTitle.main}',
-              locales: {
-                'zh-CN': '主页',
-                'en-US': 'Main'
-              }
-            }
+            meta: mainMenuMeta
           }
         ].concat(formatUserMenu)
         systemMenuStore.setUserMenu(allUserMenu)
         // 设置route meta
-        setRouteMeta(router.getRoutes(), allUserMenu)
+        useSetRouteMeta()
         router.push('/')
       } catch (error: any) {
         error.message && message.error(error.message)

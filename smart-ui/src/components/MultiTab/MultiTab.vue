@@ -41,7 +41,7 @@ export default defineComponent({
     const route = useRoute()
     const appI18nStore = useAppI18nStore()
     const computedActiveValue = computed(() => {
-      return route.fullPath
+      return (route.query && route.query.menuId) || (route.meta && route.meta.menuId)
     })
     const computedLang = computed(() => appI18nStore.lang)
     const handleClickItem = ({ key }: any) => {

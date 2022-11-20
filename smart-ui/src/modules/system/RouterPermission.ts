@@ -1,9 +1,7 @@
 import router from '@/router'
 import NProgress from 'nprogress'
 
-import { useSystemMenuStore } from '@/modules/system/store'
-
-import { getToken } from '@/common/auth/AuthUtils'
+import { getToken, getMenuPermission } from '@/common/auth/AuthUtils'
 import { LOGIN_PATH } from '@/modules/system/constants/SystemConstants'
 
 NProgress.configure({ showSpinner: false })
@@ -15,25 +13,6 @@ const error404Path = '/error/404'
 const error403Path = '/error/403'
 
 /**
- * 前台映射的权限
- * 例如访问/codeCreateView，需要查看用户是否拥有/code/codeList权限
- */
-const permissionMappingPaths: any = {
-  '/codeCreateView': '/code/codeList',
-  // 客户端监控
-  '/monitor/client/detail': '/monitor/manager/client',
-  '/monitor/client/environment': '/monitor/manager/client',
-  '/monitor/client/beans': '/monitor/manager/client',
-  '/monitor/client/loggerConfig': '/monitor/manager/client',
-  '/monitor/client/httpMapping': '/monitor/manager/client',
-  '/monitor/client/metrics': '/monitor/manager/client',
-  '/monitor/client/druid/dbConnection': '/monitor/manager/client',
-  '/monitor/client/druid/dbSql': '/monitor/manager/client',
-  '/monitor/client/druid/dbWall': '/monitor/manager/client',
-  '/monitor/client/redis/info': '/monitor/manager/client'
-}
-
-/**
  * 白名单列表
  */
 const whiteList = [
@@ -43,7 +22,6 @@ const whiteList = [
 ]
 
 router.beforeEach((to, from, next) => {
-  const systemMenuStore = useSystemMenuStore()
   NProgress.start()
   if (whiteList.includes(to.path)) {
     next()
@@ -68,16 +46,15 @@ router.beforeEach((to, from, next) => {
     return
   }
   const redirectPath = (from.query && from.query.redirect) as string | null
-  const path = redirectPath || to.path
-  // 判断用户菜单列表是否包含Path
-  const userMenuList: Array<any> = [
-    {
-      path: '/main'
-    }
-  ].concat(systemMenuStore.userMenuList || [])
   // 判断用户是否有权限访问路径
-  const permissionPath = permissionMappingPaths[path] ? permissionMappingPaths[path] : path
-  const validate = userMenuList.some((menu) => menu.path === permissionPath)
+  const permission = to.meta && (to.meta.permission as string)
+  let validate = true
+  if (permission) {
+    const userMenuPermissionList = getMenuPermission()
+    if (!userMenuPermissionList.includes(permission)) {
+      validate = false
+    }
+  }
   if (!validate) {
     // 无权限跳转到403
     next({

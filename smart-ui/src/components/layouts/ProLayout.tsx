@@ -1,4 +1,5 @@
-import { computed, createVNode, defineComponent, PropType, toRefs } from 'vue'
+import { computed, createVNode, defineComponent, toRefs } from 'vue'
+import type { PropType } from 'vue'
 import VueContainerQuery from '@/components/container/VueContainerQuery'
 import SiderMenuWrapper from '../SiderMenu'
 import { SiderMenuProps } from '@/components/SiderMenu/SiderMenu'

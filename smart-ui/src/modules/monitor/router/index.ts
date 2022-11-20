@@ -9,31 +9,49 @@ const monitorRouters: Array<RouteRecordRaw> = [
       {
         path: 'monitor/manager/application',
         component: () =>
-          import('@/modules/monitor/views/manager/application/MonitorApplicationListView.vue')
+          import('@/modules/monitor/views/manager/application/MonitorApplicationListView.vue'),
+        meta: {
+          permission: 'menu:monitor:application'
+        }
       },
       // 客户端管理页面
       {
         path: 'monitor/manager/client',
-        component: () => import('@/modules/monitor/views/manager/client/ClientManagerPage.vue')
+        component: () => import('@/modules/monitor/views/manager/client/ClientManagerPage.vue'),
+        meta: {
+          permission: 'menu:monitor:client'
+        }
       },
       // 应用事件
       {
         path: 'monitor/manager/event',
-        component: () => import('@/modules/monitor/views/manager/event/MonitorEventListView.vue')
+        component: () => import('@/modules/monitor/views/manager/event/MonitorEventListView.vue'),
+        meta: {
+          permission: 'menu:monitor:event'
+        }
       },
       {
         path: 'monitor/manager/slowSql',
         component: () =>
-          import('@/modules/monitor/views/manager/slowSql/MonitorClientSlowSqlListView.vue')
+          import('@/modules/monitor/views/manager/slowSql/MonitorClientSlowSqlListView.vue'),
+        meta: {
+          permission: 'menu:monitor:slowSql'
+        }
       },
       {
         path: 'monitor/manager/log',
-        component: () => import('@/modules/monitor/views/manager/log/MonitorClientLogListView.vue')
+        component: () => import('@/modules/monitor/views/manager/log/MonitorClientLogListView.vue'),
+        meta: {
+          permission: 'menu:monitor:log'
+        }
       },
       {
         path: 'monitor/manager/httpTrace',
         component: () =>
-          import('@/modules/monitor/views/manager/httpTrace/MonitorClientHttpTraceListView.vue')
+          import('@/modules/monitor/views/manager/httpTrace/MonitorClientHttpTraceListView.vue'),
+        meta: {
+          permission: 'menu:monitor:httpTrace'
+        }
       }
     ]
   },

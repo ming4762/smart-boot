@@ -14,7 +14,7 @@
         <a
           v-for="(item, i) in dataList"
           :key="'navigation-menu_' + i"
-          :class="['s-menu-tab', item.path === activeValue ? 'active' : '']"
+          :class="['s-menu-tab', item.menuId === activeValue ? 'active' : '']"
           href="javascript:"
           @click="() => handleClick(item)">
           {{ getTitle(item) }}
@@ -156,10 +156,10 @@ export default defineComponent({
       }
     }
     const getTitle = (menu: any) => {
-      if (!menu.meta.locales) {
-        return menu.meta.title
+      if (!menu.locales) {
+        return menu.title
       }
-      return menu.meta.locales[lang.value] || menu.meta.title
+      return menu.locales[lang.value] || menu.title
     }
     return {
       handleRemove,
