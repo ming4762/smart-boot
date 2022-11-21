@@ -74,42 +74,6 @@ export const useSystemMenuStore = defineStore('systemMenu', {
         }
       }
     },
-    /**
-     *
-     * @param menuKey
-     */
-    addMenu2(menuKey: string) {
-      return new Promise<void>((resolve) => {
-        // 获取菜单信息
-        let menu: any = null
-        for (const item of this.userMenuList) {
-          if (item.path === menuKey || item.id === menuKey) {
-            menu = item
-            break
-          }
-        }
-        if (menu === null) {
-          resolve()
-          return false
-        }
-        // TODO: 待完善 判断是否超出最大打开数
-        const appSettingStore = useAppSettingStore()
-        if (appSettingStore.hasMultiTab === true) {
-          // 判断菜单是否已经打开
-          const hasMenu = this.openMenuList.some((item: any) => {
-            return item.id === menu.id
-          })
-          if (!hasMenu) {
-            this.openMenuList.push(menu)
-            // StoreUtil.setStore(STORE_KEYS.OPEN_MENU_LIST, this.openMenuList, StoreUtil.SESSION_TYPE)
-            if (menu.name !== 'main') {
-              // 发布添加菜单事件
-              publish(EVENT_SYMBOLS.SYSTEM_ADD_MENU, menu)
-            }
-          }
-        }
-      })
-    },
     async removeMenu(menuMeta: any) {
       for (let i = 0; i < this.openMenuList.length; i++) {
         const menu = this.openMenuList[i]
@@ -122,31 +86,14 @@ export const useSystemMenuStore = defineStore('systemMenu', {
       if (router.currentRoute.value.meta.id === menuMeta.id) {
         const activeMenu = this.openMenuList.slice(-1)[0]
         // todo:待完善，菜单ID未设置
-        router.push(activeMenu.path)
+        router.push({
+          path: activeMenu.path,
+          query: {
+            menuId: activeMenu.menuId
+          }
+        })
       }
       return true
-    },
-    /**
-     * 移除菜单
-     * @param menuKey
-     */
-    removeMenu2(menuKey: string) {
-      return new Promise<void>((resolve) => {
-        for (let i = 0; i < this.openMenuList.length; i++) {
-          const menu = this.openMenuList[i]
-          if (menu.path === menuKey) {
-            this.openMenuList.splice(i, 1)
-            break
-          }
-        }
-        // StoreUtil.setStore(STORE_KEYS.OPEN_MENU_LIST, this.openMenuList, StoreUtil.SESSION_TYPE)
-        // 判断是否是当前菜单
-        if (router.currentRoute.value.fullPath === menuKey) {
-          const activeMenu = this.openMenuList.slice(-1)[0]
-          router.push(activeMenu.path)
-        }
-        return resolve()
-      })
     }
   }
 })
