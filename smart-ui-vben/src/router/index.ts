@@ -1,17 +1,19 @@
-import type { RouteRecordRaw } from 'vue-router';
-import type { App } from 'vue';
+import type { RouteRecordRaw } from 'vue-router'
+import type { App } from 'vue'
 
-import { createRouter, createWebHashHistory } from 'vue-router';
-import { basicRoutes } from './routes';
+import { createRouter, createWebHashHistory } from 'vue-router'
+import { basicRoutes } from './routes'
+import { useUserStore } from '/@/store/modules/user'
+import { PageEnum } from '/@/enums/pageEnum'
 
 // 白名单应该包含基本静态路由
-const WHITE_NAME_LIST: string[] = [];
+const WHITE_NAME_LIST: string[] = []
 const getRouteNames = (array: any[]) =>
   array.forEach((item) => {
-    WHITE_NAME_LIST.push(item.name);
-    getRouteNames(item.children || []);
-  });
-getRouteNames(basicRoutes);
+    WHITE_NAME_LIST.push(item.name)
+    getRouteNames(item.children || [])
+  })
+getRouteNames(basicRoutes)
 
 // app router
 // 创建一个可以被 Vue 应用程序使用的路由实例
@@ -23,20 +25,39 @@ export const router = createRouter({
   // 是否应该禁止尾部斜杠。默认为假
   strict: true,
   scrollBehavior: () => ({ left: 0, top: 0 }),
-});
+})
 
 // reset router
 export function resetRouter() {
   router.getRoutes().forEach((route) => {
-    const { name } = route;
+    const { name } = route
     if (name && !WHITE_NAME_LIST.includes(name as string)) {
-      router.hasRoute(name) && router.removeRoute(name);
+      router.hasRoute(name) && router.removeRoute(name)
     }
-  });
+  })
 }
 
 // config router
 // 配置路由器
 export function setupRouter(app: App<Element>) {
-  app.use(router);
+  app.use(router)
 }
+
+let routeLoad = false
+
+// @ts-ignore
+router.beforeEach(async function (to, from, next) {
+  if (to.path === PageEnum.BASE_LOGIN) {
+    next()
+  } else if (!routeLoad) {
+    console.log('----------------')
+    const userStore = useUserStore()
+    await userStore.initRoute()
+    routeLoad = true
+    next({
+      path: to.path,
+    })
+  } else {
+    next()
+  }
+})

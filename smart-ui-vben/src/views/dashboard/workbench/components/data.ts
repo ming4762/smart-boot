@@ -1,23 +1,23 @@
 interface GroupItem {
-  title: string;
-  icon: string;
-  color: string;
-  desc: string;
-  date: string;
-  group: string;
+  title: string
+  icon: string
+  color: string
+  desc: string
+  date: string
+  group: string
 }
 
 interface NavItem {
-  title: string;
-  icon: string;
-  color: string;
+  title: string
+  icon: string
+  color: string
 }
 
 interface DynamicInfoItem {
-  avatar: string;
-  name: string;
-  date: string;
-  desc: string;
+  avatar: string
+  name: string
+  date: string
+  desc: string
 }
 
 export const navItems: NavItem[] = [
@@ -51,7 +51,7 @@ export const navItems: NavItem[] = [
     icon: 'ion:bar-chart-outline',
     color: '#00d8ff',
   },
-];
+]
 
 export const dynamicInfoItems: DynamicInfoItem[] = [
   {
@@ -102,7 +102,7 @@ export const dynamicInfoItems: DynamicInfoItem[] = [
     date: '2021-04-01 20:00',
     desc: `推送了代码到 <a>Github</a>`,
   },
-];
+]
 
 export const groupItems: GroupItem[] = [
   {
@@ -141,16 +141,16 @@ export const groupItems: GroupItem[] = [
     title: 'React',
     icon: 'bx:bxl-react',
     color: '#00d8ff',
-    desc: '健康的身体是实现目标的基石。',
+    desc: '健康的身体是实目标的基石。',
     group: '技术牛',
     date: '2021-04-01',
   },
   {
     title: 'Js',
     icon: 'ion:logo-javascript',
-    color: '#EBD94E',
+    color: '#4daf1bc9',
     desc: '路是走出来的，而不是空想出来的。',
     group: '架构组',
     date: '2021-04-01',
   },
-];
+]

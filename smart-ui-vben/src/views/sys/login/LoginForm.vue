@@ -13,7 +13,7 @@
         size="large"
         v-model:value="formData.account"
         :placeholder="t('sys.login.userName')"
-        class="fix-auto-fill"
+        class="fix-auto-fill input-width"
       />
     </FormItem>
     <FormItem name="password" class="enter-x">
@@ -24,6 +24,24 @@
         :placeholder="t('sys.login.password')"
       />
     </FormItem>
+
+    <ARow :gutter="16">
+      <ACol :span="16">
+        <FormItem name="captcha">
+          <Input
+            v-model:value="formData.captcha"
+            :placeholder="t('system.login.login-captcha')"
+            size="large"
+          />
+        </FormItem>
+      </ACol>
+      <ACol :span="8">
+        <Tooltip>
+          <template #title>{{ t('system.login.captchaRefreshTooltip') }}</template>
+          <img style="height: 40px" :src="computedCaptchaUrl" @click="handleChangeCaptcha" />
+        </Tooltip>
+      </ACol>
+    </ARow>
 
     <ARow class="enter-x">
       <ACol :span="12">
@@ -58,102 +76,95 @@
           {{ t('sys.login.mobileSignInFormTitle') }}
         </Button>
       </ACol>
-      <ACol :md="8" :xs="24" class="!my-2 !md:my-0 xs:mx-0 md:mx-2">
-        <Button block @click="setLoginState(LoginStateEnum.QR_CODE)">
-          {{ t('sys.login.qrSignInFormTitle') }}
-        </Button>
-      </ACol>
       <ACol :md="6" :xs="24">
         <Button block @click="setLoginState(LoginStateEnum.REGISTER)">
           {{ t('sys.login.registerButton') }}
         </Button>
       </ACol>
     </ARow>
-
-    <Divider class="enter-x">{{ t('sys.login.otherSignIn') }}</Divider>
-
-    <div class="flex justify-evenly enter-x" :class="`${prefixCls}-sign-in-way`">
-      <GithubFilled />
-      <WechatFilled />
-      <AlipayCircleFilled />
-      <GoogleCircleFilled />
-      <TwitterCircleFilled />
-    </div>
   </Form>
 </template>
 <script lang="ts" setup>
-  import { reactive, ref, unref, computed } from 'vue';
+  import { reactive, ref, unref, computed } from 'vue'
 
-  import { Checkbox, Form, Input, Row, Col, Button, Divider } from 'ant-design-vue';
-  import {
-    GithubFilled,
-    WechatFilled,
-    AlipayCircleFilled,
-    GoogleCircleFilled,
-    TwitterCircleFilled,
-  } from '@ant-design/icons-vue';
-  import LoginFormTitle from './LoginFormTitle.vue';
+  import { Checkbox, Form, Input, Row, Col, Button, Tooltip } from 'ant-design-vue'
+  import LoginFormTitle from './LoginFormTitle.vue'
 
-  import { useI18n } from '/@/hooks/web/useI18n';
-  import { useMessage } from '/@/hooks/web/useMessage';
+  import { useI18n } from '/@/hooks/web/useI18n'
+  import { useMessage } from '/@/hooks/web/useMessage'
 
-  import { useUserStore } from '/@/store/modules/user';
-  import { LoginStateEnum, useLoginState, useFormRules, useFormValid } from './useLogin';
-  import { useDesign } from '/@/hooks/web/useDesign';
+  import { useUserStore } from '/@/store/modules/user'
+  import { LoginStateEnum, useLoginState, useFormRules, useFormValid } from './useLogin'
+  import { useDesign } from '/@/hooks/web/useDesign'
+  import { buildUUID } from '/@/utils/uuid'
+  import { defHttp } from '/@/utils/http/axios'
+  import { createPassword } from '/@/utils/auth'
   //import { onKeyStroke } from '@vueuse/core';
 
-  const ACol = Col;
-  const ARow = Row;
-  const FormItem = Form.Item;
-  const InputPassword = Input.Password;
-  const { t } = useI18n();
-  const { notification, createErrorModal } = useMessage();
-  const { prefixCls } = useDesign('login');
-  const userStore = useUserStore();
+  const ACol = Col
+  const ARow = Row
+  const FormItem = Form.Item
+  const InputPassword = Input.Password
+  const { t } = useI18n()
+  const { notification, createErrorModal } = useMessage()
+  const { prefixCls } = useDesign('login')
+  const userStore = useUserStore()
 
-  const { setLoginState, getLoginState } = useLoginState();
-  const { getFormRules } = useFormRules();
+  const { setLoginState, getLoginState } = useLoginState()
+  const { getFormRules } = useFormRules()
 
-  const formRef = ref();
-  const loading = ref(false);
-  const rememberMe = ref(false);
+  const formRef = ref()
+  const loading = ref(false)
+  const rememberMe = ref(false)
 
   const formData = reactive({
-    account: 'vben',
+    account: 'admin',
     password: '123456',
-  });
+    captcha: '',
+    captchaKey: buildUUID(),
+  })
 
-  const { validForm } = useFormValid(formRef);
+  const { validForm } = useFormValid(formRef)
 
   //onKeyStroke('Enter', handleLogin);
 
-  const getShow = computed(() => unref(getLoginState) === LoginStateEnum.LOGIN);
+  const getShow = computed(() => unref(getLoginState) === LoginStateEnum.LOGIN)
 
   async function handleLogin() {
-    const data = await validForm();
-    if (!data) return;
+    const data = await validForm()
+    if (!data) return
     try {
-      loading.value = true;
+      loading.value = true
       const userInfo = await userStore.login({
-        password: data.password,
+        password: createPassword(data.account, data.password),
         username: data.account,
         mode: 'none', //不要默认的错误提示
-      });
+        codeKey: formData.captchaKey,
+        code: formData.captcha,
+      })
       if (userInfo) {
         notification.success({
           message: t('sys.login.loginSuccessTitle'),
           description: `${t('sys.login.loginSuccessDesc')}: ${userInfo.realName}`,
           duration: 3,
-        });
+        })
       }
     } catch (error) {
+      handleChangeCaptcha()
       createErrorModal({
         title: t('sys.api.errorTip'),
         content: (error as unknown as Error).message || t('sys.api.networkExceptionMsg'),
         getContainer: () => document.body.querySelector(`.${prefixCls}`) || document.body,
-      });
+      })
     } finally {
-      loading.value = false;
+      loading.value = false
     }
+  }
+
+  const computedCaptchaUrl = computed(() => {
+    return `${defHttp.getApiUrl()}/auth/createCaptcha?codeKey=${formData.captchaKey}`
+  })
+  const handleChangeCaptcha = () => {
+    formData.captchaKey = buildUUID()
   }
 </script>
