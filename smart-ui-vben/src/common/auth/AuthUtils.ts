@@ -14,9 +14,6 @@ export const isSuperAdmin = (): boolean => {
  * @param permission
  */
 export const hasPermission = (permission: string | null | undefined | string[]): boolean => {
-  if (isSuperAdmin()) {
-    return true
-  }
   if (permission) {
     const { hasPermission } = usePermission()
     return hasPermission(permission)

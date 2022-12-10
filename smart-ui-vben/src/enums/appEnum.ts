@@ -40,6 +40,14 @@ export enum PermissionModeEnum {
   ROUTE_MAPPING = 'ROUTE_MAPPING',
 }
 
+/**
+ * 无权限显示状态枚举
+ */
+export enum NoPermissionModeEnum {
+  hide = 'hide',
+  disabled = 'disabled',
+}
+
 // Route switching animation
 // 路由切换动画
 export enum RouterTransitionEnum {

@@ -1,5 +1,6 @@
 // Used to configure the general configuration of some components without modifying the components
 
+// @ts-ignore
 import type { SorterResult } from '../components/Table'
 
 export default {

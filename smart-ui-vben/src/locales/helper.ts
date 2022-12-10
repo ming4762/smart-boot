@@ -1,6 +1,7 @@
 import type { LocaleType } from '/#/config'
 
 import { set } from 'lodash-es'
+import { deepMerge } from '/@/utils'
 
 export const loadLocalePool: LocaleType[] = []
 
@@ -34,4 +35,46 @@ export function genMessage(langs: Record<string, Record<string, any>>, prefix = 
     }
   })
   return obj
+}
+
+export const generateModuleMessage = (langs: Record<string, Record<string, any>>) => {
+  const result: Recordable = {}
+  Object.keys(langs).forEach((key) => {
+    const langModule = langs[key].default
+    if (langModule.trans) {
+      deepMerge(result, transferI18n(langModule))
+    } else {
+      deepMerge(result, langModule)
+    }
+  })
+
+  return result
+}
+
+type I18nTransfer = {
+  trans: boolean
+  key: string
+  data: { [index: string]: any }
+}
+
+/**
+ * 转换国际化信息
+ */
+export const transferI18n = (data: I18nTransfer | any) => {
+  if (!data.trans) {
+    return data
+  }
+  const keySplit = data.key.split('.')
+  let object = {}
+  for (let i = keySplit.length - 1; i >= 0; i--) {
+    const key = keySplit[i]
+    const itemData: any = {}
+    if (i === keySplit.length - 1) {
+      itemData[key] = data.data
+    } else {
+      itemData[key] = object
+    }
+    object = itemData
+  }
+  return object
 }

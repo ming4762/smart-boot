@@ -16,6 +16,7 @@ import { registerGlobComp } from '/@/components/registerGlobComp'
 import registerVxeTable from '/@/components/RegisterVxeTable'
 
 import { isDevMode } from './utils/env'
+import 'vxe-table/lib/style.css'
 
 if (isDevMode()) {
   import('ant-design-vue/es/style')

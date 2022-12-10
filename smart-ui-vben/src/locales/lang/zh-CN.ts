@@ -1,12 +1,15 @@
-import { genMessage } from '../helper'
+import { generateModuleMessage, genMessage } from '../helper'
 import antdLocale from 'ant-design-vue/es/locale/zh_CN'
+import vxeZhCN from 'vxe-table/es/locale/lang/zh-CN'
+import { deepMerge } from '/@/utils'
 
-import { systemZhCN } from '/@/views/sys/i18n'
 const modules = import.meta.globEager('./zh-CN/**/*.ts')
+const modulesLocales = import.meta.globEager('../../modules/**/lang/zh_CN.ts')
+console.log(genMessage(modules, 'zh-CN'))
 export default {
   message: {
-    ...genMessage(modules, 'zh-CN'),
+    ...deepMerge(genMessage(modules, 'zh-CN'), generateModuleMessage(modulesLocales)),
     antdLocale,
-    ...systemZhCN,
+    ...vxeZhCN,
   },
 }
