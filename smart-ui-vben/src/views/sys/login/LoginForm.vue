@@ -161,7 +161,6 @@ const computedCaptchaUrl = computed(() => {
   return `${defHttp.getApiUrl()}/auth/createCaptcha?codeKey=${formData.captchaKey}`
 })
 const handleChangeCaptcha = () => {
-  console.log(t('common.okText'))
   formData.captchaKey = buildUUID()
 }
 </script>

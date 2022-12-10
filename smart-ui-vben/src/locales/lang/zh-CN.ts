@@ -5,7 +5,6 @@ import { deepMerge } from '/@/utils'
 
 const modules = import.meta.globEager('./zh-CN/**/*.ts')
 const modulesLocales = import.meta.globEager('../../modules/**/lang/zh_CN.ts')
-console.log(genMessage(modules, 'zh-CN'))
 export default {
   message: {
     ...deepMerge(genMessage(modules, 'zh-CN'), generateModuleMessage(modulesLocales)),

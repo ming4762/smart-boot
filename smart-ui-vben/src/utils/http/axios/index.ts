@@ -94,7 +94,11 @@ const transform: AxiosTransform = {
     }
 
     if (apiUrl && isString(apiUrl)) {
-      config.url = `${apiUrl}${config.url}`
+      let spi = ''
+      if (!config.url?.startsWith('/')) {
+        spi = '/'
+      }
+      config.url = `${apiUrl}${spi}${config.url}`
     }
     const params = config.params || {}
     const data = config.data || false
@@ -195,7 +199,9 @@ const transform: AxiosTransform = {
     }
 
     checkStatus(error?.response?.status, msg, errorMessageMode)
-
+    if (!config) {
+      throw new Error(message)
+    }
     // 添加自动重试机制 保险起见 只针对GET请求
     const retryRequest = new AxiosRetry()
     const { isOpenRetry } = config.requestOptions.retryRequest
