@@ -1,15 +1,15 @@
-import { ContentEnum, RouterTransitionEnum } from '/@/enums/appEnum';
+import { ContentEnum, RouterTransitionEnum } from '/@/enums/appEnum'
 import {
   MenuModeEnum,
   MenuTypeEnum,
   TopMenuAlignEnum,
   TriggerEnum,
   MixSidebarTriggerEnum,
-} from '/@/enums/menuEnum';
+} from '/@/enums/menuEnum'
 
-import { useI18n } from '/@/hooks/web/useI18n';
+import { useI18n } from '/@/hooks/web/useI18n'
 
-const { t } = useI18n();
+const { t } = useI18n()
 
 export enum HandlerEnum {
   CHANGE_LAYOUT,
@@ -43,7 +43,6 @@ export enum HandlerEnum {
   TABS_SHOW,
   TABS_SHOW_FOLD,
 
-  LOCK_TIME,
   FULL_CONTENT,
   CONTENT_MODE,
   SHOW_BREADCRUMB,
@@ -57,6 +56,9 @@ export enum HandlerEnum {
   OPEN_PROGRESS,
   OPEN_PAGE_LOADING,
   OPEN_ROUTE_TRANSITION,
+  TABLE_SIZE,
+  BUTTON_SIZE,
+  FORM_SIZE,
 }
 
 export const contentModeOptions = [
@@ -68,7 +70,7 @@ export const contentModeOptions = [
     value: ContentEnum.FIXED,
     label: t('layout.setting.contentModeFixed'),
   },
-];
+]
 
 export const topMenuAlignOptions = [
   {
@@ -83,7 +85,7 @@ export const topMenuAlignOptions = [
     value: TopMenuAlignEnum.END,
     label: t('layout.setting.topMenuAlignCenter'),
   },
-];
+]
 
 export const getMenuTriggerOptions = (hideTop: boolean) => {
   return [
@@ -103,8 +105,8 @@ export const getMenuTriggerOptions = (hideTop: boolean) => {
             label: t('layout.setting.menuTriggerTop'),
           },
         ]),
-  ];
-};
+  ]
+}
 
 export const routerTransitionOptions = [
   RouterTransitionEnum.ZOOM_FADE,
@@ -117,8 +119,32 @@ export const routerTransitionOptions = [
   return {
     label: item,
     value: item,
-  };
-});
+  }
+})
+
+/**
+ * 表格尺寸
+ */
+export const tableSize = ['medium', 'small', 'mini'].map((item) => {
+  return {
+    label: item,
+    value: item,
+  }
+})
+
+export const buttonSize = ['large', 'middle', 'small'].map((item) => {
+  return {
+    label: item,
+    value: item,
+  }
+})
+
+export const formSize = ['large', 'default', 'small'].map((item) => {
+  return {
+    label: item,
+    value: item,
+  }
+})
 
 export const menuTypeList = [
   {
@@ -142,7 +168,7 @@ export const menuTypeList = [
     mode: MenuModeEnum.INLINE,
     type: MenuTypeEnum.MIX_SIDEBAR,
   },
-];
+]
 
 export const mixSidebarTriggerOptions = [
   {
@@ -153,4 +179,4 @@ export const mixSidebarTriggerOptions = [
     value: MixSidebarTriggerEnum.CLICK,
     label: t('layout.setting.triggerClick'),
   },
-];
+]

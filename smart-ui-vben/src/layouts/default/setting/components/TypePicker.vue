@@ -19,19 +19,19 @@
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, PropType } from 'vue';
+  import { defineComponent, PropType } from 'vue'
 
-  import { Tooltip } from 'ant-design-vue';
-  import { useDesign } from '/@/hooks/web/useDesign';
+  import { Tooltip } from 'ant-design-vue'
+  import { useDesign } from '/@/hooks/web/useDesign'
 
-  import { menuTypeList } from '../enum';
+  import { menuTypeList } from '../enum'
   export default defineComponent({
     name: 'MenuTypePicker',
     components: { Tooltip },
     props: {
       menuTypeList: {
         type: Array as PropType<typeof menuTypeList>,
-        default: () => [],
+        defualt: () => [],
       },
       handler: {
         type: Function as PropType<Fn>,
@@ -43,13 +43,13 @@
       },
     },
     setup() {
-      const { prefixCls } = useDesign('setting-menu-type-picker');
+      const { prefixCls } = useDesign('setting-menu-type-picker')
 
       return {
         prefixCls,
-      };
+      }
     },
-  });
+  })
 </script>
 <style lang="less" scoped>
   @prefix-cls: ~'@{namespace}-setting-menu-type-picker';
