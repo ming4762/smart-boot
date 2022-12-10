@@ -92,7 +92,7 @@ export const useUserStore = defineStore({
         const { token, permissions, roles, user } = data
         // todo:兼容性代码
         user.realName = user.fullName
-
+        console.log(permissions)
         // save token
         this.setToken(token)
         this.setRoleList(roles)

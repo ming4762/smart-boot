@@ -1,3 +1,4 @@
+import { computed } from 'vue'
 import type { RouteRecordRaw } from 'vue-router'
 
 import { useAppStore } from '/@/store/modules/app'
@@ -23,6 +24,7 @@ export function usePermission() {
   const appStore = useAppStore()
   const permissionStore = usePermissionStore()
   const { closeAll } = useTabs(router)
+  const getNoPermissionMode = computed(() => appStore.getProjectConfig.noPermissionMode)
 
   /**
    * Change permission mode
@@ -58,6 +60,9 @@ export function usePermission() {
    * Determine whether there is permission
    */
   function hasPermission(value?: RoleEnum | RoleEnum[] | string | string[], def = true): boolean {
+    if (isSuperAdmin()) {
+      return true
+    }
     // Visible by default
     if (!value) {
       return def
@@ -101,11 +106,26 @@ export function usePermission() {
   }
 
   /**
+   * 是否是超级管理员
+   */
+  const isSuperAdmin = (): boolean => {
+    const userStore = useUserStore()
+    return userStore.getRoleList.includes('SUPERADMIN')
+  }
+
+  /**
    * refresh menu data
    */
   async function refreshMenu() {
     resume()
   }
 
-  return { changeRole, hasPermission, togglePermissionMode, refreshMenu }
+  return {
+    changeRole,
+    hasPermission,
+    togglePermissionMode,
+    refreshMenu,
+    getNoPermissionMode,
+    isSuperAdmin,
+  }
 }

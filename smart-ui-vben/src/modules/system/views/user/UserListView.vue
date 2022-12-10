@@ -1,6 +1,6 @@
 <template>
   <div class="full-height" style="padding: 10px">
-    <vxe-grid
+    <Grid
       ref="tableRef"
       :columns="columns"
       :data="data"
@@ -15,7 +15,7 @@
       :size="tableSizeConfig"
       @sort-change="handleSortChange">
       <template #pager>
-        <vxe-pager
+        <Pager
           v-model:current-page="tablePage.currentPage"
           v-model:page-size="tablePage.pageSize"
           :page-sizes="[500, 1000, 2000, 5000]"
@@ -33,88 +33,88 @@
           @page-change="handlePageChange" />
       </template>
       <template #table-operation="{ row }">
-        <a-dropdown>
+        <Dropdown>
           <a-button :size="tableButtonSizeConfig" type="primary">
             Actions
             <DownOutlined />
           </a-button>
           <template #overlay>
-            <a-menu @click="({ key }) => handleActions(row, key)">
-              <a-menu-item
+            <Menu @click="({ key }) => handleActions(row, key)">
+              <MenuItem
                 key="edit"
                 :disabled="
                   !hasPermission(permissions.update) || !hasSystemUserUpdate(row.userType)
                 ">
                 <edit-outlined />
                 {{ $t('common.button.edit') }}
-              </a-menu-item>
-              <a-menu-item
+              </MenuItem>
+              <MenuItem
                 key="showAccount"
                 :disabled="
                   !hasPermission('sys:account:query') || !hasSystemUserUpdate(row.userType)
                 ">
                 <user-outlined />
                 {{ $t('system.views.user.button.showAccount') }}
-              </a-menu-item>
-            </a-menu>
+              </MenuItem>
+            </Menu>
           </template>
-        </a-dropdown>
+        </Dropdown>
       </template>
       <template #toolbar_buttons>
-        <a-form style="margin-left: 10px" layout="inline" :model="searchModel">
-          <a-form-item>
-            <a-input
+        <Form style="margin-left: 10px" layout="inline" :model="searchModel">
+          <FormItem>
+            <Input
               v-model:value="searchModel.username"
               style="width: 110px"
               :size="formSizeConfig"
               :placeholder="$t('system.views.user.table.username')" />
-          </a-form-item>
-          <a-form-item>
-            <a-input
+          </FormItem>
+          <FormItem>
+            <Input
               v-model:value="searchModel.fullName"
               style="width: 110px"
               :size="formSizeConfig"
               :placeholder="$t('system.views.user.table.fullName')" />
-          </a-form-item>
-          <a-form-item>
-            <a-input
+          </FormItem>
+          <FormItem>
+            <Input
               v-model:value="searchModel.email"
               style="width: 110px"
               :size="formSizeConfig"
               :placeholder="$t('system.views.user.table.email')" />
-          </a-form-item>
-          <a-form-item :label="$t('common.table.useYn')">
-            <a-select
+          </FormItem>
+          <FormItem :label="$t('common.table.useYn')">
+            <Select
               v-model:value="searchModel.useYn"
               :size="formSizeConfig"
               style="width: 80px"
               :placeholder="$t('common.table.useYn')">
-              <a-select-option v-for="item in ynList" :key="item.key" :value="item.key">
+              <SelectOption v-for="item in ynList" :key="item.key" :value="item.key">
                 {{ item.value }}
-              </a-select-option>
-            </a-select>
-          </a-form-item>
-          <a-form-item :label="$t('common.table.deleteYn')">
-            <a-select
+              </SelectOption>
+            </Select>
+          </FormItem>
+          <FormItem :label="$t('common.table.deleteYn')">
+            <Select
               v-model:value="searchModel.deleteYn"
               :size="formSizeConfig"
               style="width: 80px"
               :placeholder="$t('common.table.deleteYn')">
-              <a-select-option v-for="item in ynList" :key="item.key" :value="item.key">
+              <SelectOption v-for="item in ynList" :key="item.key" :value="item.key">
                 {{ item.value }}
-              </a-select-option>
-            </a-select>
-          </a-form-item>
-          <a-form-item>
+              </SelectOption>
+            </Select>
+          </FormItem>
+          <FormItem>
             <a-button :size="buttonSizeConfig" type="primary" @click="loadData">
               {{ $t('common.button.search') }}
             </a-button>
-          </a-form-item>
-        </a-form>
+          </FormItem>
+        </Form>
       </template>
       <template #toolbar_tools>
-        <a-form layout="inline">
-          <a-form-item>
+        <Form layout="inline">
+          <FormItem>
             <a-button
               v-permission="permissions.add"
               :size="buttonSizeConfig"
@@ -157,69 +157,67 @@
               @click="handleDeleteUser">
               {{ $t('common.button.delete') }}
             </a-button>
-          </a-form-item>
-        </a-form>
+          </FormItem>
+        </Form>
       </template>
       <template #table-userType="{ row }">
         <span>
           {{ userTypeMap[row.userType] }}
         </span>
       </template>
-    </vxe-grid>
+    </Grid>
     <a-modal
       v-model:visible="modalVisible"
       :title="isAdd ? $t('common.button.add') : $t('common.button.edit')"
       width="600px"
       :confirm-loading="saveLoading"
       @ok="handleOk">
-      <a-spin :spinning="formLoading">
-        <a-form
+      <Spin :spinning="formLoading">
+        <Form
           ref="formRef"
+          style="padding: 10px"
           :rules="rules"
           :label-col="{ span: 4 }"
           :wrapper-col="{ span: 19 }"
           :model="addEditModel">
-          <a-form-item name="username" :label="$t('system.views.user.table.username')">
-            <a-input
+          <FormItem name="username" :label="$t('system.views.user.table.username')">
+            <Input
               v-model:value="addEditModel.username"
               :placeholder="$t('system.views.user.validate.username')" />
-          </a-form-item>
-          <a-form-item name="fullName" :label="$t('system.views.user.table.fullName')">
-            <a-input
+          </FormItem>
+          <FormItem name="fullName" :label="$t('system.views.user.table.fullName')">
+            <Input
               v-model:value="addEditModel.fullName"
               :placeholder="$t('system.views.user.validate.fullName')" />
-          </a-form-item>
-          <a-form-item :label="$t('system.views.user.table.email')">
-            <a-input
+          </FormItem>
+          <FormItem :label="$t('system.views.user.table.email')">
+            <Input
               v-model:value="addEditModel.email"
               :placeholder="$t('system.views.user.validate.email')" />
-          </a-form-item>
-          <a-form-item name="userType" :label="$t('system.views.user.table.userType')">
-            <a-select v-model:value="addEditModel.userType">
-              <a-select-option v-if="hasPermissionUpdateSystemUser" :value="SYS_USER_TYPE">
+          </FormItem>
+          <FormItem name="userType" :label="$t('system.views.user.table.userType')">
+            <Select v-model:value="addEditModel.userType">
+              <SelectOption v-if="hasPermissionUpdateSystemUser" :value="SYS_USER_TYPE">
                 系统用户
-              </a-select-option>
-              <a-select-option
+              </SelectOption>
+              <SelectOption
                 v-for="item in userTypeList"
                 :key="'userType_' + item.dictItemCode"
                 :value="item.dictItemCode">
                 {{ item.dictItemName }}
-              </a-select-option>
-            </a-select>
-          </a-form-item>
-          <a-form-item :label="$t('system.views.user.table.mobile')">
-            <a-input
+              </SelectOption>
+            </Select>
+          </FormItem>
+          <FormItem :label="$t('system.views.user.table.mobile')">
+            <Input
               v-model:value="addEditModel.mobile"
               :placeholder="$t('system.views.user.validate.mobile')" />
-          </a-form-item>
-          <a-form-item :label="$t('common.table.seq')">
-            <a-input-number
-              style="width: 100%"
-              v-model:value="addEditModel.seq"
-              :default-value="1" />
-          </a-form-item>
-          <a-form-item name="deptId" :label="$t('system.views.user.form.dept')">
-            <a-tree-select
+          </FormItem>
+          <FormItem :label="$t('common.table.seq')">
+            <InputNumber style="width: 100%" v-model:value="addEditModel.seq" :default-value="1" />
+          </FormItem>
+          <FormItem name="deptId" :label="$t('system.views.user.form.dept')">
+            <TreeSelect
               :tree-data="deptTreeData"
               :field-names="deptTreeFieldNames"
               :placeholder="$t('system.views.user.validate.selectDept')"
@@ -227,8 +225,8 @@
               allow-clear
               :disabled="dataScopeDisable"
               v-model:value="addEditModel.deptId" />
-          </a-form-item>
-          <a-form-item
+          </FormItem>
+          <FormItem
             name="dataScopeList"
             :rules="[
               {
@@ -237,20 +235,20 @@
               },
             ]"
             :label="$t('system.views.user.form.dataScope')">
-            <a-select
+            <Select
               mode="multiple"
               :disabled="dataScopeDisable"
               v-model:value="addEditModel.dataScopeList">
-              <a-select-option
+              <SelectOption
                 v-for="item in dataScopeList"
                 :key="'data-scope_' + item.key"
                 :value="item.key">
                 {{ $t(item.value) }}
-              </a-select-option>
-            </a-select>
-          </a-form-item>
-        </a-form>
-      </a-spin>
+              </SelectOption>
+            </Select>
+          </FormItem>
+        </Form>
+      </Spin>
     </a-modal>
     <!--  更新账户信息  -->
     <UserAccountUpdateModal ref="userAccountRef" />
@@ -262,8 +260,24 @@ import { computed, defineComponent, ref, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { DownOutlined, EditOutlined, UserOutlined } from '@ant-design/icons-vue'
+import {
+  MenuItem,
+  Menu,
+  Dropdown,
+  FormItem,
+  Form,
+  Input,
+  Select,
+  SelectOption,
+  InputNumber,
+  TreeSelect,
+  Spin,
+  Button,
+  Modal,
+} from 'ant-design-vue'
 
 import { SYS_USER_TYPE, DATA_SCOPE } from '../../constants/SystemConstants'
+import { Grid, Pager } from 'vxe-table'
 
 import {
   vueLoadData,
@@ -276,7 +290,7 @@ import {
 import { SystemPermissions } from '../../constants/SystemConstants'
 import dayjs from 'dayjs'
 import { tableUseYn, tableDeleteYn } from '/@/components/common/TableCommon'
-import SizeConfigHoops from '/@/components/config/SizeConfigHooks'
+import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
 import { hasPermission } from '/@/common/auth/AuthUtils'
 import UserAccountUpdateModal from './account/UserAccountUpdateModal.vue'
 import { useLoadDeptTreeData } from '/@/modules/system/hooks/dept/SysDeptHooks'
@@ -288,6 +302,21 @@ export default defineComponent({
     DownOutlined,
     EditOutlined,
     UserOutlined,
+    Grid,
+    Pager,
+    MenuItem,
+    Menu,
+    Dropdown,
+    FormItem,
+    Form,
+    Input,
+    Select,
+    SelectOption,
+    TreeSelect,
+    Spin,
+    InputNumber,
+    AModal: Modal,
+    AButton: Button,
   },
   setup() {
     const tableRef = ref()
@@ -338,7 +367,7 @@ export default defineComponent({
       hasSystemUserUpdate,
       ...userOperationVue,
       ...loadDataVue,
-      ...SizeConfigHoops(),
+      ...useSizeSetting(),
       ...addEditVue,
       permissions: SystemPermissions.user,
       ...useCreateAccount(tableRef, t, hasPermissionUpdateSystemUser),

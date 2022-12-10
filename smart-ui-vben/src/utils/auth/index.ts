@@ -2,7 +2,7 @@ import { Persistent, BasicKeys } from '/@/utils/cache/persistent'
 import { CacheTypeEnum } from '/@/enums/cacheEnum'
 import projectSetting from '/@/settings/projectSetting'
 import { TOKEN_KEY } from '/@/enums/cacheEnum'
-import sha256 from 'crypto-js/sha256';
+import sha256 from 'crypto-js/sha256'
 
 const { permissionCacheType } = projectSetting
 const isLocal = permissionCacheType === CacheTypeEnum.LOCAL

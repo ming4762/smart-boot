@@ -1,13 +1,15 @@
-import { genMessage } from '../helper'
+import { genMessage, generateModuleMessage } from '../helper'
 import antdLocale from 'ant-design-vue/es/locale/en_US'
+import vxeEnUS from 'vxe-table/es/locale/lang/en-US'
+import { deepMerge } from '/@/utils'
 
 const modules = import.meta.globEager('./en/**/*.ts')
-import { systemEnUs } from '/@/views/sys/i18n'
+const modulesLocales = import.meta.globEager('../../modules/**/lang/en_US.ts')
 export default {
   message: {
-    ...genMessage(modules, 'en'),
+    ...deepMerge(genMessage(modules, 'en'), generateModuleMessage(modulesLocales)),
     antdLocale,
-    ...systemEnUs,
+    ...vxeEnUS,
   },
   dateLocale: null,
   dateLocaleName: 'en',

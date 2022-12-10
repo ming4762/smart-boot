@@ -58,6 +58,7 @@ export function openWindow(
 export function getDynamicProps<T, U>(props: T): Partial<U> {
   const ret: Recordable = {}
 
+  // @ts-ignore
   Object.keys(props).map((key) => {
     ret[key] = unref((props as Recordable)[key])
   })
@@ -83,6 +84,7 @@ export function getRawRoute(route: RouteLocationNormalized): RouteLocationNormal
 export const withInstall = <T>(component: T, alias?: string) => {
   const comp = component as any
   comp.install = (app: App) => {
+    // @ts-ignore
     app.component(comp.name || comp.displayName, component)
     if (alias) {
       app.config.globalProperties[alias] = component

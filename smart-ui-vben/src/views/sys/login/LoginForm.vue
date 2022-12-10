@@ -6,23 +6,20 @@
     :rules="getFormRules"
     ref="formRef"
     v-show="getShow"
-    @keypress.enter="handleLogin"
-  >
+    @keypress.enter="handleLogin">
     <FormItem name="account" class="enter-x">
       <Input
         size="large"
         v-model:value="formData.account"
         :placeholder="t('sys.login.userName')"
-        class="fix-auto-fill input-width"
-      />
+        class="fix-auto-fill input-width" />
     </FormItem>
     <FormItem name="password" class="enter-x">
       <InputPassword
         size="large"
         visibilityToggle
         v-model:value="formData.password"
-        :placeholder="t('sys.login.password')"
-      />
+        :placeholder="t('sys.login.password')" />
     </FormItem>
 
     <ARow :gutter="16">
@@ -31,8 +28,7 @@
           <Input
             v-model:value="formData.captcha"
             :placeholder="t('system.login.login-captcha')"
-            size="large"
-          />
+            size="large" />
         </FormItem>
       </ACol>
       <ACol :span="8">
@@ -85,86 +81,87 @@
   </Form>
 </template>
 <script lang="ts" setup>
-  import { reactive, ref, unref, computed } from 'vue'
+import { reactive, ref, unref, computed } from 'vue'
 
-  import { Checkbox, Form, Input, Row, Col, Button, Tooltip } from 'ant-design-vue'
-  import LoginFormTitle from './LoginFormTitle.vue'
+import { Checkbox, Form, Input, Row, Col, Button, Tooltip } from 'ant-design-vue'
+import LoginFormTitle from './LoginFormTitle.vue'
 
-  import { useI18n } from '/@/hooks/web/useI18n'
-  import { useMessage } from '/@/hooks/web/useMessage'
+import { useI18n } from '/@/hooks/web/useI18n'
+import { useMessage } from '/@/hooks/web/useMessage'
 
-  import { useUserStore } from '/@/store/modules/user'
-  import { LoginStateEnum, useLoginState, useFormRules, useFormValid } from './useLogin'
-  import { useDesign } from '/@/hooks/web/useDesign'
-  import { buildUUID } from '/@/utils/uuid'
-  import { defHttp } from '/@/utils/http/axios'
-  import { createPassword } from '/@/utils/auth'
-  //import { onKeyStroke } from '@vueuse/core';
+import { useUserStore } from '/@/store/modules/user'
+import { LoginStateEnum, useLoginState, useFormRules, useFormValid } from './useLogin'
+import { useDesign } from '/@/hooks/web/useDesign'
+import { buildUUID } from '/@/utils/uuid'
+import { defHttp } from '/@/utils/http/axios'
+import { createPassword } from '/@/utils/auth'
+//import { onKeyStroke } from '@vueuse/core';
 
-  const ACol = Col
-  const ARow = Row
-  const FormItem = Form.Item
-  const InputPassword = Input.Password
-  const { t } = useI18n()
-  const { notification, createErrorModal } = useMessage()
-  const { prefixCls } = useDesign('login')
-  const userStore = useUserStore()
+const ACol = Col
+const ARow = Row
+const FormItem = Form.Item
+const InputPassword = Input.Password
+const { t } = useI18n()
+const { notification, createErrorModal } = useMessage()
+const { prefixCls } = useDesign('login')
+const userStore = useUserStore()
 
-  const { setLoginState, getLoginState } = useLoginState()
-  const { getFormRules } = useFormRules()
+const { setLoginState, getLoginState } = useLoginState()
+const { getFormRules } = useFormRules()
 
-  const formRef = ref()
-  const loading = ref(false)
-  const rememberMe = ref(false)
+const formRef = ref()
+const loading = ref(false)
+const rememberMe = ref(false)
 
-  const formData = reactive({
-    account: 'admin',
-    password: '123456',
-    captcha: '',
-    captchaKey: buildUUID(),
-  })
+const formData = reactive({
+  account: 'admin',
+  password: '123456',
+  captcha: '',
+  captchaKey: buildUUID(),
+})
 
-  const { validForm } = useFormValid(formRef)
+const { validForm } = useFormValid(formRef)
 
-  //onKeyStroke('Enter', handleLogin);
+//onKeyStroke('Enter', handleLogin);
 
-  const getShow = computed(() => unref(getLoginState) === LoginStateEnum.LOGIN)
+const getShow = computed(() => unref(getLoginState) === LoginStateEnum.LOGIN)
 
-  async function handleLogin() {
-    const data = await validForm()
-    if (!data) return
-    try {
-      loading.value = true
-      const userInfo = await userStore.login({
-        password: createPassword(data.account, data.password),
-        username: data.account,
-        mode: 'none', //不要默认的错误提示
-        codeKey: formData.captchaKey,
-        code: formData.captcha,
+async function handleLogin() {
+  const data = await validForm()
+  if (!data) return
+  try {
+    loading.value = true
+    const userInfo = await userStore.login({
+      password: createPassword(data.account, data.password),
+      username: data.account,
+      mode: 'none', //不要默认的错误提示
+      codeKey: formData.captchaKey,
+      code: formData.captcha,
+    })
+    if (userInfo) {
+      notification.success({
+        message: t('sys.login.loginSuccessTitle'),
+        description: `${t('sys.login.loginSuccessDesc')}: ${userInfo.realName}`,
+        duration: 3,
       })
-      if (userInfo) {
-        notification.success({
-          message: t('sys.login.loginSuccessTitle'),
-          description: `${t('sys.login.loginSuccessDesc')}: ${userInfo.realName}`,
-          duration: 3,
-        })
-      }
-    } catch (error) {
-      handleChangeCaptcha()
-      createErrorModal({
-        title: t('sys.api.errorTip'),
-        content: (error as unknown as Error).message || t('sys.api.networkExceptionMsg'),
-        getContainer: () => document.body.querySelector(`.${prefixCls}`) || document.body,
-      })
-    } finally {
-      loading.value = false
     }
+  } catch (error) {
+    handleChangeCaptcha()
+    createErrorModal({
+      title: t('sys.api.errorTip'),
+      content: (error as unknown as Error).message || t('sys.api.networkExceptionMsg'),
+      getContainer: () => document.body.querySelector(`.${prefixCls}`) || document.body,
+    })
+  } finally {
+    loading.value = false
   }
+}
 
-  const computedCaptchaUrl = computed(() => {
-    return `${defHttp.getApiUrl()}/auth/createCaptcha?codeKey=${formData.captchaKey}`
-  })
-  const handleChangeCaptcha = () => {
-    formData.captchaKey = buildUUID()
-  }
+const computedCaptchaUrl = computed(() => {
+  return `${defHttp.getApiUrl()}/auth/createCaptcha?codeKey=${formData.captchaKey}`
+})
+const handleChangeCaptcha = () => {
+  console.log(t('common.okText'))
+  formData.captchaKey = buildUUID()
+}
 </script>

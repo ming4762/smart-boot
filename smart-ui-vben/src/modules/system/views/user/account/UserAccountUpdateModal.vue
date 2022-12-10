@@ -33,10 +33,10 @@
           {{ accountData.accountStatus }}
         </a-descriptions-item>
         <a-descriptions-item :label="$t('system.views.user.account.initialPasswordYn')">
-          <a-tag v-if="accountData.initialPasswordYn" color="#f50">
+          <ATag v-if="accountData.initialPasswordYn" color="#f50">
             {{ $t('common.form.yes') }}
-          </a-tag>
-          <a-tag v-else color="#108ee9">{{ $t('common.form.no') }}</a-tag>
+          </ATag>
+          <ATag v-else color="#108ee9">{{ $t('common.form.no') }}</ATag>
         </a-descriptions-item>
 
         <a-descriptions-item :label="$t('system.views.user.account.loginFailTime')">
@@ -146,14 +146,46 @@ import { useI18n } from 'vue-i18n'
 import dayjs from 'dayjs'
 
 import { useShowAccount } from './UserAccountUpdateHooks'
-import SizeConfigHooks from '/@/components/config/SizeConfigHooks'
+import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
 import { hasPermission } from '/@/common/auth/AuthUtils'
+import {
+  Col,
+  Form,
+  FormItem,
+  Textarea,
+  Descriptions,
+  DescriptionsItem,
+  InputNumber,
+  Modal,
+  Tag,
+  Row,
+  Divider,
+  SelectOption,
+  Select,
+  Spin,
+} from 'ant-design-vue'
 
 /**
  * 用户账户更新弹窗
  */
 export default defineComponent({
   name: 'UserAccountUpdateModal',
+  components: {
+    AModal: Modal,
+    AForm: Form,
+    AFormItem: FormItem,
+    ARow: Row,
+    ACol: Col,
+    ATextarea: Textarea,
+    AInputNumber: InputNumber,
+    ADescriptions: Descriptions,
+    ADescriptionsItem: DescriptionsItem,
+    ATag: Tag,
+    ASelect: Select,
+    ASelectOption: SelectOption,
+    ADivider: Divider,
+    ASpin: Spin,
+  },
   setup() {
     const { t } = useI18n()
     const { modalVisible, dataLoading, userData, accountData, show, handleSave, saveLoading } =
@@ -181,7 +213,7 @@ export default defineComponent({
       accountData,
       show,
       formatTime,
-      ...SizeConfigHooks(),
+      ...useSizeSetting(),
       computedHasEditPermission,
       handleSave,
       saveLoading,

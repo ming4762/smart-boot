@@ -102,6 +102,8 @@ window.addEventListener('beforeunload', function () {
     ...omit(sessionMemory.getCache),
     ...pick(ss.get(APP_SESSION_CACHE_KEY), [TOKEN_KEY, USER_INFO_KEY]),
   })
+  // 序列化存储
+  ls.set(APP_LOCAL_CACHE_KEY, localMemory.getCache)
 })
 
 function storageChange(e: any) {

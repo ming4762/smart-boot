@@ -50,7 +50,6 @@ router.beforeEach(async function (to, from, next) {
   if (to.path === PageEnum.BASE_LOGIN) {
     next()
   } else if (!routeLoad) {
-    console.log('----------------')
     const userStore = useUserStore()
     await userStore.initRoute()
     routeLoad = true

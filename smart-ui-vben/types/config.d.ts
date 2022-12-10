@@ -6,6 +6,7 @@ import {
   RouterTransitionEnum,
   SettingButtonPositionEnum,
   SessionTimeoutProcessingEnum,
+  NoPermissionModeEnum,
 } from '/@/enums/appEnum'
 
 import { CacheTypeEnum } from '/@/enums/cacheEnum'
@@ -95,6 +96,7 @@ export interface ProjectConfig {
   settingButtonPosition: SettingButtonPositionEnum
   // Permission mode
   permissionMode: PermissionModeEnum
+  noPermissionMode: NoPermissionModeEnum
   // Session timeout processing
   sessionTimeoutProcessing: SessionTimeoutProcessingEnum
   // Website gray mode, open for possible mourning dates
@@ -163,4 +165,3 @@ export interface GlobEnvConfig {
   // Upload url
   VITE_GLOB_UPLOAD_URL?: string
 }
-

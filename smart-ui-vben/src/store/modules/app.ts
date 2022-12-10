@@ -89,7 +89,7 @@ export const useAppStore = defineStore({
 
     async resetAllState() {
       resetRouter()
-      Persistent.clearAll()
+      Persistent.clearAll(true)
     },
     async setPageLoadingAction(loading: boolean): Promise<void> {
       if (loading) {

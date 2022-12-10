@@ -1,3 +1,5 @@
+import { Tag } from 'ant-design-vue'
+
 /**
  * Boolean列配置
  * @param t
@@ -8,9 +10,9 @@ export const tableBooleanColumn = (t: Function, title: string, field: string) =>
   const createSlot = ({ row }: any) => {
     const value = row[field]
     if (value === true) {
-      return <a-tag color="#108ee9">{t('common.form.yes')}</a-tag>
+      return <Tag color="#108ee9">{t('common.form.yes')}</Tag>
     }
-    return <a-tag color="#f50">{t('common.form.no')}</a-tag>
+    return <Tag color="#f50">{t('common.form.no')}</Tag>
   }
   /**
    * 创建列信息
@@ -34,9 +36,9 @@ const tableDeleteYn = (t: Function) => {
   const createSlot = ({ row }: any) => {
     const value = row.deleteYn
     if (value === false) {
-      return <a-tag color="#108ee9">{t('common.form.no')}</a-tag>
+      return <Tag color="#108ee9">{t('common.form.no')}</Tag>
     }
-    return <a-tag color="#f50">{t('common.form.yes')}</a-tag>
+    return <Tag color="#f50">{t('common.form.yes')}</Tag>
   }
   /**
    * 创建列信息
@@ -60,9 +62,9 @@ const tableUseYn = (t: Function) => {
   const createSlot = ({ row }: any) => {
     const useYn = row.useYn
     if (useYn === true) {
-      return <a-tag color="#108ee9">{t('common.form.use')}</a-tag>
+      return <Tag color="#108ee9">{t('common.form.use')}</Tag>
     }
-    return <a-tag color="#f50">{t('common.form.noUse')}</a-tag>
+    return <Tag color="#f50">{t('common.form.noUse')}</Tag>
   }
   /**
    * 创建列信息
