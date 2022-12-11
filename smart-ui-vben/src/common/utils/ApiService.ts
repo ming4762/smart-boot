@@ -7,4 +7,8 @@ export default class ApiService {
       data,
     })
   }
+
+  public static getApiUrl(): string {
+    return defHttp.getApiUrl()
+  }
 }
