@@ -49,7 +49,7 @@
                   :placeholder="$t('system.views.role.table.roleCode')" />
               </a-form-item>
               <a-form-item>
-                <a-button type="primary" :size="buttonSizeConfig" @click="resetSearch">
+                <a-button :size="buttonSizeConfig" @click="resetSearch">
                   {{ $t('common.button.reset') }}
                 </a-button>
                 <a-button
