@@ -1,4 +1,3 @@
-
 export default {
   trans: true,
   key: 'system.views.function',
@@ -7,7 +6,7 @@ export default {
       catalogue: 'Catalogue',
       menu: 'Menu',
       function: 'Function',
-      rootCatalogue: 'Root catalogue'
+      rootCatalogue: 'Root catalogue',
     },
     table: {
       functionName: 'Function name',
@@ -18,7 +17,7 @@ export default {
       httpMethod: 'Http method',
       menuIs: 'Is menu',
       internalOrExternal: 'Open externally',
-      dataRule: 'Data permissions'
+      dataRule: 'Data permissions',
     },
     validate: {
       httpMethod: 'Please select the request method',
@@ -27,9 +26,9 @@ export default {
       i18nCode: 'Please enter the i18n code',
       url: 'Please enter the url',
       permission: 'Please enter the permission',
-      icon: 'Please enter the icon'
-    }
-  }
+      icon: 'Please enter the icon',
+    },
+  },
 }
 
 /**
