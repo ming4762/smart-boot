@@ -247,9 +247,9 @@ import { DownOutlined, EditOutlined, PlusOutlined, DeleteOutlined } from '@ant-d
 import { Grid } from 'vxe-table'
 import {
   Dropdown,
-  Form,
   Row,
   Col,
+  Form,
   FormItem,
   Input,
   InputNumber,
@@ -283,9 +283,9 @@ export default defineComponent({
     DeleteOutlined,
     Grid,
     ADropdown: Dropdown,
-    AForm: Form,
     ARow: Row,
     ACol: Col,
+    AForm: Form,
     AFormItem: FormItem,
     AInput: Input,
     AInputNumber: InputNumber,
