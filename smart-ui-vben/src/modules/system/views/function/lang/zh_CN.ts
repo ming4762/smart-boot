@@ -9,7 +9,7 @@ export default {
           catalogue: '目录',
           menu: '菜单',
           function: '功能',
-          rootCatalogue: '跟目录'
+          rootCatalogue: '跟目录',
         },
         table: {
           functionName: '功能名称',
@@ -20,7 +20,7 @@ export default {
           httpMethod: '请求方式',
           menuIs: '是否菜单',
           internalOrExternal: '是否外部打开',
-          dataRule: '数据权限'
+          dataRule: '数据权限',
         },
         validate: {
           httpMethod: '请选择请求方式',
@@ -29,9 +29,9 @@ export default {
           i18nCode: '请输入国际化编码',
           url: '请输入URL',
           permission: '请输入权限标识',
-          icon: '请输入图标'
-        }
-      }
-    }
-  }
+          icon: '请输入图标',
+        },
+      },
+    },
+  },
 }
