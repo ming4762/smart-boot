@@ -116,7 +116,7 @@ export default defineComponent({
         },
       )
 
-    async function handleMenuClick(key) {
+    async function handleMenuClick({ key }: { item: any; key: string; keyPath: string[] }) {
       const { beforeClickFn } = props
       if (beforeClickFn && isFunction(beforeClickFn)) {
         const flag = await beforeClickFn(key)

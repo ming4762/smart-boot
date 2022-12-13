@@ -19,7 +19,8 @@ import { isDevMode } from './utils/env'
 import 'vxe-table/lib/style.css'
 
 if (isDevMode()) {
-  import('ant-design-vue/es/style')
+  // import('ant-design-vue/es/style')
+  import('ant-design-vue/dist/antd.variable.min.css')
 }
 
 async function bootstrap() {

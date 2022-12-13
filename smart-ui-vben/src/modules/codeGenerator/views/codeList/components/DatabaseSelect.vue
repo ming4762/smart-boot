@@ -10,8 +10,6 @@
 import { defineComponent, ref, onMounted } from 'vue'
 import type { PropType } from 'vue'
 
-import { Select, SelectOption } from 'ant-design-vue'
-
 import ApiService from '/@/common/utils/ApiService'
 
 import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
@@ -20,10 +18,6 @@ import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
  */
 export default defineComponent({
   name: 'DatabaseSelect',
-  components: {
-    ASelect: Select,
-    ASelectOption: SelectOption,
-  },
   props: {
     parameter: {
       type: Object as PropType<any>,

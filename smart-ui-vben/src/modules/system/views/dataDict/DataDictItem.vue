@@ -1,6 +1,6 @@
 <template>
   <div class="full-height" style="padding: 10px">
-    <Grid
+    <vxe-grid
       ref="gridRef"
       v-bind="tableProps"
       :size="tableSizeConfig"
@@ -11,7 +11,7 @@
       stripe
       highlight-hover-row>
       <template #pager>
-        <Pager
+        <vxe-pager
           v-bind="pageProps"
           :page-sizes="[500, 1000, 2000, 5000]"
           :layouts="[
@@ -56,7 +56,7 @@
           </a-form-item>
         </a-form>
       </template>
-    </Grid>
+    </vxe-grid>
     <a-modal width="600px" v-bind="modalProps">
       <a-spin :spinning="spinning">
         <a-form
@@ -122,19 +122,7 @@ import type { PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import dayjs from 'dayjs'
-import {
-  message,
-  Modal,
-  Spin,
-  Switch,
-  Form,
-  Row,
-  Col,
-  FormItem,
-  InputNumber,
-  Input,
-} from 'ant-design-vue'
-import { Grid, Pager } from 'vxe-table'
+import { message } from 'ant-design-vue'
 
 import { useVxeTable, useAddEdit, useVxeDelete } from '/@/hooks/page/CrudHooks'
 import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
@@ -144,19 +132,6 @@ import { tableUseYn } from '/@/components/common/TableCommon'
 
 export default defineComponent({
   name: 'SysDictItemListView',
-  components: {
-    Grid,
-    Pager,
-    AModal: Modal,
-    ASpin: Spin,
-    AForm: Form,
-    AFormItem: FormItem,
-    ARow: Row,
-    ACol: Col,
-    AInput: Input,
-    AInputNumber: InputNumber,
-    ASwitch: Switch,
-  },
   props: {
     dictCode: {
       type: String as PropType<string | null>,

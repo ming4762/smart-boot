@@ -1,6 +1,6 @@
 <template>
   <div style="padding: 10px" class="full-height">
-    <Grid
+    <vxe-grid
       v-bind="tableProps"
       :tree-config="treeConfig"
       :columns="columns"
@@ -17,7 +17,6 @@ import { defineComponent, onMounted } from 'vue'
 import { useVxeTable } from '/@/hooks/page/CrudHooks'
 import ApiService from '/@/common/utils/ApiService'
 import { tableBooleanColumn } from '/@/components/common/TableCommon'
-import { Grid } from 'vxe-table'
 
 const doLoadData = () => {
   return ApiService.postAjax('db/code/main/getTemplateDataDocument')
@@ -25,9 +24,6 @@ const doLoadData = () => {
 
 export default defineComponent({
   name: 'TemplateDataDocumentView',
-  components: {
-    Grid,
-  },
   setup() {
     const { tableProps, loadData } = useVxeTable(doLoadData, {
       paging: false,

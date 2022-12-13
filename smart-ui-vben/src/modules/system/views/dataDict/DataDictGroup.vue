@@ -1,6 +1,6 @@
 <template>
   <div class="full-height" style="padding: 10px 0 10px 10px">
-    <Grid
+    <vxe-grid
       ref="gridRef"
       v-bind="tableProps"
       :size="tableSizeConfig"
@@ -15,7 +15,7 @@
       @current-change="handleCurrentChange"
       @filter-change="handleFilterChange">
       <template #pager>
-        <Pager
+        <vxe-pager
           v-bind="pageProps"
           :page-sizes="[500, 1000, 2000, 5000]"
           :layouts="['Sizes', 'PrevPage', 'Number', 'NextPage', 'Total']" />
@@ -77,7 +77,7 @@
           </a-select>
         </div>
       </template>
-    </Grid>
+    </vxe-grid>
     <a-modal v-bind="modalProps">
       <a-spin :spinning="spinning">
         <a-form
@@ -125,20 +125,6 @@
 import { defineComponent, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import { Grid, Pager } from 'vxe-table'
-import {
-  Modal,
-  Spin,
-  Form,
-  FormItem,
-  Row,
-  Col,
-  Select,
-  SelectOption,
-  Switch,
-  InputNumber,
-} from 'ant-design-vue'
-
 import { useVxeTable, useAddEdit, useVxeDelete } from '/@/hooks/page/CrudHooks'
 import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
 
@@ -148,20 +134,6 @@ import { tableUseYn } from '/@/components/common/TableCommon'
 
 export default defineComponent({
   name: 'SysDictListView',
-  components: {
-    AModal: Modal,
-    ASpin: Spin,
-    AForm: Form,
-    AFormItem: FormItem,
-    ARow: Row,
-    ACol: Col,
-    ASelect: Select,
-    ASelectOption: SelectOption,
-    Grid,
-    Pager,
-    ASwitch: Switch,
-    AInputNumber: InputNumber,
-  },
   emits: ['code-change'],
   // @ts-ignore
   setup(props, { emit }) {

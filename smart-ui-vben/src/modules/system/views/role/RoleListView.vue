@@ -2,7 +2,7 @@
   <div class="full-height page-container" style="padding: 10px">
     <a-layout class="full-height">
       <a-layout-content class="full-height">
-        <Grid
+        <vxe-grid
           ref="gridRef"
           :data="data"
           height="auto"
@@ -17,7 +17,7 @@
           :columns="columns"
           @current-change="handleCurrentChange">
           <template #pager>
-            <Pager
+            <vxe-pager
               v-model:current-page="tablePage.currentPage"
               v-model:page-size="tablePage.pageSize"
               :page-sizes="[500, 1000, 2000, 5000]"
@@ -103,13 +103,13 @@
               </template>
             </a-dropdown>
           </template>
-        </Grid>
+        </vxe-grid>
       </a-layout-content>
       <a-layout-sider theme="light" class="layout-set-function" width="240px">
         <RoleSetFunction :role-id="currentRow.roleId" />
       </a-layout-sider>
     </a-layout>
-    <Modal
+    <a-modal
       v-model:visible="addEditModalVisible"
       :confirm-loading="saveLoading"
       :title="isAdd ? $t('common.button.add') : $t('common.button.edit')"
@@ -143,8 +143,8 @@
           </a-form-item>
         </a-form>
       </a-spin>
-    </Modal>
-    <Modal
+    </a-modal>
+    <a-modal
       v-model:visible="setUserModalVisible"
       width="800px"
       :confirm-loading="setUserLoading"
@@ -158,7 +158,7 @@
           :data-source="allUserData"
           @change="handleTransChange" />
       </a-spin>
-    </Modal>
+    </a-modal>
   </div>
 </template>
 
@@ -166,27 +166,11 @@
 import { defineComponent, ref, createVNode } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import {
-  message,
-  Modal,
-  Layout,
-  LayoutContent,
-  Spin,
-  Form,
-  FormItem,
-  Menu,
-  MenuItem,
-  Input,
-  Dropdown,
-  Transfer,
-  Switch,
-  InputNumber,
-} from 'ant-design-vue'
+import { message, Modal } from 'ant-design-vue'
 import { ExclamationCircleOutlined, DownOutlined } from '@ant-design/icons-vue'
 import dayjs from 'dayjs'
 
 import type { VxeTableInstance } from 'vxe-table'
-import { Grid, Pager } from 'vxe-table'
 import { SystemPermissions } from '/@/modules/system/constants/SystemConstants'
 
 import RoleSetFunction from './RoleSetFunction.vue'
@@ -206,21 +190,6 @@ export default defineComponent({
   components: {
     RoleSetFunction,
     DownOutlined,
-    ALayout: Layout,
-    ALayoutContent: LayoutContent,
-    ASpin: Spin,
-    ADropdown: Dropdown,
-    ASwitch: Switch,
-    AForm: Form,
-    AFormItem: FormItem,
-    AInput: Input,
-    AInputNumber: InputNumber,
-    AMenu: Menu,
-    AMenuItem: MenuItem,
-    Grid,
-    Pager,
-    Modal,
-    ATransfer: Transfer,
   },
   setup() {
     const { t } = useI18n()

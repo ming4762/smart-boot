@@ -1,6 +1,6 @@
 <template>
   <div class="full-height">
-    <Grid
+    <vxe-grid
       v-bind="$attrs"
       ref="tableRef"
       :size="tableSizeConfig"
@@ -73,7 +73,7 @@
         <a-checkbox v-model:checked="headerEditableCheckboxChecked" :size="formSizeConfig" />
         {{ $t(column.title.replace('{', '').replace('}', '')) }}
       </template>
-    </Grid>
+    </vxe-grid>
   </div>
 </template>
 
@@ -86,8 +86,6 @@ import { MenuOutlined } from '@ant-design/icons-vue'
 import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
 import { useVxeTableSortable } from '/@/hooks/vxeTable/useVxeTableSortable'
 import { vueTableHeaderCheckboxSupport } from './PageSettingSupport'
-import { Grid } from 'vxe-table'
-import { Checkbox, Input, Select, SelectOption } from 'ant-design-vue'
 
 /**
  * copy列
@@ -153,11 +151,6 @@ export default defineComponent({
   name: 'PageTableSetting',
   components: {
     MenuOutlined,
-    Grid,
-    AInput: Input,
-    ASelect: Select,
-    ASelectOption: SelectOption,
-    ACheckbox: Checkbox,
   },
   props: {
     tableData: {

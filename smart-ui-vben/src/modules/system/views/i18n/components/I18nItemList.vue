@@ -1,6 +1,6 @@
 <template>
   <div class="full-height">
-    <Grid
+    <vxe-grid
       ref="gridRef"
       height="auto"
       :toolbar-config="toolbarConfig"
@@ -39,33 +39,33 @@
           {{ $t('common.button.edit') }}
         </a-button>
       </template>
-    </Grid>
+    </vxe-grid>
 
-    <Modal
+    <a-modal
       v-model:visible="addEditModalVisible"
       :confirm-loading="saveLoading"
       :title="isAdd ? $t('common.button.add') : $t('common.button.edit')"
       @ok="handleSave">
-      <Spin :spinning="getLoading">
-        <Form
+      <a-spin :spinning="getLoading">
+        <a-form
           ref="formRef"
           :rules="rules"
           :label-col="{ span: 5 }"
           :wrapper-col="{ span: 17 }"
           :model="saveModel">
-          <FormItem name="locale" :label="$t('system.views.i18n.i18nItem.titleLocale')">
-            <Input
+          <a-form-item name="locale" :label="$t('system.views.i18n.i18nItem.titleLocale')">
+            <a-input
               v-model:value="saveModel.locale"
               :placeholder="$t('system.views.i18n.i18nItem.localeValidate')" />
-          </FormItem>
-          <FormItem name="value" :label="$t('system.views.i18n.i18nItem.titleValue')">
-            <Input
+          </a-form-item>
+          <a-form-item name="value" :label="$t('system.views.i18n.i18nItem.titleValue')">
+            <a-input
               v-model:value="saveModel.value"
               :placeholder="$t('system.views.i18n.i18nItem.valueValidate')" />
-          </FormItem>
-        </Form>
-      </Spin>
-    </Modal>
+          </a-form-item>
+        </a-form>
+      </a-spin>
+    </a-modal>
   </div>
 </template>
 
@@ -76,9 +76,7 @@ import type { PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import dayjs from 'dayjs'
-import { message, Modal, Spin, Form, FormItem, Input } from 'ant-design-vue'
-import { Grid } from 'vxe-table'
-
+import { message } from 'ant-design-vue'
 import ApiService from '/@/common/utils/ApiService'
 import { SystemPermissions } from '/@/modules/system/constants/SystemConstants'
 import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
@@ -184,14 +182,6 @@ const addEditVueSupport = (loadData: Function, i18nId: Ref) => {
 
 export default defineComponent({
   name: 'I18nItemList',
-  components: {
-    Grid,
-    Modal,
-    Spin,
-    Form,
-    FormItem,
-    Input,
-  },
   props: {
     i18nId: Number as PropType<number | null>,
   },

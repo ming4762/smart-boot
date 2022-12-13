@@ -148,44 +148,12 @@ import dayjs from 'dayjs'
 import { useShowAccount } from './UserAccountUpdateHooks'
 import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
 import { hasPermission } from '/@/common/auth/AuthUtils'
-import {
-  Col,
-  Form,
-  FormItem,
-  Textarea,
-  Descriptions,
-  DescriptionsItem,
-  InputNumber,
-  Modal,
-  Tag,
-  Row,
-  Divider,
-  SelectOption,
-  Select,
-  Spin,
-} from 'ant-design-vue'
 
 /**
  * 用户账户更新弹窗
  */
 export default defineComponent({
   name: 'UserAccountUpdateModal',
-  components: {
-    AModal: Modal,
-    AForm: Form,
-    AFormItem: FormItem,
-    ARow: Row,
-    ACol: Col,
-    ATextarea: Textarea,
-    AInputNumber: InputNumber,
-    ADescriptions: Descriptions,
-    ADescriptionsItem: DescriptionsItem,
-    ATag: Tag,
-    ASelect: Select,
-    ASelectOption: SelectOption,
-    ADivider: Divider,
-    ASpin: Spin,
-  },
   setup() {
     const { t } = useI18n()
     const { modalVisible, dataLoading, userData, accountData, show, handleSave, saveLoading } =

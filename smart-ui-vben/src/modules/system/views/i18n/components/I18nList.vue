@@ -1,6 +1,6 @@
 <template>
   <div class="full-height">
-    <Grid
+    <vxe-grid
       highlight-current-row
       ref="gridRef"
       :toolbar-config="toolbarConfig"
@@ -12,16 +12,16 @@
       stripe
       @current-change="handleCurrentChange">
       <template #table-buttons>
-        <Form style="margin-left: 5px" layout="inline">
-          <FormItem :label="$t('system.views.i18n.i18n.titleI18nCode')">
-            <Input v-model:value="searchModel.i18nCode" size="small" />
-          </FormItem>
-          <FormItem>
+        <a-form style="margin-left: 5px" layout="inline">
+          <a-form-item :label="$t('system.views.i18n.i18n.titleI18nCode')">
+            <a-input v-model:value="searchModel.i18nCode" size="small" />
+          </a-form-item>
+          <a-form-item>
             <a-button :size="buttonSizeConfig" type="primary" @click="loadData">
               {{ $t('common.button.search') }}
             </a-button>
-          </FormItem>
-        </Form>
+          </a-form-item>
+        </a-form>
       </template>
       <template #table-tools>
         <div style="margin-right: 5px">
@@ -62,7 +62,7 @@
       </template>
 
       <template #pager>
-        <Pager
+        <vxe-pager
           :page-sizes="[100, 200, 500, 1000]"
           :layouts="['PrevPage', 'JumpNumber', 'NextPage', 'FullJump', 'Sizes', 'Total']"
           :page-size="tablePage.pageSize"
@@ -70,46 +70,46 @@
           :current-page="tablePage.currentPage"
           @page-change="handlePageChange" />
       </template>
-    </Grid>
+    </vxe-grid>
 
-    <Modal
+    <a-modal
       v-model:visible="addEditModalVisible"
       :confirm-loading="saveLoading"
       :title="isAdd ? $t('common.button.add') : $t('common.button.edit')"
       @ok="handleSave">
-      <Spin :spinning="getLoading">
-        <Form
+      <a-spin :spinning="getLoading">
+        <a-form
           ref="formRef"
           :rules="rules"
           :label-col="{ span: 5 }"
           :wrapper-col="{ span: 17 }"
           :model="addEditModel">
-          <FormItem name="platform" :label="$t('system.views.i18n.i18n.titlePlatform')">
-            <Select v-model:value="addEditModel.platform">
-              <SelectOption v-for="item in platformList" :key="item.key" :value="item.key">
+          <a-form-item name="platform" :label="$t('system.views.i18n.i18n.titlePlatform')">
+            <a-select v-model:value="addEditModel.platform">
+              <a-select-option v-for="item in platformList" :key="item.key" :value="item.key">
                 {{ $t(item.label) }}
-              </SelectOption>
-            </Select>
-          </FormItem>
-          <FormItem name="i18nCode" :label="$t('system.views.i18n.i18n.titleI18nCode')">
-            <Input
+              </a-select-option>
+            </a-select>
+          </a-form-item>
+          <a-form-item name="i18nCode" :label="$t('system.views.i18n.i18n.titleI18nCode')">
+            <a-input
               v-model:value="addEditModel.i18nCode"
               :placeholder="$t('system.views.i18n.i18n.platformValidate')" />
-          </FormItem>
-          <FormItem name="remark" :label="$t('common.table.remark')">
-            <Input
+          </a-form-item>
+          <a-form-item name="remark" :label="$t('common.table.remark')">
+            <a-input
               v-model:value="addEditModel.remark"
               :placeholder="$t('common.formValidate.remark')" />
-          </FormItem>
-          <FormItem name="seq" :label="$t('common.table.seq')">
-            <InputNumber
+          </a-form-item>
+          <a-form-item name="seq" :label="$t('common.table.seq')">
+            <a-input-number
               v-model:value="addEditModel.seq"
               style="width: 100%"
               :placeholder="$t('common.formValidate.seq')" />
-          </FormItem>
-        </Form>
-      </Spin>
-    </Modal>
+          </a-form-item>
+        </a-form>
+      </a-spin>
+    </a-modal>
   </div>
 </template>
 
@@ -119,18 +119,7 @@ import type { Ref } from 'vue'
 import type { PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import {
-  message,
-  Modal,
-  Form,
-  FormItem,
-  Input,
-  InputNumber,
-  Select,
-  SelectOption,
-  Spin,
-} from 'ant-design-vue'
-import { Grid, Pager } from 'vxe-table'
+import { message, Modal } from 'ant-design-vue'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
 import dayjs from 'dayjs'
 
@@ -304,18 +293,6 @@ const addEditVueSupport = (loadData: Function, groupId: Ref<number | undefined>)
  */
 export default defineComponent({
   name: 'I18nList',
-  components: {
-    Grid,
-    Pager,
-    Modal,
-    Form,
-    FormItem,
-    Input,
-    InputNumber,
-    Select,
-    SelectOption,
-    Spin,
-  },
   props: {
     groupId: Number as PropType<number>,
   },

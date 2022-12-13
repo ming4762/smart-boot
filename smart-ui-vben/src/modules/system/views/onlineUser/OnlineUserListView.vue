@@ -1,6 +1,6 @@
 <template>
   <div class="full-height" style="padding: 10px">
-    <Grid
+    <vxe-grid
       v-bind="tableProps"
       :size="tableSizeConfig"
       border
@@ -19,7 +19,7 @@
         </a-button>
       </template>
       <template #table-expand="{ row }">
-        <Grid
+        <vxe-gird
           class="expand-wrapper"
           border
           highlight-hover-row
@@ -35,7 +35,7 @@
               {{ $t('system.views.onlineUser.button.offline') }}
             </a-button>
           </template>
-        </Grid>
+        </vxe-gird>
       </template>
       <template #toolbar_buttons>
         <a-form style="margin-left: 10px" layout="inline" :model="searchModel">
@@ -53,7 +53,7 @@
         </a-form>
       </template>
       <template #toolbar_tools></template>
-    </Grid>
+    </vxe-grid>
   </div>
 </template>
 
@@ -61,9 +61,8 @@
 import { createVNode, defineComponent, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import { Modal, message, Form, FormItem, Input } from 'ant-design-vue'
+import { Modal, message } from 'ant-design-vue'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
-import { Grid } from 'vxe-table'
 
 import ApiService from '/@/common/utils/ApiService'
 
@@ -83,12 +82,6 @@ const doLoadData = (parameter: any, searchParameter: any) => {
 
 export default defineComponent({
   name: 'OnlineUserListView',
-  components: {
-    Grid,
-    AForm: Form,
-    AFormItem: FormItem,
-    AInput: Input,
-  },
   setup() {
     const { t } = useI18n()
     // 表格信息

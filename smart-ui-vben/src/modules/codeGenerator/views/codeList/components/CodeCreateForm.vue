@@ -40,7 +40,7 @@ import { defineComponent, reactive, toRefs, watch, ref, onMounted } from 'vue'
 import type { PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import { message, Form, FormItem, Input, Transfer } from 'ant-design-vue'
+import { message } from 'ant-design-vue'
 
 import { TemplateType } from '/@/modules/codeGenerator/constants/DatabaseConstants'
 
@@ -60,12 +60,6 @@ const modelData = {
  */
 export default defineComponent({
   name: 'CodeCreateForm',
-  components: {
-    AForm: Form,
-    AFormItem: FormItem,
-    AInput: Input,
-    ATransfer: Transfer,
-  },
   props: {
     codeData: {
       type: Object as PropType<any>,

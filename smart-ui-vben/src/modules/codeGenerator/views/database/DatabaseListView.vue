@@ -4,7 +4,7 @@
       <a-layout class="full-height">
         <a-layout-content class="full-height">
           <div class="full-height" style="padding: 5px; background: white">
-            <Grid
+            <vxe-grid
               ref="gridRef"
               :size="tableSizeConfig"
               border
@@ -19,7 +19,7 @@
               :columns="columns"
               @current-change="handleCurrentChange">
               <template #pager>
-                <Pager
+                <vxe-pager
                   v-model:current-page="tablePage.currentPage"
                   v-model:page-size="tablePage.pageSize"
                   :page-sizes="[500, 1000, 2000, 5000]"
@@ -107,7 +107,7 @@
                   </template>
                 </a-dropdown>
               </template>
-            </Grid>
+            </vxe-grid>
           </div>
         </a-layout-content>
         <a-layout-sider
@@ -198,22 +198,6 @@ import { defineComponent, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { DownOutlined } from '@ant-design/icons-vue'
-import { Grid, Pager } from 'vxe-table'
-import {
-  Form,
-  FormItem,
-  Input,
-  Menu,
-  MenuItem,
-  Spin,
-  Modal,
-  Select,
-  SelectOption,
-  Layout,
-  LayoutContent,
-  Dropdown,
-  Divider,
-} from 'ant-design-vue'
 
 import {
   vueLoadData,
@@ -239,20 +223,6 @@ export default defineComponent({
     TemplateSelected,
     DownOutlined,
     SetUserGroup,
-    Grid,
-    Pager,
-    ASpin: Spin,
-    ALayout: Layout,
-    ALayoutContent: LayoutContent,
-    AInput: Input,
-    AForm: Form,
-    AFormItem: FormItem,
-    AMenu: Menu,
-    AMenuItem: MenuItem,
-    ASelect: Select,
-    ASelectOption: SelectOption,
-    AModal: Modal,
-    ADropdown: Dropdown,
   },
   setup() {
     const templateSelectedRef = ref()

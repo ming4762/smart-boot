@@ -45,7 +45,7 @@ export const useUserStore = defineStore({
       return this.token || getAuthCache<string>(TOKEN_KEY)
     },
     getRoleList(): string[] {
-      return this.roleList.length > 0 ? this.roleList : getAuthCache<string[]>(ROLES_KEY)
+      return (this.roleList.length > 0 ? this.roleList : getAuthCache<string[]>(ROLES_KEY)) || []
     },
     getSessionTimeout(): boolean {
       return !!this.sessionTimeout

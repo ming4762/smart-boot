@@ -12,7 +12,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 
-import { LayoutSeparate } from '/@/components/LayoutSeparate';
+import { LayoutSeparate } from '/@/components/LayoutSeparate'
 
 import DataDictGroup from './DataDictGroup.vue'
 import DataDictItem from './DataDictItem.vue'

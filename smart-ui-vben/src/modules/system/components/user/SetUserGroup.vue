@@ -1,13 +1,13 @@
 <template>
-  <Layout class="full-height">
-    <LayoutHeader style="height: 56px; background: white; text-align: center">
+  <a-layout class="full-height">
+    <a-layout-header style="height: 56px; background: white; text-align: center">
       <h3>{{ $t('system.views.userGroup.title') }}</h3>
-    </LayoutHeader>
-    <Divider style="margin: 0" />
-    <LayoutContent style="background: white">
+    </a-layout-header>
+    <a-divider style="margin: 0" />
+    <a-layout-content style="background: white">
       <div class="full-height">
         <a-spin class="full-height" :spinning="dataLoading">
-          <Table
+          <a-table
             class="full-height"
             size="small"
             row-key="groupId"
@@ -18,9 +18,9 @@
             :data-source="allUserGroup" />
         </a-spin>
       </div>
-    </LayoutContent>
+    </a-layout-content>
     <a-divider style="margin: 0" />
-    <LayoutFooter style="height: 50px; text-align: center; padding: 10px 0; background: white">
+    <a-layout-footer style="height: 50px; text-align: center; padding: 10px 0; background: white">
       <div style="padding: 0 5px">
         <a-button
           :disabled="!saveButtonVisible"
@@ -31,23 +31,13 @@
           {{ $t('common.button.save') }}
         </a-button>
       </div>
-    </LayoutFooter>
-  </Layout>
+    </a-layout-footer>
+  </a-layout>
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted, reactive, ref, toRefs, watch } from 'vue'
 import type { PropType } from 'vue'
-
-import {
-  Layout,
-  LayoutHeader,
-  Divider,
-  LayoutContent,
-  LayoutFooter,
-  Table,
-  Spin,
-} from 'ant-design-vue'
 
 import ApiService from '/@/common/utils/ApiService'
 
@@ -56,16 +46,6 @@ import ApiService from '/@/common/utils/ApiService'
  */
 export default defineComponent({
   name: 'SetUserGroup',
-  components: {
-    Layout,
-    LayoutHeader,
-    Divider,
-    LayoutContent,
-    LayoutFooter,
-    Table,
-    ADivider: Divider,
-    ASpin: Spin,
-  },
   props: {
     saveButtonVisible: {
       type: Boolean as PropType<boolean>,

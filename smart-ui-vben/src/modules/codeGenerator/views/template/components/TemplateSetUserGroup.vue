@@ -42,31 +42,13 @@ import type { PropType } from 'vue'
 import ApiService from '/@/common/utils/ApiService'
 import { isSuperAdmin, getCurrentUserId } from '/@/common/auth/AuthUtils'
 
-import {
-  LayoutContent,
-  message,
-  LayoutFooter,
-  LayoutHeader,
-  Layout,
-  Table,
-  Divider,
-  Spin,
-} from 'ant-design-vue'
+import { message } from 'ant-design-vue'
 
 /**CodeListView
  * 模板设置关联的用户组
  */
 export default defineComponent({
   name: 'TemplateSetUserGroup',
-  components: {
-    ALayoutContent: LayoutContent,
-    ALayoutFooter: LayoutFooter,
-    ALayoutHeader: LayoutHeader,
-    ALayout: Layout,
-    ATable: Table,
-    ADivider: Divider,
-    ASpin: Spin,
-  },
   props: {
     template: {
       type: Object as PropType<any>,

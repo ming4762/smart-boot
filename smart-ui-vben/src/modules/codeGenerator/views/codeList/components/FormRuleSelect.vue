@@ -1,6 +1,6 @@
 <template>
   <a-modal :visible="visible" width="1000px" v-bind="$attrs" title="配置验证规则" @ok="handleOk">
-    <Grid
+    <vxe-grid
       ref="gridRef"
       border
       :edit-rules="editValidRules"
@@ -15,7 +15,7 @@
       <template #table-options="{ row }">
         <a-button @click="() => handleDeleteRow(row)">删除</a-button>
       </template>
-    </Grid>
+    </vxe-grid>
   </a-modal>
 </template>
 
@@ -24,7 +24,6 @@ import { defineComponent, ref, getCurrentInstance } from 'vue'
 import type { PropType } from 'vue'
 import type { VxeTableInstance, VxeTableDefines } from 'vxe-table'
 import { message } from 'ant-design-vue'
-import { Grid } from 'vxe-table'
 
 import { ruleList } from './PageSettingSupport'
 
@@ -48,9 +47,6 @@ const validateData = (dataList: Array<any>) => {
 
 export default defineComponent({
   name: 'FormRuleSelect',
-  components: {
-    Grid,
-  },
   props: {
     visible: {
       type: Boolean,

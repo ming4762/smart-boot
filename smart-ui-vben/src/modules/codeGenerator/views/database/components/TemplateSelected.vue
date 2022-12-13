@@ -12,8 +12,6 @@
 import { defineComponent, ref, toRefs, onMounted } from 'vue'
 import type { PropType } from 'vue'
 
-import { Transfer } from 'ant-design-vue'
-
 import ApiService from '/@/common/utils/ApiService'
 
 /**
@@ -21,9 +19,6 @@ import ApiService from '/@/common/utils/ApiService'
  */
 export default defineComponent({
   name: 'TemplateSelected',
-  components: {
-    ATransfer: Transfer,
-  },
   props: {
     templateType: {
       type: String as PropType<string>,

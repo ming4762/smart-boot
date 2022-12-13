@@ -14,5 +14,5 @@ module.exports = {
   endOfLine: 'auto',
   printWidth: 100,
   htmlWhitespaceSensitivity: 'ignore',
-  bracketSameLine: true
+  bracketSameLine: true,
 }
