@@ -1,7 +1,7 @@
 <template>
   <div class="full-height">
     <div class="table-container">
-      <Grid
+      <vxe-grid
         ref="gridRef"
         highlight-current-row
         stripe
@@ -29,7 +29,7 @@
             </ContextMenu>
           </div>
         </template>
-      </Grid>
+      </vxe-grid>
     </div>
     <div class="button-container">
       <a-button class="button" block type="primary" @click="() => handleAddEdit(true, null)">
@@ -70,8 +70,6 @@ import { EditOutlined, DeleteOutlined } from '@ant-design/icons-vue'
 import { ContextMenu } from '/@/components/ContextMenu'
 import { useVxeTable, useAddEdit, useVxeDelete } from '/@/hooks/page/CrudHooks'
 import ApiService from '/@/common/utils/ApiService'
-import { Form, FormItem, Input, InputNumber, Menu, MenuItem, Modal, Spin } from 'ant-design-vue'
-import { Grid } from 'vxe-table'
 
 const handleLoadData = async () => {
   const result = [
@@ -103,15 +101,6 @@ export default defineComponent({
     EditOutlined,
     DeleteOutlined,
     ContextMenu,
-    AModal: Modal,
-    Grid,
-    AMenuItem: MenuItem,
-    AInput: Input,
-    AForm: Form,
-    AFormItem: FormItem,
-    AMenu: Menu,
-    AInputNumber: InputNumber,
-    ASpin: Spin,
   },
   emits: ['change'],
   setup() {

@@ -1,7 +1,7 @@
 <template>
   <div id="codeListContainer" class="code-container full-height">
     <div class="full-height" style="padding: 10px">
-      <Grid
+      <vxe-grid
         id="generator_views_codeList"
         ref="gridRef"
         :data="data"
@@ -13,7 +13,7 @@
         :loading="tableLoading"
         v-bind="tableAttrs">
         <template #pager>
-          <Pager
+          <vxe-pager
             v-model:current-page="tablePage.currentPage"
             v-model:page-size="tablePage.pageSize"
             :page-sizes="[500, 1000, 2000, 5000]"
@@ -86,7 +86,7 @@
             </template>
           </a-dropdown>
         </template>
-      </Grid>
+      </vxe-grid>
       <a-modal
         v-model:visible="addEditModalVisible"
         :body-style="{ height: 'calc(100% - 110px)' }"
@@ -396,23 +396,6 @@ import {
   vueRelateAddendumTable,
 } from './CodeListViewSupport'
 import dayjs from 'dayjs'
-import { Grid, Pager } from 'vxe-table'
-import {
-  Form,
-  FormItem,
-  Input,
-  Modal,
-  Select,
-  SelectOption,
-  Spin,
-  Tabs,
-  TabPane,
-  Col,
-  Tag, Menu, MenuItem, Dropdown,
-  ListItem, Radio,
-  RadioGroup,
-  List,
-} from 'ant-design-vue'
 
 const tableTypeList: any = {
   10: 'generator.views.code.title.tableType.single',
@@ -435,26 +418,6 @@ export default defineComponent({
     PageSearchSetting,
     PageAddendumTableChose,
     PlusOutlined,
-    Grid,
-    Pager,
-    AForm: Form,
-    AFormItem: FormItem,
-    AInput: Input,
-    ASelect: Select,
-    ASelectOption: SelectOption,
-    ASpin: Spin,
-    AModal: Modal,
-    ATabs: Tabs,
-    ATabPane: TabPane,
-    ACol: Col,
-    ATag: Tag,
-    AMenu: Menu,
-    AMenuItem: MenuItem,
-    ADropdown: Dropdown,
-    AList: List,
-    AListItem: ListItem,
-    ARadio: Radio,
-    ARadioGroup: RadioGroup,
   },
   setup() {
     const router = useRouter()

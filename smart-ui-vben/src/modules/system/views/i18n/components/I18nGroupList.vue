@@ -1,7 +1,7 @@
 <template>
   <div class="full-height">
     <div class="table-container">
-      <Grid
+      <vxe-grid
         highlight-current-row
         stripe
         height="auto"
@@ -14,21 +14,21 @@
             <ContextMenu event="contextmenu">
               {{ row.groupName }}
               <template #menu>
-                <Menu @click="({ key, domEvent }) => handleMenuClick(key, row.groupId, domEvent)">
-                  <MenuItem key="edit">
+                <a-menu @click="({ key, domEvent }) => handleMenuClick(key, row.groupId, domEvent)">
+                  <a-menu-item key="edit">
                     <EditOutlined />
                     &nbsp;&nbsp;{{ $t('common.button.edit') }}
-                  </MenuItem>
-                  <MenuItem key="delete">
+                  </a-menu-item>
+                  <a-menu-item key="delete">
                     <DeleteOutlined />
                     &nbsp;&nbsp;{{ $t('common.button.delete') }}
-                  </MenuItem>
-                </Menu>
+                  </a-menu-item>
+                </a-menu>
               </template>
             </ContextMenu>
           </div>
         </template>
-      </Grid>
+      </vxe-grid>
     </div>
     <div class="button-container">
       <a-button
@@ -41,32 +41,32 @@
       </a-button>
     </div>
 
-    <Modal
+    <a-modal
       v-model:visible="modalVisible"
       :title="computedTitle"
       :confirm-loading="saveLoading"
       @ok="handleSaveUpdate">
-      <Spin :spinning="getLoading">
-        <Form
+      <a-spin :spinning="getLoading">
+        <a-form
           ref="formRef"
           :label-col="{ span: 6 }"
           :wrapper-col="{ span: 17 }"
           :rules="rules"
           :model="editModel">
-          <FormItem name="groupName" :label="$t('system.views.i18n.group.groupName')">
-            <Input
+          <a-form-item name="groupName" :label="$t('system.views.i18n.group.groupName')">
+            <a-input
               v-model:value="editModel.groupName"
               :placeholder="$t('system.views.i18n.group.groupNameValidate')" />
-          </FormItem>
-          <FormItem name="seq" :label="$t('system.views.i18n.group.seq')">
-            <InputNumber
+          </a-form-item>
+          <a-form-item name="seq" :label="$t('system.views.i18n.group.seq')">
+            <a-input-number
               v-model:value="editModel.seq"
               style="width: 120px"
               :placeholder="$t('system.views.i18n.group.seqValidate')" />
-          </FormItem>
-        </Form>
-      </Spin>
-    </Modal>
+          </a-form-item>
+        </a-form>
+      </a-spin>
+    </a-modal>
   </div>
 </template>
 
@@ -74,18 +74,7 @@
 import { defineComponent, ref, onMounted, computed, createVNode } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import {
-  message,
-  Modal,
-  Menu,
-  MenuItem,
-  Form,
-  FormItem,
-  Input,
-  InputNumber,
-  Spin,
-} from 'ant-design-vue'
-import { Grid } from 'vxe-table'
+import { message, Modal } from 'ant-design-vue'
 import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons-vue'
 
 import { ContextMenu } from '/@/components/ContextMenu'
@@ -197,15 +186,6 @@ export default defineComponent({
     ContextMenu,
     EditOutlined,
     DeleteOutlined,
-    Modal,
-    Menu,
-    MenuItem,
-    Form,
-    FormItem,
-    Input,
-    InputNumber,
-    Spin,
-    Grid,
   },
   emits: ['change'],
   // @ts-ignore

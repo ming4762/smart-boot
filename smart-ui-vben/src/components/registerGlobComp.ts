@@ -1,7 +1,75 @@
 import type { App } from 'vue'
 import { Button } from './Button'
-import { Input, Layout } from 'ant-design-vue'
+import {
+  Alert,
+  Checkbox,
+  DatePicker,
+  Descriptions,
+  Divider,
+  Drawer,
+  Dropdown,
+  Input,
+  Layout,
+  List,
+  Modal,
+  Radio,
+  Select,
+  Switch,
+  Table,
+  TimePicker,
+  Tree,
+  TreeSelect,
+  Tag,
+  Tooltip,
+  Upload,
+  Transfer,
+  Menu,
+  Avatar,
+  Tabs,
+  Form,
+  Row,
+  Col,
+  Spin,
+  Collapse,
+  Slider,
+  InputNumber,
+  Rate,
+} from 'ant-design-vue'
 
 export function registerGlobComp(app: App) {
-  app.use(Input).use(Button).use(Layout)
+  app
+    .use(Button)
+    .use(Select)
+    .use(Alert)
+    .use(Checkbox)
+    .use(DatePicker)
+    .use(TimePicker)
+    .use(Radio)
+    .use(Switch)
+    .use(List)
+    .use(Descriptions)
+    .use(Tree)
+    .use(TreeSelect)
+    .use(Table)
+    .use(Divider)
+    .use(Modal)
+    .use(Drawer)
+    .use(Dropdown)
+    .use(Tag)
+    .use(Tooltip)
+    .use(Upload)
+    .use(Transfer)
+    .use(Avatar)
+    .use(Menu)
+    .use(Tabs)
+    .use(Form)
+    .use(Input)
+    .use(Row)
+    .use(Col)
+    .use(Spin)
+    .use(Layout)
+    .use(Collapse)
+    .use(Slider)
+    .use(InputNumber)
+    .use(Rate)
 }

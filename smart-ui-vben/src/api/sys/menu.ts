@@ -1,5 +1,5 @@
 import { defHttp } from '/@/utils/http/axios'
-import { getMenuListResultModel } from './model/menuModel'
+import { getMenuListResultModel, RouteItem } from './model/menuModel'
 import { useLocaleStore } from '/@/store/modules/locale'
 import TreeUtils from '/@/utils/TreeUtils'
 
@@ -24,16 +24,26 @@ export const getMenuList = async () => {
     data: locales,
   })
   const routeMenuList: getMenuListResultModel = menuList.map((item) => {
-    const { url, functionName, locales, icon, functionId, parentId, component } = item
+    const {
+      url,
+      functionName,
+      locales,
+      icon,
+      functionId,
+      parentId,
+      component,
+      componentName,
+      redirect,
+    } = item
     // 兼容icon
     let compatibleIcon = icon
     if (compatibleIcon && compatibleIcon.indexOf(':') === -1) {
       compatibleIcon = humpToLine(compatibleIcon)
       compatibleIcon = 'ant-design:' + compatibleIcon
     }
-    return {
+    const routeItem: RouteItem = {
       path: url,
-      name: functionName,
+      name: componentName || functionName,
       component,
       meta: {
         title: functionName,
@@ -43,6 +53,10 @@ export const getMenuList = async () => {
         parentKey: parentId,
       },
     }
+    if (redirect) {
+      routeItem.redirect = redirect
+    }
+    return routeItem
   })
   // 构建树
   return TreeUtils.convertList2Tree(

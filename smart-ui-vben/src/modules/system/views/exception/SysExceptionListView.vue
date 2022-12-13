@@ -1,6 +1,6 @@
 <template>
   <div class="full-height" style="padding: 10px">
-    <Grid
+    <vxe-grid
       ref="gridRef"
       v-bind="tableProps"
       :size="tableSizeConfig"
@@ -13,7 +13,7 @@
       stripe
       highlight-hover-row>
       <template #pager>
-        <Pager
+        <vxe-pager
           v-bind="pageProps"
           :page-sizes="[500, 1000, 2000, 5000]"
           :layouts="[
@@ -99,7 +99,7 @@
           </template>
         </a-dropdown>
       </template>
-    </Grid>
+    </vxe-grid>
 
     <a-modal v-model:visible="stackTraceModalVisible" width="800px" title="堆栈信息">
       <a-spin :spinning="stackTraceLoading">
@@ -118,19 +118,6 @@ import { defineComponent, onMounted, ref } from 'vue'
 
 import { DownOutlined } from '@ant-design/icons-vue'
 import dayjs from 'dayjs'
-import { Grid, Pager } from 'vxe-table'
-import {
-  Form,
-  FormItem,
-  Input,
-  Menu,
-  MenuItem,
-  Select,
-  SelectOption,
-  Dropdown,
-  Spin,
-  Modal,
-} from 'ant-design-vue'
 
 import { useVxeTable } from '/@/hooks/page/CrudHooks'
 import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
@@ -142,18 +129,6 @@ export default defineComponent({
   name: 'SysExceptionListView',
   components: {
     DownOutlined,
-    ADropdown: Dropdown,
-    Grid,
-    ASpin: Spin,
-    Pager,
-    AForm: Form,
-    AFormItem: FormItem,
-    AInput: Input,
-    ASelect: Select,
-    ASelectOption: SelectOption,
-    AMenu: Menu,
-    AModal: Modal,
-    AMenuItem: MenuItem,
   },
   setup() {
     const gridRef = ref()

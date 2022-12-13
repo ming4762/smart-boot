@@ -5,13 +5,13 @@
     </a-layout-header>
     <a-divider style="margin: 0" />
     <a-layout-content style="background: white; overflow: auto">
-      <Spin :spinning="dataLoading">
-        <Tree
+      <a-spin :spinning="dataLoading">
+        <a-tree
           v-model:checkedKeys="checkedKeysModel"
           check-strictly
           :tree-data="functionTreeData"
           checkable />
-      </Spin>
+      </a-spin>
     </a-layout-content>
     <a-divider style="margin: 0" />
     <a-layout-footer style="height: 50px; text-align: center; padding: 10px 0; background: white">
@@ -33,16 +33,7 @@
 import { defineComponent, ref, onMounted, toRefs, watch } from 'vue'
 import type { PropType } from 'vue'
 
-import {
-  message,
-  Layout,
-  LayoutHeader,
-  LayoutFooter,
-  Divider,
-  LayoutContent,
-  Tree,
-  Spin,
-} from 'ant-design-vue'
+import { message } from 'ant-design-vue'
 
 import TreeUtils from '/@/utils/TreeUtils'
 import ApiService from '/@/common/utils/ApiService'
@@ -54,15 +45,6 @@ import { SystemPermissions } from '/@/modules/system/constants/SystemConstants'
  */
 export default defineComponent({
   name: 'RoleSetFunction',
-  components: {
-    ALayout: Layout,
-    ALayoutHeader: LayoutHeader,
-    ALayoutFooter: LayoutFooter,
-    ALayoutContent: LayoutContent,
-    ADivider: Divider,
-    Tree,
-    Spin,
-  },
   props: {
     roleId: {
       type: Number as PropType<number>,

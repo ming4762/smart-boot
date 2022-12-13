@@ -88,7 +88,7 @@
       </a-form>
     </div>
     <div style="height: calc(100% - 90px)">
-      <Grid
+      <vxe-grid
         v-bind="tableProps"
         height="auto"
         :size="tableSizeConfig"
@@ -98,7 +98,7 @@
         show-overflow="tooltip"
         stripe>
         <template #pager>
-          <Pager
+          <vxe-pager
             v-bind="pageProps"
             :page-sizes="[500, 1000, 2000, 5000]"
             :layouts="[
@@ -130,7 +130,7 @@
             {{ row.useTime }}
           </a-tag>
         </template>
-      </Grid>
+      </vxe-grid>
     </div>
     <a-modal
       v-model:visible="detailsModalVisible"
@@ -196,22 +196,6 @@
 import { defineComponent, onMounted } from 'vue'
 
 import dayjs from 'dayjs'
-import {
-  Descriptions,
-  DescriptionsItem,
-  Modal,
-  Spin,
-  Tag,
-  Form,
-  FormItem,
-  Row,
-  Col,
-  RangePicker,
-  Input,
-  Select,
-  SelectOption,
-} from 'ant-design-vue'
-import { Grid, Pager } from 'vxe-table'
 
 import { useVxeTable } from '/@/hooks/page/CrudHooks'
 import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
@@ -249,24 +233,7 @@ const doLoadData = async (parameter: any, searchParameter: any) => {
 }
 
 export default defineComponent({
-  components: {
-    ADescriptions: Descriptions,
-    ASpin: Spin,
-    AModal: Modal,
-    AForm: Form,
-    ARow: Row,
-    ACol: Col,
-    AFormItem: FormItem,
-    AInput: Input,
-    ASelect: Select,
-    ASelectOption: SelectOption,
-    ADescriptionsItem: DescriptionsItem,
-    ATag: Tag,
-    ARangePicker: RangePicker,
-    Grid,
-    Pager,
-  },
-  name: 'LogListView',
+  name: 'InterfaceLogListView',
   setup() {
     const { tableProps, loadData, searchModel, pageProps, handleReset } = useVxeTable(doLoadData, {
       defaultSorter: {

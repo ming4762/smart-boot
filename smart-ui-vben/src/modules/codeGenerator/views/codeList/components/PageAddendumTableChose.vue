@@ -6,7 +6,7 @@
     :size="tableSizeConfig"
     v-bind="$attrs"
     @ok="handleOk">
-    <Grid
+    <vxe-grid
       ref="tableRef"
       :data="data"
       :loading="dataLoading"
@@ -31,7 +31,7 @@
       <template #table-relatedColumn="{ row }">
         <a-input v-model:value="row.relatedColumn" :size="formSizeConfig" />
       </template>
-    </Grid>
+    </vxe-grid>
   </a-modal>
 </template>
 
@@ -40,8 +40,7 @@ import { defineComponent, ref, getCurrentInstance, watch, toRefs, computed } fro
 import type { PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import { Form, FormItem, Input, message, Modal } from 'ant-design-vue'
-import { Grid } from 'vxe-table'
+import { message } from 'ant-design-vue'
 
 import ApiService from '/@/common/utils/ApiService'
 import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
@@ -87,13 +86,6 @@ const columns = [
  */
 export default defineComponent({
   name: 'PageAddendumTableChose',
-  components: {
-    Grid,
-    AForm: Form,
-    AFormItem: FormItem,
-    AInput: Input,
-    AModal: Modal,
-  },
   props: {
     visible: {
       type: Boolean,

@@ -1,6 +1,6 @@
 <template>
   <div class="full-height">
-    <Grid
+    <vxe-grid
       v-bind="$attrs"
       ref="tableRef"
       :size="tableSizeConfig"
@@ -93,7 +93,7 @@
       <template #table-used="{ row }">
         <a-checkbox v-model:checked="row.used" :disabled="!row.visible" :size="formSizeConfig" />
       </template>
-    </Grid>
+    </vxe-grid>
     <PageAddendumTableChose
       v-model:visible="choseAddendumModalVisible"
       :select-table-list="currentRow.selectTableList == null ? [] : currentRow.selectTableList"
@@ -125,8 +125,6 @@ import {
   vueChoseSelectTableSupport,
   vueSetRulesSupport,
 } from './PageSettingSupport'
-import { Grid } from 'vxe-table'
-import { Input, Select, SelectOption, Checkbox } from 'ant-design-vue'
 
 const copyField = [
   'columnName',
@@ -170,11 +168,6 @@ export default defineComponent({
     PlusOutlined,
     PageAddendumTableChose,
     FormRuleSelect,
-    Grid,
-    AInput: Input,
-    ASelect: Select,
-    ASelectOption: SelectOption,
-    ACheckbox: Checkbox,
   },
   props: {
     tableData: {

@@ -6,7 +6,7 @@
       </a-layout-sider>
       <a-layout-content class="full-height">
         <div class="full-height" style="padding: 5px; background: white">
-          <Grid
+          <vxe-grid
             ref="gridRef"
             highlight-current-row
             :data="data"
@@ -21,7 +21,7 @@
             :columns="columns"
             @current-change="handleCurrentChange">
             <template #pager>
-              <Pager
+              <vxe-pager
                 v-model:current-page="tablePage.currentPage"
                 v-model:page-size="tablePage.pageSize"
                 :page-sizes="[500, 1000, 2000, 5000]"
@@ -79,7 +79,7 @@
                 </template>
               </a-dropdown>
             </template>
-          </Grid>
+          </vxe-grid>
         </div>
       </a-layout-content>
       <a-layout-sider theme="light" class="layout-user-group" width="200px">
@@ -191,18 +191,7 @@ import { useI18n } from 'vue-i18n'
 import type { VxeTableInstance } from 'vxe-table'
 
 import { DownOutlined, ExclamationCircleOutlined } from '@ant-design/icons-vue'
-import {
-  Col, Dropdown,
-  Form,
-  FormItem,
-  Layout,
-  LayoutContent, Menu, MenuItem,
-  message,
-  Modal,
-  Row,
-  Select,
-  SelectOption, Spin,
-} from 'ant-design-vue'
+import { message, Modal } from 'ant-design-vue'
 
 import { Codemirror } from '/@/components/Codemirror'
 
@@ -216,7 +205,6 @@ import { TemplateType as templateTypeConstants } from '/@/modules/codeGenerator/
 import dayjs from 'dayjs'
 
 import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
-import { Grid, Pager } from 'vxe-table'
 
 /**
  * 模板管理页面
@@ -228,21 +216,6 @@ export default defineComponent({
     DownOutlined,
     TemplateSetUserGroup,
     TemplateGroup,
-    Grid,
-    Pager,
-    ASelect: Select,
-    ASelectOption: SelectOption,
-    ARow: Row,
-    ACol: Col,
-    AForm: Form,
-    AFormItem: FormItem,
-    ALayout: Layout,
-    ALayoutContent: LayoutContent,
-    AModal: Modal,
-    AMenu: Menu,
-    AMenuItem: MenuItem,
-    ASpin: Spin,
-    ADropdown: Dropdown,
   },
   setup() {
     const gridRef = ref({} as VxeTableInstance)

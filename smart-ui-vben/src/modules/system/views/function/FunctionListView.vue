@@ -1,6 +1,6 @@
 <template>
   <div class="full-height" style="padding: 10px">
-    <Grid
+    <vxe-grid
       ref="gridRef"
       :columns="columns"
       resizable
@@ -65,7 +65,7 @@
           {{ getTagData(row.functionType).text }}
         </a-tag>
       </template>
-    </Grid>
+    </vxe-grid>
     <a-modal
       v-model:visible="addEditModalVisible"
       width="860px"
@@ -244,26 +244,6 @@ import { defineComponent, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { DownOutlined, EditOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons-vue'
-import { Grid } from 'vxe-table'
-import {
-  Dropdown,
-  Row,
-  Col,
-  Form,
-  FormItem,
-  Input,
-  InputNumber,
-  Switch,
-  Menu,
-  MenuItem,
-  Tag,
-  Radio,
-  RadioGroup,
-  Spin,
-  Modal,
-  Select,
-  SelectOption,
-} from 'ant-design-vue'
 
 import { vueLoadFunctionList, vueAddEdit, vueDelete } from './FunctionListSupport'
 import { SystemPermissions } from '../../constants/SystemConstants'
@@ -281,24 +261,6 @@ export default defineComponent({
     EditOutlined,
     PlusOutlined,
     DeleteOutlined,
-    Grid,
-    ADropdown: Dropdown,
-    ARow: Row,
-    ACol: Col,
-    AForm: Form,
-    AFormItem: FormItem,
-    AInput: Input,
-    AInputNumber: InputNumber,
-    ASwitch: Switch,
-    ASelect: Select,
-    ASelectOption: SelectOption,
-    AMenu: Menu,
-    AMenuItem: MenuItem,
-    ATag: Tag,
-    ARadio: Radio,
-    ARadioGroup: RadioGroup,
-    ASpin: Spin,
-    AModal: Modal,
   },
   setup() {
     const gridRef = ref()

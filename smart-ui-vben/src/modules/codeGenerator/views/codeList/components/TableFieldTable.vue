@@ -1,6 +1,6 @@
 <template>
   <div class="full-height">
-    <Grid align="center" stripe v-bind="$attrs" :size="tableSizeConfig" border :columns="columns">
+    <vxe-grid align="center" stripe v-bind="$attrs" :size="tableSizeConfig" border :columns="columns">
       <template #table-nullable="{ row }">
         <a-switch :size="formSizeConfig" disabled :checked="row.nullable === 1" />
       </template>
@@ -10,7 +10,7 @@
       <template #table-indexed="{ row }">
         <a-switch :size="formSizeConfig" disabled :checked="row.indexed" />
       </template>
-    </Grid>
+    </vxe-grid>
   </div>
 </template>
 
@@ -18,18 +18,12 @@
 import { defineComponent } from 'vue'
 
 import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
-import { Grid } from 'vxe-table'
-import { Switch } from 'ant-design-vue'
 
 /**
  * 数据库字段信息
  */
 export default defineComponent({
   name: 'TableFieldTable',
-  components: {
-    Grid,
-    ASwitch: Switch,
-  },
   setup() {
     const sizeConfigHoops = useSizeSetting()
     return {
