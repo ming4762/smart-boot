@@ -1,0 +1,126 @@
+<template>
+  <a-modal
+    :z-index="10000"
+    :visible="computedModalVisible"
+    :footer="null"
+    @cancel="handleHideModal">
+    <div class="exception-modal">
+      <div class="exception-modal-body">
+        <CloseCircleOutlined class="icon" />
+        <span class="title">{{ $t('component.error.exceptionTitle') }}</span>
+        <div class="content">
+          <span style="white-space: pre">NO: {{ computedNoList.join(' ') }}</span>
+          <a-textarea
+            v-model:value="model.feedbackMessage"
+            style="margin-top: 10px"
+            :placeholder="$t('common.formValidate.enter')"
+            :rows="5" />
+        </div>
+      </div>
+      <div class="exception-modal-button">
+        <a-button @click="handleHideModal">{{ $t('common.button.cancel') }}</a-button>
+        <a-button
+          type="primary"
+          :loading="submitLoading"
+          style="margin-left: 5px"
+          @click="handleSubmit">
+          {{ $t('common.button.submit') }}
+        </a-button>
+      </div>
+    </div>
+  </a-modal>
+</template>
+
+<script lang="ts">
+import { defineComponent, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { storeToRefs } from 'pinia'
+
+import { CloseCircleOutlined } from '@ant-design/icons-vue'
+
+import { useSystemExceptionStore } from '/@/store/modules/exception'
+
+import ApiService from '/@/common/utils/ApiService'
+import { successMessage } from '/@/common/utils/SystemNotice'
+
+export default defineComponent({
+  name: 'ExceptionModal',
+  components: {
+    CloseCircleOutlined,
+  },
+  setup() {
+    const { t } = useI18n()
+    const systemExceptionStore = useSystemExceptionStore()
+    const { modalVisible, noList } = storeToRefs(systemExceptionStore)
+
+    const model = ref<any>({})
+    const submitLoading = ref(false)
+    /**
+     * 隐藏弹窗
+     */
+    const handleHideModal = () => {
+      systemExceptionStore.handleHideExceptionModal()
+    }
+    /**
+     * 提交操作
+     */
+    const handleSubmit = async () => {
+      submitLoading.value = true
+      try {
+        await ApiService.postAjax('sys/exception/feedback', {
+          idList: noList.value,
+          ...model.value,
+        })
+        handleHideModal()
+        successMessage(t('common.message.submitSuccess'))
+      } catch (e) {
+        console.log(e)
+      } finally {
+        submitLoading.value = false
+      }
+    }
+    return {
+      computedModalVisible: modalVisible,
+      handleHideModal,
+      computedNoList: noList,
+      model,
+      handleSubmit,
+      submitLoading,
+    }
+  },
+})
+</script>
+
+<style lang="less" scoped>
+.exception-modal {
+  padding: 15px;
+  &:after {
+    content: '';
+    display: block;
+    clear: both;
+  }
+  .exception-modal-body {
+    .icon {
+      color: red;
+      font-size: 22px;
+      margin-right: 16px;
+    }
+    .title {
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 1.4;
+      display: inline;
+      overflow: hidden;
+      color: #000000d9;
+    }
+    .content {
+      margin-top: 8px;
+      font-size: 14px;
+    }
+  }
+  .exception-modal-button {
+    float: right;
+    margin-top: 24px;
+  }
+}
+</style>

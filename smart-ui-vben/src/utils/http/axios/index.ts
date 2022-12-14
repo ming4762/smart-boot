@@ -21,7 +21,7 @@ import { useLocaleStore } from '/@/store/modules/locale'
 
 const globSetting = useGlobSetting()
 const urlPrefix = globSetting.urlPrefix
-const { createMessage, createErrorModal } = useMessage()
+const { createMessage, createErrorModal, createError500Modal } = useMessage()
 
 /**
  * @description: 数据处理，方便区分多种处理方式
@@ -57,16 +57,21 @@ const transform: AxiosTransform = {
     if (hasSuccess) {
       return result
     }
-
     // 在此处根据自己项目的实际情况对不同的code执行不同的操作
     // 如果不希望中断当前请求，请return数据，否则直接抛出异常即可
     let timeoutMsg = ''
+    let continueDeal = true
     switch (code) {
       case ResultEnum.TIMEOUT:
         timeoutMsg = t('sys.api.timeoutMessage')
         const userStore = useUserStoreWithOut()
         userStore.setToken(undefined)
         userStore.logout(true)
+        break
+      case ResultEnum.ERROR:
+        // 500错误
+        createError500Modal(data)
+        continueDeal = false
         break
       default:
         if (message) {
@@ -76,10 +81,12 @@ const transform: AxiosTransform = {
 
     // errorMessageMode=‘modal’的时候会显示modal错误弹窗，而不是消息提示，用于一些比较重要的错误
     // errorMessageMode='none' 一般是调用时明确表示不希望自动弹出错误提示
-    if (options.errorMessageMode === 'modal') {
-      createErrorModal({ title: t('sys.api.errorTip'), content: timeoutMsg })
-    } else if (options.errorMessageMode === 'message') {
-      createMessage.error(timeoutMsg)
+    if (continueDeal) {
+      if (options.errorMessageMode === 'modal') {
+        createErrorModal({ title: t('sys.api.errorTip'), content: timeoutMsg })
+      } else if (options.errorMessageMode === 'message') {
+        createMessage.error(timeoutMsg)
+      }
     }
 
     throw new Error(timeoutMsg || t('sys.api.apiRequestFailed'))
@@ -185,7 +192,6 @@ const transform: AxiosTransform = {
       if (err?.includes('Network Error')) {
         errMessage = t('sys.api.networkExceptionMsg')
       }
-
       if (errMessage) {
         if (errorMessageMode === 'modal') {
           createErrorModal({ title: t('sys.api.errorTip'), content: errMessage })

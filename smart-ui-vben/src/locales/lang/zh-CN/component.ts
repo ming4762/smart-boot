@@ -131,4 +131,7 @@ export default {
     dragText: '请按住滑块拖动',
     successText: '验证通过',
   },
+  error: {
+    exceptionTitle: '系统发生错误，请提交错误，并联系管理员',
+  },
 }

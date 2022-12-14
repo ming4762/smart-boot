@@ -6,6 +6,8 @@ import { InfoCircleFilled, CheckCircleFilled, CloseCircleFilled } from '@ant-des
 import { NotificationArgsProps, ConfigProps } from 'ant-design-vue/lib/notification'
 import { useI18n } from './useI18n'
 import { isString } from '/@/utils/is'
+import { Result } from '/#/axios'
+import { useSystemExceptionStore } from '/@/store/modules/exception'
 
 export interface NotifyApi {
   info(config: NotificationArgsProps): void
@@ -102,21 +104,35 @@ function createWarningModal(options: ModalOptionsPartial) {
   return Modal.warning(createModalOptions(options, 'warning'))
 }
 
+/**
+ * 成功
+ * @param msg
+ */
+const successMessage = ({ msg }: any) => {
+  Message.success(msg)
+}
+
+/**
+ * 500错误弹窗
+ * @param e
+ */
+const createError500Modal = (e: Result) => {
+  const { exceptionNo } = e
+  const systemExceptionStore = useSystemExceptionStore()
+  systemExceptionStore.handleShowExceptionModal(exceptionNo!)
+}
+
 notification.config({
   placement: 'topRight',
   duration: 3,
 })
 
-const error500Handler = (e) => {
-  console.error(e)
-}
-
-const errorMessage = (e: any) => {
+const errorMessage = (e: Result) => {
   console.error(e)
   const code = e.code
   switch (code) {
     case 500: {
-      error500Handler(e)
+      createError500Modal(e)
       break
     }
     default:
@@ -137,5 +153,7 @@ export function useMessage() {
     createInfoModal,
     createWarningModal,
     errorMessage,
+    createError500Modal,
+    successMessage,
   }
 }
