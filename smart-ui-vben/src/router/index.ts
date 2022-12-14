@@ -3,8 +3,6 @@ import type { App } from 'vue'
 
 import { createRouter, createWebHashHistory } from 'vue-router'
 import { basicRoutes } from './routes'
-import { useUserStore } from '/@/store/modules/user'
-import { PageEnum } from '/@/enums/pageEnum'
 
 // 白名单应该包含基本静态路由
 const WHITE_NAME_LIST: string[] = []
@@ -42,21 +40,3 @@ export function resetRouter() {
 export function setupRouter(app: App<Element>) {
   app.use(router)
 }
-
-let routeLoad = false
-
-// @ts-ignore
-router.beforeEach(async function (to, from, next) {
-  if (to.path === PageEnum.BASE_LOGIN) {
-    next()
-  } else if (!routeLoad) {
-    const userStore = useUserStore()
-    await userStore.initRoute()
-    routeLoad = true
-    next({
-      path: to.path,
-    })
-  } else {
-    next()
-  }
-})

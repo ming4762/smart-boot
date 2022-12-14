@@ -7,6 +7,7 @@ import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
 import ApiService from '/@/common/utils/ApiService'
 
 import { isSuperAdmin, getCurrentUserId, applyTempToken } from '/@/common/auth/AuthUtils'
+import { useMessage } from '/@/hooks/web/useMessage'
 
 const defaultSearchModel = {
   connectionName: '',
@@ -309,13 +310,18 @@ export const vueCreateDict = (row: Ref, t: Function) => {
       message.error(t('generator.views.database.validate.template'))
       return false
     }
-    const tempToken = await applyTempToken('db:connection:createDic', false)
-    selectTemplateIdList.forEach((templateId) => {
-      const url = `${ApiService.getApiUrl()}public/db/createDic?connectionId=${
-        row.value.id
-      }&templateId=${templateId}&access-token=${tempToken}`
-      window.open(url)
-    })
+    try {
+      const tempToken = await applyTempToken('db:connection:createDic', false)
+      selectTemplateIdList.forEach((templateId) => {
+        const url = `${ApiService.getApiUrl()}/public/db/createDic?connectionId=${
+          row.value.id
+        }&templateId=${templateId}&access-token=${tempToken}`
+        window.open(url)
+      })
+    } catch (e) {
+      const { errorMessage } = useMessage()
+      errorMessage(e)
+    }
   }
   return {
     handleTemplateChange,

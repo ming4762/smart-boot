@@ -1,6 +1,7 @@
 import type { AppRouteRecordRaw, AppRouteModule } from '/@/router/types'
 
 import { PAGE_NOT_FOUND_ROUTE, REDIRECT_ROUTE } from '/@/router/routes/basic'
+import { CREATE_CODE_ROUTER } from '/@/modules/codeGenerator/router/CodeBasicRouter'
 
 import { PageEnum } from '/@/enums/pageEnum'
 import { t } from '/@/hooks/web/useI18n'
@@ -39,4 +40,10 @@ export const LoginRoute: AppRouteRecordRaw = {
 
 // Basic routing without permission
 // 未经许可的基本路由
-export const basicRoutes = [LoginRoute, RootRoute, REDIRECT_ROUTE, PAGE_NOT_FOUND_ROUTE]
+export const basicRoutes = [
+  LoginRoute,
+  RootRoute,
+  REDIRECT_ROUTE,
+  PAGE_NOT_FOUND_ROUTE,
+  CREATE_CODE_ROUTER,
+]

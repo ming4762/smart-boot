@@ -107,6 +107,23 @@ notification.config({
   duration: 3,
 })
 
+const error500Handler = (e) => {
+  console.error(e)
+}
+
+const errorMessage = (e: any) => {
+  console.error(e)
+  const code = e.code
+  switch (code) {
+    case 500: {
+      error500Handler(e)
+      break
+    }
+    default:
+      Message.error(e.message)
+  }
+}
+
 /**
  * @description: message
  */
@@ -119,5 +136,6 @@ export function useMessage() {
     createErrorModal,
     createInfoModal,
     createWarningModal,
+    errorMessage,
   }
 }

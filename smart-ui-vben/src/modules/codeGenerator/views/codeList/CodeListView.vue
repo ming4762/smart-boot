@@ -359,7 +359,7 @@
       :visible="createModalVisible"
       @ok="handleCreateCode"
       @cancel="createModalVisible = false">
-      <CodeCreateForm ref="createFormRef" :code-data="codeData" />
+      <CodeCreateForm style="margin: 10px" ref="createFormRef" :code-data="codeData" />
     </a-modal>
     <PageAddendumTableChose
       v-model:visible="choseAddendumModalVisible"
