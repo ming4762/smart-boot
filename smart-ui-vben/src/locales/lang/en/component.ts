@@ -126,4 +126,8 @@ export default {
     dragText: 'Hold down the slider and drag',
     successText: 'Verified',
   },
+  error: {
+    exceptionTitle:
+      'An error occurred in the system. Please submit the error and contact the administrator',
+  },
 }

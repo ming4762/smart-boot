@@ -37,6 +37,7 @@ export interface Result<T = any> {
   type: 'success' | 'error' | 'warning'
   message: string
   data: T
+  exceptionNo?: number
 }
 
 // multipart/form-data: upload file

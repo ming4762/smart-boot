@@ -3,6 +3,7 @@
     <AppProvider>
       <RouterView />
     </AppProvider>
+    <ExceptionModal />
   </ConfigProvider>
 </template>
 
@@ -11,6 +12,7 @@ import { ConfigProvider } from 'ant-design-vue'
 import { AppProvider } from '/@/components/Application'
 import { useTitle } from '/@/hooks/web/useTitle'
 import { useLocale } from '/@/locales/useLocale'
+import { ExceptionModal } from '/@/components/Exception'
 
 import 'dayjs/locale/zh-cn'
 // support Multi-language
