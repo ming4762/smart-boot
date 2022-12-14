@@ -21,6 +21,7 @@ interface UserState {
   roleList: string[]
   sessionTimeout?: boolean
   lastUpdateTime: number
+  routeInit: boolean
 }
 
 export const useUserStore = defineStore({
@@ -36,6 +37,7 @@ export const useUserStore = defineStore({
     sessionTimeout: false,
     // Last fetch time
     lastUpdateTime: 0,
+    routeInit: false,
   }),
   getters: {
     getUserInfo(): UserInfo {
@@ -52,6 +54,9 @@ export const useUserStore = defineStore({
     },
     getLastUpdateTime(): number {
       return this.lastUpdateTime
+    },
+    getRouteInit(): boolean {
+      return this.routeInit
     },
   },
   actions: {
@@ -90,9 +95,7 @@ export const useUserStore = defineStore({
         const { goHome = true, mode, ...loginParams } = params
         const data = await loginApi(loginParams, mode)
         const { token, permissions, roles, user } = data
-        // todo:兼容性代码
         user.realName = user.fullName
-        console.log(permissions)
         // save token
         this.setToken(token)
         this.setRoleList(roles)
@@ -111,6 +114,7 @@ export const useUserStore = defineStore({
         router.addRoute(PAGE_NOT_FOUND_ROUTE as unknown as RouteRecordRaw)
         permissionStore.setDynamicAddedRoute(true)
       }
+      this.routeInit = true
     },
     async afterLoginAction(
       userInfo: GetUserInfoModel,
