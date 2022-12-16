@@ -21,5 +21,5 @@ export const handleSaveUpdate = async (model: any) => {
  * @param idList ID列表
  */
 export const handleDelete = async (idList: Array<any>) => {
-  await ApiService.postAjax('sys/dict/batchDeleteById', idList)
+  await ApiService.postAjax('sys/dict/batchDeleteById', idList, { errorMessageMode: 'modal' })
 }

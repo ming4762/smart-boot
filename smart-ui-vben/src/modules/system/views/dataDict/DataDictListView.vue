@@ -4,7 +4,7 @@
       <DataDictGroup @code-change="handleCodeChange" />
     </template>
     <template #second>
-      <DataDictItem :dict-code="dictCode" />
+      <DataDictItem :dict-id="dictId" />
     </template>
   </LayoutSeparate>
 </template>
@@ -28,13 +28,13 @@ export default defineComponent({
     DataDictItem,
   },
   setup() {
-    const dictCode = ref<string | null>(null)
+    const dictId = ref<number | null>(null)
 
-    const handleCodeChange = (code: string | null) => {
-      dictCode.value = code
+    const handleCodeChange = (id: number | null) => {
+      dictId.value = id
     }
     return {
-      dictCode,
+      dictId,
       handleCodeChange,
     }
   },

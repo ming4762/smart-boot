@@ -93,4 +93,16 @@ public class SysFunctionPO extends BaseModelUserTime {
      */
     private HttpMethod httpMethod;
 
+    /**
+     * 组件
+     */
+    private String component;
+
+    /**
+     * 组件名称
+     */
+    private String componentName;
+
+    private String redirect;
+
 }

@@ -23,6 +23,9 @@
       <template #toolbar_tools>
         <a-form layout="inline">
           <a-form-item>
+            <a-button type="primary" @click="loadData" :size="buttonSizeConfig">
+              {{ $t('common.redo') }}
+            </a-button>
             <a-button
               v-permission="'sys:dict:save'"
               :size="buttonSizeConfig"
@@ -180,14 +183,14 @@ export default defineComponent({
      * 添加保存hook
      */
     const addEditHook = useAddEdit(gridRef, handleGetById, loadData, handleSaveUpdate, t, {
-      idField: 'dictCode',
+      idField: 'id',
       defaultModel: {
         useYn: true,
         seq: 1,
       },
     })
     const deleteHook = useVxeDelete(gridRef, t, handleDelete, {
-      idField: 'dictCode',
+      idField: 'id',
       listHandler: loadData,
     })
 
@@ -199,7 +202,7 @@ export default defineComponent({
     const handleActions = (row: any, action: String) => {
       switch (action) {
         case 'EDIT': {
-          addEditHook.handleAddEdit(false, row.dictCode)
+          addEditHook.handleAddEdit(false, row.id)
           break
         }
         case 'DELETE': {
@@ -221,7 +224,7 @@ export default defineComponent({
      * 当前行发生变化事件
      */
     const handleCurrentChange = ({ row }: any) => {
-      emit('code-change', row.dictCode)
+      emit('code-change', row.id)
     }
     onMounted(loadData)
     return {

@@ -19,13 +19,7 @@ export const useLoadDictItem = (dictCode: Ref<string>) => {
       dictData.value = []
     } else {
       try {
-        dictData.value = await ApiService.postAjax('sys/dictItem/list', {
-          sortName: 'seq',
-          sortOrder: 'asc',
-          parameter: {
-            'dictCode@=': dictCode.value,
-          },
-        })
+        dictData.value = await ApiService.postAjax('sys/dict/listItemByCode', dictCode.value)
       } catch (e) {
         errorMessage(e)
       }
