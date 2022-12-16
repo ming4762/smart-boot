@@ -1,5 +1,6 @@
 package com.smart.system.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.common.collect.Lists;
 import com.smart.crud.service.BaseServiceImpl;
@@ -15,6 +16,7 @@ import org.springframework.util.CollectionUtils;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
 * sys_dict - 系统字典表 Service实现类
@@ -45,8 +47,31 @@ public class SysDictServiceImpl extends BaseServiceImpl<SysDictMapper, SysDictPO
         // 删除字典项
         Lists.partition(new ArrayList<>(idList), 200).forEach(list -> this.sysDictItemService.remove(
                 new QueryWrapper<SysDictItemPO>().lambda()
-                .in(SysDictItemPO :: getDictCode, list)
+                        .in(SysDictItemPO::getDictId, list)
         ));
         return super.removeByIds(idList);
+    }
+
+    /**
+     * 通过code查询item
+     *
+     * @param dictCode dict code
+     * @return dict item list
+     */
+    @Override
+    public List<SysDictItemPO> listItemByCode(String dictCode) {
+        SysDictPO dict = this.getOne(
+                new LambdaQueryWrapper<SysDictPO>()
+                        .select(SysDictPO::getId)
+                        .eq(SysDictPO::getDictCode, dictCode)
+        );
+        if (dict == null) {
+            return new ArrayList<>(0);
+        }
+        return this.sysDictItemService.list(
+                new LambdaQueryWrapper<SysDictItemPO>()
+                        .eq(SysDictItemPO::getDictId, dict.getId())
+                        .orderByAsc(SysDictItemPO::getSeq)
+        );
     }
 }

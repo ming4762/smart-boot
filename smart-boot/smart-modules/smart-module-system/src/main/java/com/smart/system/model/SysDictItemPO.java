@@ -20,11 +20,14 @@ import java.time.LocalDateTime;
 public class SysDictItemPO extends BaseModel {
 
     private static final long serialVersionUID = 4637452253459448214L;
+
+    @TableId(type = IdType.ASSIGN_ID)
+    private Long id;
+
     /**
     * dict_code - 字典编码
     */
-    @TableId(type = IdType.ASSIGN_ID)
-    private String dictCode;
+    private Long dictId;
 
     /**
     * dict_item_code - 字典项编码

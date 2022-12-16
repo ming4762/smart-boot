@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -22,9 +20,7 @@ import java.util.List;
 public class SysUserWithDataScopeDTO extends SysUserPO {
     private static final long serialVersionUID = -7021384417582166698L;
 
-    @NotNull(message = "请选择部门")
     private Long deptId;
 
-    @NotEmpty(message = "请选择数据权限")
     private List<DataPermissionScope> dataScopeList;
 }

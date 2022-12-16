@@ -61,16 +61,12 @@
       <a-spin :spinning="spinning">
         <a-form
           ref="formRef"
+          style="padding: 10px"
           :rules="rules"
           :label-col="{ span: 6 }"
           :wrapper-col="{ span: 17 }"
           v-bind="formProps">
           <a-row>
-            <a-col :span="24">
-              <a-form-item :label="$t('system.views.dictGroup.title.dictCode')">
-                <a-input v-model:value="formProps.model.dictCode" disabled />
-              </a-form-item>
-            </a-col>
             <a-col :span="24">
               <a-form-item
                 :label="$t('system.views.dictItem.title.dictItemCode')"
@@ -133,15 +129,15 @@ import { tableUseYn } from '/@/components/common/TableCommon'
 export default defineComponent({
   name: 'SysDictItemListView',
   props: {
-    dictCode: {
-      type: String as PropType<string | null>,
+    dictId: {
+      type: Number as PropType<number | null>,
       default: null,
     },
   },
   setup(props) {
     const { t } = useI18n()
     const gridRef = ref()
-    const { dictCode } = toRefs(props)
+    const { dictId } = toRefs(props)
 
     /**
      * 加载数据
@@ -149,7 +145,7 @@ export default defineComponent({
      * @param searchParameter 查询参数
      */
     const handleLoadData = async (params: any, searchParameter: any) => {
-      if (!dictCode.value) {
+      if (!dictId.value) {
         return {
           rows: [],
           total: 0,
@@ -159,7 +155,7 @@ export default defineComponent({
         ...params,
         parameter: {
           ...searchParameter,
-          'dictCode@=': dictCode.value,
+          'dictId@=': dictId.value,
         },
       })
     }
@@ -177,19 +173,16 @@ export default defineComponent({
         },
       },
     )
-    watch(dictCode, () => {
+    watch(dictId, () => {
       loadData()
     })
 
     const handleGetById = (id: string) => {
-      return ApiService.postAjax('sys/dictItem/get', {
-        dictCode: dictCode.value,
-        dictItemCode: id,
-      })
+      return ApiService.postAjax('sys/dictItem/get', id)
     }
     const handleSaveUpdate = async (model: any) => {
-      if (!model.dictCode) {
-        model.dictCode = dictCode.value
+      if (!model.dictId) {
+        model.dictId = dictId.value
       }
       await ApiService.postAjax('sys/dictItem/saveUpdate', model)
     }
@@ -206,23 +199,17 @@ export default defineComponent({
     })
 
     const handleDelete = async (idList: Array<any>) => {
-      const data = idList.map((item) => {
-        return {
-          dictCode: dictCode.value,
-          dictItemCode: item,
-        }
-      })
-      await ApiService.postAjax('sys/dictItem/batchDelete', data)
+      await ApiService.postAjax('sys/dictItem/batchDelete', idList)
     }
     const handleShowAdd = () => {
-      if (!dictCode.value) {
+      if (!dictId.value) {
         message.error(t('system.views.dictItem.message.dictCodeNull'))
         return false
       }
 
       addEditHook.handleAddEdit(true, null).then(() => {
         addEditHook.handleSetModel({
-          dictCode: dictCode.value,
+          dictId: dictId.value,
           ...addEditHook.formProps.value.model,
         })
       })
@@ -285,12 +272,6 @@ export default defineComponent({
           width: 60,
           align: 'center',
           fixed: 'left',
-        },
-        {
-          field: 'dictCode',
-          fixed: 'left',
-          title: '{system.views.dictItem.title.dictCode}',
-          width: 160,
         },
         {
           field: 'dictItemCode',

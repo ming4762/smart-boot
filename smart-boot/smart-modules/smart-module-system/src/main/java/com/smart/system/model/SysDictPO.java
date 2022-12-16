@@ -1,5 +1,6 @@
 package com.smart.system.model;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.smart.crud.model.BaseModelUserTime;
@@ -17,10 +18,13 @@ import lombok.Setter;
 public class SysDictPO extends BaseModelUserTime {
 
     private static final long serialVersionUID = -4129235312297061914L;
+
+    @TableId(type = IdType.ASSIGN_ID)
+    private Long id;
+
     /**
     * dict_code - 字典编码
     */
-    @TableId
     private String dictCode;
 
     /**

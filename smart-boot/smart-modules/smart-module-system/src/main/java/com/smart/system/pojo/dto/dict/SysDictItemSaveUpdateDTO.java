@@ -22,7 +22,7 @@ public class SysDictItemSaveUpdateDTO implements Serializable {
     /**
     * 字典编码
     */
-    private String dictCode;
+    private Long dictId;
     /**
     * 字典项编码
     */
