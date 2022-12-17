@@ -32,4 +32,9 @@ public interface MapperPackageConstants {
      * 文件管理模块 mapper扫描
      */
     String MODULE_FILE = "com.smart.file.manager.mapper";
+
+    /**
+     * license模块
+     */
+    String MODULE_LICENSE = "";
 }

@@ -5,11 +5,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -109,13 +111,13 @@ public final class DateUtils {
      */
     @SneakyThrows
     @Nullable
-    public static Date convertDate(String dateStr) {
-        boolean isUtc = false;
+    public static LocalDateTime convertDate(String dateStr) {
+        boolean isTime = false;
         if (StringUtils.isBlank(dateStr)) {
             return null;
         }
         if (dateStr.contains(CST_DATE_STR)) {
-            return new SimpleDateFormat().parse(dateStr);
+            return LocalDateTime.parse(dateStr);
         }
         String dateDealStr = dateStr.replace("年", "-").replace("月", "-").replace("日", "")
                 .replace("/", "-").replace("\\.", "-").trim();
@@ -132,27 +134,29 @@ public final class DateUtils {
         }
 
         //确定时间格式
-        if(HH.matcher(dateDealStr).matches()){
-            dateFormatStr += " HH";
-        }else if(HH_MM.matcher(dateDealStr).matches()){
+        if(HH_MM.matcher(dateDealStr).matches()){
+            isTime = true;
             dateFormatStr += " HH:mm";
         }else if(HH_MM_SS.matcher(dateDealStr).matches()){
+            isTime = true;
             dateFormatStr += " HH:mm:ss";
         }else if(HH_MM_SS_SSS.matcher(dateDealStr).matches()){
+            isTime = true;
             dateFormatStr += " HH:mm:ss:sss";
         }
 
         if (YYYY_MM_DD_HH_MM_SS_SSS_Z.matcher(dateDealStr).matches()) {
             dateDealStr = dateDealStr.replace("Z", " UTC");
             dateFormatStr = "yyyy-MM-dd'T'HH:mm:ss.SSS Z";
-            isUtc = true;
         }
         if (StringUtils.isNotBlank(dateFormatStr)) {
-            final SimpleDateFormat format = new SimpleDateFormat(dateFormatStr);
-            if (isUtc) {
-                format.setTimeZone(TimeZone.getTimeZone("UTC"));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateFormatStr);
+            if (isTime) {
+                return LocalDateTime.parse(dateDealStr, formatter);
+            } else {
+                return LocalDate.parse(dateDealStr, formatter).atStartOfDay();
             }
-            return format.parse(dateDealStr);
+
         }
         return null;
     }

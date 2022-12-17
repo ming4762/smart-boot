@@ -62,7 +62,7 @@ public class SysDeptServiceImpl extends BaseServiceImpl<SysDeptMapper, SysDeptPO
     @SuppressWarnings("unchecked")
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean removeByIds(Collection<? extends Serializable> idList) {
+    public boolean removeByIds(Collection<?> idList) {
         Set<Long> parentIds = new HashSet<>((Collection<? extends Long>) idList);
         Set<Long> deleteIds = this.queryAllChildIds(parentIds);
         deleteIds.addAll(parentIds);
