@@ -264,15 +264,11 @@ import { useI18n } from 'vue-i18n'
 
 import { DownOutlined, EditOutlined, UserOutlined } from '@ant-design/icons-vue'
 
+import { useLoadDictItem } from '/@/modules/system/hooks/dict/SysDictHooks'
+
 import { SYS_USER_TYPE, DATA_SCOPE } from '../../constants/SystemConstants'
 
-import {
-  vueLoadData,
-  vueAddEdit,
-  userOperationHoops,
-  useCreateAccount,
-  useLoadUserType,
-} from './UserListSupport'
+import { vueLoadData, vueAddEdit, userOperationHoops, useCreateAccount } from './UserListSupport'
 
 import { SystemPermissions } from '../../constants/SystemConstants'
 import dayjs from 'dayjs'
@@ -324,7 +320,7 @@ export default defineComponent({
         }
       }
     }
-    const { userTypeList } = useLoadUserType()
+    const { dictData: userTypeList } = useLoadDictItem(ref('SYSTEM_USER_TYPE'))
     const userTypeMap = computed(() => {
       const result: { [index: string]: string } = {}
       result[SYS_USER_TYPE] = '系统用户'

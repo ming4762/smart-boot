@@ -7,10 +7,10 @@ export default {
   data: {
     title: {
       deptId: '部门ID',
-      parent: 'Parent dept',
-      deptCode: 'Dept code',
-      deptType: 'Dept type',
-      deptName: 'Dept name',
+      parent: 'Parent org',
+      deptCode: 'Org code',
+      deptType: 'Org type',
+      deptName: 'Org name',
       email: 'Email',
       director: 'Director',
       phone: 'Phone',
@@ -19,27 +19,27 @@ export default {
     validate: {
       deptId: '请输入部门ID',
       parentId: '请输入上级ID',
-      deptCode: 'Please enter dept code',
-      deptType: 'Please select dept type',
-      deptName: 'Please enter dept name',
+      deptCode: 'Please enter org code',
+      deptType: 'Please select org type',
+      deptName: 'Please enter org name',
       email: 'Please enter email',
       director: 'Please enter director',
       phone: 'Please enter phone',
     },
     rules: {
-      deptCode_NOT_EMPTY: 'Dept code cannot be empty',
-      deptType_NOT_EMPTY: 'Please select dept type',
-      deptName_NOT_EMPTY: 'Dept name cannot be empty',
+      deptCode_NOT_EMPTY: 'Org code cannot be empty',
+      deptType_NOT_EMPTY: 'Please select org type',
+      deptName_NOT_EMPTY: 'Org name cannot be empty',
     },
     search: {
-      deptCode: 'Please enter dept code',
-      deptName: 'Please enter dept name',
+      deptCode: 'Please enter org code',
+      deptName: 'Please enter org name',
     },
     button: {
       addChild: 'Add child',
     },
     message: {
-      selectDeptError: 'Please select parent dept',
+      selectDeptError: 'Please select parent org',
     },
   },
 }

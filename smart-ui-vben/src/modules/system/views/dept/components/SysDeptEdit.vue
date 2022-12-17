@@ -110,7 +110,7 @@ export default defineComponent({
     const { deptCode } = toRefs(props)
     const loading = ref(false)
     const deptData = ref<any>({})
-    const dictCode = ref('SYSTEM_DEPT_TYPE')
+    const dictCode = ref('SYSTEM_ORGANIZATION_TYPE')
 
     /**
      * 加载数据函数

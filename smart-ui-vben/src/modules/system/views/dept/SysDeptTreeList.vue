@@ -49,6 +49,7 @@
       <a-spin :spinning="spinning">
         <a-form
           v-bind="formProps"
+          style="padding: 10px"
           :label-col="{ span: 6 }"
           :wrapper-col="{ span: 17 }"
           :rules="rules">
@@ -143,7 +144,7 @@ export default defineComponent({
     const treeRef = ref()
 
     const { t } = useI18n()
-    const dictCode = ref('SYSTEM_DEPT_TYPE')
+    const dictCode = ref('SYSTEM_ORGANIZATION_TYPE')
     const parentFieldVisible = ref(false)
 
     /**

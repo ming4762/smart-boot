@@ -1,4 +1,4 @@
-import { ref, onMounted } from 'vue'
+import { ref, watchEffect } from 'vue'
 import type { Ref } from 'vue'
 
 import ApiService from '/@/common/utils/ApiService'
@@ -26,7 +26,7 @@ export const useLoadDictItem = (dictCode: Ref<string>) => {
     }
   }
 
-  onMounted(loadDictData)
+  watchEffect(() => loadDictData())
 
   return {
     dictData,
