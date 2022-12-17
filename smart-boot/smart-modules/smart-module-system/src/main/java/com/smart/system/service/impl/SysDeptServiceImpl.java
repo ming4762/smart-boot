@@ -58,12 +58,11 @@ public class SysDeptServiceImpl extends BaseServiceImpl<SysDeptMapper, SysDeptPO
      * @param idList ID列表
      * @return 删除是否成功
      */
-    @SuppressWarnings("unchecked")
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean removeByIds(Collection<?> idList) {
-        var parentIds = new HashSet<Long>((Collection<? extends Long>) idList);
-        var deleteIds = this.queryAllChildIds(parentIds);
+        Set<Long> parentIds = new HashSet<>((Collection<? extends Long>) idList);
+        Set<Long> deleteIds = this.queryAllChildIds(parentIds);
         deleteIds.addAll(parentIds);
         return super.removeByIds(deleteIds);
     }

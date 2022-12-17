@@ -2,7 +2,6 @@ package com.smart.db.generator.pojo.query;
 
 import lombok.*;
 
-import java.io.Serializable;
 import java.util.Collection;
 
 /**
@@ -18,7 +17,7 @@ import java.util.Collection;
 @NoArgsConstructor
 public class RelatedTableDeleteByMainConfigQuery {
 
-    private Collection<? extends Serializable> mainIdList;
+    private Collection<?> mainIdList;
 
     private String tableName;
 }

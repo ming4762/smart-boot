@@ -29,7 +29,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
-import java.io.Serializable;
 import java.io.StringWriter;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -838,7 +837,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
      * 删除表单配置
      * @param mainIdList 主配置ID集合
      */
-    private void removeFormConfigByMainId(@NonNull Collection<? extends Serializable> mainIdList) {
+    private void removeFormConfigByMainId(@NonNull Collection<?> mainIdList) {
         // 删除关联table信息
         this.dbCodeRelatedTableService.deleteByMainIdList(
                 RelatedTableDeleteByMainConfigQuery.builder()
@@ -863,7 +862,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
      * 删除搜索配置
      * @param mainIdList 主配置ID集合
      */
-    private void removeSearchConfigByMainId(@NonNull Collection<? extends Serializable> mainIdList) {
+    private void removeSearchConfigByMainId(@NonNull Collection<?> mainIdList) {
         // 删除关联table信息
         this.dbCodeRelatedTableService.deleteByMainIdList(
                 RelatedTableDeleteByMainConfigQuery.builder()
