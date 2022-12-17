@@ -11,6 +11,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -67,6 +68,16 @@ public final class AuthUtils {
             throw new AuthException(HttpStatus.UNAUTHORIZED);
         }
         return userDetails;
+    }
+
+    /**
+     * 获取当前登录人员用户名
+     * @return 用户名
+     */
+    public static String getCurrentUsername() {
+        return Optional.ofNullable(getCurrentUser())
+                .map(UserDetails::getUsername)
+                .orElse(null);
     }
 
     /**
