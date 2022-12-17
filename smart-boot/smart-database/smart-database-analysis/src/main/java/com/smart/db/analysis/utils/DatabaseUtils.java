@@ -100,6 +100,9 @@ public class DatabaseUtils {
             final String key = value.getClass().getName() + field.getType().getName();
             converter = CacheUtils.getAutoConverter(key);
         }
+        if (field.getType().equals(String.class)) {
+            converter = CacheUtils.getStringConverter();
+        }
         // 3、如果都没有转换器，抛出异常
         if (Objects.isNull(converter)) {
             throw new SmartDatabaseException(ExceptionConstant.DATABASE_FIELD_TO_JAVA_CONVERT_ERROR, value.getClass().getName(), field.getType().getName(), field.getName());

@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import com.smart.db.analysis.constants.ExtMappingEnum;
 import com.smart.db.analysis.constants.TypeMappingEnum;
 import com.smart.db.analysis.converter.Converter;
+import com.smart.db.analysis.converter.StringConverter;
 import com.smart.db.analysis.pojo.dbo.AbstractDatabaseBaseDO;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -49,6 +50,8 @@ public class CacheUtils {
      */
     private static final ConcurrentMap<String, ExtMappingEnum> EXT_JAVA_MAPPING_CACHE = Maps.newConcurrentMap();
 
+    private static final StringConverter STRING_CONVERTER = new StringConverter();
+
 
     /**
      * 添加converter
@@ -93,6 +96,10 @@ public class CacheUtils {
             CONVERTER_CACHE.put(clazz, clazz.getDeclaredConstructor().newInstance());
         }
         return CONVERTER_CACHE.get(clazz);
+    }
+
+    public static Converter getStringConverter() {
+        return STRING_CONVERTER;
     }
 
     /**
