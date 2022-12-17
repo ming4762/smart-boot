@@ -18,6 +18,8 @@ export default {
       menuIs: 'Is menu',
       internalOrExternal: 'Open externally',
       dataRule: 'Data permissions',
+      component: 'Component path',
+      componentName: 'Component name',
     },
     validate: {
       httpMethod: 'Please select the request method',
@@ -27,6 +29,9 @@ export default {
       url: 'Please enter the url',
       permission: 'Please enter the permission',
       icon: 'Please enter the icon',
+      component: 'Please enter component path',
+      componentName: 'Please enter component name',
+      redirect: 'Please enter redirect',
     },
   },
 }

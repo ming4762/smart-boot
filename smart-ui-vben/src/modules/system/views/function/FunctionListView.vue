@@ -77,6 +77,7 @@
           :label-col="{ span: 7 }"
           :wrapper-col="{ span: 16 }"
           :rules="formRules"
+          style="padding: 10px"
           ref="formRef"
           :model="saveModel">
           <a-row>
@@ -129,6 +130,42 @@
                   :placeholder="$t('system.views.function.validate.icon')" />
               </a-form-item>
             </a-col>
+          </a-row>
+          <a-row>
+            <a-col :span="12">
+              <a-form-item
+                name="component"
+                :rules="[
+                  {
+                    required: saveModel.functionType === 'MENU',
+                    trigger: 'blur',
+                    message: $t('system.views.function.validate.component'),
+                  },
+                ]"
+                :label="$t('system.views.function.table.component')">
+                <a-input
+                  v-model:value="saveModel.component"
+                  :placeholder="$t('system.views.function.validate.component')" />
+              </a-form-item>
+            </a-col>
+            <a-col :span="12">
+              <a-form-item
+                name="componentName"
+                :rules="[
+                  {
+                    required: saveModel.functionType === 'MENU',
+                    trigger: 'blur',
+                    message: $t('system.views.function.validate.componentName'),
+                  },
+                ]"
+                :label="$t('system.views.function.table.componentName')">
+                <a-input
+                  v-model:value="saveModel.componentName"
+                  :placeholder="$t('system.views.function.validate.componentName')" />
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row>
             <a-col :span="12">
               <a-form-item name="url" label="url">
                 <a-input
@@ -136,8 +173,14 @@
                   :placeholder="$t('system.views.function.validate.url')" />
               </a-form-item>
             </a-col>
+            <a-col :span="12">
+              <a-form-item name="redirect" label="redirect">
+                <a-input
+                  v-model:value="saveModel.redirect"
+                  :placeholder="$t('system.views.function.validate.redirect')" />
+              </a-form-item>
+            </a-col>
           </a-row>
-
           <a-row>
             <a-col :span="12">
               <a-form-item
@@ -166,8 +209,7 @@
                 name="permission"
                 :rules="[
                   {
-                    required:
-                      saveModel.functionType === 'MENU' || saveModel.functionType === 'FUNCTION',
+                    required: saveModel.functionType === 'FUNCTION',
                     message: $t('system.views.function.validate.permission'),
                     trigger: 'blur',
                   },
