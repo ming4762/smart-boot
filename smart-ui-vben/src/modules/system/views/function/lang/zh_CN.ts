@@ -21,6 +21,8 @@ export default {
           menuIs: '是否菜单',
           internalOrExternal: '是否外部打开',
           dataRule: '数据权限',
+          component: '组件路径',
+          componentName: '组件名称',
         },
         validate: {
           httpMethod: '请选择请求方式',
@@ -30,6 +32,9 @@ export default {
           url: '请输入URL',
           permission: '请输入权限标识',
           icon: '请输入图标',
+          component: '请输入组件路径',
+          componentName: '请输入组件名称',
+          redirect: '请输入redirect',
         },
       },
     },
