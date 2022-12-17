@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.smart.auth.core.annotation.NonUrlCheck;
-import com.smart.auth.core.utils.AuthUtils;
 import com.smart.commons.core.data.Tree;
 import com.smart.commons.core.http.HttpStatus;
 import com.smart.commons.core.log.Log;
@@ -80,7 +79,7 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
     public Result<Boolean> saveUpdate(@RequestBody @Valid UserUpdateDTO parameter) {
         SysUserPO model = new SysUserPO();
         BeanUtils.copyProperties(parameter, model);
-        return Result.success(this.service.saveOrUpdateWithAllUser(model, 1L));
+        return Result.success(this.service.saveOrUpdate(model));
     }
 
     @PostMapping("saveUpdateWithDataScope")
@@ -111,7 +110,7 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
     @Log(value = "添加用户", type = LogOperationTypeEnum.ADD)
     @PreAuthorize("hasPermission('sys:user', 'save')")
     public Result<Boolean> save(@RequestBody @Valid SysUserPO model) {
-        return Result.success(this.service.saveWithUser(model, AuthUtils.getCurrentUserId()));
+        return Result.success(this.service.save(model));
     }
 
     @Override

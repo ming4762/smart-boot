@@ -21,7 +21,9 @@ public interface BaseService<T extends BaseModel> extends IService<T> {
      * @param model 实体
      * @param userId 用户ID
      * @return 是否成功
+     * @deprecated com.smart.crud.mybatis.plugin.CreateUpdateUserTimeMybatisInterceptor
      */
+    @Deprecated
     boolean saveOrUpdateWithCreateUser(@NonNull T model, Long userId);
 
     /**
@@ -29,7 +31,9 @@ public interface BaseService<T extends BaseModel> extends IService<T> {
      * @param model 实体类
      * @param userId 用户ID
      * @return 是否成功
+     * @deprecated com.smart.crud.mybatis.plugin.CreateUpdateUserTimeMybatisInterceptor
      */
+    @Deprecated
     boolean saveOrUpdateWithUpdateUser(@NonNull T model, Long userId);
 
     /**
@@ -37,7 +41,9 @@ public interface BaseService<T extends BaseModel> extends IService<T> {
      * @param model 实体类
      * @param userId 用户ID
      * @return 是否成功
+     * @deprecated com.smart.crud.mybatis.plugin.CreateUpdateUserTimeMybatisInterceptor
      */
+    @Deprecated
     boolean saveOrUpdateWithAllUser(@NonNull T model, Long userId);
 
     /**
@@ -45,7 +51,9 @@ public interface BaseService<T extends BaseModel> extends IService<T> {
      * @param model 实体类
      * @param userId 用户ID
      * @return 是否保存成功
+     * @deprecated com.smart.crud.mybatis.plugin.CreateUpdateUserTimeMybatisInterceptor
      */
+    @Deprecated
     boolean saveWithUser(@NonNull T model, Long userId);
 
     /**
@@ -53,7 +61,9 @@ public interface BaseService<T extends BaseModel> extends IService<T> {
      * @param model 实体类
      * @param userId 人员信息
      * @return 是否更新成功
+     * @deprecated com.smart.crud.mybatis.plugin.CreateUpdateUserTimeMybatisInterceptor
      */
+    @Deprecated
     boolean updateWithUserById(@NonNull T model, Long userId);
 
     /**
@@ -69,7 +79,9 @@ public interface BaseService<T extends BaseModel> extends IService<T> {
      * @param modelList 实体类
      * @param userId 用户ID
      * @return 是否保存成功
+     * @deprecated com.smart.crud.mybatis.plugin.CreateUpdateUserTimeMybatisInterceptor
      */
+    @Deprecated
     boolean saveBatchWithUser(@NonNull List<T> modelList, Long userId);
 
     /**
@@ -77,7 +89,9 @@ public interface BaseService<T extends BaseModel> extends IService<T> {
      * @param modelList 实体类
      * @param userId 人员信息
      * @return 是否更新成功
+     * @deprecated com.smart.crud.mybatis.plugin.CreateUpdateUserTimeMybatisInterceptor
      */
+    @Deprecated
     boolean updateBatchWithUserById(@NonNull List<T> modelList, Long userId);
 
 }

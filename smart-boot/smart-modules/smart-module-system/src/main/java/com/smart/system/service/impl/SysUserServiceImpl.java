@@ -514,7 +514,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
 
         // 判断是否是系统用户，系统用户没有数据权限
         if (SYSTEM_USER_TYPE.equals(userModel.getUserType())) {
-            return this.saveOrUpdateWithAllUser(userModel, userId);
+            return this.saveOrUpdate(userModel);
         }
 
         var dataScopeModel = new SysUserDeptPO();
