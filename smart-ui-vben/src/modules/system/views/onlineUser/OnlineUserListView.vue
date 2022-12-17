@@ -19,7 +19,7 @@
         </a-button>
       </template>
       <template #table-expand="{ row }">
-        <vxe-gird
+        <vxe-grid
           class="expand-wrapper"
           border
           highlight-hover-row
@@ -35,7 +35,7 @@
               {{ $t('system.views.onlineUser.button.offline') }}
             </a-button>
           </template>
-        </vxe-gird>
+        </vxe-grid>
       </template>
       <template #toolbar_buttons>
         <a-form style="margin-left: 10px" layout="inline" :model="searchModel">

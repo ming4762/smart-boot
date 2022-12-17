@@ -7,10 +7,10 @@ export default {
   data: {
     title: {
       deptId: '部门ID',
-      parent: '上级部门',
-      deptCode: '部门编码',
-      deptType: '部门类型',
-      deptName: '部门名称',
+      parent: '上级组织',
+      deptCode: '组织编码',
+      deptType: '组织类型',
+      deptName: '组织名称',
       email: '邮箱',
       director: '负责人',
       phone: '电话',
@@ -19,9 +19,9 @@ export default {
     validate: {
       deptId: '请输入部门ID',
       parentId: '请输入上级ID',
-      deptCode: '请输入部门编码',
-      deptType: '请输入部门类型',
-      deptName: '请输入部门名称',
+      deptCode: '请输入组织编码',
+      deptType: '请输入组织类型',
+      deptName: '请输入组织名称',
       email: '请输入邮箱',
       director: '请输入负责人',
       phone: '请输入电话',
@@ -32,19 +32,19 @@ export default {
       updateTime: '请输入更新时间',
     },
     rules: {
-      deptCode_NOT_EMPTY: '部门编码不能为空',
-      deptType_NOT_EMPTY: '请选择部门类型',
-      deptName_NOT_EMPTY: '请输入部门名称',
+      deptCode_NOT_EMPTY: '组织编码不能为空',
+      deptType_NOT_EMPTY: '请选择组织类型',
+      deptName_NOT_EMPTY: '请输入组织名称',
     },
     search: {
-      deptCode: '请输入部门编码',
-      deptName: '请输入部门名称',
+      deptCode: '请输入组织编码',
+      deptName: '请输入组织名称',
     },
     button: {
       addChild: '添加下级',
     },
     message: {
-      selectDeptError: '请选择上级部门',
+      selectDeptError: '请选择上级组织',
     },
   },
 }
