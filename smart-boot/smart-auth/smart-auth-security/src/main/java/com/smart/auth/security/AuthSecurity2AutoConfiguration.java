@@ -13,6 +13,7 @@ import com.smart.auth.core.service.AuthUserService;
 import com.smart.auth.security.config.AuthMethodSecurityConfig;
 import com.smart.auth.security.userdetails.DefaultUserDetailsServiceImpl;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -96,7 +97,7 @@ public class AuthSecurity2AutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean(UrlMappingProvider.class)
-    public DefaultUrlMappingProvider defaultUrlMappingProvider(RequestMappingHandlerMapping mapping) {
+    public DefaultUrlMappingProvider defaultUrlMappingProvider(@Qualifier("requestMappingHandlerMapping") RequestMappingHandlerMapping mapping) {
         return new DefaultUrlMappingProvider(mapping);
     }
 

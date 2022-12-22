@@ -17,6 +17,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <spring-boot.version>2.6.2</spring-boot.version>
+        <spring-boot.version>2.7.6</spring-boot.version>
 
         <guava.version>31.1-jre</guava.version>
         <jjwt.version>0.11.5</jjwt.version>
