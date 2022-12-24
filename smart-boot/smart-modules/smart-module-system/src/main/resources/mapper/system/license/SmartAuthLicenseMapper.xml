@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smart.system.mapper.SmartAuthLicenseMapper">
+    <sql id="columnList">
+        <!--   id 主键  索引   -->
+        id,
+        <!--   license编码      -->
+        license_code,
+        <!--   所属项目      -->
+        project_id,
+        <!--   license版本      -->
+        version,
+        <!--   mac地址      -->
+        mac_address,
+        <!--   主板序列号      -->
+        ip_address,
+        <!--   cpu序列号      -->
+        cpu_serial,
+        <!--   主板序列号      -->
+        main_board_serial,
+        <!--   生效时间      -->
+        effective_date,
+        <!--   过期时间      -->
+        expiration_time,
+        <!--   状态      -->
+        status,
+        <!--   创建时间      -->
+        create_time,
+        <!--   创建人      -->
+        create_user_id
+    </sql>
+
+    <resultMap id="commonResultMap" type="com.smart.system.model.SmartAuthLicensePO">
+        <!--   id 主键  索引   -->
+        <id column="id" property="id" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   license编码      -->
+        <result column="license_code" property="licenseCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   所属项目      -->
+        <result column="project_id" property="projectId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   license版本      -->
+        <result column="version" property="version" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   mac地址      -->
+        <result column="mac_address" property="macAddress" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   主板序列号      -->
+        <result column="ip_address" property="ipAddress" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   cpu序列号      -->
+        <result column="cpu_serial" property="cpuSerial" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   主板序列号      -->
+        <result column="main_board_serial" property="mainBoardSerial" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   生效时间      -->
+        <result column="effective_date" property="effectiveDate" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+        <!--   过期时间      -->
+        <result column="expiration_time" property="expirationTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+        <!--   状态      -->
+        <result column="status" property="status" javaType="java.lang.String" jdbcType="CHAR"/>
+        <!--   创建时间      -->
+        <result column="create_time" property="createTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+        <!--   创建人      -->
+        <result column="create_user_id" property="createUserId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+    </resultMap>
+</mapper>

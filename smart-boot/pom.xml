@@ -44,6 +44,7 @@
         <scannotation.version>1.0.3</scannotation.version>
         <org.eclipse.jface.version>3.22.0</org.eclipse.jface.version>
         <nimbus-jose-jwt.version>9.23</nimbus-jose-jwt.version>
+        <truelicense.version>1.33</truelicense.version>
     </properties>
 
     <packaging>pom</packaging>
@@ -56,6 +57,7 @@
         <module>smart-document</module>
         <module>smart-file</module>
         <module>smart-kettle</module>
+        <module>smart-license</module>
         <module>smart-modules</module>
         <module>smart-monitor</module>
         <module>smart-starter</module>
@@ -286,6 +288,11 @@
                 <groupId>com.nimbusds</groupId>
                 <artifactId>nimbus-jose-jwt</artifactId>
                 <version>${nimbus-jose-jwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.schlichtherle.truelicense</groupId>
+                <artifactId>truelicense-core</artifactId>
+                <version>${truelicense.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

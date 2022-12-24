@@ -21,7 +21,18 @@
             <artifactId>spring-boot-autoconfigure</artifactId>
         </dependency>
 
+		<dependency>
+			<groupId>com.smart</groupId>
+			<artifactId>smart-license-server</artifactId>
+			<version>${smart-boot.version}</version>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>com.smart</groupId>
+			<artifactId>smart-license-client</artifactId>
+			<version>${smart-boot.version}</version>
+			<optional>true</optional>
+		</dependency>
     </dependencies>
-
-
 </project>

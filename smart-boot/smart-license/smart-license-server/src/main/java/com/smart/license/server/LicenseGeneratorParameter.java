@@ -1,0 +1,65 @@
+package com.smart.license.server;
+
+import com.smart.license.core.model.LicenseCheckInfo;
+import lombok.*;
+
+import java.time.LocalDateTime;
+
+/**
+ * License生成参数
+ * @author zhongming4762
+ * 2022/12/18
+ */
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class LicenseGeneratorParameter {
+
+    private String subject;
+
+    /**
+     * 证书生效日期
+     */
+    private LocalDateTime issuedTime;
+
+    /**
+     * 证书过期日期
+     */
+    private LocalDateTime expiryTime;
+
+    /**
+     * 允许访问的用户数
+     */
+    private Long consumerAmount;
+
+    /**
+     * 描述
+     */
+    private String description;
+
+    /**
+     * 服务器信息校验
+     */
+    private LicenseCheckInfo licenseCheckInfo;
+
+    /**
+     * 密钥路径
+     */
+    private String storePath;
+
+    /**
+     * 私钥
+     */
+    private String storePassword;
+
+    private String keyPassword;
+
+    private String alias;
+
+    /**
+     * 证书存储路径
+     */
+    private String licensePath;
+}

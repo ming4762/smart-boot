@@ -1,0 +1,2 @@
+com.smart.autoconfigure.license.server.SmartLicenseServerAutoConfiguration
+com.smart.autoconfigure.license.client.SmartLicenseClientAutoConfiguration

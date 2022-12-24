@@ -2,10 +2,12 @@ package com.smart.system;
 
 import com.smart.system.auth.AuthEventLockedHandler;
 import com.smart.system.auth.AuthEventLogHandler;
-import com.smart.system.service.SysUserAccountService;
 import com.smart.system.service.SysLogService;
+import com.smart.system.service.SysUserAccountService;
 import com.smart.system.service.SysUserService;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +18,7 @@ import org.springframework.context.annotation.Configuration;
  * 2020/1/22 9:44 上午
  */
 @Configuration
+@AutoConfigureBefore(JacksonAutoConfiguration.class)
 @ComponentScan
 public class SmartSystemAutoConfiguration {
 
