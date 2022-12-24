@@ -1,0 +1,60 @@
+/**
+ * 许可证管理 国际化信息
+ */
+export default {
+  trans: true,
+  key: 'smart.license',
+  data: {
+    title: {
+      licenseCode: 'license编码',
+      projectId: '所属项目',
+      version: 'license版本',
+      macAddress: 'mac地址',
+      ipAddress: 'IP地址',
+      cpuSerial: 'cpu序列号',
+      mainBoardSerial: '主板序列号',
+      effectiveTime: '生效时间',
+      expirationTime: '过期时间',
+      status: '状态',
+      times: '有效期',
+      storePath: '密钥路径',
+      licensePath: 'license存储路径',
+      storePassword: '密钥库密码',
+      keyPassword: '私钥密码',
+      alias: '别称',
+      subject: '主题',
+    },
+    validate: {
+      licenseCode: '请输入license编码',
+      version: '请输入license版本',
+      macAddress: '请输入mac地址，多个mac地址以逗号分隔',
+      ipAddress: '请输入IP地址，多个IP以逗号分隔',
+      cpuSerial: '请输入cpu序列号',
+      mainBoardSerial: '请输入主板序列号',
+      effectiveTime: '请输入生效时间',
+      expirationTime: '请输入过期时间',
+      status: '请输入状态',
+      times: '请输入有效期',
+      timeValidate: '过期时间不能早于当前日期',
+      storePath: '请输入密钥路径',
+      licensePath: '请输入license存储路径',
+      storePassword: '请输入密钥库密码',
+      keyPassword: '请输入私钥密码',
+      alias: '请输入别称',
+      subject: '请输入主题',
+    },
+    rules: {},
+    search: {
+      licenseCode: '请输入license编码',
+      version: '请输入license版本',
+    },
+    button: {
+      generator: '生成license',
+    },
+    message: {
+      generatorConfirm: '确定要生成license吗？',
+      generatorSuccess: '生成成功',
+      reGeneratorConfirm: 'license已生成，确定要重新生成吗？',
+    },
+  },
+}

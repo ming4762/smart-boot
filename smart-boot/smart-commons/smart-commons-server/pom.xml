@@ -3,27 +3,22 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
+        <artifactId>smart-commons</artifactId>
         <groupId>com.smart</groupId>
-        <artifactId>smart-boot</artifactId>
         <version>2.0.0-SNAPSHOT</version>
     </parent>
-    <artifactId>smart-commons</artifactId>
+    <artifactId>smart-commons-server</artifactId>
     <version>2.0.0-SNAPSHOT</version>
-    <name>smart-commons</name>
-    <description>commons工具包</description>
-    <packaging>pom</packaging>
-
-    <modules>
-        <module>smart-commons-core</module>
-        <module>smart-commons-jwt</module>
-        <module>smart-commons-server</module>
-        <module>smart-commons-validate</module>
-    </modules>
+    <name>smart-commons-server</name>
+    <description>获取服务器信息</description>
 
     <properties>
     </properties>
 
     <dependencies>
-
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
     </dependencies>
 </project>
