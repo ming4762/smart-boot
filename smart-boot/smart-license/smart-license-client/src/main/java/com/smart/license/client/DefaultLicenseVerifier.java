@@ -3,12 +3,14 @@ package com.smart.license.client;
 import com.smart.license.client.params.LicenseStoreParam;
 import com.smart.license.core.CustomKeyStoreParam;
 import com.smart.license.core.CustomLicenseManager;
+import com.smart.license.core.LicenseValidator;
 import de.schlichtherle.license.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.prefs.Preferences;
 
 /**
@@ -17,6 +19,13 @@ import java.util.prefs.Preferences;
  */
 @Slf4j
 public class DefaultLicenseVerifier implements LicenseVerifier {
+
+    private final List<LicenseValidator> licenseValidatorList;
+
+    public DefaultLicenseVerifier(List<LicenseValidator> licenseValidatorList) {
+        this.licenseValidatorList = licenseValidatorList;
+    }
+
     /**
      * 安装证书
      *
@@ -26,7 +35,7 @@ public class DefaultLicenseVerifier implements LicenseVerifier {
     @Override
     public LicenseContent install(LicenseStoreParam licenseStoreParam) {
         LicenseContent result = null;
-        CustomLicenseManager licenseManager = LicenseManagerHolder.getInstance(this.createLicenseParam(licenseStoreParam));
+        CustomLicenseManager licenseManager = LicenseManagerHolder.getInstance(this.createLicenseParam(licenseStoreParam), this.licenseValidatorList);
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
             licenseManager.uninstall();
@@ -45,7 +54,7 @@ public class DefaultLicenseVerifier implements LicenseVerifier {
      */
     @Override
     public boolean verify() {
-        LicenseManager licenseManager = LicenseManagerHolder.getInstance(null);
+        LicenseManager licenseManager = LicenseManagerHolder.getInstance(null, null);
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
             LicenseContent licenseContent = licenseManager.verify();

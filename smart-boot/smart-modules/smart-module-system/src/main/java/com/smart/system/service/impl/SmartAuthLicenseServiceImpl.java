@@ -1,9 +1,7 @@
 package com.smart.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.google.common.collect.Lists;
 import com.smart.crud.service.BaseServiceImpl;
-import com.smart.license.core.model.LicenseCheckInfo;
 import com.smart.license.server.LicenseGenerator;
 import com.smart.license.server.LicenseGeneratorParameter;
 import com.smart.system.constants.LicenseStatusEnum;
@@ -12,10 +10,6 @@ import com.smart.system.model.SmartAuthLicensePO;
 import com.smart.system.service.SmartAuthLicenseService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 /**
 * smart_auth_license - 许可证管理 Service实现类
@@ -57,14 +51,7 @@ public class SmartAuthLicenseServiceImpl extends BaseServiceImpl<SmartAuthLicens
                 .expiryTime(data.getExpirationTime())
                 .consumerAmount(data.getUserNum())
                 .description(data.getRemark())
-                .licenseCheckInfo(
-                        LicenseCheckInfo.builder()
-                                .macAddressList(this.getStringList(data.getMacAddress()))
-                                .ipAddressList(this.getStringList(data.getIpAddress()))
-                                .cpuSerial(data.getCpuSerial())
-                                .mainBoardSerial(data.getMainBoardSerial())
-                                .build()
-                )
+                .dataId(id)
                 .build();
         this.licenseGenerator.generate(parameter);
         return this.update(
@@ -72,11 +59,5 @@ public class SmartAuthLicenseServiceImpl extends BaseServiceImpl<SmartAuthLicens
                         .eq(SmartAuthLicensePO::getId, data.getId())
                         .set(SmartAuthLicensePO::getStatus, LicenseStatusEnum.GENERATOR)
         );
-    }
-
-    private List<String> getStringList(String value) {
-        return Optional.ofNullable(value)
-                .map(item -> Lists.newArrayList(item.split(",")))
-                .orElse(new ArrayList<>(0));
     }
 }

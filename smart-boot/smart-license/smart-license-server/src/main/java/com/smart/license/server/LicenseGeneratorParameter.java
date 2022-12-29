@@ -1,6 +1,5 @@
 package com.smart.license.server;
 
-import com.smart.license.core.model.LicenseCheckInfo;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -39,10 +38,7 @@ public class LicenseGeneratorParameter {
      */
     private String description;
 
-    /**
-     * 服务器信息校验
-     */
-    private LicenseCheckInfo licenseCheckInfo;
+    private Long dataId;
 
     /**
      * 密钥路径

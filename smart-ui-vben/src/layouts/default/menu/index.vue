@@ -108,7 +108,6 @@ export default defineComponent({
     /**
      * click menu
      * @param path
-     * @param item
      */
 
     function handleMenuClick(path: string) {
@@ -117,7 +116,7 @@ export default defineComponent({
 
     /**
      * before click menu
-     * @param menu
+     * @param path
      */
     async function beforeMenuClickFn(path: string) {
       if (!isUrl(path)) {
