@@ -62,8 +62,7 @@ export function createJavascriptTransition(
             onEnter={functions.enter}
             onLeave={functions.leave}
             onAfterLeave={functions.afterLeave}
-            onLeaveCancelled={functions.afterLeave}
-          >
+            onLeaveCancelled={functions.afterLeave}>
             {() => getSlot(slots)}
           </Transition>
         )
