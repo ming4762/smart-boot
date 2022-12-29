@@ -9,6 +9,9 @@ import javax.security.auth.x500.X500Principal;
 import java.io.File;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.prefs.Preferences;
 
 /**
@@ -18,6 +21,13 @@ import java.util.prefs.Preferences;
 public class DefaultLicenseGenerator implements LicenseGenerator {
 
     private static final X500Principal DEFAULT_HOLDER_AND_ISSUER = new X500Principal("CN=localhost, OU=localhost, O=localhost, L=SH, ST=SH, C=CN");
+
+    private List<LicenseDataProvider> dataProviderList;
+
+    public DefaultLicenseGenerator(List<LicenseDataProvider> dataProviderList) {
+        this.dataProviderList = dataProviderList;
+    }
+
     /**
      * 生成License
      *
@@ -27,7 +37,7 @@ public class DefaultLicenseGenerator implements LicenseGenerator {
     @SneakyThrows
     @Override
     public boolean generate(LicenseGeneratorParameter parameter) {
-        LicenseManager licenseManager = new CustomLicenseManager(this.createLicenseParam(parameter));
+        LicenseManager licenseManager = new CustomLicenseManager(this.createLicenseParam(parameter), null);
         LicenseContent licenseContent = this.createContent(parameter);
 
         licenseManager.store(licenseContent, new File(parameter.getLicensePath()));
@@ -77,7 +87,14 @@ public class DefaultLicenseGenerator implements LicenseGenerator {
         }
         content.setInfo(parameter.getDescription());
         // 设置额外需要校验的信息
-        content.setExtra(parameter.getLicenseCheckInfo());
+        Map<String, Object> extraMap = new HashMap<>(8);
+        this.dataProviderList.forEach(item -> {
+            Map<String, Object> map = item.dataMap(parameter);
+            if (map != null) {
+                extraMap.putAll(map);
+            }
+        });
+        content.setExtra(extraMap);
 
         return content;
     }

@@ -8,19 +8,19 @@ import org.springframework.beans.factory.annotation.Value;
  */
 public class PropertiesLicenseStoreParamProvider implements LicenseStoreParamProvider {
 
-    @Value("${smart.license.client.subject:null}")
+    @Value("${smart.license.client.key.subject:null}")
     private String subject;
 
-    @Value("${smart.license.client.publicAlias:null}")
+    @Value("${smart.license.client.key.publicAlias:null}")
     private String publicAlias;
 
-    @Value("${smart.license.client.storePass:null}")
+    @Value("${smart.license.client.key.storePass:null}")
     private String storePass;
 
-    @Value("${smart.license.client.licensePath:null}")
+    @Value("${smart.license.client.key.licensePath:null}")
     private String licensePath;
 
-    @Value("${smart.license.client.publicKeysStorePath:null}")
+    @Value("${smart.license.client.key.publicKeysStorePath:null}")
     private String publicKeysStorePath;
 
     /**

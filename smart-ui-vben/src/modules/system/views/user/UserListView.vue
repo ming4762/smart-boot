@@ -197,9 +197,6 @@
           </a-form-item>
           <a-form-item name="userType" :label="$t('system.views.user.table.userType')">
             <a-select v-model:value="addEditModel.userType">
-              <a-select-option v-if="hasPermissionUpdateSystemUser" :value="SYS_USER_TYPE">
-                系统用户
-              </a-select-option>
               <a-select-option
                 v-for="item in userTypeList"
                 :key="'userType_' + item.dictItemCode"

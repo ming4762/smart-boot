@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class LicenseCheckInfo implements Serializable {
+public class LicenseCheckServerInfo implements Serializable {
 
     /**
      * mac地址列表

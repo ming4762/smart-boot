@@ -69,4 +69,24 @@ public class SmartAuthLicenseSaveUpdateDTO implements Serializable {
 
     private String subject;
 
+    /**
+     * 企业
+     */
+    private String enterprise;
+
+    /**
+     * 项目&系统
+     */
+    private String project;
+
+    /**
+     * 系统版本号
+     */
+    private String version;
+
+    /**
+     * 合同编号
+     */
+    private String contractNo;
+
 }

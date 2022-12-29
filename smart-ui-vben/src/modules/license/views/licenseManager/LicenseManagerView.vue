@@ -141,6 +141,9 @@
               </a-form-item>
             </a-col>
           </a-row>
+          <a-divider class="form-divider" orientation="left">
+            {{ $t('smart.license.title.serverInfo') }}
+          </a-divider>
           <a-row>
             <a-col :span="12">
               <a-form-item :label="$t('smart.license.title.macAddress')" name="macAddress">
@@ -173,6 +176,42 @@
               </a-form-item>
             </a-col>
           </a-row>
+          <a-divider class="form-divider" orientation="left">
+            {{ $t('smart.license.title.projectInfo') }}
+          </a-divider>
+          <a-row>
+            <a-col :span="12">
+              <a-form-item :label="$t('smart.license.title.enterprise')" name="enterprise">
+                <a-input
+                  v-model:value="formProps.model.enterprise"
+                  :placeholder="$t('smart.license.validate.enterprise')" />
+              </a-form-item>
+            </a-col>
+            <a-col :span="12">
+              <a-form-item :label="$t('smart.license.title.project')" name="project">
+                <a-input
+                  v-model:value="formProps.model.project"
+                  :placeholder="$t('smart.license.validate.project')" />
+              </a-form-item>
+            </a-col>
+            <a-col :span="12">
+              <a-form-item :label="$t('smart.license.title.version')" name="version">
+                <a-input
+                  v-model:value="formProps.model.version"
+                  :placeholder="$t('smart.license.validate.version')" />
+              </a-form-item>
+            </a-col>
+            <a-col :span="12">
+              <a-form-item :label="$t('smart.license.title.contractNo')" name="contractNo">
+                <a-input
+                  v-model:value="formProps.model.contractNo"
+                  :placeholder="$t('smart.license.validate.contractNo')" />
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-divider class="form-divider" orientation="left">
+            {{ $t('smart.license.title.keyInfo') }}
+          </a-divider>
           <a-row>
             <a-col :span="12">
               <a-form-item :label="$t('smart.license.title.storePath')" name="storePath">
@@ -433,6 +472,26 @@ export default defineComponent({
           field: 'mainBoardSerial',
           title: '{smart.license.title.mainBoardSerial}',
           width: 200,
+        },
+        {
+          field: 'enterprise',
+          title: '{smart.license.title.enterprise}',
+          width: 160,
+        },
+        {
+          field: 'project',
+          title: '{smart.license.title.project}',
+          width: 160,
+        },
+        {
+          field: 'version',
+          title: '{smart.license.title.version}',
+          width: 160,
+        },
+        {
+          field: 'contractNo',
+          title: '{smart.license.title.contractNo}',
+          width: 160,
         },
         {
           field: 'effectiveTime',
