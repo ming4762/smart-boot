@@ -29,6 +29,7 @@ export default {
       serverInfo: '服务器信息',
       projectInfo: '项目&系统信息',
       keyInfo: '密钥信息',
+      licenseName: 'license名称',
     },
     validate: {
       licenseCode: '请输入license编码',
@@ -51,6 +52,7 @@ export default {
       project: '请输入项目&系统',
       version: '请输入系统版本',
       contractNo: '请输入合同编号',
+      licenseName: '请输入license名称',
     },
     rules: {},
     search: {

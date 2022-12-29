@@ -128,8 +128,16 @@
             <a-col :span="12">
               <a-form-item :label="$t('smart.license.title.licenseCode')" name="licenseCode">
                 <a-input
-                  v-model:value="formProps.model.licenseCode"
+                  disabled
+                  :value="formProps.model.licenseCode"
                   :placeholder="$t('smart.license.validate.licenseCode')" />
+              </a-form-item>
+            </a-col>
+            <a-col :span="12">
+              <a-form-item :label="$t('smart.license.title.licenseName')" name="licenseName">
+                <a-input
+                  v-model:value="formProps.model.licenseName"
+                  :placeholder="$t('smart.license.validate.licenseName')" />
               </a-form-item>
             </a-col>
             <a-col :span="12">
@@ -284,6 +292,7 @@ import {
   handleDelete,
   useGeneratorLicense,
 } from './SmartAuthLicenseHook'
+import { buildUUID } from '/@/utils/uuid'
 
 export default defineComponent({
   name: 'LicenseManagerView',
@@ -320,6 +329,9 @@ export default defineComponent({
       formRef,
     } = useAddEdit(gridRef, handleGetById, loadData, handleSaveUpdate, t, {
       idField: 'id',
+      defaultModel: {
+        licenseCode: buildUUID(),
+      },
     })
 
     const timesRules = [
@@ -390,10 +402,10 @@ export default defineComponent({
         },
       },
       rules: {
-        licenseCode: [
+        licenseName: [
           {
             required: true,
-            message: this.$t('smart.license.validate.licenseCode'),
+            message: this.$t('smart.license.validate.licenseName'),
             trigger: 'blur',
           },
         ],
@@ -450,6 +462,12 @@ export default defineComponent({
         {
           field: 'licenseCode',
           title: '{smart.license.title.licenseCode}',
+          width: 120,
+          fixed: 'left',
+        },
+        {
+          field: 'licenseName',
+          title: '{smart.license.title.licenseName}',
           width: 120,
           fixed: 'left',
         },

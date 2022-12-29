@@ -30,6 +30,9 @@ public class SmartAuthLicenseSaveUpdateDTO implements Serializable {
     @NotNull(message = "license编码不能为空")
     private String licenseCode;
 
+    @NotNull(message = "license名称不能为空")
+    private String licenseName;
+
     /**
     * mac地址，多个mac地址以逗号分隔
     */

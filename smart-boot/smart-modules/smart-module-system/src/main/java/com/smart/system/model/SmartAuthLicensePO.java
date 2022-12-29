@@ -31,6 +31,8 @@ public class SmartAuthLicensePO extends BaseModelUserTime {
     */
     private String licenseCode;
 
+    private String licenseName;
+
     /**
     * project_id - 所属项目
     */
