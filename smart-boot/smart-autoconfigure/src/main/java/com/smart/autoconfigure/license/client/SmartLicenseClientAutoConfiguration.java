@@ -5,10 +5,13 @@ import com.smart.license.client.LicenseInstallListener;
 import com.smart.license.client.LicenseVerifier;
 import com.smart.license.client.params.LicenseStoreParamProvider;
 import com.smart.license.client.params.PropertiesLicenseStoreParamProvider;
+import com.smart.license.core.LicenseValidator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.List;
 
 /**
  * License server自动配置类
@@ -21,8 +24,8 @@ public class SmartLicenseClientAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(LicenseVerifier.class)
-    public LicenseVerifier licenseVerifier() {
-        return new DefaultLicenseVerifier();
+    public LicenseVerifier licenseVerifier(List<LicenseValidator> licenseValidatorList) {
+        return new DefaultLicenseVerifier(licenseValidatorList);
     }
 
     @Bean
@@ -36,4 +39,6 @@ public class SmartLicenseClientAutoConfiguration {
     public LicenseInstallListener licenseInstallListener(LicenseStoreParamProvider paramProvider, LicenseVerifier licenseVerifier) {
         return new LicenseInstallListener(paramProvider, licenseVerifier);
     }
+
+
 }

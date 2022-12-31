@@ -1,11 +1,14 @@
 package com.smart.autoconfigure.license.server;
 
 import com.smart.license.server.DefaultLicenseGenerator;
+import com.smart.license.server.LicenseDataProvider;
 import com.smart.license.server.LicenseGenerator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.List;
 
 /**
  * License server自动配置类
@@ -22,7 +25,7 @@ public class SmartLicenseServerAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean(LicenseGenerator.class)
-    public LicenseGenerator licenseGenerator() {
-        return new DefaultLicenseGenerator();
+    public LicenseGenerator licenseGenerator(List<LicenseDataProvider> dataProviderList) {
+        return new DefaultLicenseGenerator(dataProviderList);
     }
 }
