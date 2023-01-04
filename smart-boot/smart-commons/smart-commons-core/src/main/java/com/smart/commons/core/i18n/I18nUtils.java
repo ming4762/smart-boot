@@ -73,6 +73,10 @@ public class I18nUtils {
         return get(i18nMessage, args, LocaleContextHolder.getLocale());
     }
 
+    public static String get(@NonNull I18nMessage i18nMessage, String defaultMessage, Object ...args) {
+        return doGet(i18nMessage, () -> messageSource.getMessage(i18nMessage.getI18nCode(), args, defaultMessage, LocaleContextHolder.getLocale()));
+    }
+
     /**
      * 获取I18N信息
      * @param i18nMessage I18nMessage

@@ -92,6 +92,6 @@ public enum HttpStatus implements IHttpStatus, I18nMessage {
 
     @Override
     public String defaultMessage() {
-        return I18nMessage.super.defaultMessage();
+        return this.zhCn;
     }
 }
