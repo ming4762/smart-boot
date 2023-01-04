@@ -23,7 +23,8 @@ public class DefaultMethodArgumentTypeMismatchExceptionMessageProcessor extends 
     public Object message(MethodArgumentTypeMismatchException e, long exceptionNo, @Nullable HttpServletRequest request) {
 
         log.error("MethodArgumentTypeMismatchException: 参数名 {}, 异常信息 {}", e.getName(), e.getMessage());
-        final String message = this.i18nMessage(HttpStatus.PARAM_NOT_MATCH, e.getName(), e.getMessage());
+        // todo:国际化参数
+        final String message = this.i18nMessage(HttpStatus.PARAM_NOT_MATCH, e.getMessage(), e.getName());
         return Result.failure(message);
     }
 }

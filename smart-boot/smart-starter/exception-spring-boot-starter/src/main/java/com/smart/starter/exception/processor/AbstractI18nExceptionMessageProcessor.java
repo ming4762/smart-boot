@@ -33,7 +33,7 @@ public abstract class AbstractI18nExceptionMessageProcessor<T extends Exception>
      */
     protected String i18nMessage(I18nMessage message, String defaultMessage, Object ...args) {
         if (I18nUtils.supportI18n() && Objects.nonNull(message)) {
-            return I18nUtils.get(message, args);
+            return I18nUtils.get(message, defaultMessage, args);
         }
         return defaultMessage;
     }
