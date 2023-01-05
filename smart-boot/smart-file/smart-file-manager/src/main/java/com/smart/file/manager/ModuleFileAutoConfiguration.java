@@ -25,8 +25,8 @@ public class ModuleFileAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean(SysFileService.class)
-    public SysFileService sysFileService(SmartFileProperties fileProperties) {
-        return new DefaultFileServiceImpl(fileProperties);
+    public SysFileService sysFileService() {
+        return new DefaultFileServiceImpl();
     }
 
     @Bean

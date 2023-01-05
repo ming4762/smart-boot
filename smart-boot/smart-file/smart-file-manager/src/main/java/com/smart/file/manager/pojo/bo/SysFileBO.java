@@ -1,6 +1,5 @@
 package com.smart.file.manager.pojo.bo;
 
-import com.smart.commons.core.utils.DigestUtils;
 import com.smart.commons.core.utils.IdGenerator;
 import com.smart.file.manager.constants.FileTypeEnum;
 import com.smart.file.manager.model.SysFilePO;
@@ -17,25 +16,31 @@ import java.io.InputStream;
  */
 @Getter
 @Setter
-@AllArgsConstructor
 @ToString
 public class SysFileBO {
     private SysFilePO file;
 
     private InputStream inputStream;
 
+    private String folder;
+
     @SneakyThrows
-    public SysFileBO(@NonNull MultipartFile multipartFile, String filename, String type, String handlerType) {
+    public SysFileBO(@NonNull MultipartFile multipartFile, String filename, String folder, FileTypeEnum type, String handlerType) {
         this.file = SysFilePO.builder()
                 .fileId(IdGenerator.nextId())
                 .fileName(StringUtils.isEmpty(filename) ? multipartFile.getOriginalFilename() : filename)
-                .type(StringUtils.isEmpty(type) ? FileTypeEnum.TEMP.name() : type)
+                .type(type == null ? FileTypeEnum.TEMP : type)
                 .contentType(multipartFile.getContentType())
                 .handlerType(handlerType)
-                .md5(DigestUtils.sha256(multipartFile.getInputStream()))
                 .fileSize(multipartFile.getSize())
                 .build();
+        this.folder = StringUtils.isBlank(folder) ? "" : folder;
         this.inputStream = multipartFile.getInputStream();
     }
 
+
+    public SysFileBO(SysFilePO file, InputStream inputStream) {
+        this.file = file;
+        this.inputStream = inputStream;
+    }
 }

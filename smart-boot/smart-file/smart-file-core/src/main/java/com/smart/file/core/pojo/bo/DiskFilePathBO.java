@@ -1,6 +1,7 @@
 package com.smart.file.core.pojo.bo;
 
 import com.smart.commons.core.utils.Base64Utils;
+import com.smart.file.core.model.FileSaveParameter;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -22,7 +23,7 @@ public class DiskFilePathBO {
 
     public static final String ID_CUT = "_";
 
-    private static final int IDS_LENGTH = 2;
+    private static final String POINT_STR = ".";
 
     private static final String FILE_SEPARATOR = "/";
 
@@ -36,22 +37,25 @@ public class DiskFilePathBO {
 
     private String basePath;
 
-    private String datePath;
-
-    private String md5;
+    private String folderPath;
 
     @Getter
     private String filename;
 
-    public DiskFilePathBO(String basePath, String md5, String filename) {
+    private String timestamp;
+
+    public DiskFilePathBO(String basePath, FileSaveParameter parameter) {
         this.basePath = basePath;
-        this.md5 = md5;
-        this.filename = Base64Utils.encode(filename);
+        this.filename = parameter.getFilename();
         // 如果文件名中存在路径分隔符，则进行替换
         if (StringUtils.contains(this.filename, FILE_SEPARATOR)) {
             this.filename = StringUtils.replace(this.filename, FILE_SEPARATOR, SEPARATOR_REPLACE);
         }
-        this.datePath = FORMATTER.format(Instant.now());
+        this.folderPath = parameter.getPath();
+        if (StringUtils.isBlank(this.folderPath)) {
+            this.folderPath = FORMATTER.format(Instant.now());
+        }
+        this.timestamp = String.valueOf(System.currentTimeMillis());
     }
 
     /**
@@ -59,7 +63,7 @@ public class DiskFilePathBO {
      * @return 文件夹路径
      */
     public String getFolderPath() {
-        return this.basePath + FILE_SEPARATOR + this.datePath;
+        return this.basePath + FILE_SEPARATOR + this.folderPath;
     }
 
     /**
@@ -75,11 +79,11 @@ public class DiskFilePathBO {
      * @return 文件名
      */
     public String getDiskFilename() {
-        String path = md5;
-        if (!StringUtils.isBlank(this.filename)) {
-            path = path + ID_CUT + this.filename;
+        if (!this.filename.contains(POINT_STR)) {
+            return this.filename + ID_CUT + this.timestamp;
         }
-        return path;
+        return this.filename.substring(0, this.filename.lastIndexOf(POINT_STR))
+                + ID_CUT + this.timestamp + this.filename.substring(this.filename.lastIndexOf(POINT_STR));
     }
 
     /**
@@ -91,7 +95,7 @@ public class DiskFilePathBO {
         if (StringUtils.contains(this.filename, SEPARATOR_REPLACE)) {
             name = StringUtils.replace(this.filename, SEPARATOR_REPLACE, FILE_SEPARATOR);
         }
-        return Base64Utils.decodeStr(name);
+        return name;
     }
 
     /**
@@ -99,11 +103,8 @@ public class DiskFilePathBO {
      * @return 文件ID
      */
     public String getFileId() {
-        String fileId = this.datePath + ID_CUT + this.md5;
-        if (!StringUtils.isBlank(this.filename)) {
-            fileId = fileId + ID_CUT + this.filename;
-        }
-        return fileId;
+        String fileId = String.join(SEPARATOR_REPLACE, this.folderPath, this.timestamp, this.filename);
+        return Base64Utils.encode(fileId);
     }
 
     /**
@@ -114,14 +115,13 @@ public class DiskFilePathBO {
      */
     @NonNull
     public static DiskFilePathBO createById(@NonNull String id, @NonNull String basePath) {
-        final String[] ids = id.split(DiskFilePathBO.ID_CUT);
+        String idStr = Base64Utils.decodeStr(id);
+        final String[] ids = idStr.split(DiskFilePathBO.SEPARATOR_REPLACE);
         DiskFilePathBO diskFilePath = new DiskFilePathBO();
         diskFilePath.basePath = basePath;
-        diskFilePath.datePath = ids[0];
-        diskFilePath.md5 = ids[1];
-        if (ids.length > IDS_LENGTH) {
-            diskFilePath.filename = ids[2];
-        }
+        diskFilePath.folderPath = ids[0];
+        diskFilePath.timestamp = ids[1];
+        diskFilePath.filename = ids[2];
         return diskFilePath;
     }
 }

@@ -15,7 +15,8 @@ public enum ActualFileServiceEnum {
      */
     DISK("ActualFileDiskService"),
     MONGO("ActualFileMongoService"),
-    SFTP("ActualFileSftpService");
+    SFTP("ActualFileSftpService"),
+    MINIO("ActualFileMinioService");
 
 
     private final String serviceName;

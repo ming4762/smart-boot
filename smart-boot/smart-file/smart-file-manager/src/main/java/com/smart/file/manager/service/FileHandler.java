@@ -1,9 +1,8 @@
 package com.smart.file.manager.service;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.smart.auth.core.utils.AuthUtils;
 import com.smart.file.core.SmartFileProperties;
 import com.smart.file.core.exception.SmartFileException;
+import com.smart.file.core.model.FileSaveParameter;
 import com.smart.file.core.service.ActualFileService;
 import com.smart.file.manager.constants.FileTypeEnum;
 import com.smart.file.manager.model.SysFilePO;
@@ -25,7 +24,6 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -66,7 +64,7 @@ public class FileHandler implements ApplicationContextAware, InitializingBean {
         ActualFileService actualFileService = this.actualFileServiceMap.get(dbName);
         if (Objects.isNull(actualFileService)) {
             // 获取默认的文件执行器
-            actualFileService = this.actualFileServiceMap.get(this.fileProperties.getDefaultHandler());
+            actualFileService = this.actualFileServiceMap.get(this.fileProperties.getDefaultHandler().name());
         }
         if (Objects.isNull(actualFileService)) {
             throw new SmartFileException(String.format("获取文件执行器失败，未找到对应的文件执行器，执行器名称：%s", dbName));
@@ -102,10 +100,10 @@ public class FileHandler implements ApplicationContextAware, InitializingBean {
         // 保存文件
         file.getFile().setDbId(this.saveActualFile(file));
         try {
-            if (StringUtils.isEmpty(file.getFile().getType())) {
-                file.getFile().setType(FileTypeEnum.TEMP.name());
+            if (file.getFile().getType() == null) {
+                file.getFile().setType(FileTypeEnum.TEMP);
             }
-            this.sysFileService.saveWithUser(file.getFile(), AuthUtils.getCurrentUserId());
+            this.sysFileService.save(file.getFile());
             return file.getFile();
         } catch (Exception e) {
             log.error("保存文件信息到数据库发生错误，删除保存的文件");
@@ -122,11 +120,11 @@ public class FileHandler implements ApplicationContextAware, InitializingBean {
      * @param handlerType   指定文件执行器类型
      * @return 文件实体信息
      */
-    public SysFilePO saveFile(@NonNull MultipartFile multipartFile, String type, String handlerType) {
+    public SysFilePO saveFile(@NonNull MultipartFile multipartFile, FileTypeEnum type, String handlerType) {
         final SysFilePO file = new SysFilePO();
         file.setType(type);
         try {
-            return this.saveFile(new SysFileBO(multipartFile, null, type, handlerType));
+            return this.saveFile(new SysFileBO(multipartFile, null, null, type, handlerType));
         } catch (Exception e) {
             throw new SmartFileException("系统发生未知异常", e);
         }
@@ -139,8 +137,8 @@ public class FileHandler implements ApplicationContextAware, InitializingBean {
      * @param type          文件类型
      * @return 文件实体信息
      */
-    public SysFilePO saveFile(@NonNull MultipartFile multipartFile, String type) {
-        return this.saveFile(multipartFile, type, this.fileProperties.getDefaultHandler());
+    public SysFilePO saveFile(@NonNull MultipartFile multipartFile, FileTypeEnum type) {
+        return this.saveFile(multipartFile, type, this.fileProperties.getDefaultHandler().name());
     }
 
     /**
@@ -151,16 +149,16 @@ public class FileHandler implements ApplicationContextAware, InitializingBean {
     @Nullable
     public SysFilePO getSameFile(@NonNull SysFilePO file) {
         // 根据md5判断文件是否存在
-        final List<SysFilePO> md5FileList = this.sysFileService.list(
-                new QueryWrapper<SysFilePO>().lambda()
-                        .eq(SysFilePO :: getMd5, file.getMd5())
-                        .eq(SysFilePO :: getFileName, file.getFileName())
-                        .eq(SysFilePO :: getFileSize, file.getFileSize())
-        );
-        if (md5FileList.isEmpty()) {
-            return null;
-        }
-        return md5FileList.iterator().next();
+//        final List<SysFilePO> md5FileList = this.sysFileService.list(
+//                new QueryWrapper<SysFilePO>().lambda()
+//                        .eq(SysFilePO :: getFileName, file.getFileName())
+//                        .eq(SysFilePO :: getFileSize, file.getFileSize())
+//        );
+//        if (md5FileList.isEmpty()) {
+//            return null;
+//        }
+//        return md5FileList.iterator().next();
+        return null;
     }
 
     /**
@@ -236,7 +234,7 @@ public class FileHandler implements ApplicationContextAware, InitializingBean {
         Assert.notNull(file.getDbId(), "实际文件ID为空，删除失败");
         try {
             return new SysFileBO(file, this.getActualFileService(file.getHandlerType()).download(file.getDbId()));
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             throw new SmartFileException("文件未找到", e);
         }
     }
@@ -262,9 +260,9 @@ public class FileHandler implements ApplicationContextAware, InitializingBean {
      * @param handlerType 执行器类型
      * @return SysFileBO
      */
-    private SysFileBO createSysFileBo(MultipartFile file, String fileName, String type, String handlerType) {
-        String handler = StringUtils.isBlank(handlerType) ? this.fileProperties.getDefaultHandler() : handlerType;
-        return new SysFileBO(file, fileName, type, handler);
+    protected SysFileBO createSysFileBo(MultipartFile file, String fileName, FileTypeEnum type, String handlerType) {
+        String handler = StringUtils.isBlank(handlerType) ? this.fileProperties.getDefaultHandler().name() : handlerType;
+        return new SysFileBO(file, fileName, null, type, handler);
     }
 
     /**
@@ -273,9 +271,9 @@ public class FileHandler implements ApplicationContextAware, InitializingBean {
      * @return 文件ID
      */
     @SneakyThrows(IOException.class)
-    private String saveActualFile(SysFileBO file) {
+    protected String saveActualFile(SysFileBO file) {
         try (InputStream inputStream = file.getInputStream()) {
-            return this.getActualFileService(file.getFile().getHandlerType()).save(inputStream, file.getFile().getFileName(), file.getFile().getMd5());
+            return this.getActualFileService(file.getFile().getHandlerType()).save(inputStream, FileSaveParameter.create(file.getFile().getFileName(), file.getFolder()));
         }
 
     }

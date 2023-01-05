@@ -1,3 +1,4 @@
 com.smart.autoconfigure.license.server.SmartLicenseServerAutoConfiguration
 com.smart.autoconfigure.license.client.SmartLicenseClientAutoConfiguration
 com.smart.autoconfigure.license.client.SmartLicenseValidatorAutoConfiguration
+com.smart.autoconfigure.file.minio.SmartFileMinioAutoConfiguration

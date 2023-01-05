@@ -4,6 +4,7 @@ import com.mongodb.client.gridfs.GridFSBuckets;
 import com.smart.commons.core.exception.OperationNotSupportedException;
 import com.smart.file.core.common.ActualFileServiceRegisterName;
 import com.smart.file.core.constants.ActualFileServiceEnum;
+import com.smart.file.core.model.FileSaveParameter;
 import com.smart.file.core.service.ActualFileService;
 import lombok.SneakyThrows;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -40,15 +41,15 @@ public class ActualFileServiceMongoImpl implements ActualFileService {
      * 保存文件
      *
      * @param file     文件
-     * @param filename 文件名
+     * @param parameter 参数
      * @return 文件id
      */
     @SneakyThrows
     @Override
     public @NonNull
-    String save(@NonNull File file, String filename) {
+    String save(@NonNull File file, @NonNull FileSaveParameter parameter) {
         try (FileInputStream fileInputStream = new FileInputStream(file)) {
-            return this.gridFsTemplate.store(fileInputStream, filename).toString();
+            return this.gridFsTemplate.store(fileInputStream, parameter.getFilename()).toString();
         }
     }
 
@@ -56,13 +57,12 @@ public class ActualFileServiceMongoImpl implements ActualFileService {
      * 保存文件
      *
      * @param inputStream 文件流
-     * @param filename    文件名
      * @return 文件ID
      */
     @Override
     public @NonNull
-    String save(@NonNull InputStream inputStream, String filename, String md5) {
-        return this.gridFsTemplate.store(inputStream, filename).toString();
+    String save(@NonNull InputStream inputStream, @NonNull FileSaveParameter parameter) {
+        return this.gridFsTemplate.store(inputStream, parameter.getFilename()).toString();
     }
 
     /**

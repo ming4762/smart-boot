@@ -2,6 +2,7 @@ package com.smart.file.manager.controller;
 
 import com.smart.auth.core.annotation.TempToken;
 import com.smart.commons.core.message.Result;
+import com.smart.file.manager.constants.FileTypeEnum;
 import com.smart.file.manager.model.SysFilePO;
 import com.smart.file.manager.pojo.bo.SysFileBO;
 import com.smart.file.manager.pojo.dto.SaveFileDTO;
@@ -58,7 +59,7 @@ public class FileController {
     public Result<SysFilePO> upload(
             @RequestParam("file") MultipartFile multipartFile,
             @RequestParam(value = "fileName", required = false) String fileName,
-            @RequestParam(value = "type", required = false) String type
+            @RequestParam(value = "type", required = false) FileTypeEnum type
     ) {
         return Result.success(this.fileHandler.saveFile(multipartFile, SaveFileDTO.builder().type(type).filename(fileName).build()));
     }
@@ -79,7 +80,7 @@ public class FileController {
     @ResponseBody
     public Result<List<SysFilePO>> batchUpload(
             @RequestParam("files")List<MultipartFile> multipartFileList,
-            @RequestParam(value = "type", required = false) String type
+            @RequestParam(value = "type", required = false) FileTypeEnum type
     ) {
         if (multipartFileList.isEmpty()) {
             return Result.success(new ArrayList<>(0));
@@ -98,7 +99,7 @@ public class FileController {
      * @throws IOException IOException
      */
     @Operation(summary = "下载文件")
-    @GetMapping("public/file/download/{id}")
+    @RequestMapping(value = "/file/download/{id}", method = {RequestMethod.GET, RequestMethod.POST})
     @TempToken(resource = "sys:file:download")
     public void download(@PathVariable("id") Long id, HttpServletResponse response) throws IOException {
         final SysFileBO file = this.fileHandler.download(id);

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.smart.crud.model.BaseModelCreateUserTime;
+import com.smart.file.manager.constants.FileTypeEnum;
 import lombok.*;
 
 /**
@@ -34,7 +35,7 @@ public class SysFilePO extends BaseModelCreateUserTime {
     /**
      * 类型
      */
-    private String type;
+    private FileTypeEnum type;
 
     /**
      * 文件类型

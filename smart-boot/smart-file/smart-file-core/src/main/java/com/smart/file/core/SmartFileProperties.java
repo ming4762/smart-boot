@@ -16,19 +16,18 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class SmartFileProperties {
 
     /**
-     * 本地磁盘存储路径
-     */
-    private String basePath;
-
-    /**
      * 默认的文件执行器
      */
-    private String defaultHandler = ActualFileServiceEnum.DISK.name();
+    private ActualFileServiceEnum defaultHandler = ActualFileServiceEnum.DISK;
 
     /**
      * sftp配置
      */
     private SmartJschProperties sftp;
+
+    private DiskProperties disk = new DiskProperties();
+
+    private MinioProperties minio = new MinioProperties();
 
     @Getter
     @Setter
@@ -59,5 +58,29 @@ public class SmartFileProperties {
         private String channel = "sftp";
 
         private String basePath;
+    }
+
+    /**
+     * 本地磁盘存储配置
+     */
+    @Getter
+    @Setter
+    public static class DiskProperties {
+        /**
+         * 本地磁盘存储路径
+         */
+        private String basePath;
+    }
+
+    @Getter
+    @Setter
+    public static class MinioProperties {
+        private String endpoint;
+
+        private String accessKey;
+
+        private String secretKey;
+
+        private String bucketName;
     }
 }
