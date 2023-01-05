@@ -1,15 +1,16 @@
 package com.smart.file.extensions.disk.service;
 
-import com.smart.commons.core.utils.DigestUtils;
 import com.smart.file.core.SmartFileProperties;
 import com.smart.file.core.common.ActualFileServiceRegisterName;
 import com.smart.file.core.constants.ActualFileServiceEnum;
+import com.smart.file.core.exception.SmartFileException;
+import com.smart.file.core.model.FileSaveParameter;
 import com.smart.file.core.pojo.bo.DiskFilePathBO;
 import com.smart.file.core.service.ActualFileService;
 import lombok.SneakyThrows;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.lang.NonNull;
-import org.springframework.util.StringUtils;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -26,37 +27,37 @@ public class ActualFileDiskServiceImpl implements ActualFileService {
     private final String basePath;
 
     public ActualFileDiskServiceImpl(SmartFileProperties properties) {
-        this.basePath = properties.getBasePath();
+        this.basePath = properties.getDisk().getBasePath();
+        if (StringUtils.isBlank(this.basePath)) {
+            throw new SmartFileException("使用本地磁盘存储必须设置：smart.file.disk.base-path");
+        }
     }
 
     /**
      * 保存文件
      * @param file 文件
-     * @param filename 文件名
      * @return 文件id
      */
     @Override
-    public @NonNull String save(@NonNull File file, String filename) throws IOException {
+    public @NonNull String save(@NonNull File file, @NonNull FileSaveParameter parameter) throws IOException {
         try (
-                FileInputStream inputStream = new FileInputStream(file);
-                FileInputStream md5InputStream = new FileInputStream(file)
+                FileInputStream inputStream = new FileInputStream(file)
                 ) {
-            String message = DigestUtils.sha256(md5InputStream);
-            return this.save(inputStream, !StringUtils.hasText(filename) ? file.getName() : filename, message);
+            return this.save(inputStream, parameter);
         }
     }
 
     /**
      * 保存文件
      * @param inputStream 文件流
-     * @param filename 文件名
+     * @param parameter 存储参数
      * @return 文件ID
      */
     @SneakyThrows(IOException.class)
     @Override
-    public @NonNull String save(@NonNull InputStream inputStream, String filename, String md5) {
+    public @NonNull String save(@NonNull InputStream inputStream, @NonNull FileSaveParameter parameter) {
         // 计算md5
-        final DiskFilePathBO diskFilePath = new DiskFilePathBO(this.basePath, md5, filename);
+        final DiskFilePathBO diskFilePath = new DiskFilePathBO(this.basePath, parameter);
         // 获取文件路径
         final Path folderPath = Paths.get(diskFilePath.getFolderPath());
         if (Files.notExists(folderPath)) {
@@ -97,10 +98,10 @@ public class ActualFileDiskServiceImpl implements ActualFileService {
      * @return 文件流
      */
     @Override
-    public InputStream download(@NonNull String id) throws FileNotFoundException {
+    public InputStream download(@NonNull String id) throws IOException {
         final String filePath = DiskFilePathBO.createById(id, this.basePath).getFilePath();
         final File file = new File(filePath);
-        return new FileInputStream(file);
+        return Files.newInputStream(file.toPath());
     }
 
     /**

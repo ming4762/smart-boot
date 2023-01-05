@@ -2,11 +2,11 @@ package com.smart.file.extensions.sftp.service;
 
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.SftpException;
-import com.smart.commons.core.utils.DigestUtils;
 import com.smart.file.core.SmartFileProperties;
 import com.smart.file.core.common.ActualFileServiceRegisterName;
 import com.smart.file.core.constants.ActualFileServiceEnum;
 import com.smart.file.core.exception.SmartFileException;
+import com.smart.file.core.model.FileSaveParameter;
 import com.smart.file.core.pojo.bo.DiskFilePathBO;
 import com.smart.file.core.service.ActualFileService;
 import com.smart.file.extensions.sftp.exception.SftpExceptionRuntimeException;
@@ -42,18 +42,16 @@ public class ActualFileServiceNfsImpl implements ActualFileService {
     /**
      * 保存文件
      * @param file 文件
-     * @param filename 文件名
+     * @param parameter 参数
      * @return 文件id
      */
     @Override
     @NonNull
-    public String save(@NonNull File file, String filename) throws IOException {
+    public String save(@NonNull File file, @NonNull FileSaveParameter parameter) throws IOException {
         try (
                 FileInputStream inputStream = new FileInputStream(file);
-                FileInputStream md5InputStream = new FileInputStream(file)
                 ) {
-            String message = DigestUtils.sha256(md5InputStream);
-            return this.save(inputStream, StringUtils.isEmpty(filename) ? file.getName() : filename, message);
+            return this.save(inputStream, parameter);
         }
     }
 
@@ -62,17 +60,17 @@ public class ActualFileServiceNfsImpl implements ActualFileService {
      * 保存文件
      * 计算文件MD5会造成非常大的内容压力
      * @param inputStream 文件流
-     * @param filename 文件名
+     * @param parameter 参数
      * @return 文件ID
      */
     @SneakyThrows(SftpException.class)
     @Override
     @NonNull
-    public String save(@NonNull InputStream inputStream, String filename, String md5) {
+    public String save(@NonNull InputStream inputStream, @NonNull FileSaveParameter parameter) {
         // 获取channel
         final ChannelSftp channelSftp = this.jcraftChannelProvider.getChannel();
         try {
-            final DiskFilePathBO diskFilePath = new DiskFilePathBO(this.basePath, md5, filename);
+            final DiskFilePathBO diskFilePath = new DiskFilePathBO(this.basePath, parameter);
             // 创建并进入路径
             JschUtils.createDirectories(channelSftp, diskFilePath.getFolderPath());
             // 执行保存
@@ -121,25 +119,26 @@ public class ActualFileServiceNfsImpl implements ActualFileService {
     @SneakyThrows({IOException.class, SftpException.class})
     @Override
     public InputStream download(@NonNull String id) {
+        throw new UnsupportedOperationException("NFS方式不支持该方式下载文件，请通过download(String id, OutputStream outputStream)下载文件");
         // 获取channel
-        final ChannelSftp channelSftp = this.jcraftChannelProvider.getChannel();
-        try {
-            final DiskFilePathBO diskFile = DiskFilePathBO.createById(id, this.basePath);
-            channelSftp.cd(diskFile.getFolderPath());
-            final ByteArrayInputStream byteArrayInputStream;
-            try (
-                    final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                    final InputStream inputStream = channelSftp.get(diskFile.getDiskFilename())
-            ) {
-                // 获取channel
-                IOUtils.copy(inputStream, outputStream);
-                byteArrayInputStream = new ByteArrayInputStream(outputStream.toByteArray());
-            }
-            return byteArrayInputStream;
-        } finally {
-            // 归还连接
-            this.jcraftChannelProvider.returnChannel(channelSftp);
-        }
+//        final ChannelSftp channelSftp = this.jcraftChannelProvider.getChannel();
+//        try {
+//            final DiskFilePathBO diskFile = DiskFilePathBO.createById(id, this.basePath);
+//            channelSftp.cd(diskFile.getFolderPath());
+//            final ByteArrayInputStream byteArrayInputStream;
+//            try (
+//                    final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+//                    final InputStream inputStream = channelSftp.get(diskFile.getDiskFilename())
+//            ) {
+//                // 获取channel
+//                IOUtils.copy(inputStream, outputStream);
+//                byteArrayInputStream = new ByteArrayInputStream(outputStream.toByteArray());
+//            }
+//            return byteArrayInputStream;
+//        } finally {
+//            // 归还连接
+//            this.jcraftChannelProvider.returnChannel(channelSftp);
+//        }
     }
 
     /**

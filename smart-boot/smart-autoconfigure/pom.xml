@@ -34,5 +34,13 @@
 			<version>${smart-boot.version}</version>
 			<optional>true</optional>
 		</dependency>
-    </dependencies>
+
+		<dependency>
+			<groupId>com.smart</groupId>
+			<artifactId>smart-file-extensions-minio</artifactId>
+			<version>${smart-boot.version}</version>
+			<optional>true</optional>
+		</dependency>
+	</dependencies>
+
 </project>

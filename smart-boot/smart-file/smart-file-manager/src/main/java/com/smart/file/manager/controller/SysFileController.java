@@ -10,20 +10,16 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author shizhongming
  * 2020/1/27 7:51 下午
  */
 @Slf4j
-@Tag(name = "文件管理")
-@Controller
+@Tag(name = "文件管理", description = "文件管理")
 @RequestMapping("sys/file")
+@RestController
 public class SysFileController extends BaseController<SysFileService, SysFilePO> {
 
     @Override
