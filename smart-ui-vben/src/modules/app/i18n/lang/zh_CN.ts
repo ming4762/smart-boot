@@ -13,11 +13,13 @@ export default {
       look: '查看',
       download: '下载',
       cancel: '取消',
-      submit: '提交'
+      submit: '提交',
     },
     title: {
       details: '详情',
-      close: '关闭'
+      close: '关闭',
+      add: '添加',
+      edit: '修改',
     },
     form: {
       use: '启用',
@@ -25,12 +27,12 @@ export default {
       delete: 'Y',
       noDelete: 'N',
       yes: 'Y',
-      no: 'N'
+      no: 'N',
     },
     formValidate: {
       seq: '请输入序号',
       remark: '请输入备注',
-      enter: '请输入内容'
+      enter: '请输入内容',
     },
     table: {
       createTime: '创建时间',
@@ -41,7 +43,7 @@ export default {
       deleteYn: '是否删除',
       operation: '操作',
       remark: '备注',
-      seq: '序号'
+      seq: '序号',
     },
     notice: {
       confirm: '确认',
@@ -49,7 +51,7 @@ export default {
       deleteConfirm: '确定要删除吗？',
       deleteChoose: '请选择要删除的数据',
       select: '请选择',
-      choseOne: '请选择一行数据'
+      choseOne: '请选择一行数据',
     },
     message: {
       saveSuccess: '保存成功',
@@ -58,8 +60,8 @@ export default {
       deleteFail: '删除失败',
       submitSuccess: '提交成功',
       use: '启用',
-      noUse: '停用'
-    }
+      noUse: '停用',
+    },
   },
   app: {
     multiTab: {
@@ -67,22 +69,22 @@ export default {
         location: '定位当前选项卡',
         closeAll: '关闭全部选项卡',
         closeOther: '关闭其他选项卡',
-        refreshCurrent: '刷新页面'
+        refreshCurrent: '刷新页面',
       },
-      closeOperation: '关闭操作'
+      closeOperation: '关闭操作',
     },
     title: {
       '404': '您访问的页面不存在',
       '403': '您无权限访问此页面',
-      backHome: '返回主页'
+      backHome: '返回主页',
     },
     common: {
       notice: {
-        logout: '确定要登出吗？'
-      }
+        logout: '确定要登出吗？',
+      },
     },
     message: {
-      changeTheme: '正在切换主题'
-    }
-  }
+      changeTheme: '正在切换主题',
+    },
+  },
 }

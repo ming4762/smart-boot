@@ -1,13 +1,15 @@
-import { ref, onMounted, reactive, createVNode } from 'vue'
+import { ref, onMounted, reactive } from 'vue'
 import type { Ref } from 'vue'
+import type { Result } from '/#/axios'
 
 import { message, Modal } from 'ant-design-vue'
-import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
 
 import ApiService from '/@/common/utils/ApiService'
 
 import { isSuperAdmin, getCurrentUserId, applyTempToken } from '/@/common/auth/AuthUtils'
 import { useMessage } from '/@/hooks/web/useMessage'
+import { searchForm } from './DatabaseListView.data'
+import { useForm } from '/@/components/Form'
 
 const defaultSearchModel = {
   connectionName: '',
@@ -18,13 +20,18 @@ const defaultSearchModel = {
 /**
  * 加载数据支持
  */
-export const vueLoadData = () => {
+export const vueLoadData = (t: Function) => {
   // 数据
   const data = ref([])
   // 数据加载状态
   const loading = ref(false)
   // 搜索表单
   const searchModel = ref<any>(Object.assign({}, defaultSearchModel))
+  const [registerSearch] = useForm({
+    schemas: searchForm(t),
+    showAdvancedButton: true,
+    layout: 'inline',
+  })
   // 分页信息
   const tablePage = reactive({
     total: 0,
@@ -79,70 +86,14 @@ export const vueLoadData = () => {
     tablePage,
     handlePageChange,
     resetSearch,
-  }
-}
-
-const defaultAddEditModel = {
-  connectionName: '',
-  databaseName: '',
-  type: '',
-  project: '',
-}
-
-const createFormRules = (t: Function) => {
-  return {
-    connectionName: [
-      {
-        required: true,
-        trigger: 'blur',
-        message: t('generator.views.database.validate.connectionName'),
-      },
-    ],
-    databaseName: [
-      {
-        required: true,
-        trigger: 'blur',
-        message: t('generator.views.database.validate.databaseName'),
-      },
-    ],
-    type: [
-      { required: true, trigger: 'blur', message: t('generator.views.database.validate.type') },
-    ],
-    project: [
-      { required: true, trigger: 'blur', message: t('generator.views.database.validate.project') },
-    ],
-    url: [{ required: true, trigger: 'blur', message: t('generator.views.database.validate.url') }],
-    username: [
-      { required: true, trigger: 'blur', message: t('generator.views.database.validate.username') },
-    ],
-    password: [
-      { required: true, trigger: 'blur', message: t('generator.views.database.validate.password') },
-    ],
+    registerSearch,
   }
 }
 
 /**
  * 编辑修改支持
  */
-export const vueAddEdit = (loadData: any, formRef: Ref, t: Function) => {
-  // 保存加载状态
-  const saveLoading = ref(false)
-  // 查询加载状态
-  const getLoading = ref(false)
-  // 弹窗状态
-  const addEditModalVisible = ref(false)
-  // 是否是添加
-  const isAdd = ref(false)
-  // 添加修改表单
-  const addEditModel = ref<any>(Object.assign({}, defaultAddEditModel))
-  /**
-   * 添加操作
-   */
-  const handleShowAdd = () => {
-    addEditModel.value = Object.assign({}, defaultAddEditModel)
-    isAdd.value = true
-    addEditModalVisible.value = true
-  }
+export const vueAddEdit = () => {
   /**
    * 编辑是否可以操作
    * @param row
@@ -150,45 +101,8 @@ export const vueAddEdit = (loadData: any, formRef: Ref, t: Function) => {
   const getEditDisable = (row: any) => {
     return !(isSuperAdmin() || row.createUserId === getCurrentUserId())
   }
-  /**
-   * 编辑操作
-   */
-  const handleShowEdit = async (id: number) => {
-    isAdd.value = false
-    addEditModalVisible.value = true
-    getLoading.value = true
-    try {
-      addEditModel.value = await ApiService.postAjax('db/connection/getById', id)
-    } finally {
-      getLoading.value = false
-    }
-  }
-  /**
-   * 执行保存操作
-   */
-  const handleSave = () => {
-    // 验证表单
-    formRef.value.validate().then(async () => {
-      saveLoading.value = true
-      try {
-        await ApiService.postAjax('db/connection/saveUpdate', addEditModel.value)
-        addEditModalVisible.value = false
-        loadData()
-      } finally {
-        saveLoading.value = false
-      }
-    })
-  }
+
   return {
-    saveLoading,
-    getLoading,
-    addEditModalVisible,
-    handleShowAdd,
-    isAdd,
-    addEditModel,
-    formRules: reactive(createFormRules(t)),
-    handleShowEdit,
-    handleSave,
     getEditDisable,
   }
 }
@@ -196,40 +110,7 @@ export const vueAddEdit = (loadData: any, formRef: Ref, t: Function) => {
 /**
  * 删除操作
  */
-export const vueAction = (gridRef: Ref, loadData: any, t: Function) => {
-  /**
-   * 删除操作
-   */
-  const handleDelete = () => {
-    // 获取选中行
-    const selectRows: Array<any> = gridRef.value.getCheckboxRecords()
-    if (selectRows.length === 0) {
-      message.error(t('common.notice.deleteChoose'))
-      return false
-    }
-    // 判断是否有权限删除
-    if (!isSuperAdmin()) {
-      const validateResult = selectRows.some(
-        (item: any) => item.createUserId !== getCurrentUserId(),
-      )
-      if (validateResult) {
-        message.error(t('generator.views.database.message.deleteOwn'))
-        return false
-      }
-    }
-    Modal.confirm({
-      title: t('common.notice.confirm'),
-      icon: createVNode(ExclamationCircleOutlined),
-      content: t('common.notice.deleteChoose'),
-      onOk: async () => {
-        await ApiService.postAjax(
-          'db/connection/batchDeleteById',
-          selectRows.map((item: any) => item.id),
-        )
-        loadData()
-      },
-    })
-  }
+export const vueAction = (t: Function) => {
   /**
    * 测试连接
    * @param row
@@ -252,7 +133,6 @@ export const vueAction = (gridRef: Ref, loadData: any, t: Function) => {
     }
   }
   return {
-    handleDelete,
     handleTestConnected,
   }
 }
@@ -320,7 +200,7 @@ export const vueCreateDict = (row: Ref, t: Function) => {
       })
     } catch (e) {
       const { errorMessage } = useMessage()
-      errorMessage(e)
+      errorMessage(e as Result)
     }
   }
   return {

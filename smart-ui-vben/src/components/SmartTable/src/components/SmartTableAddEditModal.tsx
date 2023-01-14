@@ -1,0 +1,134 @@
+import type { SmartAddEditModalCallbackData } from '/@/components/SmartTable'
+
+import { defineComponent, ref, unref } from 'vue'
+
+import { message } from 'ant-design-vue'
+
+import { BasicModal, useModalInner } from '/@/components/Modal'
+import { BasicForm, FormProps, useForm } from '/@/components/Form'
+import { isFunction } from '@vue/shared'
+import { isBoolean, isPromise } from '/@/utils/is'
+import { useI18n } from '/@/hooks/web/useI18n'
+
+export default defineComponent({
+  name: 'SmartTableAddEditModal',
+  props: {
+    formConfig: {
+      type: Object as PropType<FormProps>,
+      required: true,
+    },
+    beforeSave: {
+      type: Function as PropType<(data) => any | Promise<any>>,
+    },
+    saveFunction: Function as PropType<(data) => Promise<any>>,
+    afterSave: Function as PropType<(data?) => boolean | Promise<boolean> | undefined>,
+  },
+  setup(props) {
+    const { t } = useI18n()
+    const isAddRef = ref(true)
+
+    const [registerForm, { resetFields, getFieldsValue, setFieldsValue, validate }] = useForm(
+      props.formConfig,
+    )
+    const [register, { changeLoading, changeOkLoading, closeModal }] = useModalInner(
+      async (data: SmartAddEditModalCallbackData) => {
+        const { getFunction, validateFunction, selectData, isAdd } = data
+        await resetFields()
+        isAddRef.value = isAdd
+        if (isAdd) {
+          return false
+        }
+        try {
+          if (!isFunction(getFunction)) {
+            throw new Error('proxyConfig.ajax.getById未定义')
+          }
+          changeLoading(true)
+          const editData = await getFunction(selectData)
+          // todo: 触发事件
+          if (isFunction(validateFunction)) {
+            const result = validateFunction(data)
+            if (isBoolean(result) && !result) {
+              return false
+            }
+            if (isPromise(result)) {
+              const promiseResult = await result
+              if (isBoolean(promiseResult) && !promiseResult) {
+                return false
+              }
+            }
+          }
+          setFieldsValue(editData)
+        } finally {
+          changeLoading(false)
+        }
+      },
+    )
+
+    const handleSubmit = async () => {
+      try {
+        let data = await validate()
+        changeOkLoading(true)
+        // 保存前对参数进行处理
+        const beforeSave = props.beforeSave
+        if (beforeSave) {
+          if (!isFunction(beforeSave)) {
+            throw new Error('参数错误，beforeSave必须是Function')
+          }
+          const result = beforeSave(data)
+          if (isPromise(result)) {
+            data = await result
+          } else {
+            data = result
+          }
+        }
+        const saveFunction = props.saveFunction
+        if (!saveFunction) {
+          throw new Error('proxyConfig.ajax.save未定义，无法执行保存操作')
+        }
+        const saveResult = await saveFunction({
+          body: {
+            insertRecords: unref(isAddRef) ? [data] : [],
+            updateRecords: unref(isAddRef) ? [] : [data],
+          },
+        })
+        if (props.afterSave) {
+          let afterSaveResult = props.afterSave(saveResult)
+          if (isPromise(afterSaveResult)) {
+            afterSaveResult = await afterSaveResult
+          }
+          if (isBoolean(afterSaveResult) && !afterSaveResult) {
+            // 返回结果验证错误，停止执行
+            return false
+          }
+        }
+        message.success(
+          unref(isAddRef) ? t('common.message.saveSuccess') : t('common.message.editSuccess'),
+        )
+        closeModal()
+      } finally {
+        changeOkLoading(false)
+      }
+    }
+
+    return {
+      register,
+      registerForm,
+      resetFields,
+      getFieldsValue,
+      setFieldsValue,
+      handleSubmit,
+    }
+  },
+  render() {
+    const { $attrs, register, registerForm, handleSubmit } = this
+    const attrs = {
+      ...$attrs,
+      onRegister: register,
+    }
+    return (
+      <BasicModal {...attrs} onOk={handleSubmit}>
+        <BasicForm onRegister={registerForm} />
+      </BasicModal>
+    )
+  },
+})
