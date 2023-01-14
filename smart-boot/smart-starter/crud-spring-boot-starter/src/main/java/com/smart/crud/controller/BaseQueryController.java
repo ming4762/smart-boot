@@ -80,7 +80,7 @@ public abstract class BaseQueryController<K extends BaseService<T>, T extends Ba
      * @return 分页信息
      */
     protected Page<T> doPage(@NonNull PageSortQuery parameter) {
-        return  this.createPage(parameter.getLimit(), parameter.getOffset(), parameter.getPage(), parameter.getSortName(), parameter.getSortOrder());
+        return this.createPage(parameter.getLimit(), parameter.getOffset(), parameter.getPage(), parameter.getSortName(), parameter.getSortOrder());
     }
 
 
