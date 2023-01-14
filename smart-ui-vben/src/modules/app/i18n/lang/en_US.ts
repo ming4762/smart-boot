@@ -13,11 +13,13 @@ export default {
       look: 'Look',
       download: 'Download',
       cancel: 'Cancel',
-      submit: 'Submit'
+      submit: 'Submit',
     },
     title: {
       details: 'Details',
-      close: 'Close'
+      close: 'Close',
+      add: 'Add',
+      edit: 'Edit',
     },
     form: {
       use: 'Use',
@@ -25,12 +27,12 @@ export default {
       delete: 'Y',
       noDelete: 'N',
       yes: 'Y',
-      no: 'N'
+      no: 'N',
     },
     formValidate: {
       seq: 'Please enter serial number',
       remark: 'Please enter remark',
-      enter: 'Please enter message'
+      enter: 'Please enter message',
     },
     table: {
       createTime: 'Creation time',
@@ -41,7 +43,7 @@ export default {
       deleteYn: 'Delete',
       operation: 'Operation',
       remark: 'Remark',
-      seq: 'Seq'
+      seq: 'Seq',
     },
     notice: {
       confirm: 'Confirm',
@@ -49,7 +51,7 @@ export default {
       deleteConfirm: 'Are you sure you want to delete?',
       deleteChoose: 'Please select the data to delete',
       select: 'Please select',
-      choseOne: 'Please select a row of data'
+      choseOne: 'Please select a row of data',
     },
     message: {
       saveSuccess: 'Saved successfully',
@@ -58,8 +60,8 @@ export default {
       deleteFail: 'Deletion failed',
       submitSuccess: 'Submit successfully',
       use: 'enable',
-      noUse: 'deactivate'
-    }
+      noUse: 'deactivate',
+    },
   },
   app: {
     multiTab: {
@@ -67,22 +69,22 @@ export default {
         location: 'Locate the current tab',
         closeAll: 'Close all tabs',
         closeOther: 'Close other tabs',
-        refreshCurrent: 'Refresh current'
+        refreshCurrent: 'Refresh current',
       },
-      closeOperation: 'Action'
+      closeOperation: 'Action',
     },
     title: {
       '404': 'The page you visited does not exist',
       '403': 'You do not have permission to access this page',
-      backHome: 'Back Home'
+      backHome: 'Back Home',
     },
     common: {
       notice: {
-        logout: 'Are you sure you want to logout?'
-      }
+        logout: 'Are you sure you want to logout?',
+      },
     },
     message: {
-      changeTheme: 'Switching topics'
-    }
-  }
+      changeTheme: 'Switching topics',
+    },
+  },
 }

@@ -2,6 +2,7 @@
 
 // @ts-ignore
 import type { SorterResult } from '../components/Table'
+import type { VxePagerPropTypes } from 'vxe-table/types/pager'
 
 export default {
   // basic-table setting
@@ -12,16 +13,25 @@ export default {
       // The field name of the current page passed to the background
       pageField: 'page',
       // The number field name of each page displayed in the background
-      sizeField: 'pageSize',
+      sizeField: 'limit',
       // Field name of the form data returned by the interface
-      listField: 'items',
+      listField: 'rows',
       // Total number of tables returned by the interface field name
       totalField: 'total',
     },
     // Number of pages that can be selected
-    pageSizeOptions: ['10', '50', '80', '100'],
+    pageSizeOptions: [100, 500, 1000, 2000, 5000],
     // Default display quantity on one page
-    defaultPageSize: 10,
+    defaultPageSize: 100,
+    pageLayouts: [
+      'Sizes',
+      'PrevJump',
+      'PrevPage',
+      'Number',
+      'NextJump',
+      'FullJump',
+      'Total',
+    ] as VxePagerPropTypes.Layouts,
     // Default Size
     defaultSize: 'middle',
     // Custom general sort function

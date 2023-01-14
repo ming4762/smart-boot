@@ -40,6 +40,11 @@ export interface Result<T = any> {
   exceptionNo?: number
 }
 
+export interface PageData<T = any> {
+  rows: T[]
+  total: number
+}
+
 // multipart/form-data: upload file
 export interface UploadFileParams {
   // Other parameters

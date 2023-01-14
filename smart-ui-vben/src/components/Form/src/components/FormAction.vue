@@ -77,6 +77,7 @@ export default defineComponent({
     actionSpan: propTypes.number.def(6),
     isAdvanced: propTypes.bool,
     hideAdvanceBtn: propTypes.bool,
+    size: propTypes.oneOf(['default', 'small', 'large']).def('default'),
   },
   emits: ['toggle-advanced'],
   setup(props, { emit }) {
@@ -99,6 +100,7 @@ export default defineComponent({
       return Object.assign(
         {
           text: t('common.resetText'),
+          size: props.size,
         },
         props.resetButtonOptions,
       )
@@ -108,6 +110,7 @@ export default defineComponent({
       return Object.assign(
         {
           text: t('common.queryText'),
+          size: props.size,
         },
         props.submitButtonOptions,
       )
