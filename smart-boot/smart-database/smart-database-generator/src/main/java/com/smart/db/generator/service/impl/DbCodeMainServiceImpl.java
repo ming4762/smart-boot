@@ -29,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
+import java.io.Serializable;
 import java.io.StringWriter;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -144,7 +145,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean saveUpdate(DbCodeMainSaveParameter model) {
+    public Long saveUpdate(DbCodeMainSaveParameter model) {
         final DbCodeMainPO dbCodeMain = new DbCodeMainPO();
         BeanUtils.copyProperties(model, dbCodeMain);
         // 判断是否是添加操作
@@ -160,14 +161,13 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
         final AtomicInteger pageConfigIndex = new AtomicInteger(1);
         model.setId(mainId);
         // 保存表格配置
-        this.dbCodePageConfigService.saveBatchWithUser(
+        this.dbCodePageConfigService.saveBatch(
                 model.getCodePageConfigList().stream().peek(item -> {
                     item.setMainId(mainId);
                     item.setId(null);
                     // 设置序号
                     item.setSeq(pageConfigIndex.getAndIncrement());
-                }).toList(),
-                AuthUtils.getCurrentUserId()
+                }).collect(Collectors.toList())
         );
         // 保存附表配置
         if (StringUtils.equals(model.getType(), TableTypeEnum.MAIN.getType())) {
@@ -179,7 +179,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
         this.saveSearchConfig(model);
         // 保存按钮配置
         this.saveButtonConfig(model, mainId);
-        return true;
+        return mainId;
     }
 
     /**
@@ -814,9 +814,9 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
                         .in(DbCodePageConfigPO :: getMainId, idList)
         );
         // 删除表单配置
-        this.removeFormConfigByMainId((Collection<? extends Serializable>) idList);
+        this.removeFormConfigByMainId(idList);
         // 删除搜索配置
-        this.removeSearchConfigByMainId((Collection<? extends Serializable>) idList);
+        this.removeSearchConfigByMainId(idList);
         // 删除主表附表关联关系
 
         this.dbCodeRelatedTableService.remove(

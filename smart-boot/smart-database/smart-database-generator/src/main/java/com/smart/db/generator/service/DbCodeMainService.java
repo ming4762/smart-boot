@@ -22,7 +22,7 @@ public interface DbCodeMainService extends BaseService<DbCodeMainPO> {
      * @param model 实体
      * @return 是否保存成功
      */
-    boolean saveUpdate(DbCodeMainSaveParameter model);
+    Long saveUpdate(DbCodeMainSaveParameter model);
 
     /**
      * 生成代码

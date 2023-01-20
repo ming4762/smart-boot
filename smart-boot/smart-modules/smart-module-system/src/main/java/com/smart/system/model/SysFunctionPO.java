@@ -75,8 +75,7 @@ public class SysFunctionPO extends BaseModelUserTime {
     /**
      * 是否菜单
      */
-    @TableField("is_menu")
-    private Boolean menuIs;
+    private Boolean isMenu;
 
     /**
      * 外链菜单打开方式 0/内部打开 1/外部打开
