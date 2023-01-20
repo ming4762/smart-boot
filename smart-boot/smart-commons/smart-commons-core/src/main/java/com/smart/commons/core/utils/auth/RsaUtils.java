@@ -5,11 +5,14 @@ import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
 import org.springframework.lang.NonNull;
 
+import javax.crypto.Cipher;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -42,7 +45,12 @@ public class RsaUtils {
      */
     @SneakyThrows(NoSuchAlgorithmException.class)
     public static KeyPair generateKeyPair() {
-        KeyPairGenerator generator = KeyPairGenerator.getInstance(ALGORITHM);
+        return generateKeyPair(ALGORITHM);
+    }
+
+    @SneakyThrows
+    public static KeyPair generateKeyPair(String algorithm) {
+        KeyPairGenerator generator = KeyPairGenerator.getInstance(algorithm);
         generator.initialize(KEY_SIZE);
 
         return generator.generateKeyPair();
@@ -116,5 +124,57 @@ public class RsaUtils {
         PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(pubKeyByte);
 
         return KeyFactory.getInstance(ALGORITHM).generatePrivate(keySpec);
+    }
+
+    /**
+     * 公钥加密
+     * @param data 需要加密的数据
+     * @param publicKey 公钥
+     * @return 加密后的数据
+     */
+    @SneakyThrows
+    public static byte[] publicEncrypt(String data, RSAPublicKey publicKey) {
+        Cipher cipher = Cipher.getInstance(ALGORITHM);
+        cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+        return cipher.doFinal(data.getBytes(StandardCharsets.UTF_8));
+    }
+
+    /**
+     * 私钥加密
+     * @param data 需要加密的数据
+     * @param privateKey 私钥
+     * @return 加密后的数据
+     */
+    @SneakyThrows
+    public static byte[] privateEncrypt(String data, RSAPrivateKey privateKey) {
+        Cipher cipher = Cipher.getInstance(ALGORITHM);
+        cipher.init(Cipher.ENCRYPT_MODE, privateKey);
+        return cipher.doFinal(data.getBytes(StandardCharsets.UTF_8));
+    }
+
+    /**
+     * 公钥解密
+     * @param data 需要解密的数据
+     * @param publicKey 公钥
+     * @return 加密后的数据
+     */
+    @SneakyThrows
+    public static byte[] publicDecrypt(String data, RSAPublicKey publicKey) {
+        Cipher cipher = Cipher.getInstance(ALGORITHM);
+        cipher.init(Cipher.DECRYPT_MODE, publicKey);
+        return cipher.doFinal(data.getBytes(StandardCharsets.UTF_8));
+    }
+
+    /**
+     * 私钥解密
+     * @param data 需要解密的数据
+     * @param privateKey 私钥
+     * @return 加密后的数据
+     */
+    @SneakyThrows
+    public static byte[] privateDecrypt(String data, RSAPrivateKey privateKey) {
+        Cipher cipher = Cipher.getInstance(ALGORITHM);
+        cipher.init(Cipher.DECRYPT_MODE, privateKey);
+        return cipher.doFinal(data.getBytes(StandardCharsets.UTF_8));
     }
 }

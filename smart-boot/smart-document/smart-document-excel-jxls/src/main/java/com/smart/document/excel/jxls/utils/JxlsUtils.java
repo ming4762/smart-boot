@@ -15,6 +15,7 @@ import org.jxls.util.JxlsHelper;
 import org.springframework.lang.Nullable;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -88,8 +89,8 @@ public class JxlsUtils {
      */
     public static void exportExcel(File templateFile, File outFile, @NonNull Object model, @Nullable Map<String, Object> functionMap, Consumer<JexlBuilder> jexlBuilderHandler) throws IOException {
         try (
-                InputStream inputStream = new FileInputStream(templateFile);
-                OutputStream outputStream = new FileOutputStream(outFile)
+                InputStream inputStream = Files.newInputStream(templateFile.toPath());
+                OutputStream outputStream = Files.newOutputStream(outFile.toPath())
                 ) {
             exportExcel(inputStream, outputStream, model, functionMap, jexlBuilderHandler);
         }
