@@ -2,6 +2,7 @@ package com.smart.db.generator.controller;
 
 import com.google.common.collect.Lists;
 import com.smart.commons.core.document.DocumentVO;
+import com.smart.commons.core.exception.BusinessException;
 import com.smart.commons.core.message.Result;
 import com.smart.crud.controller.BaseController;
 import com.smart.crud.query.PageSortQuery;
@@ -72,7 +73,7 @@ public class DbCodeMainController extends BaseController<DbCodeMainService, DbCo
 
     @PostMapping("save")
     @PreAuthorize("hasPermission('db:codeConfig', 'save')")
-    public Result<List<String>> save(@RequestBody @Valid DbCodeMainSaveParameter parameter) {
+    public Result<Long> save(@RequestBody @Valid DbCodeMainSaveParameter parameter) {
         final List<String> message = Lists.newArrayList();
         // 验证参数
         // 1、验证类型和附表
@@ -86,10 +87,9 @@ public class DbCodeMainController extends BaseController<DbCodeMainService, DbCo
         });
         parameter.getCodeSearchConfigList().forEach(item -> this.validateTableSearch(item, message));
         if (!message.isEmpty()) {
-            return Result.failure(400, "参数验证失败", message);
+            throw new BusinessException(String.join(",", message));
         }
-        this.service.saveUpdate(parameter);
-        return Result.success(message);
+        return Result.success(this.service.saveUpdate(parameter));
     }
 
     @PostMapping("createCode")

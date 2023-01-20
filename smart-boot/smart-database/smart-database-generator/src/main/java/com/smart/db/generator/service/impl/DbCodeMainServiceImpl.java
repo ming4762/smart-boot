@@ -144,7 +144,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean saveUpdate(DbCodeMainSaveParameter model) {
+    public Long saveUpdate(DbCodeMainSaveParameter model) {
         final DbCodeMainPO dbCodeMain = new DbCodeMainPO();
         BeanUtils.copyProperties(model, dbCodeMain);
         // 判断是否是添加操作
@@ -160,14 +160,13 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
         final AtomicInteger pageConfigIndex = new AtomicInteger(1);
         model.setId(mainId);
         // 保存表格配置
-        this.dbCodePageConfigService.saveBatchWithUser(
+        this.dbCodePageConfigService.saveBatch(
                 model.getCodePageConfigList().stream().peek(item -> {
                     item.setMainId(mainId);
                     item.setId(null);
                     // 设置序号
                     item.setSeq(pageConfigIndex.getAndIncrement());
-                }).collect(Collectors.toList()),
-                AuthUtils.getCurrentUserId()
+                }).collect(Collectors.toList())
         );
         // 保存附表配置
         if (StringUtils.equals(model.getType(), TableTypeEnum.MAIN.getType())) {
@@ -179,7 +178,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
         this.saveSearchConfig(model);
         // 保存按钮配置
         this.saveButtonConfig(model, mainId);
-        return true;
+        return mainId;
     }
 
     /**
