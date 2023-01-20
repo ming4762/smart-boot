@@ -36,6 +36,7 @@ export default defineComponent({
   position: relative;
   flex: 1 1 auto;
   min-height: 0;
+  height: calc(100% - 80px);
 
   &.fixed {
     width: 1200px;

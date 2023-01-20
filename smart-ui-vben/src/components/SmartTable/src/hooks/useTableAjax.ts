@@ -51,7 +51,7 @@ export const useTableAjax = (
     let queryAjax: any = {}
     if (ajax.query) {
       queryAjax = {
-        query: (params, args) => {
+        query: async (params, args) => {
           const { form, filters, page, sorts, sort, $grid } =
             params as VxeGridPropTypes.ProxyAjaxQueryParams
           let searchInfo = {}
@@ -67,10 +67,19 @@ export const useTableAjax = (
             sort,
             searchInfo,
           }
-          let ajaxParameter = {
+          let ajaxParameter: Recordable = {
             ...form,
             ...page,
-            ...sort,
+          }
+          if (sorts.length > 0) {
+            const sortNameList: string[] = []
+            const sortOrderList: string[] = []
+            for (const item of sorts) {
+              sortNameList.push(item.field)
+              sortOrderList.push(item.order)
+            }
+            ajaxParameter.sortName = sortNameList.join(',')
+            ajaxParameter.sortOrder = sortOrderList.join(',')
           }
           if (useSearchForm) {
             // 处理参数
@@ -92,7 +101,11 @@ export const useTableAjax = (
           // 添加额外的查询条件
           Object.assign(ajaxParameter, searchInfo)
           searchParameter.ajaxParameter = ajaxParameter
-          return ajax.query!(searchParameter)
+          let result = await ajax.query!(searchParameter)
+          if (proxyConfig.afterLoad) {
+            result = proxyConfig.afterLoad(result)
+          }
+          return result
         },
       }
     }

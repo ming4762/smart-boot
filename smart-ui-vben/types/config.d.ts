@@ -10,8 +10,11 @@ import {
 } from '/@/enums/appEnum'
 
 import { CacheTypeEnum } from '/@/enums/cacheEnum'
+import { VxeTablePropTypes } from 'vxe-table/types/table'
 
 export type LocaleType = 'zh-CN' | 'en-US' | 'ru' | 'ja' | 'ko'
+
+type FormSize = 'default' | 'small' | 'large'
 
 export interface MenuSetting {
   bgColor: string
@@ -80,9 +83,9 @@ export interface TransitionSetting {
 }
 
 export interface SizeConfig {
-  table: string
+  table: VxeTablePropTypes.Size
   button: string
-  form: string
+  form: FormSize
 }
 
 export interface ProjectConfig {

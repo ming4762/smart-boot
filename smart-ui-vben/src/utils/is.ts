@@ -36,6 +36,10 @@ export function isDate(val: unknown): val is Date {
   return is(val, 'Date')
 }
 
+export function isNotBlank(value: string | null | undefined) {
+  return !!value && value.length > 0
+}
+
 export function isNull(val: unknown): val is null {
   return val === null
 }

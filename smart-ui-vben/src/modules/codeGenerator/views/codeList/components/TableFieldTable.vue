@@ -1,6 +1,12 @@
 <template>
-  <div class="full-height">
-    <vxe-grid align="center" stripe v-bind="$attrs" :size="tableSizeConfig" border :columns="columns">
+  <div>
+    <vxe-grid
+      align="center"
+      stripe
+      v-bind="$attrs"
+      :size="tableSizeConfig"
+      border
+      :columns="columns">
       <template #table-nullable="{ row }">
         <a-switch :size="formSizeConfig" disabled :checked="row.nullable === 1" />
       </template>

@@ -2,16 +2,10 @@ import { defHttp } from '/@/utils/http/axios'
 import { getMenuListResultModel, RouteItem } from './model/menuModel'
 import { useLocaleStore } from '/@/store/modules/locale'
 import TreeUtils from '/@/utils/TreeUtils'
+import StringUtils from '/@/utils/StringUtils'
 
 enum Api {
   GetMenuList = '/sys/user/listUserMenu',
-}
-
-const humpToLine = (camelCaseName: string): string => {
-  camelCaseName = camelCaseName.replace(camelCaseName[0], camelCaseName[0].toLowerCase())
-  return camelCaseName.replace(/([A-Z])/g, function (match) {
-    return '-' + match.toLowerCase()
-  })
 }
 
 /**
@@ -34,11 +28,12 @@ export const getMenuList = async () => {
       component,
       componentName,
       redirect,
+      isMenu,
     } = item
     // 兼容icon
     let compatibleIcon = icon
     if (compatibleIcon && compatibleIcon.indexOf(':') === -1) {
-      compatibleIcon = humpToLine(compatibleIcon)
+      compatibleIcon = StringUtils.humpToLine(compatibleIcon)
       compatibleIcon = 'ant-design:' + compatibleIcon
     }
     const routeItem: RouteItem = {
@@ -46,11 +41,13 @@ export const getMenuList = async () => {
       name: componentName || functionName,
       component,
       meta: {
+        hideMenu: isMenu === false,
         title: functionName,
         locales,
         icon: compatibleIcon,
         key: functionId,
         parentKey: parentId,
+        queryToProps: true,
       },
     }
     if (redirect) {

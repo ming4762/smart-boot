@@ -14,6 +14,7 @@ export default {
       download: '下载',
       cancel: '取消',
       submit: '提交',
+      reload: '重新加载',
     },
     title: {
       details: '详情',

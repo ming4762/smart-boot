@@ -18,6 +18,7 @@ import { useTableModalAddEditConfig } from './hooks/useTableModalAddEdit'
 import { createTableContext } from './hooks/userSmartTableContext'
 import SmartTableAddEditModal from './components/SmartTableAddEditModal'
 import './renderer/VxeTableButtonRenderer'
+import { error } from '/@/utils/log'
 
 export default defineComponent({
   name: 'SmartTable',
@@ -26,7 +27,7 @@ export default defineComponent({
   },
   props: smartTableProps,
   emits: ['register'],
-  setup(props, { emit, slots }) {
+  setup(props, { emit, slots, attrs }) {
     const tableElRef = ref<VxeGridInstance>() as Ref<VxeGridInstance>
     const wrapRef = ref(null)
 
@@ -64,6 +65,10 @@ export default defineComponent({
     const commitVxeProxy = (code, ...args) => unref(tableElRef)?.commitProxy(code, args)
     const getCheckboxRecords = (isFull: boolean) =>
       unref(tableElRef)?.getCheckboxRecords(isFull) || []
+    const getRadioRecord = (isFull: boolean) => unref(tableElRef)?.getRadioRecord(isFull)
+    const setRadioRow = (row: any) => unref(tableElRef)!.setRadioRow(row)
+    const setCheckboxRow = (rows: any | any[], checked: boolean) =>
+      unref(tableElRef)!.setCheckboxRow(rows, checked)
 
     // -------------- 加载函数 ------------------------
     searchFormAction.getFieldsValue
@@ -91,7 +96,9 @@ export default defineComponent({
     const addEditModalRef = ref()
     const getAddEditFieldsValue = () => unref(addEditModalRef).getFieldsValue()
     const resetAddEditFields = () => unref(addEditModalRef).resetFields()
-    const setAddEditFieldsValue = () => unref(addEditModalRef).setFieldsValue()
+    const setAddEditFieldsValue = (data: Recordable) => unref(addEditModalRef).setFieldsValue(data)
+    const validateAddEdit = () => unref(addEditModalRef).validate()
+    const validateAddEditFields = () => unref(addEditModalRef).validateFields()
     const {
       getHasAddEdit,
       showAddModal,
@@ -99,7 +106,8 @@ export default defineComponent({
       editByRow,
       getAddEditFormProps,
       getAddEditModalProps,
-    } = useTableModalAddEditConfig(getTableProps, {
+      getAddEditFormSlots,
+    } = useTableModalAddEditConfig(getTableProps, slots, {
       getCheckboxRecords,
       openAddEditModal,
       reload,
@@ -116,6 +124,7 @@ export default defineComponent({
      */
     const getTableBindValues = computed<SmartTableProps>(() => {
       let propsData: SmartTableProps = {
+        ...attrs,
         ...unref(getTableProps),
         loading: unref(getLoading),
         // data: dataSource,
@@ -143,6 +152,7 @@ export default defineComponent({
       setShowPagination,
       deleteByCheckbox,
       getCheckboxRecords,
+      getRadioRecord,
       openAddEditModal,
       showAddModal,
       editByCheckbox,
@@ -151,6 +161,10 @@ export default defineComponent({
       resetAddEditFields,
       setAddEditFieldsValue,
       deleteByRow,
+      setRadioRow,
+      setCheckboxRow,
+      validateAddEdit,
+      validateAddEditFields,
     }
 
     createTableContext({ ...tableAction, wrapRef, getBindValues: getTableBindValues })
@@ -174,6 +188,7 @@ export default defineComponent({
       getAddEditModalProps,
       addEditModalRef,
       wrapRef,
+      getAddEditFormSlots,
     }
   },
   render() {
@@ -225,7 +240,7 @@ const renderSearchForm = (smartTableInstance) => {
       Object.keys(getSearchFormSlot).length + Object.keys(getSearchFormColumnSlot).length >
       Object.keys(searchFormSlots).length
     ) {
-      throw new Error('搜索表单插槽命名重复')
+      error('搜索表单插槽命名重复')
     }
     return <BasicForm {...formAttrs}>{searchFormSlots}</BasicForm>
   }
@@ -244,6 +259,7 @@ const renderTable = (instance) => {
       registerAddEditModal,
       getAddEditFormProps,
       getAddEditModalProps,
+      getAddEditFormSlots,
     } = instance
     const result = [
       <vxe-grid ref="tableElRef" {...getTableBindValues}>
@@ -256,8 +272,9 @@ const renderTable = (instance) => {
           ref="addEditModalRef"
           {...getAddEditModalProps}
           onRegister={registerAddEditModal}
-          formConfig={getAddEditFormProps}
-        />,
+          formConfig={getAddEditFormProps}>
+          {getAddEditFormSlots}
+        </SmartTableAddEditModal>,
       )
     }
     return result

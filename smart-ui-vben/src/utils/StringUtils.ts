@@ -9,4 +9,11 @@ export default class StringUtils {
   public static hasLength(value: string | null | undefined): boolean {
     return !!value && value.length > 0
   }
+
+  public static humpToLine(camelCaseName: string): string {
+    camelCaseName = camelCaseName.replace(camelCaseName[0], camelCaseName[0].toLowerCase())
+    return camelCaseName.replace(/([A-Z])/g, function (match) {
+      return '-' + match.toLowerCase()
+    })
+  }
 }

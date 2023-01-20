@@ -9,7 +9,6 @@ export const smartTableProps = {
   },
   height: {
     type: [String, Number] as PropType<TableHeightType>,
-    default: 'auto',
   },
   loading: propTypes.bool,
   // 表单配置

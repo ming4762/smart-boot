@@ -7,7 +7,8 @@ import {
   ThemeEnum,
   RouterTransitionEnum,
   SettingButtonPositionEnum,
-  SessionTimeoutProcessingEnum, NoPermissionModeEnum,
+  SessionTimeoutProcessingEnum,
+  NoPermissionModeEnum,
 } from '/@/enums/appEnum'
 import { SIDE_BAR_BG_COLOR_LIST, HEADER_PRESET_BG_COLOR_LIST } from './designSetting'
 import { primaryColor } from '../../build/config/themeConfig'
@@ -123,7 +124,7 @@ const setting: ProjectConfig = {
 
   // Multi-label
   multiTabsSetting: {
-    cache: false,
+    cache: true,
     // Turn on
     show: true,
     // Is it possible to drag and drop sorting tabs

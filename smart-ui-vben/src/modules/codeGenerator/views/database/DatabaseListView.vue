@@ -71,6 +71,7 @@ const [registerTable, { editByRow, setLoading }] = useSmartTable({
       },
     },
   },
+  height: 'auto',
   searchWithSymbol: true,
   columns: tableColumns,
   useSearchForm: true,

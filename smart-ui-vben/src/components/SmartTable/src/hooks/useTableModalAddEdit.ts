@@ -1,11 +1,12 @@
-import type { ComputedRef, Ref } from 'vue'
+import type { ComputedRef, Ref, Slots } from 'vue'
 import type { SmartAddEditModalCallbackData, SmartTableProps } from '/@/components/SmartTable'
 import type { FormProps } from '/@/components/Form'
 import type { ModalProps } from '/@/components/Modal'
 
-import { computed, ref, unref } from 'vue'
+import { computed, ref, Slot, unref } from 'vue'
 import { useI18n } from '/@/hooks/web/useI18n'
 import { message } from 'ant-design-vue'
+import { error } from '/@/utils/log'
 
 interface TableAction {
   getCheckboxRecords: (isFull: boolean) => Array<any>
@@ -15,6 +16,7 @@ interface TableAction {
 
 export const useTableModalAddEditConfig = (
   tableProps: ComputedRef<SmartTableProps>,
+  slots: Slots,
   { getCheckboxRecords, openAddEditModal, reload }: TableAction,
 ) => {
   const { t } = useI18n()
@@ -31,20 +33,65 @@ export const useTableModalAddEditConfig = (
    * 添加修改弹窗props
    */
   const getAddEditFormProps = computed<FormProps>(() => {
-    const formConfig = unref(tableProps).addEditConfig?.formConfig || {}
+    const formConfig = unref(tableProps).addEditConfig?.formConfig
+    if (!formConfig) {
+      return {}
+    }
     return {
       ...getDefaultFormConfig(),
       ...formConfig,
     }
   })
 
+  function replaceFormSlotKey(key: string) {
+    if (!key) return ''
+    return key?.replace?.(/addEditForm\-/, '') ?? ''
+  }
+  /**
+   * 添加修改表单form插槽
+   */
+  const getAddEditFormSlots: ComputedRef<Slots> = computed(() => {
+    // 获取form插槽
+    const formSlots: { [name: string]: Slot | undefined } = {}
+    Object.keys(slots)
+      .map((item) => (item.startsWith('addEditForm-') ? item : null))
+      .filter((item) => !!item)
+      .forEach((item) => {
+        const formKey = replaceFormSlotKey(item as string)
+        formSlots[formKey] = slots[item as string]
+      })
+    // 获取column插槽
+    const columnSlots: { [name: string]: Slot | undefined } = {}
+    const schemas = unref(tableProps).addEditConfig?.formConfig?.schemas || []
+    schemas
+      .map((item) => item.slot)
+      .filter((item) => !!item)
+      .forEach((item) => {
+        columnSlots[item as string] = slots[item as string]
+      })
+    const result = {
+      ...formSlots,
+      ...columnSlots,
+    }
+    if (
+      Object.keys(formSlots).length + Object.keys(columnSlots).length >
+      Object.keys(result).length
+    ) {
+      error('添加修改表单插槽命名重复')
+    }
+    return result
+  })
+
   /**
    * 添加修改弹窗props
    */
   const getAddEditModalProps = computed<Partial<ModalProps>>(() => {
-    const tablePropsData = unref(tableProps)
-    const { modalConfig, beforeSave, afterSave } = tablePropsData.addEditConfig!
-    const saveFunction = tablePropsData.proxyConfig?.ajax?.save
+    const { addEditConfig, proxyConfig } = unref(tableProps)
+    if (!addEditConfig) {
+      return {}
+    }
+    const { modalConfig, beforeSave, afterSave } = addEditConfig!
+    const saveFunction = proxyConfig?.ajax?.save
     return {
       ...getDefaultModalConfig(isAddRef, t),
       ...(modalConfig || {}),
@@ -59,16 +106,16 @@ export const useTableModalAddEditConfig = (
     }
   })
 
-  const showAddModal = () => {
+  const showAddModal = (formData?: Recordable) => {
     if (!unref(getHasAddEdit)) {
       throw new Error('addEditConfig未定义')
     }
     isAddRef.value = true
-    openAddEditModal(true, getCallbackData(null, true))
+    openAddEditModal(true, getCallbackData(true, undefined, formData))
   }
 
-  const editByRow = (row) => {
-    return doEdit(row)
+  const editByRow = (row, formData?: Recordable) => {
+    return doEdit(row, formData)
   }
 
   const editByCheckbox = () => {
@@ -81,18 +128,19 @@ export const useTableModalAddEditConfig = (
     return doEdit(editRow)
   }
 
-  const doEdit = async (row) => {
+  const doEdit = async (row, formData?: Recordable) => {
     if (!unref(getHasAddEdit)) {
       throw new Error('addEditConfig未定义')
     }
     isAddRef.value = false
-    openAddEditModal(true, getCallbackData(row, false))
+    openAddEditModal(true, getCallbackData(false, row, formData))
     return true
   }
 
   const getCallbackData = (
-    selectData: Recordable | null,
     isAdd: boolean,
+    selectData?: Recordable,
+    formData?: Recordable,
   ): SmartAddEditModalCallbackData => {
     const getByIdFunction = unref(tableProps)?.proxyConfig?.ajax?.getById
     if (!getByIdFunction) {
@@ -102,6 +150,7 @@ export const useTableModalAddEditConfig = (
       getFunction: getByIdFunction,
       isAdd,
       selectData,
+      formData,
       validateFunction: unref(tableProps)?.addEditConfig?.afterLoadData,
     }
   }
@@ -113,6 +162,7 @@ export const useTableModalAddEditConfig = (
     getAddEditFormProps,
     getAddEditModalProps,
     editByRow,
+    getAddEditFormSlots,
   }
 }
 
