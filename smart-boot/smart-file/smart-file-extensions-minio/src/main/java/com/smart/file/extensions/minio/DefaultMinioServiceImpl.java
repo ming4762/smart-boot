@@ -62,7 +62,6 @@ public class DefaultMinioServiceImpl implements MinioService {
      * @param parameter   参数
      * @return 文件ID
      */
-    @SneakyThrows(IOException.class)
     @Override
     @NonNull
     public String save(@NonNull InputStream inputStream, @NonNull FileSaveParameter parameter) {
