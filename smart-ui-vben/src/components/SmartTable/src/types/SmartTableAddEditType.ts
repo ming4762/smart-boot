@@ -23,8 +23,11 @@ export interface SmartTableAddEditConfig<T = any> {
 
 export interface SmartAddEditModalCallbackData<T = any> {
   getFunction?: (T) => Promise<T>
-  validateFunction?: ((data: T) => Promise<boolean | undefined> | boolean | undefined) | undefined
+  validateFunction?:
+    | ((data: T, customData: any) => Promise<boolean | undefined> | boolean | undefined)
+    | undefined
   isAdd: boolean
-  selectData?: Recordable<T> | null
+  selectData?: Recordable<T>
+  formData?: Recordable
   afterSave?: () => void
 }

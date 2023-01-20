@@ -27,15 +27,22 @@ export default defineComponent({
     const { t } = useI18n()
     const isAddRef = ref(true)
 
-    const [registerForm, { resetFields, getFieldsValue, setFieldsValue, validate }] = useForm(
-      props.formConfig,
-    )
+    const [
+      registerForm,
+      { resetFields, getFieldsValue, setFieldsValue, validate, validateFields },
+    ] = useForm(props.formConfig)
     const [register, { changeLoading, changeOkLoading, closeModal }] = useModalInner(
       async (data: SmartAddEditModalCallbackData) => {
-        const { getFunction, validateFunction, selectData, isAdd } = data
+        const { getFunction, validateFunction, selectData, isAdd, formData } = data
         await resetFields()
         isAddRef.value = isAdd
         if (isAdd) {
+          if (formData) {
+            setFieldsValue({
+              ...formData,
+              isAdd,
+            })
+          }
           return false
         }
         try {
@@ -46,7 +53,7 @@ export default defineComponent({
           const editData = await getFunction(selectData)
           // todo: 触发事件
           if (isFunction(validateFunction)) {
-            const result = validateFunction(data)
+            const result = validateFunction(data, selectData)
             if (isBoolean(result) && !result) {
               return false
             }
@@ -57,7 +64,11 @@ export default defineComponent({
               }
             }
           }
-          setFieldsValue(editData)
+          setFieldsValue({
+            ...editData,
+            formData,
+            isAdd,
+          })
         } finally {
           changeLoading(false)
         }
@@ -117,17 +128,19 @@ export default defineComponent({
       getFieldsValue,
       setFieldsValue,
       handleSubmit,
+      validate,
+      validateFields,
     }
   },
   render() {
-    const { $attrs, register, registerForm, handleSubmit } = this
+    const { $attrs, register, registerForm, handleSubmit, $slots } = this
     const attrs = {
       ...$attrs,
       onRegister: register,
     }
     return (
       <BasicModal {...attrs} onOk={handleSubmit}>
-        <BasicForm onRegister={registerForm} />
+        <BasicForm onRegister={registerForm}>{$slots}</BasicForm>
       </BasicModal>
     )
   },

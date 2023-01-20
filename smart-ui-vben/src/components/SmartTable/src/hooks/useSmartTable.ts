@@ -8,6 +8,7 @@ import type { DynamicProps } from '/#/utils'
 import { getDynamicProps } from '/@/utils'
 import { error } from '/@/utils/log'
 import { VxeGridPropTypes } from 'vxe-table'
+import {NamePath} from 'ant-design-vue/lib/form/interface';
 
 type Props = Partial<DynamicProps<SmartTableProps>>
 type UseTableMethod = TableActionType & {
@@ -97,11 +98,14 @@ export const useSmartTable = (
     getCheckboxRecords: (isFull: boolean) => {
       return getTableInstance().getCheckboxRecords(isFull)
     },
+    getRadioRecord: (isFull: boolean) => {
+      return getTableInstance().getRadioRecord(isFull)
+    },
     openAddEditModal: (props?: boolean, data?: any, openOnSet?: boolean) => {
       return getTableInstance().openAddEditModal(props, data, openOnSet)
     },
-    showAddModal: () => {
-      getTableInstance().showAddModal()
+    showAddModal: (formData?: Recordable) => {
+      getTableInstance().showAddModal(formData)
     },
     editByCheckbox: () => {
       return getTableInstance().editByCheckbox()
@@ -115,11 +119,23 @@ export const useSmartTable = (
     setAddEditFieldsValue: (data: any) => {
       return getTableInstance().setAddEditFieldsValue(data)
     },
-    editByRow: (data) => {
-      return getTableInstance().editByRow(data)
+    editByRow: (data, formData) => {
+      return getTableInstance().editByRow(data, formData)
     },
     deleteByRow: (data) => {
       return getTableInstance().deleteByRow(data)
+    },
+    setRadioRow: (row) => {
+      return getTableInstance().setRadioRow(row)
+    },
+    setCheckboxRow(rows: any, checked: boolean): Promise<any> {
+      return getTableInstance().setCheckboxRow(rows, checked)
+    },
+    validateAddEdit: (nameList?: NamePath[]) => {
+      return getTableInstance().validateAddEdit(nameList)
+    },
+    validateAddEditFields: (nameList?: NamePath[]) => {
+      return getTableInstance().validateAddEdit(nameList)
     },
   }
   return [register, methods]

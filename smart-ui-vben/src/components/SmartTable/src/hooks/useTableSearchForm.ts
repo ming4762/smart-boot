@@ -30,7 +30,7 @@ export const useTableSearchForm = (
 
   function replaceFormSlotKey(key: string) {
     if (!key) return ''
-    return key?.replace?.(/form\-/, '') ?? ''
+    return key?.replace?.(/searchForm\-/, '') ?? ''
   }
 
   /**
@@ -39,7 +39,7 @@ export const useTableSearchForm = (
   const getSearchFormSlot: ComputedRef<Slots> = computed(() => {
     const result: { [name: string]: Slot | undefined } = {}
     Object.keys(slots)
-      .map((item) => (item.startsWith('form-') ? item : null))
+      .map((item) => (item.startsWith('searchForm-') ? item : null))
       .filter((item) => !!item)
       .forEach((item) => {
         const formKey = replaceFormSlotKey(item as string)

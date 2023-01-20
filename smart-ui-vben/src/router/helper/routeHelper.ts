@@ -1,10 +1,10 @@
-import type { AppRouteModule, AppRouteRecordRaw } from '/@/router/types'
-import type { Router, RouteRecordNormalized } from 'vue-router'
+import type {AppRouteModule, AppRouteRecordRaw} from '/@/router/types'
+import type {RouteLocationNormalized, Router, RouteRecordNormalized} from 'vue-router'
+import {createRouter, createWebHashHistory} from 'vue-router'
 
-import { getParentLayout, LAYOUT, EXCEPTION_COMPONENT } from '/@/router/constant'
-import { cloneDeep, omit } from 'lodash-es'
-import { warn } from '/@/utils/log'
-import { createRouter, createWebHashHistory } from 'vue-router'
+import {EXCEPTION_COMPONENT, getParentLayout, LAYOUT} from '/@/router/constant'
+import {cloneDeep, omit} from 'lodash-es'
+import {warn} from '/@/utils/log'
 
 export type LayoutMapKey = 'LAYOUT'
 const LayoutMap = new Map<string, () => Promise<typeof import('*.vue')>>()
@@ -17,10 +17,12 @@ const getComponents = (): Record<string, () => Promise<Recordable>> => {
   const result: Record<string, () => Promise<Recordable>> = {}
   const viewsRecord = import.meta.glob('../../views/**/*.{vue,tsx}')
   Object.keys(viewsRecord).forEach((item) => {
+    // @ts-ignore
     result[item] = viewsRecord[item]
   })
   const modeuleViewsRecord = import.meta.glob('../../modules/**/*.{vue,tsx}')
   Object.keys(modeuleViewsRecord).forEach((item) => {
+    // @ts-ignore
     result[item] = modeuleViewsRecord[item]
   })
   return result
@@ -31,7 +33,7 @@ function asyncImportRoute(routes: AppRouteRecordRaw[] | undefined) {
   dynamicViewsModules = dynamicViewsModules || getComponents()
   if (!routes) return
   routes.forEach((item) => {
-    const { component, name } = item
+    const { component, name, meta } = item
     const { children } = item
     if (component) {
       const layoutFound = LayoutMap.get(component.toUpperCase())
@@ -42,6 +44,14 @@ function asyncImportRoute(routes: AppRouteRecordRaw[] | undefined) {
       }
     } else if (name) {
       item.component = getParentLayout()
+    }
+    // 处理props传参
+    item.props = (route: RouteLocationNormalized) => {
+      const result: Recordable = {}
+      if (meta.queryToProps) {
+        Object.assign(result, route.query)
+      }
+      return result
     }
     children && asyncImportRoute(children)
   })

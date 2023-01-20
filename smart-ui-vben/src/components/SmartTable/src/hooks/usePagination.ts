@@ -27,10 +27,13 @@ export const usePagination = (propsRef: ComputedRef<SmartTableProps>) => {
     },
   )
 
-  const getPaginationInfo = computed((): VxeGridPropTypes.PagerConfig | boolean | undefined => {
+  const getPaginationInfo = computed((): VxeGridPropTypes.PagerConfig | undefined => {
     const { pagerConfig } = unref(propsRef)
+    if (!pagerConfig) {
+      return undefined
+    }
     if (!unref(show) || (isBoolean(pagerConfig) && !pagerConfig)) {
-      return false
+      return undefined
     }
     return {
       currentPage: 1,

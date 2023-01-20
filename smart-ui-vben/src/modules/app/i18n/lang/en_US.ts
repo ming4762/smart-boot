@@ -14,6 +14,7 @@ export default {
       download: 'Download',
       cancel: 'Cancel',
       submit: 'Submit',
+      reload: 'Reload',
     },
     title: {
       details: 'Details',

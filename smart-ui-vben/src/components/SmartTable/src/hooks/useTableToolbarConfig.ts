@@ -29,10 +29,10 @@ export const useTableToolbarConfig = (
 
   // const configRef = ref<SmartTableToolbarConfig>({})
 
-  const getToolbarConfigInfo = computed((): SmartTableToolbarConfig => {
+  const getToolbarConfigInfo = computed<SmartTableToolbarConfig | undefined>(() => {
     const { toolbarConfig, size: tableSize } = unref(tableProps)
     if (!toolbarConfig) {
-      return {}
+      return undefined
     }
     const buttons = dealButtons(toolbarConfig.buttons, tableSize)
     return {
@@ -52,26 +52,35 @@ export const useTableToolbarConfig = (
       if (item.code === 'ModalAdd') {
         // 添加按钮处理
         const defaultConfig = getDefaultAddButtonConfig(t)
-        return merge({ size: tableButtonSizeMap[tableSize] }, defaultConfig, item, {
-          props: {
-            onClick: () => {
-              showAddModal()
+        return merge(
+          { size: tableButtonSizeMap[tableSize] },
+          defaultConfig,
+          {
+            props: {
+              onClick: () => {
+                showAddModal()
+              },
             },
           },
-        }) as SmartTableButton
+          item,
+        ) as SmartTableButton
       } else if (item.code == 'ModalEdit') {
-        return merge({ size: tableButtonSizeMap[tableSize] }, getDefaultEditButtonConfig(t), item, {
-          props: {
-            onClick: () => {
-              editByCheckbox()
+        return merge(
+          { size: tableButtonSizeMap[tableSize] },
+          getDefaultEditButtonConfig(t),
+          {
+            props: {
+              onClick: () => {
+                editByCheckbox()
+              },
             },
           },
-        }) as SmartTableButton
+          item,
+        ) as SmartTableButton
       } else if (item.code === 'delete') {
         return merge(
           { size: tableButtonSizeMap[tableSize] },
           getDefaultDeleteButtonConfig(t),
-          item,
           {
             props: {
               onClick: () => {
@@ -79,6 +88,7 @@ export const useTableToolbarConfig = (
               },
             },
           },
+          item,
         ) as SmartTableButton
       }
       return item
