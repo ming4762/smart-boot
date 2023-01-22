@@ -100,7 +100,7 @@ export default defineComponent({
             getPopupContainer: () => unref((table as any)?.wrapRef.value) ?? document.body,
             type: 'text',
             size: 'small',
-            status: 'primary',
+            status: action.danger ? 'danger' : 'primary',
             ...action,
             ...(popConfirm || {}),
             onConfirm: popConfirm?.confirm,

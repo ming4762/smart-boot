@@ -1,0 +1,99 @@
+<template>
+  <div class="full-height">
+    <SmartTable @register="registerTable" :size="getTableSize">
+      <template #table-option="{ row }">
+        <SmartVxeTableAction :actions="getActions(row)" />
+      </template>
+    </SmartTable>
+  </div>
+</template>
+
+<script lang="ts" setup>
+import { useI18n } from '/@/hooks/web/useI18n'
+import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
+
+import {
+  ActionItem,
+  SmartTable,
+  SmartVxeTableAction,
+  useSmartTable,
+} from '/@/components/SmartTable'
+
+import { getTableColumns, getFormSchemas, getSearchFormSchemas } from './SysSystemListView.config'
+import { listApi, deleteApi, getByIdApi, saveUpdateApi } from './SysSystemListView.api'
+
+const { t } = useI18n()
+const { getTableSize } = useSizeSetting()
+
+const getActions = (row: Recordable): ActionItem[] => {
+  return [
+    {
+      label: t('common.button.edit'),
+      onClick: () => editByRow(row),
+    },
+    {
+      label: t('common.button.delete'),
+      onClick: () => deleteByRow(row),
+      danger: true,
+    },
+  ]
+}
+
+const [registerTable, { editByRow, deleteByRow }] = useSmartTable({
+  columns: getTableColumns(),
+  height: 'auto',
+  useSearchForm: true,
+  pagerConfig: true,
+  addEditConfig: {
+    formConfig: {
+      schemas: getFormSchemas(t),
+      baseColProps: { span: 24 },
+      labelCol: { span: 6 },
+      wrapperCol: { span: 17 },
+    },
+  },
+  toolbarConfig: {
+    refresh: true,
+    buttons: [
+      {
+        code: 'ModalAdd',
+      },
+      {
+        code: 'delete',
+      },
+    ],
+  },
+  sortConfig: {
+    remote: true,
+    defaultSort: {
+      field: 'seq',
+      order: 'asc',
+    },
+  },
+  proxyConfig: {
+    ajax: {
+      query: (params) => listApi(params.ajaxParameter),
+      save: ({ body: { insertRecords, updateRecords } }) =>
+        saveUpdateApi(insertRecords, updateRecords),
+      delete: ({ body: { removeRecords } }) => deleteApi(removeRecords),
+      getById: (params) => getByIdApi(params.id),
+    },
+  },
+  searchFormConfig: {
+    schemas: getSearchFormSchemas(t),
+    searchWithSymbol: true,
+    actionColOptions: {
+      span: 6,
+    },
+    labelCol: {
+      span: 8,
+    },
+    colon: true,
+    baseColProps: {
+      span: 6,
+    },
+  },
+})
+</script>
+
+<style scoped></style>
