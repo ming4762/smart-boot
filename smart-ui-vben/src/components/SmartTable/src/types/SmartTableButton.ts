@@ -49,4 +49,6 @@ export interface SmartTableButton extends SmartTableBasicButtonDropdowns {
   dropdowns?: SmartTableBasicButtonDropdowns[]
   buttonRender?: SmartTableButtonRender
   props?: ButtonProps
+  // 是否是ant-design按钮，false：使用vxe-table原有的按钮，true使用VxeTableToolButtonRenderer进行渲染
+  isAnt?: boolean
 }

@@ -30,7 +30,8 @@ export const useTableAjax = (
    * 获取搜索符号
    */
   const getSearchFormSymbolRef = computed<Recordable | boolean>(() => {
-    const { searchWithSymbol, searchFormConfig, useSearchForm } = unref(propsRef)
+    const { searchFormConfig, useSearchForm } = unref(propsRef)
+    const searchWithSymbol = searchFormConfig?.searchWithSymbol
     if (!useSearchForm || !searchWithSymbol) {
       return false
     }
@@ -84,7 +85,7 @@ export const useTableAjax = (
           if (useSearchForm) {
             // 处理参数
             const searchForm = getSearchFormModel()
-            const searchWithSymbol = unref(propsRef).searchWithSymbol
+            const searchWithSymbol = unref(propsRef).searchFormConfig?.searchWithSymbol
             if (isBoolean(searchWithSymbol) && searchWithSymbol) {
               // 处理搜索符号
               const symbolForm = dealSearchSymbol(searchForm)

@@ -15,6 +15,7 @@ export default {
       cancel: '取消',
       submit: '提交',
       reload: '重新加载',
+      choose: '选择',
     },
     title: {
       details: '详情',

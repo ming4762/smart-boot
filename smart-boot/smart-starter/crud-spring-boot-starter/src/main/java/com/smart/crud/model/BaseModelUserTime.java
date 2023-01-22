@@ -20,4 +20,6 @@ public abstract class BaseModelUserTime extends BaseModelCreateUserTime {
     protected Long updateUserId;
 
     protected LocalDateTime updateTime;
+
+    protected String updateBy;
 }

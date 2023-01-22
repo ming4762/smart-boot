@@ -67,7 +67,6 @@ export interface SmartTableProps<T = any> extends VxeGridProps<T> {
   // 查询条件请求之前处理
   handleSearchInfoFn?: Fn
   // 搜索是否带有符号
-  searchWithSymbol?: boolean
   toolbarConfig?: SmartTableToolbarConfig
   // 分页配置
   pagerConfig?: boolean | VxeGridPropTypes.PagerConfig
@@ -99,7 +98,7 @@ export interface TableActionType {
   getCheckboxRecords: (isFull: boolean) => Array<any>
   getRadioRecord: (isFull: boolean) => any
 
-  openAddEditModal: <T = any>(props?: boolean, data?: T, openOnSet?: boolean) => void
+  // openAddEditModal: <T = any>(props?: boolean, data?: T, openOnSet?: boolean) => void
   showAddModal: (formData?: Recordable) => void
   editByCheckbox: () => Promise<boolean> | boolean
   editByRow: <T = any>(data: T, formData?: Recordable) => Promise<boolean> | boolean
