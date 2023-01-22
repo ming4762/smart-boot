@@ -178,6 +178,7 @@ public abstract class BaseServiceImpl<K extends CrudBaseMapper<T>, T extends Bas
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @Deprecated
     public boolean saveOrUpdateWithCreateUser(@NonNull T model, Long userId) {
         boolean isAdd = this.isAdd(model);
         if (isAdd) {
@@ -195,6 +196,7 @@ public abstract class BaseServiceImpl<K extends CrudBaseMapper<T>, T extends Bas
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @Deprecated
     public boolean saveOrUpdateWithUpdateUser(@NonNull T model, Long userId) {
         boolean isAdd = this.isAdd(model);
         if (isAdd) {
@@ -212,6 +214,7 @@ public abstract class BaseServiceImpl<K extends CrudBaseMapper<T>, T extends Bas
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @Deprecated
     public boolean saveOrUpdateWithAllUser(@NonNull T model, Long userId) {
         boolean isAdd = this.isAdd(model);
         if (isAdd) {
@@ -228,6 +231,7 @@ public abstract class BaseServiceImpl<K extends CrudBaseMapper<T>, T extends Bas
      * @return 是否保存成功
      */
     @Override
+    @Deprecated
     @Transactional(rollbackFor = Exception.class)
     public boolean saveWithUser(@NonNull T model, Long userId) {
         this.setCreateUserId(model, userId);
@@ -239,6 +243,7 @@ public abstract class BaseServiceImpl<K extends CrudBaseMapper<T>, T extends Bas
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @Deprecated
     public boolean updateWithUserById(@NonNull T model, Long userId) {
         this.setUpdateTime(model);
         this.setUpdateUserId(model, userId);
@@ -252,6 +257,7 @@ public abstract class BaseServiceImpl<K extends CrudBaseMapper<T>, T extends Bas
      * @return 是否保存成功
      */
     @Override
+    @Deprecated
     @Transactional(rollbackFor = Exception.class)
     public boolean saveBatchWithUser(@NonNull List<T> modelList, Long userId) {
         if (!CollectionUtils.isEmpty(modelList)) {
@@ -272,6 +278,7 @@ public abstract class BaseServiceImpl<K extends CrudBaseMapper<T>, T extends Bas
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @Deprecated
     public boolean updateBatchWithUserById(@NonNull List<T> modelList, Long userId) {
         if (!CollectionUtils.isEmpty(modelList)) {
             modelList.forEach(item -> {

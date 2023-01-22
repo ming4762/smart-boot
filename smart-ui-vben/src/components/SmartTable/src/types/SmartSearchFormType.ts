@@ -21,4 +21,6 @@ export interface SmartSearchFormSchema extends FormSchema {
 
 export interface SmartSearchFormProps extends FormProps {
   schemas?: SmartSearchFormSchema[]
+
+  searchWithSymbol?: boolean
 }

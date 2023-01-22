@@ -19,4 +19,6 @@ public abstract class BaseModelCreateUserTime extends BaseModel {
     protected Long createUserId;
 
     protected LocalDateTime createTime;
+
+    protected String createBy;
 }

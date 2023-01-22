@@ -19,8 +19,8 @@ public enum UserPropertyEnum {
     UPDATE_USER_ID("updateUserId"),
     // 更新时间
     UPDATE_TIME("updateTime"),
-    CREATE_USER("createUser"),
-    UPDATE_USER("updateUser");
+    CREATE_USER("createBy"),
+    UPDATE_USER("updateBy");
 
 
     @Getter

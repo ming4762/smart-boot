@@ -15,6 +15,7 @@ export default {
       cancel: 'Cancel',
       submit: 'Submit',
       reload: 'Reload',
+      choose: 'Choose',
     },
     title: {
       details: 'Details',

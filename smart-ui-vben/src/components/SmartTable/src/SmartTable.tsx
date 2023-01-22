@@ -153,7 +153,7 @@ export default defineComponent({
       deleteByCheckbox,
       getCheckboxRecords,
       getRadioRecord,
-      openAddEditModal,
+      // openAddEditModal,
       showAddModal,
       editByCheckbox,
       editByRow,

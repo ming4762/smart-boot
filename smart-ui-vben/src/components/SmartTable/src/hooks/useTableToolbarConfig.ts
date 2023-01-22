@@ -91,6 +91,11 @@ export const useTableToolbarConfig = (
           item,
         ) as SmartTableButton
       }
+      if (item.isAnt) {
+        item.buttonRender = {
+          name: 'VxeTableToolButtonRenderer',
+        }
+      }
       return item
     })
   }

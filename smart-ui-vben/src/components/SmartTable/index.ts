@@ -1,5 +1,6 @@
 export { default as SmartTable } from './src/SmartTable'
 export { default as TableAction } from './src/components/TableAction.vue'
+export { default as SmartVxeTableAction } from './src/components/SmartVxeTableAction.vue'
 
 export { useSmartTable } from './src/hooks/useSmartTable'
 

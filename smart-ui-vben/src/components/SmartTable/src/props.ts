@@ -25,6 +25,5 @@ export const smartTableProps = {
   useSearchForm: propTypes.bool,
   // 立即请求接口
   immediate: { type: Boolean, default: true },
-  searchWithSymbol: propTypes.bool,
   size: propTypes.string.def('small'),
 }
