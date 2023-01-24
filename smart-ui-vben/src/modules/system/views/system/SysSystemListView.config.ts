@@ -1,5 +1,5 @@
-import type {SmartColumn, SmartSearchFormSchema} from '/@/components/SmartTable'
-import type {FormSchema} from '/@/components/Form';
+import type { SmartColumn, SmartSearchFormSchema } from '/@/components/SmartTable'
+import type { FormSchema } from '/@/components/Form'
 
 export const getTableColumns = (): SmartColumn[] => {
   return [
@@ -67,7 +67,7 @@ export const getTableColumns = (): SmartColumn[] => {
       field: 'id',
       title: '{common.table.operation}',
       fixed: 'right',
-      width: 130,
+      width: 170,
       slots: {
         default: 'table-option',
       },

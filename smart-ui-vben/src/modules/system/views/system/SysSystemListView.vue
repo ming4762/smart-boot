@@ -5,6 +5,12 @@
         <SmartVxeTableAction :actions="getActions(row)" />
       </template>
     </SmartTable>
+    <SmartUserSelectModal
+      width="700px"
+      title="选择人员"
+      @register="registerModal"
+      @selected="handleUserSelected"
+      :select-values="selectUserList" />
   </div>
 </template>
 
@@ -12,6 +18,7 @@
 import { useI18n } from '/@/hooks/web/useI18n'
 import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
 
+import { SmartUserSelectModal } from '/@/components/Form'
 import {
   ActionItem,
   SmartTable,
@@ -21,9 +28,12 @@ import {
 
 import { getTableColumns, getFormSchemas, getSearchFormSchemas } from './SysSystemListView.config'
 import { listApi, deleteApi, getByIdApi, saveUpdateApi } from './SysSystemListView.api'
+import { useSetUser } from './SysSystemListViewHooks'
 
 const { t } = useI18n()
 const { getTableSize } = useSizeSetting()
+
+const { selectUserList, handleUserSelected, registerModal, handleShowSetUser } = useSetUser(t)
 
 const getActions = (row: Recordable): ActionItem[] => {
   return [
@@ -35,6 +45,12 @@ const getActions = (row: Recordable): ActionItem[] => {
       label: t('common.button.delete'),
       onClick: () => deleteByRow(row),
       danger: true,
+    },
+    {
+      label: t('system.views.system.button.setUser'),
+      onClick: () => {
+        handleShowSetUser(row)
+      },
     },
   ]
 }

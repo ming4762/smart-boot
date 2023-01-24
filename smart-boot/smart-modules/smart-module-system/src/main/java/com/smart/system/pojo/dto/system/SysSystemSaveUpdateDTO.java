@@ -45,4 +45,6 @@ public class SysSystemSaveUpdateDTO implements Serializable {
     */
     private String version;
 
+    private Integer seq;
+
 }

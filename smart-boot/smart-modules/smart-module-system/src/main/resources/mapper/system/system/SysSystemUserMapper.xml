@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smart.system.mapper.SysSystemUserMapper">
+    <sql id="columnList">
+        <!--   id 主键  索引   -->
+        id,
+        <!--   userId   索引   -->
+        user_id,
+        <!--   systemId   索引   -->
+        system_id,
+        <!--   createTime      -->
+        create_time,
+        <!--   createUserId      -->
+        create_user_id,
+        <!--   createBy      -->
+        create_by
+    </sql>
+
+    <resultMap id="commonResultMap" type="com.smart.system.model.SysSystemUserPO">
+        <!--   id 主键  索引   -->
+        <id column="id" property="id" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   userId   索引   -->
+        <result column="user_id" property="userId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   systemId   索引   -->
+        <result column="system_id" property="systemId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   createTime      -->
+        <result column="create_time" property="createTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+        <!--   createUserId      -->
+        <result column="create_user_id" property="createUserId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   createBy      -->
+        <result column="create_by" property="createBy" javaType="java.lang.String" jdbcType="VARCHAR"/>
+    </resultMap>
+</mapper>

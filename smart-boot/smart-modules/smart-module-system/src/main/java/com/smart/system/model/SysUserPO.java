@@ -2,6 +2,7 @@ package com.smart.system.model;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.smart.crud.model.BaseModelUserTime;
@@ -66,6 +67,7 @@ public class SysUserPO extends BaseModelUserTime implements BaseUser {
      */
     private Integer seq;
 
+    @TableLogic
     private Boolean deleteYn;
 
     private Boolean useYn;

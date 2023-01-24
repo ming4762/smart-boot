@@ -63,6 +63,7 @@ export default {
       submitSuccess: 'Submit successfully',
       use: 'enable',
       noUse: 'deactivate',
+      OperationSucceeded: 'Operation succeeded',
     },
   },
   app: {

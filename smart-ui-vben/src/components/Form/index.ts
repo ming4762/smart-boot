@@ -14,5 +14,6 @@ export { default as ApiRadioGroup } from './src/components/ApiRadioGroup.vue'
 export { default as ApiCascader } from './src/components/ApiCascader.vue'
 export { default as ApiTransfer } from './src/components/ApiTransfer.vue'
 export { default as SmartTableSelect } from './src/smartBoot/components/base/SmartTableSelect'
+export { default as SmartUserSelectModal } from './src/smartBoot/components/SmartUserSelectModal.vue'
 
 export { BasicForm }

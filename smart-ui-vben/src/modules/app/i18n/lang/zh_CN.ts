@@ -63,6 +63,7 @@ export default {
       submitSuccess: '提交成功',
       use: '启用',
       noUse: '停用',
+      OperationSucceeded: '操作成功',
     },
   },
   app: {

@@ -326,6 +326,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserRolePermission queryUserRolePermission(@NonNull Long userId, @NonNull List<FunctionTypeEnum> types) {
         UserRolePermission userRolePermission = new UserRolePermission();
         // 1、查询角色信息
@@ -452,13 +453,12 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         );
         // 保存用户角色关系
         if (!CollectionUtils.isEmpty(parameter.getRoleIdList())) {
-            this.sysUserRoleService.saveBatchWithUser(
+            this.sysUserRoleService.saveBatch(
                     parameter.getRoleIdList().stream().map(roleId -> SysUserRolePO.builder()
                             .roleId(roleId)
                             .enable(Boolean.TRUE)
                             .userId(parameter.getUserId())
-                            .build()).collect(Collectors.toList()),
-                    AuthUtils.getCurrentUserId()
+                            .build()).collect(Collectors.toList())
             );
         }
         return true;
@@ -505,8 +505,6 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean saveUpdateWithDataScope(SysUserWithDataScopeDTO parameter) {
-        // 获取操作人ID
-        Long userId = AuthUtils.getNonNullCurrentUserId();
         // 更新用户
         SysUserPO userModel = new SysUserPO();
         BeanUtils.copyProperties(parameter, userModel);
@@ -516,26 +514,31 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
             return this.saveOrUpdate(userModel);
         }
 
-        SysUserDeptPO dataScopeModel = new SysUserDeptPO();
-        dataScopeModel.setUserId(userModel.getUserId());
-        dataScopeModel.setDeptId(parameter.getDeptId());
-        // 设置标识位
-        dataScopeModel.setIdent(UserDeptIdentEnum.USER_DEPT);
-        // 将数据权限数组转为逗号分隔字符串
-        dataScopeModel.setDataScope(
-                parameter.getDataScopeList().stream()
-                        .map(Enum::toString)
-                        .collect(Collectors.joining(","))
-        );
-        // 删除之前的部门数据权限
-        this.sysUserDeptService.remove(
-                new QueryWrapper<SysUserDeptPO>().lambda()
-                        .eq(SysUserDeptPO::getUserId, userModel.getUserId())
-                        .eq(SysUserDeptPO::getIdent, UserDeptIdentEnum.USER_DEPT)
-        );
+        if (parameter.getDeptId() != null) {
+            SysUserDeptPO dataScopeModel = new SysUserDeptPO();
+            dataScopeModel.setUserId(userModel.getUserId());
+            dataScopeModel.setDeptId(parameter.getDeptId());
+            // 设置标识位
+            dataScopeModel.setIdent(UserDeptIdentEnum.USER_DEPT);
+            // 将数据权限数组转为逗号分隔字符串
+            if (!CollectionUtils.isEmpty(parameter.getDataScopeList())) {
+                dataScopeModel.setDataScope(
+                        parameter.getDataScopeList().stream()
+                                .map(Enum::toString)
+                                .collect(Collectors.joining(","))
+                );
+            }
+            // 删除之前的部门数据权限
+            this.sysUserDeptService.remove(
+                    new QueryWrapper<SysUserDeptPO>().lambda()
+                            .eq(SysUserDeptPO::getUserId, userModel.getUserId())
+                            .eq(SysUserDeptPO::getIdent, UserDeptIdentEnum.USER_DEPT)
+            );
+            this.sysUserDeptService.saveOrUpdate(dataScopeModel);
+        }
+
         // 执行更新操作
-        return this.saveOrUpdateWithAllUser(userModel, userId) &&
-                this.sysUserDeptService.saveOrUpdateWithAllUser(dataScopeModel, userId);
+        return this.saveOrUpdate(userModel);
     }
 
     @Override
