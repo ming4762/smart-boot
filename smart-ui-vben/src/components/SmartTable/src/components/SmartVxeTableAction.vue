@@ -28,7 +28,7 @@
       popconfirm
       v-if="dropDownActions && getDropdownList.length > 0">
       <slot name="more"></slot>
-      <vxe-button type="text" size="small" v-if="!$slots.more">
+      <vxe-button type="text" status="primary" size="small" v-if="!$slots.more">
         更多
         <Icon icon="mdi-light:chevron-down" />
       </vxe-button>

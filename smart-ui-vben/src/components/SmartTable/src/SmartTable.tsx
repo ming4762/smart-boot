@@ -61,21 +61,21 @@ export default defineComponent({
     /**
      * vxe-table函数
      */
-    // @ts-ignore
-    const commitVxeProxy = (code, ...args) => unref(tableElRef)?.commitProxy(code, args)
-    const getCheckboxRecords = (isFull: boolean) =>
-      unref(tableElRef)?.getCheckboxRecords(isFull) || []
-    const getRadioRecord = (isFull: boolean) => unref(tableElRef)?.getRadioRecord(isFull)
-    const setRadioRow = (row: any) => unref(tableElRef)!.setRadioRow(row)
-    const setCheckboxRow = (rows: any | any[], checked: boolean) =>
-      unref(tableElRef)!.setCheckboxRow(rows, checked)
     const getTableInstance = () => unref(tableElRef)
+    const commitVxeProxy = (code, ...args) => getTableInstance()?.commitProxy(code, args)
+    const getCheckboxRecords = (isFull: boolean) =>
+      getTableInstance()?.getCheckboxRecords(isFull) || []
+    const getRadioRecord = (isFull: boolean) => getTableInstance()?.getRadioRecord(isFull)
+    const setRadioRow = (row: any) => getTableInstance()!.setRadioRow(row)
+    const setCheckboxRow = (rows: any | any[], checked: boolean) =>
+      getTableInstance()!.setCheckboxRow(rows, checked)
 
     // -------------- 加载函数 ------------------------
     searchFormAction.getFieldsValue
     const { reload, getProxyConfigRef, deleteByRow, deleteByCheckbox } = useTableAjax(
       getTableProps,
       tableElRef,
+      emit,
       {
         commitVxeProxy,
         getSearchFormModel: searchFormAction.getFieldsValue,
@@ -232,6 +232,7 @@ const renderSearchForm = (smartTableInstance) => {
       handleSearchInfoChange,
       getSearchFormSlot,
       getSearchFormColumnSlot,
+      id,
     } = smartTableInstance
     const formAttrs = {
       ...getSearchFormProps,
@@ -250,7 +251,11 @@ const renderSearchForm = (smartTableInstance) => {
     ) {
       error('搜索表单插槽命名重复')
     }
-    return <BasicForm {...formAttrs}>{searchFormSlots}</BasicForm>
+    return (
+      <BasicForm name={`${id}_search_form`} {...formAttrs}>
+        {searchFormSlots}
+      </BasicForm>
+    )
   }
 }
 
@@ -268,6 +273,7 @@ const renderTable = (instance) => {
       getAddEditFormProps,
       getAddEditModalProps,
       getAddEditFormSlots,
+      id,
     } = instance
     const result = [
       <vxe-grid ref="tableElRef" {...getTableBindValues}>
@@ -279,6 +285,7 @@ const renderTable = (instance) => {
         <SmartTableAddEditModal
           ref="addEditModalRef"
           {...getAddEditModalProps}
+          tableId={id}
           onRegister={registerAddEditModal}
           formConfig={getAddEditFormProps}>
           {getAddEditFormSlots}

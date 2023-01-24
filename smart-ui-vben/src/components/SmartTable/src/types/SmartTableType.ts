@@ -21,9 +21,9 @@ export type TableHeightType = 'auto' | number | string
 
 export interface FetchParams {
   searchInfo?: Recordable
-  page?: number
-  sortInfo?: Recordable
-  filterInfo?: Recordable
+  page?: Partial<VxeGridPropTypes.ProxyAjaxQueryPageParams>
+  sorts?: Partial<VxeGridPropTypes.ProxyAjaxQuerySortCheckedParams>[]
+  filters?: Partial<VxeTableDefines.FilterCheckedParams>[]
 }
 
 export interface SmartTableToolbarConfig extends VxeGridPropTypes.ToolbarConfig {

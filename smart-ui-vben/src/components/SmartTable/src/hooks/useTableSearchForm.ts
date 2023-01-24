@@ -25,7 +25,11 @@ export const useTableSearchForm = (
    * 搜索条件触发
    */
   const handleSearchInfoChange = () => {
-    fetch({ page: 1 })
+    fetch({
+      page: {
+        currentPage: 1,
+      },
+    })
   }
 
   function replaceFormSlotKey(key: string) {

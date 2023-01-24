@@ -9,6 +9,7 @@ import { BasicForm, FormProps, useForm } from '/@/components/Form'
 import { isFunction } from '@vue/shared'
 import { isBoolean, isPromise } from '/@/utils/is'
 import { useI18n } from '/@/hooks/web/useI18n'
+import { propTypes } from '/@/utils/propTypes'
 
 export default defineComponent({
   name: 'SmartTableAddEditModal',
@@ -22,6 +23,7 @@ export default defineComponent({
     },
     saveFunction: Function as PropType<(data) => Promise<any>>,
     afterSave: Function as PropType<(data?) => boolean | Promise<boolean> | undefined>,
+    tableId: propTypes.string,
   },
   setup(props) {
     const { t } = useI18n()
@@ -133,14 +135,14 @@ export default defineComponent({
     }
   },
   render() {
-    const { $attrs, register, registerForm, handleSubmit, $slots } = this
+    const { $attrs, register, registerForm, handleSubmit, $slots, tableId } = this
     const attrs = {
       ...$attrs,
       onRegister: register,
     }
     return (
       <BasicModal {...attrs} onOk={handleSubmit}>
-        <BasicForm onRegister={registerForm}>{$slots}</BasicForm>
+        <BasicForm name={`${tableId}_addEdit_form`} onRegister={registerForm}>{$slots}</BasicForm>
       </BasicModal>
     )
   },
