@@ -1,6 +1,7 @@
-import { propTypes } from '/@/utils/propTypes'
 import type { FormProps } from '/@/components/Form'
 import type { SmartColumn, TableHeightType } from './types/SmartTableType'
+import { buildUUID } from '/@/utils/uuid'
+import { propTypes } from '/@/utils/propTypes'
 
 export const smartTableProps = {
   columns: {
@@ -26,4 +27,5 @@ export const smartTableProps = {
   // 立即请求接口
   immediate: { type: Boolean, default: true },
   size: propTypes.string.def('small'),
+  id: propTypes.string.def(buildUUID()),
 }

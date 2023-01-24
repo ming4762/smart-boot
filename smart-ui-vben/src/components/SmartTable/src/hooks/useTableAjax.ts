@@ -3,12 +3,12 @@ import type { VxeGridInstance, VxeGridPropTypes } from 'vxe-table'
 import type { ComputedRef, Ref } from 'vue'
 import type { FetchParams, SmartTableProps, SmartTableProxyConfig } from '/@/components/SmartTable'
 
-import { computed, createVNode, unref } from 'vue'
+import { computed, createVNode, onMounted, unref } from 'vue'
 
 import { message, Modal } from 'ant-design-vue'
 
 import { isArray, isBoolean } from '/@/utils/is'
-import { omit } from 'lodash-es'
+import { omit, merge } from 'lodash-es'
 import { error } from '/@/utils/log'
 import { useI18n } from '/@/hooks/web/useI18n'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
@@ -23,9 +23,16 @@ interface ActionType {
 export const useTableAjax = (
   propsRef: ComputedRef<SmartTableProps>,
   vxeGridRef: Ref<VxeGridInstance>,
+  emit,
   { commitVxeProxy, getSearchFormModel, setLoading, getCheckboxRecords }: ActionType,
 ) => {
   const { t } = useI18n()
+  // 是否自动加载，取消vxe-table自动加载，解决触发事件问题（事件无法在数据加载完成之后执行）
+  onMounted(() => {
+    if (unref(propsRef).proxyConfig?.autoLoad !== false) {
+      reload()
+    }
+  })
   /**
    * 获取搜索符号
    */
@@ -55,19 +62,21 @@ export const useTableAjax = (
         query: async (params, args) => {
           const { form, filters, page, sorts, sort, $grid } =
             params as VxeGridPropTypes.ProxyAjaxQueryParams
-          let searchInfo = {}
+          let fetchParams: FetchParams = {}
           if (args && args.length > 0) {
-            searchInfo = args[0]
+            fetchParams = args[0]
           }
-          const searchParameter: SmartTableAjaxQueryParams = {
-            $grid,
-            form,
-            filters,
-            page,
-            sorts,
-            sort,
-            searchInfo,
-          }
+          const searchParameter: SmartTableAjaxQueryParams = merge(
+            {
+              $grid,
+              form,
+              filters,
+              page,
+              sorts,
+              sort,
+            },
+            fetchParams,
+          )
           let ajaxParameter: Recordable = {
             ...form,
             ...page,
@@ -99,8 +108,8 @@ export const useTableAjax = (
             searchParameter.searchForm = searchForm
           }
           ajaxParameter = omit(ajaxParameter, ['total'])
+          ajaxParameter = merge(ajaxParameter, searchParameter.searchInfo)
           // 添加额外的查询条件
-          Object.assign(ajaxParameter, searchInfo)
           searchParameter.ajaxParameter = ajaxParameter
           let result = await ajax.query!(searchParameter)
           if (proxyConfig.afterLoad) {
@@ -112,6 +121,7 @@ export const useTableAjax = (
     }
     const sort = sortConfig?.remote === true
     return {
+      autoLoad: false,
       sort,
       props: {
         result: 'rows',
@@ -149,6 +159,7 @@ export const useTableAjax = (
    */
   const reload = async (opt?: FetchParams) => {
     await commitVxeProxy('reload', opt)
+    emit('after-load')
   }
 
   /**

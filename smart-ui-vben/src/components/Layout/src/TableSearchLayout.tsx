@@ -11,7 +11,7 @@ export default defineComponent({
     const getTableContainerStyle = computed((): StyleValue => {
       let height = '100%'
       if (unref(hasSearchForm)) {
-        height = 'calc(100% - 76px)'
+        height = 'calc(100% - 70px)'
       }
       return {
         height,
