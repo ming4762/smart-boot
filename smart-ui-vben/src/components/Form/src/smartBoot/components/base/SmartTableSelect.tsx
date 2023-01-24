@@ -3,7 +3,6 @@ import type { SmartTableProps } from '/@/components/SmartTable'
 import { defineComponent } from 'vue'
 
 import { propTypes } from '/@/utils/propTypes'
-import { useSmartTableSelect } from '../../hooks/useSmartTableSelect'
 import { useModal } from '/@/components/Modal'
 
 import SmartTableSelectModal from './SmartTableSelectModal'
@@ -30,17 +29,14 @@ export default defineComponent({
     disabled: propTypes.bool.def(false),
   },
   setup() {
-    const { selectValues } = useSmartTableSelect()
     const [registerModal, { openModal }] = useModal()
     return {
-      selectValues,
       registerModal,
       openModal,
     }
   },
   render() {
     const {
-      selectValues,
       $attrs,
       multiple,
       tableProps,
@@ -49,6 +45,8 @@ export default defineComponent({
       $t,
       openModal,
       registerModal,
+      labelField,
+      valueField,
     } = this
     const modalSlots: any = {
       table: $slots.table,
@@ -61,7 +59,6 @@ export default defineComponent({
               {...$attrs}
               style={{ width: '100%' }}
               open={false}
-              value={selectValues.value}
               model={multiple ? 'multiple' : 'combobox'}></a-select>
           </a-col>
           <a-col class="button">
@@ -73,6 +70,8 @@ export default defineComponent({
         <SmartTableSelectModal
           {...$attrs}
           onRegister={registerModal}
+          labelField={labelField}
+          valueField={valueField}
           multiple={multiple}
           tableProps={tableProps}>
           {modalSlots}

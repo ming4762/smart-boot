@@ -1,5 +1,6 @@
 import { onUnmounted, ref, unref, watch } from 'vue'
 import type { WatchStopHandle } from 'vue'
+import type { NamePath } from 'ant-design-vue/es/form/interface'
 
 import type { FetchParams, SmartTableProps, TableActionType } from '../types/SmartTableType'
 import type { FormActionType } from '/@/components/Form'
@@ -8,7 +9,6 @@ import type { DynamicProps } from '/#/utils'
 import { getDynamicProps } from '/@/utils'
 import { error } from '/@/utils/log'
 import { VxeGridPropTypes } from 'vxe-table'
-import {NamePath} from 'ant-design-vue/lib/form/interface';
 
 type Props = Partial<DynamicProps<SmartTableProps>>
 type UseTableMethod = TableActionType & {
@@ -56,7 +56,7 @@ export const useSmartTable = (
     )
   }
 
-  const getTableInstance = (): TableActionType => {
+  const getTableAction = (): TableActionType => {
     const table = unref(tableRef)
     if (!table) {
       error(
@@ -68,74 +68,77 @@ export const useSmartTable = (
 
   const methods: UseTableMethod = {
     setProps: (props: Partial<SmartTableProps>) => {
-      getTableInstance().setProps(props)
+      getTableAction().setProps(props)
     },
     getSearchForm: () => {
       return unref(searchFormRef) as unknown as FormActionType
     },
     reload: async (opt?: FetchParams) => {
-      return await getTableInstance().reload(opt)
+      return await getTableAction().reload(opt)
     },
     setLoading: (loading: boolean) => {
-      getTableInstance().setLoading(loading)
+      getTableAction().setLoading(loading)
     },
     setPagination: (info: Partial<VxeGridPropTypes.PagerConfig>) => {
-      getTableInstance().setPagination(info)
+      getTableAction().setPagination(info)
     },
     setShowPagination: async (show: boolean) => {
-      await getTableInstance().setShowPagination(show)
+      await getTableAction().setShowPagination(show)
     },
-    getPagination: () => getTableInstance().getPagination(),
+    getPagination: () => getTableAction().getPagination(),
     getShowPagination: () => {
-      return getTableInstance().getShowPagination()
+      return getTableAction().getShowPagination()
     },
     commitVxeProxy: (code, ...args) => {
-      return getTableInstance().commitVxeProxy(code, args)
+      return getTableAction().commitVxeProxy(code, args)
     },
     deleteByCheckbox: () => {
-      getTableInstance().deleteByCheckbox()
+      getTableAction().deleteByCheckbox()
     },
     getCheckboxRecords: (isFull: boolean) => {
-      return getTableInstance().getCheckboxRecords(isFull)
+      return getTableAction().getCheckboxRecords(isFull)
     },
     getRadioRecord: (isFull: boolean) => {
-      return getTableInstance().getRadioRecord(isFull)
-    },
-    openAddEditModal: (props?: boolean, data?: any, openOnSet?: boolean) => {
-      return getTableInstance().openAddEditModal(props, data, openOnSet)
+      return getTableAction().getRadioRecord(isFull)
     },
     showAddModal: (formData?: Recordable) => {
-      getTableInstance().showAddModal(formData)
+      getTableAction().showAddModal(formData)
     },
     editByCheckbox: () => {
-      return getTableInstance().editByCheckbox()
+      return getTableAction().editByCheckbox()
     },
     getAddEditFieldsValue: () => {
-      return getTableInstance().getAddEditFieldsValue()
+      return getTableAction().getAddEditFieldsValue()
     },
     resetAddEditFields: () => {
-      return getTableInstance().resetAddEditFields()
+      return getTableAction().resetAddEditFields()
     },
     setAddEditFieldsValue: (data: any) => {
-      return getTableInstance().setAddEditFieldsValue(data)
+      return getTableAction().setAddEditFieldsValue(data)
     },
     editByRow: (data, formData) => {
-      return getTableInstance().editByRow(data, formData)
+      return getTableAction().editByRow(data, formData)
     },
     deleteByRow: (data) => {
-      return getTableInstance().deleteByRow(data)
+      return getTableAction().deleteByRow(data)
     },
     setRadioRow: (row) => {
-      return getTableInstance().setRadioRow(row)
+      return getTableAction().setRadioRow(row)
     },
     setCheckboxRow(rows: any, checked: boolean): Promise<any> {
-      return getTableInstance().setCheckboxRow(rows, checked)
+      return getTableAction().setCheckboxRow(rows, checked)
     },
     validateAddEdit: (nameList?: NamePath[]) => {
-      return getTableInstance().validateAddEdit(nameList)
+      return getTableAction().validateAddEdit(nameList)
     },
     validateAddEditFields: (nameList?: NamePath[]) => {
-      return getTableInstance().validateAddEdit(nameList)
+      return getTableAction().validateAddEdit(nameList)
+    },
+    getTableInstance: () => {
+      return getTableAction().getTableInstance()
+    },
+    getData: (rowIndex?: number) => {
+      return getTableAction().getData(rowIndex)
     },
   }
   return [register, methods]

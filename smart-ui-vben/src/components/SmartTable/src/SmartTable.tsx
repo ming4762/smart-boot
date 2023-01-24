@@ -26,7 +26,7 @@ export default defineComponent({
     BasicForm,
   },
   props: smartTableProps,
-  emits: ['register'],
+  emits: ['register', 'after-load'],
   setup(props, { emit, slots, attrs }) {
     const tableElRef = ref<VxeGridInstance>() as Ref<VxeGridInstance>
     const wrapRef = ref(null)
@@ -69,6 +69,7 @@ export default defineComponent({
     const setRadioRow = (row: any) => unref(tableElRef)!.setRadioRow(row)
     const setCheckboxRow = (rows: any | any[], checked: boolean) =>
       unref(tableElRef)!.setCheckboxRow(rows, checked)
+    const getTableInstance = () => unref(tableElRef)
 
     // -------------- 加载函数 ------------------------
     searchFormAction.getFieldsValue
@@ -165,6 +166,13 @@ export default defineComponent({
       setCheckboxRow,
       validateAddEdit,
       validateAddEditFields,
+      getTableInstance,
+      getData: (rowIndex?: number) => {
+        if (rowIndex) {
+          return getTableInstance().getData(rowIndex)
+        }
+        return getTableInstance().getData()
+      },
     }
 
     createTableContext({ ...tableAction, wrapRef, getBindValues: getTableBindValues })

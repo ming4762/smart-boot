@@ -1,8 +1,8 @@
-import type { VxeTableDefines, VxeGridProps, VxeGridPropTypes } from 'vxe-table'
+import type { VxeTableDefines, VxeGridProps, VxeGridPropTypes, VxeGridInstance } from 'vxe-table'
 import type { SmartSearchFormProps } from './SmartSearchFormType'
 import type { SmartTableButton } from './SmartTableButton'
 import type { SmartTableAddEditConfig } from './SmartTableAddEditType'
-import {NamePath} from 'ant-design-vue/lib/form/interface';
+import type { NamePath } from 'ant-design-vue/es/form/interface'
 
 export interface SmartColumn extends VxeTableDefines.ColumnOptions {
   flag?: 'INDEX' | 'DEFAULT' | 'CHECKBOX' | 'RADIO' | 'ACTION'
@@ -52,7 +52,7 @@ export interface SmartTableProxyConfig<T = any> extends VxeGridPropTypes.ProxyCo
 
 // @ts-ignore
 export interface SmartTableProps<T = any> extends VxeGridProps<T> {
-  columns: SmartColumn[]
+  columns?: SmartColumn[]
   // 默认的排序参数
   // 请求接口配置
   height?: TableHeightType
@@ -119,4 +119,6 @@ export interface TableActionType {
   setCheckboxRow(rows: any | any[], checked: boolean): Promise<any>
   validateAddEditFields: (nameList?: NamePath[]) => Promise<any>
   validateAddEdit: (nameList?: NamePath[]) => Promise<any>
+  getTableInstance: () => VxeGridInstance
+  getData: (rowIndex?: number) => any[]
 }

@@ -29,5 +29,8 @@ export default {
       code: '请输入系统编码',
       name: '请输入系统名称',
     },
+    button: {
+      setUser: '设置人员',
+    },
   },
 }

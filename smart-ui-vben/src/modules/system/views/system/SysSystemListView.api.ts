@@ -5,6 +5,8 @@ enum Api {
   saveUpdate = 'sys/system/saveUpdate',
   delete = 'sys/system/batchDeleteById',
   getById = 'sys/system/getById',
+  setUser = 'sys/system/setUser',
+  getRelatedUserId = 'sys/system/getRelatedUserId',
 }
 
 export const listApi = (params) => {
@@ -34,5 +36,21 @@ export const getByIdApi = (id: number) => {
   return defHttp.post({
     url: Api.getById,
     data: id,
+  })
+}
+
+export const setUserApi = (data: { systemId: number; userIdList: number[] }) => {
+  return defHttp.post({
+    url: Api.setUser,
+    data,
+  })
+}
+
+export const getRelatedUserIdApi = (systemId: number) => {
+  return defHttp.post({
+    url: Api.getRelatedUserId,
+    data: {
+      id: systemId,
+    },
   })
 }

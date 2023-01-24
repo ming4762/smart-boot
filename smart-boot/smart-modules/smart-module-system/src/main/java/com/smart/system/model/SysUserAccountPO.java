@@ -3,7 +3,7 @@ package com.smart.system.model;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.smart.crud.model.BaseModel;
+import com.smart.crud.model.BaseModelCreateUserTime;
 import com.smart.system.constants.MaxConnectionsPolicyEnum;
 import com.smart.system.constants.UserAccountStatusEnum;
 import com.smart.system.mybatis.type.MaxConnectionsPolicyTypeHandler;
@@ -25,7 +25,8 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SysUserAccountPO extends BaseModel {
+public class SysUserAccountPO extends BaseModelCreateUserTime {
+
     @Serial
     private static final long serialVersionUID = -8246582845593471040L;
 
@@ -46,8 +47,6 @@ public class SysUserAccountPO extends BaseModel {
      * 上次登录时间
      */
     private LocalDateTime lastLoginTime;
-
-    private LocalDateTime createTime;
 
     private String ipWhiteList;
 
