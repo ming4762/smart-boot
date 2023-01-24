@@ -2,6 +2,7 @@ import { defHttp } from '/@/utils/http/axios'
 
 enum Api {
   listUser = 'sys/user/list',
+  listSystem = 'sys/system/list',
 }
 
 /**
@@ -23,5 +24,12 @@ export const listUserApi = (params: Recordable = {}, useYn = true) => {
       ...params,
       parameter,
     },
+  })
+}
+
+export const listSystemApi = (params) => {
+  return defHttp.post({
+    url: Api.listSystem,
+    data: params,
   })
 }

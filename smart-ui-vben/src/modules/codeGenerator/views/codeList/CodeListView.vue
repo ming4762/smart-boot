@@ -1,63 +1,27 @@
 <template>
   <div class="full-height">
-    <SmartTable @register="registerTable">
+    <SmartTable @register="registerTable" :size="getTableSize">
       <template #table-operation="{ row }">
         <TableAction :actions="getTableAction(row)" />
       </template>
-      <template #addEditForm-connectionId="{ model }">
-        <DatabaseSelect v-model:value="model.connectionId" />
-      </template>
-      <template #addEditForm-RelateTable="{ model }">
-        <a-tag
-          v-for="(table, index) in model.addendumTableList"
-          :key="index"
-          style="display: inline-block"
-          @close="() => handleRemoveRelateTable(model.addendumTableList, index)"
-          closable>
-          {{ table.configName }}
-        </a-tag>
-        <PlusOutlined
-          :style="{ cursor: 'pointer' }"
-          @click="() => openPageAddendumTableChoseModal(true, {})" />
-        <PageAddendumTableChoseModal
-          :select-table-list="model.addendumTableList"
-          :setAddEditFieldsValue="setAddEditFieldsValue"
-          @register="registerPageAddendumTableChoseModal" />
-      </template>
-      <template #addEditForm-syncTable>
-        <a-button type="primary" :size="getTableSize" @click="handleSyncTableData">
-          {{ $t('generator.views.code.button.syncTableData') }}
-        </a-button>
-      </template>
-      <template #addEditForm-tabs="{ model }">
-        <CodeTableSettingTab
-          :data="computedTableData"
-          :loading="dbDataLoading"
-          :connection-id="model.connectionId"
-          :table-name="model.tableName" />
-      </template>
     </SmartTable>
+    <CodeCreateModal @register="registerCodeCreateModal" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { PlusOutlined } from '@ant-design/icons-vue'
-
 import { SmartTable, useSmartTable } from '/@/components/SmartTable'
 
 import { tableColumns, searchFormColumns } from './CodeListView.config'
 import { listApi, deleteApi } from './CodeListView.api'
-
-import { useI18n } from '/@/hooks/web/useI18n'
-import { TableAction, ActionItem } from '/@/components/SmartTable'
-import DatabaseSelect from './components/DatabaseSelect.vue'
-import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
-import { useModal } from '/@/components/Modal'
-import PageAddendumTableChoseModal from './components/PageAddendumTableChoseModal.vue'
-import CodeTableSettingTab from './components/CodeTableSettingTab.vue'
-import { useLoadDbData } from './hooks/useLoadDbData'
 import { useRouter } from 'vue-router'
 import { buildUUID } from '/@/utils/uuid'
+import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
+import { useModal } from '/@/components/Modal'
+import { useI18n } from '/@/hooks/web/useI18n'
+
+import { TableAction, ActionItem } from '/@/components/SmartTable'
+import CodeCreateModal from './components/CodeCreateModal.vue'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -81,19 +45,17 @@ const getTableAction = (row): ActionItem[] => {
     },
     {
       label: '生成',
+      onClick: () => openCodeCreateModal(true, row),
     },
   ]
 }
 
-const [registerPageAddendumTableChoseModal, { openModal: openPageAddendumTableChoseModal }] =
-  useModal()
+// 生成代码弹窗
+const [registerCodeCreateModal, { openModal: openCodeCreateModal }] = useModal()
 
-const handleRemoveRelateTable = (dataList: any[], index: number) => {
-  dataList.splice(index, 1)
-}
-
-const [registerTable, { setAddEditFieldsValue, validateAddEdit }] = useSmartTable({
+const [registerTable] = useSmartTable({
   searchFormConfig: {
+    searchWithSymbol: true,
     layout: 'inline',
     schemas: searchFormColumns(t),
     actionColOptions: {
@@ -108,12 +70,14 @@ const [registerTable, { setAddEditFieldsValue, validateAddEdit }] = useSmartTabl
     labelAlign: 'left',
   },
   height: 'auto',
-  columns: tableColumns,
+  columns: tableColumns(t),
   useSearchForm: true,
   pagerConfig: true,
-  searchWithSymbol: true,
   sortConfig: {
     remote: true,
+  },
+  columnConfig: {
+    resizable: true,
   },
   proxyConfig: {
     ajax: {
@@ -136,8 +100,6 @@ const [registerTable, { setAddEditFieldsValue, validateAddEdit }] = useSmartTabl
     ],
   },
 })
-
-const { handleSyncTableData, computedTableData, dbDataLoading } = useLoadDbData({ validateAddEdit })
 </script>
 
 <style lang="less" scoped>

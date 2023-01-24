@@ -1,7 +1,6 @@
 package com.smart.db.generator.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.smart.auth.core.utils.AuthUtils;
 import com.smart.commons.core.log.Log;
 import com.smart.commons.core.log.LogOperationTypeEnum;
 import com.smart.commons.core.message.Result;
@@ -11,6 +10,7 @@ import com.smart.db.analysis.pojo.bo.TableViewBO;
 import com.smart.db.generator.constants.DbCrudEnum;
 import com.smart.db.generator.model.DbCodeConnectionUserGroupPO;
 import com.smart.db.generator.model.DbConnectionPO;
+import com.smart.db.generator.pojo.dto.DbConnectionListBySystemDTO;
 import com.smart.db.generator.pojo.dto.DbConnectionSetUserGroupDTO;
 import com.smart.db.generator.pojo.dto.DbTableQueryDTO;
 import com.smart.db.generator.pojo.vo.connection.DbConnectionTestVO;
@@ -59,7 +59,7 @@ public class DbConnectionController extends BaseController<DbConnectionService, 
     @Log(value = "保存修改数据库连接信息", type = LogOperationTypeEnum.UPDATE)
     @PreAuthorize("hasPermission('db:connection', 'update') or hasPermission('db:connection', 'update')")
     public Result<Boolean> saveUpdate(@RequestBody DbConnectionPO model) {
-        return Result.success(this.service.saveOrUpdateWithAllUser(model, AuthUtils.getCurrentUserId()));
+        return Result.success(this.service.saveOrUpdate(model));
     }
 
     @Override
@@ -132,6 +132,16 @@ public class DbConnectionController extends BaseController<DbConnectionService, 
     public Result<Object> listByAuth(@RequestBody PageSortQuery parameter) {
         parameter.getParameter().put(DbCrudEnum.LIST_BY_AUTH.name(), Boolean.TRUE);
         parameter.getParameter().put(DbCrudEnum.QUERY_CREATE_UPDATE_USER.name(), Boolean.TRUE);
+        return super.list(parameter);
+    }
+
+    @PostMapping("listBySystem")
+    @Operation(summary = "查询列表，如果systemId为null，则不返回空")
+    public Result<Object> listBySystem(@RequestBody DbConnectionListBySystemDTO parameter) {
+        if (parameter.getSystemId() == null) {
+            return Result.success();
+        }
+        parameter.getParameter().put("systemId@=", parameter.getSystemId());
         return super.list(parameter);
     }
 
