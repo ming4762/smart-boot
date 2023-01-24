@@ -95,9 +95,12 @@ export default {
           extPackages: 'ext包名',
           controllerBasePath: 'controller路径',
           choseAddendum: '选择附表',
+          customConfig: '自定义配置',
+          templateList: '模板',
         },
         message: {
           choseTemplate: '请选择模板',
+          customConfig: '请输入json',
         },
         validate: {
           packages: '请输入包名',

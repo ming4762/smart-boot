@@ -24,8 +24,11 @@ public class DbConnectionPO extends BaseModelUserTime {
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
 
+    /**
+     * 所属系统ID
+     */
     @NotNull
-    private String project;
+    private Long systemId;
 
     private String connectionName;
 

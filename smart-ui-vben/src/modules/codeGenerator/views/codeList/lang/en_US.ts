@@ -95,9 +95,11 @@ export default {
           extPackages: 'ext packages',
           controllerBasePath: 'controller path',
           choseAddendum: 'Select addendum',
+          customConfig: 'Custom config',
         },
         message: {
           choseTemplate: 'Please select a template',
+          customConfig: 'Please enter json',
         },
         validate: {
           packages: 'Please enter package',
