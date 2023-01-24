@@ -3,6 +3,7 @@ import { defHttp } from '/@/utils/http/axios'
 enum Api {
   listUser = 'sys/user/list',
   listSystem = 'sys/system/list',
+  listSystemFilterByUser = 'sys/system/listAuthUser',
 }
 
 /**
@@ -27,9 +28,9 @@ export const listUserApi = (params: Recordable = {}, useYn = true) => {
   })
 }
 
-export const listSystemApi = (params) => {
+export const listSystemApi = (params, filterByUser = false) => {
   return defHttp.post({
-    url: Api.listSystem,
+    url: filterByUser ? Api.listSystemFilterByUser : Api.listSystem,
     data: params,
   })
 }

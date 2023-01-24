@@ -142,7 +142,9 @@ export default defineComponent({
     }
     return (
       <BasicModal {...attrs} onOk={handleSubmit}>
-        <BasicForm name={`${tableId}_addEdit_form`} onRegister={registerForm}>{$slots}</BasicForm>
+        <BasicForm name={`${tableId}_addEdit_form`} onRegister={registerForm}>
+          {$slots}
+        </BasicForm>
       </BasicModal>
     )
   },

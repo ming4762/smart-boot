@@ -2,6 +2,7 @@ package com.smart.crud.utils;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.common.collect.ImmutableMap;
@@ -69,14 +70,29 @@ public final class CrudUtils {
      */
     private static final Map<String, String> CLASS_FIELD_DB_FIELD_CACHE = Maps.newConcurrentMap();
 
+    private static final Map<Class<? extends BaseModel>, String> MODAL_TABLE_NAME_CACHE = Maps.newConcurrentMap();
 
+    public static String getTableName(Class<? extends BaseModel> clazz) {
+        if (MODAL_TABLE_NAME_CACHE.containsKey(clazz)) {
+            return MODAL_TABLE_NAME_CACHE.get(clazz);
+        }
+        TableName annotation = clazz.getAnnotation(TableName.class);
+        String tableName;
+        if (annotation != null) {
+            tableName = annotation.value();
+        } else {
+            tableName = StringUtils.humpToLine(clazz.getSimpleName());
+        }
+        MODAL_TABLE_NAME_CACHE.put(clazz, tableName);
+        return tableName;
+    }
 
     /**
      * 通过类型获取实体类Class
      * @param type 实体类type
      * @return 实体类class
      */
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({"rawtypes"})
     @Nullable
     public static Class<? extends BaseModel> getModelClassByType(@NonNull Type type) {
         if (TYPE_CLASS_CACHE.containsKey(type)) {

@@ -3,12 +3,26 @@
 @author zhongming4762
 -->
 <template>
-  <div class="full-height">
-    <SmartTable @register="registerTable">
-      <template #table-operation="{ row }">
-        <TableAction :actions="getTableAction(row)" :drop-down-actions="getDropDownAction(row)" />
+  <div class="full-height outer-container">
+    <LayoutSeparate first-size="240px" :show-line="false" class="full-height layout-container">
+      <template #first>
+        <div class="full-height system-container">
+          <SystemSimpleList
+            @current-change="handleSelectSystemChange"
+            :row-config="{ isHover: true, isCurrent: true }"
+            height="auto" />
+        </div>
       </template>
-    </SmartTable>
+      <template #second>
+        <SmartTable @register="registerTable">
+          <template #table-operation="{ row }">
+            <SmartVxeTableAction
+              :actions="getTableAction(row)"
+              :drop-down-actions="getDropDownAction(row)" />
+          </template>
+        </SmartTable>
+      </template>
+    </LayoutSeparate>
     <TemplateSelectedModal template-type="template_db_dict" @register="registerModal" />
   </div>
 </template>
@@ -16,18 +30,26 @@
 <script lang="ts" setup>
 import { useI18n } from '/@/hooks/web/useI18n'
 
-import { ActionItem, TableAction } from '/@/components/SmartTable'
+import { ActionItem, SmartVxeTableAction } from '/@/components/SmartTable'
 import { SmartTable, useSmartTable } from '/@/components/SmartTable'
 import TemplateSelectedModal from './components/TemplateSelectedModal.vue'
+import { useModal } from '/@/components/Modal'
+import { LayoutSeparate } from '/@/components/LayoutSeparate'
+import SystemSimpleList from '/@/modules/system/components/system/SystemSimpleList.vue'
 
 import { addEditForm, searchForm, tableColumns } from './DatabaseListView.data'
 import { listApi, deleteApi, getByIdApi, saveUpdateApi } from './DatabaseListView.api'
 import { handleTestConnected } from './DatabaseListHooks'
-import { useModal } from '/@/components/Modal'
 
 const { t } = useI18n()
 
 const [registerModal, { openModal }] = useModal()
+let currentSystem: Recordable = {}
+
+const handleSelectSystemChange = (row) => {
+  currentSystem = row
+  reload()
+}
 
 const getTableAction = (row): ActionItem[] => {
   return [
@@ -52,8 +74,9 @@ const getDropDownAction = (row): ActionItem[] => {
   ]
 }
 
-const [registerTable, { editByRow, setLoading }] = useSmartTable({
+const [registerTable, { editByRow, setLoading, reload, showAddModal }] = useSmartTable({
   searchFormConfig: {
+    searchWithSymbol: true,
     schemas: searchForm(t),
     layout: 'inline',
     actionColOptions: {
@@ -72,7 +95,6 @@ const [registerTable, { editByRow, setLoading }] = useSmartTable({
     },
   },
   height: 'auto',
-  searchWithSymbol: true,
   columns: tableColumns,
   useSearchForm: true,
   pagerConfig: true,
@@ -80,9 +102,14 @@ const [registerTable, { editByRow, setLoading }] = useSmartTable({
     remote: true,
   },
   proxyConfig: {
+    autoLoad: false,
     ajax: {
-      query: (parameter) => {
-        return listApi(parameter.ajaxParameter)
+      query: (params) => {
+        const queryParameter = {
+          ...params.ajaxParameter,
+          systemId: currentSystem.id,
+        }
+        return listApi(queryParameter)
       },
       delete: async ({ body }) => {
         await deleteApi(body.removeRecords)
@@ -106,6 +133,12 @@ const [registerTable, { editByRow, setLoading }] = useSmartTable({
       {
         // name: t('common.button.add'),
         code: 'ModalAdd',
+        props: {
+          onClick: () =>
+            showAddModal({
+              systemId: currentSystem.id,
+            }),
+        },
       },
       {
         code: 'ModalEdit',
@@ -118,4 +151,14 @@ const [registerTable, { editByRow, setLoading }] = useSmartTable({
 })
 </script>
 
-<style scoped></style>
+<style scoped lang="less">
+.layout-container {
+}
+.outer-container {
+  padding: 10px;
+}
+.system-container {
+  background: white;
+  margin-right: 5px;
+}
+</style>
