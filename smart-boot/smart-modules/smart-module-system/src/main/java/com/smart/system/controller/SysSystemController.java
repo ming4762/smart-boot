@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.smart.commons.core.log.Log;
 import com.smart.commons.core.log.LogOperationTypeEnum;
 import com.smart.commons.core.message.Result;
+import com.smart.crud.constants.CrudCommonEnum;
 import com.smart.crud.controller.BaseController;
 import com.smart.crud.query.IdParameter;
 import com.smart.crud.query.PageSortQuery;
@@ -48,6 +49,14 @@ public class SysSystemController extends BaseController<SysSystemService, SysSys
     @Operation(summary = "查询角色列表（支持分页、实体类属性查询）")
     @PreAuthorize("hasPermission('sys:system:query')")
     public Result<Object> list(@RequestBody @NonNull PageSortQuery parameter) {
+        return super.list(parameter);
+    }
+
+    @PostMapping("listAuthUser")
+    @Operation(summary = "查询角色列表（支持分页、实体类属性查询），只能查询当前登录人员有权限的系统")
+    @PreAuthorize("hasPermission('sys:system:query')")
+    public Result<Object> listAuthUser(@RequestBody @NonNull PageSortQuery parameter) {
+        parameter.getParameter().put(CrudCommonEnum.FILTER_BY_USER.name(), true);
         return super.list(parameter);
     }
 

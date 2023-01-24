@@ -28,11 +28,6 @@ export const tableColumns: SmartColumn[] = [
     width: 120,
   },
   {
-    title: '{generator.views.database.table.project}',
-    field: 'project',
-    width: 120,
-  },
-  {
     title: '{generator.views.database.table.url}',
     field: 'url',
     minWidth: 200,
@@ -101,6 +96,11 @@ export const addEditForm: (t: Function) => Array<FormSchema> = (t: Function) => 
       show: false,
     },
     {
+      field: 'systemId',
+      component: 'Input',
+      show: false,
+    },
+    {
       label: t('generator.views.database.table.connectionName'),
       field: 'connectionName',
       component: 'Input',
@@ -138,15 +138,6 @@ export const addEditForm: (t: Function) => Array<FormSchema> = (t: Function) => 
           trigger: 'change',
         },
       ],
-    },
-    {
-      label: t('generator.views.database.table.project'),
-      field: 'project',
-      component: 'Input',
-      componentProps: {
-        placeholder: t('generator.views.database.validate.project'),
-      },
-      required: true,
     },
     {
       label: t('generator.views.database.table.url'),

@@ -3,7 +3,7 @@ import { defHttp } from '/@/utils/http/axios'
 enum api {
   saveUpdate = 'db/connection/saveUpdate',
   getById = 'db/connection/getById',
-  list = 'db/connection/listByAuth',
+  listBySystem = 'db/connection/listBySystem',
   batchDeleteById = 'db/connection/batchDeleteById',
   testConnected = 'db/connection/testConnection',
   listTemplate = 'db/code/template/list',
@@ -26,7 +26,7 @@ export const getByIdApi = (id: number) => {
 
 export const listApi = (data?: any) => {
   return defHttp.post({
-    url: api.list,
+    url: api.listBySystem,
     data,
   })
 }
