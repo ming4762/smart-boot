@@ -13,28 +13,43 @@ import { VxeGridPropTypes } from 'vxe-table'
 type Props = Partial<DynamicProps<SmartTableProps>>
 type UseTableMethod = TableActionType & {
   getSearchForm: () => FormActionType
+  getAddEditForm: () => FormActionType | undefined
 }
 
 export const useSmartTable = (
   tableProps?: Props,
-): [(instance: TableActionType, formInstance: UseTableMethod) => void, UseTableMethod] => {
+): [
+  (
+    instance: TableActionType,
+    formInstance: UseTableMethod,
+    getAddEditForm: () => FormActionType,
+  ) => void,
+  UseTableMethod,
+] => {
   // 表格是否加载
   const loadedRef = ref<Nullable<boolean>>(false)
   const tableRef = ref<Nullable<TableActionType>>(null)
   const searchFormRef = ref<Nullable<UseTableMethod>>(null)
+  const addEditFormAction = ref<Nullable<() => FormActionType>>(null)
 
   let stopWatch: WatchStopHandle
 
-  const register = (instance: TableActionType, searchFormInstance: UseTableMethod) => {
+  const register = (
+    instance: TableActionType,
+    searchFormInstance: UseTableMethod,
+    getAddEditForm: () => FormActionType,
+  ) => {
     isProdMode() &&
       onUnmounted(() => {
         tableRef.value = null
         searchFormRef.value = null
+        addEditFormAction.value = null
       })
     if (unref(loadedRef) && isProdMode() && instance === unref(tableRef)) return
 
     tableRef.value = instance
     searchFormRef.value = searchFormInstance
+    addEditFormAction.value = getAddEditForm
     loadedRef.value = true
     // 设置函数传递的props
     tableProps && instance.setProps(getDynamicProps(tableProps))
@@ -72,6 +87,9 @@ export const useSmartTable = (
     },
     getSearchForm: () => {
       return unref(searchFormRef) as unknown as FormActionType
+    },
+    getAddEditForm: () => {
+      return unref(addEditFormAction)?.call(null)
     },
     reload: async (opt?: FetchParams) => {
       return await getTableAction().reload(opt)
@@ -116,8 +134,8 @@ export const useSmartTable = (
     setAddEditFieldsValue: (data: any) => {
       return getTableAction().setAddEditFieldsValue(data)
     },
-    editByRow: (data, formData) => {
-      return getTableAction().editByRow(data, formData)
+    editByRowModal: (data, formData) => {
+      return getTableAction().editByRowModal(data, formData)
     },
     deleteByRow: (data) => {
       return getTableAction().deleteByRow(data)

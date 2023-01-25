@@ -1,4 +1,4 @@
-import type { ButtonProps } from 'ant-design-vue/lib/button/buttonTypes'
+import { ButtonProps, ModalProps as AntModalProps } from 'ant-design-vue'
 import type { CSSProperties, VNodeChild, ComputedRef } from 'vue'
 /**
  * @description: 弹窗对外暴露的方法
@@ -29,7 +29,8 @@ export interface ReturnInnerMethods extends ModalMethods {
 
 export type UseModalInnerReturnType = [RegisterFn, ReturnInnerMethods]
 
-export interface ModalProps {
+// @ts-ignore
+export interface ModalProps extends AntModalProps {
   minHeight?: number
   height?: number
   // 启用wrapper后 底部可以适当增加高度

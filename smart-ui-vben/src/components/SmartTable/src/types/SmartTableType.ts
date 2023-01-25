@@ -60,12 +60,8 @@ export interface SmartTableProps<T = any> extends VxeGridProps<T> {
   loading?: boolean
   // 搜索表单配置
   searchFormConfig?: Partial<SmartSearchFormProps>
-  // 额外的请求参数
-  searchInfo?: Recordable
   // 是否使用搜索表单
   useSearchForm?: boolean
-  // 查询条件请求之前处理
-  handleSearchInfoFn?: Fn
   // 搜索是否带有符号
   toolbarConfig?: SmartTableToolbarConfig
   // 分页配置
@@ -101,7 +97,7 @@ export interface TableActionType {
   // openAddEditModal: <T = any>(props?: boolean, data?: T, openOnSet?: boolean) => void
   showAddModal: (formData?: Recordable) => void
   editByCheckbox: () => Promise<boolean> | boolean
-  editByRow: <T = any>(data: T, formData?: Recordable) => Promise<boolean> | boolean
+  editByRowModal: <T = any>(data: T, formData?: Recordable) => Promise<boolean> | boolean
   getAddEditFieldsValue: () => Recordable
   resetAddEditFields: () => Promise<void>
   setAddEditFieldsValue: (data: any) => Promise<void>

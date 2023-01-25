@@ -100,11 +100,12 @@ export default defineComponent({
     const setAddEditFieldsValue = (data: Recordable) => unref(addEditModalRef).setFieldsValue(data)
     const validateAddEdit = () => unref(addEditModalRef).validate()
     const validateAddEditFields = () => unref(addEditModalRef).validateFields()
+    const getAddEditForm = () => unref(addEditModalRef).getFormAction()
     const {
       getHasAddEdit,
       showAddModal,
       editByCheckbox,
-      editByRow,
+      editByRowModal,
       getAddEditFormProps,
       getAddEditModalProps,
       getAddEditFormSlots,
@@ -157,7 +158,7 @@ export default defineComponent({
       // openAddEditModal,
       showAddModal,
       editByCheckbox,
-      editByRow,
+      editByRowModal,
       getAddEditFieldsValue,
       resetAddEditFields,
       setAddEditFieldsValue,
@@ -177,7 +178,7 @@ export default defineComponent({
 
     createTableContext({ ...tableAction, wrapRef, getBindValues: getTableBindValues })
 
-    emit('register', tableAction, searchFormAction)
+    emit('register', tableAction, searchFormAction, getAddEditForm)
 
     return {
       registerSearchForm,
