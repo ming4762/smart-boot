@@ -5,7 +5,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, ref, onMounted, watch } from 'vue'
+import { defineComponent, toRefs, ref, onMounted, watch, unref } from 'vue'
+
+import { propTypes } from '/@/utils/propTypes'
+import { debounce } from 'lodash-es'
 
 import CodeMirror from 'codemirror'
 import 'codemirror/lib/codemirror.css'
@@ -20,8 +23,8 @@ import 'codemirror/mode/htmlmixed/htmlmixed.js'
 
 let coder: any = null
 
-const initialize = (props: any) => {
-  const { code, options, mode, theme, readOnly } = toRefs(props)
+const initialize = (props: any, emit: Function) => {
+  const { code, options, mode, theme, readOnly, value: valueRef } = toRefs(props)
   const textareaRef = ref()
   onMounted(() => {
     coder = CodeMirror.fromTextArea(
@@ -33,15 +36,43 @@ const initialize = (props: any) => {
         readOnly: readOnly.value,
       }),
     )
+    coder.on(
+      'change',
+      debounce(() => {
+        emit('update:value', getValue())
+      }, 300),
+    )
     // 设置初始值
     coder.setValue(code.value)
   })
+
+  const refresh = () => {
+    setTimeout(() => {
+      coder.refresh()
+    }, 200)
+  }
+
+  const setValue = (value: string) => {
+    if (coder) {
+      const currentValue = getValue()
+      if (currentValue !== value) {
+        coder.setValue(value)
+        refresh()
+      }
+    }
+  }
+
+  const getValue = (): string => {
+    if (!coder) {
+      return ''
+    }
+    return coder.getValue()
+  }
+
   watch(code, () => {
     if (coder) {
       coder.setValue(code.value)
-      setTimeout(() => {
-        coder.refresh()
-      }, 200)
+      refresh()
     }
   })
   watch(mode, () => {
@@ -54,21 +85,16 @@ const initialize = (props: any) => {
       coder.setOption('readOnly', readOnly.value)
     }
   })
+  watch(valueRef, () => {
+    setValue(unref(valueRef))
+  })
   return {
     textareaRef,
     getCode: () => {
-      if (!coder) {
-        return ''
-      }
-      return coder.getValue()
+      return getValue()
     },
     setCode: (code: string) => {
-      if (coder) {
-        coder.setValue(code)
-        setTimeout(() => {
-          coder.refresh()
-        }, 200)
-      }
+      setValue(code)
     },
   }
 }
@@ -83,6 +109,7 @@ export default defineComponent({
       type: String,
       default: '',
     },
+    value: propTypes.string.def(''),
     options: {
       type: Object,
       default: () => {
@@ -96,7 +123,7 @@ export default defineComponent({
     },
     mode: {
       type: String,
-      required: true,
+      default: 'xml',
     },
     theme: {
       type: String,
@@ -107,8 +134,9 @@ export default defineComponent({
       default: false,
     },
   },
-  setup(props) {
-    const initializeVue = initialize(props)
+  emits: ['update:value'],
+  setup(props, { emit }) {
+    const initializeVue = initialize(props, emit)
     // 编辑器实例
     return {
       ...initializeVue,

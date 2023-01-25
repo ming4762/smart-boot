@@ -1,7 +1,6 @@
 package com.smart.db.generator.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.smart.auth.core.utils.AuthUtils;
 import com.smart.commons.core.message.Result;
 import com.smart.crud.controller.BaseController;
 import com.smart.crud.query.PageSortQuery;
@@ -9,11 +8,13 @@ import com.smart.db.generator.model.DbCodeTemplateGroupPO;
 import com.smart.db.generator.model.DbCodeTemplatePO;
 import com.smart.db.generator.model.DbCodeTemplateUserGroupPO;
 import com.smart.db.generator.pojo.dto.DbTemplateUserGroupSaveDTO;
+import com.smart.db.generator.pojo.dto.template.DbCodeTemplateSaveUpdateDTO;
 import com.smart.db.generator.service.DbCodeTemplateGroupService;
 import com.smart.db.generator.service.DbCodeTemplateService;
 import com.smart.db.generator.service.DbCodeTemplateUserGroupService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,21 +52,22 @@ public class DbCodeTemplateController extends BaseController<DbCodeTemplateServi
     @PostMapping("save")
     @PreAuthorize("hasPermission('db:template', 'save')")
     public Result<Boolean> save(@RequestBody DbCodeTemplatePO model) {
-        return Result.success(this.service.saveWithUser(model, AuthUtils.getCurrentUserId()));
+        return Result.success(this.service.save(model));
     }
 
     @Override
     @PostMapping("update")
     @PreAuthorize("hasPermission('db:template', 'update')")
     public Result<Boolean> update(@RequestBody DbCodeTemplatePO model) {
-        return Result.success(this.service.updateWithUserById(model, AuthUtils.getCurrentUserId()));
+        return Result.success(this.service.updateById(model));
     }
 
-    @Override
     @PostMapping("saveUpdate")
     @PreAuthorize("hasPermission('db:template', 'save') or hasPermission('db:template', 'update')")
-    public Result<Boolean> saveUpdate(@RequestBody DbCodeTemplatePO model) {
-        return Result.success(this.service.saveOrUpdateWithAllUser(model, AuthUtils.getCurrentUserId()));
+    public Result<Boolean> saveUpdate(@RequestBody @Valid DbCodeTemplateSaveUpdateDTO parameter) {
+        DbCodeTemplatePO model = new DbCodeTemplatePO();
+        BeanUtils.copyProperties(parameter, model);
+        return Result.success(this.service.saveOrUpdate(model));
     }
 
     @Override
@@ -144,7 +146,7 @@ public class DbCodeTemplateController extends BaseController<DbCodeTemplateServi
     @Operation(summary = "保存模板分组")
     @PreAuthorize("hasPermission('db:templateGroup', 'save') or hasPermission('db:templateGroup', 'update')")
     public Result<Boolean> saveUpdateGroup(@RequestBody DbCodeTemplateGroupPO templateGroup) {
-        return Result.success(this.templateGroupService.saveOrUpdateWithAllUser(templateGroup, AuthUtils.getCurrentUserId()));
+        return Result.success(this.templateGroupService.saveOrUpdate(templateGroup));
     }
 
     @PostMapping("deleteGroupById")
