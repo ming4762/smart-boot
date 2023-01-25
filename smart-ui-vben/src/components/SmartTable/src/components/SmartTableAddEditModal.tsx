@@ -29,10 +29,8 @@ export default defineComponent({
     const { t } = useI18n()
     const isAddRef = ref(true)
 
-    const [
-      registerForm,
-      { resetFields, getFieldsValue, setFieldsValue, validate, validateFields },
-    ] = useForm(props.formConfig)
+    const [registerForm, formAction] = useForm()
+    const { resetFields, getFieldsValue, setFieldsValue, validate, validateFields } = formAction
     const [register, { changeLoading, changeOkLoading, closeModal }] = useModalInner(
       async (data: SmartAddEditModalCallbackData) => {
         const { getFunction, validateFunction, selectData, isAdd, formData } = data
@@ -132,17 +130,18 @@ export default defineComponent({
       handleSubmit,
       validate,
       validateFields,
+      getFormAction: () => formAction,
     }
   },
   render() {
-    const { $attrs, register, registerForm, handleSubmit, $slots, tableId } = this
+    const { $attrs, register, registerForm, handleSubmit, $slots, tableId, formConfig } = this
     const attrs = {
       ...$attrs,
       onRegister: register,
     }
     return (
       <BasicModal {...attrs} onOk={handleSubmit}>
-        <BasicForm name={`${tableId}_addEdit_form`} onRegister={registerForm}>
+        <BasicForm {...formConfig} name={`${tableId}_addEdit_form`} onRegister={registerForm}>
           {$slots}
         </BasicForm>
       </BasicModal>

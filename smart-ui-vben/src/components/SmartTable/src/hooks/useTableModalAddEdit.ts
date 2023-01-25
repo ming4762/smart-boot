@@ -114,7 +114,7 @@ export const useTableModalAddEditConfig = (
     openAddEditModal(true, getCallbackData(true, undefined, formData))
   }
 
-  const editByRow = (row, formData?: Recordable) => {
+  const editByRowModal = (row, formData?: Recordable) => {
     return doEdit(row, formData)
   }
 
@@ -161,7 +161,7 @@ export const useTableModalAddEditConfig = (
     getHasAddEdit,
     getAddEditFormProps,
     getAddEditModalProps,
-    editByRow,
+    editByRowModal,
     getAddEditFormSlots,
   }
 }
