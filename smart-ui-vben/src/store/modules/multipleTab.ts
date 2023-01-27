@@ -134,10 +134,10 @@ export const useMultipleTabStore = defineStore({
       // Existing pages, do not add tabs repeatedly
       const tabHasExits = this.tabList.some((tab, index) => {
         updateIndex = index
-        // 如果存在pageKey，通过pageKey判断
-        const pageKey = tab.query?.pageKey
-        if (pageKey) {
-          return query?.pageKey === pageKey
+        // 如果存在setKey，通过setKey判断
+        const setKey = tab.query?.setKey
+        if (setKey) {
+          return query?.setKey === setKey
         }
         return (tab.fullPath || tab.path) === (fullPath || path)
       })

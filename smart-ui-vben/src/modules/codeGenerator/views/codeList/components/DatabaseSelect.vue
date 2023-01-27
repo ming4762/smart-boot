@@ -20,22 +20,19 @@ export default defineComponent({
   name: 'DatabaseSelect',
   props: {
     parameter: {
-      type: Object as PropType<any>,
-      default: () => {
-        return {}
-      },
+      type: Function as PropType<Function>,
     },
   },
   setup(props) {
     const data = ref<Array<any>>([])
     const loadData = async () => {
       const result = await ApiService.postAjax(
-        '/db/connection/listByAuth',
+        '/db/connection/list',
         Object.assign(
           {
             sortName: 'seq',
           },
-          props.parameter,
+          props.parameter && props.parameter(),
         ),
       )
       data.value = result.map((item: any) => {

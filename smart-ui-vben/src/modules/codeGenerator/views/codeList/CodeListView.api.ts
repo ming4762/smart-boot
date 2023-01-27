@@ -1,11 +1,12 @@
 import { defHttp } from '/@/utils/http/axios'
 
 enum Api {
-  list = 'db/code/main/list',
+  listBySystem = 'db/code/main/listBySystem',
   delete = 'db/code/main/batchDeleteById',
 }
 
-export const listApi = (parameter) => defHttp.post({ url: Api.list, data: parameter })
+export const listBySystemApi = (parameter) =>
+  defHttp.post({ url: Api.listBySystem, data: parameter })
 
 export const deleteApi = (data) =>
   defHttp.post({ url: Api.delete, data: data.map((item: any) => item.id) })

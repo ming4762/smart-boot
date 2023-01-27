@@ -5,7 +5,9 @@
         <a-spin :spinning="pageLoading">
           <BasicForm @register="registerForm" :size="getFormSize">
             <template #addEditForm-connectionId="{ model }">
-              <DatabaseSelect v-model:value="model.connectionId" />
+              <DatabaseSelect
+                v-model:value="model.connectionId"
+                :parameter="getDatabaseListParameter" />
             </template>
             <template #addEditForm-RelateTable="{ model }">
               <a-tag
@@ -107,6 +109,8 @@ import PageAddendumTableChoseModal from '../codeList/components/PageAddendumTabl
 
 const props = defineProps({
   configId: propTypes.oneOfType([propTypes.string, propTypes.number]),
+  // 系统ID
+  systemId: propTypes.oneOfType([propTypes.string, propTypes.number]),
 })
 const { t } = useI18n()
 const router = useRouter()
@@ -114,6 +118,14 @@ const route = useRoute()
 const { getFormSize, getButtonSize } = useSizeSetting()
 
 const pageLoading = ref(false)
+
+const getDatabaseListParameter = () => {
+  return {
+    parameter: {
+      'systemId@=': props.systemId,
+    },
+  }
+}
 
 /**
  * 代码配置页面

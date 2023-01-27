@@ -1,10 +1,22 @@
 <template>
-  <div class="full-height">
-    <SmartTable @register="registerTable" :size="getTableSize">
-      <template #table-operation="{ row }">
-        <TableAction :actions="getTableAction(row)" />
+  <div class="full-height page-container">
+    <LayoutSeparate first-size="240px" :show-line="false" class="full-height">
+      <template #first>
+        <div class="full-height system-container">
+          <SystemSimpleList
+            @current-change="handleSelectSystemChange"
+            :row-config="{ isHover: true, isCurrent: true }"
+            height="auto" />
+        </div>
       </template>
-    </SmartTable>
+      <template #second>
+        <SmartTable @register="registerTable" :size="getTableSize">
+          <template #table-operation="{ row }">
+            <TableAction :actions="getTableAction(row)" />
+          </template>
+        </SmartTable>
+      </template>
+    </LayoutSeparate>
     <CodeCreateModal @register="registerCodeCreateModal" />
   </div>
 </template>
@@ -13,7 +25,7 @@
 import { SmartTable, useSmartTable } from '/@/components/SmartTable'
 
 import { tableColumns, searchFormColumns } from './CodeListView.config'
-import { listApi, deleteApi } from './CodeListView.api'
+import { listBySystemApi, deleteApi } from './CodeListView.api'
 import { useRouter } from 'vue-router'
 import { buildUUID } from '/@/utils/uuid'
 import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
@@ -22,6 +34,8 @@ import { useI18n } from '/@/hooks/web/useI18n'
 
 import { TableAction, ActionItem } from '/@/components/SmartTable'
 import CodeCreateModal from './components/CodeCreateModal.vue'
+import { LayoutSeparate } from '/@/components/LayoutSeparate'
+import SystemSimpleList from '/@/modules/system/components/system/SystemSimpleList.vue'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -31,20 +45,27 @@ const toDesign = (configId?: number) => {
   router.push({
     path: '/code/codeDesign',
     query: {
-      pageKey: buildUUID(),
+      setKey: buildUUID(),
       configId,
+      systemId: currentSystem.id,
     },
   })
+}
+
+let currentSystem: Recordable = {}
+const handleSelectSystemChange = (row) => {
+  currentSystem = row
+  reload()
 }
 
 const getTableAction = (row): ActionItem[] => {
   return [
     {
-      label: '编辑',
+      label: t('common.button.edit'),
       onClick: () => toDesign(row.id),
     },
     {
-      label: '生成',
+      label: t('generator.views.code.button.createCode'),
       onClick: () => openCodeCreateModal(true, row),
     },
   ]
@@ -53,7 +74,7 @@ const getTableAction = (row): ActionItem[] => {
 // 生成代码弹窗
 const [registerCodeCreateModal, { openModal: openCodeCreateModal }] = useModal()
 
-const [registerTable] = useSmartTable({
+const [registerTable, { reload }] = useSmartTable({
   searchFormConfig: {
     searchWithSymbol: true,
     layout: 'inline',
@@ -80,8 +101,15 @@ const [registerTable] = useSmartTable({
     resizable: true,
   },
   proxyConfig: {
+    autoLoad: false,
     ajax: {
-      query: (params) => listApi(params.ajaxParameter),
+      query: (params) => {
+        const queryParameter = {
+          ...params.ajaxParameter,
+          systemId: currentSystem.id,
+        }
+        return listBySystemApi(queryParameter)
+      },
       delete: ({ body }) => deleteApi(body.removeRecords),
     },
   },
@@ -103,6 +131,9 @@ const [registerTable] = useSmartTable({
 </script>
 
 <style lang="less" scoped>
+.system-container {
+  margin-right: 5px;
+}
 .code-container {
   ::v-deep(.ant-modal-content) {
     height: 100%;
