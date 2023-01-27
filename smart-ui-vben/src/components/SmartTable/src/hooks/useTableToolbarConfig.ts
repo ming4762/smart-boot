@@ -3,6 +3,8 @@ import type { ComputedRef } from 'vue'
 import type { SmartTableProps, SmartTableToolbarConfig } from '../types/SmartTableType'
 import type { SmartTableButton } from '../types/SmartTableButton'
 import type { SizeType } from 'ant-design-vue/es/config-provider'
+import type { VxeToolbarPropTypes } from 'vxe-table'
+import type { FetchParams } from '../types/SmartTableType'
 
 import { computed, unref } from 'vue'
 
@@ -19,11 +21,12 @@ interface TableAction {
   deleteByCheckbox: () => Promise<boolean | undefined>
   showAddModal: () => void
   editByCheckbox: () => Promise<boolean> | boolean
+  reload: (opt?: FetchParams) => Promise<any>
 }
 
 export const useTableToolbarConfig = (
   tableProps: ComputedRef<SmartTableProps>,
-  { deleteByCheckbox, showAddModal, editByCheckbox }: TableAction,
+  { deleteByCheckbox, showAddModal, editByCheckbox, reload }: TableAction,
 ) => {
   const { t } = useI18n()
 
@@ -35,11 +38,24 @@ export const useTableToolbarConfig = (
       return undefined
     }
     const buttons = dealButtons(toolbarConfig.buttons, tableSize)
+    let refresh = toolbarConfig.refresh
+    if (refresh) {
+      refresh = getDefaultRefresh()
+    }
     return {
       ...toolbarConfig,
       buttons,
+      refresh,
     }
   })
+
+  const getDefaultRefresh = (): VxeToolbarPropTypes.RefreshConfig => {
+    return {
+      queryMethod: (params) => {
+        return reload(params)
+      },
+    }
+  }
 
   const dealButtons = (
     buttons: SmartTableButton[] | undefined,

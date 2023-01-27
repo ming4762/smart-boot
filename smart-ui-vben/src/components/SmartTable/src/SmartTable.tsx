@@ -120,6 +120,7 @@ export default defineComponent({
       deleteByCheckbox,
       showAddModal,
       editByCheckbox,
+      reload,
     })
     /**
      * 获取table v-bing
