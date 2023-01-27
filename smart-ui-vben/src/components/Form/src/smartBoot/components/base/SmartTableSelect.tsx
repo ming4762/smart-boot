@@ -1,6 +1,6 @@
 import type { SmartTableProps } from '/@/components/SmartTable'
 
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 
 import { propTypes } from '/@/utils/propTypes'
 import { useModal } from '/@/components/Modal'
@@ -28,11 +28,29 @@ export default defineComponent({
     },
     disabled: propTypes.bool.def(false),
   },
-  setup() {
+  emits: ['update:value'],
+  setup(props, { emit }) {
     const [registerModal, { openModal }] = useModal()
+    const optionsRef = ref<Array<any>>([])
+    const handleSelectData = (options: any[]) => {
+      optionsRef.value = options
+      emit(
+        'update:value',
+        options.map((item) => item.value),
+      )
+    }
+    const handleDeselect = (value) => {
+      emit(
+        'update:value',
+        (props.value as any[]).filter((item) => item !== value),
+      )
+    }
     return {
       registerModal,
       openModal,
+      handleSelectData,
+      optionsRef,
+      handleDeselect,
     }
   },
   render() {
@@ -47,6 +65,10 @@ export default defineComponent({
       registerModal,
       labelField,
       valueField,
+      handleSelectData,
+      optionsRef,
+      value,
+      handleDeselect,
     } = this
     const modalSlots: any = {
       table: $slots.table,
@@ -58,11 +80,14 @@ export default defineComponent({
             <a-select
               {...$attrs}
               style={{ width: '100%' }}
+              options={optionsRef}
               open={false}
-              model={multiple ? 'multiple' : 'combobox'}></a-select>
+              value={value}
+              onDeselect={handleDeselect}
+              mode={multiple ? 'multiple' : 'combobox'}></a-select>
           </a-col>
           <a-col class="button">
-            <a-button disabled={disabled} type="primary" onClick={() => openModal(true)}>
+            <a-button disabled={disabled} type="primary" onClick={() => openModal(true, value)}>
               {$t('common.button.choose')}
             </a-button>
           </a-col>
@@ -71,7 +96,10 @@ export default defineComponent({
           {...$attrs}
           onRegister={registerModal}
           labelField={labelField}
+          onSelectData={handleSelectData}
           valueField={valueField}
+          // @ts-ignore
+          selectValues={value}
           multiple={multiple}
           tableProps={tableProps}>
           {modalSlots}

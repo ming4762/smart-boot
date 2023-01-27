@@ -1,7 +1,8 @@
 <template>
   <BasicModal
     @register="registerModal"
-    width="600px"
+    width="800px"
+    @ok="handleOk"
     style="top: 15px"
     :title="$t('generator.views.code.button.createCode')">
     <BasicForm @register="registerForm">
@@ -14,8 +15,11 @@
           multiple
           label-field="name"
           value-field="templateId">
-          <template #table="{ setSelectData }">
-            <TemplateSelectTable :set-select-data="setSelectData" />
+          <template #table="{ addSelectData, removeSelectData, getSelectData }">
+            <TemplateSelectTable
+              :add-select-data="addSelectData"
+              :remove-select-data="removeSelectData"
+              :get-select-data="getSelectData" />
           </template>
         </SmartTableSelect>
       </template>
@@ -25,24 +29,44 @@
 
 <script lang="ts" setup>
 import { useI18n } from '/@/hooks/web/useI18n'
+import { useRouter } from 'vue-router'
+import { message } from 'ant-design-vue'
 
 import { BasicModal, useModalInner } from '/@/components/Modal'
 import { BasicForm, useForm } from '/@/components/Form'
 import { SmartTableSelect } from '/@/components/Form'
 import TemplateSelectTable from './TemplateSelectTable.vue'
 
+const router = useRouter()
 const { t } = useI18n()
 
+const handleOk = async () => {
+  const model = await validate()
+  const templateIdList = model.templateIdList
+  if (!templateIdList || templateIdList.length === 0) {
+    message.warn(t('generator.views.codeCreateForm.message.choseTemplate'))
+  }
+  const url = router.resolve({
+    path: '/codeCreateView',
+    query: {
+      ...model,
+      templateIdList: templateIdList.join(','),
+    },
+  })
+  window.open(url.href, '_blank')
+}
+
 const [registerModal] = useModalInner((codeConfigData: Recordable) => {
-  const { remarks, tableName, className } = codeConfigData
+  const { remarks, tableName, className, id } = codeConfigData
   setFieldsValue({
     description: remarks,
     tableName,
     className,
+    mainId: id,
   })
 })
 
-const [registerForm, { setFieldsValue }] = useForm({
+const [registerForm, { setFieldsValue, validate }] = useForm({
   labelCol: {
     span: 6,
   },
@@ -54,6 +78,11 @@ const [registerForm, { setFieldsValue }] = useForm({
   },
   showActionButtonGroup: false,
   schemas: [
+    {
+      label: '',
+      field: 'mainId',
+      component: 'Input',
+    },
     {
       label: t('generator.views.codeCreateForm.title.description'),
       field: 'description',

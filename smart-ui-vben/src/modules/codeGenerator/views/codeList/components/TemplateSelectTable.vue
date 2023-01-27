@@ -1,29 +1,90 @@
 <template>
-  <LayoutSeparate first-size="200px" class="full-height">
-    <template #first></template>
+  <LayoutSeparate first-size="200px" :show-line="false" class="full-height">
+    <template #first>
+      <TemplateGroup class="full-height" @current-change="handleCurrentChange" />
+      <a-button @click="test">获取选中</a-button>
+    </template>
     <template #second>
-      <SmartTable @register="registerTable" />
+      <SmartTable
+        @register="registerTable"
+        @checkbox-change="handleCheckboxChange"
+        @after-load="handleAfterLoad" />
     </template>
   </LayoutSeparate>
 </template>
 
 <script lang="ts" setup>
-import { propTypes } from '/@/utils/propTypes'
 import { useI18n } from '/@/hooks/web/useI18n'
+import { defHttp } from '/@/utils/http/axios'
+import { merge } from 'lodash-es'
 
 import { SmartTable, useSmartTable } from '/@/components/SmartTable'
 import { LayoutSeparate } from '/@/components/LayoutSeparate'
 import { TemplateType as templateTypeConstants } from '/@/modules/codeGenerator/constants/DatabaseConstants'
+import TemplateGroup from '/@/modules/codeGenerator/components/template/TemplateGroup.vue'
 
 const props = defineProps({
-  setSelectData: propTypes.func.isRequired,
+  addSelectData: {
+    type: Function as PropType<Function>,
+    required: true,
+  },
+  removeSelectData: {
+    type: Function as PropType<Function>,
+    required: true,
+  },
+  getSelectData: {
+    type: Function as PropType<Function>,
+    required: true,
+  },
 })
 const { t } = useI18n()
 
-const [registerTable] = useSmartTable({
-  useSearchForm: true,
-  proxyConfig: {
+let currentGroup: Recordable = {}
 
+const test = () => {
+  console.log(props.getSelectData())
+}
+
+const handleCurrentChange = (row) => {
+  currentGroup = row || {}
+  reload()
+}
+
+const handleCheckboxChange = ({ checked, row }) => {
+  if (checked) {
+    props.addSelectData([row])
+  } else {
+    props.removeSelectData([row])
+  }
+}
+
+const handleAfterLoad = async () => {
+  // 数据重新加载后，设置选中的数据
+  await getTableInstance().setAllCheckboxRow(false)
+  await setCheckboxRow(props.getSelectData(), true)
+}
+
+const [registerTable, { reload, getTableInstance, setCheckboxRow }] = useSmartTable({
+  useSearchForm: true,
+  height: 'auto',
+  pagerConfig: true,
+  rowConfig: {
+    keyField: 'templateId',
+  },
+  proxyConfig: {
+    ajax: {
+      query: (params) => {
+        const parameter = merge(params.ajaxParameter, {
+          parameter: {
+            'groupId@=': currentGroup.groupId,
+          },
+        })
+        return defHttp.post({
+          url: 'db/code/template/list',
+          data: parameter,
+        })
+      },
+    },
   },
   searchFormConfig: {
     colon: true,
