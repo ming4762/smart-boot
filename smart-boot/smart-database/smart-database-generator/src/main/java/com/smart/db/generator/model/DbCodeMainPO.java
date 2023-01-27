@@ -26,6 +26,11 @@ public class DbCodeMainPO extends BaseModelUserTime {
     private Long connectionId;
 
     /**
+     * 所属系统ID
+     */
+    private Long systemId;
+
+    /**
      * 配置名称
      */
     private String configName;

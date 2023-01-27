@@ -13,9 +13,11 @@ import com.smart.db.generator.model.DbCodeFormConfigCommonPO;
 import com.smart.db.generator.model.DbCodeMainPO;
 import com.smart.db.generator.pojo.dto.DbCodeMainSaveParameter;
 import com.smart.db.generator.pojo.dto.DbCreateCodeDTO;
+import com.smart.db.generator.pojo.dto.main.DbCodeMainListBySystemDTO;
 import com.smart.db.generator.pojo.vo.DbCodeVO;
 import com.smart.db.generator.pojo.vo.DbMainConfigVO;
 import com.smart.db.generator.service.DbCodeMainService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -49,6 +51,16 @@ public class DbCodeMainController extends BaseController<DbCodeMainService, DbCo
     @Override
     @PostMapping("list")
     public Result<Object> list(@RequestBody @NonNull PageSortQuery parameter) {
+        return super.list(parameter);
+    }
+
+    @PostMapping("listBySystem")
+    @Operation(summary = "查询列表，如果systemId为null，则不返回空")
+    public Result<Object> listBySystem(@RequestBody @Valid DbCodeMainListBySystemDTO parameter) {
+        if (parameter.getSystemId() == null) {
+            return Result.success();
+        }
+        parameter.getParameter().put("systemId@=", parameter.getSystemId());
         return super.list(parameter);
     }
 

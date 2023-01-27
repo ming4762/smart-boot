@@ -3,7 +3,7 @@
 @author zhongming4762
 -->
 <template>
-  <div class="full-height outer-container">
+  <div class="full-height page-container">
     <LayoutSeparate first-size="240px" :show-line="false" class="full-height layout-container">
       <template #first>
         <div class="full-height system-container">
@@ -55,7 +55,7 @@ const getTableAction = (row): ActionItem[] => {
   return [
     {
       label: '编辑',
-      onClick: () => editByRow(row),
+      onClick: () => editByRowModal(row),
     },
   ]
 }
@@ -74,7 +74,7 @@ const getDropDownAction = (row): ActionItem[] => {
   ]
 }
 
-const [registerTable, { editByRow, setLoading, reload, showAddModal }] = useSmartTable({
+const [registerTable, { editByRowModal, setLoading, reload, showAddModal }] = useSmartTable({
   searchFormConfig: {
     searchWithSymbol: true,
     schemas: searchForm(t),
@@ -152,11 +152,6 @@ const [registerTable, { editByRow, setLoading, reload, showAddModal }] = useSmar
 </script>
 
 <style scoped lang="less">
-.layout-container {
-}
-.outer-container {
-  padding: 10px;
-}
 .system-container {
   background: white;
   margin-right: 5px;
