@@ -1,6 +1,6 @@
 import type { SmartTableProps } from '/@/components/SmartTable'
 
-import { defineComponent, toRefs, unref } from 'vue'
+import { computed, defineComponent, toRefs, unref } from 'vue'
 import { propTypes } from '/@/utils/propTypes'
 
 import { BasicModal, useModalInner } from '/@/components/Modal'
@@ -32,14 +32,21 @@ export default defineComponent({
     selectValues: propTypes.array.def([]),
   },
   emits: ['register', 'select-data'],
-  setup(props, { emit }) {
+  setup(props, { emit, slots }) {
     const { tableProps, selectTableProps, valueField, selectValues } = toRefs(props)
+
+    const hasTableSlot = computed<boolean>(() => {
+      return slots.table !== undefined
+    })
     const {
       registerTable,
       handleCheckboxChange,
       registerSelectTable,
       selectRowsRef,
       setSelectData,
+      addSelectData,
+      removeSelectData,
+      getSelectData,
       getTableCheckboxConfig,
       handleCheckboxAll,
     } = useSmartTableSelect(
@@ -48,8 +55,9 @@ export default defineComponent({
       props.showSelect,
       valueField,
       selectValues,
+      hasTableSlot,
     )
-    const [registerModal] = useModalInner((data) => {
+    const [registerModal, { closeModal }] = useModalInner((data) => {
       console.log(data)
     })
 
@@ -60,6 +68,7 @@ export default defineComponent({
           value: item[props.valueField],
         }
       })
+      closeModal()
       emit('select-data', selectOptions)
     }
 
@@ -67,6 +76,9 @@ export default defineComponent({
       registerModal,
       registerTable,
       setSelectData,
+      addSelectData,
+      removeSelectData,
+      getSelectData,
       handleCheckboxChange,
       registerSelectTable,
       selectRowsRef,
@@ -76,10 +88,21 @@ export default defineComponent({
     }
   },
   render() {
-    const { $attrs, registerModal, $slots, setSelectData, handleOk } = this
+    const {
+      $attrs,
+      registerModal,
+      $slots,
+      setSelectData,
+      handleOk,
+      addSelectData,
+      removeSelectData,
+      getSelectData,
+    } = this
     return (
       <BasicModal {...$attrs} onRegister={registerModal} onOk={handleOk}>
-        {$slots.table ? $slots.table({ setSelectData }) : renderTable(this)}
+        {$slots.table
+          ? $slots.table({ setSelectData, addSelectData, removeSelectData, getSelectData })
+          : renderTable(this)}
       </BasicModal>
     )
   },

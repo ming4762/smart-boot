@@ -1,5 +1,5 @@
 import type { SmartTableProps } from '/@/components/SmartTable'
-import type { Ref } from 'vue'
+import type { ComputedRef, Ref } from 'vue'
 
 import { computed, ref, unref, watch } from 'vue'
 import { remove } from 'lodash-es'
@@ -12,6 +12,7 @@ export const useSmartTableSelect = (
   showSelect: boolean,
   valueFieldRef: Ref<string>,
   selectValuesRef: Ref<Array<any>>,
+  hasTableSlot: ComputedRef<boolean>,
 ) => {
   const getTableProps = computed<SmartTableProps>(() => {
     const tableProps = unref(tablePropsRef)
@@ -31,7 +32,9 @@ export const useSmartTableSelect = (
   })
 
   watch(selectValuesRef, () => {
-    handleSetSelectRows()
+    if (!unref(hasTableSlot)) {
+      handleSetSelectRows()
+    }
   })
 
   const handleSetSelectRows = async () => {
@@ -66,19 +69,45 @@ export const useSmartTableSelect = (
 
   const selectRowsRef = ref<any[]>([])
 
+  /**
+   * 设置选中的数据
+   * @param dataList
+   */
   const setSelectData = (dataList: any[]) => {
     selectRowsRef.value = dataList
   }
 
-  const handleCheckboxChange = ({ checked, row }) => {
+  /**
+   * 添加选中的数据
+   * @param dataList
+   */
+  const addSelectData = (dataList: any[]) => {
+    const selectRows = unref(selectRowsRef)
+    selectRows.push(...dataList)
+  }
+
+  /**
+   * 移除数据
+   * @param dataList
+   */
+  const removeSelectData = (dataList: any[]) => {
     const selectRows = unref(selectRowsRef)
     const valueField = unref(valueFieldRef)
+    remove(selectRows, (item) => {
+      return dataList.some((current) => current[valueField] === item[valueField])
+    })
+  }
+  /**
+   * 获取选中的数据
+   */
+  const getSelectData = () => unref(selectRowsRef)
+
+  const handleCheckboxChange = ({ checked, row }) => {
+    const selectRows = unref(selectRowsRef)
     if (checked) {
-      selectRows.push(row)
+      addSelectData([row])
     } else {
-      remove(selectRows, (item) => {
-        return item[valueField] === row[valueField]
-      })
+      removeSelectData([row])
     }
     if (showSelect) {
       setPagination({
@@ -92,14 +121,10 @@ export const useSmartTableSelect = (
     if (!currentDataList || currentDataList.length === 0) {
       return
     }
-    const selectRows = unref(selectRowsRef)
-    const valueField = unref(valueFieldRef)
     if (checked) {
-      selectRows.push(...currentDataList)
+      addSelectData([currentDataList])
     } else {
-      remove(selectRows, (item) => {
-        return currentDataList.some((current) => current[valueField] === item[valueField])
-      })
+      removeSelectData(currentDataList)
     }
   }
 
@@ -109,7 +134,11 @@ export const useSmartTableSelect = (
     registerSelectTable,
     selectRowsRef,
     setSelectData,
+    addSelectData,
+    getSelectData,
+    removeSelectData,
     getTableCheckboxConfig,
     handleCheckboxAll,
+    getData,
   }
 }
