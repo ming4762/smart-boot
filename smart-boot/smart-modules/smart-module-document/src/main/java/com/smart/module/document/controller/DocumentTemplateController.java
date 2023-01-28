@@ -1,6 +1,5 @@
 package com.smart.module.document.controller;
 
-import com.smart.auth.core.utils.AuthUtils;
 import com.smart.commons.core.message.Result;
 import com.smart.crud.controller.BaseController;
 import com.smart.crud.query.PageSortQuery;
@@ -44,7 +43,7 @@ public class DocumentTemplateController extends BaseController<DocumentTemplateS
         if (parameter.getFile() != null) {
             model.setData(parameter.getFile().getBytes());
         }
-        return Result.success(this.service.saveOrUpdateWithAllUser(model, AuthUtils.getCurrentUserId()));
+        return Result.success(this.service.saveOrUpdate(model));
     }
 
 

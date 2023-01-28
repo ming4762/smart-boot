@@ -2,7 +2,6 @@ package com.smart.system.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.smart.auth.core.annotation.NonUrlCheck;
-import com.smart.auth.core.utils.AuthUtils;
 import com.smart.commons.core.log.Log;
 import com.smart.commons.core.log.LogOperationTypeEnum;
 import com.smart.commons.core.message.Result;
@@ -48,7 +47,7 @@ public class SysRoleController extends BaseController<SysRoleService, SysRolePO>
     @Log(value = "添加角色", type = LogOperationTypeEnum.ADD)
     @PreAuthorize("hasPermission('sys:role', 'save')")
     public Result<Boolean> save(@RequestBody SysRolePO model) {
-        return Result.success(this.service.saveWithUser(model, AuthUtils.getCurrentUserId()));
+        return Result.success(this.service.save(model));
     }
 
     @Override
@@ -74,7 +73,7 @@ public class SysRoleController extends BaseController<SysRoleService, SysRolePO>
     @Log(value = "添加修改角色", type = LogOperationTypeEnum.UPDATE)
     @PreAuthorize("hasPermission('sys:role', 'save') or hasPermission('sys:role', 'update')")
     public Result<Boolean> saveUpdate(@RequestBody SysRolePO model) {
-        return Result.success(this.service.saveOrUpdateWithAllUser(model, AuthUtils.getCurrentUserId()));
+        return Result.success(this.service.saveOrUpdate(model));
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.smart.system.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.smart.auth.core.utils.AuthUtils;
 import com.smart.commons.core.exception.BusinessException;
 import com.smart.commons.core.i18n.I18nUtils;
 import com.smart.commons.core.log.Log;
@@ -69,7 +68,7 @@ public class SysI18nController extends BaseController<SysI18nService, SysI18nPO>
     public Result<Boolean> saveOrUpdateGroup(@RequestBody @Valid SysI18nGroupSaveUpdateDTO parameter) {
         SysI18nGroupPO group = new SysI18nGroupPO();
         BeanUtils.copyProperties(parameter, group);
-        return Result.success(this.sysI18nGroupService.saveOrUpdateWithAllUser(group, AuthUtils.getCurrentUserId()));
+        return Result.success(this.sysI18nGroupService.saveOrUpdate(group));
     }
 
     @PostMapping("deleteGroup")
@@ -108,7 +107,7 @@ public class SysI18nController extends BaseController<SysI18nService, SysI18nPO>
         try {
             SysI18nPO model = new SysI18nPO();
             BeanUtils.copyProperties(parameter, model);
-            return Result.success(this.service.saveOrUpdateWithAllUser(model, AuthUtils.getCurrentUserId()));
+            return Result.success(this.service.saveOrUpdate(model));
         } catch (DuplicateKeyException e) {
             throw new BusinessException(I18nUtils.get(SystemI18nMessage.I18N_DUPLICATE, parameter.getI18nCode()), e);
         }

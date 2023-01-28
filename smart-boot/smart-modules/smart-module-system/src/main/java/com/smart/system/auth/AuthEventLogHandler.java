@@ -3,7 +3,6 @@ package com.smart.system.auth;
 import com.smart.auth.core.authentication.RestUsernamePasswordAuthenticationToken;
 import com.smart.auth.core.event.AuthEventHandler;
 import com.smart.auth.core.userdetails.RestUserDetails;
-import com.smart.auth.core.utils.AuthUtils;
 import com.smart.commons.core.log.LogSourceEnum;
 import com.smart.system.model.SysLogPO;
 import com.smart.system.service.SysLogService;
@@ -37,7 +36,7 @@ public class AuthEventLogHandler implements AuthEventHandler {
                 .operation(LogSourceEnum.LOGIN.name())
                 .result(String.format("登录成功,username:[%s],fullName:[%s]", user.getUsername(), user.getFullName()))
                 .build();
-        this.sysLogService.saveWithUser(sysLog, user.getUserId());
+        this.sysLogService.save(sysLog);
     }
 
     @Override
@@ -50,7 +49,7 @@ public class AuthEventLogHandler implements AuthEventHandler {
                 .operation(LogSourceEnum.LOGOUT.name())
                 .result(String.format("登出成功,用户名:[%s],fullName:[%s]", user.getUsername(), user.getFullName()))
                 .build();
-        this.sysLogService.saveWithUser(sysLog, AuthUtils.getCurrentUserId());
+        this.sysLogService.save(sysLog);
     }
 
     @Override
@@ -64,7 +63,7 @@ public class AuthEventLogHandler implements AuthEventHandler {
                 .operation(LogSourceEnum.LOGIN_FAIL.name())
                 .result(String.format("%s[%s],username:[%s]", exception.getClass().getSimpleName(), exception.getMessage(), token.getPrincipal()))
                 .build();
-        this.sysLogService.saveWithUser(sysLog, AuthUtils.getCurrentUserId());
+        this.sysLogService.save(sysLog);
     }
 
     @Override

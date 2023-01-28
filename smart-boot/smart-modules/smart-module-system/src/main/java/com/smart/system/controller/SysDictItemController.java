@@ -1,6 +1,5 @@
 package com.smart.system.controller;
 
-import com.smart.auth.core.utils.AuthUtils;
 import com.smart.commons.core.log.Log;
 import com.smart.commons.core.log.LogOperationTypeEnum;
 import com.smart.commons.core.message.Result;
@@ -46,7 +45,7 @@ public class SysDictItemController extends BaseController<SysDictItemService, Sy
     public Result<Boolean> saveUpdate(@RequestBody @Valid SysDictItemSaveUpdateDTO parameter) {
       	SysDictItemPO model = new SysDictItemPO();
       	BeanUtils.copyProperties(parameter, model);
-        return Result.success(this.service.saveOrUpdateWithAllUser(model, AuthUtils.getCurrentUserId()));
+        return Result.success(this.service.saveOrUpdate(model));
     }
 
     @Operation(summary = "通过ID批量删除字典序表")
