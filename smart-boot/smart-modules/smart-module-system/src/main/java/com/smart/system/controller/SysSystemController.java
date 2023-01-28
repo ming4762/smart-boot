@@ -47,14 +47,14 @@ public class SysSystemController extends BaseController<SysSystemService, SysSys
     @Override
     @PostMapping("list")
     @Operation(summary = "查询角色列表（支持分页、实体类属性查询）")
-    @PreAuthorize("hasPermission('sys:system:query')")
+    @PreAuthorize("hasPermission('sys:system', 'query')")
     public Result<Object> list(@RequestBody @NonNull PageSortQuery parameter) {
         return super.list(parameter);
     }
 
     @PostMapping("listAuthUser")
     @Operation(summary = "查询角色列表（支持分页、实体类属性查询），只能查询当前登录人员有权限的系统")
-    @PreAuthorize("hasPermission('sys:system:query')")
+    @PreAuthorize("hasPermission('sys:system', 'query')")
     public Result<Object> listAuthUser(@RequestBody @NonNull PageSortQuery parameter) {
         parameter.getParameter().put(CrudCommonEnum.FILTER_BY_USER.name(), true);
         return super.list(parameter);
@@ -63,7 +63,7 @@ public class SysSystemController extends BaseController<SysSystemService, SysSys
     @Operation(summary = "添加修改系统管理表")
     @PostMapping("saveUpdate")
     @Log(value = "添加修改系统管理表", type = LogOperationTypeEnum.UPDATE)
-    @PreAuthorize("hasPermission('sys:system:add') or hasPermission('sys:system:edit')")
+    @PreAuthorize("hasPermission('sys:system', 'add') or hasPermission('sys:system', 'edit')")
     public Result<Boolean> saveUpdate(@RequestBody @Valid SysSystemSaveUpdateDTO parameter) {
       	SysSystemPO model = new SysSystemPO();
       	BeanUtils.copyProperties(parameter, model);
@@ -73,7 +73,7 @@ public class SysSystemController extends BaseController<SysSystemService, SysSys
     @Override
     @Operation(summary = "通过ID批量删除系统管理表")
     @PostMapping("batchDeleteById")
-    @PreAuthorize("hasPermission('sys:system:delete')")
+    @PreAuthorize("hasPermission('sys:system', 'delete')")
     @Log(value = "通过ID批量删除系统管理表", type = LogOperationTypeEnum.DELETE)
     public Result<Boolean> batchDeleteById(@RequestBody List<Serializable> idList) {
         if (CollectionUtils.isEmpty(idList)) {
@@ -85,20 +85,20 @@ public class SysSystemController extends BaseController<SysSystemService, SysSys
     @Override
     @Operation(summary = "通过ID查询")
     @PostMapping("getById")
-    @PreAuthorize("hasPermission('sys:system:query')")
+    @PreAuthorize("hasPermission('sys:system', 'query')")
     public Result<SysSystemPO> getById(@RequestBody Serializable id) {
         return super.getById(id);
     }
 
     @PostMapping("setUser")
-    @PreAuthorize("hasPermission('sys:system:setUser')")
+    @PreAuthorize("hasPermission('sys:system', 'setUser')")
     @Operation(summary = "设置关联用户")
     public Result<Boolean> setUser(@RequestBody SystemSetUserDTO parameter) {
         return Result.success(this.service.setUser(parameter));
     }
 
     @PostMapping("getRelatedUserId")
-    @PreAuthorize("hasPermission('sys:system:query')")
+    @PreAuthorize("hasPermission('sys:system', 'query')")
     @Operation(summary = "获取关联用户ID")
     public Result<List<Long>> getRelatedUserId(@RequestBody @Valid IdParameter parameter) {
         return Result.success(

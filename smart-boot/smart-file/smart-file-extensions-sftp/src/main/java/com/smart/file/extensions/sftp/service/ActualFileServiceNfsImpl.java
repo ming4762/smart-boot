@@ -116,7 +116,6 @@ public class ActualFileServiceNfsImpl implements ActualFileService {
      * @param id 文件id
      * @return 文件流
      */
-    @SneakyThrows({IOException.class, SftpException.class})
     @Override
     public InputStream download(@NonNull String id) {
         throw new UnsupportedOperationException("NFS方式不支持该方式下载文件，请通过download(String id, OutputStream outputStream)下载文件");
