@@ -1,7 +1,7 @@
 import { defHttp } from '/@/utils/http/axios'
 
 enum Api {
-  list = 'sys/system/list',
+  list = 'sys/system/listAuthUser',
   saveUpdate = 'sys/system/saveUpdate',
   delete = 'sys/system/batchDeleteById',
   getById = 'sys/system/getById',

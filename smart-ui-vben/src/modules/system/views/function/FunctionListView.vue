@@ -11,7 +11,7 @@
         </a-tag>
       </template>
       <template #table-operation="{ row }">
-        <TableAction :actions="getTableActions(row)" />
+        <SmartVxeTableAction :actions="getTableActions(row)" />
       </template>
       <template #addEditForm-functionType="{ model }">
         <a-radio-group v-model:value="model.functionType">
@@ -38,12 +38,12 @@ import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
 import { listTree, deleteApi, getByIdApi, saveApi } from './FunctionListView.api'
 import { useI18n } from '/@/hooks/web/useI18n'
 import StringUtils from '/@/utils/StringUtils'
-import { TableAction } from '/@/components/SmartTable'
+import { SmartVxeTableAction } from '/@/components/SmartTable'
 
 const { t } = useI18n()
 const { getTableSize } = useSizeSetting()
 
-const [registerTable, { showAddModal, editByRow }] = useSmartTable({
+const [registerTable, { showAddModal, editByRowModal }] = useSmartTable({
   id: 'FunctionListView',
   columns: tableColumns,
   resizableConfig: {},
@@ -172,7 +172,7 @@ const getTableActions = (row: Recordable): ActionItem[] => {
       icon: 'ant-design:edit-outlined',
       onClick: () => {
         setTypeDisabled(['catalogue', 'menu', 'function'])
-        editByRow(row)
+        editByRowModal(row)
       },
     },
   ]
