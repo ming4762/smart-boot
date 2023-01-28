@@ -1,7 +1,7 @@
 package com.smart.monitor.client.core.trace.http;
 
 import org.apache.commons.collections4.queue.CircularFifoQueue;
-import org.springframework.boot.actuate.trace.http.HttpTrace;
+import org.springframework.boot.actuate.web.exchanges.HttpExchange;
 import org.springframework.util.AntPathMatcher;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ public class InMemoryEnhanceHttpTraceRepository implements EnhanceHttpTraceRepos
     /**
      * 内存存储器 最多存储50000条HttpTrace
      */
-    private static final Collection<HttpTrace> CIRCULAR_FIFO_QUEUE = Collections.synchronizedCollection(new CircularFifoQueue<>(50000));
+    private static final Collection<HttpExchange> CIRCULAR_FIFO_QUEUE = Collections.synchronizedCollection(new CircularFifoQueue<>(50000));
 
     private static final AntPathMatcher PATH_MATCHER = new AntPathMatcher();
 
@@ -33,24 +33,24 @@ public class InMemoryEnhanceHttpTraceRepository implements EnhanceHttpTraceRepos
     }
 
     @Override
-    public List<HttpTrace> removeAll() {
-        List<HttpTrace> result = this.findAll();
+    public List<HttpExchange> removeAll() {
+        List<HttpExchange> result = this.findAll();
         CIRCULAR_FIFO_QUEUE.clear();
         return result;
     }
 
     @Override
-    public void remove(HttpTrace httpTrace) {
+    public void remove(HttpExchange httpTrace) {
         CIRCULAR_FIFO_QUEUE.remove(httpTrace);
     }
 
     @Override
-    public List<HttpTrace> findAll() {
+    public List<HttpExchange> findAll() {
         return new ArrayList<>(CIRCULAR_FIFO_QUEUE);
     }
 
     @Override
-    public void add(HttpTrace trace) {
+    public void add(HttpExchange trace) {
         boolean exclude = this.excludeUrls.stream().anyMatch(item -> PATH_MATCHER.match(item, trace.getRequest().getUri().getPath()));
         if (!exclude) {
             CIRCULAR_FIFO_QUEUE.add(trace);

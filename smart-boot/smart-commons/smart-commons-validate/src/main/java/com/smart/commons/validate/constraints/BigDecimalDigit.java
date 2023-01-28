@@ -1,8 +1,8 @@
 package com.smart.commons.validate.constraints;
 
 import com.smart.commons.validate.constraintvalidators.BigDecimalDigitValidator;
+import jakarta.validation.Constraint;
 
-import javax.validation.Constraint;
 import java.lang.annotation.*;
 
 /**

@@ -43,7 +43,6 @@ public class RsaUtils {
      * 随机生成秘钥对
      * @return 秘钥对
      */
-    @SneakyThrows(NoSuchAlgorithmException.class)
     public static KeyPair generateKeyPair() {
         return generateKeyPair(ALGORITHM);
     }

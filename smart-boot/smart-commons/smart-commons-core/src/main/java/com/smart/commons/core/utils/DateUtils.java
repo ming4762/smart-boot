@@ -111,7 +111,6 @@ public final class DateUtils {
      * @param dateStr 字符串
      * @return 时间
      */
-    @SneakyThrows(ParseException.class)
     @Nullable
     public static LocalDateTime convertDate(String dateStr) {
         boolean isTime = false;

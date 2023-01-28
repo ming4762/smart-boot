@@ -1,10 +1,10 @@
 package com.smart.db.generator.pojo.dto.template;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**

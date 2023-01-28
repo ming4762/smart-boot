@@ -21,12 +21,9 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.Collection;
 import java.util.List;
-<<<<<<< HEAD
-=======
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
->>>>>>> b295335 (系统模块：功能管理页面完善)
 
 /**
  * @author jackson

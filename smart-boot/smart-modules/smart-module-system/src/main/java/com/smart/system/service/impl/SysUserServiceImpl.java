@@ -459,12 +459,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
                             .roleId(roleId)
                             .enable(Boolean.TRUE)
                             .userId(parameter.getUserId())
-<<<<<<< HEAD
-                            .build()).toList(),
-                    AuthUtils.getCurrentUserId()
-=======
                             .build()).collect(Collectors.toList())
->>>>>>> 7d4cc3a (添加系统管理页面)
             );
         }
         return true;

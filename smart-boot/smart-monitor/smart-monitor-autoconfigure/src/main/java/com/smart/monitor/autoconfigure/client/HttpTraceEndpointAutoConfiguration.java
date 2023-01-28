@@ -9,7 +9,7 @@ import com.smart.monitor.client.core.trace.http.InMemoryEnhanceHttpTraceReposito
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
 import org.springframework.boot.actuate.autoconfigure.endpoint.web.WebEndpointProperties;
-import org.springframework.boot.actuate.trace.http.HttpTraceEndpoint;
+import org.springframework.boot.actuate.web.exchanges.HttpExchangesEndpoint;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -25,7 +25,7 @@ import java.util.List;
  */
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnClass(SmartMonitorClient.class)
-@ConditionalOnAvailableEndpoint(endpoint = HttpTraceEndpoint.class)
+@ConditionalOnAvailableEndpoint(endpoint = HttpExchangesEndpoint.class)
 public class HttpTraceEndpointAutoConfiguration {
 
 
