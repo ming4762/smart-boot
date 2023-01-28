@@ -147,7 +147,7 @@ public class DbConnectionServiceImpl extends BaseServiceImpl<DbConnectionMapper,
         // 保存新数据
         List<DbCodeConnectionUserGroupPO> saveList = parameter.getUserGroupIdList().stream().map(item -> new DbCodeConnectionUserGroupPO(parameter.getConnectionId(), item))
                 .collect(Collectors.toList());
-        this.dbCodeConnectionUserGroupService.saveBatchWithUser(saveList, AuthUtils.getNonNullCurrentUserId());
+        this.dbCodeConnectionUserGroupService.saveBatch(saveList);
         return true;
     }
 

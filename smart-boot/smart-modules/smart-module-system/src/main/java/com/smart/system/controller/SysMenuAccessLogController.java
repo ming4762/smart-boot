@@ -1,6 +1,5 @@
 package com.smart.system.controller;
 
-import com.smart.auth.core.utils.AuthUtils;
 import com.smart.commons.core.message.Result;
 import com.smart.crud.controller.BaseController;
 import com.smart.crud.query.PageSortQuery;
@@ -48,6 +47,6 @@ public class SysMenuAccessLogController extends BaseController<SysMenuAccessLogS
     public Result<Boolean> save(@RequestBody SysMenuAccessLogSaveDTO parameter) {
         SysMenuAccessLogPO model = new SysMenuAccessLogPO();
         model.setFunctionId(parameter.getFunctionId());
-        return Result.success(this.service.saveWithUser(model, AuthUtils.getNonNullCurrentUserId()));
+        return Result.success(this.service.save(model));
     }
 }

@@ -1,7 +1,6 @@
 package com.smart.system.controller;
 
 import com.smart.auth.core.annotation.NonUrlCheck;
-import com.smart.auth.core.utils.AuthUtils;
 import com.smart.commons.core.log.Log;
 import com.smart.commons.core.log.LogOperationTypeEnum;
 import com.smart.commons.core.message.Result;
@@ -57,7 +56,7 @@ public class SysFunctionController extends BaseController<SysFunctionService, Sy
     @Log(value = "添加保存功能", type = LogOperationTypeEnum.UPDATE)
     @PreAuthorize("hasPermission('sys:function', 'save') or hasPermission('sys:function', 'update')")
     public Result<Boolean> saveUpdate(@RequestBody SysFunctionPO model) {
-        return Result.success(this.service.saveOrUpdateWithAllUser(model, AuthUtils.getCurrentUserId()));
+        return Result.success(this.service.saveOrUpdate(model));
     }
 
     @Override

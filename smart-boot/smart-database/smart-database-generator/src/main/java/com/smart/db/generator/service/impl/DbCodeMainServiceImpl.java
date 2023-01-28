@@ -156,7 +156,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
         }
         // 保存主表
         dbCodeMain.setId(mainId);
-        this.saveWithUser(dbCodeMain, AuthUtils.getCurrentUserId());
+        this.save(dbCodeMain);
         final AtomicInteger pageConfigIndex = new AtomicInteger(1);
         model.setId(mainId);
         // 保存表格配置
@@ -207,13 +207,12 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
     private void saveSearchConfig(@NonNull DbCodeMainSaveParameter model) {
         // 设置form 配置信息
         final AtomicInteger searchConfigIndex = new AtomicInteger(1);
-        this.dbCodeSearchConfigService.saveBatchWithUser(
+        this.dbCodeSearchConfigService.saveBatch(
                 model.getCodeSearchConfigList().stream().peek(item -> {
                     item.setMainId(model.getId());
                     item.setId(IdGenerator.nextId());
                     item.setSeq(searchConfigIndex.getAndIncrement());
-                }).collect(Collectors.toList()),
-                AuthUtils.getCurrentUserId()
+                }).collect(Collectors.toList())
         );
 
         // 保存表关联信息
@@ -242,13 +241,12 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
     private void saveFormConfig(@NonNull DbCodeMainSaveParameter model) {
         // 设置form 配置信息
         final AtomicInteger formConfigIndex = new AtomicInteger(1);
-        this.dbCodeFormConfigService.saveBatchWithUser(
+        this.dbCodeFormConfigService.saveBatch(
                 model.getCodeFormConfigList().stream().peek(item -> {
                     item.setMainId(model.getId());
                     item.setId(IdGenerator.nextId());
                     item.setSeq(formConfigIndex.getAndIncrement());
-                }).collect(Collectors.toList()),
-                AuthUtils.getCurrentUserId()
+                }).collect(Collectors.toList())
         );
         // 保存表关联信息
         final List<DbCodeRelatedTablePO> relatedTableList = Lists.newArrayList();

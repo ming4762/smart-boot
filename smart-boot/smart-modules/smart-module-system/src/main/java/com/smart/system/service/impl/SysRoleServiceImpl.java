@@ -1,7 +1,6 @@
 package com.smart.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.smart.auth.core.utils.AuthUtils;
 import com.smart.crud.constants.CrudCommonEnum;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.crud.service.BaseServiceImpl;
@@ -78,14 +77,13 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRoleMapper, SysRolePO
         );
         // 保存
         if (!CollectionUtils.isEmpty(parameter.getFunctionIdList())) {
-            return this.sysRoleFunctionService.saveBatchWithUser(
+            return this.sysRoleFunctionService.saveBatch(
                 parameter.getFunctionIdList().stream().map(item -> {
                     final SysRoleFunctionPO sysRoleFunction = new SysRoleFunctionPO();
                     sysRoleFunction.setFunctionId(item);
                     sysRoleFunction.setRoleId(parameter.getRoleId());
                     return sysRoleFunction;
-                }).collect(Collectors.toList()),
-                    AuthUtils.getCurrentUserId()
+                }).collect(Collectors.toList())
             );
         }
         return true;
@@ -102,9 +100,8 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRoleMapper, SysRolePO
         if (CollectionUtils.isEmpty(parameter.getUserIdList())) {
             return false;
         }
-        this.sysUserRoleService.saveBatchWithUser(
-                parameter.getUserIdList().stream().map(item -> new SysUserRolePO(item, parameter.getRoleId(), true)).collect(Collectors.toList()),
-                AuthUtils.getCurrentUserId()
+        this.sysUserRoleService.saveBatch(
+                parameter.getUserIdList().stream().map(item -> new SysUserRolePO(item, parameter.getRoleId(), true)).collect(Collectors.toList())
         );
         return true;
     }

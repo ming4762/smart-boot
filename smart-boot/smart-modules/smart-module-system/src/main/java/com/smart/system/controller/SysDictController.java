@@ -1,6 +1,5 @@
 package com.smart.system.controller;
 
-import com.smart.auth.core.utils.AuthUtils;
 import com.smart.commons.core.log.Log;
 import com.smart.commons.core.log.LogOperationTypeEnum;
 import com.smart.commons.core.message.Result;
@@ -45,7 +44,7 @@ public class SysDictController extends BaseController<SysDictService, SysDictPO>
     @Log(value = "添加修改系统字典表", type = LogOperationTypeEnum.UPDATE)
     @PreAuthorize("hasPermission('sys:dict', 'save') or hasPermission('sys:dict', 'update')")
     public Result<Boolean> saveUpdate(@RequestBody SysDictPO model) {
-        return Result.success(this.service.saveOrUpdateWithAllUser(model, AuthUtils.getCurrentUserId()));
+        return Result.success(this.service.saveOrUpdate(model));
     }
 
     @Override

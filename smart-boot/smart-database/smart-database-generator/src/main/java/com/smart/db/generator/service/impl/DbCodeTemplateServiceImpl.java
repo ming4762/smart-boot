@@ -106,7 +106,7 @@ public class DbCodeTemplateServiceImpl extends BaseServiceImpl<DbCodeTemplateMap
             final List<DbCodeTemplateUserGroupPO> templateUserGroupList = parameter.getGroupIdList().stream()
                     .map(item -> new DbCodeTemplateUserGroupPO(parameter.getTemplateId(), item))
                     .collect(Collectors.toList());
-            this.dbCodeTemplateUserGroupService.saveBatchWithUser(templateUserGroupList, AuthUtils.getCurrentUserId());
+            this.dbCodeTemplateUserGroupService.saveBatch(templateUserGroupList);
         }
         // 保存数据
         return true;

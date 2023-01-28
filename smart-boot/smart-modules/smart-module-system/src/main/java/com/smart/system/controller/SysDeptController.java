@@ -1,6 +1,5 @@
 package com.smart.system.controller;
 
-import com.smart.auth.core.utils.AuthUtils;
 import com.smart.commons.core.log.Log;
 import com.smart.commons.core.log.LogOperationTypeEnum;
 import com.smart.commons.core.message.Result;
@@ -48,7 +47,7 @@ public class SysDeptController extends BaseController<SysDeptService, SysDeptPO>
       	SysDeptPO model = new SysDeptPO();
       	BeanUtils.copyProperties(parameter, model);
         return Result.success(
-                this.service.saveOrUpdateWithAllUser(model, AuthUtils.getNonNullCurrentUserId())
+                this.service.saveOrUpdate(model)
         );
     }
 

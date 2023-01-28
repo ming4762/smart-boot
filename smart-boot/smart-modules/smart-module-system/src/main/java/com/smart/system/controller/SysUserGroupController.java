@@ -2,7 +2,6 @@ package com.smart.system.controller;
 
 import com.google.common.collect.ImmutableList;
 import com.smart.auth.core.annotation.NonUrlCheck;
-import com.smart.auth.core.utils.AuthUtils;
 import com.smart.commons.core.http.HttpStatus;
 import com.smart.commons.core.log.Log;
 import com.smart.commons.core.log.LogOperationTypeEnum;
@@ -45,7 +44,7 @@ public class SysUserGroupController extends BaseController<SysUserGroupService, 
     @Log(value = "添加修改用户组", type = LogOperationTypeEnum.UPDATE)
     @PreAuthorize("hasPermission('sys:userGroup', 'save') or hasPermission('sys:userGroup', 'update')")
     public Result<Boolean> saveUpdate(@RequestBody @Valid SysUserGroupPO model) {
-        return Result.success(this.service.saveOrUpdateWithAllUser(model, AuthUtils.getCurrentUserId()));
+        return Result.success(this.service.saveOrUpdate(model));
     }
 
     /**

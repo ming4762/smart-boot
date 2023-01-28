@@ -2,7 +2,6 @@ package com.smart.monitor.server.manager.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.common.collect.Lists;
-import com.smart.auth.core.utils.AuthUtils;
 import com.smart.crud.service.BaseServiceImpl;
 import com.smart.monitor.server.manager.mapper.MonitorUserGroupApplicationMapper;
 import com.smart.monitor.server.manager.model.MonitorUserGroupApplicationPO;
@@ -67,7 +66,7 @@ public class MonitorUserGroupApplicationServiceImpl extends BaseServiceImpl<Moni
                 po.setUserGroupId(item);
                 return po;
             }).collect(Collectors.toList());
-            this.saveBatchWithUser(data, AuthUtils.getCurrentUserId());
+            this.saveBatch(data);
         }
         return true;
     }
