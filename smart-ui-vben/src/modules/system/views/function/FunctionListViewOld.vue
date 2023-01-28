@@ -286,6 +286,7 @@ import { defineComponent, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { DownOutlined, EditOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons-vue'
+import { Button } from 'ant-design-vue'
 
 import { vueLoadFunctionList, vueAddEdit, vueDelete } from './FunctionListSupport'
 import { SystemPermissions } from '../../constants/SystemConstants'
@@ -303,6 +304,7 @@ export default defineComponent({
     EditOutlined,
     PlusOutlined,
     DeleteOutlined,
+    Button,
   },
   setup() {
     const gridRef = ref()

@@ -39,7 +39,7 @@ const getActions = (row: Recordable): ActionItem[] => {
   return [
     {
       label: t('common.button.edit'),
-      onClick: () => editByRow(row),
+      onClick: () => editByRowModal(row),
     },
     {
       label: t('common.button.delete'),
@@ -55,7 +55,7 @@ const getActions = (row: Recordable): ActionItem[] => {
   ]
 }
 
-const [registerTable, { editByRow, deleteByRow }] = useSmartTable({
+const [registerTable, { editByRowModal, deleteByRow }] = useSmartTable({
   columns: getTableColumns(),
   height: 'auto',
   useSearchForm: true,

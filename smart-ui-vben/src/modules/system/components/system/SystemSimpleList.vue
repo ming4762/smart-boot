@@ -49,10 +49,13 @@ const [registerTable, { getTableInstance, getData }] = useSmartTable({
   proxyConfig: {
     ajax: {
       query: (params) => {
-        return listSystemApi({
-          ...params.ajaxParameter,
-          sortName: 'seq',
-        })
+        return listSystemApi(
+          {
+            ...params.ajaxParameter,
+            sortName: 'seq',
+          },
+          true,
+        )
       },
     },
   },

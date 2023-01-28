@@ -14,7 +14,7 @@ import type { ActionItem } from '/@/components/SmartTable'
 import { useI18n } from '/@/hooks/web/useI18n'
 import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
 
-import { SmartTable, TableAction, SmartVxeTableAction, useSmartTable } from '/@/components/SmartTable'
+import { SmartTable, SmartVxeTableAction, useSmartTable } from '/@/components/SmartTable'
 
 import { getFormSchemas, getTableColumns, getSearchFormSchemas } from './CategoryListView.config'
 import { listApi, deleteApi, saveUpdateApi, getByIdApi } from './CategoryListView.api'
@@ -30,7 +30,7 @@ const getTableActions = (row): ActionItem[] => {
     },
     {
       label: t('common.button.edit'),
-      onClick: () => editByRow(row),
+      onClick: () => editByRowModal(row),
     },
     {
       label: t('common.button.delete'),
@@ -40,7 +40,7 @@ const getTableActions = (row): ActionItem[] => {
   ]
 }
 
-const [registerTable, { showAddModal, editByRow, deleteByRow }] = useSmartTable({
+const [registerTable, { showAddModal, editByRowModal, deleteByRow }] = useSmartTable({
   columns: getTableColumns(),
   border: true,
   height: 'auto',
