@@ -1,526 +1,298 @@
 <template>
-  <div class="full-height" style="padding: 10px">
-    <vxe-grid
-      ref="tableRef"
-      :columns="columns"
-      :data="data"
-      stripe
-      :sort-config="sortConfig"
-      highlight-hover-row
-      :loading="loading"
-      height="auto"
-      :toolbar-config="toolbarConfig"
-      align="left"
-      border
-      :size="tableSizeConfig"
-      @sort-change="handleSortChange">
-      <template #pager>
-        <vxe-pager
-          v-model:current-page="tablePage.currentPage"
-          v-model:page-size="tablePage.pageSize"
-          :page-sizes="[500, 1000, 2000, 5000]"
-          :layouts="[
-            'Sizes',
-            'PrevJump',
-            'PrevPage',
-            'Number',
-            'NextPage',
-            'NextJump',
-            'FullJump',
-            'Total',
-          ]"
-          :total="tablePage.total"
-          @page-change="handlePageChange" />
-      </template>
+  <div class="full-height page-container">
+    <SmartTable @register="registerTable" :size="getTableSize">
       <template #table-operation="{ row }">
-        <a-dropdown>
-          <a-button :size="tableButtonSizeConfig" type="primary">
-            Actions
-            <DownOutlined />
-          </a-button>
-          <template #overlay>
-            <a-menu @click="({ key }) => handleActions(row, key)">
-              <a-menu-item
-                key="edit"
-                :disabled="
-                  !hasPermission(permissions.update) || !hasSystemUserUpdate(row.userType)
-                ">
-                <edit-outlined />
-                {{ $t('common.button.edit') }}
-              </a-menu-item>
-              <a-menu-item
-                key="showAccount"
-                :disabled="
-                  !hasPermission('sys:account:query') || !hasSystemUserUpdate(row.userType)
-                ">
-                <user-outlined />
-                {{ $t('system.views.user.button.showAccount') }}
-              </a-menu-item>
-            </a-menu>
-          </template>
-        </a-dropdown>
-      </template>
-      <template #toolbar_buttons>
-        <a-form style="margin-left: 10px" layout="inline" :model="searchModel">
-          <a-form-item>
-            <a-input
-              v-model:value="searchModel.username"
-              style="width: 110px"
-              :size="formSizeConfig"
-              :placeholder="$t('system.views.user.table.username')" />
-          </a-form-item>
-          <a-form-item>
-            <a-input
-              v-model:value="searchModel.fullName"
-              style="width: 110px"
-              :size="formSizeConfig"
-              :placeholder="$t('system.views.user.table.fullName')" />
-          </a-form-item>
-          <a-form-item>
-            <a-input
-              v-model:value="searchModel.email"
-              style="width: 110px"
-              :size="formSizeConfig"
-              :placeholder="$t('system.views.user.table.email')" />
-          </a-form-item>
-          <a-form-item :label="$t('common.table.useYn')">
-            <a-select
-              v-model:value="searchModel.useYn"
-              :size="formSizeConfig"
-              style="width: 80px"
-              :placeholder="$t('common.table.useYn')">
-              <a-select-option v-for="item in ynList" :key="item.key" :value="item.key">
-                {{ item.value }}
-              </a-select-option>
-            </a-select>
-          </a-form-item>
-          <a-form-item :label="$t('common.table.deleteYn')">
-            <a-select
-              v-model:value="searchModel.deleteYn"
-              :size="formSizeConfig"
-              style="width: 80px"
-              :placeholder="$t('common.table.deleteYn')">
-              <a-select-option v-for="item in ynList" :key="item.key" :value="item.key">
-                {{ item.value }}
-              </a-select-option>
-            </a-select>
-          </a-form-item>
-          <a-form-item>
-            <a-button :size="buttonSizeConfig" type="primary" @click="loadData">
-              {{ $t('common.button.search') }}
-            </a-button>
-          </a-form-item>
-        </a-form>
-      </template>
-      <template #toolbar_tools>
-        <a-form layout="inline">
-          <a-form-item>
-            <a-button
-              v-permission="permissions.add"
-              :size="buttonSizeConfig"
-              type="primary"
-              class="button-margin"
-              @click="handleShowSave">
-              {{ $t('common.button.add') }}
-            </a-button>
-            <a-button
-              v-permission="permissions.useYn"
-              :size="buttonSizeConfig"
-              class="button-margin"
-              type="primary"
-              @click="() => handleSetUseYn(true)">
-              {{ $t('common.button.use') }}
-            </a-button>
-            <a-button
-              v-permission="permissions.useYn"
-              danger
-              class="button-margin"
-              :size="buttonSizeConfig"
-              type="primary"
-              @click="() => handleSetUseYn(false)">
-              {{ $t('common.button.noUse') }}
-            </a-button>
-            <a-button
-              v-permission="permissions.createAccount"
-              :size="buttonSizeConfig"
-              class="button-margin"
-              type="primary"
-              @click="handleCreateAccount">
-              {{ $t('system.views.user.button.createAccount') }}
-            </a-button>
-            <a-button
-              v-permission="permissions.delete"
-              danger
-              class="button-margin"
-              :size="buttonSizeConfig"
-              type="primary"
-              @click="handleDeleteUser">
-              {{ $t('common.button.delete') }}
-            </a-button>
-          </a-form-item>
-        </a-form>
+        <SmartVxeTableAction :actions="getTableActions(row)" />
       </template>
       <template #table-userType="{ row }">
         <span>
-          {{ userTypeMap[row.userType] }}
+          {{ getUserTypeMap[row.userType] }}
         </span>
       </template>
-    </vxe-grid>
-    <a-modal
-      v-model:visible="modalVisible"
-      :title="isAdd ? $t('common.button.add') : $t('common.button.edit')"
-      width="600px"
-      :confirm-loading="saveLoading"
-      @ok="handleOk">
-      <a-spin :spinning="formLoading">
-        <a-form
-          ref="formRef"
-          style="padding: 10px"
-          :rules="rules"
-          :label-col="{ span: 4 }"
-          :wrapper-col="{ span: 19 }"
-          :model="addEditModel">
-          <a-form-item name="username" :label="$t('system.views.user.table.username')">
-            <a-input
-              v-model:value="addEditModel.username"
-              :placeholder="$t('system.views.user.validate.username')" />
-          </a-form-item>
-          <a-form-item name="fullName" :label="$t('system.views.user.table.fullName')">
-            <a-input
-              v-model:value="addEditModel.fullName"
-              :placeholder="$t('system.views.user.validate.fullName')" />
-          </a-form-item>
-          <a-form-item :label="$t('system.views.user.table.email')">
-            <a-input
-              v-model:value="addEditModel.email"
-              :placeholder="$t('system.views.user.validate.email')" />
-          </a-form-item>
-          <a-form-item name="userType" :label="$t('system.views.user.table.userType')">
-            <a-select v-model:value="addEditModel.userType">
-              <a-select-option
-                v-for="item in userTypeList"
-                :key="'userType_' + item.dictItemCode"
-                :value="item.dictItemCode">
-                {{ item.dictItemName }}
-              </a-select-option>
-            </a-select>
-          </a-form-item>
-          <a-form-item :label="$t('system.views.user.table.mobile')">
-            <a-input
-              v-model:value="addEditModel.mobile"
-              :placeholder="$t('system.views.user.validate.mobile')" />
-          </a-form-item>
-          <a-form-item :label="$t('common.table.seq')">
-            <a-input-number
-              style="width: 100%"
-              v-model:value="addEditModel.seq"
-              :default-value="1" />
-          </a-form-item>
-          <a-form-item name="deptId" :label="$t('system.views.user.form.dept')">
-            <a-tree-select
-              :tree-data="deptTreeData"
-              :field-names="deptTreeFieldNames"
-              :placeholder="$t('system.views.user.validate.selectDept')"
-              show-search
-              allow-clear
-              :disabled="dataScopeDisable"
-              v-model:value="addEditModel.deptId" />
-          </a-form-item>
-          <a-form-item
-            name="dataScopeList"
-            :rules="[
-              {
-                required: needCheckDataScope,
-                message: $t('system.views.user.validate.selectDataScope'),
-              },
-            ]"
-            :label="$t('system.views.user.form.dataScope')">
-            <a-select
-              mode="multiple"
-              :disabled="dataScopeDisable"
-              v-model:value="addEditModel.dataScopeList">
-              <a-select-option
-                v-for="item in dataScopeList"
-                :key="'data-scope_' + item.key"
-                :value="item.key">
-                {{ $t(item.value) }}
-              </a-select-option>
-            </a-select>
-          </a-form-item>
-        </a-form>
-      </a-spin>
-    </a-modal>
-    <!--  更新账户信息  -->
-    <UserAccountUpdateModal ref="userAccountRef" />
+      <template #search-userType="{ model }">
+        <a-select v-model:value="model.userType" allowClear>
+          <a-select-option
+            v-for="item in userTypeListRef"
+            :key="'userType_' + item.dictItemCode"
+            :value="item.dictItemCode">
+            {{ item.dictItemName }}
+          </a-select-option>
+        </a-select>
+      </template>
+    </SmartTable>
+    <UserAccountUpdateModal @register="registerAccountModal" />
   </div>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, ref, reactive } from 'vue'
-import { useI18n } from 'vue-i18n'
+<script lang="ts" setup>
+import { computed, createVNode, ref, unref } from 'vue'
+import { useI18n } from '/@/hooks/web/useI18n'
 
-import { DownOutlined, EditOutlined, UserOutlined } from '@ant-design/icons-vue'
+import { message, Modal } from 'ant-design-vue'
+import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
 
 import { useLoadDictItem } from '/@/modules/system/hooks/dict/SysDictHooks'
-
-import { SYS_USER_TYPE, DATA_SCOPE } from '../../constants/SystemConstants'
-
-import { vueLoadData, vueAddEdit, userOperationHoops, useCreateAccount } from './UserListSupport'
-
-import { SystemPermissions } from '../../constants/SystemConstants'
-import dayjs from 'dayjs'
-import { tableUseYn, tableDeleteYn } from '/@/components/common/TableCommon'
 import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
 import { hasPermission } from '/@/common/auth/AuthUtils'
+import { useModal } from '/@/components/Modal'
+
+import {
+  SmartTable,
+  useSmartTable,
+  SmartVxeTableAction,
+  ActionItem,
+} from '/@/components/SmartTable'
 import UserAccountUpdateModal from './account/UserAccountUpdateModal.vue'
-import { useLoadDeptTreeData } from '/@/modules/system/hooks/dept/SysDeptHooks'
 
-export default defineComponent({
-  name: 'UserListView',
-  components: {
-    UserAccountUpdateModal,
-    DownOutlined,
-    EditOutlined,
-    UserOutlined,
-  },
-  setup() {
-    const tableRef = ref()
-    const userAccountRef = ref()
-    const { t } = useI18n()
-    /**
-     * 是否有修改系统用户的权限
-     */
-    const hasPermissionUpdateSystemUser = hasPermission('sys:systemUser:update')
-    const hasSystemUserUpdate = (type: string) => {
-      return hasPermissionUpdateSystemUser || type !== SYS_USER_TYPE
-    }
-    const loadDataVue = vueLoadData()
-    const addEditVue = vueAddEdit(loadDataVue.loadData, t)
-    // 用户操作hoops
-    const userOperationVue = userOperationHoops(
-      tableRef,
-      t,
-      loadDataVue.loadData,
-      hasPermissionUpdateSystemUser,
-    )
+import { getAddEditFormSchemas, getSearchSchemas, getTableColumns } from './UserListView.config'
+import {
+  listApi,
+  deleteApi,
+  saveUpdateWithDataScopeApi,
+  getByIdWithDataScopeApi,
+  setUseYnApi,
+  createAccountApi,
+} from './UserListView.api'
+import { SYS_USER_TYPE, SystemPermissions } from '/@/modules/system/constants/SystemConstants'
 
-    const handleActions = (row: any, key: string) => {
-      const { userId } = row
-      switch (key) {
-        case 'edit': {
-          addEditVue.handleShowUpdate(userId)
-          break
-        }
-        case 'showAccount': {
-          userAccountRef.value.show(userId)
-          break
-        }
-      }
-    }
-    const { dictData: userTypeList } = useLoadDictItem(ref('SYSTEM_USER_TYPE'))
-    const userTypeMap = computed(() => {
-      const result: { [index: string]: string } = {}
-      result[SYS_USER_TYPE] = '系统用户'
-      for (let userType of userTypeList.value) {
-        result[userType.dictItemCode] = userType.dictItemName
-      }
-      return result
-    })
-    return {
-      tableRef,
-      hasPermissionUpdateSystemUser,
-      hasSystemUserUpdate,
-      ...userOperationVue,
-      ...loadDataVue,
-      ...useSizeSetting(),
-      ...addEditVue,
-      permissions: SystemPermissions.user,
-      ...useCreateAccount(tableRef, t, hasPermissionUpdateSystemUser),
-      handleActions,
-      hasPermission,
-      userAccountRef,
-      userTypeList,
-      userTypeMap,
-      dataScopeList: reactive(DATA_SCOPE),
-      ...useLoadDeptTreeData(),
-    }
-  },
-  data() {
-    return {
-      SYS_USER_TYPE,
-      toolbarConfig: {
-        slots: {
-          buttons: 'toolbar_buttons',
-          tools: 'toolbar_tools',
-        },
-      },
-      deptTreeFieldNames: {
-        children: 'children',
-        label: 'deptName',
-        value: 'deptId',
-      },
-      sortConfig: {
-        defaultSort: {
-          field: 'seq',
-          order: 'asc',
-        },
-        remote: true,
-      },
-      columns: [
-        {
-          type: 'checkbox',
-          width: 60,
-          align: 'center',
-          fixed: 'left',
-        },
-        {
-          title: '{system.views.user.table.username}',
-          field: 'username',
-          width: 120,
-          fixed: 'left',
-        },
-        {
-          title: '{system.views.user.table.fullName}',
-          field: 'fullName',
-          width: 120,
-          fixed: 'left',
-        },
-        {
-          title: '{system.views.user.table.userType}',
-          field: 'userType',
-          width: 120,
-          slots: {
-            default: 'table-userType',
-          },
-        },
-        {
-          title: '{system.views.user.table.email}',
-          field: 'email',
-          minWidth: 160,
-        },
-        {
-          title: '{system.views.user.table.mobile}',
-          field: 'mobile',
-          minWidth: 140,
-        },
-        {
-          ...tableUseYn(this.$t).createColumn(),
-          sortable: true,
-        },
-        {
-          ...tableDeleteYn(this.$t).createColumn(),
-          sortable: true,
-        },
-        {
-          title: '{common.table.seq}',
-          field: 'seq',
-          width: 100,
-          sortable: true,
-        },
-        {
-          title: '{common.table.createTime}',
-          field: 'createTime',
-          width: 165,
-          formatter: ({ cellValue }: any) => {
-            if (cellValue) {
-              return dayjs(cellValue).format('YYYY-MM-DD HH:mm:ss')
-            }
-            return ''
-          },
-          sortable: true,
-        },
-        {
-          title: '{common.table.createUser}',
-          field: 'createUserId',
-          width: 120,
-          formatter: ({ row }: any) => {
-            if (row.createUser) {
-              return row.createUser.fullName
-            }
-            return ''
-          },
-        },
-        {
-          title: '{common.table.updateTime}',
-          field: 'updateTime',
-          width: 165,
-          formatter: ({ cellValue }: any) => {
-            if (cellValue) {
-              return dayjs(cellValue).format('YYYY-MM-DD HH:mm:ss')
-            }
-            return ''
-          },
-          sortable: true,
-        },
-        {
-          title: '{common.table.updateUser}',
-          field: 'updateUserId',
-          width: 120,
-          formatter: ({ row }: any) => {
-            if (row.updateUser) {
-              return row.updateUser.fullName
-            }
-            return ''
-          },
-        },
-        {
-          title: '{common.table.operation}',
-          field: 'operation',
-          width: 120,
-          fixed: 'right',
-          slots: {
-            default: 'table-operation',
-          },
-        },
-      ],
-      rules: {
-        username: [
-          {
-            required: true,
-            message: this.$t('system.views.user.validate.username'),
-            trigger: 'blur',
-          },
-        ],
-        fullName: [
-          {
-            required: true,
-            message: this.$t('system.views.user.validate.fullName'),
-            trigger: 'blur',
-          },
-        ],
-        userType: [
-          {
-            required: true,
-            message: this.$t('system.views.user.validate.selectUserType'),
-            trigger: 'change',
-          },
-        ],
-      },
-      ynList: [
-        {
-          key: -1,
-          value: 'ALL',
-        },
-        {
-          key: 1,
-          value: 'Y',
-        },
-        {
-          key: 0,
-          value: 'N',
-        },
-      ],
-    }
-  },
+const { t } = useI18n()
+const { getTableSize } = useSizeSetting()
+
+const { dictData: userTypeListRef } = useLoadDictItem(ref('SYSTEM_USER_TYPE'))
+const getUserTypeMap = computed(() => {
+  const result: { [index: string]: string } = {}
+  result[SYS_USER_TYPE] = '系统用户'
+  for (let userType of unref(userTypeListRef)) {
+    result[userType.dictItemCode] = userType.dictItemName
+  }
+  return result
 })
+
+/**
+ * 权限处理
+ */
+const permissions = SystemPermissions.user
+const hasPermissionUpdateSystemUser = hasPermission('sys:systemUser:update')
+const hasSystemUserUpdate = (type: string) => {
+  return hasPermissionUpdateSystemUser || type !== SYS_USER_TYPE
+}
+
+/**
+ * 账户弹窗
+ */
+const [registerAccountModal, { openModal }] = useModal()
+
+/**
+ * table行按钮
+ */
+const getTableActions = (row): ActionItem[] => {
+  return [
+    {
+      label: t('common.button.edit'),
+      onClick: () => editByRowModal(row),
+      disabled: !hasPermission(permissions.update) || !hasSystemUserUpdate(row.userType),
+    },
+    {
+      label: t('system.views.user.button.showAccount'),
+      disabled: !hasPermission('sys:account:query') || !hasSystemUserUpdate(row.userType),
+      onClick: () => openModal(true, row),
+    },
+  ]
+}
+/**
+ * 用户操作验证
+ * @param userList
+ */
+const validateOperateUser = (userList: Array<any>) => {
+  if (userList.length === 0) {
+    message.warn(t('system.views.user.validate.selectUser'))
+    return false
+  }
+  if (!hasPermissionUpdateSystemUser) {
+    // 如果没有修改系统用户的权限，判断用户中是否有系统用户
+    const hasSysUser = userList.some(({ userType }: any) => userType === SYS_USER_TYPE)
+    if (hasSysUser) {
+      message.error(t('system.views.user.validate.noSysUserUpdatePermission'))
+      return false
+    }
+  }
+  return true
+}
+
+/**
+ * 启停用户
+ * @param useYn
+ */
+const handleSetUseYn = (useYn: boolean) => {
+  const userList = getCheckboxRecords(false)
+  // 验证用户
+  const result = validateOperateUser(userList)
+  if (!result) {
+    return false
+  }
+  Modal.confirm({
+    title: t('system.views.user.validate.setUserUseYn', {
+      msg: useYn ? t('common.message.use') : t('common.message.noUse'),
+    }),
+    icon: createVNode(ExclamationCircleOutlined),
+    onOk: async () => {
+      await setUseYnApi(userList, useYn)
+      // 重新加载数据
+      reload()
+    },
+  })
+}
+
+/**
+ * 创建账户
+ */
+const handleCreateAccount = () => {
+  const userList = getCheckboxRecords(false)
+  if (userList.length === 0) {
+    message.warn(t('system.views.user.validate.selectUser'))
+    return false
+  }
+  if (!hasPermissionUpdateSystemUser) {
+    // 如果没有修改系统用户的权限，判断用户中是否有系统用户
+    const hasSysUser = userList.some(({ userType }: any) => userType === SYS_USER_TYPE)
+    if (hasSysUser) {
+      message.error(t('system.views.user.validate.noSysUserUpdatePermission'))
+      return false
+    }
+  }
+  // 判断是否有停用用户
+  const hasNoUse = userList.some((item) => item.useYn === false)
+  if (hasNoUse) {
+    message.warn(t('system.views.user.message.noUseUserNotCreateAccount'))
+    return false
+  }
+  Modal.confirm({
+    title: t('system.views.user.validate.createAccountConfirm'),
+    icon: createVNode(ExclamationCircleOutlined),
+    onOk: () => createAccountApi(userList),
+  })
+}
+
+const [registerTable, { editByRowModal, getCheckboxRecords, reload, deleteByCheckbox }] =
+  useSmartTable({
+    columns: getTableColumns(t),
+    stripe: true,
+    highlightHoverRow: true,
+    height: 'auto',
+    border: true,
+    align: 'left',
+    pagerConfig: true,
+    useSearchForm: true,
+    sortConfig: {
+      remote: true,
+      defaultSort: {
+        field: 'seq',
+        order: 'asc',
+      },
+    },
+    searchFormConfig: {
+      layout: 'inline',
+      schemas: getSearchSchemas(t),
+      colon: true,
+      // size: 'small',
+      searchWithSymbol: true,
+      baseColProps: {
+        span: 4,
+      },
+      actionColOptions: {
+        span: 5,
+      },
+    },
+    addEditConfig: {
+      modalConfig: {
+        width: '700px',
+      },
+      formConfig: {
+        colon: true,
+        schemas: getAddEditFormSchemas(t, userTypeListRef),
+        labelCol: {
+          span: 4,
+        },
+        wrapperCol: {
+          span: 19,
+        },
+      },
+    },
+    proxyConfig: {
+      ajax: {
+        query: listApi,
+        delete: deleteApi,
+        save: saveUpdateWithDataScopeApi,
+        getById: getByIdWithDataScopeApi,
+      },
+    },
+    toolbarConfig: {
+      refresh: true,
+      resizable: true,
+      buttons: [
+        {
+          code: 'ModalAdd',
+          auth: permissions.add,
+        },
+        {
+          name: t('common.button.use'),
+          isAnt: true,
+          auth: permissions.useYn,
+          props: {
+            onClick: () => handleSetUseYn(true),
+            type: 'primary',
+          },
+        },
+        {
+          name: t('common.button.noUse'),
+          isAnt: true,
+          auth: permissions.useYn,
+          props: {
+            onClick: () => handleSetUseYn(false),
+            type: 'primary',
+          },
+        },
+        {
+          name: t('system.views.user.button.createAccount'),
+          isAnt: true,
+          auth: permissions.createAccount,
+          props: {
+            onClick: () => handleCreateAccount(),
+            type: 'primary',
+          },
+        },
+        {
+          code: 'delete',
+          props: {
+            onClick: () => {
+              const userList = getCheckboxRecords(false)
+              // 验证用户
+              const result = validateOperateUser(userList)
+              if (!result) {
+                return false
+              }
+              // 验证是否包含系统用户
+              const sysUserValidate = userList.some((item: any) => item.userType === SYS_USER_TYPE)
+              if (sysUserValidate) {
+                message.error(t('system.views.user.validate.sysUserNoDelete'))
+                return false
+              }
+              // 执行删除操作
+              deleteByCheckbox()
+            },
+          },
+        },
+      ],
+    },
+  })
 </script>
 
-<style lang="less" scoped>
-.app-transfer ::v-deep(.ant-transfer-list) {
-  width: 300px;
-  height: 400px;
-}
-.button-margin {
-  margin-left: 5px;
+<style scoped lang="less">
+.page-container {
+  :deep(.smart-search-container) {
+    .ant-col {
+      //padding: 0 5px;
+    }
+  }
 }
 </style>

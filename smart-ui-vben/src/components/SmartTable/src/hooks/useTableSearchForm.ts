@@ -9,15 +9,17 @@ export const useTableSearchForm = (
   propsRef: ComputedRef<SmartTableProps>,
   slots: Slots,
   fetch: (opt?: FetchParams | undefined) => Promise<void>,
+  getLoading: ComputedRef<boolean | undefined>,
 ) => {
   /**
    * searchForm props计算属性
    */
   const getSearchFormProps = computed((): Partial<FormProps> => {
     const { searchFormConfig } = unref(propsRef)
-
+    const { submitButtonOptions } = searchFormConfig || {}
     return {
       ...searchFormConfig,
+      submitButtonOptions: { loading: unref(getLoading), ...submitButtonOptions },
     }
   })
 

@@ -101,6 +101,7 @@ export default defineComponent({
         {
           text: t('common.resetText'),
           size: props.size,
+          preIcon: 'ic:baseline-restart-alt',
         },
         props.resetButtonOptions,
       )
@@ -110,6 +111,7 @@ export default defineComponent({
       return Object.assign(
         {
           text: t('common.queryText'),
+          preIcon: 'ant-design:search-outlined',
           size: props.size,
         },
         props.submitButtonOptions,
