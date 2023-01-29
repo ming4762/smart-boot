@@ -45,7 +45,9 @@ export const useTableAjax = (
     const { schemas } = searchFormConfig as Partial<SmartSearchFormProps>
     const result: Recordable = {}
     schemas?.forEach(({ field, searchSymbol }) => {
-      result[field] = searchSymbol || '='
+      if (searchSymbol) {
+        result[field] = searchSymbol
+      }
     })
     return result
   })
@@ -97,11 +99,15 @@ export const useTableAjax = (
             const searchWithSymbol = unref(propsRef).searchFormConfig?.searchWithSymbol
             if (isBoolean(searchWithSymbol) && searchWithSymbol) {
               // 处理搜索符号
-              const symbolForm = dealSearchSymbol(searchForm)
+              const { symbolForm, noSymbolForm } = dealSearchSymbol(searchForm)
               searchParameter.searchFormSymbol = symbolForm
-              Object.assign(ajaxParameter, {
-                parameter: symbolForm,
-              })
+              Object.assign(
+                ajaxParameter,
+                {
+                  parameter: symbolForm,
+                },
+                noSymbolForm,
+              )
             } else {
               Object.assign(ajaxParameter, searchForm)
             }
@@ -136,7 +142,8 @@ export const useTableAjax = (
   })
 
   const dealSearchSymbol = (info: Recordable) => {
-    const result: Recordable = {}
+    const symbolForm: Recordable = {}
+    const noSymbolForm: Recordable = {}
     const getSearchFormSymbol = unref(getSearchFormSymbolRef)
     if (isBoolean(getSearchFormSymbol)) {
       return info
@@ -145,12 +152,15 @@ export const useTableAjax = (
       const value = info[key]
       const symbol = getSearchFormSymbol[key]
       if (symbol) {
-        result[`${key}@${symbol}`] = value
+        symbolForm[`${key}@${symbol}`] = value
       } else {
-        result[key] = value
+        noSymbolForm[key] = value
       }
     })
-    return result
+    return {
+      symbolForm,
+      noSymbolForm,
+    }
   }
 
   /**
@@ -158,7 +168,12 @@ export const useTableAjax = (
    * @param opt
    */
   const reload = async (opt?: FetchParams) => {
-    await commitVxeProxy('reload', opt)
+    try {
+      setLoading(true)
+      await commitVxeProxy('reload', opt)
+    } finally {
+      setLoading(false)
+    }
     emit('after-load')
   }
 
@@ -196,21 +211,16 @@ export const useTableAjax = (
       icon: createVNode(ExclamationCircleOutlined),
       content: t('common.notice.deleteConfirm'),
       onOk: async () => {
-        try {
-          setLoading(true)
-          const result = await deleteMethod({
-            $grid: unref(vxeGridRef),
-            body: {
-              removeRecords: rows,
-            },
-          })
-          message.success(t('common.message.deleteSuccess'))
-          const afterDelete = proxyConfig?.afterDelete || reload
-          afterDelete && afterDelete(result)
-          return Promise.resolve(true)
-        } finally {
-          setLoading(false)
-        }
+        const result = await deleteMethod({
+          $grid: unref(vxeGridRef),
+          body: {
+            removeRecords: rows,
+          },
+        })
+        message.success(t('common.message.deleteSuccess'))
+        const afterDelete = proxyConfig?.afterDelete || reload
+        afterDelete && afterDelete(result)
+        return Promise.resolve(true)
       },
     })
   }

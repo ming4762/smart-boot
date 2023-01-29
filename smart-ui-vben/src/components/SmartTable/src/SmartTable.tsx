@@ -90,7 +90,7 @@ export default defineComponent({
       handleSearchInfoChange,
       getSearchFormSlot,
       getSearchFormColumnSlot,
-    } = useTableSearchForm(getTableProps, slots, reload)
+    } = useTableSearchForm(getTableProps, slots, reload, getLoading)
 
     // -------------- 添加修改操作 ---------------------
     const [registerAddEditModal, { openModal: openAddEditModal }] = useModal()
