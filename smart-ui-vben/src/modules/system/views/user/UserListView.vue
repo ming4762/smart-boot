@@ -1,25 +1,32 @@
 <template>
   <div class="full-height page-container">
-    <SmartTable @register="registerTable" :size="getTableSize">
-      <template #table-operation="{ row }">
-        <SmartVxeTableAction :actions="getTableActions(row)" />
+    <LayoutSeparate :show-line="false" first-size="280px" class="full-height">
+      <template #first>
+        <div class="full-height dept-container">1114</div>
       </template>
-      <template #table-userType="{ row }">
-        <span>
-          {{ getUserTypeMap[row.userType] }}
-        </span>
+      <template #second>
+        <SmartTable @register="registerTable" :size="getTableSize">
+          <template #table-operation="{ row }">
+            <SmartVxeTableAction :actions="getTableActions(row)" />
+          </template>
+          <template #table-userType="{ row }">
+            <span>
+              {{ getUserTypeMap[row.userType] }}
+            </span>
+          </template>
+          <template #search-userType="{ model }">
+            <a-select v-model:value="model.userType" allowClear>
+              <a-select-option
+                v-for="item in userTypeListRef"
+                :key="'userType_' + item.dictItemCode"
+                :value="item.dictItemCode">
+                {{ item.dictItemName }}
+              </a-select-option>
+            </a-select>
+          </template>
+        </SmartTable>
       </template>
-      <template #search-userType="{ model }">
-        <a-select v-model:value="model.userType" allowClear>
-          <a-select-option
-            v-for="item in userTypeListRef"
-            :key="'userType_' + item.dictItemCode"
-            :value="item.dictItemCode">
-            {{ item.dictItemName }}
-          </a-select-option>
-        </a-select>
-      </template>
-    </SmartTable>
+    </LayoutSeparate>
     <UserAccountUpdateModal @register="registerAccountModal" />
   </div>
 </template>
@@ -35,6 +42,8 @@ import { useLoadDictItem } from '/@/modules/system/hooks/dict/SysDictHooks'
 import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
 import { hasPermission } from '/@/common/auth/AuthUtils'
 import { useModal } from '/@/components/Modal'
+
+import { LayoutSeparate } from '/@/components/LayoutSeparate'
 
 import {
   SmartTable,
@@ -294,5 +303,9 @@ const [registerTable, { editByRowModal, getCheckboxRecords, reload, deleteByChec
       //padding: 0 5px;
     }
   }
+}
+.dept-container {
+  background: white;
+  margin-right: 5px;
 }
 </style>
