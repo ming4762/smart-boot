@@ -31,6 +31,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
 
   const isBuild = command === 'build'
 
+  // @ts-ignore
   return {
     base: VITE_PUBLIC_PATH,
     root,
@@ -53,12 +54,12 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       ],
     },
     server: {
-      https: false,
+      https: true,
       // Listening on all local IPs
       host: true,
       port: VITE_PORT,
       // Load proxy configuration from .env
-      proxy: createProxy(VITE_PROXY),
+      // proxy: createProxy(VITE_PROXY),
     },
     esbuild: {
       pure: VITE_DROP_CONSOLE ? ['console.log', 'debugger'] : [],
@@ -79,6 +80,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       //   },
       // },
       // Turning off brotliSize display can slightly reduce packaging time
+      // @ts-ignore
       brotliSize: false,
       chunkSizeWarningLimit: 2000,
     },
@@ -88,9 +90,9 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       __INTLIFY_PROD_DEVTOOLS__: false,
       __APP_INFO__: JSON.stringify(__APP_INFO__),
       // 解决vite版本与vite-plugin-theme不兼容问题
-      __COLOR_PLUGIN_OUTPUT_FILE_NAME__: undefined,
-      __PROD__: true,
-      __COLOR_PLUGIN_OPTIONS__: {},
+      // __COLOR_PLUGIN_OUTPUT_FILE_NAME__: undefined,
+      // __PROD__: true,
+      // __COLOR_PLUGIN_OPTIONS__: {},
     },
 
     css: {
