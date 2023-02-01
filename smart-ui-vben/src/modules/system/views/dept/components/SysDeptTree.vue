@@ -1,7 +1,8 @@
 <template>
   <a-spin :spinning="loading">
     <a-tree
-      v-bind="$attrs"
+      v-bind="getAttrs"
+      :expanded-keys="expandedKeys"
       :auto-expand-parent="autoExpandParent"
       @expand="onExpand"
       :field-names="fieldNames"
@@ -15,11 +16,12 @@
 
 <script lang="ts">
 import type { PropType } from 'vue'
-import { computed, defineComponent, onMounted, reactive, ref, toRefs, watch } from 'vue'
+import { computed, defineComponent, onMounted, reactive, ref, toRefs, unref, watch } from 'vue'
 
 import { errorMessage } from '/@/common/utils/SystemNotice'
 import TreeUtils from '/@/utils/TreeUtils'
 import ApiService from '/@/common/utils/ApiService'
+import { propTypes } from '/@/utils/propTypes'
 
 const getParentKey = (key: number, treeData: Array<any>): number => {
   let parentKey
@@ -45,19 +47,35 @@ export default defineComponent({
     search: {
       type: String as PropType<string>,
     },
+    // 是否异步加载
+    async: propTypes.bool,
   },
-  setup(props) {
-    const { search } = toRefs(props)
+  setup(props, { attrs }) {
+    const { search, async: asyncRef } = toRefs(props)
 
     const dataList = ref<Array<any>>([])
     const autoExpandParent = ref(false)
     const expandedKeys = ref<Array<number>>([])
     const loading = ref(false)
 
+    const getAttrs = computed(() => {
+      const result: any = {
+        ...attrs,
+      }
+      if (unref(asyncRef)) {
+        result.loadData = handleAsyncLoadData
+      }
+      return result
+    })
+
     /**
      * 树形数据计算属性
      */
     const computedTreeData = computed(() => {
+      const async = unref(asyncRef)
+      if (async) {
+        return unref(dataList)
+      }
       return (
         TreeUtils.convertList2Tree(
           dataList.value,
@@ -85,16 +103,43 @@ export default defineComponent({
       autoExpandParent.value = true
     })
 
+    const handleAsyncLoadData = async (treeNode) => {
+      const dataRef = treeNode.dataRef
+      dataRef.children = await loadData(dataRef.deptId)
+      dataList.value = [...unref(dataList)]
+    }
+
     /**
      * 加载数据函数
      */
-    const loadData = async () => {
-      loading.value = true
+    const loadData = async (parentId: number | undefined | null) => {
+      const parameter: Recordable = {
+        sortName: 'seq',
+        sortOrder: 'asc',
+      }
+      if (parentId !== undefined && parentId !== null) {
+        parameter.parameter = {
+          'parentId@=': parentId,
+        }
+      }
       try {
-        dataList.value = await ApiService.postAjax('sys/dept/list', {
-          sortName: 'seq',
-          sortOrder: 'asc',
+        loading.value = true
+        const result = (await ApiService.postAjax('sys/dept/list', parameter)) as any[]
+
+        result.forEach((item) => {
+          if (item.hasChild !== true) {
+            item.isLeaf = true
+          }
         })
+        if (unref(asyncRef)) {
+          if (parentId === 0) {
+            dataList.value = result
+          } else {
+            return result
+          }
+        } else {
+          dataList.value = result
+        }
       } catch (e) {
         errorMessage(e)
       } finally {
@@ -105,7 +150,13 @@ export default defineComponent({
     /**
      * 加载数据
      */
-    onMounted(loadData)
+    onMounted(() => {
+      let parentId: number | undefined = undefined
+      if (unref(asyncRef)) {
+        parentId = 0
+      }
+      loadData(parentId)
+    })
 
     return {
       computedTreeData,
@@ -113,11 +164,14 @@ export default defineComponent({
       onExpand,
       loadData,
       loading,
+      expandedKeys,
       fieldNames: reactive({
         children: 'children',
         title: 'deptName',
         key: 'deptId',
       }),
+      getAttrs,
+      handleAsyncLoadData,
     }
   },
 })
