@@ -180,7 +180,9 @@ onMounted(() => {
       if (value) {
         loadConfigData()
       } else {
-        setFieldsValue({})
+        setFieldsValue({
+          systemId: props.systemId,
+        })
       }
     },
     {
