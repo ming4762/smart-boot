@@ -29,6 +29,12 @@ const yesNoList = [
 export const formSchemas = (t: Function): FormSchema[] => {
   return [
     {
+      label: '',
+      field: 'systemId',
+      component: 'Input',
+      show: false,
+    },
+    {
       label: t('generator.views.code.table.connectionName'),
       field: 'connectionId',
       slot: 'addEditForm-connectionId',
@@ -51,7 +57,7 @@ export const formSchemas = (t: Function): FormSchema[] => {
       label: t('generator.views.code.table.type'),
       field: 'type',
       component: 'Select',
-      defaultValue: 10,
+      defaultValue: '10',
       componentProps: {
         options: tableTypeList.map((item) => ({ label: t(item.label), value: item.value })),
       },
@@ -155,6 +161,7 @@ export const formSchemas = (t: Function): FormSchema[] => {
       label: t('generator.views.code.title.searchColNum'),
       field: 'searchColNum',
       component: 'Select',
+      defaultValue: 1,
       componentProps: {
         options: columnNumList(t),
       },
