@@ -82,6 +82,7 @@ const [registerForm, { setFieldsValue, validate }] = useForm({
       label: '',
       field: 'mainId',
       component: 'Input',
+      show: false,
     },
     {
       label: t('generator.views.codeCreateForm.title.description'),
