@@ -10,17 +10,14 @@ export function configHmrPlugin(): Plugin {
   return {
     name: 'singleHMR',
     handleHotUpdate({ modules, file }) {
-      console.log(modules)
       if (file.match(/xml$/)) return []
+      if (file.match(/\.(ts|js)/)) return undefined
 
       modules.forEach((m) => {
         if (!m.url.match(/\.(css|less)/)) {
           m.importedModules = new Set()
           m.importers = new Set()
         }
-      })
-      console.log({
-        ...modules,
       })
       return modules
     },
