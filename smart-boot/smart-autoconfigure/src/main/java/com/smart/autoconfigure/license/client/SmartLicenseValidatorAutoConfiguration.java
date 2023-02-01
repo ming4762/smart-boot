@@ -1,10 +1,12 @@
 package com.smart.autoconfigure.license.client;
 
+import com.smart.license.client.LicenseVerifier;
 import com.smart.license.client.params.ProjectInfoProvider;
 import com.smart.license.client.params.PropertiesProjectInfoProvider;
 import com.smart.license.client.validator.ProjectInfoValidator;
 import com.smart.license.client.validator.ServerInfoValidator;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +17,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @AutoConfigureBefore(SmartLicenseClientAutoConfiguration.class)
+@ConditionalOnClass(LicenseVerifier.class)
 public class SmartLicenseValidatorAutoConfiguration {
 
     /**
