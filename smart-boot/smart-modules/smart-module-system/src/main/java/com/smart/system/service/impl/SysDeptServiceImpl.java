@@ -28,6 +28,8 @@ import java.util.stream.Collectors;
 @Service
 public class SysDeptServiceImpl extends BaseServiceImpl<SysDeptMapper, SysDeptPO> implements SysDeptService {
 
+    private static final Long TOP_PARENT_ID = 0L;
+
     private final UserSetterService userSetterService;
 
     public SysDeptServiceImpl(UserSetterService userSetterService) {
@@ -63,10 +65,25 @@ public class SysDeptServiceImpl extends BaseServiceImpl<SysDeptMapper, SysDeptPO
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean removeByIds(Collection<?> idList) {
-        Set<Long> parentIds = new HashSet<>((Collection<? extends Long>) idList);
+        if (CollectionUtils.isEmpty(idList)) {
+            return false;
+        }
+        if (idList.size() > 1) {
+            throw new UnsupportedOperationException("不支持批量删除");
+        }
+        SysDeptPO dept = this.getById((Serializable) idList.iterator().next());
+        if (dept == null) {
+            return false;
+        }
+        Set<Long> parentIds = new HashSet<>((Collection<Long>) idList);
         Set<Long> deleteIds = this.queryAllChildIds(parentIds);
         deleteIds.addAll(parentIds);
-        return super.removeByIds(deleteIds);
+        boolean result = super.removeByIds(deleteIds);
+        // 更新hasChild
+        if (!TOP_PARENT_ID.equals(dept.getParentId())) {
+            this.baseMapper.updateHasChild(dept.getParentId());
+        }
+        return result;
     }
 
     @NonNull
@@ -118,5 +135,15 @@ public class SysDeptServiceImpl extends BaseServiceImpl<SysDeptMapper, SysDeptPO
             vo.setParentDept(super.getById(vo.getParentId()));
         }
         return vo;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean save(@NonNull SysDeptPO entity) {
+        boolean result = super.save(entity);
+        if (entity.getParentId() != null && !TOP_PARENT_ID.equals(entity.getParentId())) {
+            this.baseMapper.updateHasChild(entity.getParentId());
+        }
+        return result;
     }
 }

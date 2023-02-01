@@ -33,7 +33,7 @@
       <div style="margin: 10px 0 5px 0">
         <a-input-search v-model:value="searchValue" />
       </div>
-      <sys-dept-tree ref="treeRef" :search="searchValue" @select="handleTreeSelect" />
+      <sys-dept-tree ref="treeRef" async :search="searchValue" @select="handleTreeSelect" />
     </div>
     <div class="full-height right-tab">
       <a-tabs>
@@ -261,5 +261,11 @@ export default defineComponent({
   background: white;
   margin-left: 10px;
   padding: 10px;
+  :deep(.ant-tabs) {
+    height: 100%;
+    .ant-tabs-content {
+      height: 100%;
+    }
+  }
 }
 </style>

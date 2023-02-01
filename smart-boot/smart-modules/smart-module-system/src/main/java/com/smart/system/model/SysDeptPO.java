@@ -101,4 +101,9 @@ public class SysDeptPO extends BaseModel {
     */
     private String remark;
 
+    /**
+     * 是否有小鸡
+     */
+    private Boolean hasChild;
+
 }
