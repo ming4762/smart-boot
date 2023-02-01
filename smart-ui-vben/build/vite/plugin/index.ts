@@ -6,7 +6,7 @@ import purgeIcons from 'vite-plugin-purge-icons'
 import windiCSS from 'vite-plugin-windicss'
 import VitePluginCertificate from 'vite-plugin-mkcert'
 //import vueSetupExtend from 'vite-plugin-vue-setup-extend';
-// import { configHtmlPlugin } from './html'
+import { configHtmlPlugin } from './html'
 import { configPwaConfig } from './pwa'
 import { configMockPlugin } from './mock'
 import { configCompressPlugin } from './compress'
@@ -48,7 +48,7 @@ export function createVitePlugins(viteEnv: ViteEnv, isBuild: boolean) {
   VITE_LEGACY && isBuild && vitePlugins.push(legacy())
 
   // vite-plugin-html
-  // vitePlugins.push(configHtmlPlugin(viteEnv, isBuild))
+  vitePlugins.push(configHtmlPlugin(viteEnv, isBuild))
 
   // vite-plugin-svg-icons
   vitePlugins.push(configSvgIconsPlugin(isBuild))
