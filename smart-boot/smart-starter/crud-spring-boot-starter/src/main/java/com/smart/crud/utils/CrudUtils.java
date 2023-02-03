@@ -10,7 +10,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.smart.commons.core.exception.BaseException;
 import com.smart.commons.core.utils.ExceptionUtils;
-import com.smart.commons.core.utils.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import com.smart.crud.model.BaseModel;
 import com.smart.crud.model.Sort;
 import lombok.AllArgsConstructor;
@@ -81,7 +81,7 @@ public final class CrudUtils {
         if (annotation != null) {
             tableName = annotation.value();
         } else {
-            tableName = StringUtils.humpToLine(clazz.getSimpleName());
+            tableName = com.smart.commons.core.utils.StringUtils.humpToLine(clazz.getSimpleName());
         }
         MODAL_TABLE_NAME_CACHE.put(clazz, tableName);
         return tableName;
@@ -192,7 +192,7 @@ public final class CrudUtils {
      */
     @NonNull
     public static String getDefaultDbField(@NonNull String fieldName) {
-        return StringUtils.humpToLine(fieldName);
+        return com.smart.commons.core.utils.StringUtils.humpToLine(fieldName);
     }
 
     /**

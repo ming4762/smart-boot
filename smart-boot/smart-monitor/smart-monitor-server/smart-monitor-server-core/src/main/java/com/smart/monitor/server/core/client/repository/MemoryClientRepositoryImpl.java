@@ -151,4 +151,8 @@ public class MemoryClientRepositoryImpl extends AbstractClientRepositoryImpl {
         });
     }
 
+    @Override
+    protected Collection<ClientData> getActiveList(Collection<ClientData> repositoryDatas) {
+        return repositoryDatas.stream().filter(this::isActive).toList();
+    }
 }

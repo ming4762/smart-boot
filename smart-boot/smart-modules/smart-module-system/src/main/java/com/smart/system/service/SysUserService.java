@@ -102,6 +102,7 @@ public interface SysUserService extends BaseService<SysUserPO> {
     /**
      * 查询用户角色权限信息
      * @param userId 用户ID
+     * @param types 功能类型
      * @return 角色权限信息
      */
     UserRolePermission queryUserRolePermission(@NonNull Long userId, @NonNull List<FunctionTypeEnum> types);

@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
  * @author shizhongming
  * 2020/1/8 8:11 下午
  */
-public final class StringUtils extends org.apache.commons.lang3.StringUtils {
+public final class StringUtils {
 
     private StringUtils() {
         throw new IllegalStateException("Utility class");

@@ -1,7 +1,7 @@
 package com.smart.module.document.service.impl;
 
 import com.google.common.collect.Maps;
-import com.smart.commons.core.exception.IORuntimeException;
+import com.smart.commons.core.exception.BaseException;
 import com.smart.document.service.CodeService;
 import com.smart.document.service.ExcelService;
 import com.smart.module.document.pojo.dto.excel.ExcelFillWithCodeData;
@@ -66,7 +66,7 @@ public class DefaultDocumentExcelServiceImpl implements DocumentExcelService {
                     this.codeService.generateBarcode(value, barcodeStream);
                     barcodeMap.put(key, barcodeStream.toByteArray());
                 } catch (IOException e) {
-                    throw new IORuntimeException(e);
+                    throw new BaseException(e);
                 }
             });
             templateData.put("barcodeMap", barcodeMap);
@@ -79,7 +79,7 @@ public class DefaultDocumentExcelServiceImpl implements DocumentExcelService {
                     this.codeService.generateQrcode(value, qrcodeStream);
                     qrcodeMap.put(key, qrcodeStream.toByteArray());
                 } catch (IOException e) {
-                    throw new IORuntimeException(e);
+                    throw new BaseException(e);
                 }
             });
             templateData.put("qrcodeMap", qrcodeMap);

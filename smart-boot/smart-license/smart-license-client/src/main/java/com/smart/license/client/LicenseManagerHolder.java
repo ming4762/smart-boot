@@ -12,6 +12,10 @@ import java.util.List;
  */
 public class LicenseManagerHolder {
 
+    private LicenseManagerHolder() {
+        throw new IllegalStateException("Utility class");
+    }
+
     private static volatile CustomLicenseManager LICENSE_MANAGER;
 
     public static CustomLicenseManager getInstance(LicenseParam param, List<LicenseValidator> licenseValidatorList){

@@ -106,8 +106,8 @@ public interface RestUserDetails extends UserDetails {
     Long getLoginFailTime();
 
     /**
-     * 获取账户锁定状态
-     * @return TRUE：锁定
+     * 判断账户是否锁定
+     * @return true：未锁定
      */
     Boolean getAccountNonLocked();
 }

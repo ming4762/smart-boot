@@ -119,25 +119,6 @@ public class ActualFileServiceNfsImpl implements ActualFileService {
     @Override
     public InputStream download(@NonNull String id) {
         throw new UnsupportedOperationException("NFS方式不支持该方式下载文件，请通过download(String id, OutputStream outputStream)下载文件");
-        // 获取channel
-//        final ChannelSftp channelSftp = this.jcraftChannelProvider.getChannel();
-//        try {
-//            final DiskFilePathBO diskFile = DiskFilePathBO.createById(id, this.basePath);
-//            channelSftp.cd(diskFile.getFolderPath());
-//            final ByteArrayInputStream byteArrayInputStream;
-//            try (
-//                    final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-//                    final InputStream inputStream = channelSftp.get(diskFile.getDiskFilename())
-//            ) {
-//                // 获取channel
-//                IOUtils.copy(inputStream, outputStream);
-//                byteArrayInputStream = new ByteArrayInputStream(outputStream.toByteArray());
-//            }
-//            return byteArrayInputStream;
-//        } finally {
-//            // 归还连接
-//            this.jcraftChannelProvider.returnChannel(channelSftp);
-//        }
     }
 
     /**

@@ -108,7 +108,6 @@ public class NimbusJwtDecoder implements JwtDecoder {
             this.jwsAlgorithm = JWSAlgorithm.RS256;
             this.key = key;
             this.jwtProcessorCustomizer = processor -> {
-                // nothing
             };
         }
 

@@ -7,6 +7,10 @@ package com.smart.crud.datapermission;
  */
 public class DataPermissionHolder {
 
+    private DataPermissionHolder() {
+        throw new IllegalStateException("Utility class");
+    }
+
     private static final ThreadLocal<String> THREAD_LOCAL = new ThreadLocal<>();
 
     public static void setSql(String sql) {

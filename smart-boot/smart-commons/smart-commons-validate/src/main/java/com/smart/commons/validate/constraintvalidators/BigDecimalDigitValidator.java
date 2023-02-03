@@ -43,14 +43,6 @@ public class BigDecimalDigitValidator implements ConstraintValidator<BigDecimalD
         if (value.scale() != this.scale) {
             return false;
         }
-        if (value.precision() != this.precision) {
-            return false;
-        }
-        return true;
-    }
-
-    public static void main(String[] args) {
-        BigDecimal bigDecimal = new BigDecimal("125.68");
-        System.out.println(bigDecimal);
+        return value.precision() == this.precision;
     }
 }

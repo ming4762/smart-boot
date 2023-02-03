@@ -11,5 +11,10 @@ import org.apache.ibatis.annotations.Param;
 */
 public interface SysCategoryMapper extends CrudBaseMapper<SysCategoryPO> {
 
+    /**
+     * 更新是否有下级
+     * @param id ID
+     * @return 结果
+     */
     boolean updateHasChild(@Param("id") Long id);
 }

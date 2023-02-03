@@ -19,7 +19,7 @@ import java.time.Instant;
 public class InstantJson {
 
     private InstantJson() {
-        // nothing
+        throw new IllegalStateException("Utility class");
     }
 
     /**
