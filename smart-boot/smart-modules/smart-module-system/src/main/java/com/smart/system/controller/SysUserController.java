@@ -12,11 +12,11 @@ import com.smart.commons.core.log.LogOperationTypeEnum;
 import com.smart.commons.core.message.Result;
 import com.smart.commons.core.utils.TreeUtils;
 import com.smart.crud.controller.BaseController;
-import com.smart.crud.query.PageSortQuery;
 import com.smart.system.constants.UserDeptIdentEnum;
 import com.smart.system.model.*;
 import com.smart.system.pojo.dto.common.UseYnSetDTO;
 import com.smart.system.pojo.dto.user.UserAccountSaveDTO;
+import com.smart.system.pojo.dto.user.UserListDTO;
 import com.smart.system.pojo.dto.user.UserSetRoleDTO;
 import com.smart.system.pojo.dto.user.UserUpdateDTO;
 import com.smart.system.pojo.vo.SysFunctionListVO;
@@ -125,8 +125,7 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
 
     @PostMapping("list")
     @Operation(summary = "查询用户列表（支持分页、实体类属性查询）")
-    @Override
-    public Result<Object> list(@RequestBody @NonNull PageSortQuery parameter) {
+    public Result<Object> list(@RequestBody @NonNull UserListDTO parameter) {
         return super.list(parameter);
     }
 

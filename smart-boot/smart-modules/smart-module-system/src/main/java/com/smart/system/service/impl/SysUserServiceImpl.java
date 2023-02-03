@@ -26,6 +26,7 @@ import com.smart.system.mapper.SysUserGroupUserMapper;
 import com.smart.system.mapper.SysUserMapper;
 import com.smart.system.model.*;
 import com.smart.system.pojo.dbo.SysUserWthAccountBO;
+import com.smart.system.pojo.dto.user.UserListDTO;
 import com.smart.system.pojo.dto.user.UserSetRoleDTO;
 import com.smart.system.pojo.vo.SysFunctionListVO;
 import com.smart.system.pojo.vo.user.SysUserListVO;
@@ -88,7 +89,9 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
 
     private final SysUserAccountService sysUserAccountService;
 
-    public SysUserServiceImpl(SysUserRoleService sysUserRoleService, SysUserGroupUserMapper sysUserGroupUserMapper, SysUserGroupRoleMapper sysUserGroupRoleMapper, SysRoleFunctionService sysRoleFunctionService, UserSetterService userSetterService, SysUserAccountService sysUserAccountService, SysUserDeptService sysUserDeptService) {
+    private final SysDeptService sysDeptService;
+
+    public SysUserServiceImpl(SysUserRoleService sysUserRoleService, SysUserGroupUserMapper sysUserGroupUserMapper, SysUserGroupRoleMapper sysUserGroupRoleMapper, SysRoleFunctionService sysRoleFunctionService, UserSetterService userSetterService, SysUserAccountService sysUserAccountService, SysUserDeptService sysUserDeptService, SysDeptService sysDeptService) {
         this.sysUserRoleService = sysUserRoleService;
         this.sysUserGroupUserMapper = sysUserGroupUserMapper;
         this.sysUserGroupRoleMapper = sysUserGroupRoleMapper;
@@ -96,10 +99,22 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         this.userSetterService = userSetterService;
         this.sysUserAccountService = sysUserAccountService;
         this.sysUserDeptService = sysUserDeptService;
+        this.sysDeptService = sysDeptService;
     }
 
     @Override
     public List<? extends SysUserPO> list(@NonNull QueryWrapper<SysUserPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
+        if (parameter instanceof UserListDTO) {
+            List<Long> deptIdList = ((UserListDTO) parameter).getDeptIdList();
+            if (!CollectionUtils.isEmpty(deptIdList)) {
+                // 查询部门信息
+                Set<Long> allDeptIds = this.sysDeptService.queryAllChildIds(new HashSet<>(deptIdList));
+                allDeptIds.addAll(deptIdList);
+                // 添加部门查询条件
+                String deptStr = allDeptIds.stream().map(Object::toString).collect(Collectors.joining(","));
+                queryWrapper.apply("user_id in (select m.user_id from sys_user_dept m where m.dept_id in ({0}) and ident = 'USER_DEPT')", deptStr);
+            }
+        }
         List<? extends SysUserPO> userList = super.list(queryWrapper, parameter, paging);
         if (CollectionUtils.isEmpty(userList)) {
             return new ArrayList<>(0);

@@ -1,21 +1,35 @@
 <template>
-  <a-spin :spinning="loading">
-    <a-tree
-      v-bind="getAttrs"
-      :expanded-keys="expandedKeys"
-      :auto-expand-parent="autoExpandParent"
-      @expand="onExpand"
-      :field-names="fieldNames"
-      :tree-data="computedTreeData">
-      <template #title="{ deptName }">
-        {{ deptName }}
-      </template>
-    </a-tree>
-  </a-spin>
+  <div>
+    <div v-if="showSearch" class="search-container">
+      <a-input-search
+        v-model:value="searchValue"
+        :placeholder="$t('system.views.dept.search.deptName')" />
+    </div>
+    <a-spin :spinning="loading">
+      <a-tree
+        v-bind="getAttrs"
+        :expanded-keys="expandedKeys"
+        :auto-expand-parent="autoExpandParent"
+        @expand="onExpand"
+        :field-names="fieldNames"
+        :tree-data="computedTreeData">
+        <template #title="{ deptName }">
+          <span v-if="!showSearch">
+            {{ deptName }}
+          </span>
+          <span v-else-if="deptName.indexOf(searchValue) > -1">
+            {{ deptName.substr(0, deptName.indexOf(searchValue)) }}
+            <span style="color: #f50">{{ searchValue }}</span>
+            {{ deptName.substr(deptName.indexOf(searchValue) + searchValue.length) }}
+          </span>
+          <span v-else>{{ deptName }}</span>
+        </template>
+      </a-tree>
+    </a-spin>
+  </div>
 </template>
 
 <script lang="ts">
-import type { PropType } from 'vue'
 import { computed, defineComponent, onMounted, reactive, ref, toRefs, unref, watch } from 'vue'
 
 import { errorMessage } from '/@/common/utils/SystemNotice'
@@ -44,14 +58,14 @@ const getParentKey = (key: number, treeData: Array<any>): number => {
 export default defineComponent({
   name: 'SysDeptTree',
   props: {
-    search: {
-      type: String as PropType<string>,
-    },
+    // 是否支持搜索
+    showSearch: propTypes.bool.def(true),
     // 是否异步加载
     async: propTypes.bool,
   },
   setup(props, { attrs }) {
-    const { search, async: asyncRef } = toRefs(props)
+    const { async: asyncRef } = toRefs(props)
+    const searchValue = ref<string>('')
 
     const dataList = ref<Array<any>>([])
     const autoExpandParent = ref(false)
@@ -91,8 +105,31 @@ export default defineComponent({
       autoExpandParent.value = false
     }
 
-    watch(search, (value) => {
-      expandedKeys.value = dataList.value
+    /**
+     * 所有数据
+     */
+    const getAllDataList = computed(() => {
+      const result: any[] = []
+      if (unref(asyncRef)) {
+        recursionAddChildren(unref(dataList), result)
+      } else {
+        result.push(...unref(dataList))
+      }
+      return result
+    })
+
+    const recursionAddChildren = (list: any[], allData: any[]) => {
+      list.forEach((item) => {
+        allData.push(item)
+        if (item.children && item.children.length > 0) {
+          recursionAddChildren(item.children, allData)
+        }
+      })
+    }
+
+    watch(searchValue, (value) => {
+      const allData = unref(getAllDataList)
+      expandedKeys.value = allData
         .map(({ deptName, deptId }: any) => {
           if (deptName.indexOf(value) > -1) {
             return getParentKey(deptId, computedTreeData.value)
@@ -172,9 +209,14 @@ export default defineComponent({
       }),
       getAttrs,
       handleAsyncLoadData,
+      searchValue,
     }
   },
 })
 </script>
 
-<style scoped></style>
+<style scoped lang="less">
+.search-container {
+  margin-bottom: 10px;
+}
+</style>

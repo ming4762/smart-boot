@@ -61,7 +61,6 @@ public class SysDeptServiceImpl extends BaseServiceImpl<SysDeptMapper, SysDeptPO
      * @param idList ID列表
      * @return 删除是否成功
      */
-    @SuppressWarnings("unchecked")
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean removeByIds(Collection<?> idList) {
@@ -103,15 +102,23 @@ public class SysDeptServiceImpl extends BaseServiceImpl<SysDeptMapper, SysDeptPO
         if (idList.isEmpty()) {
             return;
         }
-        // 查询下级编码
-        Set<Long> ids = this.list(
+        List<SysDeptPO> deptList = this.list(
                 new QueryWrapper<SysDeptPO>().lambda()
-                        .select(SysDeptPO::getDeptId)
+                        .select(SysDeptPO::getDeptId, SysDeptPO::getHasChild)
                         .in(SysDeptPO::getParentId, idList)
-        ).stream().map(SysDeptPO::getDeptId).collect(Collectors.toSet());
-        if (CollectionUtils.isEmpty(ids)) {
+        );
+        // 查询下级编码
+        Set<Long> ids = deptList.stream().map(SysDeptPO::getDeptId).collect(Collectors.toSet());
+        if (!CollectionUtils.isEmpty(ids)) {
             childIds.addAll(ids);
-            this.queryAllChildId(ids, childIds);
+        }
+        // 获取拥有下child
+        Set<Long> hasChildIds = deptList.stream()
+                .filter(item -> Boolean.TRUE.equals(item.getHasChild()))
+                .map(SysDeptPO::getDeptId)
+                .collect(Collectors.toSet());
+        if (!CollectionUtils.isEmpty(hasChildIds)) {
+            this.queryAllChildId(hasChildIds, childIds);
         }
     }
 
