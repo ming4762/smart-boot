@@ -1,7 +1,6 @@
 package com.smart.starter.cache.guava.limit;
 
 import com.google.common.util.concurrent.RateLimiter;
-import com.smart.commons.core.lock.limit.RateLimit;
 import com.smart.commons.core.lock.limit.RateLimitService;
 import org.springframework.lang.NonNull;
 

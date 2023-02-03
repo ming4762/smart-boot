@@ -49,7 +49,7 @@ public class MappedJwtClaimSetConverter implements Converter<Map<String, Object>
     }
 
     private static Converter<Object, ?> getConverter(TypeDescriptor targetDescriptor) {
-        return (source) -> CONVERSION_SERVICE.convert(source, OBJECT_TYPE_DESCRIPTOR, targetDescriptor);
+        return source -> CONVERSION_SERVICE.convert(source, OBJECT_TYPE_DESCRIPTOR, targetDescriptor);
     }
 
     private static Instant convertInstant(Object source) {

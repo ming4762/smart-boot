@@ -19,7 +19,7 @@ public final class PageData<T> implements Serializable {
 
     private static final long serialVersionUID = 3546130315339330080L;
 
-    private List<T> rows;
+    private transient List<T> rows;
 
     private long total;
 

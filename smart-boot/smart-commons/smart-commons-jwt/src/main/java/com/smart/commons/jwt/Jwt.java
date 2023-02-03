@@ -21,10 +21,10 @@ public class Jwt implements Serializable {
     private final String tokenValue;
 
     @Getter
-    private final Map<String, Object> headers;
+    private final transient Map<String, Object> headers;
 
     @Getter
-    private final Map<String, Object> claims;
+    private final transient Map<String, Object> claims;
 
     @Getter
     private final Instant issuedAt;

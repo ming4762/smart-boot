@@ -7,7 +7,6 @@ import com.smart.auth.core.exception.MaxConnectionAuthenticationException;
 import com.smart.auth.core.exception.PasswordNoLifeLockedException;
 import com.smart.auth.core.i18n.AuthI18nMessage;
 import com.smart.auth.core.model.AuthUser;
-import com.smart.auth.core.model.Permission;
 import com.smart.auth.core.model.UserRolePermission;
 import com.smart.auth.core.service.AuthUserService;
 import com.smart.auth.extensions.jwt.data.JwtData;
@@ -31,7 +30,6 @@ import org.springframework.util.CollectionUtils;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author ShiZhongMing

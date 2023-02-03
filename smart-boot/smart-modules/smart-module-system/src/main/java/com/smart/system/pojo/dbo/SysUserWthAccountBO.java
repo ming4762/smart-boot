@@ -1,9 +1,7 @@
 package com.smart.system.pojo.dbo;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.smart.system.constants.UserAccountStatusEnum;
 import com.smart.system.model.SysUserPO;
-import com.smart.system.mybatis.type.UserAccountStatusTypeHandler;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

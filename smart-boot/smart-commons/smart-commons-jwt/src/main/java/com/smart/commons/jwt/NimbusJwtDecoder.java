@@ -107,7 +107,7 @@ public class NimbusJwtDecoder implements JwtDecoder {
             Assert.notNull(key, "key cannot be null");
             this.jwsAlgorithm = JWSAlgorithm.RS256;
             this.key = key;
-            this.jwtProcessorCustomizer = (processor) -> {
+            this.jwtProcessorCustomizer = processor -> {
             };
         }
 

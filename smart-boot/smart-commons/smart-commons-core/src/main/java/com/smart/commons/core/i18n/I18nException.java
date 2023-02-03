@@ -14,7 +14,7 @@ public class I18nException extends BusinessException {
 
     private final I18nMessage i18nMessage;
 
-    private Object[] args;
+    private transient Object[] args;
 
     public I18nException(Throwable e) {
         super(e);

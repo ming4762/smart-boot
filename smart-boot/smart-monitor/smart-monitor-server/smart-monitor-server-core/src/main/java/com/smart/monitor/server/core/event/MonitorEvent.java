@@ -17,7 +17,7 @@ public class MonitorEvent<T> extends ApplicationEvent {
 
     private final ClientData clientData;
 
-    private final T data;
+    private transient final T data;
 
     public MonitorEvent(T data, EventCode code, ClientData clientData, Object source) {
         super(source);

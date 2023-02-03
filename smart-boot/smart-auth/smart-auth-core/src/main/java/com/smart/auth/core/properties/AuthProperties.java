@@ -55,7 +55,7 @@ public class AuthProperties implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        if (this.jwt.enabled) {
+        if (Boolean.TRUE.equals(this.jwt.enabled)) {
             Assert.notNull(this.jwt.privateKey, "JWT私钥路径不能为空");
             Assert.notNull(this.jwt.publicKey, "JWT公钥路径不能为空");
         }

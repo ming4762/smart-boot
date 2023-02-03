@@ -18,6 +18,10 @@ import java.time.Instant;
  */
 public class InstantJson {
 
+    private InstantJson() {
+        throw new IllegalStateException("Utility class");
+    }
+
     /**
      * 反序列化
      */

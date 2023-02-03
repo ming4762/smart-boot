@@ -60,6 +60,7 @@ public interface ActualFileService {
      * @param id 文件id
      * @throws FileNotFoundException 未找到下载文件错误
      * @return 文件流
+     * @throws IOException IOException
      */
     InputStream download(@NonNull String id) throws IOException;
 
