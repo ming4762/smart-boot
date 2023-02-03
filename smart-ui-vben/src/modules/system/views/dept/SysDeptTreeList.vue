@@ -30,10 +30,12 @@
           {{ $t('common.button.delete') }}
         </a-button>
       </div>
-      <div style="margin: 10px 0 5px 0">
-        <a-input-search v-model:value="searchValue" />
-      </div>
-      <sys-dept-tree ref="treeRef" async :search="searchValue" @select="handleTreeSelect" />
+      <sys-dept-tree
+        style="margin-top: 5px"
+        ref="treeRef"
+        async
+        show-search
+        @select="handleTreeSelect" />
     </div>
     <div class="full-height right-tab">
       <a-tabs>
@@ -214,7 +216,6 @@ export default defineComponent({
       ...deleteHook,
       ...useLoadDictItem(dictCode),
       ...useSizeSetting(),
-      searchValue: ref(),
       handleAdd,
     }
   },

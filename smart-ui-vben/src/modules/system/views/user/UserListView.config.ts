@@ -156,6 +156,8 @@ export const getAddEditFormSchemas = (t: Function, userTypeRef: Ref<any[]>): For
       label: t('common.table.seq'),
       field: 'seq',
       component: 'Input',
+      required: true,
+      defaultValue: 1,
       componentProps: {
         style: {
           width: '100%',
@@ -215,11 +217,11 @@ export const getAddEditFormSchemas = (t: Function, userTypeRef: Ref<any[]>): For
 export const getSearchSchemas = (t: Function): SmartSearchFormSchema[] => {
   return [
     {
-      label: '',
+      label: t('system.views.user.table.username'),
       field: 'username',
       component: 'Input',
       colProps: {
-        span: 3,
+        // span: 3,
       },
       searchSymbol: 'like',
       componentProps: {
@@ -227,11 +229,11 @@ export const getSearchSchemas = (t: Function): SmartSearchFormSchema[] => {
       },
     },
     {
-      label: '',
+      label: t('system.views.user.table.fullName'),
       field: 'fullName',
       component: 'Input',
       colProps: {
-        span: 3,
+        // span: 3,
       },
       searchSymbol: 'like',
       componentProps: {
@@ -239,7 +241,7 @@ export const getSearchSchemas = (t: Function): SmartSearchFormSchema[] => {
       },
     },
     {
-      label: '',
+      label: t('system.views.user.table.email'),
       field: 'email',
       component: 'Input',
       searchSymbol: 'like',
@@ -255,7 +257,7 @@ export const getSearchSchemas = (t: Function): SmartSearchFormSchema[] => {
       searchSymbol: '=',
       componentProps: {
         style: {
-          width: '80px',
+          width: '100px',
         },
         options: [
           {
@@ -275,13 +277,13 @@ export const getSearchSchemas = (t: Function): SmartSearchFormSchema[] => {
       component: 'Input',
       componentProps: {
         style: {
-          width: '90px',
+          width: '100px',
         },
       },
       searchSymbol: '=',
       slot: 'search-userType',
       colProps: {
-        span: 5,
+        // span: 5,
       },
     },
   ]

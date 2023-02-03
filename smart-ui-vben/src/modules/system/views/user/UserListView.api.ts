@@ -1,4 +1,3 @@
-import type { SmartTableAjaxQueryParams } from '/@/components/SmartTable'
 import type { VxeGridPropTypes } from 'vxe-table'
 
 import { defHttp } from '/@/utils/http/axios'
@@ -16,10 +15,10 @@ enum Api {
   deptTreeList = 'sys/dept/list',
 }
 
-export const listApi = (params: SmartTableAjaxQueryParams) => {
+export const listApi = (ajaxParameter) => {
   return defHttp.post({
     url: Api.list,
-    data: params.ajaxParameter,
+    data: ajaxParameter,
   })
 }
 
@@ -36,6 +35,10 @@ export const saveUpdateWithDataScopeApi = async ({
   const saveList = [...body.insertRecords, ...body.updateRecords]
   if (saveList.length === 0) {
     return false
+  }
+  const model = saveList[0]
+  if (model.userType === 'SYSTEM_USER') {
+    model.deptId = null
   }
   return await defHttp.post({
     url: Api.saveUpdateWithDataScope,
