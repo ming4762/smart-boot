@@ -112,7 +112,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
                 allDeptIds.addAll(deptIdList);
                 // 添加部门查询条件
                 String deptStr = allDeptIds.stream().map(Object::toString).collect(Collectors.joining(","));
-                queryWrapper.apply("user_id in (select m.user_id from sys_user_dept m where m.dept_id in ({0}) and ident = 'USER_DEPT')", deptStr);
+                queryWrapper.apply(String.format("user_id in (select m.user_id from sys_user_dept m where m.dept_id in (%s) and ident = 'USER_DEPT')", deptStr), allDeptIds);
             }
         }
         List<? extends SysUserPO> userList = super.list(queryWrapper, parameter, paging);
