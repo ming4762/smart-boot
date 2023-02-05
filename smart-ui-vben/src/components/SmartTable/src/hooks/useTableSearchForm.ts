@@ -1,9 +1,12 @@
 import type { ComputedRef, Slot, Slots } from 'vue'
-import { computed, unref } from 'vue'
-
+import type { SmartSearchFormProps } from '/@/components/SmartTable'
 import type { FormProps } from '/@/components/Form'
-
 import type { FetchParams, SmartTableProps } from '../types/SmartTableType'
+import type { SmartSearchFormParameter } from '../types/SmartSearchFormType'
+
+import { computed, unref } from 'vue'
+import { useForm } from '/@/components/Form'
+import { isBoolean } from '/@/utils/is'
 
 export const useTableSearchForm = (
   propsRef: ComputedRef<SmartTableProps>,
@@ -11,6 +14,8 @@ export const useTableSearchForm = (
   fetch: (opt?: FetchParams | undefined) => Promise<void>,
   getLoading: ComputedRef<boolean | undefined>,
 ) => {
+  const [registerSearchForm, searchFormAction] = useForm()
+
   /**
    * searchForm props计算属性
    */
@@ -70,10 +75,75 @@ export const useTableSearchForm = (
     return result
   })
 
+  /**
+   * 获取搜索扁担参数
+   */
+  const getSearchFormParameter = (): SmartSearchFormParameter => {
+    const searchForm = searchFormAction.getFieldsValue()
+    const searchWithSymbol = unref(propsRef).searchFormConfig?.searchWithSymbol
+    const result: SmartSearchFormParameter = {
+      searchWithSymbol: isBoolean(searchWithSymbol) && searchWithSymbol,
+    }
+    if (result.searchWithSymbol) {
+      // 处理搜索符号
+      const { symbolForm, noSymbolForm } = dealSearchSymbol(searchForm)
+      result.searchSymbolForm = symbolForm
+      result.noSymbolForm = noSymbolForm
+    }
+    result.searchForm = searchForm
+    return result
+  }
+
+  /**
+   * 获取搜索符号
+   */
+  const getSearchFormSymbolRef = computed<Recordable | boolean>(() => {
+    const { searchFormConfig, useSearchForm } = unref(propsRef)
+    const searchWithSymbol = searchFormConfig?.searchWithSymbol
+    if (!useSearchForm || !searchWithSymbol) {
+      return false
+    }
+    const { schemas } = searchFormConfig as Partial<SmartSearchFormProps>
+    const result: Recordable = {}
+    schemas?.forEach(({ field, searchSymbol }) => {
+      if (searchSymbol) {
+        result[field] = searchSymbol
+      }
+    })
+    return result
+  })
+
+  const dealSearchSymbol = (info: Recordable) => {
+    const symbolForm: Recordable = {}
+    const noSymbolForm: Recordable = {}
+    const getSearchFormSymbol = unref(getSearchFormSymbolRef)
+    if (isBoolean(getSearchFormSymbol)) {
+      return info
+    }
+    Object.keys(info).forEach((key) => {
+      const value = info[key]
+      const symbol = getSearchFormSymbol[key]
+      if (symbol) {
+        symbolForm[`${key}@${symbol}`] = value
+      } else {
+        noSymbolForm[key] = value
+      }
+    })
+    return {
+      symbolForm,
+      noSymbolForm,
+    }
+  }
+
   return {
     getSearchFormProps,
     handleSearchInfoChange,
     getSearchFormSlot,
     getSearchFormColumnSlot,
+    registerSearchForm,
+    searchFormAction: {
+      ...searchFormAction,
+      getSearchFormParameter,
+    },
   }
 }
