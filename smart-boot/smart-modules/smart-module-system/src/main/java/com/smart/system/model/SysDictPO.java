@@ -40,6 +40,8 @@ public class SysDictPO extends BaseModelUserTime {
     */
     private Integer seq;
 
+    private String remark;
+
     /**
     * use_yn - 启用状态
     */
