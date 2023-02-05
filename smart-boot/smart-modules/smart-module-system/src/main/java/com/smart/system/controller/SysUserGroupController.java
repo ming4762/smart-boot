@@ -47,6 +47,20 @@ public class SysUserGroupController extends BaseController<SysUserGroupService, 
     }
 
     /**
+     * 批量保存/更新
+     *
+     * @param modelList 数据列表
+     */
+    @Override
+    @Operation(summary = "批量添加修改用户组")
+    @PostMapping("batchSaveUpdate")
+    @Log(value = "添加修改用户组", type = LogOperationTypeEnum.UPDATE)
+    @PreAuthorize("hasPermission('sys:userGroup', 'save') or hasPermission('sys:userGroup', 'update')")
+    public Result<Boolean> batchSaveUpdate(@RequestBody List<SysUserGroupPO> modelList) {
+        return super.batchSaveUpdate(modelList);
+    }
+
+    /**
      * 执行删除
      * @param idList 用户组ID集合
      * @return 是否删除成功

@@ -3,6 +3,7 @@
   <SmartTableSelectModal
     v-bind="$attrs"
     :table-props="tableProps"
+    :select-table-props="commonTableProps"
     @register="registerModal"
     label-field="fullName"
     @select-data="handleSelectData"
@@ -64,6 +65,7 @@ const commonTableProps: SmartTableProps = {
 const tableProps = reactive<SmartTableProps>({
   useSearchForm: true,
   searchFormConfig: {
+    compact: true,
     colon: true,
     searchWithSymbol: true,
     actionColOptions: {
