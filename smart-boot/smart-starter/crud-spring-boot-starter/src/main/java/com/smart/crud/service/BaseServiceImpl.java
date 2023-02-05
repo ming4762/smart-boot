@@ -1,6 +1,5 @@
 package com.smart.crud.service;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
@@ -10,7 +9,6 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.Page;
 import com.google.common.collect.Lists;
-import com.smart.commons.core.utils.IdGenerator;
 import com.smart.crud.constants.UserPropertyEnum;
 import com.smart.crud.mapper.CrudBaseMapper;
 import com.smart.crud.model.BaseModel;
@@ -20,7 +18,6 @@ import com.smart.crud.utils.CrudPageHelper;
 import com.smart.crud.utils.CrudUtils;
 import com.smart.crud.utils.PageCache;
 import lombok.SneakyThrows;
-import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,81 +52,6 @@ public abstract class BaseServiceImpl<K extends CrudBaseMapper<T>, T extends Bas
             return this.removeById((Serializable) idList.iterator().next());
         }
         return super.removeByIds(idList);
-    }
-
-
-    /**
-     * 重写save方法，修改ID的生成策略
-     * @author jackson
-     * @param entity 实体类
-     * @return 是否保存成功
-     */
-    @Override
-    public boolean save(@NonNull T entity) {
-        // 获取key
-        final TableInfo tableInfo = this.getTableInfo();
-        String keyProperty = tableInfo.getKeyProperty();
-        Assert.notEmpty(keyProperty, KEY_PROPERTY_NULL_ERROR);
-        Object idVal = ReflectionKit.getFieldValue(entity, tableInfo.getKeyProperty());
-        if (StringUtils.checkValNull(idVal)) {
-            // 如果ID为null 手动设置ID
-            this.setNumberId(entity, tableInfo);
-        }
-        return super.save(entity);
-    }
-
-    /**
-     * 重写批量save方法，修改ID的生成策略
-     * @author jackson
-     * @return 是否保存成功
-     */
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public boolean saveBatch(Collection<T> entityList, int batchSize) {
-        if (ObjectUtils.isEmpty(entityList)) {
-            return false;
-        }
-        // 获取实体类tableInfo
-        final TableInfo tableInfo = this.getTableInfo();
-        String keyProperty = tableInfo.getKeyProperty();
-        Assert.notEmpty(keyProperty, KEY_PROPERTY_NULL_ERROR);
-        // 遍历实体类设置主键
-        entityList.forEach(entity -> {
-            Object idVal = ReflectionKit.getFieldValue(entity, tableInfo.getKeyProperty());
-            if (StringUtils.checkValNull(idVal)) {
-                // 如果ID为null 手动设置ID
-                this.setNumberId(entity, tableInfo);
-            }
-        });
-        return super.saveBatch(entityList, batchSize);
-    }
-
-    /**
-     * 获取 TableInfo
-     * @return 实体类TableInfo信息
-     */
-    @NonNull
-    protected TableInfo getTableInfo() {
-        final TableInfo tableInfo = TableInfoHelper.getTableInfo(this.currentModelClass());
-        Assert.notNull(tableInfo, "error: can not execute. because can not find cache of TableInfo for entity!");
-        return tableInfo;
-    }
-
-
-    /**
-     * 设置number类型的ID
-     * 修改主键生成策略
-     * @param entity 实体类
-     * @param tableInfo 表信息
-     */
-    @SneakyThrows
-    protected void setNumberId(@NonNull T entity, @NonNull TableInfo tableInfo) {
-        final IdType idType = tableInfo.getIdType();
-        if (idType.getKey() == IdType.ASSIGN_ID.getKey() && Number.class.isAssignableFrom(tableInfo.getKeyType())) {
-            PropertyDescriptor propertyDescriptor = new PropertyDescriptor(tableInfo.getKeyProperty(), entity.getClass());
-            propertyDescriptor.getWriteMethod().invoke(entity, IdGenerator.nextId());
-
-        }
     }
 
     /**
