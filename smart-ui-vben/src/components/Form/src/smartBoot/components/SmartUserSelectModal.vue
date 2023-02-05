@@ -6,6 +6,7 @@
     :select-table-props="commonTableProps"
     @register="registerModal"
     label-field="fullName"
+    :list-api="listUserByIdApi"
     @select-data="handleSelectData"
     value-field="userId" />
 </template>
@@ -16,7 +17,7 @@ import type { SmartTableProps } from '/@/components/SmartTable'
 import { reactive } from 'vue'
 import { useI18n } from '/@/hooks/web/useI18n'
 
-import { listUserApi } from '/@/api/system/SystemApi'
+import { listUserApi, listUserByIdApi } from '/@/api/system/SystemApi'
 import { useModal } from '/@/components/Modal'
 
 import SmartTableSelectModal from './base/SmartTableSelectModal'

@@ -30,6 +30,10 @@ export default defineComponent({
     // value字段
     valueField: propTypes.string.isRequired,
     selectValues: propTypes.array.def([]),
+    listApi: {
+      type: Function as PropType<(data: any) => Promise<any>>,
+      required: true,
+    },
   },
   emits: ['register', 'select-data'],
   setup(props, { emit, slots }) {
@@ -57,6 +61,7 @@ export default defineComponent({
       valueField,
       selectValues,
       hasTableSlot,
+      props.listApi,
     )
     const [registerModal, { closeModal }] = useModalInner((data) => {
       console.log(data)

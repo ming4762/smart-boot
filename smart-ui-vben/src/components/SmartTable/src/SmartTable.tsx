@@ -115,6 +115,19 @@ export default defineComponent({
       reload,
     })
 
+    const getCustomConfig = computed(() => {
+      const tableProps = unref(getTableProps)
+      if (tableProps.customConfig) {
+        return tableProps.customConfig
+      }
+      return {
+        storage: {
+          visible: true,
+          resizable: true,
+        },
+      }
+    })
+
     // ------------- toolbar配置 ----------------------
     const { getToolbarConfigInfo } = useTableToolbarConfig(getTableProps, {
       deleteByCheckbox,
@@ -134,6 +147,7 @@ export default defineComponent({
         pagerConfig: unref(getPaginationInfo),
         toolbarConfig: unref(getToolbarConfigInfo),
         proxyConfig: unref(getProxyConfigRef),
+        customConfig: unref(getCustomConfig),
       }
 
       propsData = omit(propsData, [])
