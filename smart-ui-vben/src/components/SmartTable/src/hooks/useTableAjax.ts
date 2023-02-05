@@ -1,4 +1,4 @@
-import type { SmartSearchFormProps, SmartTableAjaxQueryParams } from '/@/components/SmartTable'
+import type { SmartTableAjaxQueryParams } from '/@/components/SmartTable'
 import type { VxeGridInstance, VxeGridPropTypes } from 'vxe-table'
 import type { ComputedRef, Ref } from 'vue'
 import type { FetchParams, SmartTableProps, SmartTableProxyConfig } from '/@/components/SmartTable'
@@ -7,15 +7,16 @@ import { computed, createVNode, onMounted, unref } from 'vue'
 
 import { message, Modal } from 'ant-design-vue'
 
-import { isArray, isBoolean } from '/@/utils/is'
+import { isArray } from '/@/utils/is'
 import { omit, merge } from 'lodash-es'
 import { error } from '/@/utils/log'
 import { useI18n } from '/@/hooks/web/useI18n'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
+import type { SmartSearchFormParameter } from '/@/components/SmartTable'
 
 interface ActionType {
   commitVxeProxy: (code: string, ...args) => void
-  getSearchFormModel: () => Recordable
+  getSearchFormParameter: () => SmartSearchFormParameter
   setLoading: (loading: boolean) => void
   getCheckboxRecords: (isFull: boolean) => Array<any>
 }
@@ -24,7 +25,7 @@ export const useTableAjax = (
   propsRef: ComputedRef<SmartTableProps>,
   vxeGridRef: Ref<VxeGridInstance>,
   emit,
-  { commitVxeProxy, getSearchFormModel, setLoading, getCheckboxRecords }: ActionType,
+  { commitVxeProxy, getSearchFormParameter, setLoading, getCheckboxRecords }: ActionType,
 ) => {
   const { t } = useI18n()
   // 是否自动加载，取消vxe-table自动加载，解决触发事件问题（事件无法在数据加载完成之后执行）
@@ -32,24 +33,6 @@ export const useTableAjax = (
     if (unref(propsRef).proxyConfig?.autoLoad !== false) {
       reload()
     }
-  })
-  /**
-   * 获取搜索符号
-   */
-  const getSearchFormSymbolRef = computed<Recordable | boolean>(() => {
-    const { searchFormConfig, useSearchForm } = unref(propsRef)
-    const searchWithSymbol = searchFormConfig?.searchWithSymbol
-    if (!useSearchForm || !searchWithSymbol) {
-      return false
-    }
-    const { schemas } = searchFormConfig as Partial<SmartSearchFormProps>
-    const result: Recordable = {}
-    schemas?.forEach(({ field, searchSymbol }) => {
-      if (searchSymbol) {
-        result[field] = searchSymbol
-      }
-    })
-    return result
   })
 
   const getProxyConfigRef = computed<SmartTableProxyConfig | undefined>(() => {
@@ -93,18 +76,16 @@ export const useTableAjax = (
             ajaxParameter.sortName = sortNameList.join(',')
             ajaxParameter.sortOrder = sortOrderList.join(',')
           }
+          const { searchForm, searchSymbolForm, noSymbolForm, searchWithSymbol } =
+            getSearchFormParameter()
           if (useSearchForm) {
-            // 处理参数
-            const searchForm = getSearchFormModel()
-            const searchWithSymbol = unref(propsRef).searchFormConfig?.searchWithSymbol
-            if (isBoolean(searchWithSymbol) && searchWithSymbol) {
+            if (searchWithSymbol) {
               // 处理搜索符号
-              const { symbolForm, noSymbolForm } = dealSearchSymbol(searchForm)
-              searchParameter.searchFormSymbol = symbolForm
+              searchParameter.searchFormSymbol = searchSymbolForm
               Object.assign(
                 ajaxParameter,
                 {
-                  parameter: symbolForm,
+                  parameter: searchSymbolForm,
                 },
                 noSymbolForm,
               )
@@ -140,28 +121,6 @@ export const useTableAjax = (
       },
     }
   })
-
-  const dealSearchSymbol = (info: Recordable) => {
-    const symbolForm: Recordable = {}
-    const noSymbolForm: Recordable = {}
-    const getSearchFormSymbol = unref(getSearchFormSymbolRef)
-    if (isBoolean(getSearchFormSymbol)) {
-      return info
-    }
-    Object.keys(info).forEach((key) => {
-      const value = info[key]
-      const symbol = getSearchFormSymbol[key]
-      if (symbol) {
-        symbolForm[`${key}@${symbol}`] = value
-      } else {
-        noSymbolForm[key] = value
-      }
-    })
-    return {
-      symbolForm,
-      noSymbolForm,
-    }
-  }
 
   /**
    * 重载数据函数

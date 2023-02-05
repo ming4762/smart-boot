@@ -1,4 +1,4 @@
-import type { FormProps, FormSchema } from '/@/components/Form'
+import type { FormActionType, FormProps, FormSchema } from '/@/components/Form'
 
 export type SearchSymbol =
   | '='
@@ -23,4 +23,15 @@ export interface SmartSearchFormProps extends FormProps {
   schemas?: SmartSearchFormSchema[]
 
   searchWithSymbol?: boolean
+}
+
+export interface SmartSearchFormParameter {
+  searchSymbolForm?: Recordable
+  noSymbolForm?: Recordable
+  searchForm?: Recordable
+  searchWithSymbol: boolean
+}
+
+export interface SmartSearchFormActionType extends FormActionType {
+  getSearchFormParameter: () => SmartSearchFormParameter
 }

@@ -4,6 +4,8 @@ import type { NamePath } from 'ant-design-vue/es/form/interface'
 
 import type { FetchParams, SmartTableProps, TableActionType } from '../types/SmartTableType'
 import type { FormActionType } from '/@/components/Form'
+import type { SmartSearchFormActionType } from '../types/SmartSearchFormType'
+
 import { isProdMode } from '/@/utils/env'
 import type { DynamicProps } from '/#/utils'
 import { getDynamicProps } from '/@/utils'
@@ -12,7 +14,7 @@ import { VxeGridPropTypes } from 'vxe-table'
 
 type Props = Partial<DynamicProps<SmartTableProps>>
 type UseTableMethod = TableActionType & {
-  getSearchForm: () => FormActionType
+  getSearchForm: () => SmartSearchFormActionType
   getAddEditForm: () => FormActionType | undefined
 }
 
@@ -86,7 +88,7 @@ export const useSmartTable = (
       getTableAction().setProps(props)
     },
     getSearchForm: () => {
-      return unref(searchFormRef) as unknown as FormActionType
+      return unref(searchFormRef) as unknown as SmartSearchFormActionType
     },
     getAddEditForm: () => {
       return unref(addEditFormAction)?.call(null)

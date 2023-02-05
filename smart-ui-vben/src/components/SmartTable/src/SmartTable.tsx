@@ -4,7 +4,7 @@ import type { VxeGridInstance } from 'vxe-table'
 import { computed, defineComponent, Ref, ref, unref } from 'vue'
 
 import { TableSearchLayout } from '/@/components/Layout'
-import { BasicForm, useForm } from '/@/components/Form'
+import { BasicForm } from '/@/components/Form'
 import { useModal } from '/@/components/Modal'
 
 import { smartTableProps } from './props'
@@ -57,7 +57,6 @@ export default defineComponent({
       setShowPagination,
     } = usePagination(getTableProps)
 
-    const [registerSearchForm, searchFormAction] = useForm()
     /**
      * vxe-table函数
      */
@@ -70,27 +69,28 @@ export default defineComponent({
     const setCheckboxRow = (rows: any | any[], checked: boolean) =>
       getTableInstance()!.setCheckboxRow(rows, checked)
 
-    // -------------- 加载函数 ------------------------
-    searchFormAction.getFieldsValue
-    const { reload, getProxyConfigRef, deleteByRow, deleteByCheckbox } = useTableAjax(
-      getTableProps,
-      tableElRef,
-      emit,
-      {
-        commitVxeProxy,
-        getSearchFormModel: searchFormAction.getFieldsValue,
-        getCheckboxRecords,
-        setLoading,
-      },
-    )
-
     // -------------- 搜索表单 ------------------------
     const {
       getSearchFormProps,
       handleSearchInfoChange,
       getSearchFormSlot,
       getSearchFormColumnSlot,
-    } = useTableSearchForm(getTableProps, slots, reload, getLoading)
+      registerSearchForm,
+      searchFormAction,
+    } = useTableSearchForm(getTableProps, slots, (params) => reload(params), getLoading)
+
+    // -------------- 加载函数 ------------------------
+    const { reload, getProxyConfigRef, deleteByRow, deleteByCheckbox } = useTableAjax(
+      getTableProps,
+      tableElRef,
+      emit,
+      {
+        commitVxeProxy,
+        getSearchFormParameter: searchFormAction.getSearchFormParameter,
+        getCheckboxRecords,
+        setLoading,
+      },
+    )
 
     // -------------- 添加修改操作 ---------------------
     const [registerAddEditModal, { openModal: openAddEditModal }] = useModal()
