@@ -23,6 +23,12 @@ export const useSmartTableSelect = (
       },
     }
   })
+  /**
+   * 是否有搜索表单
+   */
+  const getHasSearchForm = computed(() => {
+    return unref(tablePropsRef).useSearchForm
+  })
 
   const getTableCheckboxConfig = computed(() => {
     return {
@@ -140,5 +146,6 @@ export const useSmartTableSelect = (
     getTableCheckboxConfig,
     handleCheckboxAll,
     getData,
+    getHasSearchForm,
   }
 }

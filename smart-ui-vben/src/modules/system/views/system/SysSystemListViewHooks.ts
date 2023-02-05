@@ -18,10 +18,10 @@ export const useSetUser = (t: Function) => {
         systemId: unref(currentSystemRef)!.id,
       })
       message.success(t('common.message.OperationSucceeded'))
+      closeModal()
     } finally {
       setModalProps({ confirmLoading: false })
     }
-    closeModal()
   }
 
   const handleShowSetUser = async (row: Recordable) => {

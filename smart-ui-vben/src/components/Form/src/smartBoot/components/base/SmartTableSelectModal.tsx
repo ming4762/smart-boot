@@ -49,6 +49,7 @@ export default defineComponent({
       getSelectData,
       getTableCheckboxConfig,
       handleCheckboxAll,
+      getHasSearchForm,
     } = useSmartTableSelect(
       tableProps,
       selectTableProps,
@@ -85,6 +86,7 @@ export default defineComponent({
       handleOk,
       getTableCheckboxConfig,
       handleCheckboxAll,
+      getHasSearchForm,
     }
   },
   render() {
@@ -118,6 +120,7 @@ const renderTable = (instance) => {
     selectRowsRef,
     getTableCheckboxConfig,
     handleCheckboxAll,
+    getHasSearchForm,
   } = instance
   return (
     <a-row>
@@ -131,7 +134,7 @@ const renderTable = (instance) => {
         />
       </a-col>
       {showSelect ? (
-        <a-col span={12}>
+        <a-col style={getHasSearchForm ? { marginTop: '58px' } : ''} span={12}>
           <SmartTable data={selectRowsRef} onRegister={registerSelectTable} />
         </a-col>
       ) : (
