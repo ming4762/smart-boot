@@ -1,5 +1,6 @@
 import type { SmartColumn } from '/@/components/SmartTable'
 import type { FormSchema } from '/@/components/Form'
+import type { SmartSearchFormSchema } from '/@/components/SmartTable'
 
 export const tableColumns: SmartColumn[] = [
   {
@@ -244,6 +245,33 @@ export const getAddEditForm = (t: Function): FormSchema[] => {
       label: t('common.table.seq'),
       component: 'InputNumber',
       defaultValue: 1,
+    },
+  ]
+}
+
+export const getSearchSchemas = (t: Function): SmartSearchFormSchema[] => {
+  return [
+    {
+      label: t('system.views.userGroup.search.useYnTitle'),
+      field: 'useYn',
+      component: 'Select',
+      defaultValue: 1,
+      searchSymbol: '=',
+      componentProps: {
+        style: {
+          width: '100px',
+        },
+        options: [
+          {
+            label: t('common.form.use'),
+            value: 1,
+          },
+          {
+            label: t('common.form.noUse'),
+            value: 0,
+          },
+        ],
+      },
     },
   ]
 }

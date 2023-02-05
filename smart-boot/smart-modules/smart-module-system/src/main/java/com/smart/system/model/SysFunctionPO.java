@@ -1,9 +1,6 @@
 package com.smart.system.model;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.smart.commons.core.http.HttpMethod;
 import com.smart.crud.model.BaseModelUserTime;
 import com.smart.system.constants.FunctionTypeEnum;
@@ -103,5 +100,12 @@ public class SysFunctionPO extends BaseModelUserTime {
     private String componentName;
 
     private String redirect;
+
+    private Boolean hasChild;
+
+    private Boolean useYn;
+
+    @TableLogic
+    private Boolean deleteYn;
 
 }
