@@ -32,6 +32,17 @@ export const listTree = async (params) => {
   )
 }
 
+export const listApi = (params) => {
+  const parameter = {
+    sortName: 'seq',
+    ...params,
+  }
+  return defHttp.post({
+    url: Api.list,
+    data: parameter,
+  })
+}
+
 export const getByIdApi = async (data) => {
   const {
     function: functionData,

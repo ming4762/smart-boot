@@ -33,9 +33,9 @@ import { reactive } from 'vue'
 
 import { ActionItem, SmartTable, useSmartTable } from '/@/components/SmartTable'
 import { Icon } from '/@/components/Icon'
-import { tableColumns, getAddEditForm } from './FunctionListView.config'
+import { tableColumns, getAddEditForm, getSearchSchemas } from './FunctionListView.config'
 import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
-import { listTree, deleteApi, getByIdApi, saveApi } from './FunctionListView.api'
+import { listApi, deleteApi, getByIdApi, saveApi } from './FunctionListView.api'
 import { useI18n } from '/@/hooks/web/useI18n'
 import StringUtils from '/@/utils/StringUtils'
 import { SmartVxeTableAction } from '/@/components/SmartTable'
@@ -43,17 +43,42 @@ import { SmartVxeTableAction } from '/@/components/SmartTable'
 const { t } = useI18n()
 const { getTableSize } = useSizeSetting()
 
-const [registerTable, { showAddModal, editByRowModal }] = useSmartTable({
+const [registerTable, { showAddModal, editByRowModal, getSearchForm }] = useSmartTable({
   id: 'FunctionListView',
   columns: tableColumns,
   resizableConfig: {},
   border: true,
   align: 'left',
-  treeConfig: {},
   highlightHoverColumn: true,
   height: 'auto',
+  useSearchForm: true,
+  searchFormConfig: {
+    layout: 'inline',
+    colon: true,
+    schemas: getSearchSchemas(t),
+    searchWithSymbol: true,
+    actionColOptions: {
+      span: undefined,
+    },
+  },
   columnConfig: {
     resizable: true,
+  },
+  treeConfig: {
+    lazy: true,
+    loadMethod: ({ row }) => {
+      const { searchSymbolForm } = getSearchForm().getSearchFormParameter()
+      const parameter = {
+        parameter: {
+          ...searchSymbolForm,
+          'parentId@=': row.functionId,
+        },
+      }
+      return listApi(parameter)
+    },
+  },
+  rowConfig: {
+    keyField: 'functionId',
   },
   sortConfig: {
     remote: true,
@@ -77,7 +102,16 @@ const [registerTable, { showAddModal, editByRowModal }] = useSmartTable({
   },
   proxyConfig: {
     ajax: {
-      query: (params) => listTree(params.ajaxParameter),
+      query: ({ ajaxParameter }) => {
+        const parameter = {
+          ...ajaxParameter,
+          parameter: {
+            ...ajaxParameter?.parameter,
+            'parentId@=': 0,
+          },
+        }
+        return listApi(parameter)
+      },
       delete: (params) => deleteApi(params),
       save: saveApi,
       getById: getByIdApi,
@@ -143,6 +177,7 @@ const getTableActions = (row: Recordable): ActionItem[] => {
     {
       label: t('common.button.add'),
       icon: 'ant-design:plus-outlined',
+      disabled: row.functionType === 'FUNCTION',
       onClick: () => {
         const data: Recordable = {
           parentId: row.functionId,
