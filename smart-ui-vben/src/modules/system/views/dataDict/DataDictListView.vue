@@ -1,12 +1,14 @@
 <template>
-  <LayoutSeparate :show-line="false" first-size="55%" class="full-height">
-    <template #first>
-      <DataDictGroup @code-change="handleCodeChange" />
-    </template>
-    <template #second>
-      <DataDictItem :dict-id="dictId" />
-    </template>
-  </LayoutSeparate>
+  <div class="full-height page-container">
+    <LayoutSeparate :show-line="false" first-size="60%" class="full-height">
+      <template #first>
+        <DataDictGroup @code-change="handleCodeChange" />
+      </template>
+      <template #second>
+        <DataDictItem :dict-id="dictId" />
+      </template>
+    </LayoutSeparate>
+  </div>
 </template>
 
 <script lang="ts">

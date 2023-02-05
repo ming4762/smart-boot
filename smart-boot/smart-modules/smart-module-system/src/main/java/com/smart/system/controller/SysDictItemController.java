@@ -38,14 +38,13 @@ public class SysDictItemController extends BaseController<SysDictItemService, Sy
         return super.list(parameter);
     }
 
-    @Operation(summary = "添加修改字典序表")
-    @PostMapping("saveUpdate")
-    @Log(value = "添加修改字典序表", type = LogOperationTypeEnum.UPDATE)
+    @Override
+    @Operation(summary = "批量保存/更新字典序表")
+    @PostMapping("batchSaveUpdate")
+    @Log(value = "批量保存/更新字典序表", type = LogOperationTypeEnum.UPDATE)
     @PreAuthorize("hasPermission('sys:dictItem', 'save') or hasPermission('sys:dictItem', 'update')")
-    public Result<Boolean> saveUpdate(@RequestBody @Valid SysDictItemSaveUpdateDTO parameter) {
-      	SysDictItemPO model = new SysDictItemPO();
-      	BeanUtils.copyProperties(parameter, model);
-        return Result.success(this.service.saveOrUpdate(model));
+    public Result<Boolean> batchSaveUpdate(@RequestBody List<SysDictItemPO> modelList) {
+        return super.batchSaveUpdate(modelList);
     }
 
     @Operation(summary = "通过ID批量删除字典序表")
