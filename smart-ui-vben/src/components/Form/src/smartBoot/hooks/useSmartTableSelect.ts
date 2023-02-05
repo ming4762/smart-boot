@@ -13,6 +13,7 @@ export const useSmartTableSelect = (
   valueFieldRef: Ref<string>,
   selectValuesRef: Ref<Array<any>>,
   hasTableSlot: ComputedRef<boolean>,
+  listApi: (data: any) => Promise<any>,
 ) => {
   const getTableProps = computed<SmartTableProps>(() => {
     const tableProps = unref(tablePropsRef)
@@ -44,7 +45,7 @@ export const useSmartTableSelect = (
   })
 
   const handleSetSelectRows = async () => {
-    const selectRows = getSelectRows()
+    const selectRows = await getSelectRows()
     selectRowsRef.value = selectRows
     await getTableInstance().setAllCheckboxRow(false)
     await setCheckboxRow(selectRows, true)
@@ -53,19 +54,46 @@ export const useSmartTableSelect = (
   /**
    * 获取选中的数据
    */
-  const getSelectRows = () => {
+  const getSelectRows = async () => {
     const selectValues = unref(selectValuesRef)
     if (!selectValues || selectValues.length === 0) {
       return []
     }
-    const tableData = getData()
-    if (!tableData || tableData.length === 0) {
-      return []
-    }
     const valueField = unref(valueFieldRef)
-    return tableData.filter((item) => {
-      return selectValues.includes(item[valueField])
-    })
+    const tableData = getData()
+    // 没有匹配上的数据
+    let noDataValue: any[] = []
+    const matchDataList: any[] = []
+    if (tableData) {
+      tableData.forEach((item) => {
+        const key = item[valueField]
+        if (selectValues.includes(key)) {
+          matchDataList.push(item)
+        }
+      })
+      const matchKeyList = matchDataList.map((item) => item[valueField])
+      noDataValue = selectValues.filter((item) => !matchKeyList.includes(item))
+    }
+    if (noDataValue.length > 0) {
+      // 没有匹配的数据
+      // 1、从已经选中的数据中查找
+      const selectRows = unref(selectRowsRef)
+      if (selectRows.length > 0) {
+        selectRows.forEach((item) => {
+          if (noDataValue.includes(item[valueField])) {
+            matchDataList.push(item)
+          }
+        })
+        const matchKeyList2 = matchDataList.map((item) => item[valueField])
+        noDataValue = noDataValue.filter((item) => !matchKeyList2.includes(item))
+      }
+    }
+    if (noDataValue.length > 0) {
+      // 通过API查询
+      const result = await listApi(noDataValue)
+      matchDataList.push(...result)
+    }
+    return matchDataList
   }
 
   const [registerTable, { setCheckboxRow, getData, getTableInstance }] = useSmartTable(

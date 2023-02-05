@@ -97,6 +97,18 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
         return super.getById(id);
     }
 
+    /**
+     * 通过ID批量获取
+     *
+     * @param ids ID列表
+     * @return list
+     */
+    @Override
+    @PostMapping("listById")
+    @Operation(summary = "通过ID批量查询")
+    public Result<List<SysUserPO>> listById(@RequestBody List<? extends Serializable> ids) {
+        return super.listById(ids);
+    }
 
     @PostMapping("getByIdWithDataScope")
     @Operation(summary = "通过ID查询用户信息和用户数据权限信息")

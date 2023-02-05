@@ -67,13 +67,19 @@ public class SysRoleController extends BaseController<SysRoleService, SysRolePO>
         return super.list(parameter);
     }
 
+
+    /**
+     * 批量保存/更新
+     *
+     * @param modelList model
+     */
     @Override
     @Operation(summary = "添加修改角色")
-    @PostMapping("saveUpdate")
+    @PostMapping("batchSaveUpdate")
     @Log(value = "添加修改角色", type = LogOperationTypeEnum.UPDATE)
     @PreAuthorize("hasPermission('sys:role', 'save') or hasPermission('sys:role', 'update')")
-    public Result<Boolean> saveUpdate(@RequestBody SysRolePO model) {
-        return Result.success(this.service.saveOrUpdate(model));
+    public Result<Boolean> batchSaveUpdate(@RequestBody List<SysRolePO> modelList) {
+        return super.batchSaveUpdate(modelList);
     }
 
     @Override

@@ -73,6 +73,15 @@ public abstract class BaseQueryController<K extends BaseService<T>, T extends Ba
         return Result.success(this.service.getById(id));
     }
 
+    /**
+     * 通过ID批量获取
+     * @param ids ID列表
+     * @return list
+     */
+    public Result<List<T>> listById(@RequestBody List<? extends Serializable> ids) {
+        return Result.success(this.service.listByIds(ids));
+    }
+
 
     /**
      * 执行分页

@@ -1,368 +1,125 @@
 <template>
-  <div class="full-height page-container" style="padding: 10px">
+  <div class="full-height page-container">
     <a-layout class="full-height">
       <a-layout-content class="full-height">
-        <vxe-grid
-          ref="gridRef"
-          :data="data"
-          height="auto"
-          align="left"
-          border
-          stripe
-          highlight-current-row
-          highlight-hover-row
-          :size="tableSizeConfig"
-          :toolbar-config="toolbarConfig"
-          :loading="loading"
-          :columns="columns"
+        <SmartTable
+          :size="getTableSize"
+          @register="registerTable"
           @current-change="handleCurrentChange">
-          <template #pager>
-            <vxe-pager
-              v-model:current-page="tablePage.currentPage"
-              v-model:page-size="tablePage.pageSize"
-              :page-sizes="[500, 1000, 2000, 5000]"
-              :layouts="[
-                'Sizes',
-                'PrevJump',
-                'PrevPage',
-                'Number',
-                'NextPage',
-                'NextJump',
-                'FullJump',
-                'Total',
-              ]"
-              :total="tablePage.total"
-              @page-change="handlePageChange" />
-          </template>
-          <template #toolbar_buttons>
-            <a-form style="margin-left: 5px" layout="inline" :model="searchModel">
-              <a-form-item>
-                <a-input
-                  v-model:value="searchModel.roleName"
-                  :size="formSizeConfig"
-                  :placeholder="$t('system.views.role.table.roleName')" />
-              </a-form-item>
-              <a-form-item>
-                <a-input
-                  v-model:value="searchModel.roleCode"
-                  :size="formSizeConfig"
-                  :placeholder="$t('system.views.role.table.roleCode')" />
-              </a-form-item>
-              <a-form-item>
-                <a-button :size="buttonSizeConfig" @click="resetSearch">
-                  {{ $t('common.button.reset') }}
-                </a-button>
-                <a-button
-                  :size="buttonSizeConfig"
-                  style="margin-left: 5px"
-                  type="primary"
-                  @click="loadRoleList">
-                  {{ $t('common.button.search') }}
-                </a-button>
-              </a-form-item>
-            </a-form>
-          </template>
-          <template #toolbar_tools>
-            <a-form layout="inline">
-              <a-form-item>
-                <a-button
-                  v-permission="permissions.add"
-                  :size="buttonSizeConfig"
-                  type="primary"
-                  @click="handleShowAdd">
-                  {{ $t('common.button.add') }}
-                </a-button>
-                <a-button
-                  v-permission="permissions.delete"
-                  :size="buttonSizeConfig"
-                  type="primary"
-                  style="margin-left: 5px"
-                  danger
-                  @click="handleDelete">
-                  {{ $t('common.button.delete') }}
-                </a-button>
-              </a-form-item>
-            </a-form>
-          </template>
-          <!--   操作列插槽   -->
           <template #table-operation="{ row }">
-            <a-dropdown>
-              <a-button :size="tableButtonSizeConfig" type="primary">
-                Actions
-                <DownOutlined />
-              </a-button>
-              <template #overlay>
-                <a-menu @click="({ key }) => handleActions(row, key)">
-                  <a-menu-item key="edit" :disabled="!hasPermission(permissions.update)">
-                    {{ $t('common.button.edit') }}
-                  </a-menu-item>
-                  <a-menu-item key="setUser" :disabled="!hasPermission(permissions.setRoleUser)">
-                    {{ $t('system.views.role.button.setRoleUser') }}
-                  </a-menu-item>
-                </a-menu>
-              </template>
-            </a-dropdown>
+            <SmartVxeTableAction :actions="getTableActions(row)" />
           </template>
-        </vxe-grid>
+        </SmartTable>
       </a-layout-content>
       <a-layout-sider theme="light" class="layout-set-function" width="240px">
         <RoleSetFunction :role-id="currentRow.roleId" />
       </a-layout-sider>
     </a-layout>
-    <a-modal
-      v-model:visible="addEditModalVisible"
-      :confirm-loading="saveLoading"
-      :title="isAdd ? $t('common.button.add') : $t('common.button.edit')"
-      @ok="handleSave">
-      <a-spin :spinning="getLoading">
-        <a-form
-          :rules="formRules"
-          :model="addEditModel"
-          :label-col="{ span: 4 }"
-          :wrapper-col="{ span: 19 }">
-          <a-form-item name="roleName" :label="$t('system.views.role.table.roleName')">
-            <a-input
-              v-model:value="addEditModel.roleName"
-              :placeholder="$t('system.views.role.validate.roleName')" />
-          </a-form-item>
-          <a-form-item name="roleCode" :label="$t('system.views.role.table.roleCode')">
-            <a-input
-              v-model:value="addEditModel.roleCode"
-              :placeholder="$t('system.views.role.validate.roleCode')" />
-          </a-form-item>
-          <a-form-item name="useYn" :label="$t('common.table.useYn')">
-            <a-switch v-model:checked="addEditModel.useYn" />
-          </a-form-item>
-          <a-form-item name="roleType" :label="$t('system.views.role.table.roleType')">
-            <a-input
-              v-model:value="addEditModel.roleType"
-              :placeholder="$t('system.views.role.validate.roleType')" />
-          </a-form-item>
-          <a-form-item :label="$t('common.table.seq')">
-            <a-input-number v-model:value="addEditModel.seq" />
-          </a-form-item>
-        </a-form>
-      </a-spin>
-    </a-modal>
-    <a-modal
-      v-model:visible="setUserModalVisible"
-      width="800px"
-      :confirm-loading="setUserLoading"
+    <SmartUserSelectModal
+      @register="registerSetUserModal"
+      @selected="handleSetUser"
+      defaultFullscreen
+      showSelect
       :title="$t('system.views.role.button.setRoleUser')"
-      @ok="handleSetUser">
-      <a-spin :spinning="getUserLoading">
-        <a-transfer
-          class="group-set-user"
-          :render="(item) => item.title"
-          :target-keys="targetKeysModel"
-          :data-source="allUserData"
-          @change="handleTransChange" />
-      </a-spin>
-    </a-modal>
+      :select-values="selectUserList" />
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, createVNode } from 'vue'
-import { useI18n } from 'vue-i18n'
-
-import { message, Modal } from 'ant-design-vue'
-import { ExclamationCircleOutlined, DownOutlined } from '@ant-design/icons-vue'
-import dayjs from 'dayjs'
-
-import type { VxeTableInstance } from 'vxe-table'
-import { SystemPermissions } from '/@/modules/system/constants/SystemConstants'
-
-import RoleSetFunction from './RoleSetFunction.vue'
-
-import { vueAddUpdate, vueLoadRoleData, vueSetUser } from './RoleListSupport'
-
-import ApiService from '/@/common/utils/ApiService'
-import { tableUseYn } from '/@/components/common/TableCommon'
+<script lang="ts" setup>
+import { ref } from 'vue'
+import {
+  useSmartTable,
+  SmartTable,
+  SmartVxeTableAction,
+  ActionItem,
+} from '/@/components/SmartTable'
+import { useI18n } from '/@/hooks/web/useI18n'
 import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
-import { hasPermission } from '/@/common/auth/AuthUtils'
+import { SmartUserSelectModal } from '/@/components/Form'
 
-/**
- * 角色管理页面
- */
-export default defineComponent({
-  name: 'RoleListView',
-  components: {
-    RoleSetFunction,
-    DownOutlined,
-  },
-  setup() {
-    const { t } = useI18n()
-    const gridRef = ref({} as VxeTableInstance)
-    // 当前行
-    const currentRow = ref<any>({})
-    const loadRoleDataVue = vueLoadRoleData()
-    const addUpdateVue = vueAddUpdate(loadRoleDataVue.loadRoleList)
-    const setUserVue = vueSetUser()
-    /**
-     * 操作事件
-     * @param row
-     * @param action
-     */
-    const handleActions = (row: any, action: string) => {
-      switch (action) {
-        case 'edit': {
-          addUpdateVue.handleShowEdit(row.roleId)
-          break
-        }
-        case 'setUser': {
-          setUserVue.handleShowSetUser(row.roleId)
-          break
-        }
-      }
-    }
-    /**
-     * 当前行变更事件
-     */
-    const handleCurrentChange = ({ row }: any) => {
-      currentRow.value = row
-    }
-    /**
-     * 删除操作
-     */
-    const handleDelete = () => {
-      // 获取选中行
-      const selectRows = gridRef.value.getCheckboxRecords()
-      if (selectRows.length === 0) {
-        message.error(t('common.notice.deleteChoose'))
-        return false
-      }
-      Modal.confirm({
-        title: t('common.button.confirm'),
-        icon: createVNode(ExclamationCircleOutlined),
-        content: t('common.notice.deleteConfirm'),
-        onOk: async () => {
-          await ApiService.postAjax(
-            'sys/role/batchDeleteById',
-            selectRows.map((item) => item.roleId),
-          )
-          loadRoleDataVue.loadRoleList()
-        },
-      })
-    }
-    return {
-      ...loadRoleDataVue,
-      ...addUpdateVue,
-      ...setUserVue,
-      handleActions,
-      handleDelete,
-      gridRef,
-      handleCurrentChange,
-      currentRow,
-      ...useSizeSetting(),
-      hasPermission,
-    }
-  },
-  data() {
-    return {
-      permissions: SystemPermissions.role,
-      toolbarConfig: {
-        slots: {
-          buttons: 'toolbar_buttons',
-          tools: 'toolbar_tools',
-        },
+import { getAddEditFormSchemas, getSearchSchemas, getTableColumns } from './RoleListView.config'
+import { listApi, batchSaveUpdateApi, deleteApi, getByIdApi } from './RoleListView.api'
+import { SystemPermissions } from '/@/modules/system/constants/SystemConstants'
+import RoleSetFunction from './RoleSetFunction.vue'
+import { useRoleSetUser } from './hook/useRoleSetUser'
+
+const { t } = useI18n()
+const { getTableSize } = useSizeSetting()
+
+const permissions = SystemPermissions.role
+
+const currentRow = ref<Recordable>({})
+const handleCurrentChange = ({ row }: any) => {
+  currentRow.value = row
+}
+
+const { registerSetUserModal, handleSetUser, handleShowSetUser, selectUserList } = useRoleSetUser(t)
+
+const getTableActions = (row): ActionItem[] => {
+  return [
+    {
+      label: t('common.button.edit'),
+      preIcon: 'ant-design:edit-out-lined',
+      auth: permissions.update,
+      onClick: () => editByRowModal(row),
+    },
+    {
+      label: t('system.views.role.button.setRoleUser'),
+      preIcon: 'ant-design:user-add-outlined',
+      auth: permissions.setRoleUser,
+      onClick: () => {
+        handleShowSetUser(row)
       },
-      columns: [
-        {
-          type: 'checkbox',
-          width: 60,
-          align: 'center',
-          fixed: 'left',
-        },
-        {
-          title: '{system.views.role.table.roleName}',
-          field: 'roleName',
-          width: 120,
-          fixed: 'left',
-        },
-        {
-          title: '{system.views.role.table.roleCode}',
-          field: 'roleCode',
-          width: 150,
-          fixed: 'left',
-        },
-        {
-          title: '{system.views.role.table.roleType}',
-          field: 'roleType',
-          width: 120,
-        },
-        {
-          ...tableUseYn(this.$t).createColumn(),
-          sortable: true,
-        },
-        {
-          title: '{common.table.remark}',
-          field: 'remark',
-          minWidth: 160,
-        },
-        {
-          title: '{common.table.seq}',
-          field: 'seq',
-          width: 100,
-          sortable: true,
-        },
-        {
-          title: '{common.table.createTime}',
-          field: 'createTime',
-          width: 165,
-          formatter: ({ cellValue }: any) => {
-            if (cellValue) {
-              return dayjs(cellValue).format('YYYY-MM-DD HH:mm:ss')
-            }
-            return ''
-          },
-          sortable: true,
-        },
-        {
-          title: '{common.table.createUser}',
-          field: 'createUserId',
-          width: 120,
-          formatter: ({ row }: any) => {
-            if (row.createUser) {
-              return row.createUser.fullName
-            }
-            return ''
-          },
-        },
-        {
-          title: '{common.table.updateTime}',
-          field: 'updateTime',
-          width: 165,
-          formatter: ({ cellValue }: any) => {
-            if (cellValue) {
-              return dayjs(cellValue).format('YYYY-MM-DD HH:mm:ss')
-            }
-            return ''
-          },
-          sortable: true,
-        },
-        {
-          title: '{common.table.updateUser}',
-          field: 'updateUserId',
-          width: 120,
-          formatter: ({ row }: any) => {
-            if (row.updateUser) {
-              return row.updateUser.fullName
-            }
-            return ''
-          },
-        },
-        {
-          title: '{common.table.operation}',
-          field: 'operation',
-          width: 120,
-          fixed: 'right',
-          slots: {
-            default: 'table-operation',
-          },
-        },
-      ],
-    }
+    },
+  ]
+}
+
+const [registerTable, { editByRowModal }] = useSmartTable({
+  id: 'sys_role_list',
+  columns: getTableColumns(t),
+  border: true,
+  stripe: true,
+  height: 'auto',
+  highlightHoverRow: true,
+  highlightCurrentRow: true,
+  pagerConfig: true,
+  columnConfig: {
+    resizable: true,
+  },
+  useSearchForm: true,
+  searchFormConfig: {
+    colon: true,
+    searchWithSymbol: true,
+    schemas: getSearchSchemas(t),
+    layout: 'inline',
+    actionColOptions: {
+      span: undefined,
+    },
+  },
+  proxyConfig: {
+    ajax: {
+      query: (params) => listApi(params.ajaxParameter),
+      delete: ({ body: { removeRecords } }) => deleteApi(removeRecords),
+      getById: (model) => getByIdApi(model),
+      save: ({ body: { insertRecords, updateRecords } }) =>
+        batchSaveUpdateApi([...insertRecords, ...updateRecords]),
+    },
+  },
+  printConfig: {},
+  toolbarConfig: {
+    zoom: true,
+    refresh: true,
+    custom: true,
+    print: true,
+    buttons: [{ code: 'ModalAdd' }, { code: 'delete' }],
+  },
+  addEditConfig: {
+    formConfig: {
+      schemas: getAddEditFormSchemas(t),
+      colon: true,
+      wrapperCol: { span: 19 },
+      labelCol: { span: 4 },
+    },
   },
 })
 </script>
@@ -370,12 +127,5 @@ export default defineComponent({
 <style lang="less" scoped>
 .layout-set-function {
   margin-left: 5px;
-}
-.group-set-user {
-  ::v-deep(.ant-transfer-list) {
-    width: 46% !important;
-    flex: none;
-    height: 450px;
-  }
 }
 </style>
