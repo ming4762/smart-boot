@@ -64,6 +64,7 @@ export default {
       use: '启用',
       noUse: '停用',
       OperationSucceeded: '操作成功',
+      noPermission: '无权限',
     },
   },
   app: {

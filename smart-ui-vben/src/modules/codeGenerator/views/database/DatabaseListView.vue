@@ -80,7 +80,7 @@ const [registerTable, { editByRowModal, setLoading, reload, showAddModal }] = us
     schemas: searchForm(t),
     layout: 'inline',
     actionColOptions: {
-      span: 6,
+      span: undefined,
     },
   },
   addEditConfig: {

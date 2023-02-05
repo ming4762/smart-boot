@@ -2,7 +2,7 @@ import VXETable from 'vxe-table'
 import type { VxeGlobalRendererHandles } from 'vxe-table'
 import { SmartTableButton } from '../types/SmartTableButton'
 import { omit } from 'lodash-es'
-import { hasButtonPermission } from '../hooks/userSmartTableButtonAuth'
+import { hasPermission } from '/@/common/auth/AuthUtils'
 import { isString } from '/@/utils/is'
 import { unref } from 'vue'
 
@@ -22,7 +22,7 @@ VXETable.renderer.add(VxeTableToolButtonAntRenderer, {
     }
     buttonPros = omit(buttonPros, ['props', 'buttonRender'])
     // 权限处理
-    const hasAuth = hasButtonPermission(button)
+    const hasAuth = hasPermission(button?.auth)
     if (!hasAuth) {
       const auth = button.auth
       if (!isString(auth)) {

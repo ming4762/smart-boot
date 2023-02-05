@@ -103,8 +103,9 @@ const [registerTable, { editByRowModal, showAddModal, reload }] = useSmartTable(
     schemas: getSearchSchemas(t),
     searchWithSymbol: true,
     colon: true,
+    layout: 'inline',
     actionColOptions: {
-      span: 6,
+      span: undefined,
     },
   },
   toolbarConfig: {

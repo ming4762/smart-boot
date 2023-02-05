@@ -2,6 +2,8 @@ import { useUserStore } from '/@/store/modules/user'
 import { usePermission } from '/@/hooks/web/usePermission'
 import ApiService from '/@/common/utils/ApiService'
 import { UserInfo } from '/#/store'
+import type { SmartAuth } from '/#/utils'
+import { isString } from '/@/utils/is'
 
 /**
  * 是否是超级管理员
@@ -13,14 +15,25 @@ export const isSuperAdmin = (): boolean => {
 
 /**
  * 是否拥有权限
- * @param permission
+ * @param auth
  */
-export const hasPermission = (permission: string | null | undefined | string[]): boolean => {
-  if (permission) {
-    const { hasPermission } = usePermission()
+export const hasPermission = (auth?: SmartAuth | string): boolean => {
+  if (!auth) {
+    return true
+  }
+  const { hasPermission } = usePermission()
+  if (isString(auth)) {
+    return hasPermission(auth)
+  }
+  const { permission, multipleMode } = auth
+  if (isString(permission)) {
     return hasPermission(permission)
   }
-  return true
+  if (multipleMode === 'or') {
+    return permission.some((item) => hasPermission(item))
+  } else {
+    return permission.every((item) => hasPermission(item))
+  }
 }
 
 /**

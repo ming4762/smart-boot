@@ -178,7 +178,7 @@ public class RedisServiceImpl implements RedisService {
     protected Cursor<byte[]> scan(@NonNull Object patternKey, Integer count) {
         // 创建扫描参数
         ScanOptions.ScanOptionsBuilder builder = ScanOptions.scanOptions()
-                .match("*" + patternKey);
+                .match(patternKey + "*");
         if (Objects.nonNull(count)) {
             builder.count(count);
         }
