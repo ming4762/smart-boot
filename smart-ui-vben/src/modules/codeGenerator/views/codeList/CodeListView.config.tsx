@@ -132,6 +132,9 @@ export const searchFormColumns = (t: Function): SmartSearchFormSchema[] => {
       label: '',
       component: 'Select',
       componentProps: {
+        style: {
+          width: '100px',
+        },
         placeholder: t('generator.views.code.table.type'),
         options: tableTypeList.map((item) => {
           return {

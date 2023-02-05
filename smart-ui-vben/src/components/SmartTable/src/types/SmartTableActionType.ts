@@ -1,6 +1,6 @@
 import type { ButtonProps } from '/@/components/Button'
 import type { TooltipProps } from 'ant-design-vue'
-import { RoleEnum } from '/@/enums/roleEnum'
+import type { SmartAuth } from '/#/utils'
 
 export interface ActionItem extends ButtonProps {
   onClick?: Fn
@@ -11,7 +11,7 @@ export interface ActionItem extends ButtonProps {
   disabled?: boolean
   divider?: boolean
   // 权限编码控制是否显示
-  auth?: RoleEnum | RoleEnum[] | string | string[]
+  auth?: SmartAuth | string
   // 业务控制是否显示
   ifShow?: boolean | ((action: ActionItem) => boolean)
   tooltip?: string | TooltipProps

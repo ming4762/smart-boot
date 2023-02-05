@@ -64,6 +64,7 @@ export default {
       use: 'enable',
       noUse: 'deactivate',
       OperationSucceeded: 'Operation succeeded',
+      noPermission: 'No permission',
     },
   },
   app: {

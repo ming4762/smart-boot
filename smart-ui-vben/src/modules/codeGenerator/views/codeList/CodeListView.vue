@@ -80,10 +80,7 @@ const [registerTable, { reload }] = useSmartTable({
     layout: 'inline',
     schemas: searchFormColumns(t),
     actionColOptions: {
-      span: 6,
-    },
-    baseColProps: {
-      span: 6,
+      span: undefined,
     },
     baseRowStyle: {
       width: '100%',

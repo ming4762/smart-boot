@@ -5,7 +5,14 @@
         <slot name="customButton"></slot>
       </template>
       <template v-else>
-        <Tooltip v-if="action.tooltip" v-bind="getTooltip(action.tooltip)">
+        <Tooltip v-if="!action.hasAuth" :title="$t('common.message.noPermission')" color="red">
+          <!--   无权限  -->
+          <PopConfirmVxeButton disabled v-bind="action">
+            <Icon :icon="action.icon" :class="{ 'mr-1': !!action.label }" v-if="action.icon" />
+            <template v-if="action.label">{{ action.label }}</template>
+          </PopConfirmVxeButton>
+        </Tooltip>
+        <Tooltip v-else-if="action.tooltip" v-bind="getTooltip(action.tooltip)">
           <PopConfirmVxeButton v-bind="action">
             <Icon :icon="action.icon" :class="{ 'mr-1': !!action.label }" v-if="action.icon" />
             <template v-if="action.label">{{ action.label }}</template>
@@ -46,7 +53,7 @@ import { PopConfirmVxeButton } from '/@/components/Button'
 import { Dropdown } from '/@/components/Dropdown'
 import { useDesign } from '/@/hooks/web/useDesign'
 import { useTableContext } from '../hooks/userSmartTableContext'
-import { usePermission } from '/@/hooks/web/usePermission'
+import { hasPermission } from '/@/common/auth/AuthUtils'
 import { isBoolean, isFunction, isString } from '/@/utils/is'
 import { propTypes } from '/@/utils/propTypes'
 import { ACTION_COLUMN_FLAG } from '../const'
@@ -73,8 +80,6 @@ export default defineComponent({
     if (!props.outside) {
       table = useTableContext()
     }
-
-    const { hasPermission } = usePermission()
     function isIfShow(action: ActionItem): boolean {
       const ifShow = action.ifShow
 
@@ -92,7 +97,7 @@ export default defineComponent({
     const getActions = computed(() => {
       return (toRaw(props.actions) || [])
         .filter((action) => {
-          return hasPermission(action.auth) && isIfShow(action)
+          return isIfShow(action)
         })
         .map((action) => {
           const { popConfirm } = action
@@ -106,6 +111,7 @@ export default defineComponent({
             onConfirm: popConfirm?.confirm,
             onCancel: popConfirm?.cancel,
             enable: !!popConfirm,
+            hasAuth: hasPermission(action.auth),
           }
         })
     })

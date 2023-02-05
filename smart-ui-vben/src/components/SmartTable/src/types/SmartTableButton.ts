@@ -1,5 +1,6 @@
 import { ButtonProps } from '/@/components/Button'
 import type { ComputedRef, Ref } from 'vue'
+import {SmartAuth} from '/#/utils';
 
 export type SmartTableButtonType = 'text' | 'submit' | 'reset' | 'button'
 
@@ -29,15 +30,6 @@ export interface SmartTableButtonRender {
   events?: any
 }
 
-/**
- * 按钮权限
- */
-export interface SmartTableButtonAuth {
-  permission: string | string[]
-  displayMode: 'hide' | 'disabled'
-  multipleMode: 'and' | 'or'
-}
-
 export interface SmartTableBasicButtonDropdowns {
   name?: string | 'smart-auto'
   // 按钮类型
@@ -50,7 +42,7 @@ export interface SmartTableBasicButtonDropdowns {
   icon?: string
   round?: boolean
   circle?: boolean
-  auth?: string | SmartTableButtonAuth
+  auth?: string | SmartAuth
 }
 
 export interface SmartTableButton extends SmartTableBasicButtonDropdowns {

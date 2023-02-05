@@ -1,222 +1,112 @@
 <template>
-  <div class="full-height" style="padding: 10px">
-    <vxe-grid
-      v-bind="tableProps"
-      :size="tableSizeConfig"
-      border
-      :columns="columns"
-      height="auto"
-      highlight-hover-row
-      :toolbar-config="toolbarConfig"
-      stripe>
-      <template #table-operation="{ row }">
-        <a-button
-          v-permission="'sys:auth:offline'"
-          :size="tableButtonSizeConfig"
-          type="primary"
-          @click="() => handleOffline(row.username, null)">
-          {{ $t('system.views.onlineUser.button.offline') }}
-        </a-button>
-      </template>
+  <div class="full-height page-container">
+    <SmartTable :size="getTableSize" @register="registerTable">
       <template #table-expand="{ row }">
-        <vxe-grid
+        <SmartTable
+          :size="getTableSize"
           class="expand-wrapper"
-          border
-          highlight-hover-row
-          :columns="expandColumns"
           :data="row.userLoginDataList"
-          stripe>
+          @register="registerExpandTable">
           <template #expand-table-operation="data">
-            <a-button
-              v-permission="'sys:auth:offline'"
-              :size="tableButtonSizeConfig"
-              type="primary"
-              @click="() => handleOffline(null, data.row.token)">
-              {{ $t('system.views.onlineUser.button.offline') }}
-            </a-button>
+            <SmartVxeTableAction :actions="getTableActions(data.row, true)" />
           </template>
-        </vxe-grid>
+        </SmartTable>
       </template>
-      <template #toolbar_buttons>
-        <a-form style="margin-left: 10px" layout="inline" :model="searchModel">
-          <a-form-item>
-            <a-input
-              v-model:value="searchModel.username"
-              :size="formSizeConfig"
-              :placeholder="$t('system.views.user.table.username')" />
-          </a-form-item>
-          <a-form-item>
-            <a-button :size="buttonSizeConfig" type="primary" @click="loadData">
-              {{ $t('common.button.search') }}
-            </a-button>
-          </a-form-item>
-        </a-form>
+      <template #table-operation="{ row }">
+        <SmartVxeTableAction :actions="getTableActions(row, false)" />
       </template>
-      <template #toolbar_tools></template>
-    </vxe-grid>
+    </SmartTable>
   </div>
 </template>
 
-<script lang="ts">
-import { createVNode, defineComponent, onMounted } from 'vue'
-import { useI18n } from 'vue-i18n'
+<script lang="ts" setup>
+import type { ActionItem } from '/@/components/SmartTable'
 
-import { Modal, message } from 'ant-design-vue'
+import { useI18n } from '/@/hooks/web/useI18n'
+import { useSmartTable, SmartTable, SmartVxeTableAction } from '/@/components/SmartTable'
+import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
+import { message, Modal } from 'ant-design-vue'
+import { createVNode } from 'vue'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
 
-import ApiService from '/@/common/utils/ApiService'
+import {
+  getTableColumns,
+  getTableExpandColumns,
+  getSearchFormSchemas,
+} from './OnlineUserListView.config'
+import { listOnlineUserApi, offlineApi } from './OnlineUserListView.api'
 
-import { useVxeTable } from '/@/hooks/page/CrudHooks'
-import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
-import { tableBooleanColumn } from '/@/components/common/TableCommon'
-import dayjs from 'dayjs'
+const { t } = useI18n()
+const { getTableSize } = useSizeSetting()
 
-/**
- * 加载数据函数
- * @param parameter
- * @param searchParameter
- */
-const doLoadData = (parameter: any, searchParameter: any) => {
-  return ApiService.postAjax('auth/listOnlineUser', Object.assign({}, parameter, searchParameter))
+const getTableActions = (row, isExpand: boolean): ActionItem[] => {
+  return [
+    {
+      label: t('system.views.onlineUser.button.offline'),
+      auth: 'sys:auth:offline',
+      danger: true,
+      onClick: () => {
+        handleOffline(isExpand ? null : row.username, isExpand ? row.token : null)
+      },
+    },
+  ]
 }
 
-export default defineComponent({
-  name: 'OnlineUserListView',
-  setup() {
-    const { t } = useI18n()
-    // 表格信息
-    const { tableProps, loadData, searchModel } = useVxeTable(doLoadData, {
-      paging: false,
-    })
+/**
+ * 执行登出操作
+ * @param username 用户名
+ * @param token token
+ */
+const handleOffline = (username?: string, token?: string) => {
+  Modal.confirm({
+    title: t('common.notice.confirm'),
+    icon: createVNode(ExclamationCircleOutlined),
+    content: t('system.views.onlineUser.message.offlineConfirm'),
+    onOk: async () => {
+      await offlineApi(username, token)
+      message.success(t('system.views.onlineUser.message.offlineSuccess'))
+      reload()
+    },
+  })
+}
 
-    /**
-     * 执行登出操作
-     * @param username 用户名
-     * @param token token
-     */
-    const handleOffline = (username?: string, token?: string) => {
-      Modal.confirm({
-        title: t('common.notice.confirm'),
-        icon: createVNode(ExclamationCircleOutlined),
-        content: t('system.views.onlineUser.message.offlineConfirm'),
-        onOk: async () => {
-          await ApiService.postAjax('auth/offline', { username, token })
-          message.success(t('system.views.onlineUser.message.offlineSuccess'))
-        },
-      })
-    }
+const [registerTable, { reload }] = useSmartTable({
+  border: true,
+  height: 'auto',
+  highlightHoverRow: true,
+  columns: getTableColumns(),
+  useSearchForm: true,
+  searchFormConfig: {
+    layout: 'inline',
+    schemas: getSearchFormSchemas(t),
+    colon: true,
+    actionColOptions: {
+      span: undefined,
+    },
+  },
+  proxyConfig: {
+    ajax: {
+      query: ({ ajaxParameter }) => listOnlineUserApi(ajaxParameter),
+    },
+  },
+  columnConfig: {
+    resizable: true,
+  },
+  toolbarConfig: {
+    refresh: true,
+    custom: true,
+    print: true,
+  },
+})
 
-    onMounted(loadData)
-    return {
-      tableProps,
-      loadData,
-      ...useSizeSetting(),
-      searchModel,
-      handleOffline,
-    }
-  },
-  data() {
-    return {
-      toolbarConfig: {
-        slots: {
-          buttons: 'toolbar_buttons',
-          tools: 'toolbar_tools',
-        },
-      },
-      columns: [
-        {
-          title: '#',
-          type: 'expand',
-          fixed: 'left',
-          width: 80,
-          slots: {
-            content: 'table-expand',
-          },
-        },
-        {
-          title: '{system.views.user.table.username}',
-          field: 'username',
-          width: 120,
-          fixed: 'left',
-        },
-        {
-          title: '{system.views.user.table.fullName}',
-          field: 'fullName',
-          width: 120,
-          fixed: 'left',
-        },
-        {
-          title: '{system.views.user.table.email}',
-          field: 'email',
-          minWidth: 160,
-        },
-        {
-          title: '{system.views.user.table.mobile}',
-          field: 'mobile',
-          minWidth: 140,
-        },
-        {
-          title: '{common.table.operation}',
-          field: 'operation',
-          width: 120,
-          fixed: 'right',
-          slots: {
-            default: 'table-operation',
-          },
-        },
-      ],
-      expandColumns: [
-        {
-          title: '{system.views.onlineUser.title.authType}',
-          field: 'authType',
-          width: 120,
-        },
-        {
-          title: '{system.views.onlineUser.title.loginType}',
-          field: 'loginType',
-          width: 120,
-        },
-        {
-          title: '{system.views.onlineUser.title.loginTime}',
-          field: 'loginTime',
-          sortable: true,
-          width: 180,
-          formatter: ({ cellValue }: any) => {
-            if (cellValue) {
-              return dayjs(cellValue).format('YYYY-MM-DD HH:mm:ss')
-            }
-            return ''
-          },
-        },
-        {
-          title: '{system.views.onlineUser.title.loginIp}',
-          field: 'loginIp',
-          minWidth: 200,
-        },
-        {
-          ...tableBooleanColumn(
-            this.$t,
-            '{system.views.onlineUser.title.bindIp}',
-            'bindIp',
-          ).createColumn(),
-          width: 120,
-        },
-        {
-          title: '{common.table.operation}',
-          field: 'operation',
-          width: 120,
-          fixed: 'right',
-          slots: {
-            default: 'expand-table-operation',
-          },
-        },
-      ],
-    }
-  },
+const [registerExpandTable] = useSmartTable({
+  columns: getTableExpandColumns(t),
+  border: true,
+  stripe: true,
 })
 </script>
 
-<style lang="less" scoped>
+<style scoped lang="less">
 .expand-wrapper {
   padding: 15px;
 }

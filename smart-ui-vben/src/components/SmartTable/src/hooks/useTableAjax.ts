@@ -30,7 +30,8 @@ export const useTableAjax = (
   const { t } = useI18n()
   // 是否自动加载，取消vxe-table自动加载，解决触发事件问题（事件无法在数据加载完成之后执行）
   onMounted(() => {
-    if (unref(propsRef).proxyConfig?.autoLoad !== false) {
+    const proxyConfig = unref(propsRef).proxyConfig
+    if (proxyConfig && proxyConfig.autoLoad !== false) {
       reload()
     }
   })
