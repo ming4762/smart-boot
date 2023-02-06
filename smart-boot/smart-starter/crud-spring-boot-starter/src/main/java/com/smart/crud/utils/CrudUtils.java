@@ -1,5 +1,6 @@
 package com.smart.crud.utils;
 
+import com.baomidou.mybatisplus.annotation.IEnum;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -10,15 +11,16 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.smart.commons.core.exception.BaseException;
 import com.smart.commons.core.utils.ExceptionUtils;
-import org.apache.commons.lang3.StringUtils;
 import com.smart.crud.model.BaseModel;
 import com.smart.crud.model.Sort;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ReflectionUtils;
 
 import java.io.Serializable;
@@ -27,6 +29,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Crud工具类
@@ -69,6 +72,8 @@ public final class CrudUtils {
      * 实体类字段于数据库字段缓存
      */
     private static final Map<String, String> CLASS_FIELD_DB_FIELD_CACHE = Maps.newConcurrentMap();
+
+    private static final Map<String, Field> CLASS_FIELD_NAME_MAPPING = Maps.newConcurrentMap();
 
     private static final Map<Class<? extends BaseModel>, String> MODAL_TABLE_NAME_CACHE = Maps.newConcurrentMap();
 
@@ -149,15 +154,23 @@ public final class CrudUtils {
         if (CLASS_FIELD_DB_FIELD_CACHE.containsKey(key)) {
             return CLASS_FIELD_DB_FIELD_CACHE.get(key);
         }
-        Field field = ReflectionUtils.findField(clazz, fieldName);
-        String dbField;
-        if (field != null) {
-            dbField = getDbField(field);
-        } else {
-            throw new BaseException(String.format("实体类字段不存在，请检查，field：%s", fieldName));
-        }
+        Field field = getClassField(clazz, fieldName);
+        String dbField = getDbField(field);
         CLASS_FIELD_DB_FIELD_CACHE.put(key, dbField);
         return dbField;
+    }
+
+    public static Field getClassField(@NonNull Class<? extends BaseModel> clazz, @NonNull String fieldName) {
+        final String key  = clazz.getName() + fieldName;
+        if (CLASS_FIELD_NAME_MAPPING.containsKey(key)) {
+            return CLASS_FIELD_NAME_MAPPING.get(key);
+        }
+        Field field = ReflectionUtils.findField(clazz, fieldName);
+        if (field == null) {
+            throw new BaseException(String.format("实体类字段不存在，请检查，field：%s", fieldName));
+        }
+        CLASS_FIELD_NAME_MAPPING.put(key, field);
+        return field;
     }
 
     /**
@@ -257,11 +270,12 @@ public final class CrudUtils {
                     log.warn("参数无效，未找到符号，key:{}", key);
                 } else {
                     final String dbFieldName = getDbField(clazz, keySplit[0]);
+                    final Field field = getClassField(clazz, keySplit[0]);
                     if (dbFieldName == null) {
                         log.warn("参数无效，未找到实体类对应属性：{}", keySplit[0]);
                     } else {
                         try {
-                            CrudUtils.dealValue(key, value, queryWrapper, symbol, dbFieldName);
+                            CrudUtils.dealValue(key, value, queryWrapper, symbol, field, dbFieldName);
                         } catch (InvocationTargetException | IllegalAccessException e) {
                             ExceptionUtils.doThrow(e);
                         }
@@ -271,8 +285,13 @@ public final class CrudUtils {
         });
     }
 
-    private static <T> void dealValue(@NonNull String key, @Nullable Object value, @NonNull Wrapper<T> queryWrapper, @Nullable String symbol, @Nullable String dbFieldName) throws InvocationTargetException, IllegalAccessException {
+    private static <T> void dealValue(@NonNull String key, @Nullable Object value, @NonNull Wrapper<T> queryWrapper, @Nullable String symbol, @NonNull Field field, @Nullable String dbFieldName) throws InvocationTargetException, IllegalAccessException {
         if (!Objects.isNull(value)) {
+            // 处理value
+            Object enumValue = dealEnumValue(value, field);
+            if (enumValue != null) {
+                value = enumValue;
+            }
             // 值不为null处理
             if (org.apache.commons.lang3.StringUtils.isNotEmpty(value.toString())) {
                 final Method method = getWrapperMethod(queryWrapper.getClass(), symbol);
@@ -294,6 +313,31 @@ public final class CrudUtils {
                 log.warn("null值参数只能使用'='或'<>'");
             }
         }
+    }
+
+    private static Object dealEnumValue(@Nullable Object value, @NonNull Field field) {
+        if (value == null) {
+            return null;
+        }
+        if (IEnum.class.isAssignableFrom(field.getType()) && field.getType().isEnum()) {
+            // 枚举类处理
+            Map<String, IEnum<?>> enumMap = Arrays.stream(field.getType().getEnumConstants())
+                    .collect(Collectors.toMap(item -> ((Enum<?>)item).name(), item -> (IEnum<?>) item));
+            if (value instanceof String) {
+                IEnum<?> iEnum = enumMap.get(value);
+                return iEnum == null ? null : iEnum.getValue();
+            } else if (Collection.class.isAssignableFrom(value.getClass())) {
+                // 集合类
+                List<? extends IEnum<?>> enumList = ((Collection<?>) value).stream().map(enumMap::get)
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList());
+                if (CollectionUtils.isEmpty(enumList)) {
+                    return null;
+                }
+                return enumList;
+            }
+        }
+        return null;
     }
 
     /**
