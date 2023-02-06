@@ -96,6 +96,9 @@ export const useSmartTable = (
     reload: async (opt?: FetchParams) => {
       return await getTableAction().reload(opt)
     },
+    query: async (opt?: FetchParams) => {
+      return await getTableAction().query(opt)
+    },
     setLoading: (loading: boolean) => {
       getTableAction().setLoading(loading)
     },

@@ -32,7 +32,7 @@ export const useTableAjax = (
   onMounted(() => {
     const proxyConfig = unref(propsRef).proxyConfig
     if (proxyConfig && proxyConfig.autoLoad !== false) {
-      reload()
+      commitVxeProxy('_init')
     }
   })
 
@@ -137,6 +137,16 @@ export const useTableAjax = (
     emit('after-load')
   }
 
+  const query = async (opt?: FetchParams) => {
+    try {
+      setLoading(true)
+      await commitVxeProxy('query', opt)
+    } finally {
+      setLoading(false)
+    }
+    emit('after-load')
+  }
+
   /**
    * 通过checkbox删除
    */
@@ -187,6 +197,7 @@ export const useTableAjax = (
 
   return {
     reload,
+    query,
     getProxyConfigRef,
     deleteByRow,
     deleteByCheckbox,

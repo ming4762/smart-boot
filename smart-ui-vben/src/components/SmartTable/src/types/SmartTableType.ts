@@ -76,6 +76,7 @@ export interface SmartTableProps<T = any> extends VxeGridProps<T> {
  */
 export interface TableActionType {
   reload: (opt?: FetchParams) => Promise<void>
+  query: (opt?: FetchParams) => Promise<void>
   /**
    * 设置props
    * @param props
