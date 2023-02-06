@@ -77,10 +77,10 @@ export default defineComponent({
       getSearchFormColumnSlot,
       registerSearchForm,
       searchFormAction,
-    } = useTableSearchForm(getTableProps, slots, (params) => reload(params), getLoading)
+    } = useTableSearchForm(getTableProps, slots, (params) => query(params), getLoading)
 
     // -------------- 加载函数 ------------------------
-    const { reload, getProxyConfigRef, deleteByRow, deleteByCheckbox } = useTableAjax(
+    const { reload, query, getProxyConfigRef, deleteByRow, deleteByCheckbox } = useTableAjax(
       getTableProps,
       tableElRef,
       emit,
@@ -159,6 +159,7 @@ export default defineComponent({
      */
     const tableAction: TableActionType = {
       reload,
+      query,
       setProps,
       setLoading,
       // 分页
