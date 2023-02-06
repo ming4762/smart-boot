@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.smart.commons.core.log.LogOperationTypeEnum;
 import com.smart.commons.core.log.LogSourceEnum;
 import com.smart.crud.model.BaseModelCreateUserTime;
+import com.smart.system.constants.LogIdentEnum;
 import com.smart.system.mybatis.type.LogSourceTypeHandler;
 import lombok.*;
 
@@ -32,6 +33,11 @@ public class SysLogPO extends BaseModelCreateUserTime {
      * 操作
      */
     private String operation;
+
+    /**
+     * 日志标识位
+     */
+    private LogIdentEnum ident;
 
     /**
      * 用时

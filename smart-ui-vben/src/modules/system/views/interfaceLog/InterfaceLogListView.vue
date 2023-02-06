@@ -233,7 +233,7 @@ const doLoadData = async (parameter: any, searchParameter: any) => {
 }
 
 export default defineComponent({
-  name: 'InterfaceLogListView',
+  name: 'InterfaceLogListView1',
   setup() {
     const { tableProps, loadData, searchModel, pageProps, handleReset } = useVxeTable(doLoadData, {
       defaultSorter: {
