@@ -4,6 +4,7 @@ import com.smart.auth.core.authentication.RestUsernamePasswordAuthenticationToke
 import com.smart.auth.core.event.AuthEventHandler;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.commons.core.log.LogSourceEnum;
+import com.smart.system.constants.LogIdentEnum;
 import com.smart.system.model.SysLogPO;
 import com.smart.system.service.SysLogService;
 import org.springframework.http.HttpStatus;
@@ -31,11 +32,14 @@ public class AuthEventLogHandler implements AuthEventHandler {
         RestUserDetails user = (RestUserDetails) event.getAuthentication().getPrincipal();
         SysLogPO sysLog = SysLogPO.builder()
                 .ip(user.getLoginIp())
+                .ident(LogIdentEnum.LOGIN_LOG)
                 .statusCode(HttpStatus.OK.value())
                 .logSource(LogSourceEnum.LOGIN)
                 .operation(LogSourceEnum.LOGIN.name())
                 .result(String.format("登录成功,username:[%s],fullName:[%s]", user.getUsername(), user.getFullName()))
                 .build();
+        sysLog.setCreateUserId(user.getUserId());
+        sysLog.setCreateBy(user.getFullName());
         this.sysLogService.save(sysLog);
     }
 
@@ -44,6 +48,7 @@ public class AuthEventLogHandler implements AuthEventHandler {
         RestUserDetails user = (RestUserDetails) event.getAuthentication().getPrincipal();
         SysLogPO sysLog = SysLogPO.builder()
                 .ip(user.getLoginIp())
+                .ident(LogIdentEnum.LOGIN_LOG)
                 .statusCode(HttpStatus.OK.value())
                 .logSource(LogSourceEnum.LOGOUT)
                 .operation(LogSourceEnum.LOGOUT.name())
@@ -58,6 +63,7 @@ public class AuthEventLogHandler implements AuthEventHandler {
         RestUsernamePasswordAuthenticationToken token = (RestUsernamePasswordAuthenticationToken) event.getAuthentication();
         SysLogPO sysLog = SysLogPO.builder()
                 .ip(token.getLoginIp())
+                .ident(LogIdentEnum.LOGIN_LOG)
                 .statusCode(HttpStatus.UNAUTHORIZED.value())
                 .logSource(LogSourceEnum.LOGIN_FAIL)
                 .operation(LogSourceEnum.LOGIN_FAIL.name())
