@@ -14,6 +14,7 @@ export type SearchSymbol =
   | 'likeRight'
   | 'notIn'
   | 'groupBy'
+  | 'between'
 
 export interface SmartSearchFormSchema extends FormSchema {
   searchSymbol?: SearchSymbol

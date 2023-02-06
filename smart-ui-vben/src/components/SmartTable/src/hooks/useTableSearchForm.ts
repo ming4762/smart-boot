@@ -6,7 +6,7 @@ import type { SmartSearchFormParameter } from '../types/SmartSearchFormType'
 
 import { computed, unref } from 'vue'
 import { useForm } from '/@/components/Form'
-import { isBoolean } from '/@/utils/is'
+import { isArray, isBoolean } from '/@/utils/is'
 
 export const useTableSearchForm = (
   propsRef: ComputedRef<SmartTableProps>,
@@ -124,7 +124,15 @@ export const useTableSearchForm = (
       const value = info[key]
       const symbol = getSearchFormSymbol[key]
       if (symbol) {
-        symbolForm[`${key}@${symbol}`] = value
+        if (symbol === 'between') {
+          // between特殊处理
+          if (value && isArray(value) && value.length === 2) {
+            symbolForm[`${key}@>=`] = value[0]
+            symbolForm[`${key}@<=`] = value[1]
+          }
+        } else {
+          symbolForm[`${key}@${symbol}`] = value
+        }
       } else {
         noSymbolForm[key] = value
       }
