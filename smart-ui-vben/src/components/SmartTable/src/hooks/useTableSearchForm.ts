@@ -1,5 +1,5 @@
 import type { ComputedRef, Slot, Slots } from 'vue'
-import type { SmartSearchFormProps } from '/@/components/SmartTable'
+import type { SmartSearchFormProps, SmartSearchFormSchema } from '/@/components/SmartTable'
 import type { FormProps } from '/@/components/Form'
 import type { FetchParams, SmartTableProps } from '../types/SmartTableType'
 import type { SmartSearchFormParameter } from '../types/SmartSearchFormType'
@@ -97,21 +97,23 @@ export const useTableSearchForm = (
   /**
    * 获取搜索符号
    */
-  const getSearchFormSymbolRef = computed<Recordable | boolean>(() => {
-    const { searchFormConfig, useSearchForm } = unref(propsRef)
-    const searchWithSymbol = searchFormConfig?.searchWithSymbol
-    if (!useSearchForm || !searchWithSymbol) {
-      return false
-    }
-    const { schemas } = searchFormConfig as Partial<SmartSearchFormProps>
-    const result: Recordable = {}
-    schemas?.forEach(({ field, searchSymbol }) => {
-      if (searchSymbol) {
-        result[field] = searchSymbol
+  const getSearchFormSymbolRef = computed<{ [index: string]: SmartSearchFormSchema } | boolean>(
+    () => {
+      const { searchFormConfig, useSearchForm } = unref(propsRef)
+      const searchWithSymbol = searchFormConfig?.searchWithSymbol
+      if (!useSearchForm || !searchWithSymbol) {
+        return false
       }
-    })
-    return result
-  })
+      const { schemas } = searchFormConfig as Partial<SmartSearchFormProps>
+      const result: { [index: string]: SmartSearchFormSchema } = {}
+      schemas?.forEach((item) => {
+        if (item.searchSymbol) {
+          result[item.field] = item
+        }
+      })
+      return result
+    },
+  )
 
   const dealSearchSymbol = (info: Recordable) => {
     const symbolForm: Recordable = {}
@@ -122,8 +124,19 @@ export const useTableSearchForm = (
     }
     Object.keys(info).forEach((key) => {
       const value = info[key]
-      const symbol = getSearchFormSymbol[key]
-      if (symbol) {
+      const schema = getSearchFormSymbol[key]
+      const { searchSymbol: symbol, customSymbol } = schema
+      if (customSymbol) {
+        // 自定义符号
+        const customSymbolResult = customSymbol({
+          schema,
+          value,
+          model: info,
+        })
+        if (customSymbolResult) {
+          Object.assign(symbolForm, customSymbolResult)
+        }
+      } else if (schema.searchSymbol) {
         if (symbol === 'between') {
           // between特殊处理
           if (value && isArray(value) && value.length === 2) {

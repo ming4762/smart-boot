@@ -72,9 +72,10 @@ const tableColumns: Array<SmartColumn & { ident?: LoginIdent[] }> = [
   {
     title: '{system.views.log.title.useTime}',
     field: 'useTime',
-    width: 120,
+    width: 140,
     headerAlign: 'left',
     align: 'center',
+    sortable: true,
     slots: {
       default: 'table-useTime',
     },
@@ -205,6 +206,15 @@ export const getSearchFormSchemas = (t: Function, ident: LoginIdent) => {
       field: 'createTime',
       component: 'RangePicker',
       searchSymbol: 'between',
+      // customSymbol: ({ value }) => {
+      //   if (value.length > 0) {
+      //     return {
+      //       'createTime@>=': value[0],
+      //       'createTime@<=': value[1],
+      //     }
+      //   }
+      //   return {}
+      // },
       componentProps: {
         style: { width: '340px' },
         showTime: { defaultValue: dayjs('00:00:00', 'HH:mm:ss') },

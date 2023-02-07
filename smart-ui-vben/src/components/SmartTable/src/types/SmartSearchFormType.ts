@@ -18,6 +18,15 @@ export type SearchSymbol =
 
 export interface SmartSearchFormSchema extends FormSchema {
   searchSymbol?: SearchSymbol
+  customSymbol?: ({
+    schema,
+    value,
+    model,
+  }: {
+    schema: SmartSearchFormSchema
+    value: any
+    model: Recordable
+  }) => Recordable
 }
 
 export interface SmartSearchFormProps extends FormProps {
