@@ -212,7 +212,7 @@ public final class LogAspect {
                 // todo：待处理
                 .platform(null)
                 .build();
-        if (logAnnotation.saveParameter()) {
+        if (logAnnotation.saveParameter() || errorMessage != null) {
             // 设置请求参数
             String parameter = JsonUtils.toJsonString(this.getParameter(point));
             sysLog.setParams(parameter);
