@@ -56,6 +56,11 @@ public class SysExceptionPO extends BaseModel {
     private Long operateUserId;
 
     /**
+     * 操作人员名字
+     */
+    private String operationBy;
+
+    /**
     * create_time - 创建时间
     */
     private LocalDateTime createTime;

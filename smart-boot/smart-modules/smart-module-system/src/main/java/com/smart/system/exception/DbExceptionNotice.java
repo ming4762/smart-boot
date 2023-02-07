@@ -43,6 +43,7 @@ public class DbExceptionNotice extends AbstractCommonExcludeExceptionNotice {
                     .serverIp(InetAddress.getLocalHost().getHostAddress())
                     .requestPath(request.getServletPath())
                     .operateUserId(user == null ? null : user.getUserId())
+                    .operationBy(user == null ? null : user.getFullName())
                     .createTime(LocalDateTime.now())
                     .build();
             this.sysExceptionService.save(sysException);
