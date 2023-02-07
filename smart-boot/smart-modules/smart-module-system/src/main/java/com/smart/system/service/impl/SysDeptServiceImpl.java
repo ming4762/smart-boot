@@ -5,10 +5,13 @@ import com.smart.crud.constants.CrudCommonEnum;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.crud.service.BaseServiceImpl;
 import com.smart.crud.service.UserSetterService;
+import com.smart.system.constants.UserDeptIdentEnum;
 import com.smart.system.mapper.SysDeptMapper;
 import com.smart.system.model.SysDeptPO;
+import com.smart.system.model.SysUserDeptPO;
 import com.smart.system.pojo.vo.SysDeptListVo;
 import com.smart.system.service.SysDeptService;
+import com.smart.system.service.SysUserDeptService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -16,7 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -31,8 +37,11 @@ public class SysDeptServiceImpl extends BaseServiceImpl<SysDeptMapper, SysDeptPO
 
     private final UserSetterService userSetterService;
 
-    public SysDeptServiceImpl(UserSetterService userSetterService) {
+    private final SysUserDeptService sysUserDeptService;
+
+    public SysDeptServiceImpl(UserSetterService userSetterService, SysUserDeptService sysUserDeptService) {
         this.userSetterService = userSetterService;
+        this.sysUserDeptService = sysUserDeptService;
     }
 
     @Override
@@ -81,6 +90,12 @@ public class SysDeptServiceImpl extends BaseServiceImpl<SysDeptMapper, SysDeptPO
         if (!TOP_PARENT_ID.equals(dept.getParentId())) {
             this.baseMapper.updateHasChild(dept.getParentId());
         }
+        // 删除用户部门关联关系
+        this.sysUserDeptService.remove(
+                new QueryWrapper<SysUserDeptPO>().lambda()
+                        .in(SysUserDeptPO::getDeptId, deleteIds)
+                        .eq(SysUserDeptPO::getIdent, UserDeptIdentEnum.USER_DEPT.name())
+        );
         return result;
     }
 

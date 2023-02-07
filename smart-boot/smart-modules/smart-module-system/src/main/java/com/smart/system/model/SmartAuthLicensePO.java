@@ -90,8 +90,6 @@ public class SmartAuthLicensePO extends BaseModelUserTime {
     */
     private LicenseStatusEnum status;
 
-    private String createUser;
-
     private String remark;
 
     /**
