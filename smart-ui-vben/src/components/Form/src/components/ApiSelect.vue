@@ -47,10 +47,7 @@ export default defineComponent({
       default: null,
     },
     // api params
-    params: {
-      type: Object as PropType<Recordable>,
-      default: () => ({}),
-    },
+    params: propTypes.any.def({}),
     // support xxx.xxx.xx
     resultField: propTypes.string.def(''),
     labelField: propTypes.string.def('label'),

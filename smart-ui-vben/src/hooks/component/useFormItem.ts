@@ -9,6 +9,7 @@ import {
   nextTick,
   toRaw,
 } from 'vue'
+import { Form } from 'ant-design-vue'
 
 import { isEqual } from 'lodash-es'
 
@@ -41,6 +42,7 @@ export function useRuleFormItem<T extends Recordable>(
   watchEffect(() => {
     innerState.value = props[key]
   })
+  const formItemContext = Form.useInjectFormItemContext()
 
   const state: any = computed({
     get() {
@@ -50,8 +52,10 @@ export function useRuleFormItem<T extends Recordable>(
       if (isEqual(value, defaultState.value)) return
 
       innerState.value = value as T[keyof T]
+      // emit?.(changeEvent, value, ...(toRaw(unref(emitData)) || []))
       nextTick(() => {
         emit?.(changeEvent, value, ...(toRaw(unref(emitData)) || []))
+        nextTick(() => formItemContext.onFieldChange())
       })
     },
   })
