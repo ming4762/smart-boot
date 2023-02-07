@@ -72,6 +72,10 @@ componentMap.set('InputCountDown', CountdownInput)
 // componentMap.set('Upload', BasicUpload)
 componentMap.set('Divider', Divider)
 
+// ---- smart-boot 组件
+import SmartApiSelectDict from './smartBoot/components/SmartApiSelectDict.vue'
+componentMap.set('SmartApiSelectDict', SmartApiSelectDict)
+
 export function add(compName: ComponentType, component: Component) {
   componentMap.set(compName, component)
 }
