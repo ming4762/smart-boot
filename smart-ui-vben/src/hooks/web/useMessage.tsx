@@ -21,6 +21,10 @@ export interface NotifyApi {
   destroy(): void
 }
 
+export interface SuccessOptions {
+  msg: string
+}
+
 export declare type NotificationPlacement = 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight'
 export declare type IconType = 'success' | 'info' | 'error' | 'warning'
 export interface ModalOptionsEx extends Omit<ModalFuncProps, 'iconType'> {
@@ -108,7 +112,7 @@ function createWarningModal(options: ModalOptionsPartial) {
  * 成功
  * @param msg
  */
-const successMessage = ({ msg }: any) => {
+const successMessage = ({ msg }: SuccessOptions) => {
   Message.success(msg)
 }
 
@@ -127,12 +131,16 @@ notification.config({
   duration: 3,
 })
 
-const errorMessage = (e: Result) => {
+const errorMessage = (e: Result | string | Error) => {
+  if (isString(e)) {
+    Message.error(e)
+    return
+  }
   console.error(e)
-  const code = e.code
+  const code = (e as any).code
   switch (code) {
     case 500: {
-      createError500Modal(e)
+      createError500Modal(e as Result)
       break
     }
     default:

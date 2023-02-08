@@ -60,10 +60,6 @@ public class SysDeptSaveUpdateDTO implements Serializable {
     * 启用状态
     */
     private Boolean useYn;
-    /**
-    * 删除状态
-    */
-    private Boolean deleteYn;
 
     /**
     * 序号

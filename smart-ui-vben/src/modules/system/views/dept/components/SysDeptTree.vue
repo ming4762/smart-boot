@@ -146,10 +146,12 @@ export default defineComponent({
       dataList.value = [...unref(dataList)]
     }
 
+    const reload = () => loadData()
+
     /**
      * 加载数据函数
      */
-    const loadData = async (parentId: number | undefined | null) => {
+    const loadData = async (parentId?: number | null) => {
       const parameter: Recordable = {
         sortName: 'seq',
         sortOrder: 'asc',
@@ -210,6 +212,7 @@ export default defineComponent({
       getAttrs,
       handleAsyncLoadData,
       searchValue,
+      reload,
     }
   },
 })

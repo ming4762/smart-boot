@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
 * sys_dept - 部门表 Controller
@@ -49,6 +50,19 @@ public class SysDeptController extends BaseController<SysDeptService, SysDeptPO>
         return Result.success(
                 this.service.saveOrUpdate(model)
         );
+    }
+
+    @Operation(summary = "批量添加修改部门表")
+    @PostMapping("saveUpdateBatch")
+    @Log(value = "批量添加修改部门表", type = LogOperationTypeEnum.UPDATE)
+    @PreAuthorize("hasPermission('sys:dept', 'save') or hasPermission('sys:dept', 'update')")
+    public Result<Boolean> saveUpdateBatch(@RequestBody @Valid List<SysDeptSaveUpdateDTO> parameter) {
+        List<SysDeptPO> list = parameter.stream().map(item -> {
+            SysDeptPO dept = new SysDeptPO();
+            BeanUtils.copyProperties(item, dept);
+            return dept;
+        }).collect(Collectors.toList());
+        return Result.success(this.service.saveOrUpdateBatch(list));
     }
 
     @Override
