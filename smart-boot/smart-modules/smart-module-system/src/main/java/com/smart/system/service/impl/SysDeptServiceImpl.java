@@ -1,7 +1,6 @@
 package com.smart.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.google.common.collect.ImmutableList;
 import com.smart.crud.constants.CrudCommonEnum;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.crud.service.BaseServiceImpl;
@@ -20,10 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -151,7 +147,7 @@ public class SysDeptServiceImpl extends BaseServiceImpl<SysDeptMapper, SysDeptPO
         SysDeptListVo vo = new SysDeptListVo();
         BeanUtils.copyProperties(dept, vo);
         // 查询创建人更新人信息
-        this.userSetterService.setCreateUpdateUser(ImmutableList.of(vo));
+//        this.userSetterService.setCreateUpdateUser(ImmutableList.of(vo));
         // 查询上级
         if (vo.getParentId() != 0) {
             vo.setParentDept(super.getById(vo.getParentId()));
@@ -165,6 +161,29 @@ public class SysDeptServiceImpl extends BaseServiceImpl<SysDeptMapper, SysDeptPO
         boolean result = super.save(entity);
         if (entity.getParentId() != null && !TOP_PARENT_ID.equals(entity.getParentId())) {
             this.baseMapper.updateHasChild(entity.getParentId());
+        }
+        return result;
+    }
+
+    /**
+     * 批量修改插入
+     *
+     * @param entityList 实体对象集合
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean saveOrUpdateBatch(Collection<SysDeptPO> entityList) {
+        boolean result = super.saveOrUpdateBatch(entityList);
+        List<Long> parentIdList = entityList.stream()
+                .map(item -> {
+                    if (item.getParentId() != null && !TOP_PARENT_ID.equals(item.getParentId())) {
+                        return item.getParentId();
+                    }
+                    return null;
+                }).filter(Objects::nonNull)
+                .collect(Collectors.toList());
+        if (!CollectionUtils.isEmpty(parentIdList)) {
+            parentIdList.forEach(item -> this.baseMapper.updateHasChild(item));
         }
         return result;
     }

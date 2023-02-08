@@ -3,11 +3,9 @@ package com.smart.system.model;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.smart.crud.model.BaseModel;
+import com.smart.crud.model.BaseModelUserTime;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
 
 /**
 * sys_dept - 部门表
@@ -17,7 +15,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @TableName("sys_dept")
-public class SysDeptPO extends BaseModel {
+public class SysDeptPO extends BaseModelUserTime {
 
     private static final long serialVersionUID = 8885082382210229000L;
     /**
@@ -65,26 +63,6 @@ public class SysDeptPO extends BaseModel {
     * delete_yn - 删除状态
     */
     private Boolean deleteYn;
-
-    /**
-    * create_user_id - 创建人ID
-    */
-    private Long createUserId;
-
-    /**
-    * create_time - 创建时间
-    */
-    private LocalDateTime createTime;
-
-    /**
-    * update_user_id - 更新人员ID
-    */
-    private Long updateUserId;
-
-    /**
-    * update_time - 更新时间
-    */
-    private LocalDateTime updateTime;
 
     /**
     * seq - 需要

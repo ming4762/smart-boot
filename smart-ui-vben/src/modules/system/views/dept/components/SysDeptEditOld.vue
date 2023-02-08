@@ -97,7 +97,7 @@ import { useLoadDictItem } from '/@/modules/system/hooks/dict/SysDictHooks'
 import { message } from 'ant-design-vue'
 
 export default defineComponent({
-  name: 'SysDeptEdit',
+  name: 'SysDeptEditOld',
   props: {
     deptCode: {
       type: Number as PropType<number>,

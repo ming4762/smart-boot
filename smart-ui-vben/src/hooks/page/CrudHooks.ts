@@ -281,13 +281,14 @@ export const useAddEdit = (
 type DeleteParameter = {
   idField: string
   listHandler?: Function
+  afterDelete?: Function
 }
 
 /**
  * 删除操作
  */
 export const useVxeDelete = (
-  gridRef: Ref,
+  gridRef: Ref | null,
   i18nRender: Function,
   deleteHandler: (idList: Array<any>) => Promise<void>,
   parameter: DeleteParameter,
@@ -300,8 +301,8 @@ export const useVxeDelete = (
       onOk: async () => {
         await deleteHandler(idList)
         message.success(i18nRender('common.message.deleteSuccess'))
-        if (parameter.listHandler) {
-          parameter.listHandler()
+        if (parameter.afterDelete) {
+          parameter.afterDelete()
         }
       },
     })
@@ -312,7 +313,7 @@ export const useVxeDelete = (
    */
   const handleDeleteByCheckbox = () => {
     // 获取选中行
-    const selectRows = gridRef.value.getCheckboxRecords()
+    const selectRows = gridRef?.value.getCheckboxRecords()
     if (selectRows.length === 0) {
       message.error(i18nRender('common.notice.deleteChoose'))
       return false
