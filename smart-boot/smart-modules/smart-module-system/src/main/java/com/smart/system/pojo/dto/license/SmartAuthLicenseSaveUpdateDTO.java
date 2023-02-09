@@ -92,4 +92,6 @@ public class SmartAuthLicenseSaveUpdateDTO implements Serializable {
      */
     private String contractNo;
 
+    private Integer seq;
+
 }

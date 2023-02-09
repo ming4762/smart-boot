@@ -4,14 +4,13 @@ import com.smart.commons.core.log.Log;
 import com.smart.commons.core.log.LogOperationTypeEnum;
 import com.smart.commons.core.message.Result;
 import com.smart.crud.controller.BaseController;
-import com.smart.crud.query.PageSortQuery;
 import com.smart.system.model.SmartAuthLicensePO;
 import com.smart.system.pojo.dto.license.SmartAuthLicenseSaveUpdateDTO;
+import com.smart.system.pojo.dto.system.SmartAuthLicenseListBySystemDTO;
 import com.smart.system.service.SmartAuthLicenseService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
-import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
 * smart_auth_license - 许可证管理 Controller
@@ -31,22 +31,30 @@ import java.util.List;
 @RequestMapping("/smart/license")
 public class SmartAuthLicenseController extends BaseController<SmartAuthLicenseService, SmartAuthLicensePO> {
 
-    @Override
-    @PostMapping("list")
+    @PostMapping("listBySystem")
     @Operation(summary = "查询角色列表（支持分页、实体类属性查询）")
     @PreAuthorize("hasPermission('sys:license', 'query')")
-    public Result<Object> list(@RequestBody @NonNull PageSortQuery parameter) {
+    public Result<Object> listBySystem(@RequestBody @Valid SmartAuthLicenseListBySystemDTO parameter) {
+        if (parameter.getSystemId() == null) {
+            return Result.success();
+        }
+        parameter.getParameter().put("systemId@=", parameter.getSystemId());
         return super.list(parameter);
     }
 
     @Operation(summary = "添加修改许可证管理")
-    @PostMapping("saveUpdate")
+    @PostMapping("saveUpdateBatch")
     @PreAuthorize("hasPermission('sys:license', 'save') or hasPermission('sys:license', 'update')")
     @Log(value = "添加修改许可证管理", type = LogOperationTypeEnum.UPDATE)
-    public Result<Boolean> saveUpdate(@RequestBody @Valid SmartAuthLicenseSaveUpdateDTO parameter) {
-      	SmartAuthLicensePO model = new SmartAuthLicensePO();
-      	BeanUtils.copyProperties(parameter, model);
-        return super.saveUpdate(model);
+    public Result<Boolean> saveUpdateBatch(@RequestBody @Valid List<SmartAuthLicenseSaveUpdateDTO> parameter) {
+        List<SmartAuthLicensePO> list = parameter.stream()
+                .map(item -> {
+                    SmartAuthLicensePO model = new SmartAuthLicensePO();
+                    BeanUtils.copyProperties(item, model);
+                    return model;
+                }).collect(Collectors.toList());
+
+        return super.batchSaveUpdate(list);
     }
 
     @Override

@@ -36,7 +36,7 @@ public class SmartAuthLicensePO extends BaseModelUserTime {
     /**
     * project_id - 所属项目
     */
-    private Long projectId;
+    private Long systemId;
 
     /**
     * mac_address - mac地址
@@ -97,10 +97,6 @@ public class SmartAuthLicensePO extends BaseModelUserTime {
      */
     private String enterprise;
 
-    /**
-     * 项目&系统
-     */
-    private String project;
 
     /**
      * 系统版本号
@@ -111,4 +107,6 @@ public class SmartAuthLicensePO extends BaseModelUserTime {
      * 合同编号
      */
     private String contractNo;
+
+    private Integer seq;
 }
