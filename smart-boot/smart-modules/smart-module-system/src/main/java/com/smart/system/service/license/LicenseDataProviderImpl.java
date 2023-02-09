@@ -6,8 +6,9 @@ import com.smart.license.core.model.LicenseCheckProjectInfo;
 import com.smart.license.core.model.LicenseCheckServerInfo;
 import com.smart.license.server.LicenseDataProvider;
 import com.smart.license.server.LicenseGeneratorParameter;
-import com.smart.system.mapper.SmartAuthLicenseMapper;
-import com.smart.system.model.SmartAuthLicensePO;
+import com.smart.system.model.SysSystemPO;
+import com.smart.system.pojo.vo.license.SmartAuthLicenseQueryVO;
+import com.smart.system.service.SmartAuthLicenseService;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -19,10 +20,10 @@ import java.util.*;
 @Component
 public class LicenseDataProviderImpl implements LicenseDataProvider {
 
-    private final SmartAuthLicenseMapper smartAuthLicenseMapper;
+    private final SmartAuthLicenseService licenseService;
 
-    public LicenseDataProviderImpl(SmartAuthLicenseMapper smartAuthLicenseMapper) {
-        this.smartAuthLicenseMapper = smartAuthLicenseMapper;
+    public LicenseDataProviderImpl(SmartAuthLicenseService licenseService) {
+        this.licenseService = licenseService;
     }
 
     /**
@@ -43,7 +44,7 @@ public class LicenseDataProviderImpl implements LicenseDataProvider {
      */
     @Override
     public Map<String, Object> dataMap(LicenseGeneratorParameter parameter) {
-        SmartAuthLicensePO smartAuthLicense = this.smartAuthLicenseMapper.selectById(parameter.getDataId());
+        SmartAuthLicenseQueryVO smartAuthLicense = (SmartAuthLicenseQueryVO) this.licenseService.getById(parameter.getDataId());
         if (smartAuthLicense == null) {
             return Collections.emptyMap();
         }
@@ -58,7 +59,7 @@ public class LicenseDataProviderImpl implements LicenseDataProvider {
         data.put(ConstantsEnum.SERVER_INFO.name(), licenseCheckInfo);
         // 获取项目信息
         LicenseCheckProjectInfo projectInfo = LicenseCheckProjectInfo.builder()
-                .project(smartAuthLicense.getProject())
+                .project(Optional.ofNullable(smartAuthLicense.getSystem()).map(SysSystemPO::getName).orElse(""))
                 .enterprise(smartAuthLicense.getEnterprise())
                 .version(smartAuthLicense.getVersion())
                 .build();
