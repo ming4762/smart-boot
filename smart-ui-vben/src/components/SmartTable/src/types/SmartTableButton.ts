@@ -1,6 +1,7 @@
-import { ButtonProps } from '/@/components/Button'
+import type { ButtonProps } from '/@/components/Button'
 import type { ComputedRef, Ref } from 'vue'
-import {SmartAuth} from '/#/utils';
+import type { SmartAuth } from '/#/utils'
+import type { VxeToolbarPropTypes } from 'vxe-table'
 
 export type SmartTableButtonType = 'text' | 'submit' | 'reset' | 'button'
 
@@ -22,7 +23,8 @@ export type SmartTableButtonCode =
   | 'reset_custom'
   | 'ModalAdd'
   | 'ModalEdit'
-  | 'smartDelete'
+
+export type SmartTableToolCode = 'show_search'
 
 export interface SmartTableButtonRender {
   name?: string
@@ -58,4 +60,10 @@ export interface SmartTableButton extends SmartTableBasicButtonDropdowns {
   clickLoading?: boolean
   // 是否使用插槽
   slot?: string
+}
+
+export interface SmartTableToolbarTool extends VxeToolbarPropTypes.ToolConfig {
+  code?: SmartTableToolCode | string
+
+  props?: Recordable
 }

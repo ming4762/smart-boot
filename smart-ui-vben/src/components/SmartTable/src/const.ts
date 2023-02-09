@@ -19,3 +19,10 @@ export const DEFAULT_SIZE = defaultSize
 export const DEFAULT_PAGE_LAYOUTS = pageLayouts
 
 export const ACTION_COLUMN_FLAG = 'ACTION'
+
+export enum SmartTableCode {
+  /**
+   * 是否显示搜索
+   */
+  showSearch = 'show_search',
+}

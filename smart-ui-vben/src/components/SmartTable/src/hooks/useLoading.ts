@@ -16,6 +16,7 @@ export const useLoading = (props: ComputedRef<SmartTableProps>) => {
   const getLoading = computed(() => unref(loadingRef))
 
   const setLoading = (loading: boolean) => {
+    // getTableInstance().loading = loading
     loadingRef.value = loading
   }
 

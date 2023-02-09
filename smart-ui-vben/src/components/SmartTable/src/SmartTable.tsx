@@ -6,6 +6,7 @@ import { computed, defineComponent, Ref, ref, unref } from 'vue'
 import { TableSearchLayout } from '/@/components/Layout'
 import { BasicForm } from '/@/components/Form'
 import { useModal } from '/@/components/Modal'
+import { useI18n } from '/@/hooks/web/useI18n'
 
 import { smartTableProps } from './props'
 import { useTableSearchForm } from './hooks/useTableSearchForm'
@@ -20,14 +21,18 @@ import SmartTableAddEditModal from './components/SmartTableAddEditModal'
 import './renderer/VxeTableButtonRenderer'
 import { error } from '/@/utils/log'
 
+import './SmartTable.less'
+import { useToolbarEvent } from '/@/components/SmartTable/src/hooks/useToolbarEvent'
+
 export default defineComponent({
   name: 'SmartTable',
   components: {
     BasicForm,
   },
   props: smartTableProps,
-  emits: ['register', 'after-load'],
+  emits: ['register', 'after-load', 'toolbar-tool-click'],
   setup(props, { emit, slots, attrs }) {
+    const { t } = useI18n()
     const tableElRef = ref<VxeGridInstance>() as Ref<VxeGridInstance>
     const wrapRef = ref(null)
 
@@ -42,11 +47,6 @@ export default defineComponent({
     const setProps = (props: Partial<SmartTableProps>) => {
       innerPropsRef.value = { ...unref(innerPropsRef), ...props }
     }
-
-    /**
-     * 加载状态
-     */
-    const { getLoading, setLoading } = useLoading(getTableProps)
 
     // -------------- 分页 ---------------------------
     const {
@@ -69,6 +69,11 @@ export default defineComponent({
     const setCheckboxRow = (rows: any | any[], checked: boolean) =>
       getTableInstance()!.setCheckboxRow(rows, checked)
 
+    /**
+     * 加载状态
+     */
+    const { getLoading, setLoading } = useLoading(getTableProps)
+
     // -------------- 搜索表单 ------------------------
     const {
       getSearchFormProps,
@@ -77,6 +82,7 @@ export default defineComponent({
       getSearchFormColumnSlot,
       registerSearchForm,
       searchFormAction,
+      getSearchFormVisible,
     } = useTableSearchForm(getTableProps, slots, (params) => query(params), getLoading)
 
     // -------------- 加载函数 ------------------------
@@ -129,12 +135,27 @@ export default defineComponent({
     })
 
     // ------------- toolbar配置 ----------------------
-    const { getToolbarConfigInfo } = useTableToolbarConfig(getTableProps, {
+
+    const { getToolbarConfigInfo } = useTableToolbarConfig(getTableProps, t, {
       deleteByCheckbox,
       showAddModal,
       editByCheckbox,
-      reload,
+      query,
+      getSearchFormVisible: searchFormAction.getSearchFormVisible,
     })
+
+    /**
+     * 表格事件
+     */
+    const { getToolbarEvents } = useToolbarEvent(emit, {
+      setSearchFormVisible: searchFormAction.setSearchFormVisible,
+    })
+    const getTableEvents = computed(() => {
+      return {
+        ...unref(getToolbarEvents),
+      }
+    })
+
     /**
      * 获取table v-bing
      */
@@ -148,8 +169,8 @@ export default defineComponent({
         toolbarConfig: unref(getToolbarConfigInfo),
         proxyConfig: unref(getProxyConfigRef),
         customConfig: unref(getCustomConfig),
+        ...unref(getTableEvents),
       }
-
       propsData = omit(propsData, [])
       return propsData
     })
@@ -214,11 +235,14 @@ export default defineComponent({
       addEditModalRef,
       wrapRef,
       getAddEditFormSlots,
+      getSearchFormVisible,
+      getTableEvents,
     }
   },
   render() {
     const {
       getTableProps: { useSearchForm },
+      getSearchFormVisible,
     } = this
 
     // const $this = this
@@ -233,7 +257,11 @@ export default defineComponent({
       slots.search = renderSearchForm(this)
     }
     // @ts-ignore
-    return <TableSearchLayout ref="wrapRef">{slots}</TableSearchLayout>
+    return (
+      <TableSearchLayout showSearch={getSearchFormVisible} class="smart-table" ref="wrapRef">
+        {slots}
+      </TableSearchLayout>
+    )
   },
 })
 

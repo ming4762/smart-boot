@@ -67,6 +67,8 @@ export default {
     settingFullScreen: 'Full Screen',
     index: 'Index',
     total: 'total of {total}',
+    showSearch: 'Show search',
+    hideSearch: 'Hide search',
   },
   time: {
     before: ' ago',

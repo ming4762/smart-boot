@@ -4,7 +4,7 @@ import type { FormProps } from '/@/components/Form'
 import type { FetchParams, SmartTableProps } from '../types/SmartTableType'
 import type { SmartSearchFormParameter } from '../types/SmartSearchFormType'
 
-import { computed, unref } from 'vue'
+import { computed, ref, unref } from 'vue'
 import { useForm } from '/@/components/Form'
 import { isArray, isBoolean } from '/@/utils/is'
 
@@ -14,6 +14,19 @@ export const useTableSearchForm = (
   fetch: (opt?: FetchParams | undefined) => Promise<void>,
   getLoading: ComputedRef<boolean | undefined>,
 ) => {
+  /**
+   * 搜索form显示状态
+   */
+  const searchFormVisibleRef = ref(unref(propsRef)?.searchFormConfig?.defaultVisible !== false)
+  const setSearchFormVisible = (visible?: boolean) => {
+    if (isBoolean(visible)) {
+      searchFormVisibleRef.value = visible
+    } else {
+      searchFormVisibleRef.value = !unref(searchFormVisibleRef)
+    }
+  }
+  const getSearchFormVisible = computed(() => unref(searchFormVisibleRef))
+
   const [registerSearchForm, searchFormAction] = useForm()
 
   /**
@@ -76,9 +89,12 @@ export const useTableSearchForm = (
   })
 
   /**
-   * 获取搜索扁担参数
+   * 获取搜索表单参数
    */
   const getSearchFormParameter = (): SmartSearchFormParameter => {
+    if (!unref(propsRef).useSearchForm) {
+      return {}
+    }
     const searchForm = searchFormAction.getFieldsValue()
     const searchWithSymbol = unref(propsRef).searchFormConfig?.searchWithSymbol
     const result: SmartSearchFormParameter = {
@@ -162,9 +178,12 @@ export const useTableSearchForm = (
     getSearchFormSlot,
     getSearchFormColumnSlot,
     registerSearchForm,
+    getSearchFormVisible,
     searchFormAction: {
       ...searchFormAction,
       getSearchFormParameter,
+      getSearchFormVisible,
+      setSearchFormVisible,
     },
   }
 }
