@@ -1,4 +1,4 @@
-import { isObject, isString } from '/@/utils/is'
+import {isArray, isObject, isString} from '/@/utils/is'
 
 const DATE_TIME_FORMAT = 'YYYY-MM-DD HH:mm:ss'
 
@@ -21,11 +21,18 @@ export function joinTimestamp(join: boolean, restful = false): string | object {
 /**
  * @description: Format request parameter time
  */
-export function formatRequestDate(params: Recordable) {
+export function formatRequestDate(params: Recordable | Array<Recordable>) {
+  if (isArray(params)) {
+    params.forEach((item) => doFormatRequestDate(item))
+    return
+  }
+  doFormatRequestDate(params)
+}
+
+function doFormatRequestDate(params: Recordable) {
   if (Object.prototype.toString.call(params) !== '[object Object]') {
     return
   }
-
   for (const key in params) {
     const format = params[key]?.format ?? null
     if (format && typeof format === 'function') {
