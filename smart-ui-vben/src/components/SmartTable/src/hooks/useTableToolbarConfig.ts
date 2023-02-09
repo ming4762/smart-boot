@@ -2,7 +2,7 @@ import type { ComputedRef } from 'vue'
 import type { ButtonProps } from '/@/components/Button'
 
 import type { SmartTableProps, SmartTableToolbarConfig } from '../types/SmartTableType'
-import type { SmartTableButton } from '../types/SmartTableButton'
+import type { SmartTableButton, SmartTableToolbarTool } from '../types/SmartTableButton'
 import type { SizeType } from 'ant-design-vue/es/config-provider'
 import type { VxeToolbarPropTypes } from 'vxe-table'
 import type { FetchParams } from '../types/SmartTableType'
@@ -10,10 +10,13 @@ import type { FetchParams } from '../types/SmartTableType'
 import { computed, ref, unref } from 'vue'
 
 import { merge } from 'lodash-es'
-import { useI18n } from '/@/hooks/web/useI18n'
-import { isPromise } from '/@/utils/is'
+import { isBoolean, isPromise } from '/@/utils/is'
 
-import { VxeTableToolButtonAntRenderer } from '../renderer/VxeTableButtonRenderer'
+import {
+  VxeTableToolButtonAntRenderer,
+  VxeTableToolAntRenderer,
+} from '../renderer/VxeTableButtonRenderer'
+import { SmartTableCode } from '../const'
 
 const tableButtonSizeMap: { [key: string]: SizeType } = {
   medium: 'middle',
@@ -25,15 +28,15 @@ interface TableAction {
   deleteByCheckbox: () => Promise<boolean | undefined>
   showAddModal: () => void
   editByCheckbox: () => Promise<boolean> | boolean
-  reload: (opt?: FetchParams) => Promise<any>
+  query: (opt?: FetchParams) => Promise<any>
+  getSearchFormVisible: ComputedRef<boolean>
 }
 
 export const useTableToolbarConfig = (
   tableProps: ComputedRef<SmartTableProps>,
-  { deleteByCheckbox, showAddModal, editByCheckbox, reload }: TableAction,
+  t: Function,
+  { deleteByCheckbox, showAddModal, editByCheckbox, query, getSearchFormVisible }: TableAction,
 ) => {
-  const { t } = useI18n()
-
   // const configRef = ref<SmartTableToolbarConfig>({})
 
   const getToolbarConfigInfo = computed<SmartTableToolbarConfig | undefined>(() => {
@@ -50,13 +53,45 @@ export const useTableToolbarConfig = (
       ...toolbarConfig,
       buttons,
       refresh,
+      tools: getTools(toolbarConfig),
     }
   })
+
+  const getTools = (toolbarConfig: SmartTableToolbarConfig) => {
+    const { tools, showSearch } = toolbarConfig
+    if (!tools && !showSearch) {
+      return undefined
+    }
+    const result: SmartTableToolbarTool[] = [...(tools || [])]
+    if (showSearch && unref(tableProps).useSearchForm) {
+      if (isBoolean(showSearch)) {
+        const props = computed(() => {
+          return {
+            circle: true,
+            icon: 'vxe-icon-search',
+            title: unref(getSearchFormVisible)
+              ? t('component.table.hideSearch')
+              : t('component.table.showSearch'),
+          }
+        })
+        result.push({
+          code: SmartTableCode.showSearch,
+          toolRender: {
+            name: VxeTableToolAntRenderer,
+          },
+          props,
+        })
+      } else {
+        result.push(showSearch)
+      }
+    }
+    return result
+  }
 
   const getDefaultRefresh = (): VxeToolbarPropTypes.RefreshConfig => {
     return {
       queryMethod: (params) => {
-        return reload(params)
+        return query(params)
       },
     }
   }

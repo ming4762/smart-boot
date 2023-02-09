@@ -1,6 +1,6 @@
 import type { VxeTableDefines, VxeGridProps, VxeGridPropTypes, VxeGridInstance } from 'vxe-table'
 import type { SmartSearchFormProps } from './SmartSearchFormType'
-import type { SmartTableButton } from './SmartTableButton'
+import type { SmartTableButton, SmartTableToolbarTool } from './SmartTableButton'
 import type { SmartTableAddEditConfig } from './SmartTableAddEditType'
 import type { NamePath } from 'ant-design-vue/es/form/interface'
 
@@ -28,6 +28,9 @@ export interface FetchParams {
 
 export interface SmartTableToolbarConfig extends VxeGridPropTypes.ToolbarConfig {
   buttons?: SmartTableButton[]
+  tools?: SmartTableToolbarTool[]
+  // 是否显示搜索
+  showSearch?: boolean | SmartTableToolbarTool
 }
 
 export interface SmartTableAjaxQueryParams extends VxeGridPropTypes.ProxyAjaxQueryParams {

@@ -71,6 +71,8 @@ export default {
     index: '序号',
 
     total: '共 {total} 条数据',
+    showSearch: '显示搜索',
+    hideSearch: '隐藏搜索',
   },
   time: {
     before: '前',
