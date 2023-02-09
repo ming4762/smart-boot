@@ -1,12 +1,14 @@
 <template>
   <SmartTable
+    class="system-table"
     v-bind="$attrs"
     @register="registerTable"
-    @current-change="handleCurrentChange"
+    @cell-click="handleCellClick"
     @after-load="handleAfterLoad" />
 </template>
 
 <script lang="ts" setup>
+import { ref, unref, watch } from 'vue'
 import { propTypes } from '/@/utils/propTypes'
 
 import { listSystemApi } from '/@/api/system/SystemApi'
@@ -16,9 +18,13 @@ import { SmartTable, useSmartTable } from '/@/components/SmartTable'
 const props = defineProps({
   // 是否自动选中第一行
   autoSelected: propTypes.bool.def(true),
+  // 是否支持点击取消
+  clickCancel: propTypes.bool,
 })
 
 const emit = defineEmits(['current-change'])
+
+const currentRef = ref<any>({})
 
 /**
  * 数据加载完成时间
@@ -27,14 +33,26 @@ const handleAfterLoad = () => {
   if (props.autoSelected) {
     const dataList = getData()
     if (dataList.length > 0) {
-      getTableInstance().setCurrentRow(dataList[0])
-      emit('current-change', dataList[0])
+      currentRef.value = dataList[0]
     }
   }
 }
 
-const handleCurrentChange = ({ row }) => {
-  emit('current-change', row)
+watch(currentRef, (value) => {
+  if (value.id) {
+    getTableInstance().setCurrentRow(value)
+  } else {
+    getTableInstance().clearCurrentRow()
+  }
+  emit('current-change', value)
+})
+
+const handleCellClick = ({ row }) => {
+  if (unref(currentRef).id === row.id && props.clickCancel) {
+    currentRef.value = {}
+  } else {
+    currentRef.value = row
+  }
 }
 
 const [registerTable, { getTableInstance, getData }] = useSmartTable({
@@ -72,4 +90,10 @@ const [registerTable, { getTableInstance, getData }] = useSmartTable({
 })
 </script>
 
-<style scoped></style>
+<style lang="less" scoped>
+.system-table {
+  :deep(.vxe-body--row) {
+    cursor: pointer;
+  }
+}
+</style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="full-height">
+  <div class="full-height page-container">
     <SmartTable @register="registerTable" :size="getTableSize">
       <template #table-option="{ row }">
         <SmartVxeTableAction :actions="getActions(row)" />
@@ -70,6 +70,9 @@ const [registerTable, { editByRowModal, deleteByRow }] = useSmartTable({
   },
   toolbarConfig: {
     refresh: true,
+    custom: true,
+    zoom: true,
+    showSearch: true,
     buttons: [
       {
         code: 'ModalAdd',
