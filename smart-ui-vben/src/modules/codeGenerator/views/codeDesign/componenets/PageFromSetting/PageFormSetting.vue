@@ -1,90 +1,66 @@
 <template>
   <div class="full-height">
     <vxe-grid
+      v-bind="$attrs"
       ref="tableRef"
-      row-key
       :size="tableSizeConfig"
       :columns="columns"
-      :data="data"
-      align="center"
+      row-key
       highlight-hover-row
       stripe
-      v-bind="$attrs">
+      :data="data"
+      align="center">
       <template #table-drop="{ rowIndex }">
         <div class="table-drop" :data-id="rowIndex">
           <MenuOutlined />
         </div>
       </template>
       <template #table-title="{ row }">
-        <a-input v-model:value="row.title" :disabled="!row.visible" :size="formSizeConfig" />
+        <a-input v-model:value="row.title" :size="formSizeConfig" />
       </template>
       <template #table-visible="{ row }">
         <a-checkbox v-model:checked="row.visible" :size="formSizeConfig" />
       </template>
       <template #table-hidden="{ row }">
-        <a-checkbox v-model:checked="row.hidden" :disabled="!row.visible" :size="formSizeConfig" />
+        <a-checkbox v-model:checked="row.hidden" :size="formSizeConfig" />
       </template>
       <template #table-readonly="{ row }">
-        <a-checkbox
-          v-model:checked="row.readonly"
-          :disabled="!row.visible"
-          :size="formSizeConfig" />
-      </template>
-      <template #table-used="{ row }">
-        <a-checkbox v-model:checked="row.used" :disabled="!row.visible" :size="formSizeConfig" />
-      </template>
-      <template #table-searchSymbol="{ row }">
-        <a-select
-          v-model:value="row.searchSymbol"
-          :disabled="!row.visible"
-          :size="formSizeConfig"
-          style="width: 100px">
-          <a-select-option v-for="item in searchSymbolList" :key="item" :value="item">
-            {{ item }}
-          </a-select-option>
-        </a-select>
+        <a-checkbox v-model:checked="row.readonly" :size="formSizeConfig" />
       </template>
       <template #table-useTableSearch="{ row }">
-        <a-checkbox
-          v-model:checked="row.useTableSearch"
-          :disabled="!row.visible"
-          :size="formSizeConfig" />
+        <a-checkbox v-model:checked="row.useTableSearch" :size="formSizeConfig" />
       </template>
       <template #table-tableName="{ row }">
         <a-input
           v-model:value="row.tableName"
-          :disabled="!(row.useTableSearch && row.visible)"
+          :disabled="!row.useTableSearch"
           :size="formSizeConfig" />
       </template>
       <template #table-keyColumnName="{ row }">
         <a-input
           v-model:value="row.keyColumnName"
-          :disabled="!(row.useTableSearch && row.visible)"
+          :disabled="!row.useTableSearch"
           :size="formSizeConfig" />
       </template>
       <template #table-valueColumnName="{ row }">
         <a-input
           v-model:value="row.valueColumnName"
-          :disabled="!(row.useTableSearch && row.visible)"
+          :disabled="!row.useTableSearch"
           :size="formSizeConfig" />
       </template>
       <template #table-tableWhere="{ row }">
         <a-input
           v-model:value="row.tableWhere"
-          :disabled="!(row.useTableSearch && row.visible)"
+          :disabled="!row.useTableSearch"
           :size="formSizeConfig" />
       </template>
       <template #table-controlType="{ row }">
-        <a-select
-          v-model:value="row.controlType"
-          :disabled="!row.visible"
-          style="width: 100px"
-          :size="formSizeConfig">
+        <a-select v-model:value="row.controlType" :size="formSizeConfig" style="width: 100px">
           <a-select-option v-for="item in controlList" :key="item.key" :value="item.key">
             {{ $t(item.value) }}
           </a-select-option>
         </a-select>
-        <a-tooltip v-if="row.controlType === 'selectTable'" placement="top">
+        <a-tooltip v-if="row.controlType === 'SELECT_TABLE'" placement="top">
           <template #title>
             <span>选择表格</span>
           </template>
@@ -94,16 +70,13 @@
         </a-tooltip>
       </template>
       <template #table-rules="{ row }">
-        <a-select
-          v-model:value="row.rules"
-          :disabled="!row.visible"
-          mode="multiple"
-          :size="formSizeConfig"
-          style="width: 160px">
-          <a-select-option v-for="item in ruleList" :key="item.key" :value="item.key">
-            {{ item.value }}
-          </a-select-option>
-        </a-select>
+        <Icon
+          v-if="row.autoValidate === true || (row.ruleList && row.ruleList.length > 0)"
+          color="red"
+          icon="ant-design:info-circle-outlined" />
+        <a-button :size="tableButtonSizeConfig" @click="() => openRuleSetModal(true, row)">
+          设置规则
+        </a-button>
       </template>
       <template #table-visible-header="{ column }">
         <a-checkbox v-model:checked="headerVisibleCheckboxChecked" :size="formSizeConfig" />
@@ -121,33 +94,40 @@
         <a-checkbox v-model:checked="headerUseCheckboxChecked" :size="formSizeConfig" />
         {{ $t(column.title.replace('{', '').replace('}', '')) }}
       </template>
+      <template #table-used="{ row }">
+        <a-checkbox v-model:checked="row.used" :disabled="!row.visible" :size="formSizeConfig" />
+      </template>
     </vxe-grid>
-    <PageAddendumTableChose
-      v-model:visible="choseAddendumModalVisible"
-      :select-table-list="currentRow.selectTableList == null ? [] : currentRow.selectTableList"
-      :multiple="false"
-      @chose="handleChoseTable" />
+    <!--  下拉表格设置  -->
+    <PageAddendumTableChoseModal
+      @ok="handleChoseTable"
+      :select-table-list="currentRow.selectTableList === null ? [] : currentRow.selectTableList"
+      @register="registerSelectTableModal" />
+    <!--  验证规则  -->
+    <FormRuleSetModal @register="registerFormRuleSetModal" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, toRefs, watch } from 'vue'
+import { defineComponent, ref, onMounted, watch, toRefs } from 'vue'
 import type { Ref, PropType } from 'vue'
+import { useI18n } from '/@/hooks/web/useI18n'
 
 import { MenuOutlined, PlusOutlined } from '@ant-design/icons-vue'
 
-import PageAddendumTableChose from './PageAddendumTableChose.vue'
-
+import FormRuleSetModal from './FormRuleSetModal.vue'
 import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
-import { useVxeTableSortable } from '/@/hooks/vxeTable/useVxeTableSortable'
+import { useModal } from '/@/components/Modal'
+import PageAddendumTableChoseModal from '../PageAddendumTableChoseModal.vue'
 
+import { useVxeTableSortable } from '/@/hooks/vxeTable/useVxeTableSortable'
 import {
   controlList,
-  ruleList,
-  searchSymbolList,
+  getRuleList,
   vueTableHeaderCheckboxSupport,
   vueChoseSelectTableSupport,
-} from './PageSettingSupport'
+} from '../PageSettingSupport'
+import Icon from '/@/components/Icon/src/Icon.vue'
 
 const copyField = [
   'columnName',
@@ -178,22 +158,20 @@ const createDataFromTableData = (tableData: Array<any>, editData: Ref | undefine
       hidden: false,
       used: true,
       controlType: 'INPUT',
-      searchSymbol: '=',
       rules: [],
       useTableSearch: false,
     })
   })
 }
 
-/**
- * 搜索配置页面
- */
 export default defineComponent({
-  name: 'PageSearchSetting',
+  name: 'PageFormSetting',
   components: {
+    Icon,
     MenuOutlined,
     PlusOutlined,
-    PageAddendumTableChose,
+    FormRuleSetModal,
+    PageAddendumTableChoseModal,
   },
   props: {
     tableData: {
@@ -205,11 +183,15 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const { tableData, editData } = toRefs(props)
     const sizeConfigHoops = useSizeSetting()
+    const { t } = useI18n()
+    const { tableData, editData } = toRefs(props)
     const tableRef = ref()
     const data = ref<Array<any>>([])
     const currentRow = ref<any>({})
+
+    const [registerFormRuleSetModal, { openModal: openRuleSetModal }] = useModal()
+
     watch(tableData, () => {
       data.value = createDataFromTableData(tableData.value, editData)
     })
@@ -219,18 +201,21 @@ export default defineComponent({
     const getData = () => {
       return data.value
     }
+
+    const { checked } = vueTableHeaderCheckboxSupport(data, 'visible')
     return {
-      ...sizeConfigHoops,
       data,
       getData,
       tableRef,
       currentRow,
+      ...sizeConfigHoops,
+      openRuleSetModal,
+      registerFormRuleSetModal,
       ...vueChoseSelectTableSupport(currentRow),
       ...useVxeTableSortable(tableRef, '.table-drop', data),
-      ruleList: ref(ruleList),
+      ruleList: ref(getRuleList(t)),
       controlList: ref(controlList),
-      searchSymbolList: ref(searchSymbolList),
-      headerVisibleCheckboxChecked: vueTableHeaderCheckboxSupport(data, 'visible').checked,
+      headerVisibleCheckboxChecked: checked,
       headerHiddenCheckboxChecked: vueTableHeaderCheckboxSupport(data, 'hidden', false).checked,
       headerReadonlyCheckboxChecked: vueTableHeaderCheckboxSupport(data, 'readonly', false).checked,
       headerUseCheckboxChecked: vueTableHeaderCheckboxSupport(data, 'used', true).checked,
@@ -309,14 +294,6 @@ export default defineComponent({
           },
         },
         {
-          title: '{generator.views.searchSetting.title.searchSymbol}',
-          field: 'searchSymbol',
-          width: 120,
-          slots: {
-            default: 'table-searchSymbol',
-          },
-        },
-        {
           title: '{generator.views.formSetting.title.useTableSearch}',
           field: 'useTableSearch',
           width: 110,
@@ -325,7 +302,7 @@ export default defineComponent({
           },
         },
         {
-          title: '{generator.views.code.table.tableName}',
+          title: '{generator.views.codeCreateForm.title.tableName}',
           field: 'tableName',
           width: 120,
           slots: {
@@ -357,9 +334,17 @@ export default defineComponent({
           },
         },
         {
+          title: '{generator.views.formSetting.title.rules}',
+          field: 'rules',
+          width: 180,
+          slots: {
+            default: 'table-rules',
+          },
+        },
+        {
           title: '{generator.views.code.table.remarks}',
           field: 'remarks',
-          minWidth: 160,
+          width: 160,
           align: 'left',
           headerAlign: 'center',
         },

@@ -24,7 +24,7 @@
                 @click="() => openPageAddendumTableChoseModal(true, {})" />
               <PageAddendumTableChoseModal
                 :select-table-list="model.relatedTableList"
-                :setAddEditFieldsValue="setFieldsValue"
+                @ok="handleSetAddendumTable"
                 @register="registerPageAddendumTableChoseModal" />
             </template>
             <template #addEditForm-syncTable>
@@ -99,13 +99,13 @@ import { useModal } from '/@/components/Modal'
 
 import { useLoadDbData, useSaveConfig } from './CodeDesignPageHook'
 
-import DatabaseSelect from '../codeList/components/DatabaseSelect.vue'
-import TableFieldTable from '../codeList/components/TableFieldTable.vue'
-import PageTableSetting from '../codeList/components/PageTableSetting.vue'
-import PageFormSetting from '../codeList/components/PageFormSetting.vue'
-import PageSearchSetting from '../codeList/components/PageSearchSetting.vue'
+import DatabaseSelect from './componenets/DatabaseSelect/DatabaseSelect.vue'
+import TableFieldTable from './componenets/TableFieldTable/TableFieldTable.vue'
+import PageTableSetting from './componenets/PageTableSetting/PageTableSetting.vue'
+import PageFormSetting from './componenets/PageFromSetting/PageFormSetting.vue'
+import PageSearchSetting from './componenets/PageSearchSetting/PageSearchSetting.vue'
 import Icon from '/@/components/Icon/src/Icon.vue'
-import PageAddendumTableChoseModal from '../codeList/components/PageAddendumTableChoseModal.vue'
+import PageAddendumTableChoseModal from './componenets/PageAddendumTableChoseModal.vue'
 
 const props = defineProps({
   configId: propTypes.oneOfType([propTypes.string, propTypes.number]),
@@ -144,6 +144,10 @@ const [registerForm, { validate, setFieldsValue }] = useForm({
     span: 15,
   },
 })
+
+const handleSetAddendumTable = (tableData) => {
+  setFieldsValue({ addendumTableList: tableData })
+}
 
 const loadConfigData = async () => {
   try {

@@ -25,16 +25,14 @@ import { defHttp } from '/@/utils/http/axios'
 import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
 
 const props = defineProps({
-  setAddEditFieldsValue: {
-    type: Function,
-    required: true,
-  },
   multiple: propTypes.bool.def(true),
   selectTableList: {
     type: Array as PropType<Array<any>>,
     default: () => [],
   },
 })
+
+const emit = defineEmits(['ok', 'register'])
 
 const { selectTableList: selectTableListRef } = toRefs(props)
 
@@ -136,15 +134,15 @@ const handleOk = () => {
       configName: item.configName,
     }
   })
-  props.setAddEditFieldsValue({ addendumTableList: dealData })
+  emit('ok', dealData)
   // 关闭弹窗
   closeModal()
 }
 
 const [registerModal, { closeModal }] = useModalInner(() => {
-  reload()
+  query()
 })
-const [registerTable, { getCheckboxRecords, getRadioRecord, reload, setRadioRow, setCheckboxRow }] =
+const [registerTable, { getCheckboxRecords, getRadioRecord, query, setRadioRow, setCheckboxRow }] =
   useSmartTable({
     columns: unref(computedColumns),
     pagerConfig: false,
@@ -152,11 +150,8 @@ const [registerTable, { getCheckboxRecords, getRadioRecord, reload, setRadioRow,
     searchFormConfig: {
       schemas: searchSchemeList,
       layout: 'inline',
-      baseColProps: {
-        span: 8,
-      },
       actionColOptions: {
-        span: 6,
+        span: undefined,
       },
       colon: true,
     },
