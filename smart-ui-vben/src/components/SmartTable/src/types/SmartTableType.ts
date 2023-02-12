@@ -3,6 +3,8 @@ import type { SmartSearchFormProps } from './SmartSearchFormType'
 import type { SmartTableButton, SmartTableToolbarTool } from './SmartTableButton'
 import type { SmartTableAddEditConfig } from './SmartTableAddEditType'
 import type { NamePath } from 'ant-design-vue/es/form/interface'
+import type { VxeTablePropTypes } from 'vxe-table/types/table'
+import type { Options as SortableOptions } from 'sortablejs'
 
 export interface SmartColumn extends VxeTableDefines.ColumnOptions {
   flag?: 'INDEX' | 'DEFAULT' | 'CHECKBOX' | 'RADIO' | 'ACTION'
@@ -53,6 +55,19 @@ export interface SmartTableProxyConfig<T = any> extends VxeGridPropTypes.ProxyCo
   afterLoad?: (result: any) => any
 }
 
+/**
+ * 拖拽配置
+ */
+export interface SmartTableRowDragConfig extends SortableOptions {
+  icon?: string
+  // 是否自定义
+  custom?: boolean
+}
+
+export interface SmartTableRowConfig extends VxeTablePropTypes.RowConfig {
+  dragConfig?: boolean | SmartTableRowDragConfig
+}
+
 // @ts-ignore
 export interface SmartTableProps<T = any> extends VxeGridProps<T> {
   columns?: SmartColumn[]
@@ -72,6 +87,7 @@ export interface SmartTableProps<T = any> extends VxeGridProps<T> {
   proxyConfig?: SmartTableProxyConfig
   // 添加修改配置
   addEditConfig?: SmartTableAddEditConfig
+  rowConfig?: SmartTableRowConfig
 }
 
 /**

@@ -17,6 +17,7 @@ import { useTableAjax } from './hooks/useTableAjax'
 import { useTableToolbarConfig } from './hooks/useTableToolbarConfig'
 import { useTableModalAddEditConfig } from './hooks/useTableModalAddEdit'
 import { createTableContext } from './hooks/userSmartTableContext'
+import { useTableRowDrag } from './hooks/useTableDrag'
 import SmartTableAddEditModal from './components/SmartTableAddEditModal'
 import './renderer/VxeTableButtonRenderer'
 import { error } from '/@/utils/log'
@@ -157,12 +158,21 @@ export default defineComponent({
     })
 
     /**
+     * 表格拖拽支持
+     */
+    const { getTableDragColumn, getTableDragSlot } = useTableRowDrag(getTableProps, tableElRef, {
+      getData: () => getTableInstance().getData(),
+      loadData: (data) => getTableInstance().loadData(data),
+    })
+
+    /**
      * 获取table v-bing
      */
     const getTableBindValues = computed<SmartTableProps>(() => {
+      const tableProps = unref(getTableProps)
       let propsData: SmartTableProps = {
         ...attrs,
-        ...unref(getTableProps),
+        ...tableProps,
         loading: unref(getLoading),
         // data: dataSource,
         pagerConfig: unref(getPaginationInfo),
@@ -170,9 +180,17 @@ export default defineComponent({
         proxyConfig: unref(getProxyConfigRef),
         customConfig: unref(getCustomConfig),
         ...unref(getTableEvents),
+        columns: [...unref(getTableDragColumn), ...(tableProps.columns || [])],
       }
       propsData = omit(propsData, [])
       return propsData
+    })
+
+    const getTableSlots = computed(() => {
+      return {
+        ...slots,
+        ...unref(getTableDragSlot),
+      }
     })
 
     /**
@@ -237,6 +255,7 @@ export default defineComponent({
       getAddEditFormSlots,
       getSearchFormVisible,
       getTableEvents,
+      getTableSlots,
     }
   },
   render() {
@@ -308,11 +327,10 @@ const renderSearchForm = (smartTableInstance) => {
  * 渲染表格
  */
 const renderTable = (instance) => {
-  const slots: any = {}
   return () => {
     const {
       getTableBindValues,
-      $slots,
+      getTableSlots,
       getHasAddEdit,
       registerAddEditModal,
       getAddEditFormProps,
@@ -322,7 +340,7 @@ const renderTable = (instance) => {
     } = instance
     const result = [
       <vxe-grid ref="tableElRef" {...getTableBindValues}>
-        {{ ...slots, ...$slots }}
+        {{ ...getTableSlots }}
       </vxe-grid>,
     ]
     if (getHasAddEdit) {
