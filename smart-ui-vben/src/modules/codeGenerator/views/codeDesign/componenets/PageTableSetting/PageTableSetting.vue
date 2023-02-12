@@ -85,7 +85,7 @@ import { MenuOutlined } from '@ant-design/icons-vue'
 
 import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
 import { useVxeTableSortable } from '/@/hooks/vxeTable/useVxeTableSortable'
-import { vueTableHeaderCheckboxSupport } from './PageSettingSupport'
+import { vueTableHeaderCheckboxSupport } from '../PageSettingSupport'
 
 /**
  * copy列
@@ -168,6 +168,7 @@ export default defineComponent({
     const tableSortableVue = useVxeTableSortable(tableRef, '.table-drop', data)
     watch([tableData, editData], () => {
       data.value = createDataFromTableData(tableData.value, editData)
+      console.log(data.value)
     })
     onMounted(() => {
       data.value = createDataFromTableData(tableData.value, editData)

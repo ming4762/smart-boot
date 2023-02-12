@@ -1,5 +1,24 @@
 import type { FormSchema } from '/@/components/Form'
 
+type ButtonType =
+  | 'SEARCH'
+  | 'RESET'
+  | 'ADD'
+  | 'EDIT'
+  | 'DELETE'
+  | 'EXCEL_IMPORT'
+  | 'EXCEL_EXPORT'
+  | 'COLUMN_SETTING'
+  | 'ZOOM'
+  | 'REFRESH'
+  | 'SHOW_SEARCH'
+  | 'PRINT'
+
+interface Button {
+  key: ButtonType
+  value: string
+}
+
 const tableTypeList = [
   {
     label: 'generator.views.code.title.tableType.single',
@@ -104,10 +123,10 @@ export const formSchemas = (t: Function): FormSchema[] => {
       label: t('generator.views.code.title.leftButton'),
       field: 'leftButtonList',
       component: 'Select',
-      defaultValue: ['SEARCH', 'RESET'],
+      defaultValue: ['ADD', 'DELETE'],
       componentProps: {
         mode: 'multiple',
-        options: [...commonButtonList, ...rowButtonList].map((item) => ({
+        options: letButtonList.map((item) => ({
           label: item.value,
           value: item.key,
         })),
@@ -117,10 +136,10 @@ export const formSchemas = (t: Function): FormSchema[] => {
       label: t('generator.views.code.title.rightButton'),
       field: 'rightButtonList',
       component: 'Select',
-      defaultValue: ['ADD', 'EDIT', 'DELETE'],
+      defaultValue: ['ZOOM', 'REFRESH', 'SHOW_SEARCH', 'COLUMN_SETTING'],
       componentProps: {
         mode: 'multiple',
-        options: [...commonButtonList, ...rowButtonList].map((item) => ({
+        options: rightButtonList.map((item) => ({
           label: item.value,
           value: item.key,
         })),
@@ -175,7 +194,6 @@ export const formSchemas = (t: Function): FormSchema[] => {
       label: t('generator.views.code.title.i18nPrefix'),
       field: 'i18nPrefix',
       component: 'Input',
-      required: true,
     },
     // ------------ 第五行 ---------------------
     {
@@ -197,7 +215,7 @@ export const formSchemas = (t: Function): FormSchema[] => {
 /**
  * 左侧按钮列表
  */
-const commonButtonList = [
+const letButtonList: Button[] = [
   {
     key: 'SEARCH',
     value: '搜索',
@@ -211,28 +229,43 @@ const commonButtonList = [
     value: '添加',
   },
   {
+    key: 'EDIT',
+    value: '修改',
+  },
+  {
+    key: 'DELETE',
+    value: '删除',
+  },
+]
+
+const rightButtonList: Button[] = [
+  {
     key: 'EXCEL_IMPORT',
-    value: 'excel导入',
+    value: 'Excel导入',
   },
   {
-    key: 'DOWNLOAD',
-    value: '导出',
-  },
-  {
-    key: 'DOWNLOAD_ALL',
-    value: '全部导出',
+    key: 'EXCEL_EXPORT',
+    value: 'Excel导出',
   },
   {
     key: 'COLUMN_SETTING',
-    value: '列设置',
+    value: '列配置',
   },
   {
-    key: 'SET_VALID',
-    value: '设置有效',
+    key: 'ZOOM',
+    value: '放大缩小',
   },
   {
-    key: 'SET_INVALID',
-    value: '设置无效',
+    key: 'REFRESH',
+    value: '刷新',
+  },
+  {
+    key: 'SHOW_SEARCH',
+    value: '显示搜索',
+  },
+  {
+    key: 'PRINT',
+    value: '打印',
   },
 ]
 
@@ -247,10 +280,6 @@ const rowButtonList = [
   {
     key: 'DELETE',
     value: '删除',
-  },
-  {
-    key: 'save',
-    value: '保存',
   },
 ]
 

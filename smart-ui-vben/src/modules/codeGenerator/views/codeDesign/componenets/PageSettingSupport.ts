@@ -1,5 +1,6 @@
 import { ref, watch } from 'vue'
 import type { Ref } from 'vue'
+import {useModal} from '/@/components/Modal';
 
 /**
  * 空间列表
@@ -66,28 +67,37 @@ export const controlList = [
 /**
  * rule列表
  */
-export const ruleList = [
+const ruleList = [
   {
     value: 'NOT_EMPTY',
-    label: '{generator.views.code.title.ruleList.notEmpty}',
+    label: 'generator.views.code.title.ruleList.notEmpty',
   },
   {
     value: 'PHONE',
-    label: '{generator.views.code.title.ruleList.PHONE}',
+    label: 'generator.views.code.title.ruleList.PHONE',
   },
   {
     value: 'EMAIL',
-    label: '{generator.views.code.title.ruleList.EMAIL}',
+    label: 'generator.views.code.title.ruleList.EMAIL',
   },
   {
     value: 'NUMBER',
-    label: '{generator.views.code.title.ruleList.NUMBER}',
+    label: 'generator.views.code.title.ruleList.NUMBER',
   },
   {
     value: 'REGEXP',
-    label: '{generator.views.code.title.ruleList.REGEXP}',
+    label: 'generator.views.code.title.ruleList.REGEXP',
   },
 ]
+
+export const getRuleList = (t: Function) => {
+  return ruleList.map((item) => {
+    return {
+      ...item,
+      label: t(item.label),
+    }
+  })
+}
 
 /**
  * 查询标识列表
@@ -132,14 +142,14 @@ export const vueTableHeaderCheckboxSupport = (
  * 下拉表格支持
  */
 export const vueChoseSelectTableSupport = (currentRow: Ref) => {
-  const choseAddendumModalVisible = ref(false)
+  const [registerSelectTableModal, { openModal: openSelectTableModal }] = useModal()
   /**
    * 显示列选择
    * @param row
    */
   const handleShowChoseSelectTable = (row: any) => {
     currentRow.value = row
-    choseAddendumModalVisible.value = true
+    openSelectTableModal(true, {})
   }
   /**
    * 选择表格后
@@ -149,38 +159,8 @@ export const vueChoseSelectTableSupport = (currentRow: Ref) => {
     currentRow.value.selectTableList = tableList
   }
   return {
-    choseAddendumModalVisible,
+    registerSelectTableModal,
     handleShowChoseSelectTable,
     handleChoseTable,
   }
 }
-
-/**
- * 设置验证规则
- */
-export const vueSetRulesSupport = (currentRow: Ref) => {
-  // 设置验证规则modal状态
-  const setRuleModalVisible = ref(false)
-  /**
-   * 显示这是规则页面
-   * @param row 当前行
-   */
-  const handleShowSetRules = (row: any) => {
-    setRuleModalVisible.value = true
-    currentRow.value = row
-  }
-  /**
-   * 点击OK
-   * @param dataList
-   */
-  const handleSave = (dataList: Array<any>) => {
-    currentRow.value.ruleList = dataList
-  }
-  return {
-    handleShowSetRules,
-    setRuleModalVisible,
-    handleSave,
-  }
-}
-
-export default {}

@@ -14,7 +14,7 @@
         </div>
       </template>
       <template #second>
-        <SmartTable @register="registerTable">
+        <SmartTable :size="getTableSize" @register="registerTable">
           <template #table-operation="{ row }">
             <SmartVxeTableAction
               :actions="getTableAction(row)"
@@ -36,25 +36,27 @@ import TemplateSelectedModal from './components/TemplateSelectedModal.vue'
 import { useModal } from '/@/components/Modal'
 import { LayoutSeparate } from '/@/components/LayoutSeparate'
 import SystemSimpleList from '/@/modules/system/components/system/SystemSimpleList.vue'
+import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
 
 import { addEditForm, searchForm, tableColumns } from './DatabaseListView.data'
 import { listApi, deleteApi, getByIdApi, saveUpdateApi } from './DatabaseListView.api'
 import { handleTestConnected } from './DatabaseListHooks'
 
 const { t } = useI18n()
+const { getTableSize } = useSizeSetting()
 
 const [registerModal, { openModal }] = useModal()
 let currentSystem: Recordable = {}
 
 const handleSelectSystemChange = (row) => {
   currentSystem = row
-  reload()
+  query()
 }
 
 const getTableAction = (row): ActionItem[] => {
   return [
     {
-      label: '编辑',
+      label: t('common.button.edit'),
       onClick: () => editByRowModal(row),
     },
   ]
@@ -74,7 +76,7 @@ const getDropDownAction = (row): ActionItem[] => {
   ]
 }
 
-const [registerTable, { editByRowModal, setLoading, reload, showAddModal }] = useSmartTable({
+const [registerTable, { editByRowModal, setLoading, query, showAddModal }] = useSmartTable({
   searchFormConfig: {
     searchWithSymbol: true,
     schemas: searchForm(t),
@@ -94,6 +96,10 @@ const [registerTable, { editByRowModal, setLoading, reload, showAddModal }] = us
       },
     },
   },
+  columnConfig: {
+    resizable: true,
+  },
+  border: true,
   height: 'auto',
   columns: tableColumns,
   useSearchForm: true,
