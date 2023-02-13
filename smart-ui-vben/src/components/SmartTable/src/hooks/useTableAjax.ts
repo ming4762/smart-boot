@@ -166,6 +166,11 @@ export const useTableAjax = (
     return doDelete([row])
   }
 
+  const getProxyEvents = {
+    onProxyQuery: (...args) => emit('proxy-query', args),
+    onProxyDelete: (...args) => emit('proxy-delete', args),
+  }
+
   const doDelete = async (rows: any[]): Promise<boolean | undefined> => {
     const proxyConfig = unref(propsRef)?.proxyConfig
     const deleteMethod = proxyConfig?.ajax?.delete
@@ -188,6 +193,7 @@ export const useTableAjax = (
           },
         })
         message.success(t('common.message.deleteSuccess'))
+        emit('proxy-delete', { status: true })
         const afterDelete = proxyConfig?.afterDelete || query
         afterDelete && afterDelete(result)
         return Promise.resolve(true)
@@ -201,5 +207,6 @@ export const useTableAjax = (
     getProxyConfigRef,
     deleteByRow,
     deleteByCheckbox,
+    getProxyEvents,
   }
 }
