@@ -5,6 +5,7 @@
       ref="gridRef"
       :toolbar-config="toolbarConfig"
       size="small"
+      :sort-config="{ remote: true, defaultSort: { field: 'seq', order: 'desc' } }"
       :loading="dataLoading"
       height="auto"
       :data="tableData"

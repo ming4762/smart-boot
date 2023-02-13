@@ -13,7 +13,6 @@ export const listApi = (params) => {
   return defHttp.post({
     url: Api.list,
     data: {
-      sortName: 'seq',
       ...params,
     },
   })

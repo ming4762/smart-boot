@@ -40,6 +40,13 @@ const [registerTable, { reload }] = useSmartTable({
   stripe: true,
   highlightHoverRow: true,
   pagerConfig: true,
+  sortConfig: {
+    remote: true,
+    defaultSort: {
+      field: 'seq',
+      order: 'desc',
+    },
+  },
   addEditConfig: {
     formConfig: {
       schemas: getDataDictItemAddEditSchemas(t),
