@@ -37,7 +37,7 @@ export default defineComponent({
     BasicForm,
   },
   props: smartTableProps,
-  emits: ['register', 'after-load', 'toolbar-tool-click'],
+  emits: ['register', 'after-load', 'toolbar-tool-click', 'proxy-query', 'proxy-delete'],
   setup(props, { emit, slots, attrs }) {
     const { t } = useI18n()
     const tableElRef = ref<VxeGridInstance>() as Ref<VxeGridInstance>
@@ -93,17 +93,13 @@ export default defineComponent({
     } = useTableSearchForm(getTableProps, slots, (params) => query(params), getLoading)
 
     // -------------- 加载函数 ------------------------
-    const { reload, query, getProxyConfigRef, deleteByRow, deleteByCheckbox } = useTableAjax(
-      getTableProps,
-      tableElRef,
-      emit,
-      {
+    const { reload, query, getProxyConfigRef, deleteByRow, deleteByCheckbox, getProxyEvents } =
+      useTableAjax(getTableProps, tableElRef, emit, {
         commitVxeProxy,
         getSearchFormParameter: searchFormAction.getSearchFormParameter,
         getCheckboxRecords,
         setLoading,
-      },
-    )
+      })
 
     // -------------- 添加修改操作 ---------------------
     const [registerAddEditModal, { openModal: openAddEditModal }] = useModal()
@@ -160,6 +156,7 @@ export default defineComponent({
     const getTableEvents = computed(() => {
       return {
         ...unref(getToolbarEvents),
+        ...getProxyEvents,
       }
     })
 
@@ -344,7 +341,6 @@ const renderTable = (instance) => {
       getAddEditFormSlots,
       id,
     } = instance
-    console.log('---------')
     const result = [
       <vxe-grid ref="tableElRef" {...getTableBindValues}>
         {{ ...getTableSlots }}
