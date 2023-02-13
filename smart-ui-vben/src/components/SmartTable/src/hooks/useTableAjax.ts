@@ -3,7 +3,7 @@ import type { VxeGridInstance, VxeGridPropTypes } from 'vxe-table'
 import type { ComputedRef, Ref } from 'vue'
 import type { FetchParams, SmartTableProps, SmartTableProxyConfig } from '/@/components/SmartTable'
 
-import { computed, createVNode, onMounted, unref } from 'vue'
+import { computed, createVNode, unref } from 'vue'
 
 import { message, Modal } from 'ant-design-vue'
 
@@ -28,14 +28,6 @@ export const useTableAjax = (
   { commitVxeProxy, getSearchFormParameter, setLoading, getCheckboxRecords }: ActionType,
 ) => {
   const { t } = useI18n()
-  // 是否自动加载，取消vxe-table自动加载，解决触发事件问题（事件无法在数据加载完成之后执行）
-  onMounted(async () => {
-    const proxyConfig = unref(propsRef).proxyConfig
-    if (proxyConfig && proxyConfig.autoLoad !== false) {
-      await commitVxeProxy('_init')
-      emit('after-load')
-    }
-  })
 
   const getProxyConfigRef = computed<SmartTableProxyConfig | undefined>(() => {
     const { proxyConfig, useSearchForm, sortConfig } = unref(propsRef)
@@ -104,13 +96,20 @@ export const useTableAjax = (
           if (proxyConfig.afterLoad) {
             result = proxyConfig.afterLoad(result)
           }
+          let tableData
+          if (isArray(result)) {
+            tableData = result
+          } else {
+            tableData = result[proxyConfig.props?.result || 'rows']
+          }
+          emit('after-load', tableData)
           return result
         },
       }
     }
     const sort = sortConfig?.remote === true
     return {
-      autoLoad: false,
+      // autoLoad: false,
       sort,
       props: {
         result: 'rows',
@@ -132,20 +131,20 @@ export const useTableAjax = (
     try {
       setLoading(true)
       await commitVxeProxy('reload', opt)
+      emit('proxy-query', { status: true, isReload: true, isInited: false })
     } finally {
       setLoading(false)
     }
-    emit('after-load')
   }
 
   const query = async (opt?: FetchParams) => {
     try {
       setLoading(true)
       await commitVxeProxy('query', opt)
+      emit('proxy-query', { status: true, isReload: false, isInited: false })
     } finally {
       setLoading(false)
     }
-    emit('after-load')
   }
 
   /**
@@ -189,7 +188,7 @@ export const useTableAjax = (
           },
         })
         message.success(t('common.message.deleteSuccess'))
-        const afterDelete = proxyConfig?.afterDelete || reload
+        const afterDelete = proxyConfig?.afterDelete || query
         afterDelete && afterDelete(result)
         return Promise.resolve(true)
       },
