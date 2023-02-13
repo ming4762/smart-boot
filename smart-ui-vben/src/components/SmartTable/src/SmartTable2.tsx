@@ -1,13 +1,7 @@
-import type { SmartTableProps, TableActionType } from './types/SmartTableType'
+import type { SmartTableProps, TableActionType, FetchParams } from './types/SmartTableType'
 import type { VxeGridInstance } from 'vxe-table'
 
-import {
-  computed,
-  defineComponent,
-  Ref,
-  ref,
-  unref,
-} from 'vue'
+import { computed, defineComponent, onMounted, Ref, ref, unref } from 'vue'
 
 import { TableSearchLayout } from '/@/components/Layout'
 import { BasicForm } from '/@/components/Form'
@@ -18,8 +12,9 @@ import { smartTableProps } from './props'
 import { useTableSearchForm } from './hooks/useTableSearchForm'
 import { omit } from 'lodash-es'
 import { useLoading } from './hooks/useLoading'
-import { usePagination } from './hooks/usePagination'
+import { useTablePager } from './hooks/useTablePager'
 import { useTableAjax } from './hooks/useTableAjax'
+import { useLoadData } from './hooks/useLoadData'
 import { useTableToolbarConfig } from './hooks/useTableToolbarConfig'
 import { useTableModalAddEditConfig } from './hooks/useTableModalAddEdit'
 import { createTableContext } from './hooks/userSmartTableContext'
@@ -37,7 +32,7 @@ export default defineComponent({
     BasicForm,
   },
   props: smartTableProps,
-  emits: ['register', 'after-load', 'toolbar-tool-click'],
+  emits: ['register', 'after-load', 'toolbar-tool-click', 'page-change', 'sort-change'],
   setup(props, { emit, slots, attrs }) {
     const { t } = useI18n()
     const tableElRef = ref<VxeGridInstance>() as Ref<VxeGridInstance>
@@ -57,12 +52,13 @@ export default defineComponent({
 
     // -------------- 分页 ---------------------------
     const {
-      getPaginationInfo,
-      getPagination,
+      getPagerSlots,
+      setShowPagination,
       setPagination,
       getShowPagination,
-      setShowPagination,
-    } = usePagination(getTableProps)
+      getPagination,
+      getPagerConfig,
+    } = useTablePager(getTableProps, emit)
 
     /**
      * vxe-table函数
@@ -93,7 +89,7 @@ export default defineComponent({
     } = useTableSearchForm(getTableProps, slots, (params) => query(params), getLoading)
 
     // -------------- 加载函数 ------------------------
-    const { reload, query, getProxyConfigRef, deleteByRow, deleteByCheckbox } = useTableAjax(
+    const { reload, getProxyConfigRef, deleteByRow, deleteByCheckbox } = useTableAjax(
       getTableProps,
       tableElRef,
       emit,
@@ -102,6 +98,18 @@ export default defineComponent({
         getSearchFormParameter: searchFormAction.getSearchFormParameter,
         getCheckboxRecords,
         setLoading,
+      },
+    )
+
+    const { tableDataRef, query, getTableLoadDataEvent } = useLoadData(
+      getTableProps,
+      tableElRef,
+      getPagerConfig,
+      getProxyConfigRef,
+      emit,
+      {
+        setLoading,
+        setPagination,
       },
     )
 
@@ -160,6 +168,7 @@ export default defineComponent({
     const getTableEvents = computed(() => {
       return {
         ...unref(getToolbarEvents),
+        ...unref(getTableLoadDataEvent),
       }
     })
 
@@ -180,10 +189,11 @@ export default defineComponent({
         ...attrs,
         ...tableProps,
         loading: unref(getLoading),
-        // data: dataSource,
-        pagerConfig: unref(getPaginationInfo),
+        data: unref(tableDataRef),
+        pagerConfig: undefined,
         toolbarConfig: unref(getToolbarConfigInfo),
-        proxyConfig: unref(getProxyConfigRef),
+        // proxyConfig: unref(getProxyConfigRef),
+        proxyConfig: undefined,
         customConfig: unref(getCustomConfig),
         ...unref(getTableEvents),
         columns: [...unref(getTableDragColumn), ...(tableProps.columns || [])],
@@ -196,6 +206,7 @@ export default defineComponent({
       return {
         ...slots,
         ...unref(getTableDragSlot),
+        ...unref(getPagerSlots),
       }
     })
 
@@ -203,7 +214,7 @@ export default defineComponent({
      *
      */
     const tableAction: TableActionType = {
-      reload,
+      reload: (opt?: FetchParams) => query(opt),
       query,
       setProps,
       setLoading,
@@ -241,13 +252,19 @@ export default defineComponent({
 
     emit('register', tableAction, searchFormAction, getAddEditForm)
 
+    onMounted(() => {
+      const proxyConfig = unref(getTableProps).proxyConfig
+      if (proxyConfig && proxyConfig.autoLoad !== false) {
+        query()
+      }
+    })
+
     return {
       registerSearchForm,
       getSearchFormProps,
       getTableProps,
       tableAction,
       getTableBindValues,
-      getPaginationInfo,
       tableElRef,
       handleSearchInfoChange,
       getSearchFormSlot,
@@ -344,7 +361,6 @@ const renderTable = (instance) => {
       getAddEditFormSlots,
       id,
     } = instance
-    console.log('---------')
     const result = [
       <vxe-grid ref="tableElRef" {...getTableBindValues}>
         {{ ...getTableSlots }}
