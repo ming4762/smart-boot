@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive } from 'vue'
+import {reactive, ref, unref} from 'vue'
 
 import { ActionItem, SmartTable, useSmartTable } from '/@/components/SmartTable'
 import { Icon } from '/@/components/Icon'
@@ -43,101 +43,150 @@ import { SmartVxeTableAction } from '/@/components/SmartTable'
 const { t } = useI18n()
 const { getTableSize } = useSizeSetting()
 
-const [registerTable, { showAddModal, editByRowModal, getSearchForm }] = useSmartTable({
-  id: 'FunctionListView',
-  columns: tableColumns,
-  resizableConfig: {},
-  border: true,
-  align: 'left',
-  highlightHoverColumn: true,
-  height: 'auto',
-  useSearchForm: true,
-  searchFormConfig: {
-    layout: 'inline',
-    colon: true,
-    schemas: getSearchSchemas(t),
-    searchWithSymbol: true,
-    actionColOptions: {
-      span: undefined,
-    },
-  },
-  columnConfig: {
-    resizable: true,
-  },
-  treeConfig: {
-    lazy: true,
-    loadMethod: ({ row }) => {
-      const { searchSymbolForm } = getSearchForm().getSearchFormParameter()
-      const parameter = {
-        parameter: {
-          ...searchSymbolForm,
-          'parentId@=': row.functionId,
-        },
-      }
-      return listApi(parameter)
-    },
-  },
-  rowConfig: {
-    keyField: 'functionId',
-  },
-  sortConfig: {
-    remote: true,
-    defaultSort: {
-      field: 'seq',
-      order: 'asc',
-    },
-  },
-  addEditConfig: {
-    modalConfig: {
-      width: 860,
-    },
-    formConfig: {
-      baseColProps: {
-        span: 12,
+const currentRowRef = ref<any>({})
+const getTableActions = (row: Recordable): ActionItem[] => {
+  return [
+    {
+      label: t('common.button.add'),
+      icon: 'ant-design:plus-outlined',
+      disabled: row.functionType === 'FUNCTION',
+      onClick: () => {
+        currentRowRef.value = row
+        const data: Recordable = {
+          parentId: row.functionId,
+          parentName: row.functionName,
+        }
+        const functionType = row.functionType
+        switch (functionType) {
+          case 'CATALOG': {
+            setTypeDisabled(['function'])
+            break
+          }
+          case 'MENU': {
+            setTypeDisabled(['catalogue', 'menu'])
+            data.functionType = 'FUNCTION'
+            break
+          }
+          case 'FUNCTION': {
+            setTypeDisabled(['catalogue', 'menu', 'function'])
+            break
+          }
+        }
+        showAddModal(data, row)
       },
-      labelCol: { span: 7 },
-      wrapperCol: { span: 16 },
-      schemas: getAddEditForm(t),
     },
-  },
-  proxyConfig: {
-    ajax: {
-      query: ({ ajaxParameter }) => {
+    {
+      label: t('common.button.edit'),
+      icon: 'ant-design:edit-outlined',
+      onClick: () => {
+        currentRowRef.value = row
+        setTypeDisabled(['catalogue', 'menu', 'function'])
+        editByRowModal(row)
+      },
+    },
+  ]
+}
+
+const [registerTable, { showAddModal, editByRowModal, getSearchForm, getTableInstance }] =
+  useSmartTable({
+    id: 'FunctionListView',
+    columns: tableColumns,
+    resizableConfig: {},
+    border: true,
+    align: 'left',
+    highlightHoverColumn: true,
+    height: 'auto',
+    useSearchForm: true,
+    searchFormConfig: {
+      layout: 'inline',
+      colon: true,
+      schemas: getSearchSchemas(t),
+      searchWithSymbol: true,
+      actionColOptions: {
+        span: undefined,
+      },
+    },
+    columnConfig: {
+      resizable: true,
+    },
+    treeConfig: {
+      lazy: true,
+      loadMethod: ({ row }) => {
+        const { searchSymbolForm } = getSearchForm().getSearchFormParameter()
         const parameter = {
-          ...ajaxParameter,
           parameter: {
-            ...ajaxParameter?.parameter,
-            'parentId@=': 0,
+            ...searchSymbolForm,
+            'parentId@=': row.functionId,
           },
         }
         return listApi(parameter)
       },
-      delete: (params) => deleteApi(params),
-      save: saveApi,
-      getById: getByIdApi,
     },
-  },
-  toolbarConfig: {
-    refresh: true,
-    buttons: [
-      {
-        code: 'ModalAdd',
-        props: {
-          onClick: () => {
-            setTypeDisabled(['function'])
-            showAddModal({
-              parentId: '0',
-              parentName: '根目录',
-            })
+    rowConfig: {
+      keyField: 'functionId',
+    },
+    sortConfig: {
+      remote: true,
+      defaultSort: {
+        field: 'seq',
+        order: 'asc',
+      },
+    },
+    addEditConfig: {
+      modalConfig: {
+        width: 860,
+      },
+      formConfig: {
+        baseColProps: {
+          span: 12,
+        },
+        labelCol: { span: 7 },
+        wrapperCol: { span: 16 },
+        schemas: getAddEditForm(t),
+      },
+      afterSave: () => {
+        // 保存完成之后重新加载节点
+        return getTableInstance().reloadTreeExpand(unref(currentRowRef))
+      },
+    },
+    proxyConfig: {
+      ajax: {
+        query: ({ ajaxParameter }) => {
+          const parameter = {
+            ...ajaxParameter,
+            parameter: {
+              ...ajaxParameter?.parameter,
+              'parentId@=': 0,
+            },
+          }
+          return listApi(parameter)
+        },
+        delete: (params) => deleteApi(params),
+        save: saveApi,
+        getById: getByIdApi,
+      },
+    },
+    toolbarConfig: {
+      refresh: true,
+      buttons: [
+        {
+          code: 'ModalAdd',
+          props: {
+            onClick: () => {
+              setTypeDisabled(['function'])
+              showAddModal({
+                parentId: '0',
+                parentName: '根目录',
+              })
+            },
           },
         },
-      },
-      {
-        code: 'delete',
-      },
-    ],
-  },
-})
+        {
+          code: 'delete',
+        },
+      ],
+    },
+  })
 const getTagData = (functionType: string) => {
   switch (functionType) {
     case 'CATALOG': {
@@ -170,47 +219,6 @@ const getIcon = (compatibleIcon: string) => {
     compatibleIcon = 'ant-design:' + compatibleIcon
   }
   return compatibleIcon
-}
-
-const getTableActions = (row: Recordable): ActionItem[] => {
-  return [
-    {
-      label: t('common.button.add'),
-      icon: 'ant-design:plus-outlined',
-      disabled: row.functionType === 'FUNCTION',
-      onClick: () => {
-        const data: Recordable = {
-          parentId: row.functionId,
-          parentName: row.functionName,
-        }
-        const functionType = row.functionType
-        switch (functionType) {
-          case 'CATALOG': {
-            setTypeDisabled(['function'])
-            break
-          }
-          case 'MENU': {
-            setTypeDisabled(['catalogue', 'menu'])
-            data.functionType = 'FUNCTION'
-            break
-          }
-          case 'FUNCTION': {
-            setTypeDisabled(['catalogue', 'menu', 'function'])
-            break
-          }
-        }
-        showAddModal(data)
-      },
-    },
-    {
-      label: t('common.button.edit'),
-      icon: 'ant-design:edit-outlined',
-      onClick: () => {
-        setTypeDisabled(['catalogue', 'menu', 'function'])
-        editByRowModal(row)
-      },
-    },
-  ]
 }
 
 const defaultFunctionTypes = (t: Function) => {

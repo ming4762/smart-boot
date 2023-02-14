@@ -7,6 +7,8 @@ import com.smart.crud.model.CreateUpdateUserSetter;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.crud.service.BaseServiceImpl;
 import com.smart.crud.service.UserSetterService;
+import com.smart.crud.utils.CrudUtils;
+import com.smart.system.mapper.CommonMapper;
 import com.smart.system.mapper.SysFunctionMapper;
 import com.smart.system.model.SysFunctionPO;
 import com.smart.system.pojo.vo.SysFunctionListVO;
@@ -33,6 +35,12 @@ import java.util.stream.Collectors;
 public class SysFunctionServiceImpl extends BaseServiceImpl<SysFunctionMapper, SysFunctionPO> implements SysFunctionService {
 
     private UserSetterService userSetterService;
+
+    private final CommonMapper commonMapper;
+
+    public SysFunctionServiceImpl(CommonMapper commonMapper) {
+        this.commonMapper = commonMapper;
+    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -75,6 +83,40 @@ public class SysFunctionServiceImpl extends BaseServiceImpl<SysFunctionMapper, S
         this.queryCreateUpdateUser(voList);
         this.queryParent(voList);
         return voList.get(0);
+    }
+
+    /**
+     * TableId 注解存在更新记录，否插入一条记录
+     *
+     * @param entity 实体对象
+     * @return boolean
+     */
+    @Override
+    public boolean saveOrUpdate(SysFunctionPO entity) {
+        boolean result = super.saveOrUpdate(entity);
+        this.updateChild(entity.getParentId());
+        return result;
+    }
+
+    /**
+     * 批量修改插入
+     *
+     * @param entityList 实体对象集合
+     */
+    @Override
+    public boolean saveOrUpdateBatch(Collection<SysFunctionPO> entityList) {
+        boolean result = super.saveOrUpdateBatch(entityList);
+        entityList.forEach(item -> this.updateChild(item.getParentId()));
+        return result;
+    }
+
+    private void updateChild(Long id) {
+        this.commonMapper.updateHasChild(
+                CrudUtils.getTableName(SysFunctionPO.class),
+                CrudUtils.getDbField(SysFunctionPO.class, "parentId"),
+                CrudUtils.getDbField(SysFunctionPO.class, "functionId"),
+                id
+        );
     }
 
     /**

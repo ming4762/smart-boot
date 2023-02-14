@@ -4,7 +4,7 @@
     v-bind="$attrs"
     @register="registerTable"
     @cell-click="handleCellClick"
-    @after-load="handleAfterLoad" />
+    @proxy-query="handleAfterLoad" />
 </template>
 
 <script lang="ts" setup>
