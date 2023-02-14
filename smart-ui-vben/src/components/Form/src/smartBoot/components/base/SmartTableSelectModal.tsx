@@ -103,12 +103,17 @@ export default defineComponent({
       handleOk,
       addSelectData,
       removeSelectData,
-      getSelectData,
+      selectRowsRef,
     } = this
     return (
       <BasicModal {...$attrs} onRegister={registerModal} onOk={handleOk}>
         {$slots.table
-          ? $slots.table({ setSelectData, addSelectData, removeSelectData, getSelectData })
+          ? $slots.table({
+              setSelectData,
+              addSelectData,
+              removeSelectData,
+              selectData: selectRowsRef,
+            })
           : renderTable(this)}
       </BasicModal>
     )

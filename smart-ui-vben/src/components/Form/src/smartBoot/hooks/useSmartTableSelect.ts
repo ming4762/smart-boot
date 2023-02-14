@@ -1,10 +1,8 @@
 import type { SmartTableProps } from '/@/components/SmartTable'
+import { useSmartTable } from '/@/components/SmartTable'
 import type { ComputedRef, Ref } from 'vue'
-
 import { computed, ref, unref, watch } from 'vue'
 import { remove } from 'lodash-es'
-
-import { useSmartTable } from '/@/components/SmartTable'
 
 export const useSmartTableSelect = (
   tablePropsRef: Ref<SmartTableProps>,
@@ -13,7 +11,7 @@ export const useSmartTableSelect = (
   valueFieldRef: Ref<string>,
   selectValuesRef: Ref<Array<any>>,
   hasTableSlot: ComputedRef<boolean>,
-  listApi: (data: any) => Promise<any>,
+  listApi: ((data: any) => Promise<any>) | undefined,
 ) => {
   const getTableProps = computed<SmartTableProps>(() => {
     const tableProps = unref(tablePropsRef)
@@ -38,17 +36,16 @@ export const useSmartTableSelect = (
     }
   })
 
-  watch(selectValuesRef, () => {
+  watch(selectValuesRef, async () => {
+    selectRowsRef.value = await getSelectRows()
     if (!unref(hasTableSlot)) {
       handleSetSelectRows()
     }
   })
 
   const handleSetSelectRows = async () => {
-    const selectRows = await getSelectRows()
-    selectRowsRef.value = selectRows
     await getTableInstance().setAllCheckboxRow(false)
-    await setCheckboxRow(selectRows, true)
+    await setCheckboxRow(unref(selectRowsRef), true)
   }
 
   /**
@@ -60,7 +57,12 @@ export const useSmartTableSelect = (
       return []
     }
     const valueField = unref(valueFieldRef)
-    const tableData = getData()
+    let tableData: any[] = []
+    try {
+      tableData = getData()
+    } catch (e) {
+      // do nothing
+    }
     // 没有匹配上的数据
     let noDataValue: any[] = []
     const matchDataList: any[] = []
@@ -90,7 +92,7 @@ export const useSmartTableSelect = (
     }
     if (noDataValue.length > 0) {
       // 通过API查询
-      const result = await listApi(noDataValue)
+      const result = await listApi!(noDataValue)
       matchDataList.push(...result)
     }
     return matchDataList
