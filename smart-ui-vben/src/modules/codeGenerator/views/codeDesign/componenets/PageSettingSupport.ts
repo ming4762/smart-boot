@@ -1,6 +1,6 @@
 import { ref, watch } from 'vue'
 import type { Ref } from 'vue'
-import {useModal} from '/@/components/Modal';
+import { useModal } from '/@/components/Modal'
 
 /**
  * 空间列表
@@ -61,6 +61,14 @@ export const controlList = [
   {
     key: 'FILE',
     value: 'generator.views.code.title.controlList.file',
+  },
+  {
+    key: 'DATA_DICT',
+    value: 'generator.views.design.title.controlList.dataDict',
+  },
+  {
+    key: 'CATEGORY_DICT',
+    value: 'generator.views.design.title.controlList.categoryDict',
   },
 ]
 

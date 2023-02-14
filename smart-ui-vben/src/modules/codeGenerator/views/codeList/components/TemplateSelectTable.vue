@@ -2,13 +2,12 @@
   <LayoutSeparate first-size="200px" :show-line="false" class="full-height">
     <template #first>
       <TemplateGroup class="full-height" @current-change="handleCurrentChange" />
-      <a-button @click="test">获取选中</a-button>
     </template>
     <template #second>
       <SmartTable
         @register="registerTable"
         @checkbox-change="handleCheckboxChange"
-        @after-load="handleAfterLoad" />
+        @proxy-query="resetCheckbox" />
     </template>
   </LayoutSeparate>
 </template>
@@ -22,6 +21,7 @@ import { SmartTable, useSmartTable } from '/@/components/SmartTable'
 import { LayoutSeparate } from '/@/components/LayoutSeparate'
 import { TemplateType as templateTypeConstants } from '/@/modules/codeGenerator/constants/DatabaseConstants'
 import TemplateGroup from '/@/modules/codeGenerator/components/template/TemplateGroup.vue'
+import { watch } from 'vue'
 
 const props = defineProps({
   addSelectData: {
@@ -32,22 +32,15 @@ const props = defineProps({
     type: Function as PropType<Function>,
     required: true,
   },
-  getSelectData: {
-    type: Function as PropType<Function>,
-    required: true,
-  },
+  selectData: Array,
 })
 const { t } = useI18n()
 
 let currentGroup: Recordable = {}
 
-const test = () => {
-  console.log(props.getSelectData())
-}
-
 const handleCurrentChange = (row) => {
   currentGroup = row || {}
-  reload()
+  query()
 }
 
 const handleCheckboxChange = ({ checked, row }) => {
@@ -58,13 +51,20 @@ const handleCheckboxChange = ({ checked, row }) => {
   }
 }
 
-const handleAfterLoad = async () => {
+const resetCheckbox = async () => {
   // 数据重新加载后，设置选中的数据
   await getTableInstance().setAllCheckboxRow(false)
-  await setCheckboxRow(props.getSelectData(), true)
+  await setCheckboxRow(props.selectData, true)
 }
 
-const [registerTable, { reload, getTableInstance, setCheckboxRow }] = useSmartTable({
+watch(
+  () => props.selectData,
+  () => {
+    resetCheckbox()
+  },
+)
+
+const [registerTable, { query, getTableInstance, setCheckboxRow }] = useSmartTable({
   useSearchForm: true,
   height: 'auto',
   pagerConfig: true,

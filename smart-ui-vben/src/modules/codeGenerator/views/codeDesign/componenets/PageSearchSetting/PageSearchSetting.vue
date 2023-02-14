@@ -71,7 +71,6 @@
       <template #table-tableWhere="{ row }">
         <a-input
           v-model:value="row.tableWhere"
-          :disabled="!(row.useTableSearch && row.visible)"
           :size="formSizeConfig" />
       </template>
       <template #table-controlType="{ row }">

@@ -23,5 +23,13 @@ public enum FromControlTypeEnum {
     DATE,
     TIME,
     DATETIME,
-    FILE
+    FILE,
+    /**
+     * 数据字典
+     */
+    DATA_DICT,
+    /**
+     * 分类字典
+     */
+    CATEGORY_DICT,
 }

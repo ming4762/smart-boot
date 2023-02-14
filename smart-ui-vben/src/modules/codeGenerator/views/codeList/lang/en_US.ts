@@ -142,7 +142,7 @@ export default {
           useTableSearch: 'Query DB',
           keyColumnName: 'Key column',
           valueColumnName: 'Value column',
-          tableWhere: 'Query criteria',
+          tableWhere: 'Query criteria/Dict code',
           rules: 'Rules',
         },
       },

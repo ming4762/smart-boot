@@ -12,7 +12,7 @@
       <template #second>
         <SmartTable @register="registerTable" :size="getTableSize">
           <template #table-operation="{ row }">
-            <TableAction :actions="getTableAction(row)" />
+            <SmartVxeTableAction :actions="getTableAction(row)" />
           </template>
         </SmartTable>
       </template>
@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts" setup>
-import { SmartTable, useSmartTable } from '/@/components/SmartTable'
+import type { ActionItem } from '/@/components/SmartTable'
 
 import { tableColumns, searchFormColumns } from './CodeListView.config'
 import { listBySystemApi, deleteApi } from './CodeListView.api'
@@ -32,7 +32,7 @@ import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
 import { useModal } from '/@/components/Modal'
 import { useI18n } from '/@/hooks/web/useI18n'
 
-import { TableAction, ActionItem } from '/@/components/SmartTable'
+import { SmartVxeTableAction, SmartTable, useSmartTable } from '/@/components/SmartTable'
 import CodeCreateModal from './components/CodeCreateModal.vue'
 import { LayoutSeparate } from '/@/components/LayoutSeparate'
 import SystemSimpleList from '/@/modules/system/components/system/SystemSimpleList.vue'
