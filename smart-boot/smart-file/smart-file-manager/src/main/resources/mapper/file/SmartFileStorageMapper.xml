@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smart.file.manager.mapper.SmartFileStorageMapper">
+    <sql id="columnList">
+        <!--   id 主键  索引   -->
+        id,
+        <!--   存储器编码      -->
+        storage_code,
+        <!--   存储器名称      -->
+        storage_name,
+        <!--   存储器类型      -->
+        storage_type,
+        <!--   seq      -->
+        seq,
+        <!--   remark      -->
+        remark,
+        <!--   是否是默认存储器      -->
+        default_storage,
+        <!--   存储器配置信息      -->
+        storage_config,
+        <!--   createTime      -->
+        create_time,
+        <!--   createUserId      -->
+        create_user_id,
+        <!--   createBy      -->
+        create_by,
+        <!--   updateTime      -->
+        update_time,
+        <!--   updateUserId      -->
+        update_user_id,
+        <!--   updateBy      -->
+        update_by,
+        <!--   useYn      -->
+        use_yn,
+        <!--   deleteYn      -->
+        delete_yn
+    </sql>
+
+    <resultMap id="commonResultMap" type="com.smart.file.manager.model.SmartFileStoragePO">
+        <!--   id 主键  索引   -->
+        <id column="id" property="id" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   存储器编码      -->
+        <result column="storage_code" property="storageCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   存储器名称      -->
+        <result column="storage_name" property="storageName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   存储器类型      -->
+        <result column="storage_type" property="storageType" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   seq      -->
+        <result column="seq" property="seq" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        <!--   remark      -->
+        <result column="remark" property="remark" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   是否是默认存储器      -->
+        <result column="default_storage" property="defaultStorage" javaType="java.lang.Boolean" jdbcType="BIT"/>
+        <!--   存储器配置信息      -->
+        <result column="storage_config" property="storageConfig" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   createTime      -->
+        <result column="create_time" property="createTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+        <!--   createUserId      -->
+        <result column="create_user_id" property="createUserId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   createBy      -->
+        <result column="create_by" property="createBy" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   updateTime      -->
+        <result column="update_time" property="updateTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+        <!--   updateUserId      -->
+        <result column="update_user_id" property="updateUserId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   updateBy      -->
+        <result column="update_by" property="updateBy" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   useYn      -->
+        <result column="use_yn" property="useYn" javaType="java.lang.Boolean" jdbcType="BIT"/>
+        <!--   deleteYn      -->
+        <result column="delete_yn" property="deleteYn" javaType="java.lang.Boolean" jdbcType="BIT"/>
+    </resultMap>
+</mapper>

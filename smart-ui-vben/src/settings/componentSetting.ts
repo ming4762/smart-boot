@@ -20,9 +20,9 @@ export default {
       totalField: 'total',
     },
     // Number of pages that can be selected
-    pageSizeOptions: [100, 500, 1000, 2000, 5000],
+    pageSizeOptions: [50, 100, 500, 1000, 3000],
     // Default display quantity on one page
-    defaultPageSize: 100,
+    defaultPageSize: 50,
     pageLayouts: [
       'Sizes',
       'PrevJump',

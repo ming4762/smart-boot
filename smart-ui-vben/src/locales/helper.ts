@@ -51,7 +51,7 @@ export const generateModuleMessage = (langs: Record<string, Record<string, any>>
   return result
 }
 
-type I18nTransfer = {
+export type I18nTransfer = {
   trans: boolean
   key: string
   data: { [index: string]: any }
