@@ -96,13 +96,6 @@ export const useTableAjax = (
           if (proxyConfig.afterLoad) {
             result = proxyConfig.afterLoad(result)
           }
-          let tableData
-          if (isArray(result)) {
-            tableData = result
-          } else {
-            tableData = result[proxyConfig.props?.result || 'rows']
-          }
-          emit('after-load', tableData)
           return result
         },
       }

@@ -115,7 +115,7 @@ export interface TableActionType {
   getRadioRecord: (isFull: boolean) => any
 
   // openAddEditModal: <T = any>(props?: boolean, data?: T, openOnSet?: boolean) => void
-  showAddModal: (formData?: Recordable) => void
+  showAddModal: (formData?: Recordable, selectData?: Recordable) => void
   editByCheckbox: () => Promise<boolean> | boolean
   editByRowModal: <T = any>(data: T, formData?: Recordable) => Promise<boolean> | boolean
   getAddEditFieldsValue: () => Recordable

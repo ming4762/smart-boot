@@ -37,7 +37,7 @@ export default defineComponent({
     BasicForm,
   },
   props: smartTableProps,
-  emits: ['register', 'after-load', 'toolbar-tool-click', 'proxy-query', 'proxy-delete'],
+  emits: ['register', 'toolbar-tool-click', 'proxy-query', 'proxy-delete'],
   setup(props, { emit, slots, attrs }) {
     const { t } = useI18n()
     const tableElRef = ref<VxeGridInstance>() as Ref<VxeGridInstance>
@@ -121,7 +121,7 @@ export default defineComponent({
     } = useTableModalAddEditConfig(getTableProps, slots, {
       getCheckboxRecords,
       openAddEditModal,
-      reload,
+      query,
     })
 
     const getCustomConfig = computed(() => {
