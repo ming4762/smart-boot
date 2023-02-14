@@ -6,6 +6,9 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.LambdaUtils;
+import com.baomidou.mybatisplus.core.toolkit.support.LambdaMeta;
+import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -18,6 +21,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.reflection.property.PropertyNamer;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.util.CollectionUtils;
@@ -196,6 +200,17 @@ public final class CrudUtils {
             dbField = getDefaultDbField(field.getName());
         }
         return dbField;
+    }
+
+    /**
+     * 获取数据库字段
+     * @param column 字段function
+     * @return 数据库字段
+     */
+    public static String getDbField(@NonNull SFunction<?, ?> column) {
+        LambdaMeta meta = LambdaUtils.extract(column);
+        String property = PropertyNamer.methodToProperty(meta.getImplMethodName());
+        return getDbField((Class<? extends BaseModel>) meta.getInstantiatedClass(), property);
     }
 
     /**
