@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smart.system.mapper.CommonMapper">
+    <update id="updateHasChild">
+        update ${tableName}
+        set has_child = (select IF(A.count_num > 0, 1, 0)
+            from (select count(*) count_num from ${tableName} where ${parentField} = #{id}) as A)
+        where ${idField} = #{id}
+    </update>
+</mapper>
