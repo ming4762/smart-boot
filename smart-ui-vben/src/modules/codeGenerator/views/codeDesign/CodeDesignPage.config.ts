@@ -171,7 +171,7 @@ export const formSchemas = (t: Function): FormSchema[] => {
       label: t('generator.views.code.title.formColNum'),
       field: 'formColNum',
       component: 'Select',
-      defaultValue: 1,
+      defaultValue: 0,
       componentProps: {
         options: columnNumList(t),
       },
@@ -285,6 +285,10 @@ const rowButtonList = [
 
 const columnNumList = (t: Function) => {
   return [
+    {
+      value: 0,
+      label: t('generator.views.design.title.colNum.zero'),
+    },
     {
       value: 1,
       label: t('generator.views.code.title.colNum.one'),

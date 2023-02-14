@@ -71,4 +71,9 @@ public class DbCodeFormConfigCommonPO extends BaseModelUserTime {
     private String javaType;
 
     private String simpleJavaType;
+
+    /**
+     * 是否自动校验
+     */
+    private Boolean autoValidate;
 }

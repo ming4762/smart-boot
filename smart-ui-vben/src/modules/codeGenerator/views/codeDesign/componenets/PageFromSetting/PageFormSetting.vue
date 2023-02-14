@@ -49,10 +49,7 @@
           :size="formSizeConfig" />
       </template>
       <template #table-tableWhere="{ row }">
-        <a-input
-          v-model:value="row.tableWhere"
-          :disabled="!row.useTableSearch"
-          :size="formSizeConfig" />
+        <a-input v-model:value="row.tableWhere" :size="formSizeConfig" />
       </template>
       <template #table-controlType="{ row }">
         <a-select v-model:value="row.controlType" :size="formSizeConfig" style="width: 100px">
@@ -302,7 +299,7 @@ export default defineComponent({
           },
         },
         {
-          title: '{generator.views.codeCreateForm.title.tableName}',
+          title: '{generator.views.design.formSetting.title.tableName}',
           field: 'tableName',
           width: 120,
           slots: {

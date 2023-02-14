@@ -143,7 +143,7 @@ export default {
           useTableSearch: '查询数据库',
           keyColumnName: 'key字段',
           valueColumnName: 'value字段',
-          tableWhere: '查询条件',
+          tableWhere: '查询条件/字典code',
           rules: '验证规则',
         },
       },

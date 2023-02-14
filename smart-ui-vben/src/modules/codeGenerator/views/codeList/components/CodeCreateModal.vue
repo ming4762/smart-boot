@@ -13,13 +13,14 @@
           title="选择模板"
           defaultFullscreen
           multiple
+          :list-api="listByIdApi"
           label-field="name"
           value-field="templateId">
-          <template #table="{ addSelectData, removeSelectData, getSelectData }">
+          <template #table="{ addSelectData, removeSelectData, selectData }">
             <TemplateSelectTable
               :add-select-data="addSelectData"
               :remove-select-data="removeSelectData"
-              :get-select-data="getSelectData" />
+              :select-data="selectData" />
           </template>
         </SmartTableSelect>
       </template>
@@ -31,6 +32,7 @@
 import { useI18n } from '/@/hooks/web/useI18n'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
+import { defHttp } from '/@/utils/http/axios'
 
 import { BasicModal, useModalInner } from '/@/components/Modal'
 import { BasicForm, useForm } from '/@/components/Form'
@@ -65,6 +67,13 @@ const [registerModal] = useModalInner((codeConfigData: Recordable) => {
     mainId: id,
   })
 })
+
+const listByIdApi = (ids) => {
+  return defHttp.post({
+    url: 'db/code/template/listById',
+    data: ids,
+  })
+}
 
 const [registerForm, { setFieldsValue, validate }] = useForm({
   labelCol: {

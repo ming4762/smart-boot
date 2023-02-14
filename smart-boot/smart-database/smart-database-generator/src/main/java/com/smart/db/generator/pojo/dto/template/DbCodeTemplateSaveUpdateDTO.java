@@ -33,4 +33,6 @@ public class DbCodeTemplateSaveUpdateDTO implements Serializable {
 
     @NotNull(message = "模板内容不能为空")
     private String template;
+
+    private String filenameSuffix;
 }

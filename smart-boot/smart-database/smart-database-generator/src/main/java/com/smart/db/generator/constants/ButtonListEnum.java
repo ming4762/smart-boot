@@ -21,5 +21,8 @@ public enum ButtonListEnum {
      * 设为有效、设为无效
      */
     SET_VALID,
-    SET_INVALID
+    SET_INVALID,
+    ZOOM,
+    REFRESH,
+    SHOW_SEARCH,
 }

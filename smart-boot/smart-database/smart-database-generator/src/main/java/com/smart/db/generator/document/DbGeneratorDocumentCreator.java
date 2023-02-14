@@ -142,6 +142,7 @@ public class DbGeneratorDocumentCreator {
      */
     private static List<DocumentVO> createFormConfigCommonDocument() {
         List<DocumentVO> documentList = Lists.newArrayList(
+                new DocumentVO("autoValidate", "是否使用自动校验", "Boolean", null, null, true),
                 new DocumentVO("remarks", "数据库列备注", "String", null, null, false),
                 new DocumentVO("title", "标题", "String", null, null, false),
                 new DocumentVO("readonly", "是否只读", "Boolean", null, "false", false),

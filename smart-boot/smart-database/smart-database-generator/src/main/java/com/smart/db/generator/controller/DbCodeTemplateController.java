@@ -155,4 +155,17 @@ public class DbCodeTemplateController extends BaseController<DbCodeTemplateServi
     public Result<Boolean> deleteGroupById(@RequestBody List<Long> idList) {
         return Result.success(this.templateGroupService.removeByIds(idList));
     }
+
+    /**
+     * 通过ID批量获取
+     *
+     * @param ids ID列表
+     * @return list
+     */
+    @Override
+    @PostMapping("listById")
+    @Operation(summary = "通过ID批量查询")
+    public Result<List<DbCodeTemplatePO>> listById(@RequestBody List<? extends Serializable> ids) {
+        return super.listById(ids);
+    }
 }
