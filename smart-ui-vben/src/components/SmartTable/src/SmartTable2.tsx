@@ -89,7 +89,7 @@ export default defineComponent({
     } = useTableSearchForm(getTableProps, slots, (params) => query(params), getLoading)
 
     // -------------- 加载函数 ------------------------
-    const { reload, getProxyConfigRef, deleteByRow, deleteByCheckbox } = useTableAjax(
+    const { getProxyConfigRef, deleteByRow, deleteByCheckbox } = useTableAjax(
       getTableProps,
       tableElRef,
       emit,
@@ -133,7 +133,7 @@ export default defineComponent({
     } = useTableModalAddEditConfig(getTableProps, slots, {
       getCheckboxRecords,
       openAddEditModal,
-      reload,
+      query,
     })
 
     const getCustomConfig = computed(() => {

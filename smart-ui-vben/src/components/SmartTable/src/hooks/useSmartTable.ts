@@ -124,8 +124,8 @@ export const useSmartTable = (
     getRadioRecord: (isFull: boolean) => {
       return getTableAction().getRadioRecord(isFull)
     },
-    showAddModal: (formData?: Recordable) => {
-      getTableAction().showAddModal(formData)
+    showAddModal: (formData?: Recordable, selectData?: Recordable) => {
+      getTableAction().showAddModal(formData, selectData)
     },
     editByCheckbox: () => {
       return getTableAction().editByCheckbox()

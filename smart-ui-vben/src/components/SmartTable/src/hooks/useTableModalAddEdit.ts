@@ -11,13 +11,13 @@ import { error } from '/@/utils/log'
 interface TableAction {
   getCheckboxRecords: (isFull: boolean) => Array<any>
   openAddEditModal: <T = any>(props?: boolean, data?: T, openOnSet?: boolean) => void
-  reload: (parameter?) => Promise<void>
+  query: (parameter?) => Promise<void>
 }
 
 export const useTableModalAddEditConfig = (
   tableProps: ComputedRef<SmartTableProps>,
   slots: Slots,
-  { getCheckboxRecords, openAddEditModal, reload }: TableAction,
+  { getCheckboxRecords, openAddEditModal, query }: TableAction,
 ) => {
   const { t } = useI18n()
   const isAddRef = ref(true)
@@ -100,18 +100,18 @@ export const useTableModalAddEditConfig = (
       afterSave:
         afterSave ||
         (() => {
-          reload()
+          query()
           return true
         }),
     }
   })
 
-  const showAddModal = (formData?: Recordable) => {
+  const showAddModal = (formData?: Recordable, selectData?: Recordable) => {
     if (!unref(getHasAddEdit)) {
       throw new Error('addEditConfig未定义')
     }
     isAddRef.value = true
-    openAddEditModal(true, getCallbackData(true, undefined, formData))
+    openAddEditModal(true, getCallbackData(true, selectData, formData))
   }
 
   const editByRowModal = (row, formData?: Recordable) => {
