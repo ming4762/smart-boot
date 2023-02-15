@@ -5,6 +5,7 @@ enum Api {
   getById = '/sys/fileStorage/getById',
   batchSaveUpdate = '/sys/fileStorage/saveUpdateBatch',
   delete = '/sys/fileStorage/batchDeleteById',
+  setDefault = '/sys/fileStorage/setDefault',
 }
 
 export const listApi = (params) => {
@@ -34,5 +35,14 @@ export const getByIdApi = (model: Recordable) => {
   return defHttp.post({
     url: Api.getById,
     data: model.id,
+  })
+}
+
+export const setDefaultApi = (id) => {
+  return defHttp.post({
+    url: Api.setDefault,
+    data: {
+      id,
+    },
   })
 }

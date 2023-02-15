@@ -1,12 +1,10 @@
 import type { SmartColumn, SmartSearchFormSchema } from '/@/components/SmartTable'
 import type { FormSchema } from '/@/components/Form'
 
-import { tableUseYn } from '/@/components/common/TableCommon'
-
 /**
  * 表格列表
  */
-export const getTableColumns = (t: Function): SmartColumn[] => {
+export const getTableColumns = (): SmartColumn[] => {
   return [
     {
       type: 'checkbox',
@@ -37,6 +35,9 @@ export const getTableColumns = (t: Function): SmartColumn[] => {
       sortable: true,
       title: '{smart.file.storage.title.storageType}',
       width: 120,
+      slots: {
+        default: 'table-storageType',
+      },
     },
     {
       field: 'seq',
@@ -53,6 +54,10 @@ export const getTableColumns = (t: Function): SmartColumn[] => {
       field: 'defaultStorage',
       title: '{smart.file.storage.title.defaultStorage}',
       width: 140,
+      component: 'switch',
+      componentProps: {
+        disabled: true,
+      },
     },
     // {
     //   field: 'storageConfig',
@@ -63,6 +68,7 @@ export const getTableColumns = (t: Function): SmartColumn[] => {
       field: 'createTime',
       title: '{common.table.createTime}',
       width: 160,
+      sortable: true,
     },
     {
       field: 'createBy',
@@ -73,6 +79,7 @@ export const getTableColumns = (t: Function): SmartColumn[] => {
       field: 'updateTime',
       title: '{common.table.updateTime}',
       width: 160,
+      sortable: true,
     },
     {
       field: 'updateBy',
@@ -80,13 +87,15 @@ export const getTableColumns = (t: Function): SmartColumn[] => {
       width: 120,
     },
     {
-      ...tableUseYn(t).createColumn(),
-      width: 120,
+      title: '{common.table.useYn}',
+      field: 'useYn',
+      width: 100,
+      component: 'booleanTag',
     },
     {
       title: '{common.table.operation}',
       field: 'operation',
-      width: 120,
+      width: 150,
       fixed: 'right',
       slots: {
         default: 'table-operation',
