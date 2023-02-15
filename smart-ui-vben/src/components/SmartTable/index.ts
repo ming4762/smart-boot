@@ -13,3 +13,4 @@ export * from './src/types/SmartTableAddEditType'
 
 export * from './src/types/SmartTableActionType'
 export * from './src/types/SmartTableButton'
+export * from './src/types/SmartTableColumnType'
