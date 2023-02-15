@@ -2,7 +2,12 @@
   <div class="full-height page-container">
     <SmartTable @register="registerTable" :size="getTableSize">
       <template #table-operation="{ row }">
-        <SmartVxeTableAction :actions="getActions(row)" />
+        <SmartVxeTableAction
+          :actions="getActions(row)"
+          :drop-down-actions="getDropDownActions(row)" />
+      </template>
+      <template #table-storageType="{ row }">
+        <span>{{ getDictItemMap[row.storageType] }}</span>
       </template>
     </SmartTable>
   </div>
@@ -12,6 +17,7 @@
 import { useI18n } from '/@/hooks/web/useI18n'
 import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
 import { replace } from 'lodash-es'
+import { Modal } from 'ant-design-vue'
 
 import {
   ActionItem,
@@ -19,18 +25,28 @@ import {
   SmartVxeTableAction,
   useSmartTable,
 } from '/@/components/SmartTable'
+import { useLoadDictItem } from '/@/modules/system/hooks/dict/SysDictHooks'
 
 import {
   getTableColumns,
   getFormSchemas,
   getSearchFormSchemas,
 } from './SmartFileStorageListView.config'
-import { listApi, deleteApi, getByIdApi, batchSaveUpdateApi } from './SmartFileStorageListView.api'
+import {
+  listApi,
+  deleteApi,
+  getByIdApi,
+  batchSaveUpdateApi,
+  setDefaultApi,
+} from './SmartFileStorageListView.api'
+import { createVNode } from 'vue'
+import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
 
 const { t } = useI18n()
 const { getTableSize } = useSizeSetting()
 
 const storageConfigPrefix = 'storageConfig'
+const { getDictItemMap } = useLoadDictItem('FILE_STORAGE_TYPE')
 
 const getActions = (row: Recordable): ActionItem[] => {
   return [
@@ -46,8 +62,30 @@ const getActions = (row: Recordable): ActionItem[] => {
   ]
 }
 
-const [registerTable, { editByRowModal, deleteByRow }] = useSmartTable({
-  columns: getTableColumns(t),
+const getDropDownActions = (row: Recordable): ActionItem[] => {
+  return [
+    {
+      label: t('smart.file.storage.button.setDefault'),
+      preIcon: 'ant-design:check-outlined',
+      disabled: row.defaultStorage === true,
+      auth: 'sys:fileStorage:setDefault',
+      onClick: () => {
+        Modal.confirm({
+          title: t('common.notice.confirm'),
+          icon: createVNode(ExclamationCircleOutlined),
+          content: t('smart.file.storage.message.setDefault'),
+          onOk: async () => {
+            await setDefaultApi(row.id)
+            query()
+          },
+        })
+      },
+    },
+  ]
+}
+
+const [registerTable, { editByRowModal, deleteByRow, query }] = useSmartTable({
+  columns: getTableColumns(),
   height: 'auto',
   pagerConfig: true,
   useSearchForm: true,
@@ -76,9 +114,22 @@ const [registerTable, { editByRowModal, deleteByRow }] = useSmartTable({
       wrapperCol: { span: 17 },
     },
   },
+  sortConfig: {
+    remote: true,
+  },
+  columnConfig: {
+    resizable: true,
+  },
+  border: true,
   proxyConfig: {
     ajax: {
-      query: (params) => listApi(params.ajaxParameter),
+      query: ({ ajaxParameter }) => {
+        const params = {
+          sortName: 'seq',
+          ...ajaxParameter,
+        }
+        return listApi(params)
+      },
       save: ({ body: { insertRecords, updateRecords } }) => {
         const saveDatList = [...insertRecords, ...updateRecords]
         const formatDataList = saveDatList.map((item) => {

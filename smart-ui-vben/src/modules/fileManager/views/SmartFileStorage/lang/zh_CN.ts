@@ -29,11 +29,17 @@ export default {
       defaultStorage: '请输入是否是默认存储器',
       storageConfig: '请输入存储器配置信息',
     },
+    message: {
+      setDefault: '只能设置一个默认存储器，确定要设为默认存储器吗？',
+    },
     rules: {},
     search: {
       storageCode: '请输入存储器编码',
       storageName: '请输入存储器名称',
       storageType: '请输入存储器类型',
+    },
+    button: {
+      setDefault: '设为默认',
     },
   },
 }

@@ -4,6 +4,7 @@ import com.smart.commons.core.log.Log;
 import com.smart.commons.core.log.LogOperationTypeEnum;
 import com.smart.commons.core.message.Result;
 import com.smart.crud.controller.BaseController;
+import com.smart.crud.query.IdParameter;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.file.manager.model.SmartFileStoragePO;
 import com.smart.file.manager.pojo.dto.SmartFileStorageSaveUpdateDTO;
@@ -89,5 +90,13 @@ public class SmartFileStorageController extends BaseController<SmartFileStorageS
     @PreAuthorize("@hasPermission('sys:fileStorage', 'query')")
     public Result<SmartFileStoragePO> getById(@RequestBody Serializable id) {
         return super.getById(id);
+    }
+
+    @PreAuthorize("@hasPermission('sys:fileStorage', 'setDefault')")
+    @PostMapping("setDefault")
+    @Operation(summary = "设置默认")
+    @Log(value = "设置默认", type = LogOperationTypeEnum.UPDATE)
+    public Result<Boolean> setDefault(@RequestBody IdParameter parameter) {
+        return Result.success(this.service.setDefault(parameter.getId()));
     }
 }
