@@ -5,10 +5,7 @@ import type { SmartTableAddEditConfig } from './SmartTableAddEditType'
 import type { NamePath } from 'ant-design-vue/es/form/interface'
 import type { VxeTablePropTypes } from 'vxe-table/types/table'
 import type { Options as SortableOptions } from 'sortablejs'
-
-export interface SmartColumn extends VxeTableDefines.ColumnOptions {
-  flag?: 'INDEX' | 'DEFAULT' | 'CHECKBOX' | 'RADIO' | 'ACTION'
-}
+import type { SmartColumn } from './SmartTableColumnType'
 
 export interface GetColumnsParams {
   ignoreIndex?: boolean

@@ -1,13 +1,7 @@
 import type { SmartTableProps, TableActionType } from './types/SmartTableType'
 import type { VxeGridInstance } from 'vxe-table'
 
-import {
-  computed,
-  defineComponent,
-  Ref,
-  ref,
-  unref,
-} from 'vue'
+import { computed, defineComponent, Ref, ref, unref } from 'vue'
 
 import { TableSearchLayout } from '/@/components/Layout'
 import { BasicForm } from '/@/components/Form'
@@ -24,6 +18,7 @@ import { useTableToolbarConfig } from './hooks/useTableToolbarConfig'
 import { useTableModalAddEditConfig } from './hooks/useTableModalAddEdit'
 import { createTableContext } from './hooks/userSmartTableContext'
 import { useTableRowDrag } from './hooks/useTableDrag'
+import { useSmartTableColumn } from './hooks/useSmartTableColumn'
 import SmartTableAddEditModal from './components/SmartTableAddEditModal'
 import './renderer/VxeTableButtonRenderer'
 import { error } from '/@/utils/log'
@@ -168,6 +163,8 @@ export default defineComponent({
       loadData: (data) => getTableInstance().loadData(data),
     })
 
+    const { getTableColumns } = useSmartTableColumn(getTableProps, t)
+
     /**
      * 获取table v-bing
      */
@@ -183,7 +180,7 @@ export default defineComponent({
         proxyConfig: unref(getProxyConfigRef),
         customConfig: unref(getCustomConfig),
         ...unref(getTableEvents),
-        columns: [...unref(getTableDragColumn), ...(tableProps.columns || [])],
+        columns: [...unref(getTableDragColumn), ...unref(getTableColumns)],
       }
       propsData = omit(propsData, [])
       return propsData
