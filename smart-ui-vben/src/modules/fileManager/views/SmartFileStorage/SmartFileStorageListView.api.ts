@@ -1,11 +1,11 @@
 import { defHttp } from '/@/utils/http/axios'
 
 enum Api {
-  list = '/sys/fileStorage/list',
-  getById = '/sys/fileStorage/getById',
-  batchSaveUpdate = '/sys/fileStorage/saveUpdateBatch',
-  delete = '/sys/fileStorage/batchDeleteById',
-  setDefault = '/sys/fileStorage/setDefault',
+  list = '/smart/fileStorage/list',
+  getById = '/smart/fileStorage/getById',
+  batchSaveUpdate = '/smart/fileStorage/saveUpdateBatch',
+  delete = '/smart/fileStorage/batchDeleteById',
+  setDefault = '/smart/fileStorage/setDefault',
 }
 
 export const listApi = (params) => {

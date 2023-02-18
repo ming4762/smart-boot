@@ -35,7 +35,7 @@ public class ImageController {
      * @param response HttpServletResponse
      */
     @GetMapping("public/file/show/{id}")
-    @TempToken(resource = "sys:file:download")
+    @TempToken(resource = "smart:file:download")
     public void show(@PathVariable("id") Long id, HttpServletResponse response) throws IOException {
         FileDownloadResult file = this.fileService.download(id);
         if (Objects.nonNull(file)) {

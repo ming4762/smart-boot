@@ -12,10 +12,10 @@ import com.smart.file.core.pojo.bo.FileHandlerResult;
 import com.smart.file.core.service.FileService;
 import com.smart.file.core.service.FileStorageService;
 import com.smart.file.manager.model.SmartFileStoragePO;
-import com.smart.file.manager.model.SysFilePO;
+import com.smart.file.manager.model.SmartFilePO;
 import com.smart.file.manager.pojo.bo.SysFileBO;
 import com.smart.file.manager.service.SmartFileStorageService;
-import com.smart.file.manager.service.SysFileService;
+import com.smart.file.manager.service.SmartFileService;
 import lombok.SneakyThrows;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
@@ -45,9 +45,9 @@ public class DefaultFileServiceImpl implements FileService, ApplicationContextAw
 
     private final SmartFileStorageService smartFileStorageService;
 
-    private final SysFileService sysFileService;
+    private final SmartFileService sysFileService;
 
-    public DefaultFileServiceImpl(SmartFileStorageService fileStorageService, SysFileService sysFileService) {
+    public DefaultFileServiceImpl(SmartFileStorageService fileStorageService, SmartFileService sysFileService) {
         this.smartFileStorageService = fileStorageService;
         this.sysFileService = sysFileService;
     }
@@ -124,12 +124,12 @@ public class DefaultFileServiceImpl implements FileService, ApplicationContextAw
      */
     @Override
     public List<FileHandlerResult> batchDelete(@NonNull Collection<Long> fileIds) {
-        List<SysFilePO> sysFileList = this.sysFileService.listByIds(fileIds);
+        List<SmartFilePO> sysFileList = this.sysFileService.listByIds(fileIds);
         if (CollectionUtils.isEmpty(sysFileList)) {
             return Collections.emptyList();
         }
         // 获取文件存储器
-        Set<Long> fileStorageIds = sysFileList.stream().map(SysFilePO::getFileStorageId).collect(Collectors.toSet());
+        Set<Long> fileStorageIds = sysFileList.stream().map(SmartFilePO::getFileStorageId).collect(Collectors.toSet());
         List<SmartFileStoragePO> fileStorageList = this.smartFileStorageService.listByIds(fileStorageIds);
         // 验证文件存储器是否缺少
         Set<Long> validateFileStorageIds = fileStorageList.stream().map(SmartFileStoragePO::getId).collect(Collectors.toSet());
@@ -142,7 +142,7 @@ public class DefaultFileServiceImpl implements FileService, ApplicationContextAw
         Map<Long, SmartFileStoragePO> smartFileStorageMap = fileStorageList.stream().collect(Collectors.toMap(SmartFileStoragePO::getId, item -> item));
         // 删除实际文件
         sysFileList.stream()
-                .collect(Collectors.groupingBy(SysFilePO::getFileStorageId))
+                .collect(Collectors.groupingBy(SmartFilePO::getFileStorageId))
                 .forEach((storageId, list) -> {
                     SmartFileStoragePO fileStorage = smartFileStorageMap.get(storageId);
                     FileStorageService fileStorageService = this.getFileStorageService(fileStorage.getStorageType());
@@ -150,7 +150,7 @@ public class DefaultFileServiceImpl implements FileService, ApplicationContextAw
                             FileStorageDeleteParameter.builder()
                                     .storageProperties(fileStorage.getStorageConfig())
                                     .storageType(fileStorage.getStorageType())
-                                    .fileStoreKeyList(list.stream().map(SysFilePO::getStorageStoreKey).collect(Collectors.toList()))
+                                    .fileStoreKeyList(list.stream().map(SmartFilePO::getStorageStoreKey).collect(Collectors.toList()))
                                     .build()
                     );
                 });
@@ -170,7 +170,7 @@ public class DefaultFileServiceImpl implements FileService, ApplicationContextAw
      */
     @Override
     public FileDownloadResult download(@NonNull Long id) {
-        SysFilePO sysFileData = this.sysFileService.getById(id);
+        SmartFilePO sysFileData = this.sysFileService.getById(id);
         if (sysFileData == null) {
             return null;
         }

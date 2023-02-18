@@ -1,9 +1,9 @@
 package com.smart.file.manager.service.impl;
 
 import com.smart.crud.service.BaseServiceImpl;
-import com.smart.file.manager.mapper.SysFileMapper;
-import com.smart.file.manager.model.SysFilePO;
-import com.smart.file.manager.service.SysFileService;
+import com.smart.file.manager.mapper.SmartFileMapper;
+import com.smart.file.manager.model.SmartFilePO;
+import com.smart.file.manager.service.SmartFileService;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -12,6 +12,6 @@ import lombok.extern.slf4j.Slf4j;
  * 2020/1/27 7:50 下午
  */
 @Slf4j
-public class SysFileServiceImpl extends BaseServiceImpl<SysFileMapper, SysFilePO> implements SysFileService {
+public class SmartFileServiceImpl extends BaseServiceImpl<SmartFileMapper, SmartFilePO> implements SmartFileService {
 
 }
