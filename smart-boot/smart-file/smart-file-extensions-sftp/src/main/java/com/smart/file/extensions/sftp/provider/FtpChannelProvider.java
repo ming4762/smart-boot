@@ -2,13 +2,12 @@ package com.smart.file.extensions.sftp.provider;
 
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.Session;
-import com.smart.file.core.SmartFileProperties;
 import com.smart.file.core.exception.SmartFileException;
 import com.smart.file.extensions.sftp.constants.ChannelTypeEnum;
-import com.smart.file.extensions.sftp.pool.ChannelPooledObjectFactory;
-import com.smart.file.extensions.sftp.pool.JschSessionPooledObjectFactory;
+import com.smart.file.extensions.sftp.pool.ChannelKeyedPooledObjectFactory;
+import com.smart.file.extensions.sftp.pool.JschSessionKeyedPooledObjectFactory;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.pool2.impl.GenericObjectPool;
+import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -21,22 +20,18 @@ import org.springframework.beans.factory.InitializingBean;
 @Slf4j
 public class FtpChannelProvider implements JschChannelProvider<ChannelSftp>, InitializingBean, DisposableBean {
 
-    private GenericObjectPool<ChannelSftp> objectPool;
+    private GenericKeyedObjectPool<String, ChannelSftp> objectPool;
 
-    private final SmartFileProperties.SmartJschProperties properties;
-
-    public FtpChannelProvider(SmartFileProperties.SmartJschProperties properties) {
-        this.properties = properties;
-    }
 
     @Override
-    public ChannelSftp getChannel() {
-        if (this.objectPool.getNumWaiters() > 0) {
+    public ChannelSftp getChannel(String key) {
+        Integer waitersNum = this.objectPool.getNumWaitersByKey().get(key);
+        if (waitersNum > 0) {
             log.warn("线程池暂无空闲channel");
             return null;
         }
         try {
-            return this.objectPool.borrowObject();
+            return this.objectPool.borrowObject(key);
         } catch (Exception e) {
             log.error("从连接池获取channel发生错误", e);
             throw new SmartFileException("从连接池获取channel发生错误", e);
@@ -44,18 +39,18 @@ public class FtpChannelProvider implements JschChannelProvider<ChannelSftp>, Ini
     }
 
     @Override
-    public void returnChannel(ChannelSftp channel) {
-        this.objectPool.returnObject(channel);
+    public void returnChannel(String key, ChannelSftp channel) {
+        this.objectPool.returnObject(key, channel);
     }
 
     @Override
     public void afterPropertiesSet() {
         // 创建session连接池
-        final JschSessionPooledObjectFactory sessionPooledObjectFactory = new JschSessionPooledObjectFactory(this.properties);
-        final GenericObjectPool<Session> sessionObjectPool = new GenericObjectPool<>(sessionPooledObjectFactory);
+        JschSessionKeyedPooledObjectFactory sessionKeyedPooledObjectFactory = new JschSessionKeyedPooledObjectFactory();
+        GenericKeyedObjectPool<String, Session> sessionGenericKeyedObjectPool = new GenericKeyedObjectPool<>(sessionKeyedPooledObjectFactory);
         // 创建channel连接池
-        final ChannelPooledObjectFactory<ChannelSftp> channelPooledObjectFactory = new ChannelPooledObjectFactory<>(sessionObjectPool, ChannelTypeEnum.SFTP);
-        this.objectPool = new GenericObjectPool<>(channelPooledObjectFactory);
+        ChannelKeyedPooledObjectFactory<ChannelSftp> channelKeyedPooledObjectFactory = new ChannelKeyedPooledObjectFactory<>(sessionGenericKeyedObjectPool, ChannelTypeEnum.SFTP);
+        this.objectPool = new GenericKeyedObjectPool<>(channelKeyedPooledObjectFactory);
     }
 
     /**

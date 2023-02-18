@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.smart.crud.model.BaseModelCreateUserTime;
-import com.smart.file.manager.constants.FileTypeEnum;
+import com.smart.file.core.constants.FileTypeEnum;
 import lombok.*;
 
 /**
@@ -48,9 +48,9 @@ public class SysFilePO extends BaseModelCreateUserTime {
     private Long fileSize;
 
     /**
-     * 数据库ID
+     * 保存到文件存储器的KEY
      */
-    private String dbId;
+    private String storageStoreKey;
 
     /**
      * MD5
@@ -63,7 +63,7 @@ public class SysFilePO extends BaseModelCreateUserTime {
     private Integer seq;
 
     /**
-     * 文件执行器类型
+     * 文件存储器ID
      */
-    private String handlerType;
+    private Long fileStorageId;
 }

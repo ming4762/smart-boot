@@ -18,4 +18,17 @@ public interface SmartFileStorageService extends BaseService<SmartFileStoragePO>
      * @return 修改结果
      */
     boolean setDefault(Serializable id);
+
+    /**
+     * 通过code查询
+     * @param code code
+     * @return 文件存储器信息
+     */
+    SmartFileStoragePO getByCode(String code);
+
+    /**
+     * 获取默认的存储器
+     * @return 默认存储器
+     */
+    SmartFileStoragePO getDefault();
 }

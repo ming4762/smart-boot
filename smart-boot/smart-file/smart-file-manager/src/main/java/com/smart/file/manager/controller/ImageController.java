@@ -1,8 +1,8 @@
 package com.smart.file.manager.controller;
 
 import com.smart.auth.core.annotation.TempToken;
-import com.smart.file.manager.pojo.bo.SysFileBO;
-import com.smart.file.manager.service.FileHandler;
+import com.smart.file.core.pojo.bo.FileDownloadResult;
+import com.smart.file.core.service.FileService;
 import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,10 +23,10 @@ import java.util.Objects;
 @RequestMapping
 public class ImageController {
 
-    private final FileHandler fileHandler;
+    private final FileService fileService;
 
-    public ImageController(FileHandler fileHandler) {
-        this.fileHandler = fileHandler;
+    public ImageController(FileService fileHandler) {
+        this.fileService = fileHandler;
     }
 
     /**
@@ -37,7 +37,7 @@ public class ImageController {
     @GetMapping("public/file/show/{id}")
     @TempToken(resource = "sys:file:download")
     public void show(@PathVariable("id") Long id, HttpServletResponse response) throws IOException {
-        SysFileBO file = this.fileHandler.download(id);
+        FileDownloadResult file = this.fileService.download(id);
         if (Objects.nonNull(file)) {
             try (InputStream inputStream = file.getInputStream()) {
                 IOUtils.copy(inputStream, response.getOutputStream());

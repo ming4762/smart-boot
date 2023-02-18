@@ -1,11 +1,11 @@
 package com.smart.file.manager;
 
-import com.smart.file.core.SmartFileProperties;
-import com.smart.file.manager.service.FileHandler;
+import com.smart.file.core.service.FileService;
+import com.smart.file.manager.service.SmartFileStorageService;
 import com.smart.file.manager.service.SysFileService;
 import com.smart.file.manager.service.impl.DefaultFileServiceImpl;
+import com.smart.file.manager.service.impl.SysFileServiceImpl;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +16,6 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ComponentScan
-@EnableConfigurationProperties(SmartFileProperties.class)
 public class ModuleFileAutoConfiguration {
 
     /**
@@ -26,12 +25,12 @@ public class ModuleFileAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(SysFileService.class)
     public SysFileService sysFileService() {
-        return new DefaultFileServiceImpl();
+        return new SysFileServiceImpl();
     }
 
     @Bean
-    @ConditionalOnMissingBean(FileHandler.class)
-    public FileHandler fileHandler(SmartFileProperties properties, SysFileService sysFileService) {
-        return new FileHandler(properties, sysFileService);
+    @ConditionalOnMissingBean(FileService.class)
+    public FileService defaultFileServiceImpl(SmartFileStorageService smartFileStorageService, SysFileService sysFileService) {
+        return new DefaultFileServiceImpl(smartFileStorageService, sysFileService);
     }
 }

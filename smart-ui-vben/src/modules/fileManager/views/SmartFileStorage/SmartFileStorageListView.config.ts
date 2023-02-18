@@ -263,6 +263,14 @@ export const getFormSchemas = (t: Function): FormSchema[] => {
       },
       required: ({ model }) => model.storageType === 'SFTP',
     },
+    {
+      field: 'storageConfig.SFTP.privateKey',
+      component: 'Input',
+      label: t('smart.file.storage.title.privateKey'),
+      show: ({ model }) => {
+        return model.storageType === 'SFTP'
+      },
+    },
     // {
     //   field: 'storageConfig',
     //   label: t('smart.file.storage.title.storageConfig'),

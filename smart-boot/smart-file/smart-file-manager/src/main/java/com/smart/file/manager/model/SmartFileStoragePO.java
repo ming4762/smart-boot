@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.smart.crud.model.BaseModelUserTime;
+import com.smart.file.core.constants.FileStorageTypeEnum;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -36,7 +37,7 @@ public class SmartFileStoragePO extends BaseModelUserTime {
     /**
     * storage_type - 存储器类型
     */
-    private String storageType;
+    private FileStorageTypeEnum storageType;
 
     /**
     * seq - seq

@@ -1,6 +1,5 @@
 package com.smart.file.extensions.sftp;
 
-import com.smart.file.core.SmartFileProperties;
 import com.smart.file.extensions.sftp.provider.FtpChannelProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +16,7 @@ public class SmartNfsFileAutoConfiguration {
 
 
     @Bean
-    public FtpChannelProvider ftpChannelProvider(SmartFileProperties properties) {
-        return new FtpChannelProvider(properties.getSftp());
+    public FtpChannelProvider ftpChannelProvider() {
+        return new FtpChannelProvider();
     }
 }

@@ -2,11 +2,11 @@ package com.smart.file.manager.controller;
 
 import com.smart.auth.core.annotation.TempToken;
 import com.smart.commons.core.message.Result;
-import com.smart.file.manager.constants.FileTypeEnum;
-import com.smart.file.manager.model.SysFilePO;
-import com.smart.file.manager.pojo.bo.SysFileBO;
-import com.smart.file.manager.pojo.dto.SaveFileDTO;
-import com.smart.file.manager.service.FileHandler;
+import com.smart.file.core.constants.FileTypeEnum;
+import com.smart.file.core.parameter.FileSaveParameter;
+import com.smart.file.core.pojo.bo.FileDownloadResult;
+import com.smart.file.core.pojo.bo.FileHandlerResult;
+import com.smart.file.core.service.FileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -19,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -34,10 +33,10 @@ import java.util.stream.Collectors;
 @Controller
 public class FileController {
 
-    private final FileHandler fileHandler;
+    private final FileService fileService;
 
-    public FileController(FileHandler fileHandler) {
-        this.fileHandler = fileHandler;
+    public FileController(FileService fileService) {
+        this.fileService = fileService;
     }
 
     /**
@@ -56,12 +55,15 @@ public class FileController {
             @Parameter(name = "type", description = "文件类型")
     })
     @ResponseBody
-    public Result<SysFilePO> upload(
+    public Result<FileHandlerResult> upload(
             @RequestParam("file") MultipartFile multipartFile,
             @RequestParam(value = "fileName", required = false) String fileName,
             @RequestParam(value = "type", required = false) FileTypeEnum type
     ) {
-        return Result.success(this.fileHandler.saveFile(multipartFile, SaveFileDTO.builder().type(type).filename(fileName).build()));
+        return Result.success(this.fileService.save(multipartFile, FileSaveParameter.builder()
+                        .filename(fileName)
+                        .type(type)
+                .build()));
     }
 
     /**
@@ -78,7 +80,7 @@ public class FileController {
             @Parameter(name = "type", description = "文件类型"),
     })
     @ResponseBody
-    public Result<List<SysFilePO>> batchUpload(
+    public Result<List<FileHandlerResult>> batchUpload(
             @RequestParam("files")List<MultipartFile> multipartFileList,
             @RequestParam(value = "type", required = false) FileTypeEnum type
     ) {
@@ -87,7 +89,7 @@ public class FileController {
         }
         return Result.success(
                 multipartFileList.stream()
-                        .map(item -> this.fileHandler.saveFile(item, type))
+                        .map(item -> this.fileService.save(item, FileSaveParameter.builder().type(type).build()))
                         .collect(Collectors.toList())
         );
     }
@@ -102,12 +104,12 @@ public class FileController {
     @RequestMapping(value = "/file/download/{id}", method = {RequestMethod.GET, RequestMethod.POST})
     @TempToken(resource = "sys:file:download")
     public void download(@PathVariable("id") Long id, HttpServletResponse response) throws IOException {
-        final SysFileBO file = this.fileHandler.download(id);
-        if (file != null) {
+        FileDownloadResult downloadResult = this.fileService.download(id);
+        if (downloadResult != null) {
             //设置文件名并转码
-            response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(file.getFile().getFileName(), StandardCharsets.UTF_8.name()));
-            response.setContentType(file.getFile().getContentType());
-            try (InputStream inputStream = file.getInputStream()) {
+            response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(downloadResult.getFileName(), StandardCharsets.UTF_8.name()));
+            response.setContentType(downloadResult.getContentType());
+            try (InputStream inputStream = downloadResult.getInputStream()) {
                 IOUtils.copy(inputStream, response.getOutputStream());
             }
         }
@@ -122,7 +124,9 @@ public class FileController {
     @PostMapping("sys/file/batchDeleteById")
     @Operation(summary = "批量删除文件")
     @ResponseBody
-    public Result<Boolean> batchDeleteById(@RequestBody List<Serializable> ids)  {
-        return Result.success(this.fileHandler.batchDeleteFile(ids));
+    public Result<List<FileHandlerResult>> batchDeleteById(@RequestBody List<Long> ids)  {
+        return Result.success(
+                this.fileService.batchDelete(ids)
+        );
     }
 }

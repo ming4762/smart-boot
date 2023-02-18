@@ -1,5 +1,6 @@
 package com.smart.file.manager.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.google.common.collect.ImmutableList;
 import com.smart.crud.service.BaseServiceImpl;
@@ -39,5 +40,32 @@ public class SmartFileStorageServiceImpl extends BaseServiceImpl<SmartFileStorag
                         .eq(SmartFileStoragePO::getId, id)
         );
         return true;
+    }
+
+    /**
+     * 通过code查询
+     *
+     * @param code code
+     * @return 文件存储器信息
+     */
+    @Override
+    public SmartFileStoragePO getByCode(String code) {
+        return this.getOne(
+                new QueryWrapper<SmartFileStoragePO>().lambda()
+                        .eq(SmartFileStoragePO::getStorageCode, code)
+        );
+    }
+
+    /**
+     * 获取默认的存储器
+     *
+     * @return 默认存储器
+     */
+    @Override
+    public SmartFileStoragePO getDefault() {
+        return this.getOne(
+                new QueryWrapper<SmartFileStoragePO>().lambda()
+                        .eq(SmartFileStoragePO::getDefaultStorage, true)
+        );
     }
 }
