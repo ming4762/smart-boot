@@ -2,8 +2,8 @@ import VXETable from 'vxe-table'
 import type { VxeGlobalRendererHandles } from 'vxe-table'
 import { SmartTableButton } from '../types/SmartTableButton'
 import { omit } from 'lodash-es'
-import { hasPermission } from '/@/common/auth/AuthUtils'
-import { isString } from '/@/utils/is'
+// import { hasPermission } from '/@/common/auth/AuthUtils'
+// import { isString } from '/@/utils/is'
 import { unref } from 'vue'
 
 export type VxeTableRenderer =
@@ -27,16 +27,16 @@ VXETable.renderer.add(VxeTableToolButtonAntRenderer, {
     }
     buttonPros = omit(buttonPros, ['props', 'buttonRender'])
     // 权限处理
-    const hasAuth = hasPermission(button?.auth)
-    if (!hasAuth) {
-      const auth = button.auth
-      if (!isString(auth)) {
-        if (auth?.displayMode === 'hide') {
-          return ''
-        }
-      }
-      buttonPros.disabled = true
-    }
+    // const hasAuth = hasPermission(button?.auth)
+    // if (!hasAuth) {
+    //   const auth = button.auth
+    //   if (!isString(auth)) {
+    //     if (auth?.displayMode === 'hide') {
+    //       return ''
+    //     }
+    //   }
+    //   buttonPros.disabled = true
+    // }
     return <a-button {...buttonPros}>{buttonPros.name}</a-button>
   },
 })

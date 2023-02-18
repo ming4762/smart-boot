@@ -119,7 +119,7 @@ export default defineComponent({
     const getDropdownList = computed((): any[] => {
       //过滤掉隐藏的dropdown,避免出现多余的分割线
       const list = (toRaw(props.dropDownActions) || []).filter((action) => {
-        return hasPermission(action.auth) && isIfShow(action)
+        return isIfShow(action)
       })
       return list.map((action, index) => {
         const { label, popConfirm } = action
@@ -130,6 +130,8 @@ export default defineComponent({
           onCancel: popConfirm?.cancel,
           text: label,
           divider: index < list.length - 1 ? props.divider : false,
+          hasAuth: hasPermission(action.auth),
+          disabled: !hasPermission(action.auth),
         }
       })
     })

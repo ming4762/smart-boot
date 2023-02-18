@@ -6,12 +6,7 @@ import type { NamePath } from 'ant-design-vue/es/form/interface'
 import type { VxeTablePropTypes } from 'vxe-table/types/table'
 import type { Options as SortableOptions } from 'sortablejs'
 import type { SmartColumn } from './SmartTableColumnType'
-
-export interface GetColumnsParams {
-  ignoreIndex?: boolean
-  ignoreAction?: boolean
-  sort?: boolean
-}
+import { SmartTableAuthConfig } from './SmartTableAuthType'
 
 /**
  * 表格高度
@@ -85,6 +80,7 @@ export interface SmartTableProps<T = any> extends VxeGridProps<T> {
   // 添加修改配置
   addEditConfig?: SmartTableAddEditConfig
   rowConfig?: SmartTableRowConfig
+  authConfig?: SmartTableAuthConfig
 }
 
 /**
