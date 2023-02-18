@@ -47,7 +47,6 @@ export const useTableToolbarConfig = (
     }
     let buttons = dealButtons(toolbarConfig.buttons, tableSize)
     buttons = dealButtonAuth(buttons)
-    console.log(buttons)
     let refresh = toolbarConfig.refresh
     if (refresh) {
       refresh = getDefaultRefresh()
