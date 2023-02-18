@@ -8,6 +8,7 @@ import type { VxeToolbarPropTypes } from 'vxe-table'
 import type { FetchParams } from '../types/SmartTableType'
 
 import { computed, ref, unref } from 'vue'
+import { error, warn } from '/@/utils/log'
 
 import { merge } from 'lodash-es'
 import { isBoolean, isPromise } from '/@/utils/is'
@@ -44,7 +45,9 @@ export const useTableToolbarConfig = (
     if (!toolbarConfig) {
       return undefined
     }
-    const buttons = dealButtons(toolbarConfig.buttons, tableSize)
+    let buttons = dealButtons(toolbarConfig.buttons, tableSize)
+    buttons = dealButtonAuth(buttons)
+    console.log(buttons)
     let refresh = toolbarConfig.refresh
     if (refresh) {
       refresh = getDefaultRefresh()
@@ -56,6 +59,51 @@ export const useTableToolbarConfig = (
       tools: getTools(toolbarConfig),
     }
   })
+
+  const dealButtonAuth = (
+    buttons: SmartTableButton[] | undefined,
+  ): SmartTableButton[] | undefined => {
+    if (!buttons) {
+      return undefined
+    }
+    const authConfig = unref(tableProps).authConfig
+    if (!authConfig) {
+      // 未配置权限
+      return buttons
+    }
+    const { toolbar, authHandler, displayMode } = authConfig
+    if (!authHandler) {
+      error('未设置authConfig.authHandler')
+    }
+    return buttons
+      .map((button) => {
+        const { auth, code } = button
+        const configAuth = code && toolbar ? toolbar[code] : undefined
+        if (auth && configAuth) {
+          warn('toolbarConfig与AuthConfig权限配置冲突，toolbarConfig配置')
+        }
+        const buttonAuth = auth || configAuth
+        if (!buttonAuth) {
+          return button
+        }
+        const hasAuth = authHandler!(buttonAuth)
+        if (hasAuth) {
+          return button
+        }
+        if (displayMode === 'hide') {
+          return null
+        } else {
+          return {
+            ...button,
+            props: {
+              ...button.props,
+              disabled: true,
+            },
+          }
+        }
+      })
+      .filter((item) => item !== null) as SmartTableButton[]
+  }
 
   const getTools = (toolbarConfig: SmartTableToolbarConfig) => {
     const { tools, showSearch } = toolbarConfig
