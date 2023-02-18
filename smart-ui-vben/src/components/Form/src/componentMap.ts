@@ -74,7 +74,9 @@ componentMap.set('Divider', Divider)
 
 // ---- smart-boot 组件
 import SmartApiSelectDict from './smartBoot/components/SmartApiSelectDict.vue'
+import SmartApiSelectTable from './smartBoot/components/SmartApiSelectTable.vue'
 componentMap.set('SmartApiSelectDict', SmartApiSelectDict)
+componentMap.set('SmartApiSelectTable', SmartApiSelectTable)
 
 export function add(compName: ComponentType, component: Component) {
   componentMap.set(compName, component)

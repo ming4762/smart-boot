@@ -20,7 +20,7 @@
   </Select>
 </template>
 <script lang="ts">
-import { defineComponent, PropType, ref, watchEffect, computed, unref, watch } from 'vue'
+import { defineComponent, PropType, ref, computed, unref, watch, onMounted } from 'vue'
 import { Select } from 'ant-design-vue'
 import { isFunction } from '/@/utils/is'
 import { useRuleFormItem } from '/@/hooks/component/useFormItem'
@@ -83,7 +83,13 @@ export default defineComponent({
       }, [] as OptionsItem[])
     })
 
-    watchEffect(() => {
+    // watchEffect(() => {
+    //   props.immediate && !props.alwaysLoad && fetch()
+    // })
+    watch([() => props.immediate, () => props.alwaysLoad], () => {
+      props.immediate && !props.alwaysLoad && fetch()
+    })
+    onMounted(() => {
       props.immediate && !props.alwaysLoad && fetch()
     })
 
