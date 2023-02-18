@@ -1,12 +1,14 @@
 package com.smart.file.manager.pojo.bo;
 
 import com.smart.commons.core.utils.IdGenerator;
-import com.smart.file.manager.constants.FileTypeEnum;
+import com.smart.file.core.constants.FileTypeEnum;
+import com.smart.file.core.parameter.FileSaveParameter;
 import com.smart.file.manager.model.SysFilePO;
-import lombok.*;
-import org.apache.commons.lang3.StringUtils;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.SneakyThrows;
+import lombok.ToString;
 import org.springframework.lang.NonNull;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 
@@ -22,26 +24,19 @@ public class SysFileBO {
 
     private InputStream inputStream;
 
-
-    private String folder;
+    private FileSaveParameter parameter;
 
     @SneakyThrows
-    public SysFileBO(@NonNull MultipartFile multipartFile, String filename, String folder, FileTypeEnum type, String handlerType) {
+    public SysFileBO(@NonNull InputStream inputStream, FileSaveParameter parameter, String contentType) {
         this.file = SysFilePO.builder()
                 .fileId(IdGenerator.nextId())
-                .fileName(StringUtils.isEmpty(filename) ? multipartFile.getOriginalFilename() : filename)
-                .type(type == null ? FileTypeEnum.TEMP : type)
-                .contentType(multipartFile.getContentType())
-                .handlerType(handlerType)
-                .fileSize(multipartFile.getSize())
+                .fileName(parameter.getFilename())
+                .type(parameter.getType() == null ? FileTypeEnum.NORMAL : parameter.getType())
+                .contentType(contentType)
+                .fileSize(Integer.valueOf(inputStream.available()).longValue())
                 .build();
-        this.folder = StringUtils.isBlank(folder) ? "" : folder;
-        this.inputStream = multipartFile.getInputStream();
-    }
-
-
-    public SysFileBO(SysFilePO file, InputStream inputStream) {
-        this.file = file;
+        this.parameter = parameter;
         this.inputStream = inputStream;
     }
+
 }

@@ -1,7 +1,7 @@
-package com.smart.file.extensions.mongo;
+package com.smart.file.extensions.disk;
 
-import com.smart.file.core.constants.ActualFileServiceEnum;
-import com.smart.file.extensions.mongo.service.ActualFileServiceMongoImpl;
+import com.smart.file.core.constants.FileStorageTypeEnum;
+import com.smart.file.extensions.disk.service.FileStorageDiskServiceImpl;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.RootBeanDefinition;
@@ -10,15 +10,14 @@ import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.lang.NonNull;
 
 /**
- * 注册
  * @author shizhongming
- * 2020/12/7 10:30 下午
+ * 2020/12/7 10:36 下午
  */
-public class MongoFileImportBeanDefinitionRegistrar implements ImportBeanDefinitionRegistrar {
+public class SmartDiskFileImportBeanDefinitionRegistrar implements ImportBeanDefinitionRegistrar {
 
     @Override
     public void registerBeanDefinitions(@NonNull AnnotationMetadata importingClassMetadata, @NonNull BeanDefinitionRegistry registry) {
-        final BeanDefinition beanDefinition = new RootBeanDefinition(ActualFileServiceMongoImpl.class);
-        registry.registerBeanDefinition(ActualFileServiceEnum.MONGO.getServiceName(), beanDefinition);
+        final BeanDefinition beanDefinition = new RootBeanDefinition(FileStorageDiskServiceImpl.class);
+        registry.registerBeanDefinition(FileStorageTypeEnum.DISK.getServiceName(), beanDefinition);
     }
 }

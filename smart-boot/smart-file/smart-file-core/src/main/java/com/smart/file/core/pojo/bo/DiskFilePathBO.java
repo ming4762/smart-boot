@@ -1,7 +1,7 @@
 package com.smart.file.core.pojo.bo;
 
 import com.smart.commons.core.utils.Base64Utils;
-import com.smart.file.core.model.FileSaveParameter;
+import com.smart.file.core.parameter.FileStorageSaveParameter;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -44,14 +44,14 @@ public class DiskFilePathBO {
 
     private String timestamp;
 
-    public DiskFilePathBO(String basePath, FileSaveParameter parameter) {
+    public DiskFilePathBO(String basePath, FileStorageSaveParameter parameter) {
         this.basePath = basePath;
         this.filename = parameter.getFilename();
         // 如果文件名中存在路径分隔符，则进行替换
         if (StringUtils.contains(this.filename, FILE_SEPARATOR)) {
             this.filename = StringUtils.replace(this.filename, FILE_SEPARATOR, SEPARATOR_REPLACE);
         }
-        this.folderPath = parameter.getPath();
+        this.folderPath = parameter.getFolder();
         if (StringUtils.isBlank(this.folderPath)) {
             this.folderPath = FORMATTER.format(Instant.now());
         }

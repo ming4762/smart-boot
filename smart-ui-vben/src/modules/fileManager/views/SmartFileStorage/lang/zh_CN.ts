@@ -21,6 +21,7 @@ export default {
       port: '端口',
       username: '用户名',
       password: '密码',
+      privateKey: '私钥',
     },
     validate: {
       storageCode: '请输入存储器编码',

@@ -1,7 +1,7 @@
 package com.smart.file.extensions.sftp.utils;
 
 import com.jcraft.jsch.*;
-import com.smart.file.core.SmartFileProperties;
+import com.smart.file.core.properties.SmartFileStorageSftpProperties;
 import com.smart.file.extensions.sftp.exception.SftpExceptionRuntimeException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
@@ -30,7 +30,7 @@ public class JschUtils {
      * @param properties 参数
      * @return session
      */
-    public static Session createSession(SmartFileProperties.SmartJschProperties properties) throws JSchException {
+    public static Session createSession(SmartFileStorageSftpProperties properties) throws JSchException {
         final JSch jSch = new JSch();
         if (StringUtils.isNotBlank(properties.getPrivateKey())) {
             jSch.addIdentity(properties.getPrivateKey());

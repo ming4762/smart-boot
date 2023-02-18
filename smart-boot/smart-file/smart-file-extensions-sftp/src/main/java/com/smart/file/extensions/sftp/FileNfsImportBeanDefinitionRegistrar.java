@@ -1,7 +1,7 @@
 package com.smart.file.extensions.sftp;
 
-import com.smart.file.core.constants.ActualFileServiceEnum;
-import com.smart.file.extensions.sftp.service.ActualFileServiceNfsImpl;
+import com.smart.file.core.constants.FileStorageTypeEnum;
+import com.smart.file.extensions.sftp.service.FileStorageNfsServiceImpl;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.RootBeanDefinition;
@@ -18,7 +18,7 @@ public class FileNfsImportBeanDefinitionRegistrar implements ImportBeanDefinitio
 
     @Override
     public void registerBeanDefinitions(@NonNull AnnotationMetadata importingClassMetadata, @NonNull BeanDefinitionRegistry registry) {
-        final BeanDefinition beanDefinition = new RootBeanDefinition(ActualFileServiceNfsImpl.class);
-        registry.registerBeanDefinition(ActualFileServiceEnum.SFTP.getServiceName(), beanDefinition);
+        final BeanDefinition beanDefinition = new RootBeanDefinition(FileStorageNfsServiceImpl .class);
+        registry.registerBeanDefinition(FileStorageTypeEnum.SFTP.getServiceName(), beanDefinition);
     }
 }

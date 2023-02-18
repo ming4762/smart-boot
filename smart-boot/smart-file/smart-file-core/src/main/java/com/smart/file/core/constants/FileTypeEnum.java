@@ -1,4 +1,4 @@
-package com.smart.file.manager.constants;
+package com.smart.file.core.constants;
 
 /**
  * @author jackson

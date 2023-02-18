@@ -12,13 +12,15 @@ public interface JschChannelProvider<T extends Channel> {
 
     /**
      * 获取Jcraft通道
+     * @param key key
      * @return Jcraft通道
      */
-    T getChannel();
+    T getChannel(String key);
 
     /**
      * 归还通道
+     * @param key key
      * @param channel 通道
      */
-    void returnChannel(T channel);
+    void returnChannel(String key, T channel);
 }

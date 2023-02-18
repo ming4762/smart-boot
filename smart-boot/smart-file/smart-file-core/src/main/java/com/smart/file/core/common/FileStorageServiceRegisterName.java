@@ -1,18 +1,19 @@
 package com.smart.file.core.common;
 
+import com.smart.file.core.constants.FileStorageTypeEnum;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 文件执行器注册名字
+ * 文件存储器注册名字
  * @author shizhongming
  * 2020/11/29 3:40 上午
  */
 @Getter
 @Setter
 @Builder
-public class ActualFileServiceRegisterName {
+public class FileStorageServiceRegisterName {
 
     /**
      * spring bean 名称
@@ -20,7 +21,7 @@ public class ActualFileServiceRegisterName {
     private String beanName;
 
     /**
-     * 存储在数据库名字
+     * 文件存储器类型
      */
-    private String dbName;
+    private FileStorageTypeEnum storageType;
 }

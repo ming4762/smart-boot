@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Import;
  * 2020/11/5 10:52 下午
  */
 @Configuration
-@Import(DiskFileImportBeanDefinitionRegistrar.class)
+@Import(SmartDiskFileImportBeanDefinitionRegistrar.class)
 public class SmartDiskFileAutoConfiguration {
 
 }

@@ -1,5 +1,6 @@
 package com.smart.file.manager.pojo.dto;
 
+import com.smart.file.core.constants.FileStorageTypeEnum;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -32,7 +33,7 @@ public class SmartFileStorageSaveUpdateDTO implements Serializable {
     /**
     * 存储器类型
     */
-    private String storageType;
+    private FileStorageTypeEnum storageType;
     /**
     * 是否是默认存储器
     */
