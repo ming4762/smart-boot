@@ -3,7 +3,7 @@ package com.smart.file.manager.pojo.bo;
 import com.smart.commons.core.utils.IdGenerator;
 import com.smart.file.core.constants.FileTypeEnum;
 import com.smart.file.core.parameter.FileSaveParameter;
-import com.smart.file.manager.model.SysFilePO;
+import com.smart.file.manager.model.SmartFilePO;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
@@ -20,7 +20,7 @@ import java.io.InputStream;
 @Setter
 @ToString
 public class SysFileBO {
-    private SysFilePO file;
+    private SmartFilePO file;
 
     private InputStream inputStream;
 
@@ -28,7 +28,7 @@ public class SysFileBO {
 
     @SneakyThrows
     public SysFileBO(@NonNull InputStream inputStream, FileSaveParameter parameter, String contentType) {
-        this.file = SysFilePO.builder()
+        this.file = SmartFilePO.builder()
                 .fileId(IdGenerator.nextId())
                 .fileName(parameter.getFilename())
                 .type(parameter.getType() == null ? FileTypeEnum.NORMAL : parameter.getType())

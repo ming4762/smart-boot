@@ -18,6 +18,7 @@ import { useI18n } from '/@/hooks/web/useI18n'
 import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
 import { replace } from 'lodash-es'
 import { Modal } from 'ant-design-vue'
+import { hasPermission } from '/@/common/auth/AuthUtils'
 
 import {
   ActionItem,
@@ -52,11 +53,13 @@ const getActions = (row: Recordable): ActionItem[] => {
   return [
     {
       label: t('common.button.edit'),
+      auth: 'smart:fileStorage:edit',
       onClick: () => editByRowModal(row),
     },
     {
       label: t('common.button.delete'),
       onClick: () => deleteByRow(row),
+      auth: 'smart:fileStorage:delete',
       danger: true,
     },
   ]
@@ -68,7 +71,7 @@ const getDropDownActions = (row: Recordable): ActionItem[] => {
       label: t('smart.file.storage.button.setDefault'),
       preIcon: 'ant-design:check-outlined',
       disabled: row.defaultStorage === true,
-      auth: 'sys:fileStorage:setDefault',
+      auth: 'smart:fileStorage:setDefault',
       onClick: () => {
         Modal.confirm({
           title: t('common.notice.confirm'),
@@ -165,6 +168,13 @@ const [registerTable, { editByRowModal, deleteByRow, query }] = useSmartTable({
         }
         return result
       },
+    },
+  },
+  authConfig: {
+    authHandler: hasPermission,
+    toolbar: {
+      ModalAdd: 'smart:fileStorage:save',
+      delete: 'smart:fileStorage:delete',
     },
   },
   toolbarConfig: {

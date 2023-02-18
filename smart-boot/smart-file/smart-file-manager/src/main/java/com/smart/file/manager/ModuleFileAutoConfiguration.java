@@ -2,9 +2,9 @@ package com.smart.file.manager;
 
 import com.smart.file.core.service.FileService;
 import com.smart.file.manager.service.SmartFileStorageService;
-import com.smart.file.manager.service.SysFileService;
+import com.smart.file.manager.service.SmartFileService;
 import com.smart.file.manager.service.impl.DefaultFileServiceImpl;
-import com.smart.file.manager.service.impl.SysFileServiceImpl;
+import com.smart.file.manager.service.impl.SmartFileServiceImpl;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -23,14 +23,14 @@ public class ModuleFileAutoConfiguration {
      * @return 文件服务实体类
      */
     @Bean
-    @ConditionalOnMissingBean(SysFileService.class)
-    public SysFileService sysFileService() {
-        return new SysFileServiceImpl();
+    @ConditionalOnMissingBean(SmartFileService.class)
+    public SmartFileService sysFileService() {
+        return new SmartFileServiceImpl();
     }
 
     @Bean
     @ConditionalOnMissingBean(FileService.class)
-    public FileService defaultFileServiceImpl(SmartFileStorageService smartFileStorageService, SysFileService sysFileService) {
+    public FileService defaultFileServiceImpl(SmartFileStorageService smartFileStorageService, SmartFileService sysFileService) {
         return new DefaultFileServiceImpl(smartFileStorageService, sysFileService);
     }
 }

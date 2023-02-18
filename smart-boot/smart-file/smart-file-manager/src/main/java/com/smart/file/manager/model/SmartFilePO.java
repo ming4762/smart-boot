@@ -19,7 +19,7 @@ import java.io.Serial;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SysFilePO extends BaseModelCreateUserTime {
+public class SmartFilePO extends BaseModelCreateUserTime {
 
     @Serial
     private static final long serialVersionUID = -9077274336204793728L;

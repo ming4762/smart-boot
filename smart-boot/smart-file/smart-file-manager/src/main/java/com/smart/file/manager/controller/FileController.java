@@ -45,8 +45,8 @@ public class FileController {
      * @return 保存的文件信息
      */
     @Operation(summary = "上传文件")
-    @PostMapping("sys/file/upload")
-    @PreAuthorize("hasPermission('sys:file', 'upload')")
+    @PostMapping("smart/file/upload")
+    @PreAuthorize("hasPermission('smart:file', 'upload')")
     @Parameters({
             @Parameter(name = "file", description = "文件信息", required = true),
             @Parameter(name = "fileName", description = "文件名"),
@@ -71,8 +71,8 @@ public class FileController {
      * @return 保存的文件信息
      */
     @Operation(summary = "批量上传文件")
-    @PreAuthorize("hasPermission('sys:file', 'upload')")
-    @PostMapping("sys/file/batchUpload")
+    @PreAuthorize("hasPermission('smart:file', 'upload')")
+    @PostMapping("smart/file/batchUpload")
     @Parameters({
             @Parameter(name = "files", description = "文件集合", required = true),
             @Parameter(name = "type", description = "文件类型"),
@@ -99,8 +99,8 @@ public class FileController {
      * @throws IOException IOException
      */
     @Operation(summary = "下载文件")
-    @RequestMapping(value = "/file/download/{id}", method = {RequestMethod.GET, RequestMethod.POST})
-    @TempToken(resource = "sys:file:download")
+    @RequestMapping(value = "smart/file/download/{id}", method = {RequestMethod.GET, RequestMethod.POST})
+    @TempToken(resource = "smart:file:download")
     public void download(@PathVariable("id") Long id, HttpServletResponse response) throws IOException {
         FileDownloadResult downloadResult = this.fileService.download(id);
         if (downloadResult != null) {
