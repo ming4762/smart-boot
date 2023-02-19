@@ -65,6 +65,18 @@ export class VAxios {
   }
 
   /**
+   * 申请临时token
+   * @param resource
+   * @param once
+   */
+  async applyTempToken(resource: string, once = true): Promise<string> {
+    return await this.post({
+      url: 'auth/tempToken/apply',
+      data: { resource, once },
+    })
+  }
+
+  /**
    * @description: Interceptor configuration 拦截器配置
    */
   private setupInterceptors() {
@@ -124,7 +136,7 @@ export class VAxios {
   /**
    * @description:  File Upload
    */
-  uploadFile<T = any>(config: AxiosRequestConfig, params: UploadFileParams) {
+  uploadFile<T = any>(config: AxiosRequestConfig, params: UploadFileParams): Promise<T> {
     const formData = new window.FormData()
     const customFilename = params.name || 'file'
 
@@ -143,19 +155,17 @@ export class VAxios {
           })
           return
         }
-
-        formData.append(key, params.data![key])
+        if (value) {
+          formData.append(key, params.data![key])
+        }
       })
     }
-
-    return this.axiosInstance.request<T>({
+    return this.request({
       ...config,
-      method: 'POST',
       data: formData,
+      method: 'POST',
       headers: {
         'Content-type': ContentTypeEnum.FORM_DATA,
-        // @ts-ignore
-        ignoreCancelToken: true,
       },
     })
   }

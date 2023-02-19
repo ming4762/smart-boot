@@ -55,7 +55,9 @@ public class DefaultFileServiceImpl implements FileService, ApplicationContextAw
     protected FileStorageSaveParameter getFileSaveStorageParameter(FileSaveParameter parameter) {
         // 获取文件存储器
         SmartFileStoragePO smartFileStorage;
-        if (StringUtils.hasText(parameter.getFileStorageCode())) {
+        if (parameter.getFileStorageId() != null) {
+            smartFileStorage = this.smartFileStorageService.getById(parameter.getFileStorageId());
+        } else if (StringUtils.hasText(parameter.getFileStorageCode())) {
             smartFileStorage = this.smartFileStorageService.getDefault();
         } else {
             smartFileStorage = this.smartFileStorageService.getByCode(parameter.getFileStorageCode());

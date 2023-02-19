@@ -1,35 +1,29 @@
 package com.smart.file.manager.controller;
 
 import com.smart.auth.core.annotation.TempToken;
-import com.smart.commons.core.message.Result;
-import com.smart.file.core.constants.FileTypeEnum;
-import com.smart.file.core.parameter.FileSaveParameter;
 import com.smart.file.core.pojo.bo.FileDownloadResult;
-import com.smart.file.core.pojo.bo.FileHandlerResult;
 import com.smart.file.core.service.FileService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
-import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 /**
- * @author ShiZhongMing
- * 2022/8/24
- * @since 3.0.0
+ * @author zhongming4762
+ * 2023/2/19
  */
 @Controller
+@RequestMapping
 public class FileController {
+
 
     private final FileService fileService;
 
@@ -99,7 +93,7 @@ public class FileController {
      * @throws IOException IOException
      */
     @Operation(summary = "下载文件")
-    @RequestMapping(value = "smart/file/download/{id}", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "public/file/download/{id}", method = {RequestMethod.GET, RequestMethod.POST})
     @TempToken(resource = "smart:file:download")
     public void download(@PathVariable("id") Long id, HttpServletResponse response) throws IOException {
         FileDownloadResult downloadResult = this.fileService.download(id);

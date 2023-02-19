@@ -18,16 +18,6 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan
 public class ModuleFileAutoConfiguration {
 
-    /**
-     * 创建文件服务实体类
-     * @return 文件服务实体类
-     */
-    @Bean
-    @ConditionalOnMissingBean(SmartFileService.class)
-    public SmartFileService sysFileService() {
-        return new SmartFileServiceImpl();
-    }
-
     @Bean
     @ConditionalOnMissingBean(FileService.class)
     public FileService defaultFileServiceImpl(SmartFileStorageService smartFileStorageService, SmartFileService sysFileService) {

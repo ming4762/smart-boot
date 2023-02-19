@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.smart.crud.model.BaseModelCreateUserTime;
-import com.smart.file.core.constants.FileTypeEnum;
 import lombok.*;
 
 import java.io.Serial;
@@ -13,7 +12,7 @@ import java.io.Serial;
  * @author jackson
  * 2020/1/27 7:48 下午
  */
-@TableName("sys_file")
+@TableName("smart_file")
 @Getter
 @Setter
 @Builder
@@ -38,7 +37,7 @@ public class SmartFilePO extends BaseModelCreateUserTime {
     /**
      * 类型
      */
-    private FileTypeEnum type;
+    private String type;
 
     /**
      * 文件类型
