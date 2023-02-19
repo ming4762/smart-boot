@@ -5,11 +5,8 @@
         <SmartVxeTableAction :actions="getActions(row)" />
       </template>
       <template #form-upload="{ model }">
-        <a-upload
-          v-model:fileList="model.fileList"
-          @change="handleFileChange"
-          :beforeUpload="() => false">
-          <a-button>Click to Upload</a-button>
+        <a-upload v-model:fileList="model.fileList" :max-count="1" :beforeUpload="() => false">
+          <a-button>Upload</a-button>
         </a-upload>
       </template>
     </SmartTable>
@@ -51,13 +48,7 @@ const getActions = (row: Recordable): ActionItem[] => {
   ]
 }
 
-const handleFileChange = ({ file }) => {
-  getAddEditForm()?.setFieldsValue({
-    fileList: [file],
-  })
-}
-
-const [registerTable, { getAddEditForm, deleteByRow }] = useSmartTable({
+const [registerTable, { deleteByRow }] = useSmartTable({
   columns: getTableColumns(),
   height: 'auto',
   border: true,
@@ -100,7 +91,7 @@ const [registerTable, { getAddEditForm, deleteByRow }] = useSmartTable({
             type,
             seq,
           },
-          fileList[0],
+          fileList[0].originFileObj,
         )
       },
       delete: ({ body: { removeRecords } }) => deleteApi(removeRecords),
