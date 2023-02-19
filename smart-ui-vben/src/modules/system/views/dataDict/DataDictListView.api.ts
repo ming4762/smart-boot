@@ -19,10 +19,12 @@ export const listDictApi = (parameter) => {
   })
 }
 
-export const getByIdDictApi = (parameter) => {
+export const getByIdDictApi = (id) => {
   return defHttp.post({
     url: Api.getByIdDict,
-    data: parameter.id,
+    data: {
+      id: id,
+    },
   })
 }
 
