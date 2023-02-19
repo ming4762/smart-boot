@@ -48,6 +48,5 @@ export const downloadApi = async (id) => {
   // 申请临时token
   const tempToken = await defHttp.applyTempToken('smart:file:download')
   url = url + '?access-token=' + tempToken
-  console.log(url)
-  // window.open(url)
+  window.open(url)
 }
