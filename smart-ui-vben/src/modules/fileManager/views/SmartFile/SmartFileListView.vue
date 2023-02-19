@@ -41,7 +41,7 @@ const getActions = (row: Recordable): ActionItem[] => {
       danger: true,
     },
     {
-      label: '下载',
+      label: t('common.button.download'),
       preIcon: 'ant-design:download-outlined',
       auth: 'smart:file:download',
       onClick: async () => {
