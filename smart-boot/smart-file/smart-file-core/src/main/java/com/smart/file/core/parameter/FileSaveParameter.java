@@ -1,6 +1,5 @@
 package com.smart.file.core.parameter;
 
-import com.smart.file.core.constants.FileTypeEnum;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -20,14 +19,18 @@ import org.springframework.lang.Nullable;
 public class FileSaveParameter extends FileSaveCommonParameter {
 
     /**
+     * 文件存储器ID，优先级高
+     */
+    private Long fileStorageId;
+
+    /**
      * 文件存储器编码
      */
-    @NonNull
     private String fileStorageCode;
 
     /**
      * 文件类型，默认NORMAL
      */
     @Nullable
-    private FileTypeEnum type;
+    private String type;
 }

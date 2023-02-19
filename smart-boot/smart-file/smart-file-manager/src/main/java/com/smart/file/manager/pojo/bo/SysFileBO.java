@@ -20,6 +20,9 @@ import java.io.InputStream;
 @Setter
 @ToString
 public class SysFileBO {
+
+    private static final String DEFAULT_FILE_TYPE = "NORMAL";
+
     private SmartFilePO file;
 
     private InputStream inputStream;
@@ -31,7 +34,7 @@ public class SysFileBO {
         this.file = SmartFilePO.builder()
                 .fileId(IdGenerator.nextId())
                 .fileName(parameter.getFilename())
-                .type(parameter.getType() == null ? FileTypeEnum.NORMAL : parameter.getType())
+                .type(parameter.getType() == null ? DEFAULT_FILE_TYPE : parameter.getType())
                 .contentType(contentType)
                 .fileSize(Integer.valueOf(inputStream.available()).longValue())
                 .build();
