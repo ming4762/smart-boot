@@ -62,11 +62,17 @@ const [registerTable] = useSmartTable({
   },
   proxyConfig: {
     ajax: {
-      query: ({ ajaxParameter }) => listDictApi(ajaxParameter),
+      query: ({ ajaxParameter }) => {
+        const parameter = {
+          sortName: 'seq',
+          ...ajaxParameter,
+        }
+        return listDictApi(parameter)
+      },
       save: ({ body: { insertRecords, updateRecords } }) =>
         batchSaveUpdateDictApi([...insertRecords, ...updateRecords]),
       delete: ({ body: { removeRecords } }) => deleteDictApi(removeRecords),
-      getById: (params) => getByIdDictApi(params),
+      getById: (params) => getByIdDictApi(params.id),
     },
   },
   columnConfig: {
