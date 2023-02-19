@@ -17,14 +17,16 @@ export const listApi = (params) => {
   })
 }
 
-export const uploadFileApi = (data, file) => {
+export const uploadFileApi = (data, file: File) => {
   return defHttp.uploadFile(
     {
       url: Api.uploadFile,
     },
     {
       data: data,
-      file,
+      file: {
+        file: file,
+      },
     },
   )
 }
