@@ -14,7 +14,7 @@ import org.springframework.security.config.annotation.method.configuration.Globa
  * @since 1.0
  */
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@ConditionalOnProperty(prefix = "gc.auth", name = "method", havingValue = "true")
+@ConditionalOnProperty(prefix = "smart.auth", name = "method", havingValue = "true")
 public class AuthMethodSecurityConfig extends GlobalMethodSecurityConfiguration {
 
     private final PermissionEvaluator permissionEvaluator;

@@ -47,14 +47,14 @@ public class SysSystemController extends BaseController<SysSystemService, SysSys
     @Override
     @PostMapping("list")
     @Operation(summary = "查询角色列表（支持分页、实体类属性查询）")
-    @PreAuthorize("hasPermission('sys:system:query')")
+    @PreAuthorize("hasPermission('sys:system', 'query')")
     public Result<Object> list(@RequestBody @NonNull PageSortQuery parameter) {
         return super.list(parameter);
     }
 
     @PostMapping("listAuthUser")
     @Operation(summary = "查询角色列表（支持分页、实体类属性查询），只能查询当前登录人员有权限的系统")
-    @PreAuthorize("hasPermission('sys:system:query')")
+    @PreAuthorize("hasPermission('sys:system', 'query')")
     public Result<Object> listAuthUser(@RequestBody @NonNull PageSortQuery parameter) {
         parameter.getParameter().put(CrudCommonEnum.FILTER_BY_USER.name(), true);
         return super.list(parameter);
@@ -85,7 +85,7 @@ public class SysSystemController extends BaseController<SysSystemService, SysSys
     @Override
     @Operation(summary = "通过ID查询")
     @PostMapping("getById")
-    @PreAuthorize("hasPermission('sys:system:query')")
+    @PreAuthorize("hasPermission('sys:system', 'query')")
     public Result<SysSystemPO> getById(@RequestBody Serializable id) {
         return super.getById(id);
     }
@@ -98,7 +98,7 @@ public class SysSystemController extends BaseController<SysSystemService, SysSys
     }
 
     @PostMapping("getRelatedUserId")
-    @PreAuthorize("hasPermission('sys:system:query')")
+    @PreAuthorize("hasPermission('sys:system', 'query')")
     @Operation(summary = "获取关联用户ID")
     public Result<List<Long>> getRelatedUserId(@RequestBody @Valid IdParameter parameter) {
         return Result.success(
