@@ -141,6 +141,16 @@ public class Result<T> {
     }
 
     /**
+     * 报错业务异常
+     * @param message 异常信息
+     * @return 失败消息
+     * @param <T> T
+     */
+    public static <T> Result<T> businessFailure(String message) {
+        return failure(ResultCodeEnum.BUSINESS_ERROR.getCode(), message);
+    }
+
+    /**
      * 失败消息
      * @param message message
      * @param data data
