@@ -1,5 +1,7 @@
 package com.smart.license.server;
 
+import java.io.InputStream;
+
 /**
  * License生成器
  * @author zhongming4762
@@ -12,6 +14,6 @@ public interface LicenseGenerator {
      * @param parameter license生成参数
      * @return license
      */
-    boolean generate(LicenseGeneratorParameter parameter);
+    InputStream generate(LicenseGeneratorParameter parameter);
 
 }

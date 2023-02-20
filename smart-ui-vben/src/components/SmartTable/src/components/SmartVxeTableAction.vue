@@ -131,7 +131,7 @@ export default defineComponent({
           text: label,
           divider: index < list.length - 1 ? props.divider : false,
           hasAuth: hasPermission(action.auth),
-          disabled: !hasPermission(action.auth),
+          disabled: !hasPermission(action.auth) || action.disabled,
         }
       })
     })

@@ -4,9 +4,12 @@ import com.smart.license.core.CustomKeyStoreParam;
 import com.smart.license.core.CustomLicenseManager;
 import de.schlichtherle.license.*;
 import lombok.SneakyThrows;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.security.auth.x500.X500Principal;
 import java.io.File;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
@@ -22,7 +25,7 @@ public class DefaultLicenseGenerator implements LicenseGenerator {
 
     private static final X500Principal DEFAULT_HOLDER_AND_ISSUER = new X500Principal("CN=localhost, OU=localhost, O=localhost, L=SH, ST=SH, C=CN");
 
-    private List<LicenseDataProvider> dataProviderList;
+    private final List<LicenseDataProvider> dataProviderList;
 
     public DefaultLicenseGenerator(List<LicenseDataProvider> dataProviderList) {
         this.dataProviderList = dataProviderList;
@@ -36,12 +39,15 @@ public class DefaultLicenseGenerator implements LicenseGenerator {
      */
     @SneakyThrows
     @Override
-    public boolean generate(LicenseGeneratorParameter parameter) {
-        LicenseManager licenseManager = new CustomLicenseManager(this.createLicenseParam(parameter), null);
+    public InputStream generate(LicenseGeneratorParameter parameter) {
+        CustomLicenseManager licenseManager = new CustomLicenseManager(this.createLicenseParam(parameter), null);
         LicenseContent licenseContent = this.createContent(parameter);
-
-        licenseManager.store(licenseContent, new File(parameter.getLicensePath()));
-        return true;
+        if (StringUtils.isNotBlank(parameter.getLicensePath())) {
+            File licenseFile = new File(parameter.getLicensePath());
+            licenseManager.store(licenseContent, licenseFile);
+            return Files.newInputStream(licenseFile.toPath());
+        }
+        return licenseManager.store(licenseContent);
     }
 
     protected LicenseParam createLicenseParam(LicenseGeneratorParameter parameter) {
@@ -51,11 +57,12 @@ public class DefaultLicenseGenerator implements LicenseGenerator {
 
         CustomKeyStoreParam keyStoreParam = new CustomKeyStoreParam(
                 LicenseGenerator.class,
-                parameter.getStorePath(),
+                "",
                 parameter.getAlias(),
                 parameter.getStorePassword(),
                 parameter.getKeyPassword()
         );
+        keyStoreParam.setInputStream(parameter.getPrivateKeyInputStream());
 
         return new DefaultLicenseParam(
                 parameter.getSubject(),

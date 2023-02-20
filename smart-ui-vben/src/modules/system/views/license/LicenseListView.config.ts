@@ -156,6 +156,17 @@ export const getAddEditFormSchemas = (t: Function): FormSchema[] => {
       show: false,
     },
     {
+      label: t('smart.license.title.basic'),
+      field: 'id',
+      component: 'Divider',
+      colProps: {
+        span: 24,
+      },
+      componentProps: {
+        class: ['form-divider'],
+      },
+    },
+    {
       label: t('smart.license.title.licenseCode'),
       field: 'licenseCode',
       componentProps: {
@@ -186,6 +197,46 @@ export const getAddEditFormSchemas = (t: Function): FormSchema[] => {
       required: true,
       defaultValue: 1,
       component: 'InputNumber',
+    },
+    {
+      label: t('smart.license.title.subject'),
+      field: 'subject',
+      component: 'Input',
+      required: true,
+    },
+    {
+      label: t('smart.license.title.secretKey'),
+      field: 'secretKeyId',
+      component: 'SmartApiSelectTable',
+      required: true,
+      componentProps: {
+        modelClassName: 'com.smart.system.model.auth.SmartAuthSecretKeyPO',
+        valueFieldName: 'id',
+        labelFieldName: 'keyName',
+        parameter: {
+          sortName: 'seq',
+          parameter: {
+            'useYn@=': true,
+          },
+        },
+      },
+    },
+    {
+      label: t('smart.license.title.fileStorage'),
+      field: 'fileStorageId',
+      component: 'SmartApiSelectTable',
+      required: true,
+      componentProps: {
+        modelClassName: 'com.smart.system.model.file.SmartFileStoragePO',
+        valueFieldName: 'id',
+        labelFieldName: 'storageName',
+        parameter: {
+          sortName: 'seq',
+          parameter: {
+            'useYn@=': true,
+          },
+        },
+      },
     },
     {
       label: t('smart.license.title.serverInfo'),
@@ -257,53 +308,6 @@ export const getAddEditFormSchemas = (t: Function): FormSchema[] => {
       label: t('smart.license.title.contractNo'),
       field: 'contractNo',
       component: 'Input',
-    },
-    {
-      label: t('smart.license.title.keyInfo'),
-      field: 'id',
-      component: 'Divider',
-      colProps: {
-        span: 24,
-      },
-      componentProps: {
-        class: ['form-divider'],
-      },
-    },
-    {
-      label: t('smart.license.title.storePath'),
-      field: 'storePath',
-      component: 'Input',
-      required: true,
-    },
-    {
-      label: t('smart.license.title.licensePath'),
-      field: 'licensePath',
-      component: 'Input',
-      required: true,
-    },
-    {
-      label: t('smart.license.title.storePassword'),
-      field: 'storePassword',
-      component: 'InputPassword',
-      required: true,
-    },
-    {
-      label: t('smart.license.title.keyPassword'),
-      field: 'keyPassword',
-      component: 'InputPassword',
-      required: true,
-    },
-    {
-      label: t('smart.license.title.alias'),
-      field: 'alias',
-      component: 'Input',
-      required: true,
-    },
-    {
-      label: t('smart.license.title.subject'),
-      field: 'subject',
-      component: 'Input',
-      required: true,
     },
   ]
 }

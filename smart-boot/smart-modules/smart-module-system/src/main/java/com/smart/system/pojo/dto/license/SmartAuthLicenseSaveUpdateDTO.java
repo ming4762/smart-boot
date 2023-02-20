@@ -33,6 +33,15 @@ public class SmartAuthLicenseSaveUpdateDTO implements Serializable {
     @NotNull(message = "license名称不能为空")
     private String licenseName;
 
+    @NotNull(message = "秘钥不能为空")
+    private Long secretKeyId;
+
+    @NotNull(message = "存储库不能为空")
+    private Long fileStorageId;
+
+    @NotNull(message = "所属系统不能为空")
+    private Long systemId;
+
     /**
     * mac地址，多个mac地址以逗号分隔
     */
@@ -60,15 +69,6 @@ public class SmartAuthLicenseSaveUpdateDTO implements Serializable {
     @NotNull(message = "过期时间不能为空")
     private LocalDateTime expirationTime;
 
-    private String storePath;
-
-    private String licensePath;
-
-    private String storePassword;
-
-    private String keyPassword;
-
-    private String alias;
 
     private String subject;
 

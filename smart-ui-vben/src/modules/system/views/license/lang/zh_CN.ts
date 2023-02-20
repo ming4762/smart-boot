@@ -28,8 +28,10 @@ export default {
       contractNo: '合同编号',
       serverInfo: '服务器信息',
       projectInfo: '项目&系统信息',
-      keyInfo: '密钥信息',
+      secretKey: '密钥',
       licenseName: 'license名称',
+      basic: 'Basic',
+      fileStorage: 'license存储库',
     },
     validate: {
       licenseCode: '请输入license编码',
