@@ -58,7 +58,7 @@ public class DbConnectionController extends BaseController<DbConnectionService, 
     @PostMapping("saveUpdate")
     @Operation(summary = "保存修改操作")
     @Log(value = "保存修改数据库连接信息", type = LogOperationTypeEnum.UPDATE)
-    @PreAuthorize("hasPermission('db:connection', 'update') or hasPermission('db:connection', 'update')")
+    @PreAuthorize("hasPermission('db:connection', 'save') or hasPermission('db:connection', 'update')")
     public Result<Boolean> saveUpdate(@RequestBody DbConnectionPO model) {
         return Result.success(this.service.saveOrUpdate(model));
     }

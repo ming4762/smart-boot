@@ -46,6 +46,7 @@
         <nimbus-jose-jwt.version>9.23</nimbus-jose-jwt.version>
         <truelicense.version>1.33</truelicense.version>
         <minio.version>8.4.6</minio.version>
+        <hutool.version>5.8.12</hutool.version>
     </properties>
 
     <packaging>pom</packaging>
@@ -310,6 +311,11 @@
                 <groupId>io.minio</groupId>
                 <artifactId>minio</artifactId>
                 <version>${minio.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
