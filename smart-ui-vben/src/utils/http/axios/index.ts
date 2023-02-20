@@ -10,7 +10,7 @@ import { checkStatus } from './checkStatus'
 import { useGlobSetting } from '/@/hooks/setting'
 import { useMessage } from '/@/hooks/web/useMessage'
 import { RequestEnum, ResultEnum, ContentTypeEnum } from '/@/enums/httpEnum'
-import { isString } from '/@/utils/is'
+import { isBlob, isString } from '/@/utils/is'
 import { getToken } from '/@/utils/auth'
 import { setObjToUrlParams, deepMerge } from '/@/utils'
 import { useI18n } from '/@/hooks/web/useI18n'
@@ -30,7 +30,7 @@ const transform: AxiosTransform = {
   /**
    * @description: 处理响应数据。如果数据不是预期格式，可直接抛出错误
    */
-  transformResponseHook: (res: AxiosResponse<Result>, options: RequestOptions) => {
+  transformResponseHook: async (res: AxiosResponse<Result | Blob>, options: RequestOptions) => {
     const { t } = useI18n()
     const { isTransformResponse, isReturnNativeResponse } = options
     // 是否返回原生响应头 比如：需要获取响应头时使用该属性
@@ -44,13 +44,22 @@ const transform: AxiosTransform = {
     }
     // 错误的时候返回
 
-    const { data } = res
+    const { data: resData } = res
+    let data = resData
     if (!data) {
       // return '[HTTP] Request has no return value';
       throw new Error(t('sys.api.apiRequestFailed'))
     }
+    if (isBlob(data)) {
+      const type = data.type as string
+      if (type === 'application/json') {
+        data = JSON.parse(await data.text())
+      } else {
+        return res
+      }
+    }
     //  这里 code，result，message为 后台统一的字段，需要在 types.ts内修改为项目自己的接口返回格式
-    const { code, data: result, message } = data
+    const { code, data: result, message } = data as Result
 
     // 这里逻辑可以根据项目进行修改
     const hasSuccess = data && Reflect.has(data, 'code') && code === ResultEnum.SUCCESS
@@ -70,7 +79,7 @@ const transform: AxiosTransform = {
         break
       case ResultEnum.ERROR:
         // 500错误
-        createError500Modal(data)
+        createError500Modal(data as Result)
         continueDeal = false
         break
       default:
