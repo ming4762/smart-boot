@@ -1,13 +1,14 @@
 import type { AxiosRequestConfig, AxiosInstance, AxiosResponse, AxiosError } from 'axios'
-import type { RequestOptions, Result, UploadFileParams } from '/#/axios'
+import type { RequestOptions, Result, UploadFileParams, UploadFileItemParams } from '/#/axios'
 import type { CreateAxiosOptions } from './axiosTransform'
 import axios from 'axios'
 import qs from 'qs'
 import { AxiosCanceler } from './axiosCancel'
-import { isFunction } from '/@/utils/is'
+import { isArray, isFunction } from '/@/utils/is'
 import { cloneDeep } from 'lodash-es'
 import { ContentTypeEnum } from '/@/enums/httpEnum'
 import { RequestEnum } from '/@/enums/httpEnum'
+import {downloadByData} from '/@/utils/file/download';
 
 export * from './axiosTransform'
 
@@ -138,13 +139,21 @@ export class VAxios {
    */
   uploadFile<T = any>(config: AxiosRequestConfig, params: UploadFileParams): Promise<T> {
     const formData = new window.FormData()
-    const customFilename = params.name || 'file'
-
-    if (params.filename) {
-      formData.append(customFilename, params.file, params.filename)
+    const file = params.file
+    let uploadFileList: UploadFileItemParams[]
+    if (isArray(file)) {
+      uploadFileList = file
     } else {
-      formData.append(customFilename, params.file)
+      uploadFileList = [file]
     }
+    uploadFileList.forEach((item) => {
+      const customFilename = item.name || 'file'
+      if (item.filename) {
+        formData.append(customFilename, item.file, item.filename)
+      } else {
+        formData.append(customFilename, item.file)
+      }
+    })
 
     if (params.data) {
       Object.keys(params.data).forEach((key) => {
@@ -187,6 +196,28 @@ export class VAxios {
       ...config,
       data: qs.stringify(config.data, { arrayFormat: 'brackets' }),
     }
+  }
+
+  /**
+   * 下载文件请
+   * @param config
+   * @param filename
+   * @param options
+   */
+  async download(config: AxiosRequestConfig, filename?: string, options?: RequestOptions) {
+    const response: AxiosResponse<Blob> = await this.request(
+      {
+        method: 'post',
+        responseType: 'blob',
+        ...config,
+      },
+      {
+        ...options,
+      },
+    )
+    const name =
+      filename || response.headers['content-disposition']?.split(';')[1].split('filename=')[1] || ''
+    downloadByData(response.data, name)
   }
 
   get<T = any>(config: AxiosRequestConfig, options?: RequestOptions): Promise<T> {
