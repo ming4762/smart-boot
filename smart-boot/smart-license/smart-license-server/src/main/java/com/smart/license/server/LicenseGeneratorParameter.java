@@ -2,6 +2,7 @@ package com.smart.license.server;
 
 import lombok.*;
 
+import java.io.InputStream;
 import java.time.LocalDateTime;
 
 /**
@@ -43,11 +44,9 @@ public class LicenseGeneratorParameter {
     /**
      * 密钥路径
      */
-    private String storePath;
+    private InputStream privateKeyInputStream;
 
-    /**
-     * 私钥
-     */
+
     private String storePassword;
 
     private String keyPassword;

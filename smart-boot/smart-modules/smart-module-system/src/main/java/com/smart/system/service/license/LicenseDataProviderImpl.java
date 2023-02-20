@@ -8,7 +8,7 @@ import com.smart.license.server.LicenseDataProvider;
 import com.smart.license.server.LicenseGeneratorParameter;
 import com.smart.system.model.SysSystemPO;
 import com.smart.system.pojo.vo.license.SmartAuthLicenseQueryVO;
-import com.smart.system.service.SmartAuthLicenseService;
+import com.smart.system.service.auth.SmartAuthLicenseService;
 import org.springframework.stereotype.Component;
 
 import java.util.*;

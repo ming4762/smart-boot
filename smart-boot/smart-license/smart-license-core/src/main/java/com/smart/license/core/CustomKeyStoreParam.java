@@ -2,6 +2,8 @@ package com.smart.license.core;
 
 import de.schlichtherle.license.AbstractKeyStoreParam;
 import lombok.Getter;
+import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -19,6 +21,10 @@ public class CustomKeyStoreParam extends AbstractKeyStoreParam {
     private static final String CLASSPATH_PREFIX = "classpath:";
 
     private final String storePath;
+
+    @Setter
+    private InputStream inputStream;
+
     private final String alias;
     private final String storePwd;
     private final String keyPwd;
@@ -55,16 +61,19 @@ public class CustomKeyStoreParam extends AbstractKeyStoreParam {
      */
     @Override
     public InputStream getStream() throws IOException {
-        InputStream inputStream;
+        if (StringUtils.isBlank(this.storePath) && inputStream != null) {
+            return inputStream;
+        }
+        InputStream keyInputStream;
         if (this.storePath.startsWith(CLASSPATH_PREFIX)) {
             String path = this.storePath.replace(CLASSPATH_PREFIX, "");
-            inputStream = this.clazz.getClassLoader().getResourceAsStream(path);
+            keyInputStream = this.clazz.getClassLoader().getResourceAsStream(path);
         } else {
-            inputStream = Files.newInputStream(Paths.get(this.storePath));
+            keyInputStream = Files.newInputStream(Paths.get(this.storePath));
         }
-        if (inputStream == null) {
+        if (keyInputStream == null) {
             throw new FileNotFoundException(this.storePath);
         }
-        return inputStream;
+        return keyInputStream;
     }
 }

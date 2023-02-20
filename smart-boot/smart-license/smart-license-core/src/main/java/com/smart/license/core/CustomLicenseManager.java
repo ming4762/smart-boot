@@ -4,6 +4,8 @@ import de.schlichtherle.license.*;
 import de.schlichtherle.xml.GenericCertificate;
 import org.springframework.util.CollectionUtils;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 
@@ -72,5 +74,10 @@ public class CustomLicenseManager extends LicenseManager {
                 }
             }
         }
+    }
+
+    public final synchronized InputStream store(LicenseContent content) throws Exception {
+        byte[] licenseByte = this.create(content, this.getLicenseNotary());
+        return new ByteArrayInputStream(licenseByte);
     }
 }

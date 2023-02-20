@@ -1,4 +1,4 @@
-package com.smart.system.model;
+package com.smart.system.model.auth;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -32,6 +32,11 @@ public class SmartAuthLicensePO extends BaseModelUserTime {
     private String licenseCode;
 
     private String licenseName;
+
+    /**
+     * 使用秘钥ID
+     */
+    private Long secretKeyId;
 
     /**
     * project_id - 所属项目
@@ -73,15 +78,15 @@ public class SmartAuthLicensePO extends BaseModelUserTime {
      */
     private Long userNum;
 
-    private String storePath;
+    /**
+     * 文件存储器ID，license存储位置
+     */
+    private Long fileStorageId;
 
-    private String licensePath;
-
-    private String storePassword;
-
-    private String keyPassword;
-
-    private String alias;
+    /**
+     * license文件ID
+     */
+    private Long licenseFileId;
 
     private String subject;
 
@@ -109,4 +114,8 @@ public class SmartAuthLicensePO extends BaseModelUserTime {
     private String contractNo;
 
     private Integer seq;
+
+    private Boolean useYn;
+
+    private Boolean deleteYn;
 }

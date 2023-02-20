@@ -34,6 +34,7 @@ import SystemSimpleList from '/@/modules/system/components/system/SystemSimpleLi
 import { useSmartTable, SmartTable, SmartVxeTableAction } from '/@/components/SmartTable'
 import { useI18n } from '/@/hooks/web/useI18n'
 import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
+import { useAppStore } from '/@/store/modules/app'
 
 import {
   getAddEditFormSchemas,
@@ -41,12 +42,20 @@ import {
   getTableColumns,
   Permissions,
 } from './LicenseListView.config'
-import { listApi, deleteApi, saveUpdateBatchApi, getByIdApi } from './LicenseListView.api'
+import {
+  listApi,
+  deleteApi,
+  saveUpdateBatchApi,
+  getByIdApi,
+  generatorApi,
+  downloadApi,
+} from './LicenseListView.api'
 import { buildUUID } from '/@/utils/uuid'
 import dayjs from 'dayjs'
 
 const { t } = useI18n()
 const { getTableSize } = useSizeSetting()
+const appStore = useAppStore()
 
 /**
  * 系统变更时触发：更新数据
@@ -73,17 +82,28 @@ const getTableDropDownActions = (row): ActionItem[] => {
       label: t('smart.license.button.generator'),
       preIcon: 'ant-design:check-outlined',
       auth: Permissions.generator,
-      onClick: () => {
-        console.log(row)
+      onClick: async () => {
+        try {
+          appStore.setPageLoading(true)
+          await generatorApi(row.id)
+        } finally {
+          appStore.setPageLoading(false)
+        }
+        query()
       },
     },
     {
       label: t('common.button.download'),
       preIcon: 'ant-design:download-outlined',
       auth: Permissions.download,
-      disabled: row.status === 'GENERATOR',
-      onClick: () => {
-        console.log(row)
+      disabled: row.status !== 'GENERATOR',
+      onClick: async () => {
+        try {
+          appStore.setPageLoading(true)
+          await downloadApi(row.id)
+        } finally {
+          appStore.setPageLoading(false)
+        }
       },
     },
   ]
@@ -94,6 +114,7 @@ const [registerTable, { query, editByRowModal, showAddModal }] = useSmartTable({
   border: true,
   height: 'auto',
   stripe: true,
+  showOverflow: 'tooltip',
   highlightHoverRow: true,
   columnConfig: {
     resizable: true,
@@ -190,6 +211,7 @@ const [registerTable, { query, editByRowModal, showAddModal }] = useSmartTable({
       defaultFullscreen: true,
     },
     formConfig: {
+      colon: true,
       labelCol: {
         span: 6,
       },

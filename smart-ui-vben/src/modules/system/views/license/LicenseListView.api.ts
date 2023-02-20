@@ -6,6 +6,7 @@ enum Api {
   saveUpdateBatch = 'smart/license/saveUpdateBatch',
   delete = 'smart/license/batchDeleteById',
   generator = 'smart/license/generator',
+  download = 'smart/license/download',
 }
 
 export const listApi = (params) => {
@@ -40,5 +41,12 @@ export const generatorApi = (id: number) => {
   return defHttp.post({
     url: Api.generator,
     data: id,
+  })
+}
+
+export const downloadApi = (id) => {
+  return defHttp.download({
+    url: Api.download,
+    data: { id },
   })
 }

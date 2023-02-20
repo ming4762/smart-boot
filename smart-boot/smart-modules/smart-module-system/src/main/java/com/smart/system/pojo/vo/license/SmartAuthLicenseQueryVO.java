@@ -1,6 +1,6 @@
 package com.smart.system.pojo.vo.license;
 
-import com.smart.system.model.SmartAuthLicensePO;
+import com.smart.system.model.auth.SmartAuthLicensePO;
 import com.smart.system.model.SysSystemPO;
 import lombok.Getter;
 import lombok.Setter;
