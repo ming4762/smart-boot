@@ -17,6 +17,7 @@ import com.smart.system.pojo.dto.i18n.SysI18nSaveUpdateDTO;
 import com.smart.system.service.SysI18nGroupService;
 import com.smart.system.service.SysI18nService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DuplicateKeyException;
@@ -39,6 +40,7 @@ import java.util.List;
 @RestController
 @RequestMapping("sys/i18n")
 @Slf4j
+@Tag(name = "国际化-国际化分组&国际化管理")
 public class SysI18nController extends BaseController<SysI18nService, SysI18nPO> {
 
     private final SysI18nGroupService sysI18nGroupService;

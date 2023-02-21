@@ -10,6 +10,7 @@ import com.smart.system.model.SysFunctionPO;
 import com.smart.system.pojo.vo.function.SysFunctionVO;
 import com.smart.system.service.SysFunctionService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.CollectionUtils;
@@ -28,6 +29,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("sys/function")
+@Tag(name = "系统功能")
 @NonUrlCheck
 public class SysFunctionController extends BaseController<SysFunctionService, SysFunctionPO> {
 

@@ -10,6 +10,7 @@ import com.smart.system.pojo.dto.category.SysCategorySaveUpdateDTO;
 import com.smart.system.pojo.vo.category.SysCategoryGetVO;
 import com.smart.system.service.SysCategoryService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,6 +31,7 @@ import java.util.List;
 */
 @RestController
 @RequestMapping("/sys/category")
+@Tag(name = "分类字典")
 public class SysCategoryController extends BaseController<SysCategoryService, SysCategoryPO> {
 
     @Override

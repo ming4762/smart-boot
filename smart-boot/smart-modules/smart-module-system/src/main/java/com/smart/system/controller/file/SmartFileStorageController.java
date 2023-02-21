@@ -10,6 +10,7 @@ import com.smart.system.model.file.SmartFileStoragePO;
 import com.smart.system.pojo.dto.file.SmartFileStorageSaveUpdateDTO;
 import com.smart.system.service.file.SmartFileStorageService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,6 +31,7 @@ import java.util.stream.Collectors;
 * 2023-2-14 15:19:53
 */
 @RestController
+@Tag(name = "文件存储库")
 @RequestMapping("smart/fileStorage")
 public class SmartFileStorageController extends BaseController<SmartFileStorageService, SmartFileStoragePO> {
 

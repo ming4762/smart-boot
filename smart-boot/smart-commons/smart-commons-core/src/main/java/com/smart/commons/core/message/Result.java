@@ -31,16 +31,16 @@ import java.util.Optional;
 public class Result<T> {
 
     private static final long serialVersionUID = 9144229906004159463L;
-    @Schema(title = "状态码", example = "200", required = true)
+    @Schema(description = "状态码", example = "200", required = true)
     private Integer code = ResultCodeEnum.SUCCESS.getCode();
 
-    @Schema(title = "返回信息", example = "成功")
+    @Schema(description = "返回信息", example = "成功")
     private String message = null;
 
-    @Schema(title = "接口返回状态", example = "true", required = true)
+    @Schema(description = "接口返回状态", example = "true", required = true)
     private boolean success = true;
 
-    @Schema(title = "接口返回数据")
+    @Schema(description = "接口返回数据")
     private T data = null;
 
     private static <T> Result<T> newInstance() {

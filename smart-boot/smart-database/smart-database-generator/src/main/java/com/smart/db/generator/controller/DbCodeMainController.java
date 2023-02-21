@@ -18,6 +18,7 @@ import com.smart.db.generator.pojo.vo.DbCodeVO;
 import com.smart.db.generator.pojo.vo.DbMainConfigVO;
 import com.smart.db.generator.service.DbCodeMainService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -39,11 +40,13 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("db/code/main")
+@Tag(name = "代码生成器-代码配置")
 public class DbCodeMainController extends BaseController<DbCodeMainService, DbCodeMainPO> {
 
     @Override
     @PostMapping("batchDeleteById")
     @PreAuthorize("hasPermission('db:codeConfig', 'delete')")
+    @Operation(summary = "批量删除代码配置")
     public Result<Boolean> batchDeleteById(@RequestBody List<Serializable> idList) {
         return super.batchDeleteById(idList);
     }
@@ -66,6 +69,7 @@ public class DbCodeMainController extends BaseController<DbCodeMainService, DbCo
 
     @Override
     @PostMapping("getById")
+    @Operation(summary = "通过ID查询")
     public Result<DbCodeMainPO> getById(@RequestBody Serializable id) {
         return super.getById(id);
     }
@@ -76,6 +80,7 @@ public class DbCodeMainController extends BaseController<DbCodeMainService, DbCo
      * @return 配置信息
      */
     @PostMapping("getConfigById")
+    @Operation(summary = "通过ID查询代码配置")
     public Result<DbMainConfigVO> getConfigById(@RequestBody Long id) {
         if (id == null) {
             return Result.failure(400, "参数错误，配置ID不能为空");
@@ -85,6 +90,7 @@ public class DbCodeMainController extends BaseController<DbCodeMainService, DbCo
 
     @PostMapping("save")
     @PreAuthorize("hasPermission('db:codeConfig', 'save')")
+    @Operation(summary = "保存配置")
     public Result<Long> save(@RequestBody @Valid DbCodeMainSaveParameter parameter) {
         final List<String> message = Lists.newArrayList();
         // 验证参数
@@ -105,6 +111,7 @@ public class DbCodeMainController extends BaseController<DbCodeMainService, DbCo
     }
 
     @PostMapping("createCode")
+    @Operation(summary = "生成代码")
     public Result<List<DbCodeVO>> createCode(@RequestBody @Valid DbCreateCodeDTO parameter) {
        return Result.success(this.service.createCode(parameter));
     }
@@ -114,6 +121,7 @@ public class DbCodeMainController extends BaseController<DbCodeMainService, DbCo
      * @return 模板数据文档
      */
     @PostMapping("getTemplateDataDocument")
+    @Operation(summary = "获取文档信息")
     public Result<List<DocumentVO>> getTemplateDataDocument() {
         return Result.success(DbGeneratorDocumentCreator.createDocument());
     }

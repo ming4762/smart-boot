@@ -10,6 +10,7 @@ import com.smart.system.pojo.dto.license.SmartAuthLicenseSaveUpdateDTO;
 import com.smart.system.pojo.dto.system.SmartAuthLicenseListBySystemDTO;
 import com.smart.system.service.auth.SmartAuthLicenseService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.SneakyThrows;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpHeaders;
@@ -34,6 +35,7 @@ import java.util.stream.Collectors;
 */
 @RestController
 @RequestMapping("/smart/license")
+@Tag(name = "license管理")
 public class SmartAuthLicenseController extends BaseController<SmartAuthLicenseService, SmartAuthLicensePO> {
 
     @PostMapping("listBySystem")

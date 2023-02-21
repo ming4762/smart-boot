@@ -10,6 +10,7 @@ import com.smart.system.model.SysI18nItemPO;
 import com.smart.system.pojo.dto.i18n.SysI18nItemSaveUpdateDTO;
 import com.smart.system.service.SysI18nItemService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.lang.NonNull;
@@ -30,6 +31,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("sys/i18nItem")
+@Tag(name = "国际化-国际化项管理")
 public class SysI18nItemController extends BaseController<SysI18nItemService, SysI18nItemPO> {
 
     @PostMapping("saveUpdate")

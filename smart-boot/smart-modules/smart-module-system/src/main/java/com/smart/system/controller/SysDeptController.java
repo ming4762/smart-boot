@@ -9,6 +9,7 @@ import com.smart.system.model.SysDeptPO;
 import com.smart.system.pojo.dto.dept.SysDeptSaveUpdateDTO;
 import com.smart.system.service.SysDeptService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,6 +31,7 @@ import java.util.stream.Collectors;
 */
 @RestController
 @RequestMapping("sys/dept")
+@Tag(name = "组织架构")
 public class SysDeptController extends BaseController<SysDeptService, SysDeptPO> {
 
     @Override

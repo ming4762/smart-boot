@@ -6,10 +6,9 @@ import com.smart.commons.core.message.Result;
 import com.smart.crud.controller.BaseController;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.system.model.SysDictItemPO;
-import com.smart.system.pojo.dto.dict.SysDictItemSaveUpdateDTO;
 import com.smart.system.service.SysDictItemService;
 import io.swagger.v3.oas.annotations.Operation;
-import org.springframework.beans.BeanUtils;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.io.Serializable;
 import java.util.List;
 
@@ -28,6 +26,7 @@ import java.util.List;
 */
 @RestController
 @RequestMapping("sys/dictItem")
+@Tag(name = "数据字典-字典项管理")
 public class SysDictItemController extends BaseController<SysDictItemService, SysDictItemPO> {
 
 
