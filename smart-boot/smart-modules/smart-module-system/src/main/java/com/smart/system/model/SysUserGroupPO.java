@@ -19,7 +19,7 @@ import java.io.Serial;
 @TableName("sys_user_group")
 @Getter
 @Setter
-@Schema(title = "用户组实体", description = "用户组实体")
+@Schema(description = "用户组实体")
 public class SysUserGroupPO extends BaseModelUserTime {
 
 
@@ -36,14 +36,14 @@ public class SysUserGroupPO extends BaseModelUserTime {
     /**
      * 用户组名称
      */
-    @Schema(title = "用户组名称", required = true)
+    @Schema(title = "用户组名称", description = "用户组名称", required = true)
     @NotNull(message = "用户组名称不能为空")
     private String groupName;
 
     /**
      * 用户组编码
      */
-    @Schema(title = "用户组编码", required = true)
+    @Schema(description = "用户组编码", required = true)
     @NotNull(message = "用户组编码不能为空")
     private String groupCode;
 
@@ -60,6 +60,6 @@ public class SysUserGroupPO extends BaseModelUserTime {
     /**
      * 是否启用
      */
-    @Schema(title = "启用")
+    @Schema(description = "启用")
     private Boolean useYn;
 }

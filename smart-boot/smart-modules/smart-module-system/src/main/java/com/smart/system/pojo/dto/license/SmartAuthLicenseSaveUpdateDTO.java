@@ -1,6 +1,7 @@
 package com.smart.system.pojo.dto.license;
 
 import jakarta.validation.constraints.NotNull;
+import com.smart.system.constants.LicenseStatusEnum;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -54,6 +55,8 @@ public class SmartAuthLicenseSaveUpdateDTO implements Serializable {
     * cpu序列号
     */
     private String cpuSerial;
+
+    private LicenseStatusEnum status;
     /**
     * 主板序列号
     */
