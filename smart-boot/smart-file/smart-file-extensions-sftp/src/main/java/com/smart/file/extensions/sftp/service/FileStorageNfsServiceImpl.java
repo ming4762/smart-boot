@@ -77,9 +77,19 @@ public class FileStorageNfsServiceImpl implements FileStorageService {
         }
     }
 
+    @SneakyThrows(SftpException.class)
     @Override
     public InputStream download(@NonNull FileStorageGetParameter parameter) {
-        throw new UnsupportedOperationException("NFS方式不支持该方式下载文件，请通过download(String id, OutputStream outputStream)下载文件");
+//        throw new UnsupportedOperationException("NFS方式不支持该方式下载文件，请通过download(String id, OutputStream outputStream)下载文件");
+        SmartFileStorageSftpProperties properties = this.getProperties(parameter.getStorageProperties());
+        ChannelSftp channelSftp = this.channelProvider.getChannel(parameter.getStorageProperties());
+        try {
+            DiskFilePathBO diskFilePath = DiskFilePathBO.createById(parameter.getFileStorageKey(), properties.getBasePath());
+            channelSftp.cd(diskFilePath.getFolderPath());
+            return channelSftp.get(diskFilePath.getDiskFilename());
+        } finally {
+            this.channelProvider.returnChannel(parameter.getStorageProperties(), channelSftp);
+        }
     }
 
     @SneakyThrows({SftpException.class, IOException.class})

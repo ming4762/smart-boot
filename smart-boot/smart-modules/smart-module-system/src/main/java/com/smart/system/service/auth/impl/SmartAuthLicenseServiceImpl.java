@@ -1,6 +1,7 @@
 package com.smart.system.service.auth.impl;
 
 import cn.hutool.core.util.ZipUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.smart.commons.core.exception.BusinessException;
 import com.smart.commons.core.exception.SystemException;
@@ -23,6 +24,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -30,6 +32,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
 * smart_auth_license - 许可证管理 Service实现类
@@ -164,16 +167,57 @@ public class SmartAuthLicenseServiceImpl extends BaseServiceImpl<SmartAuthLicens
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean saveOrUpdateBatch(Collection<SmartAuthLicensePO> entityList) {
-        Set<Long> fileIds = new HashSet<>();
+        Set<Long> deleteFileIds = new HashSet<>();
         entityList.forEach(item -> {
-            if (item.getId() != null && item.getLicenseFileId() != null) {
+            if (item.getId() != null && LicenseStatusEnum.GENERATOR.equals(item.getStatus())) {
                 item.setStatus(LicenseStatusEnum.UPDATE);
-                fileIds.add(item.getLicenseFileId());
+                deleteFileIds.add(item.getId());
                 item.setLicenseFileId(null);
             }
         });
         boolean result = super.saveOrUpdateBatch(entityList);
-        this.fileService.batchDelete(fileIds);
+        if (!deleteFileIds.isEmpty()) {
+            // 获取文件ID
+            Set<Long> fileIds = this.list(
+                    new QueryWrapper<SmartAuthLicensePO>().lambda()
+                            .select(SmartAuthLicensePO::getLicenseFileId)
+                            .in(SmartAuthLicensePO::getId, deleteFileIds)
+            ).stream().map(SmartAuthLicensePO::getLicenseFileId).collect(Collectors.toSet());
+            if (!CollectionUtils.isEmpty(fileIds)) {
+                this.fileService.batchDelete(fileIds);
+            }
+            this.update(
+                    new UpdateWrapper<SmartAuthLicensePO>().lambda()
+                            .set(SmartAuthLicensePO::getLicenseFileId, null)
+                            .in(SmartAuthLicensePO::getId, deleteFileIds)
+            );
+        }
+        return result;
+    }
+
+    /**
+     * 批量删除(jdbc批量提交)
+     *
+     * @param list 主键ID或实体列表(主键ID类型必须与实体类型字段保持一致)
+     * @return 删除结果
+     * @since 3.5.0
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean removeBatchByIds(Collection<?> list) {
+        if (CollectionUtils.isEmpty(list)) {
+            return false;
+        }
+        Set<Long> fileIds = this.list(
+                new QueryWrapper<SmartAuthLicensePO>().lambda()
+                        .select(SmartAuthLicensePO::getLicenseFileId)
+                        .in(SmartAuthLicensePO::getId, list)
+        ).stream().map(SmartAuthLicensePO::getLicenseFileId).collect(Collectors.toSet());
+
+        boolean result = super.removeBatchByIds(list);
+        if (!CollectionUtils.isEmpty(fileIds)) {
+            this.fileService.batchDelete(fileIds);
+        }
         return result;
     }
 

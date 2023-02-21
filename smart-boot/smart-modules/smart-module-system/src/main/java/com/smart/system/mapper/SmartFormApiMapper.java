@@ -1,6 +1,7 @@
 package com.smart.system.mapper;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.smart.crud.model.BaseModel;
 import com.smart.system.controller.smart_form_api.vo.SmartFormTableSelectApiVO;
 import org.apache.ibatis.annotations.Param;
@@ -17,6 +18,6 @@ public interface SmartFormApiMapper {
             @Param("tableName") String tableName,
             @Param("valueName") String valueName,
             @Param("labelName") String labelName,
-            @Param("queryWrapper") QueryWrapper<? extends BaseModel> queryWrapper
+            @Param(Constants.WRAPPER) QueryWrapper<? extends BaseModel> queryWrapper
     );
 }

@@ -5,7 +5,7 @@
     <select id="listTableSelect" resultMap="listTableSelectResultMap">
         select ${valueName} value, ${labelName} label
         from ${tableName}
-        ${queryWrapper.customSqlSegment}
+        ${ew.customSqlSegment}
     </select>
 
     <resultMap id="listTableSelectResultMap" type="com.smart.system.controller.smart_form_api.vo.SmartFormTableSelectApiVO">

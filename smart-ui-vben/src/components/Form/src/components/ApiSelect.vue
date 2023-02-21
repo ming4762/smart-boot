@@ -103,7 +103,7 @@ export default defineComponent({
     watch(
       () => props.params,
       () => {
-        !unref(isFirstLoad) && fetch()
+        props.immediate && fetch()
       },
       { deep: true },
     )

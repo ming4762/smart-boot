@@ -19,6 +19,14 @@ license管理页面
               :drop-down-actions="getTableDropDownActions(row)"
               :actions="getTableActions(row)" />
           </template>
+          <template #form-secretKey="{ model }">
+            <SmartApiSelectTable
+              v-model:value="model.secretKeyId"
+              model-class-name="com.smart.system.model.auth.SmartAuthSecretKeyPO"
+              label-field-name="keyName"
+              value-field-name="id"
+              :params="getSecretSelectTableParams" />
+          </template>
         </SmartTable>
       </template>
     </LayoutSeparate>
@@ -28,13 +36,14 @@ license管理页面
 <script lang="ts" setup>
 import type { ActionItem } from '/@/components/SmartTable'
 
-import { ref, unref } from 'vue'
+import { computed, ref, unref } from 'vue'
 import { LayoutSeparate } from '/@/components/LayoutSeparate'
 import SystemSimpleList from '/@/modules/system/components/system/SystemSimpleList.vue'
 import { useSmartTable, SmartTable, SmartVxeTableAction } from '/@/components/SmartTable'
 import { useI18n } from '/@/hooks/web/useI18n'
 import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
 import { useAppStore } from '/@/store/modules/app'
+import { useMessage } from '/@/hooks/web/useMessage'
 
 import {
   getAddEditFormSchemas,
@@ -52,10 +61,12 @@ import {
 } from './LicenseListView.api'
 import { buildUUID } from '/@/utils/uuid'
 import dayjs from 'dayjs'
+import SmartApiSelectTable from '/@/components/Form/src/smartBoot/components/SmartApiSelectTable.vue'
 
 const { t } = useI18n()
 const { getTableSize } = useSizeSetting()
 const appStore = useAppStore()
+const { createConfirm, successMessage } = useMessage()
 
 /**
  * 系统变更时触发：更新数据
@@ -65,6 +76,16 @@ const handleSelectSystemChange = (system) => {
   currentSystemRef.value = system
   query()
 }
+
+const getSecretSelectTableParams = computed(() => {
+  return {
+    sortName: 'seq',
+    parameter: {
+      'useYn@=': true,
+      'systemId@=': unref(currentSystemRef)?.id,
+    },
+  }
+})
 
 const getTableActions = (row): ActionItem[] => {
   return [
@@ -82,14 +103,26 @@ const getTableDropDownActions = (row): ActionItem[] => {
       label: t('smart.license.button.generator'),
       preIcon: 'ant-design:check-outlined',
       auth: Permissions.generator,
-      onClick: async () => {
-        try {
-          appStore.setPageLoading(true)
-          await generatorApi(row.id)
-        } finally {
-          appStore.setPageLoading(false)
-        }
-        query()
+      onClick: () => {
+        const message =
+          row.status == 'GENERATOR'
+            ? t('smart.license.message.rebuildGeneratorConfirm')
+            : t('smart.license.message.generatorConfirm')
+        createConfirm({
+          iconType: 'warning',
+          type: 'confirm',
+          content: message,
+          onOk: async () => {
+            try {
+              appStore.setPageLoading(true)
+              await generatorApi(row.id)
+              successMessage({ msg: t('smart.license.message.generatorSuccess') })
+            } finally {
+              appStore.setPageLoading(false)
+            }
+            query()
+          },
+        })
       },
     },
     {

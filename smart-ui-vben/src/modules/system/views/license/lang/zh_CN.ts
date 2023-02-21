@@ -66,6 +66,7 @@ export default {
     },
     message: {
       generatorConfirm: '确定要生成license吗？',
+      rebuildGeneratorConfirm: 'license已生成，确定要重新生成吗？',
       generatorSuccess: '生成成功',
       reGeneratorConfirm: 'license已生成，确定要重新生成吗？',
     },

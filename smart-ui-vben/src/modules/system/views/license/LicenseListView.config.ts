@@ -205,21 +205,17 @@ export const getAddEditFormSchemas = (t: Function): FormSchema[] => {
       required: true,
     },
     {
+      label: '',
+      field: 'status',
+      component: 'Input',
+      show: false,
+    },
+    {
       label: t('smart.license.title.secretKey'),
       field: 'secretKeyId',
       component: 'SmartApiSelectTable',
       required: true,
-      componentProps: {
-        modelClassName: 'com.smart.system.model.auth.SmartAuthSecretKeyPO',
-        valueFieldName: 'id',
-        labelFieldName: 'keyName',
-        parameter: {
-          sortName: 'seq',
-          parameter: {
-            'useYn@=': true,
-          },
-        },
-      },
+      slot: 'form-secretKey',
     },
     {
       label: t('smart.license.title.fileStorage'),
