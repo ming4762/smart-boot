@@ -15,6 +15,7 @@ import com.smart.system.service.SysRoleFunctionService;
 import com.smart.system.service.SysRoleService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,6 +34,7 @@ import java.util.List;
 @RestController
 @RequestMapping("sys/role")
 @NonUrlCheck
+@Tag(name = "系统角色管理")
 public class SysRoleController extends BaseController<SysRoleService, SysRolePO> {
 
     private final SysRoleFunctionService sysRoleFunctionService;

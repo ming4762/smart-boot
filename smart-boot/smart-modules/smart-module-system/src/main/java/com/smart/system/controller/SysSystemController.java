@@ -16,6 +16,7 @@ import com.smart.system.service.SysSystemService;
 import com.smart.system.service.SysSystemUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,6 +37,7 @@ import java.util.stream.Collectors;
 */
 @RestController
 @RequestMapping("/sys/system")
+@Tag(name = "系统列表")
 public class SysSystemController extends BaseController<SysSystemService, SysSystemPO> {
 
     private final SysSystemUserService sysSystemUserService;

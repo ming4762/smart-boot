@@ -11,6 +11,7 @@ import com.smart.system.pojo.dto.auth.SmartAuthSecretKeyListDTO;
 import com.smart.system.pojo.dto.auth.SmartAuthSecretKeyUploadUpdateDTO;
 import com.smart.system.service.auth.SmartAuthSecretKeyService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.SneakyThrows;
 import org.springframework.http.HttpHeaders;
 import org.springframework.lang.NonNull;
@@ -34,6 +35,7 @@ import java.util.List;
 */
 @RestController
 @RequestMapping("/sys/auth/secret")
+@Tag(name = "秘钥管理")
 public class SmartAuthSecretKeyController extends BaseController<SmartAuthSecretKeyService, SmartAuthSecretKeyPO> {
 
     @PostMapping("listBySystem")

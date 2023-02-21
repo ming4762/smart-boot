@@ -3,6 +3,7 @@ package com.smart.system.controller.file;
 import com.smart.auth.core.annotation.TempToken;
 import com.smart.file.core.pojo.bo.FileDownloadResult;
 import com.smart.file.core.service.FileService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,7 @@ import java.util.Objects;
  */
 @Controller
 @RequestMapping
+@Tag(name = "图片接口")
 public class ImageController {
 
     private final FileService fileService;

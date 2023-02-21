@@ -5,6 +5,7 @@ import com.smart.system.controller.smart_form_api.dto.SmartFormTableSelectApiDTO
 import com.smart.system.controller.smart_form_api.vo.SmartFormTableSelectApiVO;
 import com.smart.system.service.SmartFormApiService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("api/component/smart-form")
+@Tag(name = "组件-smart-form")
 public class SmartFormApiController {
 
     private final SmartFormApiService smartFormApiService;

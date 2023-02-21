@@ -10,6 +10,7 @@ import com.smart.system.model.SysDictItemPO;
 import com.smart.system.model.SysDictPO;
 import com.smart.system.service.SysDictService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,6 +30,7 @@ import java.util.List;
 */
 @RestController
 @RequestMapping("sys/dict")
+@Tag(name = "数据字典-字典分组管理")
 public class SysDictController extends BaseController<SysDictService, SysDictPO> {
 
     @Override

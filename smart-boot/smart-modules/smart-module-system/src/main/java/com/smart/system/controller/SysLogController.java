@@ -6,6 +6,7 @@ import com.smart.crud.query.PageSortQuery;
 import com.smart.system.model.SysLogPO;
 import com.smart.system.service.SysLogService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +23,7 @@ import java.io.Serializable;
  */
 @RestController
 @RequestMapping("sys/log")
+@Tag(name = "系统日志（登录日志、接口日志）")
 public class SysLogController extends BaseController<SysLogService, SysLogPO> {
 
     @Override
