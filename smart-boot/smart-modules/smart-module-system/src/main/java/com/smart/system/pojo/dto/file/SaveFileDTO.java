@@ -1,6 +1,5 @@
-package com.smart.file.manager.pojo.dto;
+package com.smart.system.pojo.dto.file;
 
-import com.smart.file.manager.constants.FileTypeEnum;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,7 +24,7 @@ public class SaveFileDTO implements Serializable {
 
     private String folder;
 
-    private FileTypeEnum type;
+    private String type;
 
     private String handlerType;
 }

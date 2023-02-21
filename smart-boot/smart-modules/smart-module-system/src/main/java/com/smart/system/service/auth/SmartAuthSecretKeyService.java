@@ -3,8 +3,8 @@ package com.smart.system.service.auth;
 import com.smart.crud.service.BaseService;
 import com.smart.system.model.auth.SmartAuthSecretKeyPO;
 import com.smart.system.pojo.dto.auth.SmartAuthSecretKeyUploadUpdateDTO;
+import jakarta.servlet.ServletOutputStream;
 
-import javax.servlet.ServletOutputStream;
 import java.io.Serializable;
 
 /**

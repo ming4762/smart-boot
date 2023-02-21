@@ -12,6 +12,8 @@ import com.smart.system.pojo.dto.auth.SmartAuthSecretKeyUploadUpdateDTO;
 import com.smart.system.service.auth.SmartAuthSecretKeyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.SneakyThrows;
 import org.springframework.http.HttpHeaders;
 import org.springframework.lang.NonNull;
@@ -22,8 +24,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
