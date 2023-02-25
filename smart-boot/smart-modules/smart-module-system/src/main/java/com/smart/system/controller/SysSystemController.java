@@ -65,7 +65,7 @@ public class SysSystemController extends BaseController<SysSystemService, SysSys
     @Operation(summary = "添加修改系统管理表")
     @PostMapping("saveUpdate")
     @Log(value = "添加修改系统管理表", type = LogOperationTypeEnum.UPDATE)
-    @PreAuthorize("hasPermission('sys:system:add') or hasPermission('sys:system:edit')")
+    @PreAuthorize("hasPermission('sys:system', 'add') or hasPermission('sys:system', 'edit')")
     public Result<Boolean> saveUpdate(@RequestBody @Valid SysSystemSaveUpdateDTO parameter) {
       	SysSystemPO model = new SysSystemPO();
       	BeanUtils.copyProperties(parameter, model);
@@ -75,7 +75,7 @@ public class SysSystemController extends BaseController<SysSystemService, SysSys
     @Override
     @Operation(summary = "通过ID批量删除系统管理表")
     @PostMapping("batchDeleteById")
-    @PreAuthorize("hasPermission('sys:system:delete')")
+    @PreAuthorize("hasPermission('sys:system', 'delete')")
     @Log(value = "通过ID批量删除系统管理表", type = LogOperationTypeEnum.DELETE)
     public Result<Boolean> batchDeleteById(@RequestBody List<Serializable> idList) {
         if (CollectionUtils.isEmpty(idList)) {

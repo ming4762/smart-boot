@@ -29,6 +29,7 @@ export const getMenuList = async () => {
       componentName,
       redirect,
       isMenu,
+      cached,
     } = item
     // 兼容icon
     let compatibleIcon = icon
@@ -52,6 +53,9 @@ export const getMenuList = async () => {
     }
     if (redirect) {
       routeItem.redirect = redirect
+    }
+    if (cached === false) {
+      routeItem.meta.ignoreKeepAlive = true
     }
     return routeItem
   })

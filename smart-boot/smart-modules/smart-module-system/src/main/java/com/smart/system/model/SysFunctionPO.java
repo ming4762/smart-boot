@@ -98,6 +98,11 @@ public class SysFunctionPO extends BaseModelUserTime {
 
     private String redirect;
 
+    /**
+     * 是否缓存路由
+     */
+    private Boolean cached;
+
     private Boolean hasChild;
 
     private Boolean useYn;

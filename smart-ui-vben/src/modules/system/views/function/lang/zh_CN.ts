@@ -36,6 +36,9 @@ export default {
           componentName: '请输入组件名称',
           redirect: '请输入redirect',
         },
+        title: {
+          cached: '缓存路由',
+        },
       },
     },
   },
