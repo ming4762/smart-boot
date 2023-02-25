@@ -54,7 +54,7 @@ export const getByIdApi = async (data) => {
     ...functionData,
     createUser: createUser && createUser.fullName,
     updateUser: updateUser && updateUser.fullName,
-    parentName: parent && parent.functionName,
+    parentName: (parent && parent.functionName) || '根目录',
   }
 }
 

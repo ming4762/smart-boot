@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts" setup>
-import {reactive, ref, unref} from 'vue'
+import { reactive, ref, unref } from 'vue'
 
 import { ActionItem, SmartTable, useSmartTable } from '/@/components/SmartTable'
 import { Icon } from '/@/components/Icon'
@@ -137,6 +137,7 @@ const [registerTable, { showAddModal, editByRowModal, getSearchForm, getTableIns
         width: 860,
       },
       formConfig: {
+        colon: true,
         baseColProps: {
           span: 12,
         },

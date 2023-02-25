@@ -133,7 +133,7 @@ export const getAddEditForm = (t: Function): FormSchema[] => {
     {
       field: 'functionType',
       label: t('system.views.function.table.functionType'),
-      component: 'InputNumber',
+      component: 'Input',
       slot: 'addEditForm-functionType',
       required: true,
     },
@@ -148,10 +148,11 @@ export const getAddEditForm = (t: Function): FormSchema[] => {
       component: 'IconPicker',
     },
     {
-      field: 'icon2',
-      label: '',
-      component: 'Input',
-      render: () => '',
+      field: 'seq',
+      required: true,
+      label: t('common.table.seq'),
+      component: 'InputNumber',
+      defaultValue: 1,
     },
     {
       field: 'componentName',
@@ -165,6 +166,9 @@ export const getAddEditForm = (t: Function): FormSchema[] => {
             message: t('system.views.function.validate.componentName'),
           },
         ]
+      },
+      show: ({ model }) => {
+        return model.functionType !== 'FUNCTION'
       },
     },
     {
@@ -180,11 +184,15 @@ export const getAddEditForm = (t: Function): FormSchema[] => {
           },
         ]
       },
+      show: ({ model }) => {
+        return model.functionType !== 'FUNCTION'
+      },
     },
     {
       field: 'url',
       label: 'URL',
       component: 'Input',
+      required: true,
     },
     {
       field: 'redirect',
@@ -207,6 +215,9 @@ export const getAddEditForm = (t: Function): FormSchema[] => {
           },
         ]
       },
+      show: ({ model }) => {
+        return model.functionType === 'FUNCTION'
+      },
     },
     {
       field: 'permission',
@@ -221,30 +232,45 @@ export const getAddEditForm = (t: Function): FormSchema[] => {
           },
         ]
       },
+      show: ({ model }) => {
+        return model.functionType === 'FUNCTION'
+      },
     },
     {
       field: 'isMenu',
       label: t('system.views.function.table.menuIs'),
       component: 'Switch',
       defaultValue: true,
+      show: ({ model }) => {
+        return model.functionType !== 'FUNCTION'
+      },
     },
     {
       field: 'internalOrExternal',
       label: t('system.views.function.table.internalOrExternal'),
       component: 'Switch',
       defaultValue: false,
+      show: ({ model }) => {
+        return model.functionType === 'MENU'
+      },
     },
     {
       field: 'dataRule',
       label: t('system.views.function.table.dataRule'),
       component: 'Switch',
       defaultValue: false,
+      show: ({ model }) => {
+        return model.functionType === 'FUNCTION'
+      },
     },
     {
-      field: 'seq',
-      label: t('common.table.seq'),
-      component: 'InputNumber',
-      defaultValue: 1,
+      field: 'cached',
+      label: t('system.views.function.title.cached'),
+      component: 'Switch',
+      defaultValue: true,
+      show: ({ model }) => {
+        return model.functionType === 'MENU'
+      },
     },
   ]
 }
