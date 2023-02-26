@@ -78,116 +78,127 @@ const getTableActions = (row: Recordable): ActionItem[] => {
     {
       label: t('common.button.edit'),
       icon: 'ant-design:edit-outlined',
+      color: 'warning',
       onClick: () => {
         currentRowRef.value = row
         setTypeDisabled(['catalogue', 'menu', 'function'])
         editByRowModal(row)
       },
     },
+    {
+      label: t('common.button.delete'),
+      icon: 'ant-design:delete-outlined',
+      danger: true,
+      onClick: () => {
+        deleteByRow(row)
+      },
+    },
   ]
 }
 
-const [registerTable, { showAddModal, editByRowModal, getSearchForm, getTableInstance }] =
-  useSmartTable({
-    id: 'FunctionListView',
-    columns: tableColumns,
-    resizableConfig: {},
-    border: true,
-    align: 'left',
-    highlightHoverColumn: true,
-    height: 'auto',
-    useSearchForm: true,
-    searchFormConfig: {
-      layout: 'inline',
+const [
+  registerTable,
+  { showAddModal, editByRowModal, getSearchForm, getTableInstance, deleteByRow },
+] = useSmartTable({
+  id: 'FunctionListView',
+  columns: tableColumns,
+  resizableConfig: {},
+  border: true,
+  align: 'left',
+  highlightHoverColumn: true,
+  height: 'auto',
+  useSearchForm: true,
+  searchFormConfig: {
+    layout: 'inline',
+    colon: true,
+    schemas: getSearchSchemas(t),
+    searchWithSymbol: true,
+    actionColOptions: {
+      span: undefined,
+    },
+  },
+  columnConfig: {
+    resizable: true,
+  },
+  treeConfig: {
+    lazy: true,
+    loadMethod: ({ row }) => {
+      const { searchSymbolForm } = getSearchForm().getSearchFormParameter()
+      const parameter = {
+        parameter: {
+          ...searchSymbolForm,
+          'parentId@=': row.functionId,
+        },
+      }
+      return listApi(parameter)
+    },
+  },
+  rowConfig: {
+    keyField: 'functionId',
+  },
+  sortConfig: {
+    remote: true,
+    defaultSort: {
+      field: 'seq',
+      order: 'asc',
+    },
+  },
+  addEditConfig: {
+    modalConfig: {
+      width: 860,
+    },
+    formConfig: {
       colon: true,
-      schemas: getSearchSchemas(t),
-      searchWithSymbol: true,
-      actionColOptions: {
-        span: undefined,
+      baseColProps: {
+        span: 12,
       },
+      labelCol: { span: 7 },
+      wrapperCol: { span: 16 },
+      schemas: getAddEditForm(t),
     },
-    columnConfig: {
-      resizable: true,
+    afterSave: () => {
+      // 保存完成之后重新加载节点
+      return getTableInstance().reloadTreeExpand(unref(currentRowRef))
     },
-    treeConfig: {
-      lazy: true,
-      loadMethod: ({ row }) => {
-        const { searchSymbolForm } = getSearchForm().getSearchFormParameter()
+  },
+  proxyConfig: {
+    afterDelete: () => {
+      return getTableInstance().reloadTreeExpand(unref(currentRowRef))
+    },
+    ajax: {
+      query: ({ ajaxParameter }) => {
         const parameter = {
+          ...ajaxParameter,
           parameter: {
-            ...searchSymbolForm,
-            'parentId@=': row.functionId,
+            ...ajaxParameter?.parameter,
+            'parentId@=': 0,
           },
         }
         return listApi(parameter)
       },
+      delete: (params) => deleteApi(params),
+      save: saveApi,
+      getById: getByIdApi,
     },
-    rowConfig: {
-      keyField: 'functionId',
-    },
-    sortConfig: {
-      remote: true,
-      defaultSort: {
-        field: 'seq',
-        order: 'asc',
-      },
-    },
-    addEditConfig: {
-      modalConfig: {
-        width: 860,
-      },
-      formConfig: {
-        colon: true,
-        baseColProps: {
-          span: 12,
-        },
-        labelCol: { span: 7 },
-        wrapperCol: { span: 16 },
-        schemas: getAddEditForm(t),
-      },
-      afterSave: () => {
-        // 保存完成之后重新加载节点
-        return getTableInstance().reloadTreeExpand(unref(currentRowRef))
-      },
-    },
-    proxyConfig: {
-      ajax: {
-        query: ({ ajaxParameter }) => {
-          const parameter = {
-            ...ajaxParameter,
-            parameter: {
-              ...ajaxParameter?.parameter,
-              'parentId@=': 0,
-            },
-          }
-          return listApi(parameter)
-        },
-        delete: (params) => deleteApi(params),
-        save: saveApi,
-        getById: getByIdApi,
-      },
-    },
-    toolbarConfig: {
-      refresh: true,
-      buttons: [
-        {
-          code: 'ModalAdd',
-          props: {
-            onClick: () => {
-              setTypeDisabled(['function'])
-              showAddModal({
-                parentId: '0',
-                parentName: '根目录',
-              })
-            },
+  },
+  toolbarConfig: {
+    refresh: true,
+    buttons: [
+      {
+        code: 'ModalAdd',
+        props: {
+          onClick: () => {
+            setTypeDisabled(['function'])
+            showAddModal({
+              parentId: '0',
+              parentName: '根目录',
+            })
           },
         },
-        {
-          code: 'delete',
-        },
-      ],
-    },
-  })
+      },
+    ],
+  },
+})
 const getTagData = (functionType: string) => {
   switch (functionType) {
     case 'CATALOG': {
