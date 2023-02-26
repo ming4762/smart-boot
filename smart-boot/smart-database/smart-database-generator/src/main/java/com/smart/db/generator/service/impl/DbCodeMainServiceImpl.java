@@ -31,6 +31,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.io.Serializable;
 import java.io.StringWriter;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -149,14 +150,26 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
         final DbCodeMainPO dbCodeMain = new DbCodeMainPO();
         BeanUtils.copyProperties(model, dbCodeMain);
         // 判断是否是添加操作
-        final boolean isAdd = this.isAdd(dbCodeMain);
-        final long mainId = IdGenerator.nextId();
+        boolean isAdd = true;
+        DbCodeMainPO oldMain = null;
+        if (model.getId() != null) {
+            oldMain = this.getById(model.getId());
+            if (oldMain != null) {
+                isAdd = false;
+            }
+        }
+        long mainId = oldMain == null ? IdGenerator.nextId() : oldMain.getId();
+        dbCodeMain.setId(mainId);
         // 如果是修改执行删除操作
         if (!isAdd) {
             this.removeByIds(Lists.newArrayList(model.getId()));
+            dbCodeMain.setCreateUserId(oldMain.getCreateUserId());
+            dbCodeMain.setCreateTime(oldMain.getCreateTime());
+            dbCodeMain.setCreateBy(oldMain.getCreateBy());
+            dbCodeMain.setUpdateBy(AuthUtils.getCurrentUsername());
+            dbCodeMain.setUpdateTime(LocalDateTime.now());
+            dbCodeMain.setUpdateUserId(AuthUtils.getCurrentUserId());
         }
-        // 保存主表
-        dbCodeMain.setId(mainId);
         this.save(dbCodeMain);
         final AtomicInteger pageConfigIndex = new AtomicInteger(1);
         model.setId(mainId);
