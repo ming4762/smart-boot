@@ -171,16 +171,16 @@ export const formSchemas = (t: Function): FormSchema[] => {
       label: t('generator.views.code.title.formColNum'),
       field: 'formColNum',
       component: 'Select',
-      defaultValue: 0,
+      defaultValue: 1,
       componentProps: {
-        options: columnNumList(t),
+        options: columnNumList(t, false),
       },
     },
     {
       label: t('generator.views.code.title.searchColNum'),
       field: 'searchColNum',
       component: 'Select',
-      defaultValue: 1,
+      defaultValue: 0,
       componentProps: {
         options: columnNumList(t),
       },
@@ -283,12 +283,8 @@ const rowButtonList = [
   },
 ]
 
-const columnNumList = (t: Function) => {
-  return [
-    {
-      value: 0,
-      label: t('generator.views.design.title.colNum.zero'),
-    },
+const columnNumList = (t: Function, hasZeroColumn = true) => {
+  const column = [
     {
       value: 1,
       label: t('generator.views.code.title.colNum.one'),
@@ -306,6 +302,15 @@ const columnNumList = (t: Function) => {
       label: t('generator.views.code.title.colNum.four'),
     },
   ]
+  if (hasZeroColumn) {
+    return [
+      {
+        value: 0,
+        label: t('generator.views.design.title.colNum.zero'),
+      },
+    ].concat(column)
+  }
+  return column
 }
 
 const rowButtonTypeList = (t: Function) => [
