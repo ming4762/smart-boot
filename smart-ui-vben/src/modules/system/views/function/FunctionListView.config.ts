@@ -192,12 +192,23 @@ export const getAddEditForm = (t: Function): FormSchema[] => {
       field: 'url',
       label: 'URL',
       component: 'Input',
-      required: true,
+      dynamicRules: ({ model }) => {
+        return [
+          {
+            required: model.functionType === 'MENU',
+            trigger: 'blur',
+            message: t('system.views.function.validate.url'),
+          },
+        ]
+      },
     },
     {
       field: 'redirect',
       label: 'Redirect',
       component: 'Input',
+      show: ({ model }) => {
+        return model.functionType !== 'FUNCTION'
+      },
     },
     {
       field: 'httpMethod',
@@ -205,15 +216,6 @@ export const getAddEditForm = (t: Function): FormSchema[] => {
       component: 'Select',
       componentProps: {
         options: ['GET', 'POST', 'PUT', 'DELETE'].map((item) => ({ label: item, value: item })),
-      },
-      dynamicRules: ({ model }) => {
-        return [
-          {
-            required: model.functionType === 'FUNCTION',
-            message: t('system.views.function.validate.httpMethod'),
-            trigger: 'blur',
-          },
-        ]
       },
       show: ({ model }) => {
         return model.functionType === 'FUNCTION'
