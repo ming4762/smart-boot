@@ -21,10 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.io.Serializable;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -48,12 +46,29 @@ public class SysFunctionServiceImpl extends BaseServiceImpl<SysFunctionMapper, S
         if (CollectionUtils.isEmpty(idList)) {
             return false;
         }
-        super.removeByIds(idList);
-        // 删除下级
-        return this.remove(
+        Set<Long> parentIds = this.listByIds((Collection<? extends Serializable>) idList)
+                .stream().map(SysFunctionPO::getParentId)
+                .collect(Collectors.toSet());
+        // 获取上级
+        Set<Long> deleteIds = new HashSet<>();
+        this.getAllChildren(new HashSet<>((Collection<Long>) idList), deleteIds);
+        boolean result = super.removeByIds(deleteIds);
+        // 更新是否有上级
+        parentIds.forEach(this::updateHasChild);
+        return result;
+    }
+
+    public void getAllChildren(Set<Long> ids, Set<Long> allIds) {
+        allIds.addAll(ids);
+        Set<Long> childrenIds = this.list(
                 new QueryWrapper<SysFunctionPO>().lambda()
-                .in(SysFunctionPO :: getParentId, idList)
-        );
+                        .in(SysFunctionPO::getParentId, ids)
+        ).stream().map(SysFunctionPO::getFunctionId)
+                .filter(item -> !allIds.contains(item))
+                .collect(Collectors.toSet());
+        if (!CollectionUtils.isEmpty(childrenIds)) {
+            this.getAllChildren(childrenIds, allIds);
+        }
     }
 
     @Override
@@ -94,7 +109,7 @@ public class SysFunctionServiceImpl extends BaseServiceImpl<SysFunctionMapper, S
     @Override
     public boolean saveOrUpdate(SysFunctionPO entity) {
         boolean result = super.saveOrUpdate(entity);
-        this.updateChild(entity.getParentId());
+        this.updateHasChild(entity.getParentId());
         return result;
     }
 
@@ -106,11 +121,11 @@ public class SysFunctionServiceImpl extends BaseServiceImpl<SysFunctionMapper, S
     @Override
     public boolean saveOrUpdateBatch(Collection<SysFunctionPO> entityList) {
         boolean result = super.saveOrUpdateBatch(entityList);
-        entityList.forEach(item -> this.updateChild(item.getParentId()));
+        entityList.forEach(item -> this.updateHasChild(item.getParentId()));
         return result;
     }
 
-    private void updateChild(Long id) {
+    private void updateHasChild(Long id) {
         this.commonMapper.updateHasChild(
                 CrudUtils.getTableName(SysFunctionPO.class),
                 CrudUtils.getDbField(SysFunctionPO.class, "parentId"),
