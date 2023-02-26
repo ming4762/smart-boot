@@ -90,6 +90,7 @@ const getTableActions = (row: Recordable): ActionItem[] => {
       icon: 'ant-design:delete-outlined',
       danger: true,
       onClick: () => {
+        currentRowRef.value = row
         deleteByRow(row)
       },
     },
@@ -162,9 +163,6 @@ const [
     },
   },
   proxyConfig: {
-    afterDelete: () => {
-      return getTableInstance().reloadTreeExpand(unref(currentRowRef))
-    },
     ajax: {
       query: ({ ajaxParameter }) => {
         const parameter = {
