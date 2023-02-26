@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smart.system.mapper.tenant.SysTenantMapper">
+    <sql id="columnList">
+        <!--   id 主键  索引   -->
+        id,
+        <!--   租户编号   索引   -->
+        tenant_code,
+        <!--   租户名字      -->
+        tenant_name,
+        <!--   联系人      -->
+        contacts,
+        <!--   联系人电话      -->
+        contact_phone,
+        <!--   域名      -->
+        domain,
+        <!--   可用人数，-1不限制      -->
+        available_user_num,
+        <!--   地址      -->
+        address,
+        <!--   LOGO      -->
+        logo_id,
+        <!--   开始时间      -->
+        start_time,
+        <!--   过期时间      -->
+        end_time,
+        <!--   备注      -->
+        remark,
+        <!--   序号      -->
+        seq,
+        <!--   createTime      -->
+        create_time,
+        <!--   createUserId      -->
+        create_user_id,
+        <!--   createBy      -->
+        create_by,
+        <!--   updateTime      -->
+        update_time,
+        <!--   updateUserId      -->
+        update_user_id,
+        <!--   updateBy      -->
+        update_by,
+        <!--   useYn      -->
+        use_yn,
+        <!--   deleteYn      -->
+        delete_yn
+    </sql>
+
+    <resultMap id="commonResultMap" type="com.smart.system.model.tenant.SysTenantPO">
+        <!--   id 主键  索引   -->
+        <id column="id" property="id" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   租户编号   索引   -->
+        <result column="tenant_code" property="tenantCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   租户名字      -->
+        <result column="tenant_name" property="tenantName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   联系人      -->
+        <result column="contacts" property="contacts" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   联系人电话      -->
+        <result column="contact_phone" property="contactPhone" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   域名      -->
+        <result column="domain" property="domain" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   可用人数，-1不限制      -->
+        <result column="available_user_num" property="availableUserNum" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   地址      -->
+        <result column="address" property="address" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   LOGO      -->
+        <result column="logo_id" property="logoId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   开始时间      -->
+        <result column="start_time" property="startTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+        <!--   过期时间      -->
+        <result column="end_time" property="endTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+        <!--   备注      -->
+        <result column="remark" property="remark" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   序号      -->
+        <result column="seq" property="seq" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        <!--   createTime      -->
+        <result column="create_time" property="createTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+        <!--   createUserId      -->
+        <result column="create_user_id" property="createUserId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   createBy      -->
+        <result column="create_by" property="createBy" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   updateTime      -->
+        <result column="update_time" property="updateTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+        <!--   updateUserId      -->
+        <result column="update_user_id" property="updateUserId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   updateBy      -->
+        <result column="update_by" property="updateBy" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   useYn      -->
+        <result column="use_yn" property="useYn" javaType="java.lang.Boolean" jdbcType="BIT"/>
+        <!--   deleteYn      -->
+        <result column="delete_yn" property="deleteYn" javaType="java.lang.Boolean" jdbcType="BIT"/>
+    </resultMap>
+</mapper>

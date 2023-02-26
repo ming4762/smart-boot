@@ -107,7 +107,6 @@ public class SysFunctionPO extends BaseModelUserTime {
 
     private Boolean useYn;
 
-    @TableLogic
     private Boolean deleteYn;
 
 }
