@@ -20,30 +20,34 @@ import {
 } from '/@/components/SmartTable'
 
 import {
-  getTableColumns,
   getFormSchemas,
   getSearchFormSchemas,
+  getTableColumns,
   Permissions,
 } from './SysParameterListView.config'
-import { listApi, deleteApi, getByIdApi, batchSaveUpdateApi } from './SysParameterListView.api'
+import { batchSaveUpdateApi, deleteApi, getByIdApi, listApi } from './SysParameterListView.api'
 
 const { t } = useI18n()
 const { getTableSize } = useSizeSetting()
 
 const getActions = (row): ActionItem[] => {
-  return [
+  const { buildIn } = row
+  const result: ActionItem[] = [
     {
       label: t('common.button.edit'),
-      auth: Permissions.update,
+      auth: buildIn ? Permissions.updateBuildIn : Permissions.update,
       onClick: () => editByRowModal(row),
     },
-    {
+  ]
+  if (!buildIn) {
+    result.push({
       label: t('common.button.delete'),
       auth: Permissions.delete,
       danger: true,
       onClick: () => deleteByRow(row),
-    },
-  ]
+    })
+  }
+  return result
 }
 
 const [registerTable, { editByRowModal, deleteByRow }] = useSmartTable({

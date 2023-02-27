@@ -6,6 +6,7 @@ export enum Permissions {
   save = 'sys:parameter:save',
   update = 'sys:parameter:update',
   delete = 'sys:parameter:delete',
+  updateBuildIn = 'sys:parameter:updateBuildIn',
 }
 
 /**

@@ -1,5 +1,8 @@
 package com.smart.system.controller;
 
+import com.smart.auth.core.utils.AuthUtils;
+import com.smart.commons.core.http.HttpStatus;
+import com.smart.commons.core.i18n.I18nUtils;
 import com.smart.commons.core.log.Log;
 import com.smart.commons.core.log.LogOperationTypeEnum;
 import com.smart.commons.core.message.Result;
@@ -11,6 +14,7 @@ import com.smart.system.service.SysParameterService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,8 +24,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
 * sys_parameter - 系统参数表 Controller
@@ -31,6 +36,8 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("sys/parameter")
 public class SysParameterController extends BaseController<SysParameterService, SysParameterPO> {
+
+    private static final String UPDATE_BUILD_IN_PERMISSION = "sys:parameter:updateBuildIn";
 
     @Override
     @PostMapping("list")
@@ -45,12 +52,31 @@ public class SysParameterController extends BaseController<SysParameterService, 
     @Log(value = "批量添加修改系统参数表", type = LogOperationTypeEnum.UPDATE)
     @PreAuthorize("hasPermission('sys:parameter', 'save') or hasPermission('sys:parameter', 'update')")
     public Result<Boolean> saveUpdateBatch(@RequestBody @Valid List<SysParameterSaveUpdateDTO> parameterList) {
-      	List<SysParameterPO> modelList = parameterList.stream().map(item -> {
+        List<SysParameterPO> saveList = new ArrayList<>();
+        List<SysParameterPO> updateList = new ArrayList<>();
+        AtomicBoolean hasBuildIn = new AtomicBoolean(false);
+        parameterList.forEach(item -> {
             SysParameterPO model = new SysParameterPO();
             BeanUtils.copyProperties(item, model);
-            return model;
-        }).collect(Collectors.toList());
-        return super.batchSaveUpdate(modelList);
+            if (item.getId() == null) {
+                saveList.add(model);
+            } else {
+                SysParameterPO getData = this.service.getById(item.getId());
+                if (getData == null) {
+                    saveList.add(model);
+                } else {
+                    if (Boolean.TRUE.equals(getData.getBuildIn())) {
+                        hasBuildIn.set(true);
+                    }
+                    updateList.add(model);
+                }
+            }
+        });
+        if (hasBuildIn.get() && !AuthUtils.hasPermission(UPDATE_BUILD_IN_PERMISSION)) {
+            // 验证是否拥有权限
+            throw new AccessDeniedException(I18nUtils.get(HttpStatus.FORBIDDEN));
+        }
+        return Result.success(this.service.saveUpdate(saveList, updateList));
     }
 
     @Override

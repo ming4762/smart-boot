@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.smart.system.model.SysParameterPO;
 import com.smart.system.service.SysParameterService;
 import com.smart.system.mapper.SysParameterMapper;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
@@ -39,5 +40,23 @@ public class SysParameterServiceImpl extends BaseServiceImpl<SysParameterMapper,
             return null;
         }
         return list.get(0).getParameter();
+    }
+
+    /**
+     * 添加更新
+     * @param saveList   添加列表
+     * @param updateList 更新列表
+     * @return 是否更新成功
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean saveUpdate(List<SysParameterPO> saveList, List<SysParameterPO> updateList) {
+        if (!CollectionUtils.isEmpty(saveList)) {
+            this.saveBatch(saveList);
+        }
+        if (!CollectionUtils.isEmpty(updateList)) {
+            this.updateBatchById(updateList);
+        }
+        return true;
     }
 }

@@ -30,9 +30,9 @@ export const deleteApi = (removeRecords: Recordable[]) => {
   })
 }
 
-export const getByIdApi = (model: Recordable) => {
+export const getByIdApi = (id) => {
   return defHttp.post({
     url: Api.getById,
-    data: model.id,
+    data: id,
   })
 }

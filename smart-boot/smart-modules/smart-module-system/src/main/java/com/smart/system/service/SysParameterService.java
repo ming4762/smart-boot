@@ -5,6 +5,8 @@ import com.smart.system.model.SysParameterPO;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
+import java.util.List;
+
 /**
 * sys_parameter - 系统参数表 Service
 * @author SmartCodeGenerator
@@ -19,4 +21,12 @@ public interface SysParameterService extends BaseService<SysParameterPO> {
      */
     @Nullable
     String getParameter(@NonNull String code);
+
+    /**
+     * 添加更新
+     * @param saveList 添加列表
+     * @param updateList 更新列表
+     * @return 是否更新成功
+     */
+    boolean saveUpdate(List<SysParameterPO> saveList, List<SysParameterPO> updateList);
 }
