@@ -1,6 +1,13 @@
 import type { SmartColumn, SmartSearchFormSchema } from '/@/components/SmartTable'
 import type { FormSchema } from '/@/components/Form'
 
+export enum Permission {
+  query = 'sys:tenant:query',
+  save = 'sys:tenant:save',
+  update = 'sys:tenant:update',
+  delete = 'sys:tenant:delete',
+}
+
 /**
  * 表格列表
  */
@@ -49,6 +56,7 @@ export const getTableColumns = (): SmartColumn[] => {
       field: 'availableUserNum',
       title: '{system.views.tenant.title.availableUserNum}',
       width: 120,
+      sortable: true,
     },
     {
       field: 'address',
@@ -65,11 +73,13 @@ export const getTableColumns = (): SmartColumn[] => {
       field: 'startTime',
       title: '{system.views.tenant.title.startTime}',
       width: 160,
+      sortable: true,
     },
     {
       field: 'endTime',
       title: '{system.views.tenant.title.endTime}',
       width: 160,
+      sortable: true,
     },
     {
       field: 'remark',
@@ -80,11 +90,13 @@ export const getTableColumns = (): SmartColumn[] => {
       field: 'seq',
       title: '{common.table.seq}',
       width: 120,
+      sortable: true,
     },
     {
       field: 'createTime',
       title: '{common.table.createTime}',
       width: 160,
+      sortable: true,
     },
     {
       field: 'createBy',
@@ -105,6 +117,7 @@ export const getTableColumns = (): SmartColumn[] => {
       field: 'useYn',
       title: '{common.table.useYn}',
       component: 'booleanTag',
+      sortable: true,
       width: 120,
     },
     {

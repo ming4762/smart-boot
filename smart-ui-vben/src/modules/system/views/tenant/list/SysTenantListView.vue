@@ -19,8 +19,13 @@ import {
   useSmartTable,
 } from '/@/components/SmartTable'
 
-import { getTableColumns, getFormSchemas, getSearchFormSchemas } from './SysTenantListView.config'
-import { listApi, deleteApi, getByIdApi, batchSaveUpdateApi } from './SysTenantListView.api'
+import {
+  getFormSchemas,
+  getSearchFormSchemas,
+  getTableColumns,
+  Permission,
+} from './SysTenantListView.config'
+import { batchSaveUpdateApi, deleteApi, getByIdApi, listApi } from './SysTenantListView.api'
 
 const { t } = useI18n()
 const { getTableSize } = useSizeSetting()
@@ -29,12 +34,19 @@ const getActions = (row: Recordable): ActionItem[] => {
   return [
     {
       label: t('common.button.edit'),
+      auth: Permission.update,
       onClick: () => editByRowModal(row),
+    },
+    {
+      label: t('common.button.delete'),
+      auth: Permission.delete,
+      danger: true,
+      onClick: () => deleteByRow(row),
     },
   ]
 }
 
-const [registerTable, { editByRowModal }] = useSmartTable({
+const [registerTable, { editByRowModal, deleteByRow }] = useSmartTable({
   columns: getTableColumns(),
   height: 'auto',
   pagerConfig: true,
@@ -71,6 +83,9 @@ const [registerTable, { editByRowModal }] = useSmartTable({
       labelCol: { span: 6 },
       wrapperCol: { span: 17 },
     },
+  },
+  sortConfig: {
+    remote: true,
   },
   proxyConfig: {
     ajax: {
