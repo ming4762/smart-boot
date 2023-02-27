@@ -12,16 +12,17 @@ import com.smart.file.core.parameter.FileSaveParameter;
 import com.smart.file.core.pojo.bo.FileDownloadResult;
 import com.smart.file.core.pojo.bo.FileHandlerResult;
 import com.smart.file.core.service.FileService;
+import com.smart.system.constants.SysParameterCodeEnum;
 import com.smart.system.mapper.auth.SmartAuthSecretKeyMapper;
 import com.smart.system.model.auth.SmartAuthSecretKeyPO;
 import com.smart.system.model.file.SmartFileStoragePO;
 import com.smart.system.pojo.dto.auth.SmartAuthSecretKeyUploadUpdateDTO;
 import com.smart.system.pojo.vo.auth.SmartAuthSecretKeyListVO;
+import com.smart.system.service.SysParameterService;
 import com.smart.system.service.auth.SmartAuthSecretKeyService;
 import com.smart.system.service.file.SmartFileStorageService;
 import jakarta.servlet.ServletOutputStream;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,15 +45,16 @@ import java.util.stream.Collectors;
 @Service
 public class SmartAuthSecretKeyServiceImpl extends BaseServiceImpl<SmartAuthSecretKeyMapper, SmartAuthSecretKeyPO> implements SmartAuthSecretKeyService {
 
-    private static final String FILE_TYPE_SECRECY = "SECRECY";
-
     private final FileService fileService;
 
-    @Autowired
-    private SmartFileStorageService smartFileStorageService;
+    private final SmartFileStorageService smartFileStorageService;
 
-    public SmartAuthSecretKeyServiceImpl(FileService fileService) {
+    private final SysParameterService sysParameterService;
+
+    public SmartAuthSecretKeyServiceImpl(FileService fileService, SmartFileStorageService smartFileStorageService, SysParameterService sysParameterService) {
         this.fileService = fileService;
+        this.smartFileStorageService = smartFileStorageService;
+        this.sysParameterService = sysParameterService;
     }
 
     @Override
@@ -104,6 +106,7 @@ public class SmartAuthSecretKeyServiceImpl extends BaseServiceImpl<SmartAuthSecr
         if (parameter.getId() != null) {
             secretKey = this.getById(parameter.getId());
         }
+        String secretFileType = this.sysParameterService.getParameter(SysParameterCodeEnum.SECRECY_FILE_TYPE.getCode());
         // 第一步保存文件
         FileHandlerResult publicKeySaveResult = null;
         FileHandlerResult privateKeySaveResult = null;
@@ -112,14 +115,14 @@ public class SmartAuthSecretKeyServiceImpl extends BaseServiceImpl<SmartAuthSecr
                     parameter.getPublicKeyFile(),
                     FileSaveParameter.builder()
                             .fileStorageId(parameter.getFileStorageId())
-                            .type(FILE_TYPE_SECRECY)
+                            .type(secretFileType)
                             .build()
             );
             privateKeySaveResult = this.fileService.save(
                     parameter.getPrivateKeyFile(),
                     FileSaveParameter.builder()
                             .fileStorageId(parameter.getFileStorageId())
-                            .type(FILE_TYPE_SECRECY)
+                            .type(secretFileType)
                             .build()
             );
             SmartAuthSecretKeyPO model = new SmartAuthSecretKeyPO();

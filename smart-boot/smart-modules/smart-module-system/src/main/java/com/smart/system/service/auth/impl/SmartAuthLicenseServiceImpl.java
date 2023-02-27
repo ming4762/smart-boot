@@ -13,10 +13,12 @@ import com.smart.file.core.service.FileService;
 import com.smart.license.server.LicenseGenerator;
 import com.smart.license.server.LicenseGeneratorParameter;
 import com.smart.system.constants.LicenseStatusEnum;
+import com.smart.system.constants.SysParameterCodeEnum;
 import com.smart.system.mapper.auth.SmartAuthLicenseMapper;
 import com.smart.system.model.auth.SmartAuthLicensePO;
 import com.smart.system.model.auth.SmartAuthSecretKeyPO;
 import com.smart.system.pojo.vo.license.SmartAuthLicenseQueryVO;
+import com.smart.system.service.SysParameterService;
 import com.smart.system.service.SysSystemService;
 import com.smart.system.service.auth.SmartAuthLicenseService;
 import com.smart.system.service.auth.SmartAuthSecretKeyService;
@@ -42,8 +44,6 @@ import java.util.stream.Collectors;
 @Service
 public class SmartAuthLicenseServiceImpl extends BaseServiceImpl<SmartAuthLicenseMapper, SmartAuthLicensePO> implements SmartAuthLicenseService {
 
-    private static final String FILE_TYPE_SECRECY = "SECRECY";
-
     private final LicenseGenerator licenseGenerator;
 
     private final SysSystemService systemService;
@@ -52,11 +52,14 @@ public class SmartAuthLicenseServiceImpl extends BaseServiceImpl<SmartAuthLicens
 
     private final FileService fileService;
 
-    public SmartAuthLicenseServiceImpl(@Lazy LicenseGenerator licenseGenerator, SysSystemService systemService, SmartAuthSecretKeyService smartAuthSecretKeyService, FileService fileService) {
+    private final SysParameterService sysParameterService;
+
+    public SmartAuthLicenseServiceImpl(@Lazy LicenseGenerator licenseGenerator, SysSystemService systemService, SmartAuthSecretKeyService smartAuthSecretKeyService, FileService fileService, SysParameterService sysParameterService) {
         this.licenseGenerator = licenseGenerator;
         this.systemService = systemService;
         this.smartAuthSecretKeyService = smartAuthSecretKeyService;
         this.fileService = fileService;
+        this.sysParameterService = sysParameterService;
     }
 
     /**
@@ -95,6 +98,8 @@ public class SmartAuthLicenseServiceImpl extends BaseServiceImpl<SmartAuthLicens
         if (privateKeyData == null) {
             throw new SystemException("获取秘钥文件失败");
         }
+        // 获取机密文件类型
+        String secrecyFileType = this.sysParameterService.getParameter(SysParameterCodeEnum.SECRECY_FILE_TYPE.getCode());
         // 生成license
         LicenseGeneratorParameter parameter = LicenseGeneratorParameter.builder()
                 .subject(data.getSubject())
@@ -113,7 +118,7 @@ public class SmartAuthLicenseServiceImpl extends BaseServiceImpl<SmartAuthLicens
         FileHandlerResult licenseFile = this.fileService.save(
                 inputStream,
                 FileSaveParameter.builder()
-                        .type(FILE_TYPE_SECRECY)
+                        .type(secrecyFileType)
                         .fileStorageId(data.getFileStorageId())
                         .filename(data.getLicenseName() + ".lic")
                         .build()

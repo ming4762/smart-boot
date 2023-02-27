@@ -1,6 +1,5 @@
 package com.smart.file.core.pojo.bo;
 
-import com.smart.file.core.constants.FileTypeEnum;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,7 +28,7 @@ public class FileHandlerResult implements Serializable {
     /**
      * 类型
      */
-    private FileTypeEnum type;
+    private String type;
 
     /**
      * 文件类型
