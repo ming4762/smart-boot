@@ -101,4 +101,14 @@ public final class AuthUtils {
         }
         return user.getUserId();
     }
+
+    /**
+     * 判断是否拥有权限
+     * @param permission 权限
+     * @return true：拥有权限
+     */
+    public static boolean hasPermission(@NonNull String permission) {
+        return getNonNullCurrentUser().getPermissions().stream()
+                .anyMatch(item -> StringUtils.equals(permission, item.getAuthority()));
+    }
 }
