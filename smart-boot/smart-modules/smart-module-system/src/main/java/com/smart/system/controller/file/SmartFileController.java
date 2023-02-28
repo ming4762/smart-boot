@@ -1,5 +1,6 @@
 package com.smart.system.controller.file;
 
+import com.smart.auth.core.utils.AuthUtils;
 import com.smart.commons.core.message.Result;
 import com.smart.crud.constants.CrudCommonEnum;
 import com.smart.crud.controller.BaseController;
@@ -7,8 +8,10 @@ import com.smart.crud.query.PageSortQuery;
 import com.smart.file.core.parameter.FileSaveParameter;
 import com.smart.file.core.pojo.bo.FileHandlerResult;
 import com.smart.file.core.service.FileService;
+import com.smart.system.constants.SysParameterCodeEnum;
 import com.smart.system.model.file.SmartFilePO;
 import com.smart.system.pojo.dto.file.FileUploadDTO;
+import com.smart.system.service.SysParameterService;
 import com.smart.system.service.file.SmartFileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -34,10 +37,15 @@ import java.util.stream.Collectors;
 @RestController
 public class SmartFileController extends BaseController<SmartFileService, SmartFilePO> {
 
+    private static final String PERMISSION_QUERY_SECRET = "sys:file:querySecret";
+
     private final FileService fileService;
 
-    public SmartFileController(FileService fileService) {
+    private final SysParameterService sysParameterService;
+
+    public SmartFileController(FileService fileService, SysParameterService sysParameterService) {
         this.fileService = fileService;
+        this.sysParameterService = sysParameterService;
     }
 
     @Override
@@ -47,6 +55,14 @@ public class SmartFileController extends BaseController<SmartFileService, SmartF
     @ResponseBody
     public Result<Object> list(@RequestBody @NonNull PageSortQuery parameter) {
         parameter.getParameter().put(CrudCommonEnum.WITH_ALL.name(), true);
+        // 权限控制
+        // 判断用户是否拥有查询机密文件的权限
+        boolean hasPermission = AuthUtils.hasPermission(PERMISSION_QUERY_SECRET);
+        if (!hasPermission) {
+            String secretFileType = this.sysParameterService.getParameter(SysParameterCodeEnum.SECRECY_FILE_TYPE.getCode());
+            parameter.getParameter().put("type@<>", secretFileType);
+        }
+
         return super.list(parameter);
     }
 
