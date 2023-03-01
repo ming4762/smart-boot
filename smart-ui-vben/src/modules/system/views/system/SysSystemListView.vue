@@ -101,16 +101,14 @@ const [registerTable, { editByRowModal, deleteByRow }] = useSmartTable({
   searchFormConfig: {
     schemas: getSearchFormSchemas(t),
     searchWithSymbol: true,
+    layout: 'inline',
     actionColOptions: {
-      span: 6,
+      span: undefined,
     },
-    labelCol: {
-      span: 8,
-    },
+    // labelCol: {
+    //   span: 8,
+    // },
     colon: true,
-    baseColProps: {
-      span: 6,
-    },
   },
 })
 </script>

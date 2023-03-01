@@ -55,7 +55,7 @@ export const getTableColumns = (): SmartColumn[] => {
     {
       field: 'availableUserNum',
       title: '{system.views.tenant.title.availableUserNum}',
-      width: 120,
+      width: 160,
       sortable: true,
     },
     {
