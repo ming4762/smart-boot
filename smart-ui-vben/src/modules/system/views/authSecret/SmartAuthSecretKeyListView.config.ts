@@ -186,7 +186,22 @@ export const getSearchFormSchemas = (t: Function): SmartSearchFormSchema[] => {
       field: 'useYn',
       label: t('common.table.useYn'),
       component: 'Select',
-      searchSymbol: 'like',
+      searchSymbol: '=',
+      componentProps: {
+        style: {
+          width: '120px',
+        },
+        options: [
+          {
+            label: t('common.form.use'),
+            value: 1,
+          },
+          {
+            label: t('common.form.noUse'),
+            value: 0,
+          },
+        ],
+      },
     },
   ]
 }
