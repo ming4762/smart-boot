@@ -7,7 +7,7 @@
         </div>
       </template>
       <template #second>
-        <SmartTable @register="registerTable" :size="getTableSize">
+        <SmartTable @register="registerTable" :size="getTableSize" >
           <template #table-operation="{ row }">
             <SmartVxeTableAction :actions="getTableActions(row)" />
           </template>
@@ -227,6 +227,9 @@ const [
     searchWithSymbol: true,
     actionColOptions: {
       span: undefined,
+    },
+    labelCol: {
+      span: 0,
     },
   },
   addEditConfig: {

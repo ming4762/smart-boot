@@ -5,13 +5,13 @@
   </span>
 </template>
 <script lang="ts">
-import { computed, defineComponent } from 'vue'
+import { computed, defineComponent, unref } from 'vue'
 
 import Icon from '/@/components/Icon/index'
 import { useI18n } from '/@/hooks/web/useI18n'
 import { useDesign } from '/@/hooks/web/useDesign'
 import { contentProps } from '../props'
-const { t } = useI18n()
+const { locale } = useI18n()
 
 export default defineComponent({
   name: 'MenuItemContent',
@@ -20,8 +20,16 @@ export default defineComponent({
   },
   props: contentProps,
   setup(props) {
+    console.log(props)
     const { prefixCls } = useDesign('basic-menu-item-content')
-    const getI18nName = computed(() => t(props.item?.name))
+    // const getI18nName = computed(() => t(props.item?.name))
+    const getI18nName = computed(() => {
+      const { title, locales } = (props.item || {}) as any
+      if (!locales || !locales[unref(locale)]) {
+        return title
+      }
+      return locales[unref(locale)]
+    })
     const getIcon = computed(() => props.item?.icon)
 
     return {
