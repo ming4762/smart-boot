@@ -71,7 +71,20 @@ public class DiskFilePathBO {
      * @return 文件路径
      */
     public String getFilePath() {
-        return this.getFolderPath() + FILE_SEPARATOR + this.getDiskFilename();
+        return this.getFilePath(false);
+    }
+
+    /**
+     * 获取路径，首个字符是否是分隔符
+     * @param deleteFirstSeparator true，首个字符是分隔符，则删除分隔符
+     * @return 文件路径
+     */
+    public String getFilePath(boolean deleteFirstSeparator) {
+        String path = this.getFolderPath() + FILE_SEPARATOR + this.getDiskFilename();
+        if (deleteFirstSeparator && path.startsWith(FILE_SEPARATOR)) {
+            return path.substring(1);
+        }
+        return path;
     }
 
     /**

@@ -55,6 +55,12 @@ const [registerTable, { deleteByRow }] = useSmartTable({
   highlightHoverRow: true,
   pagerConfig: true,
   useSearchForm: true,
+  rowConfig: {
+    keyField: 'fileId',
+  },
+  columnConfig: {
+    resizable: true,
+  },
   searchFormConfig: {
     schemas: getSearchFormSchemas(t),
     searchWithSymbol: true,
