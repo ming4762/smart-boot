@@ -10,7 +10,6 @@ import io.minio.messages.Bucket;
 import org.springframework.lang.NonNull;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
 import java.util.List;
@@ -67,7 +66,6 @@ public interface MinioService extends FileStorageService {
      * @param parameter 参数
      * @param file 文件
      * @param bucketName 存储桶名字
-     * @throws IOException 文件写入失败抛出异常
      * @return 文件id
      */
     @NonNull

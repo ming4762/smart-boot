@@ -15,6 +15,7 @@
 
 	<modules>
 		<module>smart-file-core</module>
+		<module>smart-file-extensions-aliyun-oss</module>
 		<module>smart-file-extensions-disk</module>
 		<module>smart-file-extensions-minio</module>
 		<module>smart-file-extensions-sftp</module>

@@ -1,5 +1,6 @@
 package com.smart.file.core.constants;
 
+import com.smart.file.core.properties.SmartFileStorageAliyunOssProperties;
 import com.smart.file.core.properties.SmartFileStorageDiskProperties;
 import com.smart.file.core.properties.SmartFileStorageMinioProperties;
 import com.smart.file.core.properties.SmartFileStorageSftpProperties;
@@ -16,7 +17,9 @@ public enum FileStorageTypeEnum {
      */
     DISK("ActualFileDiskService", SmartFileStorageDiskProperties.class),
     SFTP("ActualFileSftpService", SmartFileStorageSftpProperties.class),
-    MINIO("ActualFileMinioService", SmartFileStorageMinioProperties.class);
+    MINIO("ActualFileMinioService", SmartFileStorageMinioProperties.class),
+    ALIYUN_OSS("ActualFileAliyunOssService", SmartFileStorageAliyunOssProperties.class)
+    ;
 
     @Getter
     private final String serviceName;

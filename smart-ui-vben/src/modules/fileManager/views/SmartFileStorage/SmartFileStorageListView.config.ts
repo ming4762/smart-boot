@@ -271,12 +271,8 @@ export const getFormSchemas = (t: Function): FormSchema[] => {
         return model.storageType === 'SFTP'
       },
     },
-    // {
-    //   field: 'storageConfig',
-    //   label: t('smart.file.storage.title.storageConfig'),
-    //   component: 'Input',
-    //   componentProps: {},
-    // },
+    // --------------- 阿里云OSS
+    ...getAliyunOssFormSchemas(t),
   ]
 }
 
@@ -303,6 +299,51 @@ export const getSearchFormSchemas = (t: Function): SmartSearchFormSchema[] => {
         style: { width: '140px' },
       },
       searchSymbol: '=',
+    },
+  ]
+}
+
+/**
+ * 获取阿里云OSS表单配置
+ * @param t
+ */
+const getAliyunOssFormSchemas = (t: Function): FormSchema[] => {
+  return [
+    {
+      field: 'storageConfig.ALIYUN_OSS.endpoint',
+      component: 'Input',
+      label: t('smart.file.storage.title.endpoint'),
+      show: ({ model }) => {
+        return model.storageType === 'ALIYUN_OSS'
+      },
+      required: ({ model }) => model.storageType === 'ALIYUN_OSS',
+    },
+    {
+      field: 'storageConfig.ALIYUN_OSS.accessKey',
+      component: 'Input',
+      label: t('smart.file.storage.title.accessKey'),
+      show: ({ model }) => {
+        return model.storageType === 'ALIYUN_OSS'
+      },
+      required: ({ model }) => model.storageType === 'ALIYUN_OSS',
+    },
+    {
+      field: 'storageConfig.ALIYUN_OSS.secretKey',
+      component: 'Input',
+      label: t('smart.file.storage.title.secretKey'),
+      show: ({ model }) => {
+        return model.storageType === 'ALIYUN_OSS'
+      },
+      required: ({ model }) => model.storageType === 'ALIYUN_OSS',
+    },
+    {
+      field: 'storageConfig.ALIYUN_OSS.bucketName',
+      component: 'Input',
+      label: t('smart.file.storage.title.bucketName'),
+      show: ({ model }) => {
+        return model.storageType === 'ALIYUN_OSS'
+      },
+      required: ({ model }) => model.storageType === 'ALIYUN_OSS',
     },
   ]
 }

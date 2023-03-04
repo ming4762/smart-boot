@@ -256,7 +256,6 @@ public class FileStorageMinioServiceImpl implements MinioService {
      * @param bucketName 存储桶名字
      * @param file       文件
      * @return 文件id
-     * @throws IOException 文件写入失败抛出异常
      */
     @SneakyThrows(IOException.class)
     @NonNull
@@ -274,7 +273,6 @@ public class FileStorageMinioServiceImpl implements MinioService {
      * @param bucketName  存储桶名字
      * @param inputStream 文件流
      * @return 文件ID
-     * @throws IOException IOException
      */
     @NonNull
     @Override
