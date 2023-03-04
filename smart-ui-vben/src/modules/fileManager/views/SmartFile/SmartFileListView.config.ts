@@ -100,8 +100,12 @@ export const getFormSchemas = (t: Function): FormSchema[] => {
         modelClassName: 'com.smart.system.model.file.SmartFileStoragePO',
         valueFieldName: 'id',
         labelFieldName: 'storageName',
-        parameter: {
+        params: {
           sortName: 'seq',
+          parameter: {
+            'deleteYn@<>': true,
+            'useYn@=': true,
+          },
         },
       },
       required: true,
@@ -163,8 +167,12 @@ export const getSearchFormSchemas = (t: Function): SmartSearchFormSchema[] => {
         modelClassName: 'com.smart.system.model.file.SmartFileStoragePO',
         valueFieldName: 'id',
         labelFieldName: 'storageName',
-        parameter: {
+        params: {
           sortName: 'seq',
+          parameter: {
+            'deleteYn@<>': true,
+            'useYn@=': true,
+          },
         },
       },
       searchSymbol: '=',
