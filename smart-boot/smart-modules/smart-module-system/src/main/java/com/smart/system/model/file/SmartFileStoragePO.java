@@ -59,7 +59,6 @@ public class SmartFileStoragePO extends BaseModelUserTime {
     /**
     * storage_config - 存储器配置信息
     */
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String storageConfig;
 
     /**
