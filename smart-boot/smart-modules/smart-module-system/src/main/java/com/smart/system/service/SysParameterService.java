@@ -6,6 +6,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import java.util.List;
+import java.util.Map;
 
 /**
 * sys_parameter - 系统参数表 Service
@@ -21,6 +22,15 @@ public interface SysParameterService extends BaseService<SysParameterPO> {
      */
     @Nullable
     String getParameter(@NonNull String code);
+
+
+    /**
+     * 获取参数值
+     * @param codeList 系统参数编码
+     * @return 系统参数值 Map
+     */
+    @NonNull
+    Map<String, String> getParameter(@NonNull List<String> codeList);
 
     /**
      * 添加更新

@@ -16,13 +16,6 @@ import java.util.Set;
  */
 public interface SysUserAccountService extends BaseService<SysUserAccountPO> {
 
-    /**
-     * 查询在线用户信息
-     * @param tokens token列表
-     * @return 在线用户信息
-     */
-    List<SysOnlineUserVO> listOnlineUser(Set<String> tokens);
-
 
     /**
      * 更新密码
