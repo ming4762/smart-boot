@@ -1,4 +1,4 @@
-package com.smart.auth.security.token;
+package com.smart.auth.extensions.jwt.token;
 
 import com.google.common.collect.Lists;
 import com.smart.auth.core.constants.LoginTypeEnum;
@@ -7,8 +7,10 @@ import com.smart.auth.core.service.AuthCache;
 import com.smart.auth.core.token.TokenData;
 import com.smart.auth.core.token.TokenRepository;
 import com.smart.auth.core.userdetails.RestUserDetails;
+import com.smart.auth.extensions.jwt.resolver.JwtResolver;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.time.Duration;
@@ -21,7 +23,8 @@ import java.util.stream.Collectors;
  * @author zhongming4762
  * 2023/3/6
  */
-public class DefaultTokenRepository implements TokenRepository {
+@Component
+public class JwtTokenRepository implements TokenRepository {
 
     private static final String JWT_SPLIT_KEY = "&#";
 
@@ -33,20 +36,22 @@ public class DefaultTokenRepository implements TokenRepository {
 
     private final AuthCache<String, Object> authCache;
 
-    public DefaultTokenRepository(AuthProperties authProperties, AuthCache<String, Object> authCache) {
+    private final JwtResolver jwtResolver;
+
+    public JwtTokenRepository(AuthProperties authProperties, AuthCache<String, Object> authCache, JwtResolver jwtResolver) {
         this.authProperties = authProperties;
         this.authCache = authCache;
+        this.jwtResolver = jwtResolver;
     }
 
     /**
      * 保存JWT
      *
-     * @param token token
      * @param user  用户信息
      * @return 是否保存成功
      */
     @Override
-    public boolean save(@NonNull String token, @NonNull RestUserDetails user) {
+    public String save(@NonNull RestUserDetails user) {
         LoginTypeEnum loginType = user.getLoginType();
         // 获取有效期
         Duration timeout = authProperties.getSession().getTimeout().getGlobal();
@@ -57,8 +62,9 @@ public class DefaultTokenRepository implements TokenRepository {
         }
         // 保存jwt到cache中
         LocalDateTime currentTime = LocalDateTime.now();
-        this.authCache.put(this.getTokenKey(user.getUsername(), token), new TokenData(token, currentTime, currentTime, timeout), timeout);
-        return true;
+        String token = this.jwtResolver.create(user);
+        this.authCache.put(this.getTokenKey(user.getUsername(), token), new TokenData(token, currentTime, currentTime, timeout, user), timeout);
+        return token;
     }
 
     /**

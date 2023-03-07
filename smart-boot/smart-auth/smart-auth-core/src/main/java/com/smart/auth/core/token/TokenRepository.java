@@ -16,11 +16,10 @@ public interface TokenRepository extends Ordered {
 
     /**
      * 保存JWT
-     * @param token token
      * @param user 用户信息
      * @return 是否保存成功
      */
-    boolean save(@NonNull String token, @NonNull RestUserDetails user);
+    String save(@NonNull RestUserDetails user);
 
     /**
      * 验证JWT

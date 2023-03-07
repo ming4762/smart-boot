@@ -90,10 +90,10 @@ public class AuthController {
         return Result.success(key);
     }
 
-//    /**
-//     * 获取所有在线用户
-//     * @return 在线用户列表
-//     */
+    /**
+     * 获取所有在线用户
+     * @return 在线用户列表
+     */
 //    @PostMapping("auth/listOnlineUser")
 //    @Operation(summary = "查询所有在线用户")
 //    public Result<List<SysOnlineUserVO>> listOnlineUser(@RequestBody OnlineUserQueryDTO parameter) {
