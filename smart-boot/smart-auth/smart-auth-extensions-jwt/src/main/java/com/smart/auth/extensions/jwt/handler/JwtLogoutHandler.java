@@ -2,8 +2,7 @@ package com.smart.auth.extensions.jwt.handler;
 
 import com.smart.auth.core.exception.AuthException;
 import com.smart.auth.core.handler.SecurityLogoutHandler;
-import com.smart.auth.core.token.TokenRepository;
-import com.smart.auth.core.utils.AuthUtils;
+import com.smart.auth.extensions.jwt.token.JwtTokenRepository;
 import com.smart.auth.extensions.jwt.utils.JwtUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,9 +16,9 @@ import org.springframework.security.core.Authentication;
  */
 public class JwtLogoutHandler implements SecurityLogoutHandler {
 
-    private final TokenRepository tokenRepository;
+    private final JwtTokenRepository tokenRepository;
 
-    public JwtLogoutHandler(TokenRepository tokenRepository) {
+    public JwtLogoutHandler(JwtTokenRepository tokenRepository) {
         this.tokenRepository = tokenRepository;
     }
 
@@ -29,6 +28,6 @@ public class JwtLogoutHandler implements SecurityLogoutHandler {
         if (StringUtils.isBlank(jwt)) {
             throw new AuthException("JWT为null，无法登出");
         }
-        this.tokenRepository.invalidateByToken(AuthUtils.getNonNullCurrentUser().getUsername(), jwt);
+        this.tokenRepository.invalidateByToken(jwt);
     }
 }

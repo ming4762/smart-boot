@@ -1,5 +1,6 @@
 package com.smart.auth.security;
 
+import com.smart.auth.core.api.AuthApi;
 import com.smart.auth.core.authentication.AuthenticationFailureEventInitializer;
 import com.smart.auth.core.authentication.MethodPermissionEvaluatorImpl;
 import com.smart.auth.core.authentication.url.DefaultUrlAuthenticationProviderImpl;
@@ -12,6 +13,8 @@ import com.smart.auth.core.handler.AuthSuccessDataHandler;
 import com.smart.auth.core.handler.DefaultAuthSuccessDataHandler;
 import com.smart.auth.core.properties.AuthProperties;
 import com.smart.auth.core.service.AuthUserService;
+import com.smart.auth.core.token.TokenRepository;
+import com.smart.auth.security.api.LocalAuthApiImpl;
 import com.smart.auth.security.config.AuthMethodSecurityConfig;
 import com.smart.auth.security.userdetails.DefaultUserDetailsServiceImpl;
 import lombok.SneakyThrows;
@@ -31,6 +34,8 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+
+import java.util.List;
 
 /**
  * AUTH 自动配置类
@@ -126,5 +131,16 @@ public class AuthSecurity2AutoConfiguration {
     @ConditionalOnMissingBean
     public UrlAuthenticationProvider defaultUrlAuthenticationProviderImpl(UrlMappingProvider urlMappingProvider) {
         return new DefaultUrlAuthenticationProviderImpl(urlMappingProvider);
+    }
+
+    /**
+     * 创建AuthApi
+     * @param tokenRepositoryList token存储器列表
+     * @return AuthApi
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    public AuthApi authApi(List<TokenRepository> tokenRepositoryList) {
+        return new LocalAuthApiImpl(tokenRepositoryList);
     }
 }

@@ -2,17 +2,13 @@ package com.smart.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.smart.auth.core.exception.LongTimeNoLoginLockedException;
-import com.smart.auth.core.exception.MaxConnectionAuthenticationException;
 import com.smart.auth.core.exception.PasswordNoLifeLockedException;
 import com.smart.auth.core.i18n.AuthI18nMessage;
 import com.smart.auth.core.model.AuthUser;
 import com.smart.auth.core.model.UserRolePermission;
 import com.smart.auth.core.service.AuthUserService;
-import com.smart.auth.extensions.jwt.data.JwtData;
-import com.smart.auth.extensions.jwt.store.CacheJwtStore;
 import com.smart.commons.core.i18n.I18nUtils;
 import com.smart.system.constants.FunctionTypeEnum;
-import com.smart.system.constants.MaxConnectionsPolicyEnum;
 import com.smart.system.constants.UserAccountStatusEnum;
 import com.smart.system.model.SysUserAccountPO;
 import com.smart.system.model.SysUserPO;
@@ -41,12 +37,9 @@ public class AuthUserServiceImpl implements AuthUserService {
 
     private final SysUserAccountService sysUserAccountService;
 
-    private final CacheJwtStore cacheJwtStore;
-
-    public AuthUserServiceImpl(SysUserService sysUserService, SysUserAccountService sysAuthUserService, CacheJwtStore cacheJwtStore) {
+    public AuthUserServiceImpl(SysUserService sysUserService, SysUserAccountService sysAuthUserService) {
         this.sysUserService = sysUserService;
         this.sysUserAccountService = sysAuthUserService;
-        this.cacheJwtStore = cacheJwtStore;
     }
 
 
@@ -94,20 +87,21 @@ public class AuthUserServiceImpl implements AuthUserService {
         // 验证账户登录数
         if (connectionNum > 0) {
             // 获取当前登录数
-            List<JwtData> loginDataList = this.cacheJwtStore.listData(user.getUsername());
-            if (loginDataList.size() >= connectionNum) {
-                // 登录用户数量已达上限
-                MaxConnectionsPolicyEnum maxConnectionsPolicy = userAccount.getMaxConnectionsPolicy();
-                if (maxConnectionsPolicy.equals(MaxConnectionsPolicyEnum.LOGIN_NOT_ALLOW)) {
-                    throw new MaxConnectionAuthenticationException(I18nUtils.get(AuthI18nMessage.MAX_CONNECTION_LOGIN_FAIL));
-                }
-                if (maxConnectionsPolicy.equals(MaxConnectionsPolicyEnum.FIRST_USER_LOGOUT)) {
-                    // 移除最早登录的用户
-                    loginDataList.stream()
-                            .min(Comparator.comparing(JwtData::getRefreshTime))
-                            .ifPresent(jwtData -> this.cacheJwtStore.invalidateByToken(user.getUsername(), jwtData.getJwt()));
-                }
-            }
+            // todo：认证模块需要开发
+//            List<JwtData> loginDataList = this.cacheJwtStore.listData(user.getUsername());
+//            if (loginDataList.size() >= connectionNum) {
+//                // 登录用户数量已达上限
+//                MaxConnectionsPolicyEnum maxConnectionsPolicy = userAccount.getMaxConnectionsPolicy();
+//                if (maxConnectionsPolicy.equals(MaxConnectionsPolicyEnum.LOGIN_NOT_ALLOW)) {
+//                    throw new MaxConnectionAuthenticationException(I18nUtils.get(AuthI18nMessage.MAX_CONNECTION_LOGIN_FAIL));
+//                }
+//                if (maxConnectionsPolicy.equals(MaxConnectionsPolicyEnum.FIRST_USER_LOGOUT)) {
+//                    // 移除最早登录的用户
+//                    loginDataList.stream()
+//                            .min(Comparator.comparing(JwtData::getRefreshTime))
+//                            .ifPresent(jwtData -> this.cacheJwtStore.invalidateByToken(user.getUsername(), jwtData.getJwt()));
+//                }
+//            }
         }
 
         return true;

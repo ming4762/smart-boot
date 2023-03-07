@@ -3,11 +3,9 @@ package com.smart.system.service;
 import com.smart.crud.service.BaseService;
 import com.smart.system.constants.UserAccountStatusEnum;
 import com.smart.system.model.SysUserAccountPO;
-import com.smart.system.pojo.vo.user.SysOnlineUserVO;
 import org.springframework.lang.NonNull;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author ShiZhongMing
@@ -15,13 +13,6 @@ import java.util.Set;
  * @since 1.0
  */
 public interface SysUserAccountService extends BaseService<SysUserAccountPO> {
-
-    /**
-     * 查询在线用户信息
-     * @param tokens token列表
-     * @return 在线用户信息
-     */
-    List<SysOnlineUserVO> listOnlineUser(Set<String> tokens);
 
 
     /**

@@ -43,38 +43,6 @@ public class SysUserAccountServiceImpl extends BaseServiceImpl<SysUserAccountMap
         this.sysParameterService = sysParameterService;
     }
 
-    // todo：认证模块需要开发
-    /**
-     * 查询在线用户信息
-     * @return 在线用户信息
-     */
-//    public List<SysOnlineUserVO> listOnlineUser(Set<String> tokens) {
-//        if (CollectionUtils.isEmpty(tokens)) {
-//            return new ArrayList<>(0);
-//        }
-//        // 解析所有jwt
-//        Map<Long, List<RestUserDetails>> restUserDetailsMap = tokens.stream().map(this.jwtResolver::resolver)
-//                .collect(Collectors.groupingBy(RestUserDetails::getUserId));
-//        // 查询用户信息
-//        List<SysUserPO> userList = this.sysUserMapper.selectBatchIds(restUserDetailsMap.keySet());
-//        return userList.stream().map(user -> {
-//            SysOnlineUserVO onlineUser = new SysOnlineUserVO();
-//            BeanUtils.copyProperties(user, onlineUser);
-//            List<RestUserDetails> userDetailsList = restUserDetailsMap.get(user.getUserId());
-//            if (!CollectionUtils.isEmpty(userDetailsList)) {
-//                onlineUser.setUserLoginDataList(
-//                        userDetailsList.stream().map(userDetail -> {
-//                            SysOnlineUserVO.UserLoginData loginData = new SysOnlineUserVO.UserLoginData();
-//                            BeanUtils.copyProperties(userDetail, loginData);
-//                            return loginData;
-//                        }).toList()
-//                );
-//            }
-//            return onlineUser;
-//        }).toList();
-//    }
-
-
     /**
      * 更改密码
      * @param password 密码

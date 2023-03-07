@@ -41,13 +41,6 @@
 
 		<dependency>
 			<groupId>com.smart</groupId>
-			<artifactId>smart-auth-extensions-jwt</artifactId>
-			<version>${project.parent.version}</version>
-			<optional>true</optional>
-		</dependency>
-
-		<dependency>
-			<groupId>com.smart</groupId>
 			<artifactId>i18n-spring-boot-starter</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
