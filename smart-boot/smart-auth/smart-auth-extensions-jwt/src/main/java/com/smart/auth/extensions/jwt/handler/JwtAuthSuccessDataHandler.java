@@ -5,16 +5,13 @@ import com.smart.auth.core.handler.DefaultAuthSuccessDataHandler;
 import com.smart.auth.core.model.LoginResult;
 import com.smart.auth.core.token.TokenRepository;
 import com.smart.auth.core.userdetails.RestUserDetails;
-import com.smart.auth.extensions.jwt.resolver.JwtResolver;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.Ordered;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.Authentication;
-import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
@@ -27,41 +24,28 @@ import java.util.stream.Collectors;
  * 2021/3/1 10:00
  * @since 1.0
  */
-public class JwtAuthSuccessDataHandler extends DefaultAuthSuccessDataHandler implements InitializingBean, ApplicationContextAware {
-
-    private JwtResolver jwtResolver;
+public class JwtAuthSuccessDataHandler extends DefaultAuthSuccessDataHandler implements ApplicationContextAware {
 
     private List<TokenRepository> tokenRepositoryList;
 
     @Override
     public LoginResult successData(Authentication authentication, HttpServletRequest request, LoginTypeEnum loginType) {
         RestUserDetails user = (RestUserDetails)authentication.getPrincipal();
-        String jwt = this.jwtResolver.create(user);
-        this.save(jwt, user);
+        String token = this.save(user);
         // 设置token
-        user.setToken(jwt);
+        user.setToken(token);
         return super.successData(authentication, request, loginType);
     }
 
-    private void save(@NonNull String jwt, @NonNull RestUserDetails user) {
-        boolean result;
+    private String save(@NonNull RestUserDetails user) {
+        String result = null;
         for (TokenRepository tokenRepository : tokenRepositoryList) {
-            result = tokenRepository.save(jwt, user);
-            if (result) {
+            result = tokenRepository.save(user);
+            if (StringUtils.hasText(result)) {
                 break;
             }
         }
-    }
-
-
-    @Override
-    public void afterPropertiesSet() {
-        Assert.notNull(this.jwtResolver, "jwtResolver is null, please init it");
-    }
-
-    @Autowired
-    public void setJwtResolver(JwtResolver jwtResolver) {
-        this.jwtResolver = jwtResolver;
+        return result;
     }
 
     @Override

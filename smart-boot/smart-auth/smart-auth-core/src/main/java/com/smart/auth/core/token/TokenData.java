@@ -1,5 +1,6 @@
 package com.smart.auth.core.token;
 
+import com.smart.auth.core.userdetails.RestUserDetails;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,4 +33,6 @@ public class TokenData implements Serializable {
     private LocalDateTime refreshTime;
 
     private Duration timeout;
+
+    private RestUserDetails user;
 }

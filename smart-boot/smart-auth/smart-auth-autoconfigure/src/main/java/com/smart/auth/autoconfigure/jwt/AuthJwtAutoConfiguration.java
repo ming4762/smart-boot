@@ -11,11 +11,14 @@ import com.smart.auth.core.handler.AuthLogoutSuccessHandler;
 import com.smart.auth.core.handler.AuthSuccessDataHandler;
 import com.smart.auth.core.handler.SecurityLogoutHandler;
 import com.smart.auth.core.properties.AuthProperties;
+import com.smart.auth.core.service.AuthCache;
 import com.smart.auth.core.token.TokenRepository;
 import com.smart.auth.extensions.jwt.AuthJwtConfigure;
 import com.smart.auth.extensions.jwt.handler.JwtAuthSuccessDataHandler;
 import com.smart.auth.extensions.jwt.handler.JwtLogoutHandler;
+import com.smart.auth.extensions.jwt.resolver.JwtResolver;
 import com.smart.auth.extensions.jwt.service.JwtService;
+import com.smart.auth.extensions.jwt.token.JwtTokenRepository;
 import com.smart.commons.core.utils.auth.RsaUtils;
 import com.smart.commons.jwt.JwtDecoder;
 import com.smart.commons.jwt.JwtEncoder;
@@ -140,6 +143,19 @@ public class AuthJwtAutoConfiguration {
     @ConditionalOnMissingBean(JwtAuthSuccessDataHandler.class)
     public AuthSuccessDataHandler jwtAuthSuccessDataHandler() {
         return new JwtAuthSuccessDataHandler();
+    }
+
+    /**
+     * 创建JWT token存储器
+     * @param authProperties properties
+     * @param authCache 缓存器
+     * @param jwtResolver JWT解析器
+     * @return JwtTokenRepository
+     */
+    @Bean
+    @ConditionalOnMissingBean(JwtTokenRepository.class)
+    public JwtTokenRepository jwtTokenRepository(AuthProperties authProperties, AuthCache<String, Object> authCache, JwtResolver jwtResolver) {
+        return new JwtTokenRepository(authProperties, authCache, jwtResolver);
     }
 
 }
