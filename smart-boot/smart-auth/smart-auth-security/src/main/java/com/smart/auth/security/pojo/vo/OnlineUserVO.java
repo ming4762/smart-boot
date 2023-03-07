@@ -1,33 +1,38 @@
-package com.smart.system.pojo.vo.user;
+package com.smart.auth.security.pojo.vo;
 
 import com.smart.auth.core.constants.AuthTypeEnum;
 import com.smart.auth.core.constants.LoginTypeEnum;
-import com.smart.system.model.SysUserPO;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.io.Serializable;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
 /**
  * 在线用户VO
- * @author ShiZhongMing
- * 2022/1/17
- * @since 2.0.0
+ * @author zhongming4762
+ * 2023/3/7
  */
-@ToString
 @Getter
 @Setter
-public class SysOnlineUserVO extends SysUserPO {
+@ToString
+public class OnlineUserVO implements Serializable {
 
 
     private static final long serialVersionUID = 3127805743664997934L;
+    private Long userId;
+
+    private String username;
+
+    private String fullName;
+
     private List<UserLoginData> userLoginDataList;
 
     @Getter
     @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class UserLoginData implements Serializable {
         private static final long serialVersionUID = 187324682045393739L;
         private String loginIp;
@@ -53,5 +58,7 @@ public class SysOnlineUserVO extends SysUserPO {
         private Boolean bindIp;
 
         private String token;
+
+        private Duration timeout;
     }
 }

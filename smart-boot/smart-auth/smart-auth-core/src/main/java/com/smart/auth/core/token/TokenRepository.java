@@ -32,10 +32,9 @@ public interface TokenRepository extends Ordered {
     /**
      * 通过token失效
      * @param token token
-     * @param username 用户名
      * @return 是否成功
      */
-    boolean invalidateByToken(@NonNull String username, @NonNull String token);
+    boolean invalidateByToken(@NonNull String token);
 
     /**
      * 使用户登录失效
@@ -49,7 +48,7 @@ public interface TokenRepository extends Ordered {
      * @return 所有jwt
      */
     @NonNull
-    Set<String> listAll();
+    Set<String> listToken();
 
     /**
      * 通过用户名查询JWT
@@ -57,7 +56,7 @@ public interface TokenRepository extends Ordered {
      * @return jwt列表
      */
     @NonNull
-    Set<String> listAll(@NonNull String username);
+    Set<String> listToken(@NonNull String username);
 
     /**
      * 查询所有数据

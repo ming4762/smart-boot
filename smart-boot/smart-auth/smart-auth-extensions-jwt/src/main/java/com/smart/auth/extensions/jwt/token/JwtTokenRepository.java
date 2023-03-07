@@ -93,15 +93,14 @@ public class JwtTokenRepository implements TokenRepository {
 
     /**
      * 通过token失效
-     *
-     * @param username 用户名
      * @param token    token
      * @return 是否成功
      */
     @Override
-    public boolean invalidateByToken(@NonNull String username, @NonNull String token) {
-        this.authCache.remove(this.getTokenKey(username, token));
-        this.authCache.remove(this.getAttributeKey(username, token));
+    public boolean invalidateByToken(@NonNull String token) {
+        RestUserDetails user = this.jwtResolver.resolver(token);
+        this.authCache.remove(this.getTokenKey(user.getUsername(), token));
+        this.authCache.remove(this.getAttributeKey(user.getUsername(), token));
         return true;
     }
 
@@ -128,7 +127,7 @@ public class JwtTokenRepository implements TokenRepository {
      */
     @NonNull
     @Override
-    public Set<String> listAll() {
+    public Set<String> listToken() {
         Set<String> keys = this.authCache.matchKeys(this.getTokenKey(null, null));
         if (CollectionUtils.isEmpty(keys)) {
             return new HashSet<>(0);
@@ -144,7 +143,7 @@ public class JwtTokenRepository implements TokenRepository {
      */
     @NonNull
     @Override
-    public Set<String> listAll(@NonNull String username) {
+    public Set<String> listToken(@NonNull String username) {
         Set<String> keys = this.authCache.matchKeys(this.getTokenKey(username, null));
         if (CollectionUtils.isEmpty(keys)) {
             return new HashSet<>(0);

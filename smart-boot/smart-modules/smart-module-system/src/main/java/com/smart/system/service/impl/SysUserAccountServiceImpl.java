@@ -43,6 +43,7 @@ public class SysUserAccountServiceImpl extends BaseServiceImpl<SysUserAccountMap
         this.sysUserMapper = sysUserMapper;
         this.sysParameterService = sysParameterService;
     }
+
     /**
      * 更改密码
      * @param password 密码

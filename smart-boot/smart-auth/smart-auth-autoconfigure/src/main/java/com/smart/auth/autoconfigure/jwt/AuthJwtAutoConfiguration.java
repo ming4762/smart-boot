@@ -12,7 +12,6 @@ import com.smart.auth.core.handler.AuthSuccessDataHandler;
 import com.smart.auth.core.handler.SecurityLogoutHandler;
 import com.smart.auth.core.properties.AuthProperties;
 import com.smart.auth.core.service.AuthCache;
-import com.smart.auth.core.token.TokenRepository;
 import com.smart.auth.extensions.jwt.AuthJwtConfigure;
 import com.smart.auth.extensions.jwt.handler.JwtAuthSuccessDataHandler;
 import com.smart.auth.extensions.jwt.handler.JwtLogoutHandler;
@@ -120,7 +119,7 @@ public class AuthJwtAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean(SecurityLogoutHandler.class)
-    public SecurityLogoutHandler jwtLogoutHandler(TokenRepository tokenRepository) {
+    public SecurityLogoutHandler jwtLogoutHandler(JwtTokenRepository tokenRepository) {
         return new JwtLogoutHandler(tokenRepository);
     }
 
