@@ -87,4 +87,29 @@ public class AuthController {
         return Result.success(key);
     }
 
+//    /**
+//     * 获取所有在线用户
+//     * @return 在线用户列表
+//     */
+//    @PostMapping("auth/listOnlineUser")
+//    @Operation(summary = "查询所有在线用户")
+//    public Result<List<SysOnlineUserVO>> listOnlineUser(@RequestBody OnlineUserQueryDTO parameter) {
+//        Set<String> tokens = parameter.getUsername() == null ? this.cacheJwtStore.listAll() : this.cacheJwtStore.listAll(parameter.getUsername());
+//        return Result.success(this.sysUserAccountService.listOnlineUser(tokens));
+//    }
+//
+//    @PostMapping("auth/offline")
+//    @Operation(summary = "用户离线操作")
+//    @Log(value = "用户离线操作", type = LogOperationTypeEnum.DELETE)
+//    @PreAuthorize("hasPermission('sys:auth', 'offline')")
+//    public Result<Boolean> offline(@RequestBody OfflineDTO parameter) {
+//        if (StringUtils.isNotBlank(parameter.getToken())) {
+//            RestUserDetails userDetails = this.jwtResolver.resolver(parameter.getToken());
+//            return Result.success(this.cacheJwtStore.invalidateByToken(userDetails.getUsername(), parameter.getToken()));
+//        }
+//        if (StringUtils.isNotBlank(parameter.getUsername())) {
+//            return Result.success(this.cacheJwtStore.invalidateByUsername(parameter.getUsername()));
+//        }
+//        return Result.success(false);
+//    }
 }

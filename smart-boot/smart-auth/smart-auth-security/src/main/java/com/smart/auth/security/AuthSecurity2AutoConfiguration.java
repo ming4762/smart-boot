@@ -2,6 +2,8 @@ package com.smart.auth.security;
 
 import com.smart.auth.core.authentication.AuthenticationFailureEventInitializer;
 import com.smart.auth.core.authentication.MethodPermissionEvaluatorImpl;
+import com.smart.auth.core.authentication.url.DefaultUrlAuthenticationProviderImpl;
+import com.smart.auth.core.authentication.url.UrlAuthenticationProvider;
 import com.smart.auth.core.beans.DefaultUrlMappingProvider;
 import com.smart.auth.core.beans.UrlMappingProvider;
 import com.smart.auth.core.handler.AuthLoginFailureHandler;
@@ -9,8 +11,11 @@ import com.smart.auth.core.handler.AuthLoginSuccessHandler;
 import com.smart.auth.core.handler.AuthSuccessDataHandler;
 import com.smart.auth.core.handler.DefaultAuthSuccessDataHandler;
 import com.smart.auth.core.properties.AuthProperties;
+import com.smart.auth.core.service.AuthCache;
 import com.smart.auth.core.service.AuthUserService;
+import com.smart.auth.core.token.TokenRepository;
 import com.smart.auth.security.config.AuthMethodSecurityConfig;
+import com.smart.auth.security.token.DefaultTokenRepository;
 import com.smart.auth.security.userdetails.DefaultUserDetailsServiceImpl;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -112,5 +117,28 @@ public class AuthSecurity2AutoConfiguration {
     @ConditionalOnMissingBean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) {
         return configuration.getAuthenticationManager();
+    }
+
+    /**
+     * 创建URL权限认证器
+     * @param urlMappingProvider URL映射
+     * @return UrlAuthenticationProvider
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    public UrlAuthenticationProvider defaultUrlAuthenticationProviderImpl(UrlMappingProvider urlMappingProvider) {
+        return new DefaultUrlAuthenticationProviderImpl(urlMappingProvider);
+    }
+
+    /**
+     * 创建默认的token存储器
+     * @param properties 参数
+     * @param authCache 缓存器
+     * @return TokenRepository
+     */
+    @Bean
+    @ConditionalOnMissingBean(TokenRepository.class)
+    public TokenRepository defaultTokenRepository(AuthProperties properties, AuthCache<String, Object> authCache) {
+        return new DefaultTokenRepository(properties, authCache);
     }
 }
