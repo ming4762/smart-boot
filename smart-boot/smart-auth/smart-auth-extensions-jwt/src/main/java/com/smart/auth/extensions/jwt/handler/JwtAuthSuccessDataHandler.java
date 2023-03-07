@@ -3,9 +3,9 @@ package com.smart.auth.extensions.jwt.handler;
 import com.smart.auth.core.constants.LoginTypeEnum;
 import com.smart.auth.core.handler.DefaultAuthSuccessDataHandler;
 import com.smart.auth.core.model.LoginResult;
+import com.smart.auth.core.token.TokenRepository;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.auth.extensions.jwt.resolver.JwtResolver;
-import com.smart.auth.extensions.jwt.store.JwtStore;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
@@ -30,7 +30,7 @@ public class JwtAuthSuccessDataHandler extends DefaultAuthSuccessDataHandler imp
 
     private JwtResolver jwtResolver;
 
-    private List<JwtStore> jwtStoreList;
+    private List<TokenRepository> tokenRepositoryList;
 
     @Override
     public LoginResult successData(Authentication authentication, HttpServletRequest request, LoginTypeEnum loginType) {
@@ -44,8 +44,8 @@ public class JwtAuthSuccessDataHandler extends DefaultAuthSuccessDataHandler imp
 
     private void save(@NonNull String jwt, @NonNull RestUserDetails user) {
         boolean result;
-        for (JwtStore jwtStore : jwtStoreList) {
-            result = jwtStore.save(jwt, user);
+        for (TokenRepository tokenRepository : tokenRepositoryList) {
+            result = tokenRepository.save(jwt, user);
             if (result) {
                 break;
             }
@@ -65,8 +65,8 @@ public class JwtAuthSuccessDataHandler extends DefaultAuthSuccessDataHandler imp
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.jwtStoreList = Arrays.stream(applicationContext.getBeanNamesForType(JwtStore.class))
-                .map(item -> applicationContext.getBean(item, JwtStore.class))
+        this.tokenRepositoryList = Arrays.stream(applicationContext.getBeanNamesForType(TokenRepository.class))
+                .map(item -> applicationContext.getBean(item, TokenRepository.class))
                 .sorted(Comparator.comparingInt(Ordered::getOrder))
                 .toList();
     }

@@ -11,8 +11,11 @@ import com.smart.auth.core.handler.AuthLoginSuccessHandler;
 import com.smart.auth.core.handler.AuthSuccessDataHandler;
 import com.smart.auth.core.handler.DefaultAuthSuccessDataHandler;
 import com.smart.auth.core.properties.AuthProperties;
+import com.smart.auth.core.service.AuthCache;
 import com.smart.auth.core.service.AuthUserService;
+import com.smart.auth.core.token.TokenRepository;
 import com.smart.auth.security.config.AuthMethodSecurityConfig;
+import com.smart.auth.security.token.DefaultTokenRepository;
 import com.smart.auth.security.userdetails.DefaultUserDetailsServiceImpl;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -126,5 +129,17 @@ public class AuthSecurity2AutoConfiguration {
     @ConditionalOnMissingBean
     public UrlAuthenticationProvider defaultUrlAuthenticationProviderImpl(UrlMappingProvider urlMappingProvider) {
         return new DefaultUrlAuthenticationProviderImpl(urlMappingProvider);
+    }
+
+    /**
+     * 创建默认的token存储器
+     * @param properties 参数
+     * @param authCache 缓存器
+     * @return TokenRepository
+     */
+    @Bean
+    @ConditionalOnMissingBean(TokenRepository.class)
+    public TokenRepository defaultTokenRepository(AuthProperties properties, AuthCache<String, Object> authCache) {
+        return new DefaultTokenRepository(properties, authCache);
     }
 }

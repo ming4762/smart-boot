@@ -2,10 +2,10 @@ package com.smart.auth.extensions.jwt.filter;
 
 import com.smart.auth.core.exception.IpBindAuthenticationException;
 import com.smart.auth.core.i18n.AuthI18nMessage;
+import com.smart.auth.core.token.TokenRepository;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.auth.core.utils.AuthCheckUtils;
 import com.smart.auth.extensions.jwt.context.JwtContext;
-import com.smart.auth.extensions.jwt.store.JwtStore;
 import com.smart.auth.extensions.jwt.utils.JwtUtils;
 import com.smart.commons.core.i18n.I18nUtils;
 import com.smart.commons.core.utils.IpUtils;
@@ -36,7 +36,7 @@ import java.util.Objects;
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private List<JwtStore> jwtStoreList;
+    private List<TokenRepository> tokenRepositoryList;
 
     private final JwtContext jwtContext;
 
@@ -57,7 +57,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         Assert.notNull(jwt, "系统发生未知错误，jwt为null");
         // 验证JWT
-        boolean validate = this.jwtStoreList.stream().anyMatch(item -> item.validate(jwt, user));
+        boolean validate = this.tokenRepositoryList.stream().anyMatch(item -> item.validate(jwt, user));
         if (!validate) {
             throw new CredentialsExpiredException(I18nUtils.get(AuthI18nMessage.ERROR_TOKEN_EXPIRE));
         }
@@ -74,7 +74,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     @Autowired
-    public void setJwtStoreList(List<JwtStore> jwtStoreList) {
-        this.jwtStoreList = jwtStoreList;
+    public void setJwtStoreList(List<TokenRepository> tokenRepositoryList) {
+        this.tokenRepositoryList = tokenRepositoryList;
     }
 }

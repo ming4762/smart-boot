@@ -11,13 +11,11 @@ import com.smart.auth.core.handler.AuthLogoutSuccessHandler;
 import com.smart.auth.core.handler.AuthSuccessDataHandler;
 import com.smart.auth.core.handler.SecurityLogoutHandler;
 import com.smart.auth.core.properties.AuthProperties;
-import com.smart.auth.core.service.AuthCache;
+import com.smart.auth.core.token.TokenRepository;
 import com.smart.auth.extensions.jwt.AuthJwtConfigure;
 import com.smart.auth.extensions.jwt.handler.JwtAuthSuccessDataHandler;
 import com.smart.auth.extensions.jwt.handler.JwtLogoutHandler;
 import com.smart.auth.extensions.jwt.service.JwtService;
-import com.smart.auth.extensions.jwt.store.CacheJwtStore;
-import com.smart.auth.extensions.jwt.store.CacheJwtStoreImpl;
 import com.smart.commons.core.utils.auth.RsaUtils;
 import com.smart.commons.jwt.JwtDecoder;
 import com.smart.commons.jwt.JwtEncoder;
@@ -48,11 +46,6 @@ public class AuthJwtAutoConfiguration {
 
     private static final String CLASSPATH_BEGIN = "classpath:";
 
-    @Bean
-    @ConditionalOnMissingBean(CacheJwtStore.class)
-    public CacheJwtStore cacheJwtStore(AuthProperties authProperties, AuthCache<String, Object> authCache) {
-        return new CacheJwtStoreImpl(authProperties, authCache);
-    }
     /**
      * 创建JwtService
      * @return JwtService
@@ -120,13 +113,13 @@ public class AuthJwtAutoConfiguration {
 
     /**
      * 创建登出执行器
-     * @param cacheJwtStore CacheJwtStore
+     * @param tokenRepository tokenRepository
      * @return SecurityLogoutHandler
      */
     @Bean
     @ConditionalOnMissingBean(SecurityLogoutHandler.class)
-    public SecurityLogoutHandler jwtLogoutHandler(CacheJwtStore cacheJwtStore) {
-        return new JwtLogoutHandler(cacheJwtStore);
+    public SecurityLogoutHandler jwtLogoutHandler(TokenRepository tokenRepository) {
+        return new JwtLogoutHandler(tokenRepository);
     }
 
     /**
