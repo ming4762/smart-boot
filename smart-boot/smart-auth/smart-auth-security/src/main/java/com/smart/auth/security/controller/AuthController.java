@@ -1,7 +1,6 @@
 package com.smart.auth.security.controller;
 
 import com.smart.auth.core.annotation.NonUrlCheck;
-import com.smart.auth.core.api.AuthApi;
 import com.smart.auth.core.i18n.AuthI18nMessage;
 import com.smart.auth.core.model.TempTokenData;
 import com.smart.auth.core.properties.AuthProperties;
@@ -21,6 +20,7 @@ import com.smart.commons.core.message.Result;
 import com.smart.commons.core.utils.DigestUtils;
 import com.smart.commons.core.utils.IpUtils;
 import com.smart.commons.core.utils.JsonUtils;
+import com.smart.module.api.auth.AuthApi;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;

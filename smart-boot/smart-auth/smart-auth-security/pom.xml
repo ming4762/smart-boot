@@ -49,6 +49,16 @@
 			<artifactId>jakarta.validation-api</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>com.smart</groupId>
+			<artifactId>smart-auth-api</artifactId>
+			<version>${smart-boot.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.smart</groupId>
+			<artifactId>smart-system-api</artifactId>
+			<version>${smart-boot.version}</version>
+		</dependency>
 	</dependencies>
 
 </project>

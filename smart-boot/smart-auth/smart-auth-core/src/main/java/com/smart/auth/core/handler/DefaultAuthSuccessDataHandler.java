@@ -3,8 +3,8 @@ package com.smart.auth.core.handler;
 import com.google.common.collect.Sets;
 import com.smart.auth.core.constants.LoginTypeEnum;
 import com.smart.auth.core.model.LoginResult;
-import com.smart.auth.core.model.Permission;
 import com.smart.auth.core.userdetails.RestUserDetails;
+import com.smart.module.api.system.dto.Permission;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
 

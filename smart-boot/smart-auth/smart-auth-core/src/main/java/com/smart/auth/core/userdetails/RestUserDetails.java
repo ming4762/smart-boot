@@ -2,7 +2,7 @@ package com.smart.auth.core.userdetails;
 
 import com.smart.auth.core.constants.AuthTypeEnum;
 import com.smart.auth.core.constants.LoginTypeEnum;
-import com.smart.auth.core.model.Permission;
+import com.smart.module.api.system.dto.Permission;
 import lombok.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.userdetails.UserDetails;

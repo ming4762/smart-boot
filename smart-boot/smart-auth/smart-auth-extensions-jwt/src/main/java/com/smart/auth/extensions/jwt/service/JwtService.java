@@ -1,6 +1,9 @@
 package com.smart.auth.extensions.jwt.service;
 
-import com.smart.auth.core.model.*;
+import com.smart.auth.core.model.PermissionGrantedAuthority;
+import com.smart.auth.core.model.RestUserDetailsImpl;
+import com.smart.auth.core.model.RoleGrantedAuthority;
+import com.smart.auth.core.model.SmartGrantedAuthority;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.auth.extensions.jwt.resolver.JwtResolver;
 import com.smart.commons.core.utils.JsonUtils;
@@ -11,12 +14,16 @@ import com.smart.commons.jwt.JwtEncoderParameters;
 import com.smart.commons.jwt.algorithm.SignatureAlgorithm;
 import com.smart.commons.jwt.claim.JwtClaimsSet;
 import com.smart.commons.jwt.header.JwsHeader;
+import com.smart.module.api.system.dto.Permission;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 /**

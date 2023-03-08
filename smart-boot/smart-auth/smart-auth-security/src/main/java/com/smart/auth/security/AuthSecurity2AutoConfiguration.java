@@ -1,6 +1,5 @@
 package com.smart.auth.security;
 
-import com.smart.auth.core.api.AuthApi;
 import com.smart.auth.core.authentication.AuthenticationFailureEventInitializer;
 import com.smart.auth.core.authentication.MethodPermissionEvaluatorImpl;
 import com.smart.auth.core.authentication.url.DefaultUrlAuthenticationProviderImpl;
@@ -12,11 +11,12 @@ import com.smart.auth.core.handler.AuthLoginSuccessHandler;
 import com.smart.auth.core.handler.AuthSuccessDataHandler;
 import com.smart.auth.core.handler.DefaultAuthSuccessDataHandler;
 import com.smart.auth.core.properties.AuthProperties;
-import com.smart.auth.core.service.AuthUserService;
 import com.smart.auth.core.token.TokenRepository;
 import com.smart.auth.security.api.LocalAuthApiImpl;
 import com.smart.auth.security.config.AuthMethodSecurityConfig;
 import com.smart.auth.security.userdetails.DefaultUserDetailsServiceImpl;
+import com.smart.module.api.auth.AuthApi;
+import com.smart.module.api.system.SystemAuthUserApi;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -50,13 +50,13 @@ public class AuthSecurity2AutoConfiguration {
 
     /**
      * 创建默认的 UserDetailsService
-     * @param authUserService authUserService
+     * @param systemAuthUserApi systemAuthUserApi
      * @return UserDetailsService
      */
     @Bean
     @ConditionalOnMissingBean(UserDetailsService.class)
-    public DefaultUserDetailsServiceImpl defaultUserDetailsService(AuthUserService authUserService) {
-        return new DefaultUserDetailsServiceImpl(authUserService);
+    public DefaultUserDetailsServiceImpl defaultUserDetailsService(SystemAuthUserApi systemAuthUserApi) {
+        return new DefaultUserDetailsServiceImpl(systemAuthUserApi);
     }
 
     /**
