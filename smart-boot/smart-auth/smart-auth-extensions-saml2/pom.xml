@@ -34,7 +34,7 @@
 		<dependency>
 			<groupId>com.smart</groupId>
 			<artifactId>smart-auth-core</artifactId>
-			<version>${project.parent.version}</version>
+			<version>${smart-boot.version}</version>
 		</dependency>
 
 	</dependencies>

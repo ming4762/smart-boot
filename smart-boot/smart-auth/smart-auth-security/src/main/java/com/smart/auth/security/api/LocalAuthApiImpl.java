@@ -1,7 +1,7 @@
 package com.smart.auth.security.api;
 
-import com.smart.auth.core.api.AuthApi;
 import com.smart.auth.core.token.TokenRepository;
+import com.smart.module.api.auth.AuthApi;
 import org.springframework.lang.NonNull;
 
 import java.util.List;

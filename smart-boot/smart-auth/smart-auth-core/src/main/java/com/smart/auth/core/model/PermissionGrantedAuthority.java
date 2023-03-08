@@ -1,6 +1,7 @@
 package com.smart.auth.core.model;
 
 import com.smart.auth.core.constants.GrantedAuthorityTypeEnum;
+import com.smart.module.api.system.dto.Permission;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

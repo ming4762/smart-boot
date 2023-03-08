@@ -1,10 +1,15 @@
 package com.smart.auth.security.userdetails;
 
 import com.google.common.collect.Sets;
-import com.smart.auth.core.model.*;
-import com.smart.auth.core.service.AuthUserService;
+import com.smart.auth.core.model.PermissionGrantedAuthority;
+import com.smart.auth.core.model.RestUserDetailsImpl;
+import com.smart.auth.core.model.RoleGrantedAuthority;
+import com.smart.auth.core.model.SmartGrantedAuthority;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.auth.core.userdetails.SmsUserDetailService;
+import com.smart.module.api.system.SystemAuthUserApi;
+import com.smart.module.api.system.dto.AuthUser;
+import com.smart.module.api.system.dto.UserRolePermission;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -22,10 +27,10 @@ import java.util.stream.Collectors;
  */
 public class DefaultUserDetailsServiceImpl implements UserDetailsService, SmsUserDetailService {
 
-    private final AuthUserService userService;
+    private final SystemAuthUserApi systemAuthUserApi;
 
-    public DefaultUserDetailsServiceImpl(AuthUserService userService) {
-        this.userService = userService;
+    public DefaultUserDetailsServiceImpl(SystemAuthUserApi systemAuthUserApi) {
+        this.systemAuthUserApi = systemAuthUserApi;
     }
 
     @Override
@@ -35,7 +40,7 @@ public class DefaultUserDetailsServiceImpl implements UserDetailsService, SmsUse
             return null;
         }
         // 查询用户
-        final AuthUser user = this.userService.getByUsername(username);
+        final AuthUser user = this.systemAuthUserApi.getByUsername(username);
         return this.getUserDetails(user);
     }
 
@@ -49,7 +54,7 @@ public class DefaultUserDetailsServiceImpl implements UserDetailsService, SmsUse
             return null;
         }
         Set<SmartGrantedAuthority> grantedAuthoritySet = Sets.newHashSet();
-        UserRolePermission userRolePermission = this.userService.queryRolePermission(user);
+        UserRolePermission userRolePermission = this.systemAuthUserApi.queryRolePermission(user);
         // 添加角色
         grantedAuthoritySet.addAll(
                 userRolePermission.getRoleCodes().stream()
@@ -91,7 +96,7 @@ public class DefaultUserDetailsServiceImpl implements UserDetailsService, SmsUse
             return null;
         }
         // 查询用户
-        final AuthUser user = this.userService.getByPhone(phone);
+        final AuthUser user = this.systemAuthUserApi.getByPhone(phone);
         return this.getUserDetails(user);
     }
 }

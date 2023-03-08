@@ -2,8 +2,13 @@ package com.smart.auth.extensions.saml2.userdetails;
 
 import com.google.common.collect.Sets;
 import com.smart.auth.core.constants.AuthTypeEnum;
-import com.smart.auth.core.model.*;
-import com.smart.auth.core.service.AuthUserService;
+import com.smart.auth.core.model.RestUserDetailsImpl;
+import com.smart.auth.core.model.RoleGrantedAuthority;
+import com.smart.auth.core.model.PermissionGrantedAuthority;
+import com.smart.auth.core.model.SmartGrantedAuthority;
+import com.smart.module.api.system.SystemAuthUserApi;
+import com.smart.module.api.system.dto.AuthUser;
+import com.smart.module.api.system.dto.UserRolePermission;
 import lombok.SneakyThrows;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,25 +26,24 @@ import java.util.stream.Collectors;
  */
 public class DefaultSamlUserDetailsServiceImpl implements SAMLUserDetailsService {
 
-    private final AuthUserService userService;
+    private final SystemAuthUserApi systemAuthUserApi;
 
-    public DefaultSamlUserDetailsServiceImpl(AuthUserService authUserService) {
-        this.userService = authUserService;
+    public DefaultSamlUserDetailsServiceImpl(SystemAuthUserApi systemAuthUserApi) {
+        this.systemAuthUserApi = systemAuthUserApi;
     }
 
-    @SneakyThrows
     @Override
     public Object loadUserBySAML(SAMLCredential credential) {
         // 获取用户名
         String username = credential.getNameID().getValue();
         // 查询用户
-        final AuthUser user = this.userService.getByUsername(username);
+        final AuthUser user = this.systemAuthUserApi.getByUsername(username);
         if (Objects.isNull(user)) {
             throw new UsernameNotFoundException(String.format("not found user, please create user in DB, username: [%s]", username));
         }
         Set<SmartGrantedAuthority> grantedAuthoritySet = Sets.newHashSet();
         // 添加角色
-        UserRolePermission userRolePermission = this.userService.queryRolePermission(user);
+        UserRolePermission userRolePermission = this.systemAuthUserApi.queryRolePermission(user);
         grantedAuthoritySet.addAll(
 
                 userRolePermission.getRoleCodes().stream()
