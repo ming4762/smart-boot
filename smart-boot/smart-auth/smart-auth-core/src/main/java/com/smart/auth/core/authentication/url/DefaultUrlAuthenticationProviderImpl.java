@@ -5,7 +5,7 @@ import com.smart.auth.core.beans.UrlMappingProvider;
 import com.smart.auth.core.constants.RoleEnum;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.commons.core.beans.AbstractBeanNameProvider;
-import com.smart.module.api.system.dto.Permission;
+import com.smart.commons.core.dto.auth.Permission;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.annotation.AnnotationUtils;

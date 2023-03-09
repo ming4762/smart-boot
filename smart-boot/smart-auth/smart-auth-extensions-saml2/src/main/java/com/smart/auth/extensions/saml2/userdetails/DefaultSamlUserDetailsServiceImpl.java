@@ -6,10 +6,10 @@ import com.smart.auth.core.model.RestUserDetailsImpl;
 import com.smart.auth.core.model.RoleGrantedAuthority;
 import com.smart.auth.core.model.PermissionGrantedAuthority;
 import com.smart.auth.core.model.SmartGrantedAuthority;
+import com.smart.commons.core.dto.auth.UserRolePermission;
 import com.smart.module.api.system.SystemAuthUserApi;
 import com.smart.module.api.system.dto.AuthUser;
-import com.smart.module.api.system.dto.UserRolePermission;
-import lombok.SneakyThrows;
+
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.saml.SAMLCredential;

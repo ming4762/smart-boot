@@ -1,0 +1,17 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: @artifactId@
+  cloud:
+    nacos:
+      server-addr: localhost:8848
+      discovery:
+        namespace: @profiles.active@
+      config:
+        namespace: @profiles.active@
+  config:
+    import:
+      - optional:nacos:application-@profiles.active@.yml
+      - optional:nacos:${spring.application.name}-@profiles.active@.yml

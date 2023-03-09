@@ -1,4 +1,5 @@
-import { defHttp } from '/@/utils/http/axios'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
+import { applyTempToken } from '/@/common/auth/AuthUtils'
 
 enum Api {
   list = 'smart/file/list',
@@ -10,6 +11,7 @@ enum Api {
 
 export const listApi = (params) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_FILE,
     url: Api.list,
     data: {
       ...params,
@@ -20,6 +22,7 @@ export const listApi = (params) => {
 export const uploadFileApi = (data, file: File) => {
   return defHttp.uploadFile(
     {
+      service: ApiServiceEnum.SMART_FILE,
       url: Api.uploadFile,
     },
     {
@@ -33,6 +36,7 @@ export const uploadFileApi = (data, file: File) => {
 
 export const deleteApi = (removeRecords: Recordable[]) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_FILE,
     url: Api.delete,
     data: removeRecords.map((item) => item.fileId),
   })
@@ -40,6 +44,7 @@ export const deleteApi = (removeRecords: Recordable[]) => {
 
 export const getByIdApi = (model: Recordable) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_FILE,
     url: Api.getById,
     data: model.fileId,
   })
@@ -48,7 +53,7 @@ export const getByIdApi = (model: Recordable) => {
 export const downloadApi = async (id) => {
   let url = `${defHttp.getApiUrl()}${Api.download}${id}`
   // 申请临时token
-  const tempToken = await defHttp.applyTempToken('smart:file:download')
+  const tempToken = await applyTempToken('smart:file:download')
   url = url + '?access-token=' + tempToken
   window.open(url)
 }

@@ -1,0 +1,29 @@
+logging:
+  level:
+    root: info
+    com.smart: debug
+
+management:
+  endpoint:
+    #    开启shutdown端点
+    shutdown:
+      enabled: true
+    health:
+      show-details: always
+    logfile:
+      enabled: true
+    env:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  health:
+    mail:
+      enabled: false
+spring:
+  data:
+    redis:
+      host: one.smart-ming.online
+      password: ming8858
+

@@ -103,9 +103,11 @@ public class AuthJwtSecurityConfigurer extends SecurityConfigurerAdapter<Default
         builder
                 .authenticationProvider(this.getBean(RestAuthenticationProvider.class, this.serviceProvider.authenticationProvider))
                 // 添加登录 登出过滤器
-                .addFilterAfter(this.createJwtFilterChainProxy(), BasicAuthenticationFilter.class)
-                // 添加认证过滤器
-                .addFilterAfter(this.postProcess(new JwtAuthenticationFilter(this.jwtContext)), ExceptionTranslationFilter.class);
+                .addFilterAfter(this.createJwtFilterChainProxy(), BasicAuthenticationFilter.class);
+        if (Boolean.TRUE.equals(this.serviceProvider.jwtAuth)) {
+            // 添加认证过滤器
+            builder.addFilterAfter(this.postProcess(new JwtAuthenticationFilter(this.jwtContext)), ExceptionTranslationFilter.class);
+        }
     }
 
     /**
@@ -238,6 +240,10 @@ public class AuthJwtSecurityConfigurer extends SecurityConfigurerAdapter<Default
         private String loginUrl;
 
         private String logoutUrl;
+        /**
+         * 是否使用jwt认证器
+         */
+        private Boolean jwtAuth = true;
 
 
         /**
@@ -258,6 +264,11 @@ public class AuthJwtSecurityConfigurer extends SecurityConfigurerAdapter<Default
 
         public ServiceProvider bindIp(boolean bindIp) {
             this.bindIp = bindIp;
+            return this;
+        }
+
+        public ServiceProvider jwtAuth(boolean jwtAuth) {
+            this.jwtAuth = jwtAuth;
             return this;
         }
 

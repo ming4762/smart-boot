@@ -11,11 +11,8 @@ import com.smart.auth.core.handler.AuthLoginSuccessHandler;
 import com.smart.auth.core.handler.AuthSuccessDataHandler;
 import com.smart.auth.core.handler.DefaultAuthSuccessDataHandler;
 import com.smart.auth.core.properties.AuthProperties;
-import com.smart.auth.core.token.TokenRepository;
-import com.smart.auth.security.api.LocalAuthApiImpl;
 import com.smart.auth.security.config.AuthMethodSecurityConfig;
 import com.smart.auth.security.userdetails.DefaultUserDetailsServiceImpl;
-import com.smart.module.api.auth.AuthApi;
 import com.smart.module.api.system.SystemAuthUserApi;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -34,8 +31,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
-import java.util.List;
-
 /**
  * AUTH 自动配置类
  * @author shizhongming
@@ -44,7 +39,7 @@ import java.util.List;
 @Configuration("AuthSecurity2AutoConfiguration")
 @EnableConfigurationProperties(AuthProperties.class)
 @Import(AuthMethodSecurityConfig.class)
-@ComponentScan(basePackages = "com.smart.auth.security.controller")
+@ComponentScan(basePackages = {"com.smart.auth.security.controller", "com.smart.auth.security.api"})
 public class AuthSecurity2AutoConfiguration {
 
     /**
@@ -132,14 +127,4 @@ public class AuthSecurity2AutoConfiguration {
         return new DefaultUrlAuthenticationProviderImpl(urlMappingProvider);
     }
 
-    /**
-     * 创建AuthApi
-     * @param tokenRepositoryList token存储器列表
-     * @return AuthApi
-     */
-    @Bean
-    @ConditionalOnMissingBean
-    public AuthApi authApi(List<TokenRepository> tokenRepositoryList) {
-        return new LocalAuthApiImpl(tokenRepositoryList);
-    }
 }

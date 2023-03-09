@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.smart</groupId>
+        <artifactId>smart-cloud-common</artifactId>
+        <version>2.0.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>smart-cloud-common-auth</artifactId>
+    <version>2.0.0-SNAPSHOT</version>
+    <name>smart-cloud-common-auth</name>
+    <description>cloud common auth 提供认证功能</description>
+
+    <properties>
+    </properties>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-auth-core</artifactId>
+            <version>${smart-boot.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-cloud-auth-api</artifactId>
+            <version>${smart-boot.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>

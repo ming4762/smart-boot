@@ -187,6 +187,18 @@ public class JwtTokenRepository implements TokenRepository {
     }
 
     /**
+     * 获取token数据
+     *
+     * @param token token
+     * @return TokenData
+     */
+    @Override
+    public TokenData getData(String token) {
+        RestUserDetails user = this.jwtResolver.resolver(token);
+        return (TokenData) this.authCache.get(this.getTokenKey(user.getUsername(), token));
+    }
+
+    /**
      * 获取token的key
      * @param username 用户名
      * @return jst

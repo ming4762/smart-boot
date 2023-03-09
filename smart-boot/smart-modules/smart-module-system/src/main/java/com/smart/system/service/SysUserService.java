@@ -1,8 +1,8 @@
 package com.smart.system.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.smart.commons.core.dto.auth.UserRolePermission;
 import com.smart.crud.service.BaseService;
-import com.smart.module.api.system.dto.UserRolePermission;
 import com.smart.system.constants.FunctionTypeEnum;
 import com.smart.system.model.SysFunctionPO;
 import com.smart.system.model.SysRolePO;

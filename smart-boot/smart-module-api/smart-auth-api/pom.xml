@@ -20,6 +20,11 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-commons-core</artifactId>
+        </dependency>
     </dependencies>
 
 

@@ -1,5 +1,11 @@
-import type { AxiosRequestConfig, AxiosInstance, AxiosResponse, AxiosError } from 'axios'
-import type { RequestOptions, Result, UploadFileParams, UploadFileItemParams } from '/#/axios'
+import type { AxiosInstance, AxiosResponse, AxiosError } from 'axios'
+import type {
+  RequestOptions,
+  Result,
+  UploadFileParams,
+  UploadFileItemParams,
+  SmartAxiosRequestConfig,
+} from '/#/axios'
 import type { CreateAxiosOptions } from './axiosTransform'
 import axios from 'axios'
 import qs from 'qs'
@@ -8,7 +14,8 @@ import { isArray, isFunction } from '/@/utils/is'
 import { cloneDeep } from 'lodash-es'
 import { ContentTypeEnum } from '/@/enums/httpEnum'
 import { RequestEnum } from '/@/enums/httpEnum'
-import {downloadByData} from '/@/utils/file/download';
+import { downloadByData } from '/@/utils/file/download'
+import {useGlobSetting} from '/@/hooks/setting';
 
 export * from './axiosTransform'
 
@@ -65,16 +72,13 @@ export class VAxios {
     return this.options.requestOptions?.apiUrl || ''
   }
 
-  /**
-   * 申请临时token
-   * @param resource
-   * @param once
-   */
-  async applyTempToken(resource: string, once = true): Promise<string> {
-    return await this.post({
-      url: 'auth/tempToken/apply',
-      data: { resource, once },
-    })
+  getApiUrlByService(service: string): string {
+    const url = this.options.requestOptions?.apiUrl || ''
+    const { isStandalone } = useGlobSetting()
+    if (!isStandalone) {
+      return `${url}/${service}`
+    }
+    return url
   }
 
   /**
@@ -95,7 +99,7 @@ export class VAxios {
     const axiosCanceler = new AxiosCanceler()
 
     // Request interceptor configuration processing
-    this.axiosInstance.interceptors.request.use((config: AxiosRequestConfig) => {
+    this.axiosInstance.interceptors.request.use((config: SmartAxiosRequestConfig) => {
       // If cancel repeat request is turned on, then cancel repeat request is prohibited
       // @ts-ignore
       const { ignoreCancelToken } = config.requestOptions
@@ -137,7 +141,7 @@ export class VAxios {
   /**
    * @description:  File Upload
    */
-  uploadFile<T = any>(config: AxiosRequestConfig, params: UploadFileParams): Promise<T> {
+  uploadFile<T = any>(config: SmartAxiosRequestConfig, params: UploadFileParams): Promise<T> {
     const formData = new window.FormData()
     const file = params.file
     let uploadFileList: UploadFileItemParams[]
@@ -180,7 +184,7 @@ export class VAxios {
   }
 
   // support form-data
-  supportFormData(config: AxiosRequestConfig) {
+  supportFormData(config: SmartAxiosRequestConfig) {
     const headers = config.headers || this.options.headers
     const contentType = headers?.['Content-Type'] || headers?.['content-type']
 
@@ -204,7 +208,7 @@ export class VAxios {
    * @param filename
    * @param options
    */
-  async download(config: AxiosRequestConfig, filename?: string, options?: RequestOptions) {
+  async download(config: SmartAxiosRequestConfig, filename?: string, options?: RequestOptions) {
     const response: AxiosResponse<Blob> = await this.request(
       {
         method: 'post',
@@ -220,29 +224,29 @@ export class VAxios {
     downloadByData(response.data, name)
   }
 
-  get<T = any>(config: AxiosRequestConfig, options?: RequestOptions): Promise<T> {
+  get<T = any>(config: SmartAxiosRequestConfig, options?: RequestOptions): Promise<T> {
     return this.request({ ...config, method: 'GET' }, options)
   }
 
-  post<T = any>(config: AxiosRequestConfig, options?: RequestOptions): Promise<T> {
+  post<T = any>(config: SmartAxiosRequestConfig, options?: RequestOptions): Promise<T> {
     return this.request({ ...config, method: 'POST' }, options)
   }
 
-  postForm<T = any>(config: AxiosRequestConfig, options?: RequestOptions): Promise<T> {
+  postForm<T = any>(config: SmartAxiosRequestConfig, options?: RequestOptions): Promise<T> {
     const headers = config.headers || {}
     headers['Content-Type'] = ContentTypeEnum.FORM_URLENCODED
     return this.request({ ...config, method: 'POST', headers }, options)
   }
 
-  put<T = any>(config: AxiosRequestConfig, options?: RequestOptions): Promise<T> {
+  put<T = any>(config: SmartAxiosRequestConfig, options?: RequestOptions): Promise<T> {
     return this.request({ ...config, method: 'PUT' }, options)
   }
 
-  delete<T = any>(config: AxiosRequestConfig, options?: RequestOptions): Promise<T> {
+  delete<T = any>(config: SmartAxiosRequestConfig, options?: RequestOptions): Promise<T> {
     return this.request({ ...config, method: 'DELETE' }, options)
   }
 
-  request<T = any>(config: AxiosRequestConfig, options?: RequestOptions): Promise<T> {
+  request<T = any>(config: SmartAxiosRequestConfig, options?: RequestOptions): Promise<T> {
     let conf: CreateAxiosOptions = cloneDeep(config)
     const transform = this.getTransform()
 

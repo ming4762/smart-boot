@@ -1,4 +1,4 @@
-import { defHttp } from '/@/utils/http/axios'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 import { getMenuListResultModel, RouteItem } from './model/menuModel'
 import { useLocaleStore } from '/@/store/modules/locale'
 import TreeUtils from '/@/utils/TreeUtils'
@@ -14,6 +14,7 @@ enum Api {
 export const getMenuList = async () => {
   const locales = useLocaleStore().localInfo.availableLocales
   const menuList: Array<any> = await defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.GetMenuList,
     data: locales,
   })

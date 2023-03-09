@@ -72,4 +72,11 @@ public interface TokenRepository extends Ordered {
      */
     @NonNull
     List<TokenData> listData(@NonNull String username);
+
+    /**
+     * 获取token数据
+     * @param token token
+     * @return TokenData
+     */
+    TokenData getData(String token);
 }

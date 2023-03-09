@@ -1,0 +1,27 @@
+spring:
+  cloud:
+    gateway:
+      # 开启网关的跨域功能，具体微服务上的跨域需要进行关闭，否则无效
+      globalcors:
+        cors-configurations:
+          '[/**]': # 匹配所有请求
+            allowedOrigins: "*" # 跨域处理 允许所有的域
+            allowedHeaders: "*"
+            allowedMethods: # 支持的方法
+              - GET
+              - POST
+              - PUT
+              - DELETE
+      routes:
+        - id: smart-cloud-auth
+          uri: lb://smart-cloud-auth
+          predicates:
+            - Path=/smart-auth/**
+          filters:
+            - StripPrefix=1
+        - id: smart-cloud-system
+          uri: lb://smart-cloud-system
+          predicates:
+            - Path=/smart-system/**
+          filters:
+            - StripPrefix=1

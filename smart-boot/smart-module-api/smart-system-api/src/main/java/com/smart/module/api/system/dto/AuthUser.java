@@ -1,8 +1,6 @@
 package com.smart.module.api.system.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.List;
@@ -15,6 +13,8 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class AuthUser implements Serializable {
 
     private static final long serialVersionUID = 1978668286729284813L;

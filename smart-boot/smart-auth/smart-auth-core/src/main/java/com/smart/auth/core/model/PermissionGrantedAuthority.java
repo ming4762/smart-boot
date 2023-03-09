@@ -1,10 +1,12 @@
 package com.smart.auth.core.model;
 
 import com.smart.auth.core.constants.GrantedAuthorityTypeEnum;
-import com.smart.module.api.system.dto.Permission;
+import com.smart.commons.core.dto.auth.Permission;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.io.Serial;
 
 /**
  * @author jackson
@@ -15,6 +17,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class PermissionGrantedAuthority implements SmartGrantedAuthority {
 
+    @Serial
     private static final long serialVersionUID = -8344886266135685662L;
 
     private Permission permission;

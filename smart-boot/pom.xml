@@ -18,6 +18,8 @@
 
         <spring-boot.version>2.7.6</spring-boot.version>
         <smart-boot.version>2.0.0-SNAPSHOT</smart-boot.version>
+        <spring-cloud.version>2021.0.6</spring-cloud.version>
+        <spring-cloud-alibaba.version>2021.1</spring-cloud-alibaba.version>
 
         <guava.version>31.1-jre</guava.version>
         <jjwt.version>0.11.5</jjwt.version>
@@ -28,8 +30,9 @@
         <swagger-annotations.version>2.2.0</swagger-annotations.version>
         <commons-io.version>2.6</commons-io.version>
         <jsch.version>0.1.55</jsch.version>
-        <pagehelper.version>1.4.1</pagehelper.version>
-        <mybatis-plus-boot-starter.version>3.5.2</mybatis-plus-boot-starter.version>
+        <pagehelper.version>1.4.2</pagehelper.version>
+
+        <mybatis-plus-boot-starter.version>3.5.3</mybatis-plus-boot-starter.version>
         <jodconverter.version>4.4.2</jodconverter.version>
         <google.zxing.version>3.4.1</google.zxing.version>
         <jxls.version>2.10.0</jxls.version>
@@ -55,12 +58,14 @@
     <modules>
         <module>smart-auth</module>
         <module>smart-autoconfigure</module>
+        <module>smart-cloud</module>
         <module>smart-commons</module>
         <module>smart-database</module>
         <module>smart-document</module>
         <module>smart-file</module>
         <module>smart-kettle</module>
         <module>smart-license</module>
+        <module>smart-module-api</module>
         <module>smart-modules</module>
         <module>smart-monitor</module>
         <module>smart-starter</module>
@@ -76,6 +81,24 @@
         </developer>
     </developers>
 
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <profiles.active>dev</profiles.active>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>pro</id>
+            <properties>
+                <profiles.active>pro</profiles.active>
+            </properties>
+        </profile>
+    </profiles>
+
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -90,6 +113,22 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
                 <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!--      spring cloud      -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!--      spring-cloud-alibaba      -->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -330,6 +369,13 @@
     </dependencyManagement>
 
     <build>
+        <finalName>${project.name}</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

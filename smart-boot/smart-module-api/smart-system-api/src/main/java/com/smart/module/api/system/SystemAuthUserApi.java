@@ -1,7 +1,7 @@
 package com.smart.module.api.system;
 
+import com.smart.commons.core.dto.auth.UserRolePermission;
 import com.smart.module.api.system.dto.AuthUser;
-import com.smart.module.api.system.dto.UserRolePermission;
 import lombok.NonNull;
 import org.springframework.lang.Nullable;
 

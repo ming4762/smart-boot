@@ -5,10 +5,10 @@ import com.google.common.collect.ImmutableList;
 import com.smart.auth.core.exception.LongTimeNoLoginLockedException;
 import com.smart.auth.core.exception.PasswordNoLifeLockedException;
 import com.smart.auth.core.i18n.AuthI18nMessage;
+import com.smart.commons.core.dto.auth.UserRolePermission;
 import com.smart.commons.core.i18n.I18nUtils;
 import com.smart.module.api.system.SystemAuthUserApi;
 import com.smart.module.api.system.dto.AuthUser;
-import com.smart.module.api.system.dto.UserRolePermission;
 import com.smart.system.constants.FunctionTypeEnum;
 import com.smart.system.constants.UserAccountStatusEnum;
 import com.smart.system.model.SysUserAccountPO;
@@ -16,6 +16,7 @@ import com.smart.system.model.SysUserPO;
 import com.smart.system.service.SysUserAccountService;
 import com.smart.system.service.SysUserService;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.annotation.Primary;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -33,6 +34,7 @@ import java.util.stream.Collectors;
  * @since 1.0
  */
 @Service
+@Primary
 public class LocalSystemAuthUserApiImpl implements SystemAuthUserApi {
 
     private final SysUserService sysUserService;
