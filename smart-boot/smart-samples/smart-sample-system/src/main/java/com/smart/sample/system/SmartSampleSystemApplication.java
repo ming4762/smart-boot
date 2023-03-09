@@ -5,6 +5,7 @@ import com.smart.auth.security.imports.EnableAuthTempToken;
 import com.smart.autoconfigure.compatible.CompatibleAutoConfiguration;
 import com.smart.commons.core.cors.EnableCors;
 import com.smart.commons.core.spring.EnableRateLimit;
+import com.smart.commons.core.spring.EnabledCustomObjectMapper;
 import com.smart.commons.core.validate.EnableGlobalValidator;
 import com.smart.i18n.config.EnableValidatorI18nSource;
 import org.springframework.boot.SpringApplication;
@@ -26,6 +27,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableAuthTempToken
 @EnableRateLimit
 @EnableCaching
+@EnabledCustomObjectMapper
 @CompatibleAutoConfiguration(exclude = {PageHelperAutoConfiguration.class})
 public class SmartSampleSystemApplication {
 

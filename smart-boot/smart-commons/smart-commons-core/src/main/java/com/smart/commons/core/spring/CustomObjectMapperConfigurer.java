@@ -1,4 +1,4 @@
-package com.smart.system.config;
+package com.smart.commons.core.spring;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -29,7 +29,7 @@ import java.util.List;
  * 2022/12/17 20:02
  */
 @Configuration
-public class SmartWebMvcConfigurer implements WebMvcConfigurer {
+public class CustomObjectMapperConfigurer implements WebMvcConfigurer {
 
     /**
      *

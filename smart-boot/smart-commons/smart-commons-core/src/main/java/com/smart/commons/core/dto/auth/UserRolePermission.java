@@ -1,4 +1,4 @@
-package com.smart.module.api.system.dto;
+package com.smart.commons.core.dto.auth;
 
 import lombok.Getter;
 import lombok.Setter;

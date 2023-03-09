@@ -93,7 +93,7 @@ import { useUserStore } from '/@/store/modules/user'
 import { LoginStateEnum, useLoginState, useFormRules, useFormValid } from './useLogin'
 import { useDesign } from '/@/hooks/web/useDesign'
 import { buildUUID } from '/@/utils/uuid'
-import { defHttp } from '/@/utils/http/axios'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 import { createPassword } from '/@/utils/auth'
 //import { onKeyStroke } from '@vueuse/core';
 
@@ -158,7 +158,7 @@ async function handleLogin() {
 }
 
 const computedCaptchaUrl = computed(() => {
-  return `${defHttp.getApiUrl()}/auth/createCaptcha?codeKey=${formData.captchaKey}`
+  return `${defHttp.getApiUrlByService(ApiServiceEnum.SMART_AUTH)}/auth/createCaptcha?codeKey=${formData.captchaKey}`
 })
 const handleChangeCaptcha = () => {
   formData.captchaKey = buildUUID()

@@ -1,0 +1,36 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 110MB
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    system:
+      url: jdbc:mysql://one.smart-ming.online:3306/smart-system?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+      username: root
+      password: ming8858
+
+logging:
+  level:
+    root: info
+    com.smart: debug
+
+management:
+  endpoint:
+    #    开启shutdown端点
+    shutdown:
+      enabled: true
+    health:
+      show-details: always
+    logfile:
+      enabled: true
+    env:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  health:
+    mail:
+      enabled: false

@@ -1,10 +1,10 @@
 /**
  * Data processing class, can be configured according to the project
  */
-import type { AxiosRequestConfig, AxiosResponse } from 'axios'
-import type { RequestOptions, Result } from '/#/axios'
+import type { AxiosResponse } from 'axios'
+import type { RequestOptions, Result, SmartAxiosRequestConfig } from '/#/axios'
 
-export interface CreateAxiosOptions extends AxiosRequestConfig {
+export interface CreateAxiosOptions extends SmartAxiosRequestConfig {
   authenticationScheme?: string
   transform?: AxiosTransform
   requestOptions?: RequestOptions
@@ -15,7 +15,10 @@ export abstract class AxiosTransform {
    * @description: Process configuration before request
    * @description: Process configuration before request
    */
-  beforeRequestHook?: (config: AxiosRequestConfig, options: RequestOptions) => AxiosRequestConfig
+  beforeRequestHook?: (
+    config: SmartAxiosRequestConfig,
+    options: RequestOptions,
+  ) => SmartAxiosRequestConfig
 
   /**
    * @description: 处理响应数据
@@ -31,9 +34,9 @@ export abstract class AxiosTransform {
    * @description: 请求之前的拦截器
    */
   requestInterceptors?: (
-    config: AxiosRequestConfig,
+    config: SmartAxiosRequestConfig,
     options: CreateAxiosOptions,
-  ) => AxiosRequestConfig
+  ) => SmartAxiosRequestConfig
 
   /**
    * @description: 请求之后的拦截器

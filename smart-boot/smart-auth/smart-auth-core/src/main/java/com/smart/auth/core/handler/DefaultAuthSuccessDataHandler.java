@@ -4,12 +4,13 @@ import com.google.common.collect.Sets;
 import com.smart.auth.core.constants.LoginTypeEnum;
 import com.smart.auth.core.model.LoginResult;
 import com.smart.auth.core.userdetails.RestUserDetails;
-import com.smart.module.api.system.dto.Permission;
+import com.smart.commons.core.dto.auth.Permission;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
 
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 
 /**
  * @author ShiZhongMing

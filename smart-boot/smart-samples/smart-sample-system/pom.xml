@@ -40,7 +40,7 @@
 
 		<dependency>
 			<groupId>com.smart</groupId>
-			<artifactId>smart-auth-cache-guava</artifactId>
+			<artifactId>smart-auth-cache-redis</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 
@@ -83,12 +83,6 @@
 			<version>${project.parent.version}</version>
 		</dependency>
 
-<!--		<dependency>-->
-<!--			<groupId>com.smart</groupId>-->
-<!--			<artifactId>smart-monitor-starter-client</artifactId>-->
-<!--			<version>${project.parent.version}</version>-->
-<!--		</dependency>-->
-
 		<!--	添加端点	-->
 		<dependency>
 			<groupId>com.smart</groupId>
@@ -101,6 +95,35 @@
 			<version>${project.parent.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.smart</groupId>
+			<artifactId>smart-license-client-starter</artifactId>
+			<version>${smart-boot.version}</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>com.smart</groupId>
+			<artifactId>smart-file-extensions-disk</artifactId>
+			<version>${smart-boot.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.smart</groupId>
+			<artifactId>smart-file-extensions-minio</artifactId>
+			<version>${smart-boot.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.smart</groupId>
+			<artifactId>smart-file-extensions-aliyun-oss</artifactId>
+			<version>${smart-boot.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.github.xiaoymin</groupId>
+			<artifactId>knife4j-openapi2-spring-boot-starter</artifactId>
+		</dependency>
 	</dependencies>
 
 

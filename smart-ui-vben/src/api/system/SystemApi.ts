@@ -1,4 +1,4 @@
-import { defHttp } from '/@/utils/http/axios'
+import { defHttp, ApiServiceEnum } from '/@/utils/http/axios'
 
 enum Api {
   listUser = 'sys/user/list',
@@ -21,6 +21,7 @@ export const listUserApi = (params: Recordable = {}, useYn = true) => {
     }
   }
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.listUser,
     data: {
       ...params,
@@ -31,6 +32,7 @@ export const listUserApi = (params: Recordable = {}, useYn = true) => {
 
 export const listUserByIdApi = (ids: any[]) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.listUserById,
     data: ids,
   })
@@ -38,6 +40,7 @@ export const listUserByIdApi = (ids: any[]) => {
 
 export const listSystemApi = (params, filterByUser = false) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: filterByUser ? Api.listSystemFilterByUser : Api.listSystem,
     data: params,
   })

@@ -3,10 +3,10 @@ package com.smart.auth.core.authentication;
 import com.smart.auth.core.constants.RoleEnum;
 import com.smart.auth.core.properties.AuthProperties;
 import com.smart.auth.core.userdetails.RestUserDetails;
-import com.smart.module.api.system.dto.Permission;
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
+import com.smart.commons.core.dto.auth.Permission;
 
 import java.io.Serializable;
 import java.util.Set;

@@ -1,5 +1,6 @@
 package com.smart.module.api.auth;
 
+import com.smart.module.api.auth.dto.AuthUserDetailsDTO;
 import org.springframework.lang.NonNull;
 
 /**
@@ -23,4 +24,13 @@ public interface AuthApi {
      * @return 结果
      */
     boolean offlineByUsername(@NonNull String username);
+
+    /**
+     * 通过token查询用户信息
+     * @param token token
+     * @return AuthUserDetailsDTO
+     */
+    AuthUserDetailsDTO getUserDetails(@NonNull String token);
+
+
 }

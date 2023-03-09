@@ -1,4 +1,4 @@
-package com.smart.module.api.system.dto;
+package com.smart.commons.core.dto.auth;
 
 import com.smart.commons.core.http.HttpMethod;
 import lombok.*;

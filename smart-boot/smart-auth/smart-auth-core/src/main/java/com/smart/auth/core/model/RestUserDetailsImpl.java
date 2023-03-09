@@ -5,7 +5,7 @@ import com.google.common.collect.Sets;
 import com.smart.auth.core.constants.AuthTypeEnum;
 import com.smart.auth.core.constants.LoginTypeEnum;
 import com.smart.auth.core.userdetails.RestUserDetails;
-import com.smart.module.api.system.dto.Permission;
+import com.smart.commons.core.dto.auth.Permission;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;

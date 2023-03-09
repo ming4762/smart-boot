@@ -104,9 +104,18 @@ const transform: AxiosTransform = {
   // 请求之前处理config
   beforeRequestHook: (config, options) => {
     const { apiUrl, joinPrefix, joinParamsToUrl, formatDate, joinTime = true, urlPrefix } = options
-
     if (joinPrefix) {
       config.url = `${urlPrefix}${config.url}`
+    }
+
+    // 处理URL
+    const { isStandalone } = useGlobSetting()
+    if (!isStandalone) {
+      let spi = ''
+      if (!config.url?.startsWith('/')) {
+        spi = '/'
+      }
+      config.url = `${config.service}${spi}${config.url}`
     }
 
     if (apiUrl && isString(apiUrl)) {
@@ -282,6 +291,13 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
   )
 }
 export const defHttp = createAxios()
+
+export enum ApiServiceEnum {
+  NONE = '',
+  SMART_AUTH = 'smart-auth',
+  SMART_SYSTEM = 'smart-system',
+  SMART_FILE = 'smart-file',
+}
 
 // other api url
 // export const otherHttp = createAxios({
