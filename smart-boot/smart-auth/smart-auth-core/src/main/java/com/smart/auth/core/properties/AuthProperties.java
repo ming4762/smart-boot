@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.lang.NonNull;
 import org.springframework.util.Assert;
 
@@ -19,6 +20,7 @@ import java.util.List;
 @ConfigurationProperties(prefix = "smart.auth")
 @Getter
 @Setter
+@RefreshScope
 public class AuthProperties implements InitializingBean {
 
 

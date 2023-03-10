@@ -7,6 +7,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
+import java.util.Objects;
+
 /**
  * 自定义matcher，同时校验扩展名、路径
  * @author ShiZhongMing
@@ -37,7 +39,7 @@ public class ExtensionPathMatcher implements RequestMatcher {
     @Override
     public boolean matches(HttpServletRequest request) {
         // 验证请求方式
-        if (this.httpMethod != null && org.springframework.util.StringUtils.hasText(request.getMethod()) && this.httpMethod != valueOf(request.getMethod())) {
+        if (this.httpMethod != null && org.springframework.util.StringUtils.hasText(request.getMethod()) && !Objects.equals(valueOf(request.getMethod()), this.httpMethod)) {
             if (log.isDebugEnabled()) {
                 log.debug("Request '" + request.getMethod() + " " + request.getRequestURI() + "' doesn't match '" + this.httpMethod + " " + this.pattern + "'");
             }
@@ -49,7 +51,7 @@ public class ExtensionPathMatcher implements RequestMatcher {
             return true;
         }
         // 验证路径
-        AntPathRequestMatcher matcher = new AntPathRequestMatcher(this.pattern);
+        AntPathRequestMatcher matcher = new AntPathRequestMatcher(this.pattern, request.getMethod());
         return matcher.matches(request);
     }
 

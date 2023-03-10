@@ -39,6 +39,7 @@ public class SecurityConfig extends AuthWebSecurityConfigurerAdapter {
                 .serviceProvider()
                 .applicationContext(applicationContext)
                 .jwtAuth(false)
+                .bindIp(false)
                 .and().and()
                 // 验证码
                 .apply(AuthCaptchaSecurityConfigurer.captcha())

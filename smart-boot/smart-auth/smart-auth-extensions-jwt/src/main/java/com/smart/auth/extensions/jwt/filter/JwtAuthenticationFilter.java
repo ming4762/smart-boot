@@ -5,8 +5,8 @@ import com.smart.auth.core.i18n.AuthI18nMessage;
 import com.smart.auth.core.token.TokenRepository;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.auth.core.utils.AuthCheckUtils;
+import com.smart.auth.core.utils.TokenUtils;
 import com.smart.auth.extensions.jwt.context.JwtContext;
-import com.smart.auth.extensions.jwt.utils.JwtUtils;
 import com.smart.commons.core.i18n.I18nUtils;
 import com.smart.commons.core.utils.IpUtils;
 import jakarta.servlet.FilterChain;
@@ -21,7 +21,6 @@ import org.springframework.security.authentication.AuthenticationServiceExceptio
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.util.Assert;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -51,11 +50,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throw new BadCredentialsException(I18nUtils.get(AuthI18nMessage.ERROR_TOKEN_EMPTY));
         }
         // 验证JWT是否有效
-        String jwt = JwtUtils.getJwt(request);
+        String jwt = TokenUtils.getToken(request);
         if (StringUtils.isBlank(jwt)) {
             throw new AuthenticationServiceException(I18nUtils.get(AuthI18nMessage.ERROR_TOKEN_EMPTY));
         }
-        Assert.notNull(jwt, "系统发生未知错误，jwt为null");
         // 验证JWT
         boolean validate = this.tokenRepositoryList.stream().anyMatch(item -> item.validate(jwt, user));
         if (!validate) {

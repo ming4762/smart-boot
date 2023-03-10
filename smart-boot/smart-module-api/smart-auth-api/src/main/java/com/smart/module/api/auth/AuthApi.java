@@ -1,6 +1,8 @@
 package com.smart.module.api.auth;
 
+import com.smart.commons.core.message.Result;
 import com.smart.module.api.auth.dto.AuthUserDetailsDTO;
+import com.smart.module.api.auth.dto.AuthenticationDTO;
 import org.springframework.lang.NonNull;
 
 /**
@@ -32,5 +34,11 @@ public interface AuthApi {
      */
     AuthUserDetailsDTO getUserDetails(@NonNull String token);
 
+    /**
+     * 用户鉴权
+     * @param parameter 验证的参数
+     * @return 验证结果
+     */
+    Result<Boolean> authenticate(AuthenticationDTO parameter);
 
 }

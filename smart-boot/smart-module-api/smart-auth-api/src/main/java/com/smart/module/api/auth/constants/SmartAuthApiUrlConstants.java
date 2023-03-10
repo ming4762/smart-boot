@@ -21,4 +21,9 @@ public interface SmartAuthApiUrlConstants {
      * 通过token查询用户信息
      */
     String GET_USER_DETAILS_BY_TOKEN = "/remote/auth/getUserDetails";
+
+    /**
+     * 用户认证接口
+     */
+    String AUTH_AUTHENTICATE = "/remote/auth/authenticate";
 }

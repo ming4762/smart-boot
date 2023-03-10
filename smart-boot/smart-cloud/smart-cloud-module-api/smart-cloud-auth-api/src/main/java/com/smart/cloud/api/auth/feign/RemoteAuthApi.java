@@ -1,9 +1,12 @@
 package com.smart.cloud.api.auth.feign;
 
 import com.smart.cloud.common.core.constants.CloudServiceNameConstants;
+import com.smart.cloud.common.feign.interceptor.FeignTokenRequestInterceptor;
+import com.smart.commons.core.message.Result;
 import com.smart.module.api.auth.AuthApi;
 import com.smart.module.api.auth.constants.SmartAuthApiUrlConstants;
 import com.smart.module.api.auth.dto.AuthUserDetailsDTO;
+import com.smart.module.api.auth.dto.AuthenticationDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,4 +49,13 @@ public interface RemoteAuthApi extends AuthApi {
     @Override
     @PostMapping(SmartAuthApiUrlConstants.GET_USER_DETAILS_BY_TOKEN)
     AuthUserDetailsDTO getUserDetails(@NonNull String token);
+
+    /**
+     * 用户鉴权
+     * @param parameter 验证的参数
+     * @return 验证结果
+     */
+    @Override
+    @PostMapping(SmartAuthApiUrlConstants.AUTH_AUTHENTICATE)
+    Result<Boolean> authenticate(AuthenticationDTO parameter);
 }

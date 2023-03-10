@@ -1,19 +1,17 @@
-package com.smart.auth.extensions.jwt.utils;
+package com.smart.auth.core.utils;
 
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.lang.Nullable;
 
 /**
- * jwt工具类
- * @author jackson
- * 2020/2/14 10:34 下午
+ * token工具类
+ * @author zhongming4762
+ * 2023/3/10
  */
-@Slf4j
-public class JwtUtils {
+public class TokenUtils {
 
-    private JwtUtils() {
+    private TokenUtils() {
         throw new IllegalStateException("Utility class");
     }
 
@@ -23,7 +21,7 @@ public class JwtUtils {
      * @return JWT
      */
     @Nullable
-    public static String getJwt(HttpServletRequest request) {
+    public static String getToken(HttpServletRequest request) {
         return request.getHeader(HttpHeaders.AUTHORIZATION);
     }
 }
