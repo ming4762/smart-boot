@@ -195,8 +195,8 @@ public class Result<T> {
         return failure(e.getCode(), e.getMessage());
     }
 
-    public static Result<Exception> failure(@NonNull Exception e) {
-        return failure(ResultCodeEnum.FAILURE.getCode(), e.toString());
+    public static Result<Boolean> failure(@NonNull Exception e) {
+        return failure(ResultCodeEnum.FAILURE.getCode(), e.toString(), false);
     }
 
     /**

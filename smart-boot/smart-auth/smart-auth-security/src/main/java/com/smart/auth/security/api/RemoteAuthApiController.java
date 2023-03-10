@@ -1,8 +1,10 @@
 package com.smart.auth.security.api;
 
+import com.smart.commons.core.message.Result;
 import com.smart.module.api.auth.AuthApi;
 import com.smart.module.api.auth.constants.SmartAuthApiUrlConstants;
 import com.smart.module.api.auth.dto.AuthUserDetailsDTO;
+import com.smart.module.api.auth.dto.AuthenticationDTO;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -58,6 +60,18 @@ public class RemoteAuthApiController implements AuthApi {
     @PostMapping(SmartAuthApiUrlConstants.GET_USER_DETAILS_BY_TOKEN)
     public AuthUserDetailsDTO getUserDetails(@NonNull @RequestBody String token) {
         return this.localAuthApi.getUserDetails(token);
+    }
+
+    /**
+     * 用户鉴权
+     *
+     * @param parameter 验证的参数
+     * @return 验证结果
+     */
+    @Override
+    @PostMapping(SmartAuthApiUrlConstants.AUTH_AUTHENTICATE)
+    public Result<Boolean> authenticate(@RequestBody AuthenticationDTO parameter) {
+        return this.localAuthApi.authenticate(parameter);
     }
 
 }

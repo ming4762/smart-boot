@@ -2,8 +2,8 @@ package com.smart.auth.extensions.jwt.context;
 
 import com.smart.auth.core.authentication.RestUsernamePasswordAuthenticationToken;
 import com.smart.auth.core.userdetails.RestUserDetails;
+import com.smart.auth.core.utils.TokenUtils;
 import com.smart.auth.extensions.jwt.resolver.JwtResolver;
-import com.smart.auth.extensions.jwt.utils.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class JwtSecurityContextRepository implements SecurityContextRepository {
     @Override
     public SecurityContext loadContext(HttpRequestResponseHolder requestResponseHolder) {
         HttpServletRequest request = requestResponseHolder.getRequest();
-        String jwt = JwtUtils.getJwt(request);
+        String jwt = TokenUtils.getToken(request);
         if (StringUtils.isBlank(jwt)) {
             return generateNewContext();
         }
@@ -84,7 +84,7 @@ public class JwtSecurityContextRepository implements SecurityContextRepository {
 
     @Override
     public boolean containsContext(HttpServletRequest request) {
-        String jwt = JwtUtils.getJwt(request);
+        String jwt = TokenUtils.getToken(request);
         return StringUtils.isNotBlank(jwt);
     }
 

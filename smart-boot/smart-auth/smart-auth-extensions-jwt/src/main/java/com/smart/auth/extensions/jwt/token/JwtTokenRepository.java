@@ -195,7 +195,12 @@ public class JwtTokenRepository implements TokenRepository {
     @Override
     public TokenData getData(String token) {
         RestUserDetails user = this.jwtResolver.resolver(token);
-        return (TokenData) this.authCache.get(this.getTokenKey(user.getUsername(), token));
+        TokenData tokenData = (TokenData) this.authCache.get(this.getTokenKey(user.getUsername(), token));
+        if (tokenData == null) {
+            return null;
+        }
+        tokenData.setUser(user);
+        return tokenData;
     }
 
     /**

@@ -81,6 +81,10 @@
 			<artifactId>smart-auth-api</artifactId>
 			<version>${smart-boot.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-context</artifactId>
+		</dependency>
     </dependencies>
 
 </project>
