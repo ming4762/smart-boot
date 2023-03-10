@@ -89,7 +89,7 @@ public class AuthSecurity2AutoConfiguration {
     @ConditionalOnProperty(prefix = "smart.auth", name = "method", havingValue = "true")
     @ConditionalOnMissingBean(PermissionEvaluator.class)
     public PermissionEvaluator permissionEvaluator(AuthProperties authProperties) {
-        return new MethodPermissionEvaluatorImpl(authProperties);
+        return new MethodPermissionEvaluatorImpl(authProperties.getDevelopment());
     }
 
     /**
