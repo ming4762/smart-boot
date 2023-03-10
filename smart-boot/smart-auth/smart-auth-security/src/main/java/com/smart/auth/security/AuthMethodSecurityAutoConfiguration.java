@@ -17,7 +17,7 @@ public class AuthMethodSecurityAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public PermissionEvaluator methodPermissionEvaluatorImpl(AuthProperties authProperties) {
-        return new MethodPermissionEvaluatorImpl(authProperties);
+        return new MethodPermissionEvaluatorImpl(authProperties.getDevelopment());
     }
 
 }

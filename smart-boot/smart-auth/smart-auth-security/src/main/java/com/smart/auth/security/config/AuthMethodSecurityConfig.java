@@ -14,7 +14,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
  * @since 1.0
  */
 @EnableMethodSecurity
-@ConditionalOnProperty(prefix = "smart.auth", name = "method", havingValue = "true")
+@ConditionalOnProperty(prefix = "smart.auth", name = "method", havingValue = "true", matchIfMissing = true)
 public class AuthMethodSecurityConfig {
 
     private final PermissionEvaluator permissionEvaluator;

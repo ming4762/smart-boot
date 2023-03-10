@@ -90,7 +90,7 @@ public class AuthSecurity2AutoConfiguration {
     @ConditionalOnBean(AuthorizationManagerBeforeMethodInterceptor.class)
     @ConditionalOnMissingBean(PermissionEvaluator.class)
     public PermissionEvaluator permissionEvaluator(AuthProperties authProperties) {
-        return new MethodPermissionEvaluatorImpl(authProperties);
+        return new MethodPermissionEvaluatorImpl(authProperties.getDevelopment());
     }
 
     /**

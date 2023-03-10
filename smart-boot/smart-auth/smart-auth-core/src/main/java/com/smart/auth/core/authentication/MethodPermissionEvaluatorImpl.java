@@ -1,12 +1,11 @@
 package com.smart.auth.core.authentication;
 
 import com.smart.auth.core.constants.RoleEnum;
-import com.smart.auth.core.properties.AuthProperties;
 import com.smart.auth.core.userdetails.RestUserDetails;
+import com.smart.commons.core.dto.auth.Permission;
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
-import com.smart.commons.core.dto.auth.Permission;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -19,17 +18,16 @@ import java.util.stream.Collectors;
  */
 public class MethodPermissionEvaluatorImpl implements PermissionEvaluator {
 
+    private final Boolean developmentMode;
 
-    private final AuthProperties authProperties;
-
-    public MethodPermissionEvaluatorImpl(AuthProperties authProperties) {
-        this.authProperties = authProperties;
+    public MethodPermissionEvaluatorImpl(Boolean developmentMode) {
+        this.developmentMode = developmentMode;
     }
 
     @Override
     public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permission) {
         // 开发模式不拦截
-        if (BooleanUtils.isTrue(this.authProperties.getDevelopment())) {
+        if (BooleanUtils.isTrue(developmentMode)) {
             return true;
         }
         // 验证角色，超级管理员角色不拦截
