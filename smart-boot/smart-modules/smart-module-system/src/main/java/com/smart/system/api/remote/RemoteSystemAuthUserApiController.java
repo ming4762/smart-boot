@@ -1,4 +1,4 @@
-package com.smart.system.api;
+package com.smart.system.api.remote;
 
 import com.smart.commons.core.dto.auth.UserRolePermission;
 import com.smart.module.api.system.SystemAuthUserApi;
