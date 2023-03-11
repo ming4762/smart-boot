@@ -30,15 +30,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, toRefs, watch } from 'vue'
+import { defineComponent, ref, onMounted, toRefs, watch, unref } from 'vue'
 import type { PropType } from 'vue'
 
 import { message } from 'ant-design-vue'
 
 import TreeUtils from '/@/utils/TreeUtils'
-import ApiService from '/@/common/utils/ApiService'
 
 import { SystemPermissions } from '/@/modules/system/constants/SystemConstants'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 
 /**
  * 设置角色对应的功能
@@ -65,8 +65,12 @@ export default defineComponent({
     const loadFunctionTreeData = async () => {
       dataLoading.value = true
       try {
-        const result: Array<any> = await ApiService.postAjax('/sys/function/list', {
-          sortName: 'seq',
+        const result = await defHttp.post({
+          service: ApiServiceEnum.SMART_SYSTEM,
+          url: 'sys/function/list',
+          data: {
+            sortName: 'seq',
+          },
         })
         functionTreeData.value =
           TreeUtils.convertList2Tree(
@@ -92,10 +96,11 @@ export default defineComponent({
       if (roleId.value !== null) {
         dataLoading.value = true
         try {
-          checkedKeysModel.value = await ApiService.postAjax(
-            'sys/role/listFunctionId',
-            roleId.value,
-          )
+          checkedKeysModel.value = await defHttp.post({
+            service: ApiServiceEnum.SMART_SYSTEM,
+            url: 'sys/role/listFunctionId',
+            data: unref(roleId),
+          })
         } finally {
           dataLoading.value = false
         }
@@ -111,9 +116,13 @@ export default defineComponent({
       }
       saveLoading.value = true
       try {
-        await ApiService.postAjax('sys/role/saveRoleMenu', {
-          roleId: roleId.value,
-          functionIdList: checkedKeysModel.value.checked,
+        await defHttp.post({
+          service: ApiServiceEnum.SMART_SYSTEM,
+          url: 'sys/role/saveRoleMenu',
+          data: {
+            roleId: roleId.value,
+            functionIdList: checkedKeysModel.value.checked,
+          },
         })
         message.success('保存成功')
       } finally {

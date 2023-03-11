@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 
-import ApiService from '/@/common/utils/ApiService'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 
 /**
  * 显示日志详情
@@ -15,7 +15,11 @@ export const useShowDetails = () => {
     detailsModalVisible.value = true
     getDetailLoading.value = true
     try {
-      detailsData.value = await ApiService.postAjax('sys/log/getById', id)
+      detailsData.value = await defHttp.post({
+        service: ApiServiceEnum.SMART_SYSTEM,
+        url: 'sys/log/getById',
+        data: id,
+      })
     } finally {
       getDetailLoading.value = false
     }

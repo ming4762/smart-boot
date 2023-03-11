@@ -1,9 +1,9 @@
 import { useUserStore } from '/@/store/modules/user'
 import { usePermission } from '/@/hooks/web/usePermission'
-import ApiService from '/@/common/utils/ApiService'
 import { UserInfo } from '/#/store'
 import type { SmartAuth } from '/#/utils'
 import { isString } from '/@/utils/is'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 
 /**
  * 是否是超级管理员
@@ -42,7 +42,11 @@ export const hasPermission = (auth?: SmartAuth | string): boolean => {
  * @param once 是否只使用一次
  */
 export const applyTempToken = async (resource: string, once = true): Promise<string> => {
-  return await ApiService.postAjax('auth/tempToken/apply', { resource, once })
+  return await defHttp.post({
+    service: ApiServiceEnum.SMART_AUTH,
+    url: 'auth/tempToken/apply',
+    data: { resource, once },
+  })
 }
 
 /**

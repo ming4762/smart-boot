@@ -297,6 +297,8 @@ export enum ApiServiceEnum {
   SMART_AUTH = 'smart-auth',
   SMART_SYSTEM = 'smart-system',
   SMART_FILE = 'smart-file',
+  // 代码生成器
+  SMART_CODE = 'smart-code',
 }
 
 // other api url

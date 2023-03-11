@@ -40,8 +40,8 @@ import { CloseCircleOutlined } from '@ant-design/icons-vue'
 
 import { useSystemExceptionStore } from '/@/store/modules/exception'
 
-import ApiService from '/@/common/utils/ApiService'
 import { successMessage } from '/@/common/utils/SystemNotice'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 
 export default defineComponent({
   name: 'ExceptionModal',
@@ -67,12 +67,18 @@ export default defineComponent({
     const handleSubmit = async () => {
       submitLoading.value = true
       try {
-        await ApiService.postAjax('sys/exception/feedback', {
-          idList: noList.value,
-          ...model.value,
+        await defHttp.post({
+          service: ApiServiceEnum.SMART_SYSTEM,
+          url: 'sys/exception/feedback',
+          data: {
+            idList: noList.value,
+            ...model.value,
+          },
         })
         handleHideModal()
-        successMessage(t('common.message.submitSuccess'))
+        successMessage({
+          msg: t('common.message.submitSuccess'),
+        })
       } catch (e) {
         console.log(e)
       } finally {

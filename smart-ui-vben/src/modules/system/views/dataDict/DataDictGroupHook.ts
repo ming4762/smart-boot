@@ -1,11 +1,15 @@
-import ApiService from '/@/common/utils/ApiService'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 
 /**
  * 通过ID查询
  * @param id ID
  */
 export const handleGetById = async (id: string) => {
-  return await ApiService.postAjax('sys/dict/getById', { id: id })
+  return await defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
+    url: 'sys/dict/getById',
+    data: { id: id },
+  })
 }
 
 /**
@@ -13,7 +17,11 @@ export const handleGetById = async (id: string) => {
  * @param model 添加保存参数
  */
 export const handleSaveUpdate = async (model: any) => {
-  await ApiService.postAjax('sys/dict/saveUpdate', model)
+  return await defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
+    url: 'sys/dict/saveUpdate',
+    data: model,
+  })
 }
 
 /**
@@ -21,5 +29,12 @@ export const handleSaveUpdate = async (model: any) => {
  * @param idList ID列表
  */
 export const handleDelete = async (idList: Array<any>) => {
-  await ApiService.postAjax('sys/dict/batchDeleteById', idList, { errorMessageMode: 'modal' })
+  return await defHttp.post(
+    {
+      service: ApiServiceEnum.SMART_SYSTEM,
+      url: 'sys/dict/batchDeleteById',
+      data: idList,
+    },
+    { errorMessageMode: 'modal' },
+  )
 }

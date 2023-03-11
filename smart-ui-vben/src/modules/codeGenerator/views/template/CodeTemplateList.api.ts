@@ -1,4 +1,4 @@
-import { defHttp } from '/@/utils/http/axios'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 
 enum Api {
   list = 'db/code/template/list',
@@ -9,12 +9,14 @@ enum Api {
 
 export const listApi = (params) =>
   defHttp.post({
+    service: ApiServiceEnum.SMART_CODE,
     url: Api.list,
     data: params,
   })
 
 export const saveUpdateApi = (model) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_CODE,
     url: Api.saveUpdate,
     data: model,
   })
@@ -22,6 +24,7 @@ export const saveUpdateApi = (model) => {
 
 export const deleteApi = (ids: number[]) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_CODE,
     url: Api.delete,
     data: ids,
   })
@@ -29,6 +32,7 @@ export const deleteApi = (ids: number[]) => {
 
 export const getByIdApi = (id: number) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_CODE,
     url: Api.getById,
     data: id,
   })

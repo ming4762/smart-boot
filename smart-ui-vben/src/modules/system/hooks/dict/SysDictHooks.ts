@@ -1,8 +1,8 @@
 import { computed, ref, unref, watch } from 'vue'
 import type { Ref } from 'vue'
 
-import ApiService from '/@/common/utils/ApiService'
 import { errorMessage } from '/@/common/utils/SystemNotice'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 
 /**
  * 加载字典项hook
@@ -27,7 +27,11 @@ export const useLoadDictItem = (dictCodeRef: Ref<string> | string) => {
       dictData.value = []
     } else {
       try {
-        dictData.value = await ApiService.postAjax('sys/dict/listItemByCode', dictCode)
+        dictData.value = await defHttp.post({
+          service: ApiServiceEnum.SMART_SYSTEM,
+          url: 'sys/dict/listItemByCode',
+          data: dictCode,
+        })
       } catch (e) {
         errorMessage(e)
       }

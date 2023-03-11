@@ -1,6 +1,6 @@
 import type { VxeGridPropTypes } from 'vxe-table'
 
-import { defHttp } from '/@/utils/http/axios'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 import TreeUtils from '/@/utils/TreeUtils'
 
 enum Api {
@@ -17,6 +17,7 @@ enum Api {
 
 export const listApi = (ajaxParameter) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.list,
     data: ajaxParameter,
   })
@@ -24,6 +25,7 @@ export const listApi = (ajaxParameter) => {
 
 export const deleteApi = (params: VxeGridPropTypes.ProxyAjaxDeleteParams) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.delete,
     data: params.body.removeRecords.map((item) => item.userId),
   })
@@ -41,6 +43,7 @@ export const saveUpdateWithDataScopeApi = async ({
     model.deptId = null
   }
   return await defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.saveUpdateWithDataScope,
     data: saveList[0],
   })
@@ -48,6 +51,7 @@ export const saveUpdateWithDataScopeApi = async ({
 
 export const getByIdWithDataScopeApi = async (params) => {
   const result = await defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.getByIdWithDataScope,
     data: params.userId,
   })
@@ -59,6 +63,7 @@ export const getByIdWithDataScopeApi = async (params) => {
 
 export const setUseYnApi = (userList: any[], useYn: boolean) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.setUseYn,
     data: {
       idList: userList.map((item) => item.userId),
@@ -69,6 +74,7 @@ export const setUseYnApi = (userList: any[], useYn: boolean) => {
 
 export const createAccountApi = (userList: any[]) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.createAccount,
     data: userList.map((item) => item.userId),
   })
@@ -76,6 +82,7 @@ export const createAccountApi = (userList: any[]) => {
 
 export const saveAccountSettingApi = (data) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.saveAccountSetting,
     data: data,
   })
@@ -83,6 +90,7 @@ export const saveAccountSettingApi = (data) => {
 
 export const getByIdApi = (id: string | null) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.getById,
     data: id,
   })
@@ -90,6 +98,7 @@ export const getByIdApi = (id: string | null) => {
 
 export const getDeptTreeListApi = async () => {
   const data = await defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.deptTreeList,
     data: {
       sortName: 'seq',

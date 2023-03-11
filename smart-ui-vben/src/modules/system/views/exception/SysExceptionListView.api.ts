@@ -1,4 +1,4 @@
-import { defHttp } from '/@/utils/http/axios'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 
 enum Api {
   list = 'sys/exception/list',
@@ -7,6 +7,7 @@ enum Api {
 
 export const listApi = (params) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.list,
     data: params,
   })
@@ -14,6 +15,7 @@ export const listApi = (params) => {
 
 export const getById = (id) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.getById,
     data: id,
   })

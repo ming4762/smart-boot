@@ -1,4 +1,4 @@
-import { defHttp } from '/@/utils/http/axios'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 
 enum Api {
   listDict = 'sys/dict/list',
@@ -14,6 +14,7 @@ enum Api {
 
 export const listDictApi = (parameter) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.listDict,
     data: parameter,
   })
@@ -21,6 +22,7 @@ export const listDictApi = (parameter) => {
 
 export const getByIdDictApi = (id) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.getByIdDict,
     data: {
       id: id,
@@ -30,6 +32,7 @@ export const getByIdDictApi = (id) => {
 
 export const batchSaveUpdateDictApi = (parameter: any[]) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.batchSaveUpdateDict,
     data: parameter,
   })
@@ -37,6 +40,7 @@ export const batchSaveUpdateDictApi = (parameter: any[]) => {
 
 export const deleteDictApi = (parameter: any[]) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.deleteDict,
     data: parameter,
   })
@@ -44,6 +48,7 @@ export const deleteDictApi = (parameter: any[]) => {
 
 export const listDictItemApi = (parameter) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.listItem,
     data: parameter,
   })
@@ -51,6 +56,7 @@ export const listDictItemApi = (parameter) => {
 
 export const getByIdDictItemApi = (parameter) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.getByIdItem,
     data: parameter.id,
   })
@@ -58,6 +64,7 @@ export const getByIdDictItemApi = (parameter) => {
 
 export const batchSaveUpdateDictItemApi = (parameter: any[]) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.batchSaveUpdateItem,
     data: parameter,
   })
@@ -65,6 +72,7 @@ export const batchSaveUpdateDictItemApi = (parameter: any[]) => {
 
 export const deleteDictItemApi = (parameter: any[]) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.deleteItem,
     data: parameter,
   })

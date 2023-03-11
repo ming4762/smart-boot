@@ -1,4 +1,4 @@
-import { defHttp } from '/@/utils/http/axios'
+import {ApiServiceEnum, defHttp} from '/@/utils/http/axios'
 
 enum Api {
   list = '/smart/fileStorage/list',
@@ -10,6 +10,7 @@ enum Api {
 
 export const listApi = (params) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_FILE,
     url: Api.list,
     data: {
       ...params,
@@ -19,6 +20,7 @@ export const listApi = (params) => {
 
 export const batchSaveUpdateApi = (modelList: any[]) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_FILE,
     url: Api.batchSaveUpdate,
     data: modelList,
   })
@@ -26,6 +28,7 @@ export const batchSaveUpdateApi = (modelList: any[]) => {
 
 export const deleteApi = (removeRecords: Recordable[]) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_FILE,
     url: Api.delete,
     data: removeRecords.map((item) => item.id),
   })
@@ -33,6 +36,7 @@ export const deleteApi = (removeRecords: Recordable[]) => {
 
 export const getByIdApi = (model: Recordable) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_FILE,
     url: Api.getById,
     data: model.id,
   })
@@ -40,6 +44,7 @@ export const getByIdApi = (model: Recordable) => {
 
 export const setDefaultApi = (id) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_FILE,
     url: Api.setDefault,
     data: {
       id,

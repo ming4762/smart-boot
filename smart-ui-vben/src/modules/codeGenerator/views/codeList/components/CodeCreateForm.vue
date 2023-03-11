@@ -44,7 +44,7 @@ import { message } from 'ant-design-vue'
 
 import { TemplateType } from '/@/modules/codeGenerator/constants/DatabaseConstants'
 
-import ApiService from '/@/common/utils/ApiService'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 
 const modelData = {
   description: '',
@@ -83,9 +83,13 @@ export default defineComponent({
     const loadTemplateData = async () => {
       dataLoading.value = true
       try {
-        const result = await ApiService.postAjax('db/code/template/list', {
-          parameter: {
-            'templateType@=': TemplateType.TEMPLATE_CODE.value,
+        const result = await defHttp.post({
+          service: ApiServiceEnum.SMART_CODE,
+          url: 'db/code/template/list',
+          data: {
+            parameter: {
+              'templateType@=': TemplateType.TEMPLATE_CODE.value,
+            },
           },
         })
         transDataSource.value = result.map((item: any) => {

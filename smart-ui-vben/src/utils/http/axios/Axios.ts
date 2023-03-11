@@ -15,7 +15,7 @@ import { cloneDeep } from 'lodash-es'
 import { ContentTypeEnum } from '/@/enums/httpEnum'
 import { RequestEnum } from '/@/enums/httpEnum'
 import { downloadByData } from '/@/utils/file/download'
-import {useGlobSetting} from '/@/hooks/setting';
+import { useGlobSetting } from '/@/hooks/setting'
 
 export * from './axiosTransform'
 

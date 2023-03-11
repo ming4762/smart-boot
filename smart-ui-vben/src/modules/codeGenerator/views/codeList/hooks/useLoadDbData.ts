@@ -1,6 +1,6 @@
 import { computed, ref } from 'vue'
-import ApiService from '/@/common/utils/ApiService'
 import { isNotBlank } from '/@/utils/is'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 
 export const useLoadDbData = ({ validateAddEdit }) => {
   // 数据库数据加载状态
@@ -15,9 +15,13 @@ export const useLoadDbData = ({ validateAddEdit }) => {
     if (isNotBlank(connectionId) && isNotBlank(tableName)) {
       dbDataLoading.value = true
       try {
-        dbData.value = await ApiService.postAjax('db/connection/queryDbTable', {
-          dbConnectionId: connectionId,
-          tableName: tableName,
+        dbData.value = await defHttp.post({
+          service: ApiServiceEnum.SMART_CODE,
+          url: 'db/connection/queryDbTable',
+          data: {
+            dbConnectionId: connectionId,
+            tableName: tableName,
+          },
         })
       } finally {
         dbDataLoading.value = false

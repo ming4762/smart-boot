@@ -1,4 +1,4 @@
-import { defHttp } from '/@/utils/http/axios'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 
 enum Api {
   list = 'sys/system/listAuthUser',
@@ -11,6 +11,7 @@ enum Api {
 
 export const listApi = (params) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.list,
     data: {
       ...params,
@@ -20,6 +21,7 @@ export const listApi = (params) => {
 
 export const saveUpdateApi = (insertRecords, updateRecords) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.saveUpdate,
     data: [...insertRecords, ...updateRecords][0],
   })
@@ -27,12 +29,14 @@ export const saveUpdateApi = (insertRecords, updateRecords) => {
 
 export const deleteApi = (removeRecords: Recordable[]) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.delete,
     data: removeRecords.map((item) => item.id),
   })
 }
 export const getByIdApi = (id: number) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.getById,
     data: id,
   })
@@ -40,6 +44,7 @@ export const getByIdApi = (id: number) => {
 
 export const setUserApi = (data: { systemId: number; userIdList: number[] }) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.setUser,
     data,
   })
@@ -47,6 +52,7 @@ export const setUserApi = (data: { systemId: number; userIdList: number[] }) => 
 
 export const getRelatedUserIdApi = (systemId: number) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.getRelatedUserId,
     data: {
       id: systemId,

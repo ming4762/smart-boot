@@ -16,10 +16,10 @@ import { defineComponent, onMounted, ref } from 'vue'
 
 import { Codemirror } from '/@/components/Codemirror'
 
-import ApiService from '/@/common/utils/ApiService'
 import FileUtils from '/@/utils/file/FileUtils'
 
 import { extensionLanguageMap } from './CodeCreateSupport'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 
 /**
  * 代码生成页面
@@ -39,12 +39,13 @@ export default defineComponent({
     const loadData = async () => {
       dataLoading.value = true
       try {
-        data.value = await ApiService.postAjax(
-          'db/code/main/createCode',
-          Object.assign({}, attrs, {
+        data.value = await defHttp.post({
+          service: ApiServiceEnum.SMART_CODE,
+          url: 'db/code/main/createCode',
+          data: Object.assign({}, attrs, {
             templateIdList: attrs.templateIdList.split(','),
           }),
-        )
+        })
       } finally {
         dataLoading.value = false
       }

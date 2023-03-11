@@ -70,17 +70,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, toRefs, watch } from 'vue'
+import { defineComponent, ref, toRefs, unref, watch } from 'vue'
 import type { Ref } from 'vue'
 import type { PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import dayjs from 'dayjs'
 import { message } from 'ant-design-vue'
-import ApiService from '/@/common/utils/ApiService'
 import { SystemPermissions } from '/@/modules/system/constants/SystemConstants'
 import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
 import { useVxeDelete } from '/@/hooks/page/CrudHooks'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 
 const loadDataVueSupport = (i18nId: Ref<number | null | undefined>) => {
   const dataLoading = ref(false)
@@ -92,9 +92,13 @@ const loadDataVueSupport = (i18nId: Ref<number | null | undefined>) => {
   const loadData = async () => {
     dataLoading.value = true
     try {
-      tableData.value = await ApiService.postAjax('sys/i18nItem/list', {
-        parameter: {
-          'i18nId@=': i18nId.value,
+      tableData.value = await defHttp.post({
+        service: ApiServiceEnum.SMART_SYSTEM,
+        url: 'sys/i18nItem/list',
+        data: {
+          parameter: {
+            'i18nId@=': i18nId.value,
+          },
         },
       })
     } catch (e: any) {
@@ -132,7 +136,12 @@ const addEditVueSupport = (loadData: Function, i18nId: Ref) => {
       addEditModalVisible.value = true
       getLoading.value = true
       try {
-        saveModel.value = (await ApiService.postAjax('sys/i18nItem/getById', id)) || {}
+        saveModel.value =
+          (await defHttp.post({
+            service: ApiServiceEnum.SMART_SYSTEM,
+            url: 'sys/i18nItem/getById',
+            data: id,
+          })) || {}
       } finally {
         getLoading.value = false
       }
@@ -157,7 +166,11 @@ const addEditVueSupport = (loadData: Function, i18nId: Ref) => {
     }
     saveLoading.value = true
     try {
-      await ApiService.postAjax('sys/i18nItem/saveUpdate', saveModel.value)
+      await defHttp.post({
+        service: ApiServiceEnum.SMART_SYSTEM,
+        url: 'sys/i18nItem/saveUpdate',
+        data: unref(saveModel),
+      })
     } catch (e: any) {
       console.error(e)
       message.error(e && e.message)
@@ -198,7 +211,11 @@ export default defineComponent({
       gridRef,
       t,
       async (idList: Array<number>) => {
-        await ApiService.postAjax('sys/i18nItem/batchDeleteById', idList)
+        await defHttp.post({
+          service: ApiServiceEnum.SMART_SYSTEM,
+          url: 'sys/i18nItem/batchDeleteById',
+          data: idList,
+        })
       },
       {
         idField: 'i18nItemId',

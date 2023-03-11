@@ -15,11 +15,14 @@
 import { defineComponent, onMounted } from 'vue'
 
 import { useVxeTable } from '/@/hooks/page/CrudHooks'
-import ApiService from '/@/common/utils/ApiService'
 import { tableBooleanColumn } from '/@/components/common/TableCommon'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 
 const doLoadData = () => {
-  return ApiService.postAjax('db/code/main/getTemplateDataDocument')
+  defHttp.post({
+    service: ApiServiceEnum.SMART_CODE,
+    url: 'db/code/main/getTemplateDataDocument',
+  })
 }
 
 export default defineComponent({

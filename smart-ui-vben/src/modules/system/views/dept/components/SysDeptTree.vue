@@ -34,8 +34,8 @@ import { computed, defineComponent, onMounted, reactive, ref, toRefs, unref, wat
 
 import { errorMessage } from '/@/common/utils/SystemNotice'
 import TreeUtils from '/@/utils/TreeUtils'
-import ApiService from '/@/common/utils/ApiService'
 import { propTypes } from '/@/utils/propTypes'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 
 const getParentKey = (key: number, treeData: Array<any>): number => {
   let parentKey
@@ -163,7 +163,11 @@ export default defineComponent({
       }
       try {
         loading.value = true
-        const result = (await ApiService.postAjax('sys/dept/list', parameter)) as any[]
+        const result = (await defHttp.post({
+          service: ApiServiceEnum.SMART_SYSTEM,
+          url: 'sys/dept/list',
+          data: parameter,
+        })) as any[]
 
         result.forEach((item) => {
           if (item.hasChild !== true) {
