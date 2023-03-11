@@ -69,7 +69,7 @@ import { EditOutlined, DeleteOutlined } from '@ant-design/icons-vue'
 
 import { ContextMenu } from '/@/components/ContextMenu'
 import { useVxeTable, useAddEdit, useVxeDelete } from '/@/hooks/page/CrudHooks'
-import ApiService from '/@/common/utils/ApiService'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 
 const handleLoadData = async () => {
   const result = [
@@ -77,22 +77,39 @@ const handleLoadData = async () => {
       groupName: 'ALL',
     },
   ]
-  return result.concat((await ApiService.postAjax('db/code/template/listGroup')) || [])
+  return result.concat(
+    (await defHttp.post({
+      url: 'db/code/template/listGroup',
+      service: ApiServiceEnum.SMART_CODE,
+    })) || [],
+  )
 }
 
 /**
  * 通过ID查询
  */
 const handleGet = (id: any) => {
-  return ApiService.postAjax('db/code/template/getGroupById', id)
+  return defHttp.post({
+    service: ApiServiceEnum.SMART_CODE,
+    url: 'db/code/template/getGroupById',
+    data: id,
+  })
 }
 
 const handleSaveUpdate = async (model: any) => {
-  await ApiService.postAjax('db/code/template/saveUpdateGroup', model)
+  return defHttp.post({
+    service: ApiServiceEnum.SMART_CODE,
+    url: 'db/code/template/saveUpdateGroup',
+    data: model,
+  })
 }
 
 const handleDelete = async (idList: Array<any>) => {
-  await ApiService.postAjax('db/code/template/deleteGroupById', idList)
+  return defHttp.post({
+    service: ApiServiceEnum.SMART_CODE,
+    url: 'db/code/template/deleteGroupById',
+    data: idList,
+  })
 }
 
 export default defineComponent({

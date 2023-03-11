@@ -1,4 +1,4 @@
-import { defHttp } from '/@/utils/http/axios'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 
 enum Api {
   getById = 'sys/dept/getById',
@@ -8,6 +8,7 @@ enum Api {
 
 export const getByIdApi = (params) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.getById,
     data: params,
   })
@@ -15,6 +16,7 @@ export const getByIdApi = (params) => {
 
 export const saveUpdateBatchApi = (modelList: any[]) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.saveUpdateBatch,
     data: modelList,
   })
@@ -22,6 +24,7 @@ export const saveUpdateBatchApi = (modelList: any[]) => {
 
 export const deleteApi = (ids: number[]) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.delete,
     data: ids,
   })

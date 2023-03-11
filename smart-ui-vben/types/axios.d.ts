@@ -2,7 +2,7 @@ import type { AxiosRequestConfig } from 'axios'
 
 export type ErrorMessageMode = 'none' | 'modal' | 'message' | undefined
 
-export type ApiService = 'smart-auth' | 'smart-system' | '' | 'smart-file'
+export type ApiService = 'smart-auth' | 'smart-system' | '' | 'smart-file' | 'smart-code'
 
 export interface SmartAxiosRequestConfig<D = any> extends AxiosRequestConfig<D> {
   // 指定请求发送的服务

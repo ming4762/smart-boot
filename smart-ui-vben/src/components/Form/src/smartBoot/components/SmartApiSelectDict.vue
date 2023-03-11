@@ -5,7 +5,7 @@
 <script lang="ts" setup>
 import ApiSelect from '../../components/ApiSelect.vue'
 import { propTypes } from '/@/utils/propTypes'
-import { defHttp } from '/@/utils/http/axios'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 
 const props = defineProps({
   dictCode: propTypes.string.isRequired,
@@ -13,6 +13,7 @@ const props = defineProps({
 
 const api = () => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: 'sys/dict/listItemByCode',
     data: props.dictCode,
   })

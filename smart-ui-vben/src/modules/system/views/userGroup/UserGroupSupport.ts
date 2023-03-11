@@ -1,10 +1,10 @@
-import { ref, onMounted, reactive, createVNode } from 'vue'
+import { ref, onMounted, reactive, createVNode, unref } from 'vue'
 import type { Ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import ApiService from '/@/common/utils/ApiService'
 import { message, Modal } from 'ant-design-vue'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 
 const defaultSearchModel = {
   groupCode: '',
@@ -61,7 +61,11 @@ export const vueLoadData = () => {
     allParameter.parameter = customParameter
     loading.value = true
     try {
-      const { rows, total } = await ApiService.postAjax('sys/userGroup/list', allParameter)
+      const { rows, total } = await defHttp.post({
+        service: ApiServiceEnum.SMART_SYSTEM,
+        url: 'sys/userGroup/list',
+        data: allParameter,
+      })
       tablePage.total = total
       data.value = rows
     } finally {
@@ -151,7 +155,11 @@ export const vueAddUpdate = (loadData: any) => {
     addEditModalVisible.value = true
     getLoading.value = true
     try {
-      addEditModel.value = await ApiService.postAjax('sys/userGroup/getById', id)
+      addEditModel.value = await defHttp.post({
+        service: ApiServiceEnum.SMART_SYSTEM,
+        url: 'sys/userGroup/getById',
+        data: id,
+      })
     } finally {
       getLoading.value = false
     }
@@ -162,7 +170,11 @@ export const vueAddUpdate = (loadData: any) => {
   const handleSave = async () => {
     saveLoading.value = true
     try {
-      await ApiService.postAjax('sys/userGroup/saveUpdate', addEditModel.value)
+      await defHttp.post({
+        service: ApiServiceEnum.SMART_SYSTEM,
+        url: 'sys/userGroup/saveUpdate',
+        data: unref(addEditModel),
+      })
       addEditModalVisible.value = false
       loadData()
     } finally {
@@ -201,10 +213,11 @@ export const vueDelete = (gridRef: Ref, loadData: any) => {
       icon: createVNode(ExclamationCircleOutlined),
       content: '确定要删除吗？',
       onOk: async () => {
-        await ApiService.postAjax(
-          'sys/userGroup/batchDeleteById',
-          selectRows.map((item: any) => item.groupId),
-        )
+        await defHttp.post({
+          service: ApiServiceEnum.SMART_SYSTEM,
+          url: 'sys/userGroup/batchDeleteById',
+          data: selectRows.map((item: any) => item.groupId),
+        })
         loadData()
       },
     })
@@ -237,10 +250,14 @@ export const vueSetUser = () => {
       loadUserLoading.value = true
       // 加载所有用户数据
       if (allUserData.value.length === 0) {
-        const result: Array<any> = await ApiService.postAjax('sys/user/list', {
-          sortName: 'seq',
-          parameter: {
-            'useYn@=': true,
+        const result: Array<any> = await defHttp.post({
+          service: ApiServiceEnum.SMART_SYSTEM,
+          url: 'sys/user/list',
+          data: {
+            sortName: 'seq',
+            parameter: {
+              'useYn@=': true,
+            },
           },
         })
         allUserData.value = result.map(({ userId, fullName, username }: any) => {
@@ -251,10 +268,11 @@ export const vueSetUser = () => {
         })
       }
       // 加载用户关联数据
-      const result: Array<number> = await ApiService.postAjax(
-        'sys/userGroup/listUserIdById',
-        selectRow.groupId,
-      )
+      const result: Array<number> = await defHttp.post({
+        service: ApiServiceEnum.SMART_SYSTEM,
+        url: 'sys/userGroup/listUserIdById',
+        data: selectRow.groupId,
+      })
       targetKeys.value = result.map((item) => item + '')
     } finally {
       loadUserLoading.value = false
@@ -269,9 +287,13 @@ export const vueSetUser = () => {
   const handleSetUser = async () => {
     try {
       setUserLoading.value = true
-      await ApiService.postAjax('sys/userGroup/saveUserGroupByGroupId', {
-        groupId: selectRow.groupId,
-        userIdList: targetKeys.value,
+      await defHttp.post({
+        service: ApiServiceEnum.SMART_SYSTEM,
+        url: 'sys/userGroup/saveUserGroupByGroupId',
+        data: {
+          groupId: selectRow.groupId,
+          userIdList: targetKeys.value,
+        },
       })
       setUserModalVisible.value = false
     } finally {

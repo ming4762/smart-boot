@@ -39,10 +39,10 @@
 import { defineComponent, toRefs, onMounted, ref, reactive, watch, computed } from 'vue'
 import type { PropType } from 'vue'
 
-import ApiService from '/@/common/utils/ApiService'
 import { isSuperAdmin, getCurrentUserId } from '/@/common/auth/AuthUtils'
 
 import { message } from 'ant-design-vue'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 
 /**CodeListView
  * 模板设置关联的用户组
@@ -85,10 +85,14 @@ export default defineComponent({
     const loadAllUserGroup = async () => {
       try {
         dataLoading.value = true
-        allUserGroup.value = await ApiService.postAjax('sys/userGroup/list', {
-          sortName: 'seq',
-          parameter: {
-            'useYn@=': true,
+        allUserGroup.value = await defHttp.post({
+          service: ApiServiceEnum.SMART_SYSTEM,
+          url: 'sys/userGroup/list',
+          data: {
+            sortName: 'seq',
+            parameter: {
+              'useYn@=': true,
+            },
           },
         })
       } finally {
@@ -105,10 +109,11 @@ export default defineComponent({
       }
       try {
         dataLoading.value = true
-        const result: Array<any> = await ApiService.postAjax(
-          'db/code/template/listUserGroupByTemplate',
-          templateValue.templateId,
-        )
+        const result: Array<any> = await defHttp.post({
+          service: ApiServiceEnum.SMART_CODE,
+          url: 'db/code/template/listUserGroupByTemplate',
+          data: templateValue.templateId,
+        })
         rowSelection.selectedRowKeys = result.map((item) => item.groupId)
       } finally {
         dataLoading.value = false
@@ -125,9 +130,13 @@ export default defineComponent({
       }
       try {
         saveLoading.value = true
-        await ApiService.postAjax('db/code/template/saveTemplateUserGroup', {
-          templateId: templateValue.templateId,
-          groupIdList: rowSelection.selectedRowKeys,
+        await defHttp.post({
+          service: ApiServiceEnum.SMART_CODE,
+          url: 'db/code/template/saveTemplateUserGroup',
+          data: {
+            templateId: templateValue.templateId,
+            groupIdList: rowSelection.selectedRowKeys,
+          },
         })
         message.success('保存成功')
       } finally {

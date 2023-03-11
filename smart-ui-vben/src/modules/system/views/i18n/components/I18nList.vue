@@ -115,7 +115,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, toRefs, onMounted, watch, reactive, createVNode } from 'vue'
+import { defineComponent, ref, toRefs, onMounted, watch, reactive, createVNode, unref } from 'vue'
 import type { Ref } from 'vue'
 import type { PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -124,11 +124,11 @@ import { message, Modal } from 'ant-design-vue'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
 import dayjs from 'dayjs'
 
-import ApiService from '/@/common/utils/ApiService'
 import { SystemPermissions } from '/@/modules/system/constants/SystemConstants'
 import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
 import { tableUseYn } from '/@/components/common/TableCommon'
 import { useVxeDelete } from '/@/hooks/page/CrudHooks'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 
 const platformListV = [
   {
@@ -166,10 +166,14 @@ const loadDataVueSupport = (groupId: Ref<number | undefined>, emit: Function) =>
           parameter[`${key}@like`] = value
         }
       })
-      const { rows, total } = await ApiService.postAjax('sys/i18n/list', {
-        limit: tablePage.pageSize,
-        page: tablePage.currentPage,
-        parameter: parameter,
+      const { rows, total } = await defHttp.post({
+        service: ApiServiceEnum.SMART_SYSTEM,
+        url: 'sys/i18n/list',
+        data: {
+          limit: tablePage.pageSize,
+          page: tablePage.currentPage,
+          parameter: parameter,
+        },
       })
       tablePage.total = total
       tableData.value = rows
@@ -224,7 +228,11 @@ const addEditVueSupport = (loadData: Function, groupId: Ref<number | undefined>)
       addEditModalVisible.value = true
       try {
         getLoading.value = true
-        addEditModel.value = await ApiService.postAjax('sys/i18n/getById', id)
+        await defHttp.post({
+          service: ApiServiceEnum.SMART_SYSTEM,
+          url: 'sys/i18n/getById',
+          data: id,
+        })
       } finally {
         getLoading.value = false
       }
@@ -247,7 +255,10 @@ const addEditVueSupport = (loadData: Function, groupId: Ref<number | undefined>)
       content: i18n('system.views.i18n.i18n.message.reloadContent'),
       icon: createVNode(ExclamationCircleOutlined),
       onOk: async () => {
-        await ApiService.postAjax('sys/i18n/reload')
+        await defHttp.post({
+          service: ApiServiceEnum.SMART_SYSTEM,
+          url: 'sys/i18n/reload',
+        })
         message.success(i18n('system.views.i18n.i18n.message.reloadSuccess'))
       },
     })
@@ -264,7 +275,11 @@ const addEditVueSupport = (loadData: Function, groupId: Ref<number | undefined>)
     }
     saveLoading.value = true
     try {
-      await ApiService.postAjax('sys/i18n/saveUpdate', addEditModel.value)
+      await defHttp.post({
+        service: ApiServiceEnum.SMART_SYSTEM,
+        url: 'sys/i18n/saveUpdate',
+        data: unref(addEditModel),
+      })
     } finally {
       saveLoading.value = false
     }
@@ -311,7 +326,11 @@ export default defineComponent({
       gridRef,
       t,
       async (idList: Array<number>) => {
-        await ApiService.postAjax('sys/i18n/batchDeleteById', idList)
+        await defHttp.post({
+          service: ApiServiceEnum.SMART_SYSTEM,
+          url: 'sys/i18n/batchDeleteById',
+          data: idList,
+        })
       },
       {
         idField: 'i18nId',

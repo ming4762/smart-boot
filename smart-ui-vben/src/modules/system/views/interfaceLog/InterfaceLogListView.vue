@@ -199,9 +199,9 @@ import dayjs from 'dayjs'
 
 import { useVxeTable } from '/@/hooks/page/CrudHooks'
 import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
-import ApiService from '/@/common/utils/ApiService'
 
 import { useShowDetails } from './InterfaceLogListHooks'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 
 const parameterLike = ['operation']
 const parameterEq = ['statusCode', 'operationType']
@@ -223,11 +223,15 @@ const doLoadData = async (parameter: any, searchParameter: any) => {
       }
     }
   })
-  return await ApiService.postAjax('sys/log/list', {
-    ...parameter,
-    parameter: {
-      ...params,
-      QUERY_CREATE_UPDATE_USER: true,
+  return await defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
+    url: 'sys/log/list',
+    data: {
+      ...parameter,
+      parameter: {
+        ...params,
+        QUERY_CREATE_UPDATE_USER: true,
+      },
     },
   })
 }

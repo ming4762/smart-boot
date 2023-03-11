@@ -1,4 +1,4 @@
-import { defHttp } from '/@/utils/http/axios'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 
 enum Api {
   queryDbTable = 'db/connection/queryDbTable',
@@ -12,12 +12,18 @@ enum Api {
  * @param tableName
  */
 export const queryDbTableApi = (connectionId: number, tableName: number) =>
-  defHttp.post({ url: Api.queryDbTable, data: { dbConnectionId: connectionId, tableName } })
+  defHttp.post({
+    service: ApiServiceEnum.SMART_CODE,
+    url: Api.queryDbTable,
+    data: { dbConnectionId: connectionId, tableName },
+  })
 
-export const getConfigByIdApi = (configId: number) => defHttp.post({ url: Api.getConfigById, data: configId })
+export const getConfigByIdApi = (configId: number) =>
+  defHttp.post({ service: ApiServiceEnum.SMART_CODE, url: Api.getConfigById, data: configId })
 
 export const saveConfigApi = (model: Recordable) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_CODE,
     url: Api.saveConfig,
     data: model,
   })

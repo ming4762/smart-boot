@@ -12,7 +12,7 @@
 import { defineComponent, ref, toRefs, onMounted } from 'vue'
 import type { PropType } from 'vue'
 
-import ApiService from '/@/common/utils/ApiService'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 
 /**
  * 模板选择组件
@@ -38,9 +38,13 @@ export default defineComponent({
       dataLoading.value = true
       targetKeysModel.value = []
       try {
-        const result = await ApiService.postAjax('db/code/template/list', {
-          parameter: {
-            'templateType@=': templateType.value,
+        const result = await defHttp.post({
+          service: ApiServiceEnum.SMART_CODE,
+          url: 'db/code/template/list',
+          data: {
+            parameter: {
+              'templateType@=': templateType.value,
+            },
           },
         })
         transDataSource.value = result.map((item: any) => {

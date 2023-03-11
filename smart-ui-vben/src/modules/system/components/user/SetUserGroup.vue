@@ -39,7 +39,7 @@
 import { defineComponent, onMounted, reactive, ref, toRefs, watch } from 'vue'
 import type { PropType } from 'vue'
 
-import ApiService from '/@/common/utils/ApiService'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 
 /**
  * 设置用户组组件
@@ -76,10 +76,14 @@ export default defineComponent({
     const loadAllUserGroup = async () => {
       try {
         dataLoading.value = true
-        allUserGroup.value = await ApiService.postAjax('sys/userGroup/list', {
-          sortName: 'seq',
-          parameter: {
-            'useYn@=': true,
+        allUserGroup.value = await defHttp.post({
+          service: ApiServiceEnum.SMART_SYSTEM,
+          url: 'sys/userGroup/list',
+          data: {
+            sortName: 'seq',
+            parameter: {
+              'useYn@=': true,
+            },
           },
         })
       } finally {

@@ -1,4 +1,4 @@
-import { defHttp } from '/@/utils/http/axios'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 import TreeUtils from '/@/utils/TreeUtils'
 import { merge } from 'lodash-es'
 
@@ -19,6 +19,7 @@ export const listTree = async (params) => {
     }),
   }
   const result = await defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.list,
     data: parameter,
   })
@@ -38,6 +39,7 @@ export const listApi = (params) => {
     ...params,
   }
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.list,
     data: parameter,
   })
@@ -49,7 +51,11 @@ export const getByIdApi = async (data) => {
     createUser,
     parent,
     updateUser,
-  } = await defHttp.post({ url: Api.getById, data: data.functionId })
+  } = await defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
+    url: Api.getById,
+    data: data.functionId,
+  })
   return {
     ...functionData,
     createUser: createUser && createUser.fullName,
@@ -59,9 +65,17 @@ export const getByIdApi = async (data) => {
 }
 
 export const saveApi = ({ body: { insertRecords, updateRecords } }) => {
-  return defHttp.post({ url: Api.save, data: [...insertRecords, ...updateRecords][0] })
+  return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
+    url: Api.save,
+    data: [...insertRecords, ...updateRecords][0],
+  })
 }
 
 export const deleteApi = ({ body: { removeRecords } }) => {
-  return defHttp.post({ url: Api.delete, data: removeRecords.map((item) => item.functionId) })
+  return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
+    url: Api.delete,
+    data: removeRecords.map((item) => item.functionId),
+  })
 }

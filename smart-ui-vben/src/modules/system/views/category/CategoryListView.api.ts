@@ -1,4 +1,4 @@
-import { defHttp } from '/@/utils/http/axios'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 
 enum Api {
   list = '/sys/category/list',
@@ -18,6 +18,7 @@ export const listApi = (params: Recordable = {}, parentId = 0) => {
     }
   }
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.list,
     data: {
       sortName: 'seq',
@@ -28,6 +29,7 @@ export const listApi = (params: Recordable = {}, parentId = 0) => {
 
 export const saveUpdateApi = (data) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.saveUpdate,
     data,
   })
@@ -35,6 +37,7 @@ export const saveUpdateApi = (data) => {
 
 export const getByIdApi = async (id: number) => {
   const result = await defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.getById,
     data: id,
   })
@@ -44,6 +47,7 @@ export const getByIdApi = async (id: number) => {
 
 export const deleteApi = (idList: number[]) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.batchDeleteById,
     data: idList,
   })

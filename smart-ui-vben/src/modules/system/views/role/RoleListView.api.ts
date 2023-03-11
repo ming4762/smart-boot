@@ -1,4 +1,4 @@
-import { defHttp } from '/@/utils/http/axios'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 
 enum Api {
   list = 'sys/role/list',
@@ -12,6 +12,7 @@ enum Api {
 
 export const listApi = (parameter) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.list,
     data: parameter,
   })
@@ -19,6 +20,7 @@ export const listApi = (parameter) => {
 
 export const deleteApi = (parameter: any[]) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.delete,
     data: parameter.map((item) => item.roleId),
   })
@@ -26,6 +28,7 @@ export const deleteApi = (parameter: any[]) => {
 
 export const getByIdApi = (model) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.getById,
     data: model.roleId,
   })
@@ -33,6 +36,7 @@ export const getByIdApi = (model) => {
 
 export const listUserApi = (parameter?) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.listUser,
     data: parameter,
   })
@@ -40,6 +44,7 @@ export const listUserApi = (parameter?) => {
 
 export const listUserByRoleIdApi = (roleIds: number[]) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.listUserByRoleId,
     data: roleIds,
   })
@@ -47,6 +52,7 @@ export const listUserByRoleIdApi = (roleIds: number[]) => {
 
 export const setRoleUserApi = (roleId: number, userIdList: number[]) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.setRoleUser,
     data: {
       roleId,
@@ -57,6 +63,7 @@ export const setRoleUserApi = (roleId: number, userIdList: number[]) => {
 
 export const batchSaveUpdateApi = (dataList: any[]) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.batchSaveUpdate,
     data: dataList,
   })

@@ -1,7 +1,7 @@
 import { ref, onMounted } from 'vue'
 
 import TreeUtils from '/@/utils/TreeUtils'
-import { defHttp } from '/@/utils/http/axios'
+import {ApiServiceEnum, defHttp} from '/@/utils/http/axios'
 
 /**
  * 加载部门树形数据
@@ -16,6 +16,7 @@ export const useLoadDeptTreeData = () => {
    */
   const loadDeptData = async () => {
     const data = await defHttp.post({
+      service: ApiServiceEnum.SMART_SYSTEM,
       url: '/sys/dept/list',
       data: {
         sortName: 'seq',

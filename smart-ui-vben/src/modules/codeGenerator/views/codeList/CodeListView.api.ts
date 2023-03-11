@@ -1,4 +1,4 @@
-import { defHttp } from '/@/utils/http/axios'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 
 enum Api {
   listBySystem = 'db/code/main/listBySystem',
@@ -6,7 +6,7 @@ enum Api {
 }
 
 export const listBySystemApi = (parameter) =>
-  defHttp.post({ url: Api.listBySystem, data: parameter })
+  defHttp.post({ service: ApiServiceEnum.SMART_CODE, url: Api.listBySystem, data: parameter })
 
 export const deleteApi = (data) =>
-  defHttp.post({ url: Api.delete, data: data.map((item: any) => item.id) })
+  defHttp.post({ service: ApiServiceEnum.SMART_CODE, url: Api.delete, data: data.map((item: any) => item.id) })

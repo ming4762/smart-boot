@@ -71,7 +71,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, computed, createVNode } from 'vue'
+import { defineComponent, ref, onMounted, computed, createVNode, unref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { message, Modal } from 'ant-design-vue'
@@ -79,8 +79,8 @@ import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-de
 
 import { ContextMenu } from '/@/components/ContextMenu'
 
-import ApiService from '/@/common/utils/ApiService'
 import { SystemPermissions } from '/@/modules/system/constants/SystemConstants'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 
 const ListVueSupport = () => {
   const tableLoading = ref<boolean>(false)
@@ -88,7 +88,10 @@ const ListVueSupport = () => {
   const loadTableData = async () => {
     try {
       tableLoading.value = true
-      data.value = await ApiService.postAjax('sys/i18n/listGroup')
+      data.value = await defHttp.post({
+        service: ApiServiceEnum.SMART_SYSTEM,
+        url: 'sys/i18n/listGroup',
+      })
     } finally {
       tableLoading.value = false
     }
@@ -107,7 +110,11 @@ const deleteVueSupport = (i18nRender: Function, loadData: Function) => {
       title: i18nRender('common.notice.deleteConfirm'),
       icon: createVNode(ExclamationCircleOutlined),
       onOk: async () => {
-        await ApiService.postAjax('sys/i18n/deleteGroup', [id])
+        await defHttp.post({
+          service: ApiServiceEnum.SMART_SYSTEM,
+          url: 'sys/i18n/deleteGroup',
+          data: [id],
+        })
         loadData()
       },
     })
@@ -138,7 +145,11 @@ const addEditVueSupport = (loadData: Function) => {
     if (!isAdd.value) {
       try {
         getLoading.value = true
-        editModel.value = await ApiService.postAjax('sys/i18n/getGroupById', groupId)
+        editModel.value = await defHttp.post({
+          service: ApiServiceEnum.SMART_SYSTEM,
+          url: 'sys/i18n/getGroupById',
+          data: groupId,
+        })
       } finally {
         getLoading.value = false
       }
@@ -155,7 +166,11 @@ const addEditVueSupport = (loadData: Function) => {
     // 执行保存操作
     saveLoading.value = true
     try {
-      await ApiService.postAjax('sys/i18n/saveOrUpdateGroup', editModel.value)
+      await defHttp.post({
+        service: ApiServiceEnum.SMART_SYSTEM,
+        url: 'sys/i18n/saveOrUpdateGroup',
+        data: unref(editModel),
+      })
     } catch (e: any) {
       console.error(e)
       message.error(e && e.message)

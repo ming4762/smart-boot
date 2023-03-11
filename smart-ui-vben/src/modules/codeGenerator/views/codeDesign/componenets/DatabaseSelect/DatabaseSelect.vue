@@ -10,9 +10,8 @@
 import { defineComponent, ref, onMounted } from 'vue'
 import type { PropType } from 'vue'
 
-import ApiService from '/@/common/utils/ApiService'
-
 import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 /**
  * 数据库连接下拉列
  */
@@ -26,15 +25,16 @@ export default defineComponent({
   setup(props) {
     const data = ref<Array<any>>([])
     const loadData = async () => {
-      const result = await ApiService.postAjax(
-        '/db/connection/list',
-        Object.assign(
+      const result = await defHttp.post({
+        service: ApiServiceEnum.SMART_CODE,
+        url: '/db/connection/list',
+        data: Object.assign(
           {
             sortName: 'seq',
           },
           props.parameter && props.parameter(),
         ),
-      )
+      })
       data.value = result.map((item: any) => {
         return {
           key: item.id + '',
