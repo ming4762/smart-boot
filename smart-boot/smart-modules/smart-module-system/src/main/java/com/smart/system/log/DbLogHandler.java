@@ -1,11 +1,10 @@
 package com.smart.system.log;
 
 import com.smart.commons.core.log.Log;
+import com.smart.module.api.system.SysLogApi;
+import com.smart.module.api.system.dto.SysLogSaveDTO;
 import com.smart.starter.log.handler.LogHandler;
 import com.smart.starter.log.model.SysLog;
-import com.smart.system.constants.LogIdentEnum;
-import com.smart.system.model.SysLogPO;
-import com.smart.system.service.SysLogService;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
@@ -21,18 +20,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class DbLogHandler implements LogHandler {
 
-    private final SysLogService sysLogService;
+    private final SysLogApi sysLogApi;
 
-    public DbLogHandler(SysLogService sysLogService) {
-        this.sysLogService = sysLogService;
+    public DbLogHandler(SysLogApi sysLogApi) {
+        this.sysLogApi = sysLogApi;
     }
 
     @Override
     public boolean save(@NonNull SysLog sysLog, @NonNull ProceedingJoinPoint point, @NonNull Log logAnnotation, long time, int code, @Nullable Object result, @Nullable String errorMessage) {
-        SysLogPO po = new SysLogPO();
-        BeanUtils.copyProperties(sysLog, po);
-        po.setIdent(LogIdentEnum.INTERFACE_LOG);
-        this.sysLogService.save(po);
-        return true;
+        SysLogSaveDTO dto = new SysLogSaveDTO();
+        BeanUtils.copyProperties(sysLog, dto);
+        return this.sysLogApi.saveLog(dto);
     }
 }
