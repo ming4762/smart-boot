@@ -61,13 +61,25 @@ const [registerTable] = useSmartTable({
     zoom: true,
     custom: true,
   },
+  sortConfig: {
+    remote: true,
+    defaultSort: {
+      field: 'createTime',
+      order: 'desc',
+    },
+  },
   columns: getTableColumns(t),
   columnConfig: {
     resizable: true,
   },
   proxyConfig: {
     ajax: {
-      query: ({ ajaxParameter }) => listApi(ajaxParameter),
+      query: ({ ajaxParameter }) =>
+        listApi({
+          sortName: 'createTime',
+          sortOrder: 'desc',
+          ...ajaxParameter,
+        }),
     },
   },
 })
