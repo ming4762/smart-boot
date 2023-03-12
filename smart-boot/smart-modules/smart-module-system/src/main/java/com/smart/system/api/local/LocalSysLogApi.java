@@ -1,8 +1,8 @@
 package com.smart.system.api.local;
 
 import com.smart.module.api.system.SysLogApi;
+import com.smart.module.api.system.constants.LogIdentEnum;
 import com.smart.module.api.system.dto.SysLogSaveDTO;
-import com.smart.system.constants.LogIdentEnum;
 import com.smart.system.model.SysLogPO;
 import com.smart.system.service.SysLogService;
 import org.springframework.beans.BeanUtils;

@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.smart.commons.core.log.LogOperationTypeEnum;
 import com.smart.commons.core.log.LogSourceEnum;
 import com.smart.crud.model.BaseModelCreateUserTime;
-import com.smart.system.constants.LogIdentEnum;
+import com.smart.module.api.system.constants.LogIdentEnum;
 import com.smart.system.mybatis.type.LogSourceTypeHandler;
 import lombok.*;
 

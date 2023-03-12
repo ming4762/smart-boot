@@ -1,6 +1,6 @@
 package com.smart.system.mybatis.type;
 
-import com.smart.system.constants.UserAccountStatusEnum;
+import com.smart.module.api.system.constants.UserAccountStatusEnum;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 

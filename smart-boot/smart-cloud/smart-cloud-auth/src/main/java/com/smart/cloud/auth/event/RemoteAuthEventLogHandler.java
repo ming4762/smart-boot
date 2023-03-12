@@ -1,36 +1,43 @@
-package com.smart.system.auth;
+package com.smart.cloud.auth.event;
 
 import com.smart.auth.core.authentication.RestUsernamePasswordAuthenticationToken;
 import com.smart.auth.core.event.AuthEventHandler;
 import com.smart.auth.core.userdetails.RestUserDetails;
+import com.smart.cloud.api.system.feign.RemoteSysLogApi;
 import com.smart.commons.core.log.LogSourceEnum;
+import com.smart.module.api.system.SysLogApi;
 import com.smart.module.api.system.constants.LogIdentEnum;
-import com.smart.system.model.SysLogPO;
-import com.smart.system.service.SysLogService;
+import com.smart.module.api.system.dto.SysLogSaveDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.event.AbstractAuthenticationFailureEvent;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.authentication.event.LogoutSuccessEvent;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.stereotype.Component;
 
 /**
- * 保存登录日志
- * @author ShiZhongMing
- * 2021/12/30 14:23
- * @since 1.0
+ * 登录日志远程保存
+ * @author zhongming4762
+ * 2023/3/11
  */
-public class AuthEventLogHandler implements AuthEventHandler {
+@Component
+public class RemoteAuthEventLogHandler implements AuthEventHandler {
 
-    private final SysLogService sysLogService;
+    private final SysLogApi sysLogApi;
 
-    public AuthEventLogHandler(SysLogService sysLogService) {
-        this.sysLogService = sysLogService;
+    public RemoteAuthEventLogHandler(RemoteSysLogApi sysLogApi) {
+        this.sysLogApi = sysLogApi;
     }
 
+    /**
+     * 登录成功事件
+     *
+     * @param event 事件
+     */
     @Override
     public void handleLoginSuccess(AuthenticationSuccessEvent event) {
         RestUserDetails user = (RestUserDetails) event.getAuthentication().getPrincipal();
-        SysLogPO sysLog = SysLogPO.builder()
+        SysLogSaveDTO dto = SysLogSaveDTO.builder()
                 .ip(user.getLoginIp())
                 .ident(LogIdentEnum.LOGIN_LOG)
                 .statusCode(HttpStatus.OK.value())
@@ -38,15 +45,18 @@ public class AuthEventLogHandler implements AuthEventHandler {
                 .operation(LogSourceEnum.LOGIN.name())
                 .result(String.format("登录成功,username:[%s],fullName:[%s]", user.getUsername(), user.getFullName()))
                 .build();
-        sysLog.setCreateUserId(user.getUserId());
-        sysLog.setCreateBy(user.getFullName());
-        this.sysLogService.save(sysLog);
+        this.sysLogApi.saveLog(dto);
     }
 
+    /**
+     * 登出成功事件
+     *
+     * @param event 事件
+     */
     @Override
     public void handleLogoutSuccess(LogoutSuccessEvent event) {
         RestUserDetails user = (RestUserDetails) event.getAuthentication().getPrincipal();
-        SysLogPO sysLog = SysLogPO.builder()
+        SysLogSaveDTO dto = SysLogSaveDTO.builder()
                 .ip(user.getLoginIp())
                 .ident(LogIdentEnum.LOGIN_LOG)
                 .statusCode(HttpStatus.OK.value())
@@ -54,14 +64,19 @@ public class AuthEventLogHandler implements AuthEventHandler {
                 .operation(LogSourceEnum.LOGOUT.name())
                 .result(String.format("登出成功,用户名:[%s],fullName:[%s]", user.getUsername(), user.getFullName()))
                 .build();
-        this.sysLogService.save(sysLog);
+        this.sysLogApi.saveLog(dto);
     }
 
+    /**
+     * 登录发生错误事件
+     *
+     * @param event 事件
+     */
     @Override
     public void handleLoginFail(AbstractAuthenticationFailureEvent event) {
         AuthenticationException exception = event.getException();
         RestUsernamePasswordAuthenticationToken token = (RestUsernamePasswordAuthenticationToken) event.getAuthentication();
-        SysLogPO sysLog = SysLogPO.builder()
+        SysLogSaveDTO dto = SysLogSaveDTO.builder()
                 .ip(token.getLoginIp())
                 .ident(LogIdentEnum.LOGIN_LOG)
                 .statusCode(HttpStatus.UNAUTHORIZED.value())
@@ -69,11 +84,12 @@ public class AuthEventLogHandler implements AuthEventHandler {
                 .operation(LogSourceEnum.LOGIN_FAIL.name())
                 .result(String.format("%s[%s],username:[%s]", exception.getClass().getSimpleName(), exception.getMessage(), token.getPrincipal()))
                 .build();
-        this.sysLogService.save(sysLog);
+
+        this.sysLogApi.saveLog(dto);
     }
 
     @Override
     public int getOrder() {
-        return Integer.MAX_VALUE;
+        return 0;
     }
 }

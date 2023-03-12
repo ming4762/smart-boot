@@ -23,4 +23,9 @@ public interface SystemApiUrlConstants {
      * 保存系统日志
      */
     String LOG_SAVE = "/remote/system/log/save";
+
+    String LIST_USER_BY_USERNAME = "/remote/system/user/listUserByUsername";
+    String LIST_USER_BY_ID = "/remote/system/user/listUserById";
+    String LOCK_ACCOUNT = "/remote/system/user/lockAccount";
+    String RESET_LOGIN_FAIL_TIME = "/remote/system/user/resetLoginFailTime";
 }

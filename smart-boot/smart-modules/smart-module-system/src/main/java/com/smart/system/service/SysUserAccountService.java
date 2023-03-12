@@ -1,7 +1,7 @@
 package com.smart.system.service;
 
 import com.smart.crud.service.BaseService;
-import com.smart.system.constants.UserAccountStatusEnum;
+import com.smart.module.api.system.constants.UserAccountStatusEnum;
 import com.smart.system.model.SysUserAccountPO;
 import org.springframework.lang.NonNull;
 

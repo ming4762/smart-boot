@@ -1,4 +1,4 @@
-package com.smart.system.constants;
+package com.smart.module.api.system.constants;
 
 import com.baomidou.mybatisplus.annotation.IEnum;
 import lombok.Getter;
@@ -14,7 +14,7 @@ public enum LogIdentEnum implements IEnum<String> {
      * 登录日志
      * 接口日志
      */
-    LOGIN_LOG("10", "接口日志"),
+    LOGIN_LOG("10", "登录日志"),
     INTERFACE_LOG("20", "接口日志")
     ;
 

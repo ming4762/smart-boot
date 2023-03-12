@@ -1,36 +1,24 @@
-package com.smart.system.model;
+package com.smart.module.api.system.dto;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.smart.crud.model.BaseModelCreateUserTime;
 import com.smart.module.api.system.constants.MaxConnectionsPolicyEnum;
 import com.smart.module.api.system.constants.UserAccountStatusEnum;
-import com.smart.system.mybatis.type.MaxConnectionsPolicyTypeHandler;
-import com.smart.system.mybatis.type.UserAccountStatusTypeHandler;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 用户认证信息
- * @author ShiZhongMing
- * 2021/12/31
- * @since 1.0.7
+ * 用户账户DTO
+ * @author zhongming4762
+ * 2023/3/11
  */
 @Getter
 @Setter
-@TableName(value = "sys_user_account", autoResultMap = true)
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class SysUserAccountPO extends BaseModelCreateUserTime {
+@ToString
+public class SysUserAccountDTO implements Serializable {
 
-    @Serial
-    private static final long serialVersionUID = -8246582845593471040L;
-
-    @TableId
     private Long userId;
 
     /**
@@ -38,7 +26,6 @@ public class SysUserAccountPO extends BaseModelCreateUserTime {
      */
     private Long loginFailTime;
 
-    @TableField(typeHandler = UserAccountStatusTypeHandler.class)
     private UserAccountStatusEnum accountStatus;
 
     private Boolean initialPasswordYn;
@@ -59,7 +46,6 @@ public class SysUserAccountPO extends BaseModelCreateUserTime {
     /**
      * 超出最大连接数执行策略
      */
-    @TableField(typeHandler = MaxConnectionsPolicyTypeHandler.class)
     private MaxConnectionsPolicyEnum maxConnectionsPolicy;
 
     /**
@@ -78,5 +64,4 @@ public class SysUserAccountPO extends BaseModelCreateUserTime {
      * 账户锁定时间
      */
     private LocalDateTime lockTime;
-
 }

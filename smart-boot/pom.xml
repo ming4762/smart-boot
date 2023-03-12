@@ -30,7 +30,7 @@
         <swagger-annotations.version>2.2.0</swagger-annotations.version>
         <commons-io.version>2.11.0</commons-io.version>
         <jsch.version>0.1.55</jsch.version>
-        <pagehelper.version>1.4.2</pagehelper.version>
+        <pagehelper.version>1.4.6</pagehelper.version>
 
         <mybatis-plus-boot-starter.version>3.5.3</mybatis-plus-boot-starter.version>
         <jodconverter.version>4.4.2</jodconverter.version>
@@ -211,6 +211,12 @@
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus-boot-starter.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-annotation</artifactId>
                 <version>${mybatis-plus-boot-starter.version}</version>
             </dependency>
 
