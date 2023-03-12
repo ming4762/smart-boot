@@ -1,7 +1,6 @@
 package com.smart.cloud.api.auth.feign;
 
 import com.smart.cloud.common.core.constants.CloudServiceNameConstants;
-import com.smart.cloud.common.feign.interceptor.FeignTokenRequestInterceptor;
 import com.smart.commons.core.message.Result;
 import com.smart.module.api.auth.AuthApi;
 import com.smart.module.api.auth.constants.SmartAuthApiUrlConstants;

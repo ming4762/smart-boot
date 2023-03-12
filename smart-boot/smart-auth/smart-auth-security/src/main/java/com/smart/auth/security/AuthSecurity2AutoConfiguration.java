@@ -12,7 +12,9 @@ import com.smart.auth.core.handler.AuthSuccessDataHandler;
 import com.smart.auth.core.handler.DefaultAuthSuccessDataHandler;
 import com.smart.auth.core.properties.AuthProperties;
 import com.smart.auth.security.config.AuthMethodSecurityConfig;
+import com.smart.auth.security.event.AuthEventLockedHandler;
 import com.smart.auth.security.userdetails.DefaultUserDetailsServiceImpl;
+import com.smart.module.api.system.SysUserApi;
 import com.smart.module.api.system.SystemAuthUserApi;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -125,6 +127,17 @@ public class AuthSecurity2AutoConfiguration {
     @ConditionalOnMissingBean
     public UrlAuthenticationProvider defaultUrlAuthenticationProviderImpl(UrlMappingProvider urlMappingProvider) {
         return new DefaultUrlAuthenticationProviderImpl(urlMappingProvider);
+    }
+
+    /**
+     * 创建登录失败锁定期
+     * @param sysUserApi SysUserApi
+     * @return AuthEventLockedHandler
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    public AuthEventLockedHandler authEventLockedHandler(SysUserApi sysUserApi) {
+        return new AuthEventLockedHandler(sysUserApi);
     }
 
 }

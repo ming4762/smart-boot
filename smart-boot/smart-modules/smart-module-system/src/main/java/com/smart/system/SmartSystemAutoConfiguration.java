@@ -1,7 +1,6 @@
 package com.smart.system;
 
 import com.smart.file.core.service.FileService;
-import com.smart.system.auth.AuthEventLockedHandler;
 import com.smart.system.auth.AuthEventLogHandler;
 import com.smart.system.service.SysLogService;
 import com.smart.system.service.SysUserAccountService;
@@ -35,16 +34,6 @@ public class SmartSystemAutoConfiguration {
     @ConditionalOnMissingBean(AuthEventLogHandler.class)
     public AuthEventLogHandler authEventLogHandler(SysLogService sysLogService) {
         return new AuthEventLogHandler(sysLogService);
-    }
-
-    /**
-     * 认证失败用户锁定处理器
-     * @return AuthEventLockedHandler
-     */
-    @Bean
-    @ConditionalOnMissingBean(AuthEventLockedHandler.class)
-    public AuthEventLockedHandler authEventLockedHandler(SysUserService sysUserService, SysUserAccountService sysAuthUserService) {
-        return new AuthEventLockedHandler(sysUserService, sysAuthUserService);
     }
 
     @Bean

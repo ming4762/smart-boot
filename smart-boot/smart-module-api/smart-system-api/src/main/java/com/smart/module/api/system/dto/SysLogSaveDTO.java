@@ -2,9 +2,8 @@ package com.smart.module.api.system.dto;
 
 import com.smart.commons.core.log.LogOperationTypeEnum;
 import com.smart.commons.core.log.LogSourceEnum;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import com.smart.module.api.system.constants.LogIdentEnum;
+import lombok.*;
 
 import java.io.Serializable;
 
@@ -16,6 +15,9 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class SysLogSaveDTO implements Serializable {
 
     /**
@@ -74,4 +76,6 @@ public class SysLogSaveDTO implements Serializable {
      * 日志来源
      */
     private LogSourceEnum logSource;
+
+    private LogIdentEnum ident;
 }

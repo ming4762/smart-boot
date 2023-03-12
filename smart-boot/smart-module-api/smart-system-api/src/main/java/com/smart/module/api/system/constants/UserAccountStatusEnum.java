@@ -1,4 +1,4 @@
-package com.smart.system.constants;
+package com.smart.module.api.system.constants;
 
 import lombok.Getter;
 
