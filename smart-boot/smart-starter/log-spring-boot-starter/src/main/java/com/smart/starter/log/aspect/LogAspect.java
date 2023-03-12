@@ -9,6 +9,7 @@ import com.smart.commons.core.log.LogSourceEnum;
 import com.smart.commons.core.message.Result;
 import com.smart.commons.core.utils.IpUtils;
 import com.smart.commons.core.utils.JsonUtils;
+import com.smart.module.api.system.constants.LogIdentEnum;
 import com.smart.starter.log.LogProperties;
 import com.smart.starter.log.handler.LogHandler;
 import com.smart.starter.log.model.SysLog;
@@ -209,6 +210,7 @@ public final class LogAspect {
                 .operationType(logAnnotation.type())
                 // 自动日志
                 .logSource(LogSourceEnum.AUTO_POINTCUT)
+                .ident(LogIdentEnum.INTERFACE_LOG)
                 // todo：待处理
                 .platform(null)
                 .build();
