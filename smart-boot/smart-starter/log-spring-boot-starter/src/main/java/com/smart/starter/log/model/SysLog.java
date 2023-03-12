@@ -2,6 +2,7 @@ package com.smart.starter.log.model;
 
 import com.smart.commons.core.log.LogOperationTypeEnum;
 import com.smart.commons.core.log.LogSourceEnum;
+import com.smart.module.api.system.constants.LogIdentEnum;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -76,4 +77,6 @@ public class SysLog implements Serializable {
      * 日志来源
      */
     private LogSourceEnum logSource;
+
+    private LogIdentEnum ident;
 }
