@@ -29,5 +29,10 @@ public interface SystemApiUrlConstants {
     String LOCK_ACCOUNT = "/remote/system/user/lockAccount";
     String RESET_LOGIN_FAIL_TIME = "/remote/system/user/resetLoginFailTime";
 
+    /**
+     * 读取国际化信息
+     */
     String I18N_READ_BY_LOCALE = "/remote/system/i18n/readI18nByLocale";
+
+    String EXCEPTION_SAVE = "/remote/system/exception/save";
 }

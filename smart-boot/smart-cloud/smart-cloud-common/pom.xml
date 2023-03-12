@@ -16,6 +16,7 @@
     <modules>
         <module>smart-cloud-common-auth</module>
         <module>smart-cloud-common-core</module>
+        <module>smart-cloud-common-exception</module>
         <module>smart-cloud-common-feign</module>
         <module>smart-cloud-common-i18n</module>
         <module>smart-cloud-common-log</module>
