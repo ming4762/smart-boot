@@ -14,5 +14,5 @@ public interface SysLogApi {
      * @param parameter 参数
      * @return 是否保存成功
      */
-    boolean saveLog(SysLogSaveDTO parameter);
+    Boolean saveLog(SysLogSaveDTO parameter);
 }

@@ -44,6 +44,8 @@ public class RemoteAuthEventLogHandler implements AuthEventHandler {
                 .logSource(LogSourceEnum.LOGIN)
                 .operation(LogSourceEnum.LOGIN.name())
                 .result(String.format("登录成功,username:[%s],fullName:[%s]", user.getUsername(), user.getFullName()))
+                .createUserId(user.getUserId())
+                .createBy(user.getFullName())
                 .build();
         this.sysLogApi.saveLog(dto);
     }
