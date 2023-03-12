@@ -78,4 +78,8 @@ public class SysLogSaveDTO implements Serializable {
     private LogSourceEnum logSource;
 
     private LogIdentEnum ident;
+
+    private Long createUserId;
+
+    private String createBy;
 }

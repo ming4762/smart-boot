@@ -23,5 +23,5 @@ public interface RemoteSysLogApi extends SysLogApi {
      */
     @Override
     @PostMapping(SystemApiUrlConstants.LOG_SAVE)
-    boolean saveLog(SysLogSaveDTO parameter);
+    Boolean saveLog(SysLogSaveDTO parameter);
 }

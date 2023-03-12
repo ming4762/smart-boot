@@ -1,7 +1,6 @@
 package com.smart.system.api.local;
 
 import com.smart.module.api.system.SysLogApi;
-import com.smart.module.api.system.constants.LogIdentEnum;
 import com.smart.module.api.system.dto.SysLogSaveDTO;
 import com.smart.system.model.SysLogPO;
 import com.smart.system.service.SysLogService;
@@ -31,10 +30,9 @@ public class LocalSysLogApi implements SysLogApi {
      * @return 是否保存成功
      */
     @Override
-    public boolean saveLog(SysLogSaveDTO parameter) {
+    public Boolean saveLog(SysLogSaveDTO parameter) {
         SysLogPO po = new SysLogPO();
         BeanUtils.copyProperties(parameter, po);
-        po.setIdent(LogIdentEnum.INTERFACE_LOG);
         return this.sysLogService.save(po);
     }
 }

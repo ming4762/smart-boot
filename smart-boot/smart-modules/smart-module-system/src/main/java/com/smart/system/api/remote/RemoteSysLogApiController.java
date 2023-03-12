@@ -5,6 +5,7 @@ import com.smart.module.api.system.constants.SystemApiUrlConstants;
 import com.smart.module.api.system.dto.SysLogSaveDTO;
 import com.smart.system.api.local.LocalSysLogApi;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,7 +32,7 @@ public class RemoteSysLogApiController implements SysLogApi {
      */
     @Override
     @PostMapping(SystemApiUrlConstants.LOG_SAVE)
-    public boolean saveLog(SysLogSaveDTO parameter) {
+    public Boolean saveLog(@RequestBody SysLogSaveDTO parameter) {
         return localSysLogApi.saveLog(parameter);
     }
 }
