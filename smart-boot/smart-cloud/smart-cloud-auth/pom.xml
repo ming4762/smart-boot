@@ -61,6 +61,12 @@
             <version>${smart-boot.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-cloud-common-i18n</artifactId>
+            <version>${smart-boot.version}</version>
+        </dependency>
+
     </dependencies>
 
 

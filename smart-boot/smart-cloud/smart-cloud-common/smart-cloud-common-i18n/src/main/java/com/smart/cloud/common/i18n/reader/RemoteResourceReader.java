@@ -1,27 +1,30 @@
-package com.smart.system.i18n;
+package com.smart.cloud.common.i18n.reader;
 
 import com.smart.i18n.reader.ResourceReader;
 import com.smart.module.api.system.SysI18nApi;
-import org.springframework.stereotype.Component;
 
 import java.util.Locale;
 import java.util.Map;
 
 /**
- * 从数据库读取国际化信息
- * @author ShiZhongMing
- * 2021/11/23
- * @since 1.0.7
+ * 远程读取国际化信息
+ * @author zhongming4762
+ * 2023/3/12
  */
-@Component
-public class I18nDbResourceReader implements ResourceReader {
+public class RemoteResourceReader implements ResourceReader {
 
     private final SysI18nApi sysI18nApi;
 
-    public I18nDbResourceReader(SysI18nApi sysI18nApi) {
+    public RemoteResourceReader(SysI18nApi sysI18nApi) {
         this.sysI18nApi = sysI18nApi;
     }
 
+    /**
+     * 读取资源
+     *
+     * @param locale 语言
+     * @return 资源信息
+     */
     @Override
     public Map<String, String> read(Locale locale) {
         return this.sysI18nApi.readI18nByLocale(locale);
