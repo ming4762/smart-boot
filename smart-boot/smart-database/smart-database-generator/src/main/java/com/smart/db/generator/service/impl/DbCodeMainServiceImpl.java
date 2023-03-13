@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.smart.auth.core.utils.AuthUtils;
 import com.smart.commons.core.exception.BaseException;
 import com.smart.commons.core.exception.BusinessException;
@@ -19,8 +18,6 @@ import com.smart.db.generator.pojo.dto.*;
 import com.smart.db.generator.pojo.query.RelatedTableDeleteByMainConfigQuery;
 import com.smart.db.generator.pojo.vo.*;
 import com.smart.db.generator.service.*;
-import com.smart.system.model.SysUserPO;
-import com.smart.system.service.SysUserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
@@ -43,7 +40,6 @@ import java.util.stream.Collectors;
 @Service
 public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbCodeMainPO> implements DbCodeMainService {
 
-    private final SysUserService sysUserService;
     private final DbCodePageConfigService dbCodePageConfigService;
 
     private final DbCodeFormConfigService dbCodeFormConfigService;
@@ -62,7 +58,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
 
     private final DbCodeRuleConfigService dbCodeRuleConfigService;
 
-    public DbCodeMainServiceImpl(DbCodePageConfigService dbCodePageConfigService, DbCodeFormConfigService dbCodeFormConfigService, DbConnectionService databaseConnectionService, DbCodeTemplateService dbCodeTemplateService, TemplateEngine templateEngine, DbCodeSearchConfigService dbCodeSearchConfigService, DbCodeButtonConfigService dbCodeButtonConfigService, DbCodeRelatedTableService dbCodeRelatedTableService, DbCodeRuleConfigService dbCodeRuleConfigService, SysUserService sysUserService) {
+    public DbCodeMainServiceImpl(DbCodePageConfigService dbCodePageConfigService, DbCodeFormConfigService dbCodeFormConfigService, DbConnectionService databaseConnectionService, DbCodeTemplateService dbCodeTemplateService, TemplateEngine templateEngine, DbCodeSearchConfigService dbCodeSearchConfigService, DbCodeButtonConfigService dbCodeButtonConfigService, DbCodeRelatedTableService dbCodeRelatedTableService, DbCodeRuleConfigService dbCodeRuleConfigService) {
         this.dbCodePageConfigService = dbCodePageConfigService;
         this.dbCodeFormConfigService = dbCodeFormConfigService;
         this.databaseConnectionService = databaseConnectionService;
@@ -72,7 +68,6 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
         this.dbCodeButtonConfigService = dbCodeButtonConfigService;
         this.dbCodeRelatedTableService = dbCodeRelatedTableService;
         this.dbCodeRuleConfigService = dbCodeRuleConfigService;
-        this.sysUserService = sysUserService;
     }
 
     @Override
@@ -97,35 +92,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
 
         // 设置连接信息
         this.setConnection(voList);
-        // 设置创建人修改人
-        this.setCreateUpdateUser(voList);
         return voList;
-    }
-
-    /**
-     * 设置创建人修改人
-     * @param voList voList
-     */
-    private void setCreateUpdateUser(List<DbCodeMainPO> voList) {
-        // 查询添加人/修改人
-        Set<Long> userIds = Sets.newHashSet();
-        voList.forEach(item -> {
-            userIds.add(item.getCreateUserId());
-            userIds.add(item.getUpdateUserId());
-        });
-        final Set<Long> nonNullUserIds = userIds.stream().filter(Objects::nonNull).collect(Collectors.toSet());
-        if (nonNullUserIds.isEmpty()) {
-            return;
-        }
-        final Map<Long, SysUserPO> userMap = this.sysUserService.list(
-                new QueryWrapper<SysUserPO>().lambda()
-                        .select(SysUserPO :: getUserId, SysUserPO :: getUsername, SysUserPO :: getFullName)
-                        .in(SysUserPO :: getUserId, nonNullUserIds)
-        ).stream().collect(Collectors.toMap(SysUserPO :: getUserId, item -> item));
-        voList.forEach(item -> {
-            ((DbCodeMainListVO)item).setCreateUser(userMap.get(item.getCreateUserId()));
-            ((DbCodeMainListVO)item).setUpdateUser(userMap.get(item.getUpdateUserId()));
-        });
     }
 
     /**

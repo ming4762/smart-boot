@@ -15,6 +15,7 @@
 
     <modules>
         <module>smart-cloud-auth</module>
+        <module>smart-cloud-code</module>
         <module>smart-cloud-common</module>
         <module>smart-cloud-gateway</module>
         <module>smart-cloud-module-api</module>

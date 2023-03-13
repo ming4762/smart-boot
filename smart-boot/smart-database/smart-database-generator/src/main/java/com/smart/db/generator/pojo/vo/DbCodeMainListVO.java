@@ -1,7 +1,6 @@
 package com.smart.db.generator.pojo.vo;
 
 import com.smart.db.generator.model.DbCodeMainPO;
-import com.smart.system.model.SysUserPO;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -24,7 +23,4 @@ public class DbCodeMainListVO extends DbCodeMainPO {
 
     private String tableRemarks;
 
-    private SysUserPO createUser;
-
-    private SysUserPO updateUser;
 }

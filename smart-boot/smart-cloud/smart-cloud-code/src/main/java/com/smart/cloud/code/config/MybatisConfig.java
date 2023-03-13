@@ -1,4 +1,4 @@
-package com.smart.cloud.system.config;
+package com.smart.cloud.code.config;
 
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceBuilder;
 import com.smart.commons.core.constants.MapperPackageConstants;
@@ -19,13 +19,12 @@ import javax.sql.DataSource;
  */
 @Configuration
 @MapperScan(basePackages = {
-        MapperPackageConstants.MODULE_SYSTEM,
-        MapperPackageConstants.MONITOR_SERVER,
+        MapperPackageConstants.DATABASE_GENERATOR,
 })
 public class MybatisConfig {
 
     @Bean
-    @ConfigurationProperties("spring.datasource.system")
+    @ConfigurationProperties("spring.datasource")
     @Primary
     public DataSource systemDatasource() {
         return DruidDataSourceBuilder.create().build();

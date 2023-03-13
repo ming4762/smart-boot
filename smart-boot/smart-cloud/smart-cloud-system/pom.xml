@@ -34,14 +34,8 @@
         <!--    异常处理    -->
         <dependency>
             <groupId>com.smart</groupId>
-            <artifactId>exception-spring-boot-starter</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <!--    代码生成器    -->
-        <dependency>
-            <groupId>com.smart</groupId>
-            <artifactId>smart-database-generator</artifactId>
-            <version>${project.parent.version}</version>
+            <artifactId>smart-cloud-common-exception</artifactId>
+            <version>${smart-boot.version}</version>
         </dependency>
 
         <dependency>

@@ -158,7 +158,9 @@ async function handleLogin() {
 }
 
 const computedCaptchaUrl = computed(() => {
-  return `${defHttp.getApiUrlByService(ApiServiceEnum.SMART_AUTH)}/auth/createCaptcha?codeKey=${formData.captchaKey}`
+  return `${defHttp.getApiUrlByService(ApiServiceEnum.SMART_AUTH)}/auth/createCaptcha?codeKey=${
+    formData.captchaKey
+  }`
 })
 const handleChangeCaptcha = () => {
   formData.captchaKey = buildUUID()

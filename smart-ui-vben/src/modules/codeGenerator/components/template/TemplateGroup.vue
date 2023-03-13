@@ -13,7 +13,7 @@ import type { SmartTableProps } from '/@/components/SmartTable'
 import { computed } from 'vue'
 
 import { SmartTable, useSmartTable } from '/@/components/SmartTable'
-import { defHttp } from '/@/utils/http/axios'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 
 const props = defineProps({
   tableProps: Object as PropType<SmartTableProps>,
@@ -42,6 +42,7 @@ const getTableProps = computed<SmartTableProps>(() => {
       ajax: {
         query: async (params) => {
           const result = await defHttp.post({
+            service: ApiServiceEnum.SMART_CODE,
             url: 'db/code/template/listGroup',
             data: {
               ...params.ajaxParameter,
