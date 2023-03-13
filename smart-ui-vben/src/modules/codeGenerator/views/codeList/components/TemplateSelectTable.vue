@@ -14,7 +14,7 @@
 
 <script lang="ts" setup>
 import { useI18n } from '/@/hooks/web/useI18n'
-import { defHttp } from '/@/utils/http/axios'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 import { merge } from 'lodash-es'
 
 import { SmartTable, useSmartTable } from '/@/components/SmartTable'
@@ -80,6 +80,7 @@ const [registerTable, { query, getTableInstance, setCheckboxRow }] = useSmartTab
           },
         })
         return defHttp.post({
+          service: ApiServiceEnum.SMART_CODE,
           url: 'db/code/template/list',
           data: parameter,
         })

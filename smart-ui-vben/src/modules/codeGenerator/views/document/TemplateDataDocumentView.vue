@@ -19,7 +19,7 @@ import { tableBooleanColumn } from '/@/components/common/TableCommon'
 import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 
 const doLoadData = () => {
-  defHttp.post({
+  return defHttp.post({
     service: ApiServiceEnum.SMART_CODE,
     url: 'db/code/main/getTemplateDataDocument',
   })

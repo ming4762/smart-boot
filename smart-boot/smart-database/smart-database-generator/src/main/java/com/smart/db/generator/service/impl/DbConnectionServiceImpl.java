@@ -1,13 +1,11 @@
 package com.smart.db.generator.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.smart.auth.core.utils.AuthUtils;
 import com.smart.commons.core.exception.BusinessException;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.crud.service.BaseServiceImpl;
-import com.smart.crud.service.UserSetterService;
 import com.smart.db.analysis.executor.DatabaseExecutor;
 import com.smart.db.analysis.executor.DbExecutorProvider;
 import com.smart.db.analysis.pojo.bo.TableViewBO;
@@ -21,7 +19,6 @@ import com.smart.db.generator.pojo.dto.DbTableQueryDTO;
 import com.smart.db.generator.pojo.vo.connection.DbConnectionResultVO;
 import com.smart.db.generator.service.DbCodeConnectionUserGroupService;
 import com.smart.db.generator.service.DbConnectionService;
-import com.smart.system.service.SysUserGroupUserService;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import org.springframework.beans.BeanUtils;
@@ -33,7 +30,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @author ShiZhongMing
@@ -47,15 +43,10 @@ public class DbConnectionServiceImpl extends BaseServiceImpl<DbConnectionMapper,
 
     private final DbCodeConnectionUserGroupService dbCodeConnectionUserGroupService;
 
-    private final SysUserGroupUserService sysUserGroupUserService;
 
-    private final UserSetterService createUpdateUserService;
-
-    public DbConnectionServiceImpl(DbExecutorProvider dbExecutorProvider, DbCodeConnectionUserGroupService dbCodeConnectionUserGroupService, SysUserGroupUserService sysUserGroupUserService, UserSetterService createUpdateUserService) {
+    public DbConnectionServiceImpl(DbExecutorProvider dbExecutorProvider, DbCodeConnectionUserGroupService dbCodeConnectionUserGroupService) {
         this.dbExecutorProvider = dbExecutorProvider;
         this.dbCodeConnectionUserGroupService = dbCodeConnectionUserGroupService;
-        this.sysUserGroupUserService = sysUserGroupUserService;
-        this.createUpdateUserService = createUpdateUserService;
     }
 
     @Override
@@ -68,26 +59,14 @@ public class DbConnectionServiceImpl extends BaseServiceImpl<DbConnectionMapper,
         if (connectionList.isEmpty()) {
             return connectionList;
         }
-        List<DbConnectionResultVO> connectionVoList = connectionList.stream()
+        return connectionList.stream()
                 .map(item -> {
                     DbConnectionResultVO vo = new DbConnectionResultVO();
                     BeanUtils.copyProperties(item, vo);
                     return vo;
                 }).toList();
-        // 设置创建人/更新人
-        if (Objects.equals(parameter.getParameter().get(DbCrudEnum.QUERY_CREATE_UPDATE_USER.name()), Boolean.TRUE)) {
-            this.queryCreateUpdateUser(connectionVoList);
-        }
-        return connectionVoList;
     }
 
-    /**
-     * 查询更新人创建人
-     * @param connectionResultList VO List
-     */
-    private void queryCreateUpdateUser(List<DbConnectionResultVO> connectionResultList) {
-        this.createUpdateUserService.setCreateUpdateUser(connectionResultList);
-    }
 
     /**
      * 数据级过滤
@@ -97,21 +76,9 @@ public class DbConnectionServiceImpl extends BaseServiceImpl<DbConnectionMapper,
         if (AuthUtils.isSuperAdmin()) {
             return;
         }
-        // 查询当前用户组对应的用户ID
-        List<Long> groupIdList = this.sysUserGroupUserService.listGroupIdByUserId(Lists.newArrayList(AuthUtils.getNonNullCurrentUserId())).get(AuthUtils.getNonNullCurrentUserId());
         // 查询用户组对应的连接信息
         final Set<Long> connectionIds = Sets.newHashSet();
-        if (!CollectionUtils.isEmpty(groupIdList)) {
-            connectionIds.addAll(
-                    this.dbCodeConnectionUserGroupService.list(
-                            new QueryWrapper<DbCodeConnectionUserGroupPO>().lambda()
-                                    .select(DbCodeConnectionUserGroupPO :: getConnectionId)
-                                    .in(DbCodeConnectionUserGroupPO :: getUserGroupId, groupIdList)
-                    ).stream().map(DbCodeConnectionUserGroupPO :: getConnectionId)
-                            .filter(Objects :: nonNull)
-                            .collect(Collectors.toSet())
-            );
-        }
+
         queryWrapper.lambda().and(wrapper -> {
             wrapper.eq(DbConnectionPO :: getCreateUserId, AuthUtils.getNonNullCurrentUserId());
             if (!CollectionUtils.isEmpty(connectionIds)) {
