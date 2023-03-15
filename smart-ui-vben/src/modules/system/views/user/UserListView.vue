@@ -245,6 +245,9 @@ const [
       wrapperCol: {
         span: 19,
       },
+      baseColProps: {
+        span: 24,
+      },
     },
   },
   proxyConfig: {
