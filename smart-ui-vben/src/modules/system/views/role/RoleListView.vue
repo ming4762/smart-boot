@@ -117,8 +117,11 @@ const [registerTable, { editByRowModal }] = useSmartTable({
     formConfig: {
       schemas: getAddEditFormSchemas(t),
       colon: true,
-      wrapperCol: { span: 19 },
-      labelCol: { span: 4 },
+      wrapperCol: { span: 18 },
+      labelCol: { span: 5 },
+      baseColProps: {
+        span: 24,
+      },
     },
   },
 })

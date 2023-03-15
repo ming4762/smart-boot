@@ -94,6 +94,9 @@ const [registerTable, { editByRowModal }] = useSmartTable({
       wrapperCol: {
         span: 18,
       },
+      baseColProps: {
+        span: 24,
+      },
     },
   },
   proxyConfig: {
