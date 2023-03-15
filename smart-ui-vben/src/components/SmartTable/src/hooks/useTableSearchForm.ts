@@ -7,6 +7,11 @@ import type { SmartSearchFormParameter } from '../types/SmartSearchFormType'
 import { computed, ref, unref } from 'vue'
 import { useForm } from '/@/components/Form'
 import { isArray, isBoolean } from '/@/utils/is'
+const SizeMap: { [index: string]: 'default' | 'small' | 'large' } = {
+  midum: 'default',
+  small: 'small',
+  mini: 'small',
+}
 
 export const useTableSearchForm = (
   propsRef: ComputedRef<SmartTableProps>,
@@ -33,12 +38,16 @@ export const useTableSearchForm = (
    * searchForm props计算属性
    */
   const getSearchFormProps = computed((): Partial<FormProps> => {
-    const { searchFormConfig } = unref(propsRef)
+    const { searchFormConfig, size } = unref(propsRef)
     const { submitButtonOptions } = searchFormConfig || {}
-    return {
+    const props: FormProps = {
       ...searchFormConfig,
       submitButtonOptions: { loading: unref(getLoading), ...submitButtonOptions },
     }
+    if (size) {
+      props.size = searchFormConfig?.size || SizeMap[size]
+    }
+    return props
   })
 
   /**

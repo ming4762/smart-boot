@@ -14,6 +14,12 @@ interface TableAction {
   query: (parameter?) => Promise<void>
 }
 
+const SizeMap: { [index: string]: 'default' | 'small' | 'large' } = {
+  midum: 'default',
+  small: 'small',
+  mini: 'small',
+}
+
 export const useTableModalAddEditConfig = (
   tableProps: ComputedRef<SmartTableProps>,
   slots: Slots,
@@ -33,14 +39,19 @@ export const useTableModalAddEditConfig = (
    * 添加修改弹窗props
    */
   const getAddEditFormProps = computed<FormProps>(() => {
-    const formConfig = unref(tableProps).addEditConfig?.formConfig
+    const { size, addEditConfig } = unref(tableProps)
+    const formConfig = addEditConfig?.formConfig
     if (!formConfig) {
       return {}
     }
-    return {
+    const props: FormProps = {
       ...getDefaultFormConfig(),
       ...formConfig,
     }
+    if (size) {
+      props.size = formConfig.size || SizeMap[size]
+    }
+    return props
   })
 
   function replaceFormSlotKey(key: string) {

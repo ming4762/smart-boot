@@ -7,7 +7,7 @@
         </div>
       </template>
       <template #second>
-        <SmartTable @register="registerTable" :size="getTableSize" >
+        <SmartTable @register="registerTable" :size="getTableSize">
           <template #table-operation="{ row }">
             <SmartVxeTableAction :actions="getTableActions(row)" />
           </template>
@@ -223,11 +223,11 @@ const [
     layout: 'inline',
     schemas: getSearchSchemas(t),
     colon: true,
-    // size: 'small',
     searchWithSymbol: true,
     actionColOptions: {
       span: undefined,
     },
+    size: 'default',
     labelCol: {
       span: 0,
     },
@@ -237,6 +237,7 @@ const [
       width: '700px',
     },
     formConfig: {
+      size: 'default',
       colon: true,
       schemas: getAddEditFormSchemas(t, userTypeListRef),
       labelCol: {
