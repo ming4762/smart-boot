@@ -1,4 +1,4 @@
-import { defineComponent, computed, unref, StyleValue, toRefs } from 'vue'
+import { defineComponent, computed, unref, toRefs } from 'vue'
 import { propTypes } from '/@/utils/propTypes'
 
 import './TableSearchLayout.less'
@@ -16,15 +16,15 @@ export default defineComponent({
     const { search, default: tableSlot } = slots
     const hasSearchForm = computed(() => search !== undefined)
 
-    const getTableContainerStyle = computed((): StyleValue => {
-      let height = '100%'
-      if (unref(hasSearchForm) && unref(showSearchRef)) {
-        height = 'calc(100% - 70px)'
-      }
-      return {
-        height,
-      }
-    })
+    // const getTableContainerStyle = computed((): StyleValue => {
+    //   let height = '100%'
+    //   if (unref(hasSearchForm) && unref(showSearchRef)) {
+    //     height = 'calc(100% - 70px)'
+    //   }
+    //   return {
+    //     height,
+    //   }
+    // })
 
     const getSearchContainerClass = computed(() => {
       const classList = ['smart-search-container']
@@ -41,9 +41,7 @@ export default defineComponent({
         ) : (
           ''
         )}
-        <div class="smart-table-container" style={unref(getTableContainerStyle)}>
-          {tableSlot && tableSlot()}
-        </div>
+        <div class="smart-table-container">{tableSlot && tableSlot()}</div>
       </div>
     )
   },

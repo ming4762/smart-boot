@@ -1,11 +1,11 @@
 import type { FormProps } from '/@/components/Form'
 import type {
-  SmartColumn,
   SmartTableProps,
   SmartTableProxyConfig,
   TableHeightType,
   SmartTableToolbarConfig,
 } from './types/SmartTableType'
+import type { SmartColumn } from './types/SmartTableColumnType'
 import type { VxeGridPropTypes } from 'vxe-table'
 
 import { ComponentPropsOptions } from 'vue'
