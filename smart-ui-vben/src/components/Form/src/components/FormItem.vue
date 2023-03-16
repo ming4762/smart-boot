@@ -59,9 +59,10 @@ export default defineComponent({
 
     const getValues = computed(() => {
       const { allDefaultValues, formModel, schema } = props
-      const { mergeDynamicData } = props.formProps
+      const { mergeDynamicData, size } = props.formProps
       return {
         field: schema.field,
+        size,
         model: formModel,
         values: {
           ...mergeDynamicData,
@@ -270,7 +271,8 @@ export default defineComponent({
       // RangePicker place is an array
       if (isCreatePlaceholder && component !== 'RangePicker' && component) {
         propsData.placeholder =
-          unref(getComponentsProps)?.placeholder || createPlaceholderMessage(component) + props.schema?.label
+          unref(getComponentsProps)?.placeholder ||
+          createPlaceholderMessage(component) + props.schema?.label
       }
       propsData.codeField = field
       propsData.formValues = unref(getValues)

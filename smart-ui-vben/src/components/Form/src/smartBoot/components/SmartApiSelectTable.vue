@@ -12,7 +12,7 @@
 
 <script lang="ts" setup>
 import { propTypes } from '/@/utils/propTypes'
-import { defHttp } from '/@/utils/http/axios'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 import ApiSelect from '/@/components/Form/src/components/ApiSelect.vue'
 import { computed } from 'vue'
 
@@ -36,6 +36,7 @@ const getParams = computed(() => {
 
 const api = (params) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
     url: 'api/component/smart-form/listTableSelect',
     data: params,
   })
