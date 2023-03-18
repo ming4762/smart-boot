@@ -90,5 +90,11 @@ export default {
     message: {
       changeTheme: 'Switching topics',
     },
+    changePassword: {
+      oldPassword: 'Old password',
+      newPassword: 'New password',
+      newPasswordConfirm: 'Confirm',
+      successMessage: 'Password modified successfully, please login again!',
+    },
   },
 }

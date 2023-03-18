@@ -5,8 +5,8 @@ import { store } from '/@/store'
 import { PageEnum } from '/@/enums/pageEnum'
 import { ROLES_KEY, TOKEN_KEY, USER_INFO_KEY } from '/@/enums/cacheEnum'
 import { getAuthCache, setAuthCache } from '/@/utils/auth'
-import { GetUserInfoModel, LoginParams } from '/@/api/sys/model/userModel'
-import { doLogout, loginApi } from '/@/api/sys/user'
+import { ChangePasswordParams, GetUserInfoModel, LoginParams } from '/@/api/sys/model/userModel'
+import { doLogout, loginApi, changePasswordApi } from '/@/api/sys/user'
 import { useI18n } from '/@/hooks/web/useI18n'
 import { useMessage } from '/@/hooks/web/useMessage'
 import { router } from '/@/router'
@@ -14,6 +14,7 @@ import { usePermissionStore } from '/@/store/modules/permission'
 import { RouteRecordRaw } from 'vue-router'
 import { PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic'
 import { h } from 'vue'
+import { createPassword } from '/@/utils/auth'
 
 interface UserState {
   userInfo: Nullable<UserInfo>
@@ -123,6 +124,9 @@ export const useUserStore = defineStore({
     ): Promise<GetUserInfoModel | null> {
       if (!this.getToken) return null
       // get user info
+      this.setUserInfo({
+        ...userInfo,
+      })
       const sessionTimeout = this.sessionTimeout
       if (sessionTimeout) {
         this.setSessionTimeout(false)
@@ -178,6 +182,19 @@ export const useUserStore = defineStore({
         onOk: async () => {
           await this.logout(true)
         },
+      })
+    },
+    /**
+     * 修改密码
+     * @param parameter 参数
+     */
+    changePassword({ oldPassword, newPassword, newPasswordConfirm }: ChangePasswordParams) {
+      const { username } = this.getUserInfo
+      console.log(oldPassword, newPassword)
+      return changePasswordApi({
+        oldPassword: createPassword(username, oldPassword),
+        newPassword: createPassword(username, newPassword),
+        newPasswordConfirm: createPassword(username, newPasswordConfirm),
       })
     },
   },

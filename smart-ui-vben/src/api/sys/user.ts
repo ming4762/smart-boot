@@ -1,5 +1,5 @@
 import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
-import { LoginParams, LoginResultModel } from './model/userModel'
+import { ChangePasswordParams, LoginParams, LoginResultModel } from './model/userModel'
 
 import { ErrorMessageMode } from '/#/axios'
 
@@ -9,6 +9,7 @@ enum Api {
   GetUserInfo = '/getUserInfo',
   GetPermCode = '/getPermCode',
   TestRetry = '/testRetry',
+  changePassword = 'sys/auth/changePassword',
 }
 
 /**
@@ -53,4 +54,16 @@ export function testRetry() {
       },
     },
   )
+}
+
+/**
+ * 修改密码
+ * @param params 参数
+ */
+export const changePasswordApi = (params: ChangePasswordParams) => {
+  return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
+    url: Api.changePassword,
+    data: params,
+  })
 }

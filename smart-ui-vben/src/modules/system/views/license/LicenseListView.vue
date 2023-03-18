@@ -19,9 +19,10 @@ license管理页面
               :drop-down-actions="getTableDropDownActions(row)"
               :actions="getTableActions(row)" />
           </template>
-          <template #form-secretKey="{ model }">
+          <template #form-secretKey="{ model, size }">
             <SmartApiSelectTable
               v-model:value="model.secretKeyId"
+              :size="size"
               model-class-name="com.smart.system.model.auth.SmartAuthSecretKeyPO"
               label-field-name="keyName"
               value-field-name="id"

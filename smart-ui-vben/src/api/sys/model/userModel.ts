@@ -41,3 +41,9 @@ export interface GetUserInfoModel {
 
   homePath?: string
 }
+
+export interface ChangePasswordParams {
+  oldPassword: string
+  newPassword: string
+  newPasswordConfirm: string
+}

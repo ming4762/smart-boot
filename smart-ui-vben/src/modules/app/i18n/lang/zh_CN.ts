@@ -90,5 +90,11 @@ export default {
     message: {
       changeTheme: '正在切换主题',
     },
+    changePassword: {
+      oldPassword: '原密码',
+      newPassword: '新密码',
+      newPasswordConfirm: '确认新密码',
+      successMessage: '密码修改成功，请重新登录！',
+    },
   },
 }
