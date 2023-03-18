@@ -2,6 +2,7 @@ package com.smart.commons.server.info;
 
 import lombok.SneakyThrows;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 /**
@@ -39,7 +40,7 @@ public class WindowsServerInfo extends AbstractServerInfo {
      * @param command 命令
      * @return 执行结果
      */
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     @Override
     public String exec(String[] command) {
         Process process = Runtime.getRuntime().exec(command[0]);

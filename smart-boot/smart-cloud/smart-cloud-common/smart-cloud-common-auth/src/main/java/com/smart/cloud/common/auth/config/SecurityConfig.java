@@ -20,7 +20,7 @@ import org.springframework.security.web.context.SecurityContextRepository;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    @SneakyThrows
+    @SneakyThrows(Exception.class)
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, RemoteSecurityContextRepository securityContextRepository) {
         http

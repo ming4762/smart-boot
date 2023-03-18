@@ -11,5 +11,10 @@ import java.util.List;
  */
 public interface SmartFormApiService {
 
+    /**
+     * 查询表格数据列表
+     * @param parameter 参数
+     * @return 表格数据列表
+     */
     List<SmartFormTableSelectApiVO> listTableSelect(SmartFormTableSelectApiDTO parameter);
 }

@@ -47,7 +47,7 @@ public class RsaUtils {
         return generateKeyPair(ALGORITHM);
     }
 
-    @SneakyThrows
+    @SneakyThrows(NoSuchAlgorithmException.class)
     public static KeyPair generateKeyPair(String algorithm) {
         KeyPairGenerator generator = KeyPairGenerator.getInstance(algorithm);
         generator.initialize(KEY_SIZE);
@@ -144,7 +144,7 @@ public class RsaUtils {
      * @param privateKey 私钥
      * @return 加密后的数据
      */
-    @SneakyThrows
+    @SneakyThrows(Exception.class)
     public static byte[] privateEncrypt(String data, RSAPrivateKey privateKey) {
         Cipher cipher = Cipher.getInstance(ALGORITHM);
         cipher.init(Cipher.ENCRYPT_MODE, privateKey);
@@ -157,7 +157,7 @@ public class RsaUtils {
      * @param publicKey 公钥
      * @return 加密后的数据
      */
-    @SneakyThrows
+    @SneakyThrows(Exception.class)
     public static byte[] publicDecrypt(String data, RSAPublicKey publicKey) {
         Cipher cipher = Cipher.getInstance(ALGORITHM);
         cipher.init(Cipher.DECRYPT_MODE, publicKey);
@@ -170,7 +170,7 @@ public class RsaUtils {
      * @param privateKey 私钥
      * @return 加密后的数据
      */
-    @SneakyThrows
+    @SneakyThrows(Exception.class)
     public static byte[] privateDecrypt(String data, RSAPrivateKey privateKey) {
         Cipher cipher = Cipher.getInstance(ALGORITHM);
         cipher.init(Cipher.DECRYPT_MODE, privateKey);

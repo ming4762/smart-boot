@@ -15,6 +15,7 @@ import org.apache.ibatis.plugin.Signature;
 import org.springframework.beans.BeanUtils;
 
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -84,7 +85,7 @@ public class CreateUpdateUserTimeMybatisInterceptor implements Interceptor {
         return invocation.proceed();
     }
 
-    @SneakyThrows
+    @SneakyThrows({IllegalAccessException.class, InvocationTargetException.class})
     private void setTime(PropertyDescriptor propertyDescriptor, Object data) {
         if (propertyDescriptor != null && propertyDescriptor.getReadMethod().invoke(data) == null) {
             if (propertyDescriptor.getPropertyType().equals(LocalDateTime.class)) {

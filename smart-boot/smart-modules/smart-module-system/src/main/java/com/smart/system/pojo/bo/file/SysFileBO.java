@@ -9,6 +9,7 @@ import lombok.SneakyThrows;
 import lombok.ToString;
 import org.springframework.lang.NonNull;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -28,7 +29,7 @@ public class SysFileBO {
 
     private FileSaveParameter parameter;
 
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     public SysFileBO(@NonNull InputStream inputStream, FileSaveParameter parameter, String contentType) {
         this.file = SmartFilePO.builder()
                 .fileId(IdGenerator.nextId())

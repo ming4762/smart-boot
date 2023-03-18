@@ -26,7 +26,7 @@ public class SecurityConfig extends AuthWebSecurityConfigurerAdapter {
         super(authProperties);
     }
 
-    @SneakyThrows
+    @SneakyThrows(Exception.class)
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, ApplicationContext applicationContext) {
         super.configure(http);

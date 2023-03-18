@@ -43,14 +43,14 @@ public abstract class AbstractServerInfo implements ServerInfo {
         return this.getLocalInetAddress().stream()
                 .map(InetAddress::getHostAddress)
                 .distinct()
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
      * 获取服务器所有的InetAddress
      * @return InetAddress 列表
      */
-    @SneakyThrows
+    @SneakyThrows(SocketException.class)
     protected List<InetAddress> getLocalInetAddress() {
         List<InetAddress> inetAddressList = new ArrayList<>(4);
 
