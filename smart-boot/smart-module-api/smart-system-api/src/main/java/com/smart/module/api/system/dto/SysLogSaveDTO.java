@@ -53,7 +53,7 @@ public class SysLogSaveDTO implements Serializable {
     /**
      * 状态码
      */
-    private int statusCode;
+    private Integer statusCode;
 
     /**
      * 错误信息

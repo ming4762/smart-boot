@@ -228,7 +228,7 @@ public class DefaultFileServiceImpl implements FileService, ApplicationContextAw
         }
     }
 
-    @SneakyThrows
+    @SneakyThrows(IOException.class)
     protected SysFileBO createSysFileBo(MultipartFile file, FileSaveParameter parameter) {
         SysFileBO sysFileBo = new SysFileBO(file.getInputStream(), parameter, file.getContentType());
         if (!StringUtils.hasText(sysFileBo.getFile().getFileName())) {

@@ -37,7 +37,7 @@ public class DefaultLicenseGenerator implements LicenseGenerator {
      * @param parameter license生成参数
      * @return license
      */
-    @SneakyThrows
+    @SneakyThrows(Exception.class)
     @Override
     public InputStream generate(LicenseGeneratorParameter parameter) {
         CustomLicenseManager licenseManager = new CustomLicenseManager(this.createLicenseParam(parameter), null);

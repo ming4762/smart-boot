@@ -46,6 +46,7 @@ public class SysParameterServiceImpl extends BaseServiceImpl<SysParameterMapper,
     }
 
     @NonNull
+    @Override
     public Map<String, String> getParameter(@NonNull List<String> codeList) {
         if (CollectionUtils.isEmpty(codeList)) {
             return Collections.emptyMap();

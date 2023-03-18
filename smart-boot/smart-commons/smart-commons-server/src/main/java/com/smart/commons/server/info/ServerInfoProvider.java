@@ -1,8 +1,5 @@
 package com.smart.commons.server.info;
 
-import lombok.SneakyThrows;
-
-import javax.naming.OperationNotSupportedException;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,7 +45,6 @@ public class ServerInfoProvider {
         return serverInfo.getIpAddress();
     }
 
-    @SneakyThrows
     private static void initServerInfo() {
         if (serverInfo == null) {
             if (isLinux()) {
@@ -56,7 +52,7 @@ public class ServerInfoProvider {
             } else if (isWindows()) {
                 serverInfo = new WindowsServerInfo();
             } else {
-                throw new OperationNotSupportedException("不支持的操作系统");
+                throw new UnsupportedOperationException("不支持的操作系统");
             }
         }
     }

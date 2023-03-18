@@ -14,6 +14,14 @@ import java.util.List;
  */
 public interface SmartFormApiMapper {
 
+    /**
+     * 查询表格列表
+     * @param tableName 表名
+     * @param valueName value字段名
+     * @param labelName label字段名
+     * @param queryWrapper 查询条件
+     * @return 表格数据列表
+     */
     List<SmartFormTableSelectApiVO> listTableSelect(
             @Param("tableName") String tableName,
             @Param("valueName") String valueName,

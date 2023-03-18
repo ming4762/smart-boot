@@ -39,11 +39,9 @@ public class DbCodeTemplateServiceImpl extends BaseServiceImpl<DbCodeTemplateMap
         queryWrapper.select(DbCodeTemplatePO.class, field -> !"template".equals(field.getProperty()));
         // 设置查询权限
         // 1、判断是否是超级管理员
-//        final RestUserDetails user = AuthUtils.getNonNullCurrentUser();
         List<? extends DbCodeTemplatePO> list = super.list(queryWrapper, parameter, paging);
         // 转换为VO
-        List<DbCodeTemplateListVO> voList = BeanUtils.copyProperties(list, DbCodeTemplateListVO.class);
-        return voList;
+        return BeanUtils.copyProperties(list, DbCodeTemplateListVO.class);
     }
     @Override
     @Transactional(rollbackFor = Exception.class)

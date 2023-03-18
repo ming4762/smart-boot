@@ -14,7 +14,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnabledCustomObjectMapper
-//@EnableSmartFeignClients
 @EnableFeignClients(basePackages = {"com.smart.cloud.api.system.feign"})
 public class SmartCloudAuthApplication {
 

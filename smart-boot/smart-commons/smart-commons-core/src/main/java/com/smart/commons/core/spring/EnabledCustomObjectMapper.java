@@ -9,6 +9,7 @@ import java.lang.annotation.Target;
 
 /**
  * 引入自定义的object mapper
+ * @author zhongming4762
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
