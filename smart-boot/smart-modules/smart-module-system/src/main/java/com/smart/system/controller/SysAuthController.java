@@ -8,6 +8,7 @@ import com.smart.commons.core.i18n.I18nException;
 import com.smart.commons.core.log.Log;
 import com.smart.commons.core.log.LogOperationTypeEnum;
 import com.smart.commons.core.message.Result;
+import com.smart.module.api.auth.AuthApi;
 import com.smart.system.model.SysUserPO;
 import com.smart.system.pojo.dbo.SysUserWthAccountBO;
 import com.smart.system.pojo.dto.ChangePasswordDTO;
@@ -44,9 +45,12 @@ public class SysAuthController {
 
     private final SysUserAccountService sysUserAccountService;
 
-    public SysAuthController(SysUserService sysUserService, SysUserAccountService sysAuthUserService) {
+    private final AuthApi authApi;
+
+    public SysAuthController(SysUserService sysUserService, SysUserAccountService sysAuthUserService, AuthApi authApi) {
         this.sysUserService = sysUserService;
         this.sysUserAccountService = sysAuthUserService;
+        this.authApi = authApi;
     }
 
     /**
@@ -54,7 +58,7 @@ public class SysAuthController {
      * @param parameter 参数
      * @return 是否更改成功
      */
-    @PostMapping("auth/changePassword")
+    @PostMapping("sys/auth/changePassword")
     @Log(value = "更新密码", type = LogOperationTypeEnum.UPDATE, saveParameter = false, saveResult = true)
     @Operation(summary = "更改密码")
     public Result<Boolean> changePassword(@NonNull @RequestBody @Valid ChangePasswordDTO parameter) {
@@ -76,8 +80,7 @@ public class SysAuthController {
         }
         this.sysUserAccountService.changePassword(AuthUtils.getNonNullCurrentUserId(), parameter.getNewPassword());
         // 删除用户登录状态
-        // todo：认证模块需要开发
-//        this.cacheJwtStore.invalidateByUsername(AuthUtils.getNonNullCurrentUser().getUsername());
+        this.authApi.offlineByUsername(AuthUtils.getNonNullCurrentUser().getUsername());
         return Result.success(true);
     }
 

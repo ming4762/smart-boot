@@ -18,12 +18,17 @@
           v-if="getShowDoc" />
         <MenuDivider v-if="getShowDoc" />
         <MenuItem
+          icon="ant-design:key-outlined"
+          :text="t('layout.header.changePassword')"
+          key="changePassword" />
+        <MenuItem
           key="logout"
           :text="t('layout.header.dropdownItemLoginOut')"
           icon="ion:power-outline" />
       </Menu>
     </template>
   </Dropdown>
+  <ChangePasswordModal @register="registerChangePasswordModal" />
 </template>
 <script lang="ts">
 // components
@@ -45,8 +50,9 @@ import { propTypes } from '/@/utils/propTypes'
 import { openWindow } from '/@/utils'
 
 import { createAsyncComponent } from '/@/utils/factory/createAsyncComponent'
+import ChangePasswordModal from './ChangePasswordModal.vue'
 
-type MenuEvent = 'logout' | 'doc'
+type MenuEvent = 'logout' | 'doc' | 'changePassword'
 
 export default defineComponent({
   name: 'UserDropdown',
@@ -55,6 +61,7 @@ export default defineComponent({
     Menu,
     MenuItem: createAsyncComponent(() => import('./DropMenuItem.vue')),
     MenuDivider: Menu.Divider,
+    ChangePasswordModal,
   },
   props: {
     theme: propTypes.oneOf(['dark', 'light']),
@@ -71,10 +78,15 @@ export default defineComponent({
     })
 
     const [register] = useModal()
+    const [registerChangePasswordModal, { openModal }] = useModal()
 
     //  login out
     function handleLoginOut() {
       userStore.confirmLoginOut()
+    }
+
+    const handleChangePassword = () => {
+      openModal()
     }
 
     // open doc
@@ -90,6 +102,9 @@ export default defineComponent({
         case 'doc':
           openDoc()
           break
+        case 'changePassword':
+          handleChangePassword()
+          break
       }
     }
 
@@ -100,6 +115,7 @@ export default defineComponent({
       handleMenuClick,
       getShowDoc,
       register,
+      registerChangePasswordModal,
     }
   },
 })

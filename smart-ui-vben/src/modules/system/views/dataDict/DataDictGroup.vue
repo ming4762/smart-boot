@@ -39,12 +39,16 @@ const [registerTable] = useSmartTable({
   useSearchForm: true,
   searchFormConfig: {
     colon: true,
+    compact: true,
     searchWithSymbol: true,
     schemas: getDataDictGroupSearchSchemas(t),
     layout: 'inline',
     actionColOptions: {
       span: undefined,
     },
+    // baseColProps: {
+    //   span: 8,
+    // },
   },
   addEditConfig: {
     formConfig: {

@@ -163,10 +163,14 @@ const [registerTable, { editByRowModal, query }] = useSmartTable({
       getById: (params) => getByIdApi(params.id),
     },
   },
+  importConfig: {},
+  exportConfig: {},
   toolbarConfig: {
     zoom: true,
     refresh: true,
     custom: true,
+    import: true,
+    export: true,
     buttons: [
       {
         code: 'ModalAdd',
