@@ -2,13 +2,13 @@ package com.smart.file.extensions.minio;
 
 import com.smart.commons.core.utils.JsonUtils;
 import com.smart.file.core.common.FileStorageServiceRegisterName;
-import com.smart.file.core.constants.FileStorageTypeEnum;
 import com.smart.file.core.parameter.FileStorageCommonParameter;
 import com.smart.file.core.parameter.FileStorageDeleteParameter;
 import com.smart.file.core.parameter.FileStorageGetParameter;
 import com.smart.file.core.parameter.FileStorageSaveParameter;
 import com.smart.file.core.pojo.bo.DiskFilePathBO;
 import com.smart.file.core.properties.SmartFileStorageMinioProperties;
+import com.smart.module.api.file.constants.FileStorageTypeEnum;
 import io.minio.*;
 import io.minio.errors.*;
 import io.minio.http.Method;

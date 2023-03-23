@@ -1,6 +1,7 @@
 package com.smart.module.api.auth;
 
 import com.smart.commons.core.message.Result;
+import com.smart.module.api.auth.dto.AuthCacheDTO;
 import com.smart.module.api.auth.dto.AuthUserDetailsDTO;
 import com.smart.module.api.auth.dto.AuthenticationDTO;
 import org.springframework.lang.NonNull;
@@ -40,5 +41,24 @@ public interface AuthApi {
      * @return 验证结果
      */
     Result<Boolean> authenticate(AuthenticationDTO parameter);
+
+    /**
+     * 获取认证缓存
+     * @param key key
+     * @return 缓存对象
+     */
+    Object getAuthCache(@NonNull String key);
+
+    /**
+     * 设置缓存信息
+     * @param parameter key
+     */
+    void setAuthCache(@NonNull AuthCacheDTO parameter);
+
+    /**
+     * 删除缓存
+     * @param key 缓存的key
+     */
+    void removeAuthCache(@NonNull String key);
 
 }

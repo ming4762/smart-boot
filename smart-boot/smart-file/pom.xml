@@ -19,6 +19,7 @@
 		<module>smart-file-extensions-disk</module>
 		<module>smart-file-extensions-minio</module>
 		<module>smart-file-extensions-sftp</module>
+		<module>smart-file-manager</module>
 	</modules>
 
 	<properties>

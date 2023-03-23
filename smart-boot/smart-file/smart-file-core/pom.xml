@@ -38,6 +38,11 @@
 			<optional>true</optional>
 		</dependency>
 
+		<dependency>
+			<groupId>com.smart</groupId>
+			<artifactId>smart-file-api</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
 	</dependencies>
 
 

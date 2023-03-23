@@ -51,7 +51,7 @@ export const getByIdApi = (model: Recordable) => {
 }
 
 export const downloadApi = async (id) => {
-  let url = `${defHttp.getApiUrl()}${Api.download}${id}`
+  let url = `${defHttp.getApiUrl()}/${ApiServiceEnum.SMART_FILE}${Api.download}${id}`
   // 申请临时token
   const tempToken = await applyTempToken('smart:file:download')
   url = url + '?access-token=' + tempToken

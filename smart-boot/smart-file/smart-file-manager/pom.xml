@@ -19,19 +19,24 @@
 		<dependency>
 			<groupId>com.smart</groupId>
 			<artifactId>smart-auth-core</artifactId>
-			<version>${project.parent.version}</version>
+			<version>${smart-boot.version}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>com.smart</groupId>
 			<artifactId>smart-file-core</artifactId>
-			<version>${project.parent.version}</version>
+			<version>${smart-boot.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.smart</groupId>
 			<artifactId>crud-spring-boot-starter</artifactId>
-			<version>${project.parent.version}</version>
+			<version>${smart-boot.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.smart</groupId>
+			<artifactId>smart-file-api</artifactId>
+			<version>${smart-boot.version}</version>
 		</dependency>
 	</dependencies>
 

@@ -49,6 +49,12 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
+        <!--    loadbalancer缓存    -->
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>com.smart</groupId>
             <artifactId>smart-cloud-system-api</artifactId>

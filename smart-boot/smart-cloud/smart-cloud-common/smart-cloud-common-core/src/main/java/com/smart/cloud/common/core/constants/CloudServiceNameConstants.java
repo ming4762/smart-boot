@@ -17,4 +17,9 @@ public interface CloudServiceNameConstants {
      */
     String AUTH_SERVICE = "smart-cloud-auth";
 
+    /**
+     * 文件服务
+     */
+    String FILE_SERVICE = "smart-cloud-file";
+
 }

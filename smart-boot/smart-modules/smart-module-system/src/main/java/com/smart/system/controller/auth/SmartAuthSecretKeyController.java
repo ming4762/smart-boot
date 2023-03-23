@@ -85,6 +85,7 @@ public class SmartAuthSecretKeyController extends BaseController<SmartAuthSecret
     @Operation(summary = "下载秘钥")
     @PostMapping("download")
     public void download(@RequestBody IdParameter parameter, HttpServletResponse response) {
+        response.setHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, HttpHeaders.CONTENT_DISPOSITION);
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=secretKey.zip");
         this.service.download(parameter.getId(), response.getOutputStream());
     }

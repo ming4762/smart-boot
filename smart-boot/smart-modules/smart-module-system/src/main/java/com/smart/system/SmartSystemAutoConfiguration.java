@@ -1,13 +1,7 @@
 package com.smart.system;
 
-import com.smart.file.core.service.FileService;
 import com.smart.system.auth.AuthEventLogHandler;
 import com.smart.system.service.SysLogService;
-import com.smart.system.service.SysUserAccountService;
-import com.smart.system.service.SysUserService;
-import com.smart.system.service.file.SmartFileService;
-import com.smart.system.service.file.SmartFileStorageService;
-import com.smart.system.service.file.impl.DefaultFileServiceImpl;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
@@ -36,9 +30,4 @@ public class SmartSystemAutoConfiguration {
         return new AuthEventLogHandler(sysLogService);
     }
 
-    @Bean
-    @ConditionalOnMissingBean(FileService.class)
-    public FileService defaultFileServiceImpl(SmartFileStorageService smartFileStorageService, SmartFileService sysFileService) {
-        return new DefaultFileServiceImpl(smartFileStorageService, sysFileService);
-    }
 }

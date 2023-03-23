@@ -6,14 +6,15 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.smart.commons.core.exception.BusinessException;
 import com.smart.commons.core.exception.SystemException;
 import com.smart.crud.service.BaseServiceImpl;
-import com.smart.file.core.parameter.FileSaveParameter;
-import com.smart.file.core.pojo.bo.FileDownloadResult;
-import com.smart.file.core.pojo.bo.FileHandlerResult;
-import com.smart.file.core.service.FileService;
 import com.smart.license.server.LicenseGenerator;
 import com.smart.license.server.LicenseGeneratorParameter;
+import com.smart.module.api.file.SmartFileApi;
+import com.smart.module.api.file.bo.FileDownloadResult;
+import com.smart.module.api.file.bo.FileHandlerResult;
+import com.smart.module.api.file.dto.InputStreamMultipartFile;
+import com.smart.module.api.file.dto.RemoteFileSaveParameter;
+import com.smart.module.api.system.constants.SysParameterCodeEnum;
 import com.smart.system.constants.LicenseStatusEnum;
-import com.smart.system.constants.SysParameterCodeEnum;
 import com.smart.system.mapper.auth.SmartAuthLicenseMapper;
 import com.smart.system.model.auth.SmartAuthLicensePO;
 import com.smart.system.model.auth.SmartAuthSecretKeyPO;
@@ -50,15 +51,15 @@ public class SmartAuthLicenseServiceImpl extends BaseServiceImpl<SmartAuthLicens
 
     private final SmartAuthSecretKeyService smartAuthSecretKeyService;
 
-    private final FileService fileService;
+    private final SmartFileApi smartFileApi;
 
     private final SysParameterService sysParameterService;
 
-    public SmartAuthLicenseServiceImpl(@Lazy LicenseGenerator licenseGenerator, SysSystemService systemService, SmartAuthSecretKeyService smartAuthSecretKeyService, FileService fileService, SysParameterService sysParameterService) {
+    public SmartAuthLicenseServiceImpl(@Lazy LicenseGenerator licenseGenerator, SysSystemService systemService, SmartAuthSecretKeyService smartAuthSecretKeyService, SmartFileApi smartFileApi, SysParameterService sysParameterService) {
         this.licenseGenerator = licenseGenerator;
         this.systemService = systemService;
         this.smartAuthSecretKeyService = smartAuthSecretKeyService;
-        this.fileService = fileService;
+        this.smartFileApi = smartFileApi;
         this.sysParameterService = sysParameterService;
     }
 
@@ -94,7 +95,7 @@ public class SmartAuthLicenseServiceImpl extends BaseServiceImpl<SmartAuthLicens
         }
         // 查询秘钥信息
         SmartAuthSecretKeyPO smartAuthSecretKey = this.getSecretKey(data.getSecretKeyId());
-        FileDownloadResult privateKeyData = this.fileService.download(smartAuthSecretKey.getPrivateKeyFileId());
+        FileDownloadResult privateKeyData = this.smartFileApi.download(smartAuthSecretKey.getPrivateKeyFileId());
         if (privateKeyData == null) {
             throw new SystemException("获取秘钥文件失败");
         }
@@ -114,13 +115,14 @@ public class SmartAuthLicenseServiceImpl extends BaseServiceImpl<SmartAuthLicens
                 .dataId(id)
                 .build();
         InputStream inputStream = this.licenseGenerator.generate(parameter);
+        String filename = data.getLicenseName() + ".lic";
         // 保存license文件
-        FileHandlerResult licenseFile = this.fileService.save(
-                inputStream,
-                FileSaveParameter.builder()
+        FileHandlerResult licenseFile = this.smartFileApi.save(
+                RemoteFileSaveParameter.builder()
+                        .multipartFile(new InputStreamMultipartFile(inputStream, filename))
                         .type(secrecyFileType)
                         .fileStorageId(data.getFileStorageId())
-                        .filename(data.getLicenseName() + ".lic")
+                        .filename(filename)
                         .build()
         );
         return this.update(
@@ -156,12 +158,12 @@ public class SmartAuthLicenseServiceImpl extends BaseServiceImpl<SmartAuthLicens
             throw new BusinessException("获取秘钥信息失败");
         }
         // 获取公钥
-        FileDownloadResult publicKeyFile = this.fileService.download(authSecretKey.getPublicKeyFileId());
-        FileDownloadResult licenseFile = this.fileService.download(authLicense.getLicenseFileId());
+        FileDownloadResult publicKeyFile = this.smartFileApi.download(authSecretKey.getPublicKeyFileId());
+        FileDownloadResult licenseFile = this.smartFileApi.download(authLicense.getLicenseFileId());
         if (publicKeyFile == null || licenseFile == null) {
             throw new BusinessException("获取文件失败，请检查文件是否已删除");
         }
-        ZipUtil.zip(outputStream, new String[]{publicKeyFile.getFileName(), licenseFile.getFileName()}, new InputStream[]{publicKeyFile.getInputStream(), licenseFile.getInputStream()});
+        ZipUtil.zip(outputStream, new String[]{publicKeyFile.getFilename(), licenseFile.getFilename()}, new InputStream[]{publicKeyFile.getInputStream(), licenseFile.getInputStream()});
     }
 
     /**
@@ -189,7 +191,7 @@ public class SmartAuthLicenseServiceImpl extends BaseServiceImpl<SmartAuthLicens
                             .in(SmartAuthLicensePO::getId, deleteFileIds)
             ).stream().map(SmartAuthLicensePO::getLicenseFileId).collect(Collectors.toSet());
             if (!CollectionUtils.isEmpty(fileIds)) {
-                this.fileService.batchDelete(fileIds);
+                this.smartFileApi.batchDelete(fileIds);
             }
             this.update(
                     new UpdateWrapper<SmartAuthLicensePO>().lambda()
@@ -221,7 +223,7 @@ public class SmartAuthLicenseServiceImpl extends BaseServiceImpl<SmartAuthLicens
 
         boolean result = super.removeBatchByIds(list);
         if (!CollectionUtils.isEmpty(fileIds)) {
-            this.fileService.batchDelete(fileIds);
+            this.smartFileApi.batchDelete(fileIds);
         }
         return result;
     }
@@ -242,7 +244,7 @@ public class SmartAuthLicenseServiceImpl extends BaseServiceImpl<SmartAuthLicens
         entity.setStatus(LicenseStatusEnum.UPDATE);
         boolean result = super.save(entity);
         if (fileId != null) {
-            this.fileService.delete(entity.getLicenseFileId());
+            this.smartFileApi.delete(entity.getLicenseFileId());
         }
         return result;
     }

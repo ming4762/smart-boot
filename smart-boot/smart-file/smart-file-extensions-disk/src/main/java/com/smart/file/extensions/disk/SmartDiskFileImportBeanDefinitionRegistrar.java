@@ -1,7 +1,7 @@
 package com.smart.file.extensions.disk;
 
-import com.smart.file.core.constants.FileStorageTypeEnum;
 import com.smart.file.extensions.disk.service.FileStorageDiskServiceImpl;
+import com.smart.module.api.file.constants.FileStorageTypeEnum;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.RootBeanDefinition;

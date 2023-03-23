@@ -15,6 +15,7 @@
 
     <modules>
         <module>smart-auth-api</module>
+        <module>smart-file-api</module>
         <module>smart-system-api</module>
     </modules>
 

@@ -51,8 +51,9 @@ public class SmartAuthAccessGlobalFilter implements GlobalFilter, Ordered {
         ServerHttpRequest request = exchange.getRequest();
         // 获取请求路径
         String requestPath = request.getURI().getPath();
+        // 删除前缀
+        String servicePath = requestPath.substring(1).substring(requestPath.indexOf("/", 1) - 1);
         HttpMethod httpMethod = request.getMethod();
-
         List<String> tokenList = request.getHeaders().get(HttpHeaders.AUTHORIZATION);
 
 
@@ -63,7 +64,7 @@ public class SmartAuthAccessGlobalFilter implements GlobalFilter, Ordered {
             }
             return this.remoteAuthApi.authenticate(
                     AuthenticationDTO.builder()
-                            .url(requestPath)
+                            .url(servicePath)
                             .httpMethod(httpMethod.name())
                             .build()
             );
