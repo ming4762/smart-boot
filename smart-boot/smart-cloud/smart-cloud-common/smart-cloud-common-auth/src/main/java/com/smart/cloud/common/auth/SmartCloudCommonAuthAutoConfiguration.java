@@ -2,6 +2,7 @@ package com.smart.cloud.common.auth;
 
 import com.smart.auth.core.authentication.MethodPermissionEvaluatorImpl;
 import com.smart.auth.core.properties.AuthProperties;
+import com.smart.auth.core.temptoken.EnableAuthTempToken;
 import com.smart.cloud.common.auth.config.SecurityConfig;
 import com.smart.cloud.common.auth.repository.RemoteSecurityContextRepository;
 import com.smart.module.api.auth.AuthApi;
@@ -27,6 +28,7 @@ import java.util.List;
 @Configuration(proxyBeanMethods = false)
 @Import(SecurityConfig.class)
 @EnableConfigurationProperties(AuthProperties.class)
+@EnableAuthTempToken
 public class SmartCloudCommonAuthAutoConfiguration {
 
     /**

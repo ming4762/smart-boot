@@ -1,8 +1,8 @@
 package com.smart.file.core.service;
 
-import com.smart.file.core.parameter.FileSaveParameter;
-import com.smart.file.core.pojo.bo.FileDownloadResult;
-import com.smart.file.core.pojo.bo.FileHandlerResult;
+import com.smart.module.api.file.bo.FileDownloadResult;
+import com.smart.module.api.file.bo.FileHandlerResult;
+import com.smart.module.api.file.dto.FileSaveParameter;
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
 import org.springframework.lang.NonNull;

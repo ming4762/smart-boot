@@ -38,6 +38,12 @@
             <version>${smart-boot.version}</version>
         </dependency>
 
+        <!--    loadbalancer缓存    -->
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -53,28 +59,7 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
-        <!--    文件存储支持    -->
-        <dependency>
-            <groupId>com.smart</groupId>
-            <artifactId>smart-file-extensions-disk</artifactId>
-            <version>${smart-boot.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.smart</groupId>
-            <artifactId>smart-file-extensions-minio</artifactId>
-            <version>${smart-boot.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.smart</groupId>
-            <artifactId>smart-file-extensions-aliyun-oss</artifactId>
-            <version>${smart-boot.version}</version>
-        </dependency>
-
         <!--    文档支持    -->
-        <dependency>
-            <groupId>com.github.xiaoymin</groupId>
-            <artifactId>knife4j-openapi2-spring-boot-starter</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>com.smart</groupId>
@@ -93,6 +78,12 @@
         <dependency>
             <groupId>com.smart</groupId>
             <artifactId>smart-cloud-common-auth</artifactId>
+            <version>${smart-boot.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-cloud-file-api</artifactId>
             <version>${smart-boot.version}</version>
         </dependency>
     </dependencies>

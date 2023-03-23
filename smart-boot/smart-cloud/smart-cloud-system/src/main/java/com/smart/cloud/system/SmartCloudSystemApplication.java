@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableValidatorI18nSource
 @EnableGlobalValidator
 @EnabledCustomObjectMapper
-@EnableFeignClients(basePackages = "com.smart.cloud.api.auth.feign")
+@EnableFeignClients(basePackages = {"com.smart.cloud.api.auth.feign", "com.smart.cloud.api.file.feign"})
 public class SmartCloudSystemApplication {
 
     public static void main(String[] args) {

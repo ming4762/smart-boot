@@ -69,7 +69,6 @@
         <module>smart-modules</module>
         <module>smart-monitor</module>
         <module>smart-starter</module>
-        <module>smart-module-api</module>
         <module>smart-samples</module>
     </modules>
 

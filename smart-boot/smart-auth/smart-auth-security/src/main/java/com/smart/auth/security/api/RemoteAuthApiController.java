@@ -3,6 +3,7 @@ package com.smart.auth.security.api;
 import com.smart.commons.core.message.Result;
 import com.smart.module.api.auth.AuthApi;
 import com.smart.module.api.auth.constants.SmartAuthApiUrlConstants;
+import com.smart.module.api.auth.dto.AuthCacheDTO;
 import com.smart.module.api.auth.dto.AuthUserDetailsDTO;
 import com.smart.module.api.auth.dto.AuthenticationDTO;
 import org.springframework.lang.NonNull;
@@ -74,4 +75,37 @@ public class RemoteAuthApiController implements AuthApi {
         return this.localAuthApi.authenticate(parameter);
     }
 
+    /**
+     * 获取认证缓存
+     *
+     * @param key key
+     * @return 缓存对象
+     */
+    @Override
+    @PostMapping(SmartAuthApiUrlConstants.GET_AUTH_CACHE)
+    public Object getAuthCache(@NonNull @RequestBody String key) {
+        return this.localAuthApi.getAuthCache(key);
+    }
+
+    /**
+     * 设置缓存信息
+     *
+     * @param parameter 参数
+     */
+    @Override
+    @PostMapping(SmartAuthApiUrlConstants.SET_AUTH_CACHE)
+    public void setAuthCache(@NonNull @RequestBody AuthCacheDTO parameter) {
+        this.localAuthApi.setAuthCache(parameter);
+    }
+
+    /**
+     * 删除缓存
+     *
+     * @param key 缓存的key
+     */
+    @Override
+    @PostMapping(SmartAuthApiUrlConstants.REMOVE_AUTH_CACHE)
+    public void removeAuthCache(@NonNull @RequestBody String key) {
+        this.localAuthApi.removeAuthCache(key);
+    }
 }

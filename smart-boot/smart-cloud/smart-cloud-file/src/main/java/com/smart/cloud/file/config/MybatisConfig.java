@@ -1,0 +1,42 @@
+package com.smart.cloud.file.config;
+
+import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceBuilder;
+import com.smart.commons.core.constants.MapperPackageConstants;
+import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+
+import javax.sql.DataSource;
+
+/**
+ * @author ShiZhongMing
+ * 2021/4/22 12:55
+ * @since 1.0
+ */
+@Configuration
+@MapperScan(basePackages = {
+        MapperPackageConstants.MODULE_FILE,
+})
+public class MybatisConfig {
+
+    @Bean
+    @ConfigurationProperties("spring.datasource")
+    @Primary
+    public DataSource dataSource() {
+        return DruidDataSourceBuilder.create().build();
+    }
+
+    /**
+     * 创建事务管理器
+     * @param dataSource 数据源
+     * @return DataSourceTransactionManager
+     */
+    @Bean("transactionManager")
+    @Primary
+    public DataSourceTransactionManager systemDataSourceTransactionManager(DataSource dataSource) {
+        return new DataSourceTransactionManager(dataSource);
+    }
+}

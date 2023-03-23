@@ -4,7 +4,6 @@ import com.smart.auth.core.annotation.NonUrlCheck;
 import com.smart.auth.core.i18n.AuthI18nMessage;
 import com.smart.auth.core.model.TempTokenData;
 import com.smart.auth.core.properties.AuthProperties;
-import com.smart.auth.core.service.AuthCache;
 import com.smart.auth.core.token.TokenData;
 import com.smart.auth.core.token.TokenRepository;
 import com.smart.auth.core.userdetails.RestUserDetails;
@@ -21,6 +20,7 @@ import com.smart.commons.core.utils.DigestUtils;
 import com.smart.commons.core.utils.IpUtils;
 import com.smart.commons.core.utils.JsonUtils;
 import com.smart.module.api.auth.AuthApi;
+import com.smart.module.api.auth.dto.AuthCacheDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -52,14 +52,11 @@ public class AuthController {
 
     private final AuthProperties authProperties;
 
-    private final AuthCache<String, Object> authCache;
-
     private final List<TokenRepository> tokenRepositoryList;
 
     private final AuthApi authApi;
 
-    public AuthController(AuthCache<String, Object> authCache, AuthProperties authProperties, List<TokenRepository> tokenRepositoryList, AuthApi authApi) {
-        this.authCache = authCache;
+    public AuthController(AuthProperties authProperties, List<TokenRepository> tokenRepositoryList, AuthApi authApi) {
         this.authProperties = authProperties;
         this.tokenRepositoryList = tokenRepositoryList;
         this.authApi = authApi;
@@ -107,7 +104,7 @@ public class AuthController {
 
         String key = DigestUtils.sha256(JsonUtils.toJsonString(tempTokenData), 1);
         // 默认有效期60秒
-        this.authCache.put(key, tempTokenData, properties.getTimeout());
+        this.authApi.setAuthCache(new AuthCacheDTO(key, tempTokenData, properties.getTimeout()));
         return Result.success(key);
     }
 

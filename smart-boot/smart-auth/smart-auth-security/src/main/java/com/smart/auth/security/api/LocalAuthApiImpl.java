@@ -3,6 +3,7 @@ package com.smart.auth.security.api;
 import com.smart.auth.core.exception.IpBindAuthenticationException;
 import com.smart.auth.core.i18n.AuthI18nMessage;
 import com.smart.auth.core.properties.AuthProperties;
+import com.smart.auth.core.service.AuthCache;
 import com.smart.auth.core.token.TokenData;
 import com.smart.auth.core.token.TokenRepository;
 import com.smart.auth.core.userdetails.RestUserDetails;
@@ -15,6 +16,7 @@ import com.smart.commons.core.i18n.I18nUtils;
 import com.smart.commons.core.message.Result;
 import com.smart.commons.core.utils.IpUtils;
 import com.smart.module.api.auth.AuthApi;
+import com.smart.module.api.auth.dto.AuthCacheDTO;
 import com.smart.module.api.auth.dto.AuthUserDetailsDTO;
 import com.smart.module.api.auth.dto.AuthenticationDTO;
 import jakarta.servlet.http.HttpServletRequest;
@@ -45,9 +47,12 @@ public class LocalAuthApiImpl implements AuthApi {
 
     private final List<TokenRepository> tokenRepositoryList;
 
-    public LocalAuthApiImpl(List<TokenRepository> tokenRepositoryList, AuthProperties authProperties) {
+    private final AuthCache<String, Object> authCache;
+
+    public LocalAuthApiImpl(List<TokenRepository> tokenRepositoryList, AuthProperties authProperties, AuthCache<String, Object> authCache) {
         this.tokenRepositoryList = tokenRepositoryList;
         this.authProperties = authProperties;
+        this.authCache = authCache;
     }
 
     /**
@@ -169,5 +174,36 @@ public class LocalAuthApiImpl implements AuthApi {
             throw new IpBindAuthenticationException(I18nUtils.get(AuthI18nMessage.ERROR_IP_VALIDATE));
         }
         return true;
+    }
+
+    /**
+     * 获取认证缓存
+     *
+     * @param key key
+     * @return 缓存对象
+     */
+    @Override
+    public Object getAuthCache(@NonNull String key) {
+        return this.authCache.get(key);
+    }
+
+    /**
+     * 设置缓存信息
+     *
+     * @param parameter 参数
+     */
+    @Override
+    public void setAuthCache(@NonNull AuthCacheDTO parameter) {
+        this.authCache.put(parameter.getKey(), parameter.getData(), parameter.getTimeout());
+    }
+
+    /**
+     * 删除缓存
+     *
+     * @param key 缓存的key
+     */
+    @Override
+    public void removeAuthCache(@NonNull String key) {
+        this.authCache.remove(key);
     }
 }

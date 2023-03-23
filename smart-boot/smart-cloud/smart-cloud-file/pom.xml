@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.smart</groupId>
+        <artifactId>smart-cloud</artifactId>
+        <version>2.0.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>smart-cloud-file</artifactId>
+    <version>2.0.0-SNAPSHOT</version>
+    <name>smart-cloud-file</name>
+    <description>文件管理微服务</description>
+
+    <properties>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+        </dependency>
+
+        <!--    文件存储支持    -->
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-file-manager</artifactId>
+            <version>${smart-boot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-file-extensions-aliyun-oss</artifactId>
+            <version>${smart-boot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-file-extensions-disk</artifactId>
+            <version>${smart-boot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-file-extensions-minio</artifactId>
+            <version>${smart-boot.version}</version>
+        </dependency>
+
+        <!--    异常处理    -->
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-cloud-common-exception</artifactId>
+            <version>${smart-boot.version}</version>
+        </dependency>
+
+        <!--    国际化    -->
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-cloud-common-i18n</artifactId>
+            <version>${smart-boot.version}</version>
+        </dependency>
+
+        <!--    loadbalancer缓存    -->
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <!--    文档支持    -->
+
+        <!--    认证模块远程接口    -->
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-cloud-auth-api</artifactId>
+            <version>${smart-boot.version}</version>
+        </dependency>
+
+        <!--    引入认证模块    -->
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-cloud-common-auth</artifactId>
+            <version>${smart-boot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-cloud-system-api</artifactId>
+            <version>${smart-boot.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+    </dependencies>
+
+
+</project>

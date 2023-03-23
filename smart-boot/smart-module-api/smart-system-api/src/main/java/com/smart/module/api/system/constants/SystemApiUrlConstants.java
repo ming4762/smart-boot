@@ -35,4 +35,10 @@ public interface SystemApiUrlConstants {
     String I18N_READ_BY_LOCALE = "/remote/system/i18n/readI18nByLocale";
 
     String EXCEPTION_SAVE = "/remote/system/exception/save";
+
+    /**
+     * 获取系统参数接口
+     */
+    String PARAMETER_GET = "/remote/system/parameter/get";
+    String PARAMETER_BATCH_GET = "/remote/system/parameter/batchGet";
 }

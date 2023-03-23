@@ -26,4 +26,10 @@ public interface SmartAuthApiUrlConstants {
      * 用户认证接口
      */
     String AUTH_AUTHENTICATE = "/remote/auth/authenticate";
+
+    String SET_AUTH_CACHE = "/remote/auth/setAuthCache";
+
+    String GET_AUTH_CACHE = "/remote/auth/getAuthCache";
+
+    String REMOVE_AUTH_CACHE = "/remote/auth/removeAuthCache";
 }

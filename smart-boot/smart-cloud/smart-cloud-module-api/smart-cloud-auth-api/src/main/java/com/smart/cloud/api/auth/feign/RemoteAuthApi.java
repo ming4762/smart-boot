@@ -4,6 +4,7 @@ import com.smart.cloud.common.core.constants.CloudServiceNameConstants;
 import com.smart.commons.core.message.Result;
 import com.smart.module.api.auth.AuthApi;
 import com.smart.module.api.auth.constants.SmartAuthApiUrlConstants;
+import com.smart.module.api.auth.dto.AuthCacheDTO;
 import com.smart.module.api.auth.dto.AuthUserDetailsDTO;
 import com.smart.module.api.auth.dto.AuthenticationDTO;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -57,4 +58,32 @@ public interface RemoteAuthApi extends AuthApi {
     @Override
     @PostMapping(SmartAuthApiUrlConstants.AUTH_AUTHENTICATE)
     Result<Boolean> authenticate(AuthenticationDTO parameter);
+
+
+    /**
+     * 获取认证缓存
+     *
+     * @param key key
+     * @return 缓存对象
+     */
+    @Override
+    @PostMapping(SmartAuthApiUrlConstants.GET_AUTH_CACHE)
+    Object getAuthCache(@NonNull String key);
+
+    /**
+     * 设置缓存信息
+     * @param parameter 参数
+     */
+    @Override
+    @PostMapping(SmartAuthApiUrlConstants.SET_AUTH_CACHE)
+    void setAuthCache(@NonNull AuthCacheDTO parameter);
+
+    /**
+     * 删除缓存
+     *
+     * @param key 缓存的key
+     */
+    @Override
+    @PostMapping(SmartAuthApiUrlConstants.REMOVE_AUTH_CACHE)
+    void removeAuthCache(@NonNull String key);
 }

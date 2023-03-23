@@ -2,7 +2,6 @@ package com.smart.file.extensions.disk.service;
 
 import com.smart.commons.core.utils.JsonUtils;
 import com.smart.file.core.common.FileStorageServiceRegisterName;
-import com.smart.file.core.constants.FileStorageTypeEnum;
 import com.smart.file.core.parameter.FileStorageCommonParameter;
 import com.smart.file.core.parameter.FileStorageDeleteParameter;
 import com.smart.file.core.parameter.FileStorageGetParameter;
@@ -10,6 +9,7 @@ import com.smart.file.core.parameter.FileStorageSaveParameter;
 import com.smart.file.core.pojo.bo.DiskFilePathBO;
 import com.smart.file.core.properties.SmartFileStorageDiskProperties;
 import com.smart.file.core.service.FileStorageService;
+import com.smart.module.api.file.constants.FileStorageTypeEnum;
 import lombok.SneakyThrows;
 import org.springframework.lang.NonNull;
 

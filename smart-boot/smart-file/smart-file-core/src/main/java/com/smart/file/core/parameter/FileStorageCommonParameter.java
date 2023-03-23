@@ -1,6 +1,6 @@
 package com.smart.file.core.parameter;
 
-import com.smart.file.core.constants.FileStorageTypeEnum;
+import com.smart.module.api.file.constants.FileStorageTypeEnum;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
