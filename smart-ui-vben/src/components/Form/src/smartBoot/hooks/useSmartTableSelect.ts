@@ -12,9 +12,14 @@ export const useSmartTableSelect = (
   selectValuesRef: Ref<Array<any>>,
   hasTableSlot: ComputedRef<boolean>,
   listApi: ((data: any) => Promise<any>) | undefined,
+  alwaysLoad: Ref<boolean>,
+  multiple: Ref<boolean>,
 ) => {
   const getTableProps = computed<SmartTableProps>(() => {
     const tableProps = unref(tablePropsRef)
+    if (unref(alwaysLoad) && tableProps.proxyConfig) {
+      tableProps.proxyConfig.autoLoad = false
+    }
     return {
       ...tableProps,
       rowConfig: {
@@ -36,16 +41,48 @@ export const useSmartTableSelect = (
     }
   })
 
+  /**
+   * 获取单选配置
+   */
+  const getTableRadioConfig = computed(() => {
+    const result: Recordable = {
+      highlight: true,
+      strict: false,
+      reserve: true,
+    }
+    const selectValues = unref(selectValuesRef)
+    if (selectValues && selectValues.length > 0) {
+      result.checkRowKey = selectValues[0]
+    }
+    return result
+  })
+
   watch(selectValuesRef, async () => {
     selectRowsRef.value = await getSelectRows()
     if (!unref(hasTableSlot)) {
-      handleSetSelectRows()
+      handleSetSelect()
     }
   })
+
+  const handleSetSelect = async () => {
+    if (unref(multiple)) {
+      await handleSetSelectRows()
+    } else {
+      await handleSetRadioRow()
+    }
+  }
 
   const handleSetSelectRows = async () => {
     await getTableInstance().setAllCheckboxRow(false)
     await setCheckboxRow(unref(selectRowsRef), true)
+  }
+
+  const handleSetRadioRow = async () => {
+    const selectRows = unref(selectRowsRef)
+    if (selectRows && selectRows.length > 0) {
+      await getTableInstance().clearRadioRow()
+      await getTableInstance().setRadioRow(selectRows[0])
+    }
   }
 
   /**
@@ -98,7 +135,7 @@ export const useSmartTableSelect = (
     return matchDataList
   }
 
-  const [registerTable, { setCheckboxRow, getData, getTableInstance }] = useSmartTable(
+  const [registerTable, { setCheckboxRow, getData, getTableInstance, query }] = useSmartTable(
     unref(getTableProps),
   )
   const [registerSelectTable, { setPagination }] = useSmartTable(unref(selectTablePropsRef) || {})
@@ -152,6 +189,16 @@ export const useSmartTableSelect = (
     }
   }
 
+  /**
+   * 单选触发
+   */
+  const handleRadioChange = ({ row, newValue }) => {
+    setSelectData([])
+    if (newValue) {
+      addSelectData([row])
+    }
+  }
+
   const handleCheckboxAll = ({ checked }) => {
     const currentDataList = getData()
     if (!currentDataList || currentDataList.length === 0) {
@@ -177,5 +224,9 @@ export const useSmartTableSelect = (
     handleCheckboxAll,
     getData,
     getHasSearchForm,
+    query,
+    getTableRadioConfig,
+    handleRadioChange,
+    handleSetSelect,
   }
 }

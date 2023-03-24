@@ -34,10 +34,13 @@ export default defineComponent({
       type: Function as PropType<(data: any) => Promise<any>>,
       required: true,
     },
+    // 是否每次弹窗都加载数据
+    alwaysLoad: propTypes.bool.def(false),
   },
   emits: ['register', 'select-data'],
   setup(props, { emit, slots }) {
-    const { tableProps, selectTableProps, valueField, selectValues } = toRefs(props)
+    const { tableProps, selectTableProps, valueField, selectValues, alwaysLoad, multiple } =
+      toRefs(props)
 
     const hasTableSlot = computed<boolean>(() => {
       return slots.table !== undefined
@@ -54,6 +57,10 @@ export default defineComponent({
       getTableCheckboxConfig,
       handleCheckboxAll,
       getHasSearchForm,
+      query,
+      getTableRadioConfig,
+      handleRadioChange,
+      handleSetSelect,
     } = useSmartTableSelect(
       tableProps,
       selectTableProps,
@@ -62,9 +69,14 @@ export default defineComponent({
       selectValues,
       hasTableSlot,
       props.listApi,
+      alwaysLoad,
+      multiple,
     )
-    const [registerModal, { closeModal }] = useModalInner((data) => {
-      console.log(data)
+    const [registerModal, { closeModal }] = useModalInner(async (_) => {
+      if (unref(alwaysLoad)) {
+        await query()
+        await handleSetSelect()
+      }
     })
 
     const handleOk = () => {
@@ -92,6 +104,8 @@ export default defineComponent({
       getTableCheckboxConfig,
       handleCheckboxAll,
       getHasSearchForm,
+      getTableRadioConfig,
+      handleRadioChange,
     }
   },
   render() {
@@ -124,6 +138,7 @@ const renderTable = (instance) => {
   const {
     $attrs,
     showSelect,
+    multiple,
     registerTable,
     handleCheckboxChange,
     registerSelectTable,
@@ -131,7 +146,26 @@ const renderTable = (instance) => {
     getTableCheckboxConfig,
     handleCheckboxAll,
     getHasSearchForm,
+    getTableRadioConfig,
+    handleRadioChange,
   } = instance
+  let tableAttrs = {
+    ...$attrs,
+  }
+  if (multiple) {
+    tableAttrs = {
+      ...tableAttrs,
+      checkboxConfig: unref(getTableCheckboxConfig),
+      onCheckboxChange: handleCheckboxChange,
+      onCheckboxAll: handleCheckboxAll,
+    }
+  } else {
+    tableAttrs = {
+      ...tableAttrs,
+      radioConfig: unref(getTableRadioConfig),
+      onRadioChange: handleRadioChange,
+    }
+  }
   return (
     <a-row>
       <a-col span={showSelect ? 12 : 24}>
@@ -140,7 +174,7 @@ const renderTable = (instance) => {
           checkboxConfig={getTableCheckboxConfig}
           onCheckboxChange={handleCheckboxChange}
           onCheckboxAll={handleCheckboxAll}
-          {...$attrs}
+          {...tableAttrs}
         />
       </a-col>
       {showSelect ? (
