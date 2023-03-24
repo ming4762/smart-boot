@@ -87,7 +87,10 @@ export default defineComponent({
               mode={multiple ? 'multiple' : 'combobox'}></a-select>
           </a-col>
           <a-col class="button">
-            <a-button disabled={disabled} type="primary" onClick={() => openModal(true, value)}>
+            <a-button
+              disabled={disabled}
+              type="primary"
+              onClick={() => openModal(true, value || {})}>
               {$t('common.button.choose')}
             </a-button>
           </a-col>
