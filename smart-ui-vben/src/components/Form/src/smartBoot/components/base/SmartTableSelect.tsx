@@ -28,16 +28,17 @@ export default defineComponent({
     },
     disabled: propTypes.bool.def(false),
   },
-  emits: ['update:value'],
+  emits: ['update:value', 'change'],
   setup(props, { emit }) {
     const [registerModal, { openModal }] = useModal()
     const optionsRef = ref<Array<any>>([])
-    const handleSelectData = (options: any[]) => {
+    const handleSelectData = (options: any[], selectRows: any[]) => {
       optionsRef.value = options
       emit(
         'update:value',
         options.map((item) => item.value),
       )
+      emit('change', selectRows)
     }
     const handleDeselect = (value) => {
       emit(
