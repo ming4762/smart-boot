@@ -201,6 +201,7 @@ export const getAddEditForm = (t: Function): FormSchema[] => {
           },
         ]
       },
+      required: true,
     },
     {
       field: 'redirect',

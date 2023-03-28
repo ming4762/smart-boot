@@ -1,5 +1,6 @@
 package com.smart.file.manager.service.impl;
 
+import com.google.common.collect.ImmutableList;
 import com.smart.file.core.exception.SmartFileException;
 import com.smart.file.core.parameter.FileStorageDeleteParameter;
 import com.smart.file.core.parameter.FileStorageGetParameter;
@@ -160,7 +161,7 @@ public class DefaultFileServiceImpl implements FileService, ApplicationContextAw
             FileHandlerResult result = new FileHandlerResult();
             BeanUtils.copyProperties(item, result);
             return result;
-        }).toList();
+        }).collect(Collectors.toList());
     }
 
     /**
@@ -217,7 +218,7 @@ public class DefaultFileServiceImpl implements FileService, ApplicationContextAw
             if (storageStoreKey != null) {
                 fileStorageService.delete(
                         FileStorageDeleteParameter.builder()
-                                .fileStoreKeyList(List.of(storageStoreKey))
+                                .fileStoreKeyList(ImmutableList.of(storageStoreKey))
                                 .storageType(fileSaveStorageParameter.getStorageType())
                                 .storageProperties(fileSaveStorageParameter.getStorageProperties())
                                 .build()

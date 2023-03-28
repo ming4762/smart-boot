@@ -7,7 +7,7 @@ import com.smart.auth.core.event.AuthEventHandler;
 import com.smart.auth.core.exception.LongTimeNoLoginLockedException;
 import com.smart.auth.core.exception.PasswordNoLifeLockedException;
 import com.smart.auth.core.userdetails.RestUserDetails;
-import com.smart.system.constants.UserAccountStatusEnum;
+import com.smart.module.api.system.constants.UserAccountStatusEnum;
 import com.smart.system.model.SysUserAccountPO;
 import com.smart.system.model.SysUserPO;
 import com.smart.system.service.SysUserAccountService;

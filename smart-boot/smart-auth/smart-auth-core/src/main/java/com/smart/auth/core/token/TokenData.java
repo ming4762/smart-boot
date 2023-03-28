@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -23,7 +22,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class TokenData implements Serializable {
 
-    @Serial
     private static final long serialVersionUID = -1673739084242479566L;
 
     private String token;

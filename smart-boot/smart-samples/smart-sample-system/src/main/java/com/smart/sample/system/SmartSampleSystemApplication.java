@@ -1,6 +1,5 @@
 package com.smart.sample.system;
 
-import com.github.pagehelper.autoconfigure.PageHelperAutoConfiguration;
 import com.smart.auth.core.temptoken.EnableAuthTempToken;
 import com.smart.commons.core.cors.EnableCors;
 import com.smart.commons.core.spring.EnableRateLimit;
@@ -17,7 +16,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * 2022/1/11
  * @since 1.0
  */
-@SpringBootApplication(exclude = {PageHelperAutoConfiguration.class})
+@SpringBootApplication
 @EnableTransactionManagement
 @EnableValidatorI18nSource
 @EnableCors

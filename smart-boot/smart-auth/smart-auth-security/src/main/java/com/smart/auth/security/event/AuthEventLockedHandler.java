@@ -43,8 +43,8 @@ public class AuthEventLockedHandler implements AuthEventHandler {
      */
     @Override
     public void handleLoginFail(AbstractAuthenticationFailureEvent event) {
-        if (event instanceof AuthenticationFailureLockedEvent event1) {
-            this.handleLocked(event1);
+        if (event instanceof AuthenticationFailureLockedEvent) {
+            this.handleLocked((AuthenticationFailureLockedEvent) event);
             return;
         }
         this.sysUserApi.updateLoginFailTime(new AccountLoginFailTimeUpdateDTO((String) event.getAuthentication().getPrincipal(), 1L));

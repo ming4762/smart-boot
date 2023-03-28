@@ -2,6 +2,7 @@ package com.smart.system.service.auth.impl;
 
 import cn.hutool.core.util.ZipUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.google.common.collect.ImmutableList;
 import com.smart.commons.core.exception.BaseException;
 import com.smart.commons.core.exception.BusinessException;
 import com.smart.crud.constants.CrudCommonEnum;
@@ -74,7 +75,7 @@ public class SmartAuthSecretKeyServiceImpl extends BaseServiceImpl<SmartAuthSecr
                             BeanUtils.copyProperties(item, vo);
                             vo.setFileStorage(fileStorageMap.get(item.getFileStorageId()));
                             return vo;
-                        }).toList();
+                        }).collect(Collectors.toList());
             }
         }
         return list;
@@ -132,7 +133,7 @@ public class SmartAuthSecretKeyServiceImpl extends BaseServiceImpl<SmartAuthSecr
             boolean saveResult = this.save(model);
             // 删除之前的文件，放到最后是因为防止保存失败，数据回蓝，而文件已经删除
             if (secretKey != null) {
-                this.smartFileApi.batchDelete(List.of(secretKey.getPrivateKeyFileId(), secretKey.getPublicKeyFileId()));
+                this.smartFileApi.batchDelete(ImmutableList.of(secretKey.getPrivateKeyFileId(), secretKey.getPublicKeyFileId()));
             }
             return saveResult;
         } catch (Exception e) {

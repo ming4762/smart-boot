@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -21,7 +20,6 @@ import java.io.Serializable;
 @Schema(title = "用户离线参数")
 public class OfflineDTO implements Serializable {
 
-    @Serial
     private static final long serialVersionUID = 16332489185546505L;
 
     @Schema(title = "用户名")

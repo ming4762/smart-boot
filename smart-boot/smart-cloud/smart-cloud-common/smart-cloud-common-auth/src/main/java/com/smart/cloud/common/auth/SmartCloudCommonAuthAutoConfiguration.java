@@ -1,5 +1,6 @@
 package com.smart.cloud.common.auth;
 
+import com.google.common.collect.ImmutableList;
 import com.smart.auth.core.authentication.MethodPermissionEvaluatorImpl;
 import com.smart.auth.core.properties.AuthProperties;
 import com.smart.auth.core.temptoken.EnableAuthTempToken;
@@ -18,8 +19,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
-
-import java.util.List;
 
 /**
  * @author zhongming4762
@@ -47,7 +46,7 @@ public class SmartCloudCommonAuthAutoConfiguration {
     public CacheManager cacheManager() {
         SimpleCacheManager simpleCacheManager = new SimpleCacheManager();
         simpleCacheManager.setCaches(
-                List.of(new ConcurrentMapCache(RemoteSecurityContextRepository.USER_CACHE_NAME))
+                ImmutableList.of(new ConcurrentMapCache(RemoteSecurityContextRepository.USER_CACHE_NAME))
         );
         return simpleCacheManager;
     }

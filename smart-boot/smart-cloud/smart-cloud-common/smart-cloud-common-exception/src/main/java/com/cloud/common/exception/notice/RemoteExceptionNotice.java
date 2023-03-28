@@ -6,10 +6,10 @@ import com.smart.commons.core.utils.IpUtils;
 import com.smart.module.api.system.SysExceptionApi;
 import com.smart.module.api.system.dto.SysExceptionSaveDTO;
 import com.smart.starter.exception.notice.AbstractCommonExcludeExceptionNotice;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 
+import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 

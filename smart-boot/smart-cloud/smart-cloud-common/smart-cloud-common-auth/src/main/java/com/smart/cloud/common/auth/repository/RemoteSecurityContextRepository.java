@@ -9,8 +9,6 @@ import com.smart.auth.core.model.SmartGrantedAuthority;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.module.api.auth.AuthApi;
 import com.smart.module.api.auth.dto.AuthUserDetailsDTO;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.HttpHeaders;
@@ -21,8 +19,11 @@ import org.springframework.security.web.context.HttpRequestResponseHolder;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.util.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 远程调用获取登录用户信息并缓存 生成SecurityContext
@@ -67,13 +68,13 @@ public class RemoteSecurityContextRepository implements SecurityContextRepositor
         Set<SmartGrantedAuthority> grantedAuthoritySet = Sets.newHashSet();
         grantedAuthoritySet.addAll(
                 dto.getRolePermission().getRoleCodes().stream()
-                        .map(RoleGrantedAuthority::new).toList()
+                        .map(RoleGrantedAuthority::new).collect(Collectors.toList())
         );
         // 添加权限
         grantedAuthoritySet.addAll(
                 dto.getRolePermission().getPermissions()
                         .stream()
-                        .map(PermissionGrantedAuthority::new).toList()
+                        .map(PermissionGrantedAuthority::new).collect(Collectors.toList())
         );
         restUserDetails.setAuthorities(grantedAuthoritySet);
         restUserDetails.setLoginIp(dto.getLoginIp());

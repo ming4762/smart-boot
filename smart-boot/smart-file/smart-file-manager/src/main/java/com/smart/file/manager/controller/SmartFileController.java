@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author shizhongming
@@ -105,7 +106,7 @@ public class SmartFileController extends BaseController<SmartFileService, SmartF
         return Result.success(
                 multipartFileList.stream()
                         .map(item -> this.fileService.save(item, FileSaveParameter.builder().type(type).build()))
-                        .toList()
+                        .collect(Collectors.toList())
         );
     }
 

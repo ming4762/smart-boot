@@ -1,6 +1,8 @@
 package com.smart.commons.core.utils;
 
 import com.smart.commons.core.message.Result;
+
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**

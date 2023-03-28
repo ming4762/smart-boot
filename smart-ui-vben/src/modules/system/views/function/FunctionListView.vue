@@ -178,23 +178,68 @@ const [
       save: saveApi,
       getById: getByIdApi,
     },
-  },
-  toolbarConfig: {
-    refresh: true,
-    buttons: [
-      {
-        code: 'ModalAdd',
-        props: {
-          onClick: () => {
-            setTypeDisabled(['function'])
-            showAddModal({
-              parentId: '0',
-              parentName: '根目录',
-            })
+    rowConfig: {
+      keyField: 'functionId',
+    },
+    sortConfig: {
+      remote: true,
+      defaultSort: {
+        field: 'seq',
+        order: 'asc',
+      },
+    },
+    addEditConfig: {
+      modalConfig: {
+        width: 860,
+      },
+      formConfig: {
+        colon: true,
+        baseColProps: {
+          span: 12,
+        },
+        labelCol: { span: 7 },
+        wrapperCol: { span: 16 },
+        schemas: getAddEditForm(t),
+      },
+      afterSave: () => {
+        // 保存完成之后重新加载节点
+        return getTableInstance().reloadTreeExpand(unref(currentRowRef))
+      },
+    },
+    proxyConfig: {
+      ajax: {
+        query: ({ ajaxParameter }) => {
+          const parameter = {
+            ...ajaxParameter,
+            parameter: {
+              ...ajaxParameter?.parameter,
+              'parentId@=': 0,
+            },
+          }
+          return listApi(parameter)
+        },
+        delete: (params) => deleteApi(params),
+        save: saveApi,
+        getById: getByIdApi,
+      },
+    },
+    toolbarConfig: {
+      refresh: true,
+      buttons: [
+        {
+          code: 'ModalAdd',
+          props: {
+            onClick: () => {
+              setTypeDisabled(['function'])
+              showAddModal({
+                parentId: '0',
+                parentName: '根目录',
+              })
+            },
           },
         },
-      },
-    ],
+      ],
+    },
   },
 })
 const getTagData = (functionType: string) => {

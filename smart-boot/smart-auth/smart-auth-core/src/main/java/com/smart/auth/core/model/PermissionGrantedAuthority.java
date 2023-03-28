@@ -6,8 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serial;
-
 /**
  * @author jackson
  * 2020/1/29 9:06 下午
@@ -17,7 +15,6 @@ import java.io.Serial;
 @Data
 public class PermissionGrantedAuthority implements SmartGrantedAuthority {
 
-    @Serial
     private static final long serialVersionUID = -8344886266135685662L;
 
     private Permission permission;

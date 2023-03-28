@@ -19,7 +19,6 @@ import com.smart.module.api.auth.AuthApi;
 import com.smart.module.api.auth.dto.AuthCacheDTO;
 import com.smart.module.api.auth.dto.AuthUserDetailsDTO;
 import com.smart.module.api.auth.dto.AuthenticationDTO;
-import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Primary;
 import org.springframework.lang.NonNull;
@@ -32,6 +31,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
@@ -156,9 +156,10 @@ public class LocalAuthApiImpl implements AuthApi {
 
     protected boolean authenticate(HttpServletRequest request) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!(principal instanceof RestUserDetails user)) {
+        if (!(principal instanceof RestUserDetails)) {
             throw new BadCredentialsException(I18nUtils.get(AuthI18nMessage.ERROR_TOKEN_EMPTY));
         }
+        RestUserDetails user = (RestUserDetails) principal;
         // 验证JWT是否有效
         String token = TokenUtils.getToken(request);
         if (StringUtils.isBlank(token)) {

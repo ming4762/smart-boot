@@ -1,8 +1,7 @@
 package com.smart.auth.core.utils.request;
 
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
-
+import javax.servlet.*;
+import javax.servlet.http.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -467,6 +466,14 @@ public class MatcherHttpServletRequest implements HttpServletRequest {
      */
     @Override
     public boolean isRequestedSessionIdFromURL() {
+        return false;
+    }
+
+    /**
+     * @deprecated
+     */
+    @Override
+    public boolean isRequestedSessionIdFromUrl() {
         return false;
     }
 
@@ -997,6 +1004,15 @@ public class MatcherHttpServletRequest implements HttpServletRequest {
     }
 
     /**
+     * @param s
+     * @deprecated
+     */
+    @Override
+    public String getRealPath(String s) {
+        return null;
+    }
+
+    /**
      * Returns the Internet Protocol (IP) source port of the client or last
      * proxy that sent the request.
      *
@@ -1116,61 +1132,6 @@ public class MatcherHttpServletRequest implements HttpServletRequest {
      */
     @Override
     public DispatcherType getDispatcherType() {
-        return null;
-    }
-
-    /**
-     * Obtain a unique (within the lifetime of the Servlet container) identifier
-     * string for this request.
-     * <p>
-     * There is no defined format for this string. The format is implementation
-     * dependent.
-     *
-     * @return A unique identifier for the request
-     * @since Servlet 6.0
-     */
-    @Override
-    public String getRequestId() {
-        return null;
-    }
-
-    /**
-     * Obtain the request identifier for this request as defined by the protocol
-     * in use. Note that some protocols do not define such an identifier.
-     * <p>
-     * Examples of protocol provided request identifiers include:
-     * <dl>
-     * <dt>HTTP 1.x</dt>
-     * <dd>None, so the empty string should be returned</dd>
-     * <dt>HTTP 2</dt>
-     * <dd>The stream identifier</dd>
-     * <dt>HTTP 3</dt>
-     * <dd>The stream identifier</dd>
-     * <dt>AJP</dt>
-     * <dd>None, so the empty string should be returned</dd>
-     * </dl>
-     *
-     * @return The request identifier if one is defined, otherwise an empty
-     * string
-     * @since Servlet 6.0
-     */
-    @Override
-    public String getProtocolRequestId() {
-        return null;
-    }
-
-    /**
-     * Obtain details of the network connection to the Servlet container that is
-     * being used by this request. The information presented may differ from
-     * information presented elsewhere in the Servlet API as raw information is
-     * presented without adjustments for, example, use of reverse proxies that
-     * may be applied elsewhere in the Servlet API.
-     *
-     * @return The network connection details.
-     * @since Servlet 6.0
-     */
-    @Override
-    public ServletConnection getServletConnection() {
         return null;
     }
 }
