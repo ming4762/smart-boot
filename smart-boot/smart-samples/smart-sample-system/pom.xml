@@ -120,6 +120,11 @@
 			<version>${smart-boot.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.smart</groupId>
+			<artifactId>smart-file-manager</artifactId>
+			<version>${smart-boot.version}</version>
+		</dependency>
 	</dependencies>
 
 
