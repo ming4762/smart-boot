@@ -1,0 +1,6 @@
+server:
+  port: 9095
+
+spring:
+  profiles:
+    active: dev
