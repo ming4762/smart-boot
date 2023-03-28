@@ -118,7 +118,7 @@ public class NimbusJwtEncoder implements JwtEncoder {
             builder.type(new JOSEObjectType(type));
         }
 
-        Map<String, Object> customHeaders = new HashMap<>();
+        Map<String, Object> customHeaders = new HashMap<>(8);
         headers.getHeaders().forEach((name, value) -> {
             if (!JWSHeader.getRegisteredParameterNames().contains(name)) {
                 customHeaders.put(name, value);
@@ -154,7 +154,7 @@ public class NimbusJwtEncoder implements JwtEncoder {
             builder.jwtID(jwtId);
         }
 
-        Map<String, Object> customClaims = new HashMap<>();
+        Map<String, Object> customClaims = new HashMap<>(8);
         claims.getClaims().forEach((name, value) -> {
             if (!JWTClaimsSet.getRegisteredNames().contains(name)) {
                 customClaims.put(name, value);

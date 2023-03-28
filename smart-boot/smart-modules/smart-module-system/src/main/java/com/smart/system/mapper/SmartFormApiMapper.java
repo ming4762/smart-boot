@@ -3,7 +3,7 @@ package com.smart.system.mapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.smart.crud.model.BaseModel;
-import com.smart.system.controller.smart_form_api.vo.SmartFormTableSelectApiVO;
+import com.smart.system.controller.api.form.vo.SmartFormTableSelectApiVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

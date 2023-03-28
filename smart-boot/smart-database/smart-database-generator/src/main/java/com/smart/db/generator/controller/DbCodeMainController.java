@@ -131,8 +131,9 @@ public class DbCodeMainController extends BaseController<DbCodeMainService, DbCo
      * @param data 数据
      */
     private void validateTableSearch(DbCodeFormConfigCommonPO data, List<String> message) {
-        if (Boolean.TRUE.equals(data.getUseTableSearch()) && !(StringUtils.isNotBlank(data.getTableName()) && StringUtils.isNotBlank(data.getKeyColumnName()) && StringUtils.isNotBlank(data.getValueColumnName()))) {
-            message.add(String.format("使用表格查询，必须指定数据库信息，字段：%s", data.getColumnName()));
+        if (Boolean.TRUE.equals(data.getUseTableSearch()) && (StringUtils.isAnyBlank(data.getTableName(), data.getKeyColumnName(), data.getValueColumnName()))) {
+                message.add(String.format("使用表格查询，必须指定数据库信息，字段：%s", data.getColumnName()));
+
         }
     }
 

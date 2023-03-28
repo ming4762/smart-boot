@@ -8,7 +8,7 @@
         ${ew.customSqlSegment}
     </select>
 
-    <resultMap id="listTableSelectResultMap" type="com.smart.system.controller.smart_form_api.vo.SmartFormTableSelectApiVO">
+    <resultMap id="listTableSelectResultMap" type="com.smart.system.controller.api.form.vo.SmartFormTableSelectApiVO">
         <result column="label" property="label" />
         <result column="value" property="value" />
     </resultMap>

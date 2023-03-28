@@ -1,4 +1,4 @@
-package com.smart.system.controller.smart_form_api.vo;
+package com.smart.system.controller.api.form.vo;
 
 import lombok.Getter;
 import lombok.Setter;

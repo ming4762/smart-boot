@@ -41,7 +41,7 @@ public class YamlUtils {
      */
     public static Map<String, Object> readInOneLayer(Reader reader) {
         Map<String, Object> data = read(reader);
-        Map<String, Object> result = new HashMap<>();
+        Map<String, Object> result = new HashMap<>(8);
         convertInOneLayer(data, "", result);
         return result;
     }

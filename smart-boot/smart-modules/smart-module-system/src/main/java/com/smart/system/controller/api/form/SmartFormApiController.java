@@ -1,8 +1,8 @@
-package com.smart.system.controller.smart_form_api;
+package com.smart.system.controller.api.form;
 
 import com.smart.commons.core.message.Result;
-import com.smart.system.controller.smart_form_api.dto.SmartFormTableSelectApiDTO;
-import com.smart.system.controller.smart_form_api.vo.SmartFormTableSelectApiVO;
+import com.smart.system.controller.api.form.dto.SmartFormTableSelectApiDTO;
+import com.smart.system.controller.api.form.vo.SmartFormTableSelectApiVO;
 import com.smart.system.service.SmartFormApiService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

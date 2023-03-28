@@ -6,8 +6,8 @@ import com.smart.crud.model.BaseModel;
 import com.smart.crud.model.Sort;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.crud.utils.CrudUtils;
-import com.smart.system.controller.smart_form_api.dto.SmartFormTableSelectApiDTO;
-import com.smart.system.controller.smart_form_api.vo.SmartFormTableSelectApiVO;
+import com.smart.system.controller.api.form.dto.SmartFormTableSelectApiDTO;
+import com.smart.system.controller.api.form.vo.SmartFormTableSelectApiVO;
 import com.smart.system.mapper.SmartFormApiMapper;
 import com.smart.system.service.SmartFormApiService;
 import org.apache.commons.lang3.StringUtils;
@@ -50,7 +50,7 @@ public class SmartFormApiServiceImpl implements SmartFormApiService {
         PageSortQuery pageSortQuery = parameter.getQueryParameter();
         if (pageSortQuery != null) {
             queryWrapper = CrudUtils.createQueryWrapperFromParameters(
-                    pageSortQuery.getParameter() == null ? new HashMap<>() : pageSortQuery.getParameter(),
+                    pageSortQuery.getParameter() == null ? new HashMap<>(0) : pageSortQuery.getParameter(),
                     clazz
             );
             if (StringUtils.isNotBlank(pageSortQuery.getSortName())) {

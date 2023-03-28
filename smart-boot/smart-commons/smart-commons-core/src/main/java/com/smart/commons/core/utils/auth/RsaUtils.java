@@ -125,7 +125,7 @@ public class RsaUtils {
      * @param publicKey 公钥
      * @return 加密后的数据
      */
-    @SneakyThrows
+    @SneakyThrows({Exception.class})
     public static byte[] publicEncrypt(String data, RSAPublicKey publicKey) {
         Cipher cipher = Cipher.getInstance(ALGORITHM);
         cipher.init(Cipher.ENCRYPT_MODE, publicKey);

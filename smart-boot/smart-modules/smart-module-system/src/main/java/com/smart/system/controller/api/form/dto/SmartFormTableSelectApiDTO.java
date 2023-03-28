@@ -1,4 +1,4 @@
-package com.smart.system.controller.smart_form_api.dto;
+package com.smart.system.controller.api.form.dto;
 
 import com.smart.crud.query.PageSortQuery;
 import io.swagger.v3.oas.annotations.media.Schema;
