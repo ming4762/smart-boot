@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.smart</groupId>
-		<artifactId>smart-samples</artifactId>
+		<artifactId>smart-services</artifactId>
 		<version>2.0.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>smart-service-system</artifactId>
@@ -96,11 +96,11 @@
 <!--		</dependency>-->
 
 		<!--	license客户端	-->
-		<dependency>
-			<groupId>com.smart</groupId>
-			<artifactId>smart-license-client-starter</artifactId>
-			<version>${smart-boot.version}</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>com.smart</groupId>-->
+<!--			<artifactId>smart-license-client-starter</artifactId>-->
+<!--			<version>${smart-boot.version}</version>-->
+<!--		</dependency>-->
 
 		<!--	文件支持	-->
 		<dependency>
