@@ -1,7 +1,4 @@
 spring:
-  redis:
-    host: localhost
-    password: password
   servlet:
     multipart:
       max-file-size: 100MB
@@ -17,6 +14,10 @@ spring:
     url: jdbc:mysql://localhost:3306/smart-system?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: root
     password: password
+  data:
+    redis:
+      host: localhost
+      password: password
 
 logging:
   level:
