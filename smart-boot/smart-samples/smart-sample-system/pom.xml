@@ -124,6 +124,12 @@
 			<groupId>com.github.xiaoymin</groupId>
 			<artifactId>knife4j-openapi2-spring-boot-starter</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>com.smart</groupId>
+			<artifactId>smart-file-manager</artifactId>
+			<version>${smart-boot.version}</version>
+		</dependency>
 	</dependencies>
 
 

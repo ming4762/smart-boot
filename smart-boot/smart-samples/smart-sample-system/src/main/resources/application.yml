@@ -2,6 +2,10 @@ server:
   port: 9095
 
 spring:
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 110MB
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -61,3 +65,36 @@ management:
   health:
     mail:
       enabled: false
+smart:
+  auth:
+    ignores:
+      get:
+        - .html
+        - /doc.html
+        - /webjars/**
+        - /v3/api-docs/**
+      pattern:
+        - /xrebel/**
+    method: true
+  license:
+    client:
+      key:
+        subject: CESHI123
+        publicAlias: publicCert
+        storePass: public_password1234
+        licensePath: D:\zhongming\Documents\01-workspace\06-temp\keystore\license.lic
+        publicKeysStorePath: D:\zhongming\Documents\01-workspace\06-temp\keystore\publicCerts.keystore
+      project:
+        enterprise: ''
+        project: ''
+        version: ''
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: 'default'
+      paths-to-match: '/**'

@@ -1,8 +1,6 @@
 package com.smart.sample.system;
 
-import com.github.pagehelper.autoconfigure.PageHelperAutoConfiguration;
-import com.smart.auth.security.imports.EnableAuthTempToken;
-import com.smart.autoconfigure.compatible.CompatibleAutoConfiguration;
+import com.smart.auth.core.temptoken.EnableAuthTempToken;
 import com.smart.commons.core.cors.EnableCors;
 import com.smart.commons.core.spring.EnableRateLimit;
 import com.smart.commons.core.spring.EnabledCustomObjectMapper;
@@ -28,7 +26,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableRateLimit
 @EnableCaching
 @EnabledCustomObjectMapper
-@CompatibleAutoConfiguration(exclude = {PageHelperAutoConfiguration.class})
 public class SmartSampleSystemApplication {
 
     public static void main(String[] args) {
