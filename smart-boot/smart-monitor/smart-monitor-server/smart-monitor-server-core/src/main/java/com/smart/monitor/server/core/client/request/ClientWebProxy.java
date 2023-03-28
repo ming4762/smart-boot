@@ -1,7 +1,6 @@
 package com.smart.monitor.server.core.client.request;
 
 import com.google.common.collect.Maps;
-import com.smart.commons.core.exception.IORuntimeException;
 import com.smart.commons.core.message.Result;
 import com.smart.commons.core.utils.JsonUtils;
 import com.smart.commons.core.utils.RestUtils;
@@ -53,13 +52,14 @@ public class ClientWebProxy {
     public void forward(@NonNull ClientId clientId, HttpServletRequest request, HttpServletResponse response, boolean needUp) {
         this.forward(clientId, repositoryData -> this.createForwardRequest(request, repositoryData), result -> {
             if (result != null) {
-                try {
-                    response.getWriter().write(JsonUtils.toJsonString(Result.success(result)));
-                } catch (IOException e) {
-                    throw new IORuntimeException(e);
-                }
+                this.write(response, result);
             }
         }, needUp);
+    }
+
+    @SneakyThrows(IOException.class)
+    private void write(HttpServletResponse response, Serializable result) {
+        response.getWriter().write(JsonUtils.toJsonString(Result.success(result)));
     }
 
     /**

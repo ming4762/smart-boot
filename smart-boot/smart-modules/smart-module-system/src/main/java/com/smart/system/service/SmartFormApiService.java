@@ -1,7 +1,7 @@
 package com.smart.system.service;
 
-import com.smart.system.controller.smart_form_api.dto.SmartFormTableSelectApiDTO;
-import com.smart.system.controller.smart_form_api.vo.SmartFormTableSelectApiVO;
+import com.smart.system.controller.api.form.dto.SmartFormTableSelectApiDTO;
+import com.smart.system.controller.api.form.vo.SmartFormTableSelectApiVO;
 
 import java.util.List;
 
