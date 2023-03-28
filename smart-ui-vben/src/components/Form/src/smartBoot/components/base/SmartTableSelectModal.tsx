@@ -87,7 +87,7 @@ export default defineComponent({
         }
       })
       closeModal()
-      emit('select-data', selectOptions)
+      emit('select-data', selectOptions, unref(selectRowsRef))
     }
 
     return {
