@@ -97,7 +97,7 @@ export const getFormSchemas = (t: Function): FormSchema[] => {
       label: t('system.views.file.title.fileStorageId'),
       component: 'SmartApiSelectTable',
       componentProps: {
-        modelClassName: 'com.smart.system.model.file.SmartFileStoragePO',
+        modelClassName: 'com.smart.file.manager.model.SmartFileStoragePO',
         valueFieldName: 'id',
         labelFieldName: 'storageName',
         params: {
@@ -164,7 +164,7 @@ export const getSearchFormSchemas = (t: Function): SmartSearchFormSchema[] => {
         style: {
           width: '150px',
         },
-        modelClassName: 'com.smart.system.model.file.SmartFileStoragePO',
+        modelClassName: 'com.smart.file.manager.model.SmartFileStoragePO',
         valueFieldName: 'id',
         labelFieldName: 'storageName',
         params: {
