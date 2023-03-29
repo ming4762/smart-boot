@@ -223,7 +223,7 @@ export const getAddEditFormSchemas = (t: Function): FormSchema[] => {
       component: 'SmartApiSelectTable',
       required: true,
       componentProps: {
-        modelClassName: 'com.smart.system.model.file.SmartFileStoragePO',
+        modelClassName: 'com.smart.file.manager.model.SmartFileStoragePO',
         valueFieldName: 'id',
         labelFieldName: 'storageName',
         params: {
