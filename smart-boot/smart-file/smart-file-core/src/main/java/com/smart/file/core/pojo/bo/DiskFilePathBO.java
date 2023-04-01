@@ -25,7 +25,7 @@ public class DiskFilePathBO {
 
     private static final String POINT_STR = ".";
 
-    private static final String FILE_SEPARATOR = "/";
+    public static final String FILE_SEPARATOR = "/";
 
     private static final String SEPARATOR_REPLACE = "@@";
 

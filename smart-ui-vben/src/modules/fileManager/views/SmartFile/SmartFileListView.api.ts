@@ -1,5 +1,6 @@
 import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 import { applyTempToken } from '/@/common/auth/AuthUtils'
+import {useGlobSetting} from '/@/hooks/setting';
 
 enum Api {
   list = 'smart/file/list',
@@ -51,7 +52,10 @@ export const getByIdApi = (model: Recordable) => {
 }
 
 export const downloadApi = async (id) => {
-  let url = `${defHttp.getApiUrl()}/${ApiServiceEnum.SMART_FILE}${Api.download}${id}`
+  const { isStandalone } = useGlobSetting()
+  let url = `${defHttp.getApiUrl()}${isStandalone ? '' : '/' + ApiServiceEnum.SMART_FILE}${
+    Api.download
+  }${id}`
   // 申请临时token
   const tempToken = await applyTempToken('smart:file:download')
   url = url + '?access-token=' + tempToken

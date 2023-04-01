@@ -273,6 +273,8 @@ export const getFormSchemas = (t: Function): FormSchema[] => {
     },
     // --------------- 阿里云OSS
     ...getAliyunOssFormSchemas(t),
+    // --------------- 七牛云
+    ...getQiniuFormSchemas(t),
   ]
 }
 
@@ -344,6 +346,55 @@ const getAliyunOssFormSchemas = (t: Function): FormSchema[] => {
         return model.storageType === 'ALIYUN_OSS'
       },
       required: ({ model }) => model.storageType === 'ALIYUN_OSS',
+    },
+  ]
+}
+
+const getQiniuFormSchemas = (t: Function): FormSchema[] => {
+  return [
+    {
+      field: 'storageConfig.QINIU.accessKey',
+      component: 'Input',
+      label: t('smart.file.storage.title.accessKey'),
+      show: ({ model }) => {
+        return model.storageType === 'QINIU'
+      },
+      required: ({ model }) => model.storageType === 'QINIU',
+    },
+    {
+      field: 'storageConfig.QINIU.secretKey',
+      component: 'InputPassword',
+      label: t('smart.file.storage.title.secretKey'),
+      show: ({ model }) => {
+        return model.storageType === 'QINIU'
+      },
+      required: ({ model }) => model.storageType === 'QINIU',
+    },
+    {
+      field: 'storageConfig.QINIU.bucketName',
+      component: 'Input',
+      label: t('smart.file.storage.title.bucketName'),
+      show: ({ model }) => {
+        return model.storageType === 'QINIU'
+      },
+      required: ({ model }) => model.storageType === 'QINIU',
+    },
+    {
+      field: 'storageConfig.QINIU.region',
+      component: 'Input',
+      label: t('smart.file.storage.title.region'),
+      show: ({ model }) => {
+        return model.storageType === 'QINIU'
+      },
+    },
+    {
+      field: 'storageConfig.QINIU.url',
+      component: 'Input',
+      label: t('smart.file.storage.title.url'),
+      show: ({ model }) => {
+        return model.storageType === 'QINIU'
+      },
+      required: ({ model }) => model.storageType === 'QINIU',
     },
   ]
 }
