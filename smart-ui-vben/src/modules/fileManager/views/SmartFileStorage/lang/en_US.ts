@@ -22,6 +22,8 @@ export default {
       username: 'Username',
       password: 'Password',
       privateKey: 'Private key',
+      region: 'Region',
+      url: 'URL',
     },
     validate: {
       storageCode: 'Please enter storage code',

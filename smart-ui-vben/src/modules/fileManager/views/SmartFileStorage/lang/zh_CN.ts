@@ -22,6 +22,8 @@ export default {
       username: '用户名',
       password: '密码',
       privateKey: '私钥',
+      region: '区域',
+      url: 'URL',
     },
     validate: {
       storageCode: '请输入存储器编码',

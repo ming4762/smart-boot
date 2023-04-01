@@ -29,7 +29,7 @@ export const getTableColumns = (): SmartColumn[] => {
       sortable: true,
     },
     {
-      field: 'fileName',
+      field: 'filename',
       title: '{system.views.file.title.fileName}',
       width: 160,
       fixed: 'left',

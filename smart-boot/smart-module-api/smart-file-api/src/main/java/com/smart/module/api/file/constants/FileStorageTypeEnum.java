@@ -14,7 +14,8 @@ public enum FileStorageTypeEnum {
     DISK("ActualFileDiskService", "com.smart.file.core.properties.SmartFileStorageDiskProperties"),
     SFTP("ActualFileSftpService", "com.smart.file.core.properties.SmartFileStorageSftpProperties"),
     MINIO("ActualFileMinioService", "com.smart.file.core.properties.SmartFileStorageMinioProperties"),
-    ALIYUN_OSS("ActualFileAliyunOssService", "com.smart.file.core.properties.SmartFileStorageAliyunOssProperties")
+    ALIYUN_OSS("ActualFileAliyunOssService", "com.smart.file.core.properties.SmartFileStorageAliyunOssProperties"),
+    QINIU("ActualFileQiniuService", "com.smart.file.core.properties.SmartFileStorageQiniuProperties")
     ;
 
     @Getter
