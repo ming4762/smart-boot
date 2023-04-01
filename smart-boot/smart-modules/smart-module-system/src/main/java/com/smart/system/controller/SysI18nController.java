@@ -17,8 +17,8 @@ import com.smart.system.pojo.dto.i18n.SysI18nSaveUpdateDTO;
 import com.smart.system.service.SysI18nGroupService;
 import com.smart.system.service.SysI18nService;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.validation.Valid;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DuplicateKeyException;
@@ -111,7 +111,7 @@ public class SysI18nController extends BaseController<SysI18nService, SysI18nPO>
             BeanUtils.copyProperties(parameter, model);
             return Result.success(this.service.saveOrUpdate(model));
         } catch (DuplicateKeyException e) {
-            throw new BusinessException(I18nUtils.get(SystemI18nMessage.I18N_DUPLICATE, parameter.getI18nCode()), e);
+            throw new BusinessException(I18nUtils.get(SystemI18nMessage.I18N_DUPLICATE, (Object) parameter.getI18nCode()), e);
         }
     }
 
