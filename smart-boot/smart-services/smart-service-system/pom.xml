@@ -120,8 +120,18 @@
 		</dependency>
 		<dependency>
 			<groupId>com.smart</groupId>
+			<artifactId>smart-file-extensions-qiniu</artifactId>
+			<version>${smart-boot.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.smart</groupId>
 			<artifactId>smart-file-manager</artifactId>
 			<version>${smart-boot.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.github.xiaoymin</groupId>
+			<artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
 		</dependency>
 	</dependencies>
 

@@ -27,7 +27,7 @@
         <commons-collections4.version>4.4</commons-collections4.version>
         <commons-beanutils.version>1.9.4</commons-beanutils.version>
         <spring-security-saml2.version>1.0.10.RELEASE</spring-security-saml2.version>
-        <swagger-annotations.version>2.2.0</swagger-annotations.version>
+        <swagger-annotations.version>2.2.8</swagger-annotations.version>
         <commons-io.version>2.11.0</commons-io.version>
         <jsch.version>0.1.55</jsch.version>
         <pagehelper.version>1.4.6</pagehelper.version>
@@ -51,7 +51,8 @@
         <minio.version>8.4.6</minio.version>
         <hutool.version>5.8.12</hutool.version>
         <aliyun.oss.version>3.16.1</aliyun.oss.version>
-        <knife4j.version>4.0.0</knife4j.version>
+        <knife4j-openapi3.version>4.1.0</knife4j-openapi3.version>
+        <qiniu.version>7.12.1</qiniu.version>
     </properties>
 
     <packaging>pom</packaging>
@@ -373,8 +374,20 @@
 
             <dependency>
                 <groupId>com.github.xiaoymin</groupId>
-                <artifactId>knife4j-openapi2-spring-boot-starter</artifactId>
-                <version>${knife4j.version}</version>
+                <artifactId>knife4j-openapi3-spring-boot-starter</artifactId>
+                <version>${knife4j-openapi3.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
+                <version>${knife4j-openapi3.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.qiniu</groupId>
+                <artifactId>qiniu-java-sdk</artifactId>
+                <version>${qiniu.version}</version>
             </dependency>
 
         </dependencies>
