@@ -1,0 +1,157 @@
+<template>
+  <div class="full-height">
+    <SmartTable
+      @register="registerTable"
+      :size="getTableSize"
+      @current-change="handleCurrentChange">
+      <template #table-operation="{ row }">
+        <SmartVxeTableAction :actions="getTableActions(row)" />
+      </template>
+    </SmartTable>
+  </div>
+</template>
+
+<script lang="ts" setup>
+import { useSmartTable, SmartTable, SmartVxeTableAction } from '/@/components/SmartTable'
+import { propTypes } from '/@/utils/propTypes'
+import { useI18n } from '/@/hooks/web/useI18n'
+import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
+import { message, Modal } from 'ant-design-vue'
+import { createVNode, watch } from 'vue'
+import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
+
+import { getI18nTableColumns, getI18nAddEditSchemas } from './i18n.config'
+import { listI18nApi, getI18nByIdApi, i18nSaveUpdateApi, i18nDeleteApi } from './i18n.api'
+import { SystemPermissions } from '/@/modules/system/constants/SystemConstants'
+
+const props = defineProps({
+  groupId: propTypes.number,
+})
+const emit = defineEmits(['change'])
+
+const { t } = useI18n()
+const { getTableSize } = useSizeSetting()
+
+watch(
+  () => props.groupId,
+  async () => {
+    await getSearchForm().setFieldsValue({ groupId: props.groupId })
+    await query()
+    emit('change', null)
+  },
+)
+
+const permissions = SystemPermissions.i18n
+
+const getTableActions = (row: any) => {
+  return [
+    {
+      label: t('common.button.edit'),
+      preIcon: 'ant-design:edit-out-lined',
+      auth: permissions.update,
+      onClick: () => editByRowModal(row),
+    },
+  ]
+}
+
+const handleCurrentChange = ({ row }) => {
+  emit('change', row.i18nId)
+}
+
+const [registerTable, { getSearchForm, query, editByRowModal }] = useSmartTable({
+  height: 'auto',
+  stripe: true,
+  highlightCurrentRow: true,
+  columns: getI18nTableColumns(),
+  useSearchForm: true,
+  pagerConfig: true,
+  showOverflow: 'tooltip',
+  rowConfig: {
+    isCurrent: true,
+  },
+  columnConfig: {
+    resizable: true,
+  },
+  sortConfig: {
+    remote: true,
+    defaultSort: { field: 'seq', order: 'desc' },
+  },
+  searchFormConfig: {
+    searchWithSymbol: true,
+    schemas: [
+      {
+        label: t('system.views.i18n.i18n.titleI18nCode'),
+        field: 'i18nCode',
+        component: 'Input',
+        searchSymbol: 'like',
+      },
+      {
+        label: '',
+        field: 'groupId',
+        component: 'Input',
+        searchSymbol: 'like',
+        show: false,
+      },
+    ],
+    compact: true,
+    colon: true,
+    layout: 'inline',
+    actionColOptions: { span: undefined },
+  },
+  addEditConfig: {
+    formConfig: {
+      schemas: getI18nAddEditSchemas(t),
+      labelCol: { span: 5 },
+      wrapperCol: { span: 17 },
+    },
+  },
+  toolbarConfig: {
+    refresh: true,
+    resizable: true,
+    zoom: true,
+    buttons: [
+      {
+        isAnt: true,
+        name: t('system.views.i18n.i18n.button.reload'),
+        props: {
+          type: 'primary',
+          onClick: () => handleReload(),
+        },
+      },
+      { code: 'ModalAdd' },
+      { code: 'ModalEdit' },
+      { code: 'delete' },
+    ],
+  },
+  proxyConfig: {
+    ajax: {
+      query: ({ ajaxParameter }) => listI18nApi(ajaxParameter || {}),
+      getById: (model) => getI18nByIdApi(model.i18nId),
+      save: ({ body: { insertRecords, updateRecords } }) =>
+        i18nSaveUpdateApi([...insertRecords, ...updateRecords][0]),
+      delete: ({ body: { removeRecords } }) => i18nDeleteApi(removeRecords),
+    },
+  },
+})
+
+/**
+ * 刷新国际化信息
+ */
+const handleReload = async () => {
+  Modal.confirm({
+    title: t('system.views.i18n.i18n.message.reloadConfirm'),
+    content: t('system.views.i18n.i18n.message.reloadContent'),
+    icon: createVNode(ExclamationCircleOutlined),
+    onOk: async () => {
+      await defHttp.post({
+        service: ApiServiceEnum.SMART_SYSTEM,
+        url: 'sys/i18n/reload',
+      })
+      message.success(t('system.views.i18n.i18n.message.reloadSuccess'))
+    },
+  })
+}
+</script>
+
+<style lang="less" scoped></style>

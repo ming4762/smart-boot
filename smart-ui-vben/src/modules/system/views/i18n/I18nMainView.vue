@@ -21,7 +21,7 @@
 import { defineComponent, ref } from 'vue'
 
 import I18nGroupList from './components/I18nGroupList.vue'
-import I18nList from './components/I18nList.vue'
+import I18nList from './components/i18nList.vue'
 import I18nItemList from './components/I18nItemList.vue'
 
 export default defineComponent({
