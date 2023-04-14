@@ -19,5 +19,9 @@ public enum AuthTypeEnum {
     /**
      * 开放API接口登录
      */
-    APP_SECRET
+    APP_SECRET,
+    /**
+     * 微信小程序登录
+     */
+    WECHAT_APP
 }

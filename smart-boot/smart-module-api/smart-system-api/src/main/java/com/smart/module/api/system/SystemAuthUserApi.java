@@ -38,4 +38,24 @@ public interface SystemAuthUserApi {
      * @return 权限角色信息
      */
     UserRolePermission queryRolePermission(@NonNull AuthUser authUser);
+
+    /**
+     * 通过openid获取用户信息
+     * @param appid appid
+     * @param openid openid
+     * @return AuthUser
+     */
+    default AuthUser getByAppOpenid(String appid, String openid) {
+        return null;
+    }
+
+    /**
+     * 通过unionid获取用户信息
+     * @param appid appid
+     * @param unionid unionid
+     * @return AuthUser
+     */
+    default AuthUser getByUnionid(String appid, String unionid) {
+        return null;
+    }
 }

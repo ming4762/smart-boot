@@ -6,3 +6,4 @@ com.smart.auth.autoconfigure.sms.AuthSmsAutoConfiguration
 com.smart.auth.autoconfigure.secret.AuthAppsecretAutoConfiguration
 com.smart.auth.autoconfigure.secret.AuthAppsecretGuavaStoreAutoConfiguration
 com.smart.auth.autoconfigure.secret.AuthAppsecretRedisStoreAutoConfiguration
+com.smart.auth.autoconfigure.wechat.AuthWechatAutoConfiguration

@@ -53,6 +53,7 @@
         <aliyun.oss.version>3.16.1</aliyun.oss.version>
         <knife4j-openapi3.version>4.1.0</knife4j-openapi3.version>
         <qiniu.version>7.12.1</qiniu.version>
+        <wx-java.version>4.4.0</wx-java.version>
     </properties>
 
     <packaging>pom</packaging>
@@ -388,6 +389,23 @@
                 <groupId>com.qiniu</groupId>
                 <artifactId>qiniu-java-sdk</artifactId>
                 <version>${qiniu.version}</version>
+            </dependency>
+
+            <!--      微信工具类      -->
+            <dependency>
+                <groupId>com.github.binarywang</groupId>
+                <artifactId>weixin-java-miniapp</artifactId>
+                <version>${wx-java.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.binarywang</groupId>
+                <artifactId>weixin-java-pay</artifactId>
+                <version>${wx-java.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.binarywang</groupId>
+                <artifactId>weixin-java-mp</artifactId>
+                <version>${wx-java.version}</version>
             </dependency>
 
         </dependencies>

@@ -1,18 +1,21 @@
 package com.smart.auth.security.userdetails;
 
 import com.google.common.collect.Sets;
+import com.smart.auth.core.constants.AuthTypeEnum;
 import com.smart.auth.core.model.PermissionGrantedAuthority;
 import com.smart.auth.core.model.RestUserDetailsImpl;
 import com.smart.auth.core.model.RoleGrantedAuthority;
 import com.smart.auth.core.model.SmartGrantedAuthority;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.auth.core.userdetails.SmsUserDetailService;
+import com.smart.auth.core.userdetails.WechatUserDetailService;
 import com.smart.commons.core.dto.auth.UserRolePermission;
 import com.smart.module.api.system.SystemAuthUserApi;
 import com.smart.module.api.system.dto.AuthUser;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -25,7 +28,7 @@ import java.util.stream.Collectors;
  * @author shizhongming
  * 2020/1/23 7:34 下午
  */
-public class DefaultUserDetailsServiceImpl implements UserDetailsService, SmsUserDetailService {
+public class DefaultUserDetailsServiceImpl implements UserDetailsService, SmsUserDetailService, WechatUserDetailService {
 
     private final SystemAuthUserApi systemAuthUserApi;
 
@@ -97,5 +100,43 @@ public class DefaultUserDetailsServiceImpl implements UserDetailsService, SmsUse
         // 查询用户
         final AuthUser user = this.systemAuthUserApi.getByPhone(phone);
         return this.getUserDetails(user);
+    }
+
+    /**
+     * 通过微信openid加载用户信息
+     *
+     * @param openid openid
+     * @return 用户信息
+     * @throws AuthenticationException 异常信息
+     */
+    @Override
+    public RestUserDetails loadUserByOpenid(AuthTypeEnum authType, String appid, String openid) throws AuthenticationException {
+        if (StringUtils.isEmpty(openid)) {
+            return null;
+        }
+        AuthUser authUser = switch (authType) {
+            case WECHAT_APP -> this.systemAuthUserApi.getByAppOpenid(appid, openid);
+            default -> null;
+        };
+        if (authUser == null) {
+            return null;
+        }
+        return this.getUserDetails(authUser);
+    }
+
+    /**
+     * 通过微信unionid加载用户信息
+     *
+     * @param unionid unionid
+     * @return 用户信息
+     * @throws AuthenticationException 异常信息
+     */
+    @Override
+    public RestUserDetails loadUserByUnionid(AuthTypeEnum authType, String appid, String unionid) throws AuthenticationException {
+        if (StringUtils.isEmpty(unionid)) {
+            return null;
+        }
+        AuthUser authUser = this.systemAuthUserApi.getByUnionid(appid, unionid);
+        return this.getUserDetails(authUser);
     }
 }

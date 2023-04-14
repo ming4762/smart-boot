@@ -20,6 +20,7 @@
 		<module>i18n-spring-boot-starter</module>
 		<module>log-spring-boot-starter</module>
 		<module>redis-spring-boot-starter</module>
+		<module>wxjava-spring-boot-starter</module>
 	</modules>
 
 	<properties>

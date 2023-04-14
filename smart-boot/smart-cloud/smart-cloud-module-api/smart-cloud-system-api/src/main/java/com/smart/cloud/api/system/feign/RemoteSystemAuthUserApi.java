@@ -49,4 +49,26 @@ public interface RemoteSystemAuthUserApi extends SystemAuthUserApi {
     @Override
     @PostMapping(SystemApiUrlConstants.QUERY_ROLE_PERMISSION)
     UserRolePermission queryRolePermission(@NonNull AuthUser authUser);
+
+    /**
+     * 通过openid获取用户信息
+     *
+     * @param appid  appid
+     * @param openid openid
+     * @return AuthUser
+     */
+    @Override
+    @PostMapping(SystemApiUrlConstants.WECHAT_GET_BY_APP_OPENID)
+    AuthUser getByAppOpenid(String appid, String openid);
+
+    /**
+     * 通过unionid获取用户信息
+     *
+     * @param appid   appid
+     * @param unionid unionid
+     * @return AuthUser
+     */
+    @Override
+    @PostMapping(SystemApiUrlConstants.WECHAT_GET_BY_APP_UNIONID)
+    AuthUser getByUnionid(String appid, String unionid);
 }

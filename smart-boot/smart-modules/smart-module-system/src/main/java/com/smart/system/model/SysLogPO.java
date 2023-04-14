@@ -94,4 +94,5 @@ public class SysLogPO extends BaseModelCreateUserTime {
      */
     @TableField(typeHandler = LogSourceTypeHandler.class)
     private LogSourceEnum logSource;
+
 }

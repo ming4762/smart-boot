@@ -200,4 +200,28 @@ public class LocalSystemAuthUserApiImpl implements SystemAuthUserApi {
     public UserRolePermission queryRolePermission(@NonNull AuthUser authUser) {
         return this.sysUserService.queryUserRolePermission(authUser.getUserId(), List.of(FunctionTypeEnum.FUNCTION));
     }
+
+    /**
+     * 通过openid获取用户信息
+     *
+     * @param openid openid
+     * @return AuthUser
+     */
+    @Override
+    public AuthUser getByAppOpenid(String appid, String openid) {
+        SysUserPO sysUser = this.sysUserService.getById(1);
+        return this.createAuthUser(sysUser);
+    }
+
+    /**
+     * 通过unionid获取用户信息
+     *
+     * @param unionid unionid
+     * @return AuthUser
+     */
+    @Override
+    public AuthUser getByUnionid(String appid, String unionid) {
+        SysUserPO sysUser = this.sysUserService.getById(1);
+        return this.createAuthUser(sysUser);
+    }
 }

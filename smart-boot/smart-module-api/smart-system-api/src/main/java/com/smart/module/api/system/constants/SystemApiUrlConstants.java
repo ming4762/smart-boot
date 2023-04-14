@@ -41,4 +41,8 @@ public interface SystemApiUrlConstants {
      */
     String PARAMETER_GET = "/remote/system/parameter/get";
     String PARAMETER_BATCH_GET = "/remote/system/parameter/batchGet";
+
+    String WECHAT_GET_BY_APP_OPENID = "/remote/system/wechat/getByAppOpenid";
+
+    String WECHAT_GET_BY_APP_UNIONID = "/remote/system/wechat/getByUnionid";
 }

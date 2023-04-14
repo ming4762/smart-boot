@@ -70,6 +70,13 @@ public enum AuthI18nMessage implements I18nMessage {
     CAPTCHA_EXPIRE_ERROR("auth.error.captcha_expire", "Verification code has expired"),
     CAPTCHA_ERROR("auth.error.captcha_error", "Verification code error"),
 
+    // ----------- 微信登录 ------------
+    WECHAT_APP_CONFIG_NOT_FOUND("auth.error.wechat.app.configNotFound", "Failed to obtain WeChat min app configuration"),
+    WECHAT_APP_CONFIG_NOT_FOUND_APPID("auth.error.wechat.app.configNotFoundAppid", "Unable to find the configuration for the corresponding appid=[{0}] for the search. Please verify!"),
+    // 不支持的登录类型
+    WECHAT_LOGIN_TYPE_NOT_SUPPORT("auth.error.wechat.loginTypeNotSupport", "Unsupported WeChat login type"),
+    WECHAT_USER_NOT_BOND("auth.error.wechat.userBindError", "WeChat user not bound"),
+    WECHAT_APP_APPID_NOT_CONFIG("auth.error.wechat.app.appidNotConfig", "Appid not config")
     ;
 
 

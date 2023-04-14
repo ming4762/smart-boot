@@ -2,6 +2,7 @@ package com.smart.service.system.config;
 
 import com.smart.auth.core.properties.AuthProperties;
 import com.smart.auth.extensions.jwt.AuthJwtSecurityConfigurer;
+import com.smart.auth.extensions.wechat.SmartAuthWechatAppConfigurer;
 import com.smart.auth.security.config.AuthCaptchaSecurityConfigurer;
 import com.smart.auth.security.config.AuthWebSecurityConfigurerAdapter;
 import lombok.SneakyThrows;
@@ -39,14 +40,15 @@ public class SecurityConfig extends AuthWebSecurityConfigurerAdapter {
                 // jwt配置
                 .apply(AuthJwtSecurityConfigurer.jwt())
                 .serviceProvider()
-                .applicationContext(applicationContext)
                 .and()
                 .and()
                 // 验证码配置
                 .apply(AuthCaptchaSecurityConfigurer.captcha())
                 .serviceProvider()
                 .applicationContext(applicationContext)
-                .loginUrl(AuthJwtSecurityConfigurer.LOGIN_URL);
+                .loginUrl(AuthJwtSecurityConfigurer.LOGIN_URL)
+                .and().and()
+                .apply(SmartAuthWechatAppConfigurer.wechatApp());
         return http.build();
     }
 

@@ -113,8 +113,8 @@ public class AuthSecurity2AutoConfiguration {
     }
 
     @SneakyThrows(Exception.class)
-    @Bean
-    @ConditionalOnMissingBean
+//    @Bean
+//    @ConditionalOnMissingBean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) {
         return configuration.getAuthenticationManager();
     }

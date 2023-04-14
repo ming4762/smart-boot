@@ -58,4 +58,30 @@ public class RemoteSystemAuthUserApiController implements SystemAuthUserApi {
     public UserRolePermission queryRolePermission(@NonNull @RequestBody AuthUser authUser) {
         return this.systemAuthUserApi.queryRolePermission(authUser);
     }
+
+    /**
+     * 通过openid获取用户信息
+     *
+     * @param appid  appid
+     * @param openid openid
+     * @return AuthUser
+     */
+    @Override
+    @PostMapping(SystemApiUrlConstants.WECHAT_GET_BY_APP_OPENID)
+    public AuthUser getByAppOpenid(String appid, String openid) {
+        return SystemAuthUserApi.super.getByAppOpenid(appid, openid);
+    }
+
+    /**
+     * 通过unionid获取用户信息
+     *
+     * @param appid   appid
+     * @param unionid unionid
+     * @return AuthUser
+     */
+    @Override
+    @PostMapping(SystemApiUrlConstants.WECHAT_GET_BY_APP_UNIONID)
+    public AuthUser getByUnionid(String appid, String unionid) {
+        return SystemAuthUserApi.super.getByUnionid(appid, unionid);
+    }
 }
