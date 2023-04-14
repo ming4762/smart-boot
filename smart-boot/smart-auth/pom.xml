@@ -22,6 +22,7 @@
         <module>smart-auth-extensions-saml2</module>
         <module>smart-auth-extensions-secret</module>
         <module>smart-auth-extensions-sms</module>
+        <module>smart-auth-extensions-wechat</module>
         <module>smart-auth-security</module>
     </modules>
 

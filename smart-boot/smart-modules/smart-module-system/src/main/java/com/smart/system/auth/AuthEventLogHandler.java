@@ -1,6 +1,8 @@
 package com.smart.system.auth;
 
+import com.smart.auth.core.authentication.AbstractEnhanceAuthenticationToken;
 import com.smart.auth.core.authentication.RestUsernamePasswordAuthenticationToken;
+import com.smart.auth.core.constants.AuthTypeEnum;
 import com.smart.auth.core.event.AuthEventHandler;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.commons.core.log.LogSourceEnum;
@@ -8,6 +10,7 @@ import com.smart.module.api.system.constants.LogIdentEnum;
 import com.smart.system.model.SysLogPO;
 import com.smart.system.service.SysLogService;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.event.AbstractAuthenticationFailureEvent;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.authentication.event.LogoutSuccessEvent;
@@ -35,7 +38,7 @@ public class AuthEventLogHandler implements AuthEventHandler {
                 .ident(LogIdentEnum.LOGIN_LOG)
                 .statusCode(HttpStatus.OK.value())
                 .logSource(LogSourceEnum.LOGIN)
-                .operation(LogSourceEnum.LOGIN.name())
+                .operation(user.getAuthType().name())
                 .result(String.format("登录成功,username:[%s],fullName:[%s]", user.getUsername(), user.getFullName()))
                 .build();
         sysLog.setCreateUserId(user.getUserId());
@@ -60,13 +63,22 @@ public class AuthEventLogHandler implements AuthEventHandler {
     @Override
     public void handleLoginFail(AbstractAuthenticationFailureEvent event) {
         AuthenticationException exception = event.getException();
-        RestUsernamePasswordAuthenticationToken token = (RestUsernamePasswordAuthenticationToken) event.getAuthentication();
+        AbstractAuthenticationToken token = (AbstractAuthenticationToken) event.getAuthentication();
+        String loginIp = "";
+        AuthTypeEnum authType = null;
+        if (token instanceof RestUsernamePasswordAuthenticationToken restToken) {
+            loginIp = restToken.getLoginIp();
+            authType = AuthTypeEnum.USERNAME;
+        } else if (AbstractEnhanceAuthenticationToken.class.isAssignableFrom(token.getClass())) {
+            loginIp = ((AbstractEnhanceAuthenticationToken) token).getLoginIp();
+            authType = ((AbstractEnhanceAuthenticationToken) token).getAuthType();
+        }
         SysLogPO sysLog = SysLogPO.builder()
-                .ip(token.getLoginIp())
+                .ip(loginIp)
                 .ident(LogIdentEnum.LOGIN_LOG)
                 .statusCode(HttpStatus.UNAUTHORIZED.value())
                 .logSource(LogSourceEnum.LOGIN_FAIL)
-                .operation(LogSourceEnum.LOGIN_FAIL.name())
+                .operation(authType == null ? null : authType.name())
                 .result(String.format("%s[%s],username:[%s]", exception.getClass().getSimpleName(), exception.getMessage(), token.getPrincipal()))
                 .build();
         this.sysLogService.save(sysLog);

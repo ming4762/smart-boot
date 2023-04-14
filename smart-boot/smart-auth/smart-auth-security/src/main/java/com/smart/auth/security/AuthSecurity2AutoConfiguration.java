@@ -16,7 +16,6 @@ import com.smart.auth.security.event.AuthEventLockedHandler;
 import com.smart.auth.security.userdetails.DefaultUserDetailsServiceImpl;
 import com.smart.module.api.system.SysUserApi;
 import com.smart.module.api.system.SystemAuthUserApi;
-import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -109,13 +108,6 @@ public class AuthSecurity2AutoConfiguration {
     @ConditionalOnMissingBean
     public AuthenticationFailureEventInitializer authenticationFailureEventInitializer(DefaultAuthenticationEventPublisher eventPublisher) {
         return new AuthenticationFailureEventInitializer(eventPublisher);
-    }
-
-    @SneakyThrows
-    @Bean
-    @ConditionalOnMissingBean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) {
-        return configuration.getAuthenticationManager();
     }
 
     /**

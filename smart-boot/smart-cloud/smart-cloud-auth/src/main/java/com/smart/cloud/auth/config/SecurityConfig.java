@@ -37,7 +37,6 @@ public class SecurityConfig extends AuthWebSecurityConfigurerAdapter {
                 // jwt支持
                 .and().apply(AuthJwtSecurityConfigurer.jwt())
                 .serviceProvider()
-                .applicationContext(applicationContext)
                 .jwtAuth(false)
                 .bindIp(false)
                 .and().and()

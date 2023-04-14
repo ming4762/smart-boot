@@ -6,7 +6,6 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-import com.smart.auth.core.authentication.RestAuthenticationProvider;
 import com.smart.auth.core.handler.AuthLogoutSuccessHandler;
 import com.smart.auth.core.handler.AuthSuccessDataHandler;
 import com.smart.auth.core.handler.SecurityLogoutHandler;
@@ -30,7 +29,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 import java.io.FileInputStream;
@@ -121,17 +119,6 @@ public class AuthJwtAutoConfiguration {
     @ConditionalOnMissingBean(SecurityLogoutHandler.class)
     public SecurityLogoutHandler jwtLogoutHandler(JwtTokenRepository tokenRepository) {
         return new JwtLogoutHandler(tokenRepository);
-    }
-
-    /**
-     * 创建 RestAuthenticationProvider
-     * @param userDetailsService userDetailsService
-     * @return RestAuthenticationProvider
-     */
-    @Bean
-    @ConditionalOnMissingBean(RestAuthenticationProvider.class)
-    public RestAuthenticationProvider restAuthenticationProvider(UserDetailsService userDetailsService) {
-        return new RestAuthenticationProvider(userDetailsService);
     }
 
     /**

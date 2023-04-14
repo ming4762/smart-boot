@@ -42,6 +42,17 @@
 			<artifactId>smart-auth-cache-redis</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
+		<!--	微信登录支持	-->
+		<dependency>
+			<groupId>com.smart</groupId>
+			<artifactId>smart-auth-extensions-wechat</artifactId>
+			<version>${smart-boot.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.smart</groupId>
+			<artifactId>wxjava-spring-boot-starter</artifactId>
+			<version>${smart-boot.version}</version>
+		</dependency>
 
 		<!--	基础支持：国际化、异常处理	-->
 		<dependency>
