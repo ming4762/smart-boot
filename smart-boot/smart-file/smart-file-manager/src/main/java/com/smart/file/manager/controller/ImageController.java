@@ -41,6 +41,7 @@ public class ImageController {
         FileDownloadResult file = this.fileService.download(id);
         if (Objects.nonNull(file)) {
             var inputStream = file.getInputStream();
+            response.setContentType(file.getContentType());
             try (inputStream) {
                 IOUtils.copy(inputStream, response.getOutputStream());
             }
