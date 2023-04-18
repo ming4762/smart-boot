@@ -85,7 +85,13 @@ export default defineComponent({
       registerSearchForm,
       searchFormAction,
       getSearchFormVisible,
-    } = useTableSearchForm(getTableProps, slots, (params) => query(params), getLoading)
+    } = useTableSearchForm(
+      getTableProps,
+      slots,
+      (params) => query(params),
+      getLoading,
+      setPagination,
+    )
 
     // -------------- 加载函数 ------------------------
     const { reload, query, getProxyConfigRef, deleteByRow, deleteByCheckbox, getProxyEvents } =
