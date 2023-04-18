@@ -3,10 +3,12 @@ import type { SmartSearchFormProps, SmartSearchFormSchema } from '/@/components/
 import type { FormProps } from '/@/components/Form'
 import type { FetchParams, SmartTableProps } from '../types/SmartTableType'
 import type { SmartSearchFormParameter } from '../types/SmartSearchFormType'
+import type { VxeGridPropTypes } from 'vxe-table'
 
 import { computed, ref, unref } from 'vue'
 import { useForm } from '/@/components/Form'
 import { isArray, isBoolean } from '/@/utils/is'
+
 const SizeMap: { [index: string]: 'default' | 'small' | 'large' } = {
   midum: 'default',
   small: 'small',
@@ -18,6 +20,7 @@ export const useTableSearchForm = (
   slots: Slots,
   fetch: (opt?: FetchParams | undefined) => Promise<void>,
   getLoading: ComputedRef<boolean | undefined>,
+  setPagination: (info: Partial<VxeGridPropTypes.PagerConfig>) => void,
 ) => {
   /**
    * 搜索form显示状态
@@ -54,6 +57,9 @@ export const useTableSearchForm = (
    * 搜索条件触发
    */
   const handleSearchInfoChange = () => {
+    setPagination({
+      currentPage: 1,
+    })
     fetch({
       page: {
         currentPage: 1,
