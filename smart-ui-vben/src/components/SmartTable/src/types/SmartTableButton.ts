@@ -1,5 +1,5 @@
 import type { ButtonProps } from '/@/components/Button'
-import type { ComputedRef, Ref } from 'vue'
+import type { ComputedRef, Ref, VNode } from 'vue'
 import type { SmartAuth } from '/#/utils'
 import type { VxeToolbarPropTypes } from 'vxe-table'
 
@@ -59,7 +59,7 @@ export interface SmartTableButton extends SmartTableBasicButtonDropdowns {
   // 点击事件是否触发加载状态
   clickLoading?: boolean
   // 是否使用插槽
-  slot?: string
+  slot?: (button: SmartTableButton & ButtonProps) => VNode | string
 }
 
 export interface SmartTableToolbarTool extends VxeToolbarPropTypes.ToolConfig {

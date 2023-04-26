@@ -16,6 +16,7 @@ import { isBoolean, isPromise } from '/@/utils/is'
 import {
   VxeTableToolButtonAntRenderer,
   VxeTableToolAntRenderer,
+  VxeTableToolButtonSlotRenderer,
 } from '../renderer/VxeTableButtonRenderer'
 import { SmartTableCode } from '../const'
 
@@ -220,6 +221,16 @@ export const useTableToolbarConfig = (
         }
         return result
       })
+      if (item.slot) {
+        return {
+          size: tableButtonSizeMap[tableSize],
+          buttonRender: {
+            name: VxeTableToolButtonSlotRenderer,
+          },
+          ...item,
+          props,
+        }
+      }
       // 如果是ant 按钮使用VxeTableToolButtonRenderer进行渲染
       if (item.isAnt) {
         return {
