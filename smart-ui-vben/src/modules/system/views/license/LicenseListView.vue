@@ -83,6 +83,7 @@ const getSecretSelectTableParams = computed(() => {
     sortName: 'seq',
     parameter: {
       'useYn@=': true,
+      'deleteYn@=': false,
       'systemId@=': unref(currentSystemRef)?.id,
     },
   }
