@@ -21,6 +21,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author zhongming4762
@@ -68,7 +69,7 @@ public class SmartAuthWechatAppConfigurer extends SecurityConfigurerAdapter<Defa
         ApplicationContext applicationContext = this.builder.getSharedObject(ApplicationContext.class);
         List<WechatLoginProvider> wechatLoginProviderList = Arrays.stream(applicationContext.getBeanNamesForType(WechatLoginProvider.class))
                 .map(item -> applicationContext.getBean(item, WechatLoginProvider.class))
-                .toList();
+                .collect(Collectors.toList());
         WechatUserDetailService wechatUserDetailService = this.getBean(WechatUserDetailService.class, null);
         WechatAuthConfigProvider wechatAuthConfigProvider = this.getBean(WechatAuthConfigProvider.class, null);
         return new WechatAuthenticationProvider(wechatLoginProviderList, wechatUserDetailService, wechatAuthConfigProvider);

@@ -115,10 +115,14 @@ public class DefaultUserDetailsServiceImpl implements UserDetailsService, SmsUse
         if (StringUtils.isEmpty(openid)) {
             return null;
         }
-        AuthUser authUser = switch (authType) {
-            case WECHAT_APP -> this.systemAuthUserApi.getByAppOpenid(appid, openid);
-            default -> null;
-        };
+        AuthUser authUser = null;
+        switch (authType) {
+            case WECHAT_APP: {
+                authUser = this.systemAuthUserApi.getByAppOpenid(appid, openid);
+                break;
+            }
+            default: {}
+        }
         if (authUser == null) {
             return null;
         }

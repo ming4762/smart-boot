@@ -66,8 +66,8 @@ public class AuthEventLogHandler implements AuthEventHandler {
         AbstractAuthenticationToken token = (AbstractAuthenticationToken) event.getAuthentication();
         String loginIp = "";
         AuthTypeEnum authType = null;
-        if (token instanceof RestUsernamePasswordAuthenticationToken restToken) {
-            loginIp = restToken.getLoginIp();
+        if (token instanceof RestUsernamePasswordAuthenticationToken) {
+            loginIp = ((RestUsernamePasswordAuthenticationToken) token).getLoginIp();
             authType = AuthTypeEnum.USERNAME;
         } else if (AbstractEnhanceAuthenticationToken.class.isAssignableFrom(token.getClass())) {
             loginIp = ((AbstractEnhanceAuthenticationToken) token).getLoginIp();

@@ -1,3 +1,6 @@
+server:
+  port: 9095
+
 spring:
   redis:
     host: one.smart-ming.online
@@ -14,9 +17,10 @@ spring:
         enabled: true
         login-username: root
         login-password: root
-    url: jdbc:mysql://one.smart-ming.online:3306/smart-system?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
-    username: root
-    password: ming8858
+    system:
+      url: jdbc:mysql://one.smart-ming.online:3306/smart-system?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+      username: root
+      password: ming8858
 
 logging:
   level:
@@ -41,7 +45,6 @@ management:
   health:
     mail:
       enabled: false
-
 smart:
   auth:
     ignores:
@@ -52,3 +55,26 @@ smart:
         - /v3/api-docs/**
       pattern:
         - /xrebel/**
+    method: true
+  license:
+    client:
+      key:
+        subject: CESHI123
+        publicAlias: publicCert
+        storePass: public_password1234
+        licensePath: D:\zhongming\Documents\01-workspace\06-temp\keystore\license.lic
+        publicKeysStorePath: D:\zhongming\Documents\01-workspace\06-temp\keystore\publicCerts.keystore
+      project:
+        enterprise: ''
+        project: ''
+        version: ''
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: 'default'
+      paths-to-match: '/**'

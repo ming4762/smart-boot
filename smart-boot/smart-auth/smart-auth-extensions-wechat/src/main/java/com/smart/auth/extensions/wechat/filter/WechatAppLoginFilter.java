@@ -2,11 +2,12 @@ package com.smart.auth.extensions.wechat.filter;
 
 import com.smart.auth.core.constants.AuthTypeEnum;
 import com.smart.auth.extensions.wechat.authentication.WechatAuthenticationToken;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * wechat小程序登录filter

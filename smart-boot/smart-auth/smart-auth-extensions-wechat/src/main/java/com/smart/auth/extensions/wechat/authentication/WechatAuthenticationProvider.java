@@ -61,8 +61,8 @@ public class WechatAuthenticationProvider implements AuthenticationProvider {
             throw new AuthenticationServiceException(e.getMessage(), e);
         }
         String credentials = (String) token.getCredentials();
-        if (loginResult instanceof WechatAppLoginResult appLoginResult) {
-            credentials = appLoginResult.getSessionKey();
+        if (loginResult instanceof WechatAppLoginResult) {
+            credentials = ((WechatAppLoginResult) loginResult).getSessionKey();
         }
         RestUserDetails userDetails = null;
         // 调用微信登录成功后，获取系统用户消息
