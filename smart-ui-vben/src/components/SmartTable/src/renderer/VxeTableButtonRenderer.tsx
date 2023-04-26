@@ -1,10 +1,9 @@
 import VXETable from 'vxe-table'
 import type { VxeGlobalRendererHandles } from 'vxe-table'
-import { SmartTableButton } from '../types/SmartTableButton'
+import { SmartTableButton } from '/@/components/SmartTable'
 import { omit } from 'lodash-es'
-// import { hasPermission } from '/@/common/auth/AuthUtils'
-// import { isString } from '/@/utils/is'
 import { unref } from 'vue'
+import { isString } from '/@/utils/is'
 
 export type VxeTableRenderer =
   | 'VxeTableToolButtonAntRenderer'
@@ -14,6 +13,8 @@ export type VxeTableRenderer =
 export const VxeTableToolButtonAntRenderer: VxeTableRenderer = 'VxeTableToolButtonAntRenderer'
 
 export const VxeTableToolAntRenderer: VxeTableRenderer = 'VxeTableToolAntRenderer'
+
+export const VxeTableToolButtonSlotRenderer: VxeTableRenderer = 'VxeTableToolButtonSlotRenderer'
 
 VXETable.renderer.add(VxeTableToolButtonAntRenderer, {
   renderToolbarButton(
@@ -57,5 +58,21 @@ VXETable.renderer.add(VxeTableToolAntRenderer, {
     //     <a-button {...props} onClick={(event) => handleClick(event)} />
     //   </a-tooltip>
     // )
+  },
+})
+
+/**
+ * vxe-table 插槽渲染器
+ */
+VXETable.renderer.add(VxeTableToolButtonSlotRenderer, {
+  renderToolbarButton(
+    _: VxeGlobalRendererHandles.RenderButtonOptions,
+    params: VxeGlobalRendererHandles.RenderButtonParams,
+  ): VxeGlobalRendererHandles.RenderResult {
+    const button = params.button as SmartTableButton
+    if (!button.slot || isString(button.slot)) {
+      return ''
+    }
+    return button.slot(button)
   },
 })
