@@ -19,7 +19,7 @@
         <spring-boot.version>3.0.2</spring-boot.version>
         <spring-cloud.version>2022.0.1</spring-cloud.version>
         <smart-boot.version>3.0.0-SNAPSHOT</smart-boot.version>
-        <spring-cloud-alibaba.version>2022.0.0.0-RC1</spring-cloud-alibaba.version>
+        <spring-cloud-alibaba.version>2022.0.0.0-RC2</spring-cloud-alibaba.version>
 
         <guava.version>31.1-jre</guava.version>
         <jjwt.version>0.11.5</jjwt.version>
