@@ -2,6 +2,7 @@ package com.smart.module.api.system;
 
 import com.smart.commons.core.dto.auth.UserRolePermission;
 import com.smart.module.api.system.dto.AuthUser;
+import com.smart.module.api.system.parameter.WechatUserQueryParameter;
 import lombok.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -41,21 +42,19 @@ public interface SystemAuthUserApi {
 
     /**
      * 通过openid获取用户信息
-     * @param appid appid
-     * @param openid openid
+     * @param parameter 参数
      * @return AuthUser
      */
-    default AuthUser getByAppOpenid(String appid, String openid) {
+    default AuthUser getByAppOpenid(WechatUserQueryParameter parameter) {
         return null;
     }
 
     /**
      * 通过unionid获取用户信息
-     * @param appid appid
-     * @param unionid unionid
+     * @param parameter 参数
      * @return AuthUser
      */
-    default AuthUser getByUnionid(String appid, String unionid) {
+    default AuthUser getByUnionid(WechatUserQueryParameter parameter) {
         return null;
     }
 }

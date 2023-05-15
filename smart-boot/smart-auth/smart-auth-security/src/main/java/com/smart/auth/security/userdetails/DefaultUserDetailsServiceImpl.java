@@ -12,6 +12,7 @@ import com.smart.auth.core.userdetails.WechatUserDetailService;
 import com.smart.commons.core.dto.auth.UserRolePermission;
 import com.smart.module.api.system.SystemAuthUserApi;
 import com.smart.module.api.system.dto.AuthUser;
+import com.smart.module.api.system.parameter.WechatUserQueryParameter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -115,7 +116,12 @@ public class DefaultUserDetailsServiceImpl implements UserDetailsService, SmsUse
             return null;
         }
         AuthUser authUser = switch (authType) {
-            case WECHAT_APP -> this.systemAuthUserApi.getByAppOpenid(appid, openid);
+            case WECHAT_APP -> this.systemAuthUserApi.getByAppOpenid(
+                    WechatUserQueryParameter.builder()
+                            .appid(appid)
+                            .openid(openid)
+                            .build()
+            );
             default -> null;
         };
         if (authUser == null) {
@@ -136,7 +142,12 @@ public class DefaultUserDetailsServiceImpl implements UserDetailsService, SmsUse
         if (StringUtils.isEmpty(unionid)) {
             return null;
         }
-        AuthUser authUser = this.systemAuthUserApi.getByUnionid(appid, unionid);
+        AuthUser authUser = this.systemAuthUserApi.getByUnionid(
+                WechatUserQueryParameter.builder()
+                        .appid(appid)
+                        .unionid(unionid)
+                        .build()
+        );
         return this.getUserDetails(authUser);
     }
 }

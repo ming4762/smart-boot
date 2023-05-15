@@ -1,7 +1,7 @@
 package com.smart.service.system.auth;
 
 import com.smart.auth.core.constants.AuthTypeEnum;
-import com.smart.auth.extensions.wechat.provider.WechatAuthConfigProvider;
+import com.smart.auth.core.wechat.WechatAuthConfigProvider;
 import com.smart.starter.wxjava.model.WechatAppConfig;
 import com.smart.starter.wxjava.provider.WechatAppConfigProvider;
 import org.springframework.stereotype.Component;

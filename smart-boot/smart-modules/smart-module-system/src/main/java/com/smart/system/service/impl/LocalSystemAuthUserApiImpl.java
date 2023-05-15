@@ -9,6 +9,7 @@ import com.smart.commons.core.i18n.I18nUtils;
 import com.smart.module.api.system.SystemAuthUserApi;
 import com.smart.module.api.system.constants.UserAccountStatusEnum;
 import com.smart.module.api.system.dto.AuthUser;
+import com.smart.module.api.system.parameter.WechatUserQueryParameter;
 import com.smart.system.constants.FunctionTypeEnum;
 import com.smart.system.model.SysUserAccountPO;
 import com.smart.system.model.SysUserPO;
@@ -204,11 +205,11 @@ public class LocalSystemAuthUserApiImpl implements SystemAuthUserApi {
     /**
      * 通过openid获取用户信息
      *
-     * @param openid openid
+     * @param parameter 参数
      * @return AuthUser
      */
     @Override
-    public AuthUser getByAppOpenid(String appid, String openid) {
+    public AuthUser getByAppOpenid(WechatUserQueryParameter parameter) {
         SysUserPO sysUser = this.sysUserService.getById(1);
         return this.createAuthUser(sysUser);
     }
@@ -216,11 +217,11 @@ public class LocalSystemAuthUserApiImpl implements SystemAuthUserApi {
     /**
      * 通过unionid获取用户信息
      *
-     * @param unionid unionid
+     * @param parameter 参数
      * @return AuthUser
      */
     @Override
-    public AuthUser getByUnionid(String appid, String unionid) {
+    public AuthUser getByUnionid(WechatUserQueryParameter parameter) {
         SysUserPO sysUser = this.sysUserService.getById(1);
         return this.createAuthUser(sysUser);
     }
