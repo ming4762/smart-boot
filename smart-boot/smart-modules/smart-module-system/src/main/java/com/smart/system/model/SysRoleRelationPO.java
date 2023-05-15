@@ -1,5 +1,8 @@
 package com.smart.system.model;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.smart.crud.model.BaseModelCreateUserTime;
 import com.smart.system.constants.RoleRelationTypeEnum;
 import lombok.Getter;
@@ -15,9 +18,13 @@ import java.io.Serial;
  */
 @Getter
 @Setter
+@TableName("sys_role_relation")
 public class SysRoleRelationPO extends BaseModelCreateUserTime {
     @Serial
     private static final long serialVersionUID = -3101700604215505813L;
+
+    @TableId(type = IdType.ASSIGN_ID)
+    private Long id;
 
     private Long roleId;
 
