@@ -4,6 +4,7 @@ import com.smart.commons.core.dto.auth.UserRolePermission;
 import com.smart.module.api.system.SystemAuthUserApi;
 import com.smart.module.api.system.constants.SystemApiUrlConstants;
 import com.smart.module.api.system.dto.AuthUser;
+import com.smart.module.api.system.parameter.WechatUserQueryParameter;
 import com.smart.system.service.impl.LocalSystemAuthUserApiImpl;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -62,26 +63,24 @@ public class RemoteSystemAuthUserApiController implements SystemAuthUserApi {
     /**
      * 通过openid获取用户信息
      *
-     * @param appid  appid
-     * @param openid openid
+     * @param parameter 参数
      * @return AuthUser
      */
     @Override
     @PostMapping(SystemApiUrlConstants.WECHAT_GET_BY_APP_OPENID)
-    public AuthUser getByAppOpenid(String appid, String openid) {
-        return SystemAuthUserApi.super.getByAppOpenid(appid, openid);
+    public AuthUser getByAppOpenid(WechatUserQueryParameter parameter) {
+        return SystemAuthUserApi.super.getByAppOpenid(parameter);
     }
 
     /**
      * 通过unionid获取用户信息
      *
-     * @param appid   appid
-     * @param unionid unionid
+     * @param parameter 参数
      * @return AuthUser
      */
     @Override
     @PostMapping(SystemApiUrlConstants.WECHAT_GET_BY_APP_UNIONID)
-    public AuthUser getByUnionid(String appid, String unionid) {
-        return SystemAuthUserApi.super.getByUnionid(appid, unionid);
+    public AuthUser getByUnionid(WechatUserQueryParameter parameter) {
+        return SystemAuthUserApi.super.getByUnionid(parameter);
     }
 }

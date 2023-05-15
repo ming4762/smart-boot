@@ -5,6 +5,7 @@ import com.smart.commons.core.dto.auth.UserRolePermission;
 import com.smart.module.api.system.SystemAuthUserApi;
 import com.smart.module.api.system.constants.SystemApiUrlConstants;
 import com.smart.module.api.system.dto.AuthUser;
+import com.smart.module.api.system.parameter.WechatUserQueryParameter;
 import lombok.NonNull;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.lang.Nullable;
@@ -53,22 +54,20 @@ public interface RemoteSystemAuthUserApi extends SystemAuthUserApi {
     /**
      * 通过openid获取用户信息
      *
-     * @param appid  appid
-     * @param openid openid
+     * @param parameter 参数
      * @return AuthUser
      */
     @Override
     @PostMapping(SystemApiUrlConstants.WECHAT_GET_BY_APP_OPENID)
-    AuthUser getByAppOpenid(String appid, String openid);
+    AuthUser getByAppOpenid(WechatUserQueryParameter parameter);
 
     /**
      * 通过unionid获取用户信息
      *
-     * @param appid   appid
-     * @param unionid unionid
+     * @param parameter 参数
      * @return AuthUser
      */
     @Override
     @PostMapping(SystemApiUrlConstants.WECHAT_GET_BY_APP_UNIONID)
-    AuthUser getByUnionid(String appid, String unionid);
+    AuthUser getByUnionid(WechatUserQueryParameter parameter);
 }
