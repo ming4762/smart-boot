@@ -24,6 +24,7 @@ export default {
       privateKey: '私钥',
       region: '区域',
       url: 'URL',
+      useHttps: '启用https',
     },
     validate: {
       storageCode: '请输入存储器编码',

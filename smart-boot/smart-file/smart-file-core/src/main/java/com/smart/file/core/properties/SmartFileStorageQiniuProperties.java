@@ -24,4 +24,9 @@ public class SmartFileStorageQiniuProperties {
     private String region;
 
     private String url;
+
+    /**
+     * 是否使用https
+     */
+    private Boolean useHttps;
 }

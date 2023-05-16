@@ -24,6 +24,7 @@ export default {
       privateKey: 'Private key',
       region: 'Region',
       url: 'URL',
+      useHttps: 'Use https',
     },
     validate: {
       storageCode: 'Please enter storage code',

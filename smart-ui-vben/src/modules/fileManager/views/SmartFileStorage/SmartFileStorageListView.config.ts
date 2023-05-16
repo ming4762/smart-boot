@@ -396,5 +396,13 @@ const getQiniuFormSchemas = (t: Function): FormSchema[] => {
       },
       required: ({ model }) => model.storageType === 'QINIU',
     },
+    {
+      field: 'storageConfig.QINIU.useHttps',
+      component: 'Switch',
+      label: t('smart.file.storage.title.useHttps'),
+      show: ({ model }) => {
+        return model.storageType === 'QINIU'
+      },
+    },
   ]
 }

@@ -135,7 +135,7 @@ public class FileStorageQiniuServiceImpl implements QiniuService {
     @SneakyThrows(QiniuException.class)
     public String getObjectUrl(FileStorageGetParameter parameter, Duration expiry) {
         QiniuClientCache clientCache = this.getClientCache(parameter.getStorageProperties());
-        DownloadUrl downloadUrl = new DownloadUrl(clientCache.getProperties().getUrl(), false, parameter.getFileStorageKey());
+        DownloadUrl downloadUrl = new DownloadUrl(clientCache.getProperties().getUrl(), Boolean.TRUE.equals(clientCache.getProperties().getUseHttps()), parameter.getFileStorageKey());
         long deadline = System.currentTimeMillis() / 1000 + expiry.getSeconds();
         return downloadUrl.buildURL(clientCache.getAuth(), deadline);
     }
