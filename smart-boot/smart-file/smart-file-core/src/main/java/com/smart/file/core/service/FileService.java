@@ -92,4 +92,11 @@ public interface FileService {
         downloadResult.setInputStream(null);
         return downloadResult;
     }
+
+    /**
+     * 获取文件的访问地址
+     * @param idList ID 列表
+     * @return 访问地址列表
+     */
+    List<String> listAddress(List<Long> idList);
 }

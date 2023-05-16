@@ -152,7 +152,7 @@ public class DefaultFileServiceImpl implements FileService, ApplicationContextAw
                             FileStorageDeleteParameter.builder()
                                     .storageProperties(fileStorage.getStorageConfig())
                                     .storageType(fileStorage.getStorageType())
-                                    .fileStoreKeyList(list.stream().map(SmartFilePO::getStorageStoreKey).collect(Collectors.toList()))
+                                    .fileStoreKeyList(list.stream().map(SmartFilePO::getStorageStoreKey).toList())
                                     .build()
                     );
                 });
@@ -195,6 +195,48 @@ public class DefaultFileServiceImpl implements FileService, ApplicationContextAw
         BeanUtils.copyProperties(sysFileData, result);
         result.setInputStream(inputStream);
         return result;
+    }
+
+    /**
+     * 获取文件的访问地址
+     *
+     * @param idList ID 列表
+     * @return 访问地址列表
+     */
+    @Override
+    public List<String> listAddress(List<Long> idList) {
+        if (CollectionUtils.isEmpty(idList)) {
+            return Collections.emptyList();
+        }
+        // 查询文件信息
+        List<SmartFilePO> fileList = this.sysFileService.listByIds(idList);
+        if (CollectionUtils.isEmpty(fileList)) {
+            throw new SmartFileException("获取文件信息失败，文件ID：" + idList);
+        }
+        // 获取文件存储器
+        Set<Long> fileStorageIds = fileList.stream()
+                .map(SmartFilePO::getFileStorageId)
+                .collect(Collectors.toSet());
+        List<SmartFileStoragePO> fileStorageList = this.smartFileStorageService.listByIds(fileStorageIds);
+        if (CollectionUtils.isEmpty(fileStorageList) || fileStorageIds.size() != fileStorageList.size()) {
+            throw new SmartFileException("获取文件存储器信息失败，文件存储器ID：" + fileStorageIds);
+        }
+        Map<Long, SmartFileStoragePO> fileStorageMap = fileStorageList.stream().collect(Collectors.toMap(SmartFileStoragePO::getId, item -> item));
+        return fileList.stream()
+                .map(item -> {
+                    SmartFileStoragePO fileStorage = fileStorageMap.get(item.getFileStorageId());
+                    if (fileStorage == null) {
+                        throw new SmartFileException("获取文件存储器失败，id：" + item.getFileStorageId());
+                    }
+                    FileStorageService fileStorageService = this.getFileStorageService(fileStorage.getStorageType());
+                    return fileStorageService.getAddress(
+                            FileStorageGetParameter.builder()
+                                    .storageType(fileStorage.getStorageType())
+                                    .fileStorageKey(fileStorage.getStorageCode())
+                                    .storageProperties(fileStorage.getStorageConfig())
+                                    .build()
+                    );
+                }).toList();
     }
 
     protected FileHandlerResult saveFile(@NonNull SysFileBO file) {
