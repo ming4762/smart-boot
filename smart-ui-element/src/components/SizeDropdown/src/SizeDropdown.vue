@@ -12,7 +12,7 @@ const { getPrefixCls } = useDesign()
 const prefixCls = getPrefixCls('size-dropdown')
 
 defineProps({
-  color: propTypes.string.def('')
+  color: propTypes.string.def(''),
 })
 
 const { t } = useI18n()

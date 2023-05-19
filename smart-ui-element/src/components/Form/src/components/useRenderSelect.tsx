@@ -38,20 +38,19 @@ export const useRenderSelect = (slots: Slots) => {
       <ElOption
         {...other}
         label={labelAlias ? option[labelAlias] : label}
-        value={valueAlias ? option[valueAlias] : value}
-      >
+        value={valueAlias ? option[valueAlias] : value}>
         {{
           default: () =>
             // option 插槽名规则，{field}-option
             item?.componentProps?.optionsSlot
               ? getSlot(slots, `${item.field}-option`, { item: option })
-              : undefined
+              : undefined,
         }}
       </ElOption>
     )
   }
 
   return {
-    renderSelectOptions
+    renderSelectOptions,
   }
 }

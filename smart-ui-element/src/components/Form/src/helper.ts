@@ -18,7 +18,7 @@ export const setTextPlaceholder = (schema: FormSchema): PlaceholderMoel => {
   const selectMap = ['Select', 'TimePicker', 'DatePicker', 'TimeSelect', 'TimeSelect']
   if (textMap.includes(schema?.component as string)) {
     return {
-      placeholder: t('common.inputText')
+      placeholder: t('common.inputText'),
     }
   }
   if (selectMap.includes(schema?.component as string)) {
@@ -26,17 +26,17 @@ export const setTextPlaceholder = (schema: FormSchema): PlaceholderMoel => {
     const twoTextMap = ['datetimerange', 'daterange', 'monthrange', 'datetimerange', 'daterange']
     if (
       twoTextMap.includes(
-        (schema?.componentProps?.type || schema?.componentProps?.isRange) as string
+        (schema?.componentProps?.type || schema?.componentProps?.isRange) as string,
       )
     ) {
       return {
         startPlaceholder: t('common.startTimeText'),
         endPlaceholder: t('common.endTimeText'),
-        rangeSeparator: '-'
+        rangeSeparator: '-',
       }
     } else {
       return {
-        placeholder: t('common.selectText')
+        placeholder: t('common.selectText'),
       }
     }
   }
@@ -59,9 +59,9 @@ export const setGridProp = (col: ColProps = {}): ColProps => {
           sm: 12,
           md: 12,
           lg: 12,
-          xl: 12
+          xl: 12,
         }),
-    ...col
+    ...col,
   }
   return colProps
 }
@@ -77,7 +77,7 @@ export const setComponentProps = (item: FormSchema): Recordable => {
     ? { ...item.componentProps }
     : {
         clearable: true,
-        ...item.componentProps
+        ...item.componentProps,
       }
   // 需要删除额外的属性
   delete componentProps?.slots
@@ -93,7 +93,7 @@ export const setComponentProps = (item: FormSchema): Recordable => {
 export const setItemComponentSlots = (
   slots: Slots,
   slotsProps: Recordable = {},
-  field: string
+  field: string,
 ): Recordable => {
   const slotObj: Recordable = {}
   for (const key in slotsProps) {

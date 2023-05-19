@@ -14,7 +14,7 @@ import {
   getProjectApi,
   getDynamicApi,
   getTeamApi,
-  getRadarApi
+  getRadarApi,
 } from '@/api/dashboard/workplace'
 import type { WorkplaceTotal, Project, Dynamic, Team } from '@/api/dashboard/workplace/types'
 import { set } from 'lodash-es'
@@ -25,7 +25,7 @@ const loading = ref(true)
 let totalSate = reactive<WorkplaceTotal>({
   project: 0,
   access: 0,
-  todo: 0
+  todo: 0,
 })
 
 const getCount = async () => {
@@ -77,9 +77,9 @@ const getRadar = async () => {
       res.data.map((v) => {
         return {
           name: t(v.name),
-          max: v.max
+          max: v.max,
         }
-      })
+      }),
     )
     set(radarOptionData, 'series', [
       {
@@ -88,14 +88,14 @@ const getRadar = async () => {
         data: [
           {
             value: res.data.map((v) => v.personal),
-            name: t('workplace.personal')
+            name: t('workplace.personal'),
           },
           {
             value: res.data.map((v) => v.team),
-            name: t('workplace.team')
-          }
-        ]
-      }
+            name: t('workplace.team'),
+          },
+        ],
+      },
     ])
   }
 }
@@ -120,8 +120,7 @@ const { t } = useI18n()
               <img
                 src="@/assets/imgs/avatar.jpg"
                 alt=""
-                class="w-70px h-70px rounded-[50%] mr-20px"
-              />
+                class="w-70px h-70px rounded-[50%] mr-20px" />
               <div>
                 <div class="text-20px text-700">
                   {{ t('workplace.goodMorning') }}，Archer，{{ t('workplace.happyDay') }}
@@ -140,8 +139,7 @@ const { t } = useI18n()
                   class="text-20px"
                   :start-val="0"
                   :end-val="totalSate.project"
-                  :duration="2600"
-                />
+                  :duration="2600" />
               </div>
               <ElDivider direction="vertical" />
               <div class="px-8px text-right">
@@ -150,8 +148,7 @@ const { t } = useI18n()
                   class="text-20px"
                   :start-val="0"
                   :end-val="totalSate.todo"
-                  :duration="2600"
-                />
+                  :duration="2600" />
               </div>
               <ElDivider direction="vertical" border-style="dashed" />
               <div class="px-8px text-right">
@@ -160,8 +157,7 @@ const { t } = useI18n()
                   class="text-20px"
                   :start-val="0"
                   :end-val="totalSate.access"
-                  :duration="2600"
-                />
+                  :duration="2600" />
               </div>
             </div>
           </ElCol>
@@ -188,8 +184,7 @@ const { t } = useI18n()
               :lg="8"
               :md="12"
               :sm="24"
-              :xs="24"
-            >
+              :xs="24">
               <ElCard shadow="hover">
                 <div class="flex items-center">
                   <Icon :icon="item.icon" :size="25" class="mr-10px" />
@@ -219,8 +214,7 @@ const { t } = useI18n()
               <img
                 src="@/assets/imgs/avatar.jpg"
                 alt=""
-                class="w-35px h-35px rounded-[50%] mr-20px"
-              />
+                class="w-35px h-35px rounded-[50%] mr-20px" />
               <div>
                 <div class="text-14px">
                   <Highlight :keys="item.keys.map((v) => t(v))">
@@ -251,8 +245,7 @@ const { t } = useI18n()
             :md="12"
             :sm="24"
             :xs="24"
-            class="mb-10px"
-          >
+            class="mb-10px">
             <ElLink type="default" :underline="false">
               {{ t('workplace.operation') }}{{ item }}
             </ElLink>

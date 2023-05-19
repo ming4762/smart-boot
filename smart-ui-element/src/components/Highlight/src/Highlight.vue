@@ -8,9 +8,9 @@ export default defineComponent({
     tag: propTypes.string.def('span'),
     keys: {
       type: Array as PropType<string[]>,
-      default: () => []
+      default: () => [],
     },
-    color: propTypes.string.def('var(--el-color-primary)')
+    color: propTypes.string.def('var(--el-color-primary)'),
   },
   emits: ['click'],
   setup(props, { emit, slots }) {
@@ -24,10 +24,10 @@ export default defineComponent({
             },
             style: {
               color: props.color,
-              cursor: 'pointer'
-            }
+              cursor: 'pointer',
+            },
           },
-          key
+          key,
         )
       })
     })
@@ -60,6 +60,6 @@ export default defineComponent({
     }
 
     return () => renderText()
-  }
+  },
 })
 </script>

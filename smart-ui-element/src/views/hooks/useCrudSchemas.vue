@@ -20,8 +20,8 @@ const { register, tableObject, methods } = useTable<TableData>({
   delListApi: delTableListApi,
   response: {
     list: 'list',
-    total: 'total'
-  }
+    total: 'total',
+  },
 })
 
 const { getList, setSearchParams } = methods
@@ -36,30 +36,30 @@ const crudSchemas = reactive<CrudSchema[]>([
     label: t('tableDemo.index'),
     type: 'index',
     form: {
-      show: false
+      show: false,
     },
     detail: {
-      show: false
-    }
+      show: false,
+    },
   },
   {
     field: 'title',
     label: t('tableDemo.title'),
     search: {
-      show: true
+      show: true,
     },
     form: {
       colProps: {
-        span: 24
-      }
+        span: 24,
+      },
     },
     detail: {
-      span: 24
-    }
+      span: 24,
+    },
   },
   {
     field: 'author',
-    label: t('tableDemo.author')
+    label: t('tableDemo.author'),
   },
   {
     field: 'display_time',
@@ -68,9 +68,9 @@ const crudSchemas = reactive<CrudSchema[]>([
       component: 'DatePicker',
       componentProps: {
         type: 'datetime',
-        valueFormat: 'YYYY-MM-DD HH:mm:ss'
-      }
-    }
+        valueFormat: 'YYYY-MM-DD HH:mm:ss',
+      },
+    },
   },
   {
     field: 'importance',
@@ -79,22 +79,22 @@ const crudSchemas = reactive<CrudSchema[]>([
       return h(
         ElTag,
         {
-          type: cellValue === 1 ? 'success' : cellValue === 2 ? 'warning' : 'danger'
+          type: cellValue === 1 ? 'success' : cellValue === 2 ? 'warning' : 'danger',
         },
         () =>
           cellValue === 1
             ? t('tableDemo.important')
             : cellValue === 2
             ? t('tableDemo.good')
-            : t('tableDemo.commonly')
+            : t('tableDemo.commonly'),
       )
     },
     search: {
       show: true,
       component: 'Select',
       componentProps: {
-        options: dictStore.getDictObj.importance
-      }
+        options: dictStore.getDictObj.importance,
+      },
     },
     form: {
       component: 'Select',
@@ -102,19 +102,19 @@ const crudSchemas = reactive<CrudSchema[]>([
         options: [
           {
             label: '重要',
-            value: 3
+            value: 3,
           },
           {
             label: '良好',
-            value: 2
+            value: 2,
           },
           {
             label: '一般',
-            value: 1
-          }
-        ]
-      }
-    }
+            value: 1,
+          },
+        ],
+      },
+    },
   },
   {
     field: 'importance2',
@@ -122,8 +122,8 @@ const crudSchemas = reactive<CrudSchema[]>([
     search: {
       show: true,
       component: 'Select',
-      dictName: 'importance'
-    }
+      dictName: 'importance',
+    },
   },
   {
     field: 'importance3',
@@ -134,44 +134,44 @@ const crudSchemas = reactive<CrudSchema[]>([
       api: async () => {
         const res = await getDictOneApi()
         return res.data
-      }
-    }
+      },
+    },
   },
   {
     field: 'pageviews',
     label: t('tableDemo.pageviews'),
     form: {
       component: 'InputNumber',
-      value: 0
-    }
+      value: 0,
+    },
   },
   {
     field: 'content',
     label: t('exampleDemo.content'),
     table: {
-      show: false
+      show: false,
     },
     form: {
       component: 'Editor',
       colProps: {
-        span: 24
-      }
+        span: 24,
+      },
     },
     detail: {
-      span: 24
-    }
+      span: 24,
+    },
   },
   {
     field: 'action',
     width: '260px',
     label: t('tableDemo.action'),
     form: {
-      show: false
+      show: false,
     },
     detail: {
-      show: false
-    }
-  }
+      show: false,
+    },
+  },
 ])
 
 const { allSchemas } = useCrudSchemas(crudSchemas)
@@ -185,7 +185,7 @@ const delData = async (row: TableData | null, multiple: boolean) => {
   delLoading.value = true
   await delList(
     multiple ? selections.map((v) => v.id) : [tableObject.currentRow?.id as string],
-    multiple
+    multiple,
   ).finally(() => {
     delLoading.value = false
   })
@@ -209,10 +209,9 @@ const delData = async (row: TableData | null, multiple: boolean) => {
       :data="tableObject.tableList"
       :loading="tableObject.loading"
       :pagination="{
-        total: tableObject.total
+        total: tableObject.total,
       }"
-      @register="register"
-    >
+      @register="register">
       <template #action="{ row }">
         <ElButton type="danger" @click="delData(row, false)">
           {{ t('exampleDemo.del') }}

@@ -50,19 +50,19 @@ export const useTable = <T = any>(config?: UseTableConfig<T>) => {
     tableList: [],
     // AxiosConfig 配置
     params: {
-      ...(config?.defaultParams || {})
+      ...(config?.defaultParams || {}),
     },
     // 加载中
     loading: true,
     // 当前行的数据
-    currentRow: null
+    currentRow: null,
   })
 
   const paramsObj = computed(() => {
     return {
       ...tableObject.params,
       pageSize: tableObject.pageSize,
-      pageIndex: tableObject.currentPage
+      pageIndex: tableObject.currentPage,
     }
   })
 
@@ -70,7 +70,7 @@ export const useTable = <T = any>(config?: UseTableConfig<T>) => {
     () => tableObject.currentPage,
     () => {
       methods.getList()
-    }
+    },
   )
 
   watch(
@@ -83,7 +83,7 @@ export const useTable = <T = any>(config?: UseTableConfig<T>) => {
         tableObject.currentPage = 1
         methods.getList()
       }
-    }
+    },
   )
 
   // Table实例
@@ -153,7 +153,7 @@ export const useTable = <T = any>(config?: UseTableConfig<T>) => {
       tableObject.params = Object.assign(tableObject.params, {
         pageSize: tableObject.pageSize,
         pageIndex: tableObject.currentPage,
-        ...data
+        ...data,
       })
       methods.getList()
     },
@@ -175,14 +175,14 @@ export const useTable = <T = any>(config?: UseTableConfig<T>) => {
         ElMessageBox.confirm(t('common.delMessage'), t('common.delWarning'), {
           confirmButtonText: t('common.delOk'),
           cancelButtonText: t('common.delCancel'),
-          type: 'warning'
+          type: 'warning',
         }).then(async () => {
           await delData(ids)
         })
       } else {
         await delData(ids)
       }
-    }
+    },
   }
 
   config?.props && methods.setProps(config.props)
@@ -191,6 +191,6 @@ export const useTable = <T = any>(config?: UseTableConfig<T>) => {
     register,
     elTableRef,
     tableObject,
-    methods
+    methods,
   }
 }

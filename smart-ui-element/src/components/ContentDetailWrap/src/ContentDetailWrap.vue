@@ -13,7 +13,7 @@ const prefixCls = getPrefixCls('content-detail-wrap')
 
 defineProps({
   title: propTypes.string.def(''),
-  message: propTypes.string.def('')
+  message: propTypes.string.def(''),
 })
 const emit = defineEmits(['back'])
 const offset = ref(85)
@@ -29,9 +29,8 @@ onMounted(() => {
       <div
         :class="[
           `${prefixCls}-header`,
-          'flex border-bottom-1 h-50px items-center text-center bg-white pr-10px'
-        ]"
-      >
+          'flex border-bottom-1 h-50px items-center text-center bg-white pr-10px',
+        ]">
         <div :class="[`${prefixCls}-header__back`, 'flex pl-10px pr-10px ']">
           <el-button @click="emit('back')">
             <Icon icon="ep:arrow-left" class="mr-5px" />

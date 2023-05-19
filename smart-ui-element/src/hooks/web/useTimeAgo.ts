@@ -17,7 +17,7 @@ const TIME_AGO_MESSAGE_MAP: {
     week: (n, past) => (n === 1 ? (past ? '上周' : '下周') : `${n} 周`),
     hour: (n) => `${n} 小时`,
     minute: (n) => `${n} 分钟`,
-    second: (n) => `${n} 秒`
+    second: (n) => `${n} 秒`,
   },
   en: {
     justNow: '刚刚',
@@ -33,8 +33,8 @@ const TIME_AGO_MESSAGE_MAP: {
       n === 1 ? (past ? 'last week' : 'next week') : `${n} week${n > 1 ? 's' : ''}`,
     hour: (n) => `${n} hour${n > 1 ? 's' : ''}`,
     minute: (n) => `${n} minute${n > 1 ? 's' : ''}`,
-    second: (n) => `${n} second${n > 1 ? 's' : ''}`
-  }
+    second: (n) => `${n} second${n > 1 ? 's' : ''}`,
+  },
 }
 
 export const useTimeAgo = (time: Date | number | string) => {
@@ -43,7 +43,7 @@ export const useTimeAgo = (time: Date | number | string) => {
   const currentLocale = computed(() => localeStore.getCurrentLocale)
 
   const timeAgo = useTimeAgoCore(time, {
-    messages: TIME_AGO_MESSAGE_MAP[unref(currentLocale).lang]
+    messages: TIME_AGO_MESSAGE_MAP[unref(currentLocale).lang],
   })
 
   return timeAgo

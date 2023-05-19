@@ -8,7 +8,7 @@ import { pathResolve } from '@/utils/routerHelper'
 
 export const useRenderMenuItem = (
   // allRouters: AppRouteRecordRaw[] = [],
-  menuMode: 'vertical' | 'horizontal'
+  menuMode: 'vertical' | 'horizontal',
 ) => {
   const renderMenuItem = (routers: AppRouteRecordRaw[], parentPath = '/') => {
     return routers.map((v) => {
@@ -27,7 +27,7 @@ export const useRenderMenuItem = (
           return (
             <ElMenuItem index={onlyOneChild ? pathResolve(fullPath, onlyOneChild.path) : fullPath}>
               {{
-                default: () => renderMenuTitle(onlyOneChild ? onlyOneChild?.meta : meta)
+                default: () => renderMenuTitle(onlyOneChild ? onlyOneChild?.meta : meta),
               }}
             </ElMenuItem>
           )
@@ -40,11 +40,10 @@ export const useRenderMenuItem = (
               index={fullPath}
               popperClass={
                 menuMode === 'vertical' ? `${preFixCls}--vertical` : `${preFixCls}--horizontal`
-              }
-            >
+              }>
               {{
                 title: () => renderMenuTitle(meta),
-                default: () => renderMenuItem(v.children!, fullPath)
+                default: () => renderMenuItem(v.children!, fullPath),
               }}
             </ElSubMenu>
           )
@@ -54,6 +53,6 @@ export const useRenderMenuItem = (
   }
 
   return {
-    renderMenuItem
+    renderMenuItem,
   }
 }

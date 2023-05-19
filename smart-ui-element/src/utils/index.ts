@@ -80,7 +80,7 @@ export function formatTime(time: Date | number | string, fmt: string) {
       'm+': date.getMinutes(),
       's+': date.getSeconds(),
       'q+': Math.floor((date.getMonth() + 3) / 3),
-      S: date.getMilliseconds()
+      S: date.getMilliseconds(),
     }
     if (/(y+)/.test(fmt)) {
       fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length))
@@ -89,7 +89,7 @@ export function formatTime(time: Date | number | string, fmt: string) {
       if (new RegExp('(' + k + ')').test(fmt)) {
         fmt = fmt.replace(
           RegExp.$1,
-          RegExp.$1.length === 1 ? o[k] : ('00' + o[k]).substr(('' + o[k]).length)
+          RegExp.$1.length === 1 ? o[k] : ('00' + o[k]).substr(('' + o[k]).length),
         )
       }
     }

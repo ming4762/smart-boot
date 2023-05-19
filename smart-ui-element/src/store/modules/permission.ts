@@ -16,7 +16,7 @@ export const usePermissionStore = defineStore('permission', {
     routers: [],
     addRouters: [],
     isAddRouters: false,
-    menuTabRouters: []
+    menuTabRouters: [],
   }),
   getters: {
     getRouters(): AppRouteRecordRaw[] {
@@ -30,12 +30,12 @@ export const usePermissionStore = defineStore('permission', {
     },
     getMenuTabRouters(): AppRouteRecordRaw[] {
       return this.menuTabRouters
-    }
+    },
   },
   actions: {
     generateRoutes(
       type: 'admin' | 'test' | 'none',
-      routers?: AppCustomRouteRecordRaw[] | string[]
+      routers?: AppCustomRouteRecordRaw[] | string[],
     ): Promise<unknown> {
       return new Promise<void>((resolve) => {
         let routerMap: AppRouteRecordRaw[] = []
@@ -57,9 +57,9 @@ export const usePermissionStore = defineStore('permission', {
             name: '404Page',
             meta: {
               hidden: true,
-              breadcrumb: false
-            }
-          }
+              breadcrumb: false,
+            },
+          },
         ])
         // 渲染菜单的所有路由
         this.routers = cloneDeep(constantRouterMap).concat(routerMap)
@@ -71,8 +71,8 @@ export const usePermissionStore = defineStore('permission', {
     },
     setMenuTabRouters(routers: AppRouteRecordRaw[]): void {
       this.menuTabRouters = routers
-    }
-  }
+    },
+  },
 })
 
 export const usePermissionStoreWithOut = () => {

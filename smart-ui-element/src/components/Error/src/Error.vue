@@ -20,22 +20,22 @@ const errorMap: {
   '404': {
     url: pageError,
     message: t('error.pageError'),
-    buttonText: t('error.returnToHome')
+    buttonText: t('error.returnToHome'),
   },
   '500': {
     url: networkError,
     message: t('error.networkError'),
-    buttonText: t('error.returnToHome')
+    buttonText: t('error.returnToHome'),
   },
   '403': {
     url: noPermission,
     message: t('error.noPermission'),
-    buttonText: t('error.returnToHome')
-  }
+    buttonText: t('error.returnToHome'),
+  },
 }
 
 const props = defineProps({
-  type: propTypes.string.validate((v: string) => ['404', '500', '403'].includes(v)).def('404')
+  type: propTypes.string.validate((v: string) => ['404', '500', '403'].includes(v)).def('404'),
 })
 
 const emit = defineEmits(['errorClick'])

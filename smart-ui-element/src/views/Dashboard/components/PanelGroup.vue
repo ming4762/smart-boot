@@ -19,7 +19,7 @@ let totalState = reactive<AnalysisTotalTypes>({
   users: 0,
   messages: 0,
   moneys: 0,
-  shoppings: 0
+  shoppings: 0,
 })
 
 const getCount = async () => {
@@ -43,21 +43,19 @@ getCount()
             <div :class="`${prefixCls}__item flex justify-between`">
               <div>
                 <div
-                  :class="`${prefixCls}__item--icon ${prefixCls}__item--peoples p-16px inline-block rounded-6px`"
-                >
+                  :class="`${prefixCls}__item--icon ${prefixCls}__item--peoples p-16px inline-block rounded-6px`">
                   <Icon icon="svg-icon:peoples" :size="40" />
                 </div>
               </div>
               <div class="flex flex-col justify-between">
-                <div :class="`${prefixCls}__item--text text-16px text-gray-500 text-right`">{{
-                  t('analysis.newUser')
-                }}</div>
+                <div :class="`${prefixCls}__item--text text-16px text-gray-500 text-right`">
+                  {{ t('analysis.newUser') }}
+                </div>
                 <CountTo
                   class="text-20px font-700 text-right"
                   :start-val="0"
                   :end-val="102400"
-                  :duration="2600"
-                />
+                  :duration="2600" />
               </div>
             </div>
           </template>
@@ -72,21 +70,19 @@ getCount()
             <div :class="`${prefixCls}__item flex justify-between`">
               <div>
                 <div
-                  :class="`${prefixCls}__item--icon ${prefixCls}__item--message p-16px inline-block rounded-6px`"
-                >
+                  :class="`${prefixCls}__item--icon ${prefixCls}__item--message p-16px inline-block rounded-6px`">
                   <Icon icon="svg-icon:message" :size="40" />
                 </div>
               </div>
               <div class="flex flex-col justify-between">
-                <div :class="`${prefixCls}__item--text text-16px text-gray-500 text-right`">{{
-                  t('analysis.unreadInformation')
-                }}</div>
+                <div :class="`${prefixCls}__item--text text-16px text-gray-500 text-right`">
+                  {{ t('analysis.unreadInformation') }}
+                </div>
                 <CountTo
                   class="text-20px font-700 text-right"
                   :start-val="0"
                   :end-val="81212"
-                  :duration="2600"
-                />
+                  :duration="2600" />
               </div>
             </div>
           </template>
@@ -101,21 +97,19 @@ getCount()
             <div :class="`${prefixCls}__item flex justify-between`">
               <div>
                 <div
-                  :class="`${prefixCls}__item--icon ${prefixCls}__item--money p-16px inline-block rounded-6px`"
-                >
+                  :class="`${prefixCls}__item--icon ${prefixCls}__item--money p-16px inline-block rounded-6px`">
                   <Icon icon="svg-icon:money" :size="40" />
                 </div>
               </div>
               <div class="flex flex-col justify-between">
-                <div :class="`${prefixCls}__item--text text-16px text-gray-500 text-right`">{{
-                  t('analysis.transactionAmount')
-                }}</div>
+                <div :class="`${prefixCls}__item--text text-16px text-gray-500 text-right`">
+                  {{ t('analysis.transactionAmount') }}
+                </div>
                 <CountTo
                   class="text-20px font-700 text-right"
                   :start-val="0"
                   :end-val="9280"
-                  :duration="2600"
-                />
+                  :duration="2600" />
               </div>
             </div>
           </template>
@@ -130,21 +124,19 @@ getCount()
             <div :class="`${prefixCls}__item flex justify-between`">
               <div>
                 <div
-                  :class="`${prefixCls}__item--icon ${prefixCls}__item--shopping p-16px inline-block rounded-6px`"
-                >
+                  :class="`${prefixCls}__item--icon ${prefixCls}__item--shopping p-16px inline-block rounded-6px`">
                   <Icon icon="svg-icon:shopping" :size="40" />
                 </div>
               </div>
               <div class="flex flex-col justify-between">
-                <div :class="`${prefixCls}__item--text text-16px text-gray-500 text-right`">{{
-                  t('analysis.totalShopping')
-                }}</div>
+                <div :class="`${prefixCls}__item--text text-16px text-gray-500 text-right`">
+                  {{ t('analysis.totalShopping') }}
+                </div>
                 <CountTo
                   class="text-20px font-700 text-right"
                   :start-val="0"
                   :end-val="13600"
-                  :duration="2600"
-                />
+                  :duration="2600" />
               </div>
             </div>
           </template>

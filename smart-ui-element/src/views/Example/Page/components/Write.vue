@@ -13,8 +13,8 @@ const { required } = useValidator()
 const props = defineProps({
   currentRow: {
     type: Object as PropType<Nullable<TableData>>,
-    default: () => null
-  }
+    default: () => null,
+  },
 })
 
 const { t } = useI18n()
@@ -25,19 +25,19 @@ const schema = reactive<FormSchema[]>([
     label: t('exampleDemo.title'),
     component: 'Input',
     formItemProps: {
-      rules: [required()]
+      rules: [required()],
     },
     colProps: {
-      span: 24
-    }
+      span: 24,
+    },
   },
   {
     field: 'author',
     label: t('exampleDemo.author'),
     component: 'Input',
     formItemProps: {
-      rules: [required()]
-    }
+      rules: [required()],
+    },
   },
   {
     field: 'display_time',
@@ -45,35 +45,35 @@ const schema = reactive<FormSchema[]>([
     component: 'DatePicker',
     componentProps: {
       type: 'datetime',
-      valueFormat: 'YYYY-MM-DD HH:mm:ss'
+      valueFormat: 'YYYY-MM-DD HH:mm:ss',
     },
     formItemProps: {
-      rules: [required()]
-    }
+      rules: [required()],
+    },
   },
   {
     field: 'importance',
     label: t('exampleDemo.importance'),
     component: 'Select',
     formItemProps: {
-      rules: [required()]
+      rules: [required()],
     },
     componentProps: {
       options: [
         {
           label: '重要',
-          value: 3
+          value: 3,
         },
         {
           label: '良好',
-          value: 2
+          value: 2,
         },
         {
           label: '一般',
-          value: 1
-        }
-      ]
-    }
+          value: 1,
+        },
+      ],
+    },
   },
   {
     field: 'pageviews',
@@ -81,26 +81,26 @@ const schema = reactive<FormSchema[]>([
     component: 'InputNumber',
     value: 0,
     formItemProps: {
-      rules: [required()]
-    }
+      rules: [required()],
+    },
   },
   {
     field: 'content',
     component: 'Editor',
     colProps: {
-      span: 24
+      span: 24,
     },
     componentProps: {
       defaultHtml: '',
       onChange: (edit: IDomEditor) => {
         const { setValues } = methods
         setValues({
-          content: edit.getHtml()
+          content: edit.getHtml(),
         })
-      }
+      },
     },
-    label: t('exampleDemo.content')
-  }
+    label: t('exampleDemo.content'),
+  },
 ])
 
 const rules = reactive({
@@ -109,11 +109,11 @@ const rules = reactive({
   importance: [required()],
   pageviews: [required()],
   display_time: [required()],
-  content: [required()]
+  content: [required()],
 })
 
 const { register, methods, elFormRef } = useForm({
-  schema
+  schema,
 })
 
 watch(
@@ -126,19 +126,19 @@ watch(
       {
         field: 'content',
         path: 'componentProps.defaultHtml',
-        value: currentRow.content
-      }
+        value: currentRow.content,
+      },
     ])
   },
   {
     deep: true,
-    immediate: true
-  }
+    immediate: true,
+  },
 )
 
 defineExpose({
   elFormRef,
-  getFormData: methods.getFormData
+  getFormData: methods.getFormData,
 })
 </script>
 

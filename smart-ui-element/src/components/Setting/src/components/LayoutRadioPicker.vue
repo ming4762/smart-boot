@@ -19,41 +19,37 @@ const layout = computed(() => appStore.getLayout)
         `${prefixCls}__classic`,
         'relative w-56px h-48px cursor-pointer bg-gray-300',
         {
-          'is-acitve': layout === 'classic'
-        }
+          'is-acitve': layout === 'classic',
+        },
       ]"
-      @click="appStore.setLayout('classic')"
-    ></div>
+      @click="appStore.setLayout('classic')"></div>
     <div
       :class="[
         `${prefixCls}__top-left`,
         'relative w-56px h-48px cursor-pointer bg-gray-300',
         {
-          'is-acitve': layout === 'topLeft'
-        }
+          'is-acitve': layout === 'topLeft',
+        },
       ]"
-      @click="appStore.setLayout('topLeft')"
-    ></div>
+      @click="appStore.setLayout('topLeft')"></div>
     <div
       :class="[
         `${prefixCls}__top`,
         'relative w-56px h-48px cursor-pointer bg-gray-300',
         {
-          'is-acitve': layout === 'top'
-        }
+          'is-acitve': layout === 'top',
+        },
       ]"
-      @click="appStore.setLayout('top')"
-    ></div>
+      @click="appStore.setLayout('top')"></div>
     <div
       :class="[
         `${prefixCls}__cut-menu`,
         'relative w-56px h-48px cursor-pointer bg-gray-300',
         {
-          'is-acitve': layout === 'cutMenu'
-        }
+          'is-acitve': layout === 'cutMenu',
+        },
       ]"
-      @click="appStore.setLayout('cutMenu')"
-    >
+      @click="appStore.setLayout('cutMenu')">
       <div class="absolute h-full w-[33%] top-0 left-[10%] bg-gray-200"></div>
     </div>
   </div>

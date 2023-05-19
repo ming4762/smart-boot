@@ -94,8 +94,8 @@ export const useAppStore = defineStore('app', {
         // 头部悬停颜色
         topHeaderHoverColor: '#f6f6f6',
         // 头部边框颜色
-        topToolBorderColor: '#eee'
-      }
+        topToolBorderColor: '#eee',
+      },
     }
   },
   getters: {
@@ -173,7 +173,7 @@ export const useAppStore = defineStore('app', {
     },
     getFooter(): boolean {
       return this.footer
-    }
+    },
   },
   actions: {
     setBreadcrumb(breadcrumb: boolean) {
@@ -266,8 +266,8 @@ export const useAppStore = defineStore('app', {
     },
     setFooter(footer: boolean) {
       this.footer = footer
-    }
-  }
+    },
+  },
 })
 
 export const useAppStoreWithOut = () => {

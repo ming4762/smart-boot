@@ -23,7 +23,7 @@ const config: {
     pro: '',
 
     // 打包测试环境接口前缀
-    test: ''
+    test: '',
   },
 
   /**
@@ -40,7 +40,7 @@ const config: {
    * 默认接口请求类型
    * 可选值：application/x-www-form-urlencoded multipart/form-data
    */
-  default_headers: 'application/json'
+  default_headers: 'application/json',
 }
 
 export { config }

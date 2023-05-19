@@ -52,10 +52,9 @@ const disabledClick = () => {
             :options="{
               color: {
                 dark: '#55D187',
-                light: '#2d8cf0'
-              }
-            }"
-          />
+                light: '#2d8cf0',
+              },
+            }" />
         </ElCard>
       </ElCol>
       <ElCol :xl="6" :lg="6" :md="12" :sm="24" :xs="24">
@@ -92,9 +91,8 @@ const disabledClick = () => {
               logoSize: 0.2,
               borderSize: 0.05,
               borderRadius: 50,
-              bgColor: 'blue'
-            }"
-          />
+              bgColor: 'blue',
+            }" />
         </ElCard>
       </ElCol>
       <ElCol :xl="6" :lg="6" :md="12" :sm="24" :xs="24">

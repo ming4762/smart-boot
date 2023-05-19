@@ -30,15 +30,15 @@ const { t } = useI18n()
 
 const rules = {
   username: [required()],
-  password: [required()]
+  password: [required()],
 }
 
 const schema = reactive<FormSchema[]>([
   {
     field: 'title',
     colProps: {
-      span: 24
-    }
+      span: 24,
+    },
   },
   {
     field: 'username',
@@ -46,11 +46,11 @@ const schema = reactive<FormSchema[]>([
     value: 'admin',
     component: 'Input',
     colProps: {
-      span: 24
+      span: 24,
     },
     componentProps: {
-      placeholder: t('login.usernamePlaceholder')
-    }
+      placeholder: t('login.usernamePlaceholder'),
+    },
   },
   {
     field: 'password',
@@ -58,41 +58,41 @@ const schema = reactive<FormSchema[]>([
     value: 'admin',
     component: 'InputPassword',
     colProps: {
-      span: 24
+      span: 24,
     },
     componentProps: {
       style: {
-        width: '100%'
+        width: '100%',
       },
-      placeholder: t('login.passwordPlaceholder')
-    }
+      placeholder: t('login.passwordPlaceholder'),
+    },
   },
   {
     field: 'tool',
     colProps: {
-      span: 24
-    }
+      span: 24,
+    },
   },
   {
     field: 'login',
     colProps: {
-      span: 24
-    }
+      span: 24,
+    },
   },
   {
     field: 'other',
     component: 'Divider',
     label: t('login.otherLogin'),
     componentProps: {
-      contentPosition: 'center'
-    }
+      contentPosition: 'center',
+    },
   },
   {
     field: 'otherIcon',
     colProps: {
-      span: 24
-    }
-  }
+      span: 24,
+    },
+  },
 ])
 
 const iconSize = 30
@@ -113,8 +113,8 @@ watch(
     redirect.value = route?.query?.redirect as string
   },
   {
-    immediate: true
-  }
+    immediate: true,
+  },
 )
 
 // 登录
@@ -155,7 +155,7 @@ const getRole = async () => {
   const { getFormData } = methods
   const formData = await getFormData<UserType>()
   const params = {
-    roleName: formData.username
+    roleName: formData.username,
   }
   // admin - 模拟后端过滤菜单
   // test - 模拟前端过滤菜单
@@ -192,8 +192,7 @@ const toRegister = () => {
     hide-required-asterisk
     size="large"
     class="dark:(border-1 border-[var(--el-border-color)] border-solid)"
-    @register="register"
-  >
+    @register="register">
     <template #title>
       <h2 class="text-2xl font-bold text-center w-[100%]">{{ t('login.login') }}</h2>
     </template>
@@ -224,26 +223,22 @@ const toRegister = () => {
           icon="ant-design:github-filled"
           :size="iconSize"
           class="cursor-pointer anticon"
-          :color="iconColor"
-        />
+          :color="iconColor" />
         <Icon
           icon="ant-design:wechat-filled"
           :size="iconSize"
           class="cursor-pointer anticon"
-          :color="iconColor"
-        />
+          :color="iconColor" />
         <Icon
           icon="ant-design:alipay-circle-filled"
           :size="iconSize"
           :color="iconColor"
-          class="cursor-pointer anticon"
-        />
+          class="cursor-pointer anticon" />
         <Icon
           icon="ant-design:weibo-circle-filled"
           :size="iconSize"
           :color="iconColor"
-          class="cursor-pointer anticon"
-        />
+          class="cursor-pointer anticon" />
       </div>
     </template>
   </Form>

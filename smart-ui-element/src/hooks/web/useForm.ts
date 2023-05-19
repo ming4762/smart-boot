@@ -82,7 +82,7 @@ export const useForm = (props?: FormProps) => {
     getFormData: async <T = Recordable>(): Promise<T> => {
       const form = await getForm()
       return form?.formModel as T
-    }
+    },
   }
 
   props && methods.setProps(props)
@@ -90,6 +90,6 @@ export const useForm = (props?: FormProps) => {
   return {
     register,
     elFormRef,
-    methods
+    methods,
   }
 }

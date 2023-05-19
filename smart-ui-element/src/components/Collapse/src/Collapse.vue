@@ -9,7 +9,7 @@ const { getPrefixCls } = useDesign()
 const prefixCls = getPrefixCls('collapse')
 
 defineProps({
-  color: propTypes.string.def('')
+  color: propTypes.string.def(''),
 })
 
 const appStore = useAppStore()
@@ -29,7 +29,6 @@ const toggleCollapse = () => {
       :icon="collapse ? 'ant-design:menu-unfold-outlined' : 'ant-design:menu-fold-outlined'"
       :color="color"
       class="cursor-pointer"
-      @click="toggleCollapse"
-    />
+      @click="toggleCollapse" />
   </div>
 </template>

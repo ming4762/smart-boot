@@ -18,10 +18,10 @@ const appStore = useAppStore()
 const props = defineProps({
   options: {
     type: Object as PropType<EChartsOption>,
-    required: true
+    required: true,
   },
   width: propTypes.oneOfType([Number, String]).def(''),
-  height: propTypes.oneOfType([Number, String]).def('500px')
+  height: propTypes.oneOfType([Number, String]).def('500px'),
 })
 
 const isDark = computed(() => appStore.getIsDark)
@@ -34,7 +34,7 @@ const theme = computed(() => {
 
 const options = computed(() => {
   return Object.assign(props.options, {
-    darkMode: unref(theme)
+    darkMode: unref(theme),
   })
 })
 
@@ -50,7 +50,7 @@ const styles = computed(() => {
 
   return {
     width,
-    height
+    height,
   }
 })
 
@@ -69,8 +69,8 @@ watch(
     }
   },
   {
-    deep: true
-  }
+    deep: true,
+  },
 )
 
 const resizeHandler = debounce(() => {

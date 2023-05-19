@@ -18,8 +18,8 @@ export default defineComponent({
   props: {
     menuSelect: {
       type: Function as PropType<(index: string) => void>,
-      default: undefined
-    }
+      default: undefined,
+    },
   },
   setup(props) {
     const appStore = useAppStore()
@@ -42,7 +42,7 @@ export default defineComponent({
     })
 
     const routers = computed(() =>
-      unref(layout) === 'cutMenu' ? permissionStore.getMenuTabRouters : permissionStore.getRouters
+      unref(layout) === 'cutMenu' ? permissionStore.getMenuTabRouters : permissionStore.getRouters,
     )
 
     const collapse = computed(() => appStore.getCollapse)
@@ -90,13 +90,12 @@ export default defineComponent({
           backgroundColor="var(--left-menu-bg-color)"
           textColor="var(--left-menu-text-color)"
           activeTextColor="var(--left-menu-text-active-color)"
-          onSelect={menuSelect}
-        >
+          onSelect={menuSelect}>
           {{
             default: () => {
               const { renderMenuItem } = useRenderMenuItem(unref(menuMode))
               return renderMenuItem(unref(routers))
-            }
+            },
           }}
         </ElMenu>
       )
@@ -110,14 +109,13 @@ export default defineComponent({
           'h-[100%] overflow-hidden flex-col bg-[var(--left-menu-bg-color)]',
           {
             'w-[var(--left-menu-min-width)]': unref(collapse) && unref(layout) !== 'cutMenu',
-            'w-[var(--left-menu-max-width)]': !unref(collapse) && unref(layout) !== 'cutMenu'
-          }
-        ]}
-      >
+            'w-[var(--left-menu-max-width)]': !unref(collapse) && unref(layout) !== 'cutMenu',
+          },
+        ]}>
         {renderMenuWrap()}
       </div>
     )
-  }
+  },
 })
 </script>
 

@@ -13,7 +13,7 @@ export interface TagsViewState {
 export const useTagsViewStore = defineStore('tagsView', {
   state: (): TagsViewState => ({
     visitedViews: [],
-    cachedViews: new Set()
+    cachedViews: new Set(),
   }),
   getters: {
     getVisitedViews(): RouteLocationNormalizedLoaded[] {
@@ -21,7 +21,7 @@ export const useTagsViewStore = defineStore('tagsView', {
     },
     getCachedViews(): string[] {
       return Array.from(this.cachedViews)
-    }
+    },
   },
   actions: {
     // 新增缓存和tag
@@ -35,8 +35,8 @@ export const useTagsViewStore = defineStore('tagsView', {
       if (view.meta?.noTagsView) return
       this.visitedViews.push(
         Object.assign({}, view, {
-          title: view.meta?.title || 'no-name'
-        })
+          title: view.meta?.title || 'no-name',
+        }),
       )
     },
     // 新增缓存
@@ -102,7 +102,7 @@ export const useTagsViewStore = defineStore('tagsView', {
     delLeftViews(view: RouteLocationNormalizedLoaded) {
       const index = findIndex<RouteLocationNormalizedLoaded>(
         this.visitedViews,
-        (v) => v.path === view.path
+        (v) => v.path === view.path,
       )
       if (index > -1) {
         this.visitedViews = this.visitedViews.filter((v, i) => {
@@ -115,7 +115,7 @@ export const useTagsViewStore = defineStore('tagsView', {
     delRightViews(view: RouteLocationNormalizedLoaded) {
       const index = findIndex<RouteLocationNormalizedLoaded>(
         this.visitedViews,
-        (v) => v.path === view.path
+        (v) => v.path === view.path,
       )
       if (index > -1) {
         this.visitedViews = this.visitedViews.filter((v, i) => {
@@ -131,8 +131,8 @@ export const useTagsViewStore = defineStore('tagsView', {
           break
         }
       }
-    }
-  }
+    },
+  },
 })
 
 export const useTagsViewStoreWithOut = () => {

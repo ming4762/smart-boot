@@ -1,9 +1,9 @@
-import request from '@/config/axios'
+import request from '@/config/axios/indexOkd'
 import type {
   AnalysisTotalTypes,
   UserAccessSource,
   WeeklyUserActivity,
-  MonthlySales
+  MonthlySales,
 } from './types'
 
 export const getCountApi = (): Promise<IResponse<AnalysisTotalTypes[]>> => {

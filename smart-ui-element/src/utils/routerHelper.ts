@@ -4,7 +4,7 @@ import type {
   RouteLocationNormalized,
   RouteRecordNormalized,
   RouteMeta,
-  RouteRecordRaw
+  RouteRecordRaw,
 } from 'vue-router'
 import { isUrl } from '@/utils/is'
 import { omit, cloneDeep } from 'lodash-es'
@@ -18,7 +18,7 @@ export const getParentLayout = () => {
   return () =>
     new Promise((resolve) => {
       resolve({
-        name: 'ParentLayout'
+        name: 'ParentLayout',
       })
     })
 }
@@ -32,9 +32,9 @@ export const getRawRoute = (route: RouteLocationNormalized): RouteLocationNormal
       ? matched.map((item) => ({
           meta: item.meta,
           name: item.name,
-          path: item.path
+          path: item.path,
         }))
-      : undefined) as RouteRecordNormalized[]
+      : undefined) as RouteRecordNormalized[],
   }
 }
 
@@ -42,7 +42,7 @@ export const getRawRoute = (route: RouteLocationNormalized): RouteLocationNormal
 export const generateRoutesFn1 = (
   routes: AppRouteRecordRaw[],
   keys: string[],
-  basePath = '/'
+  basePath = '/',
 ): AppRouteRecordRaw[] => {
   const res: AppRouteRecordRaw[] = []
 
@@ -97,7 +97,7 @@ export const generateRoutesFn2 = (routes: AppCustomRouteRecordRaw[]): AppRouteRe
       path: route.path,
       name: route.name,
       redirect: route.redirect,
-      meta: route.meta
+      meta: route.meta,
     }
     if (route.component) {
       const comModule = modules[`../${route.component}.vue`] || modules[`../${route.component}.tsx`]
@@ -161,7 +161,7 @@ const isMultipleRoute = (route: AppRouteRecordRaw) => {
 const promoteRouteLevel = (route: AppRouteRecordRaw) => {
   let router: Router | null = createRouter({
     routes: [route as RouteRecordRaw],
-    history: createWebHashHistory()
+    history: createWebHashHistory(),
   })
 
   const routes = router.getRoutes()
@@ -175,7 +175,7 @@ const promoteRouteLevel = (route: AppRouteRecordRaw) => {
 const addToChildren = (
   routes: RouteRecordNormalized[],
   children: AppRouteRecordRaw[],
-  routeModule: AppRouteRecordRaw
+  routeModule: AppRouteRecordRaw,
 ) => {
   for (let index = 0; index < children.length; index++) {
     const child = children[index]

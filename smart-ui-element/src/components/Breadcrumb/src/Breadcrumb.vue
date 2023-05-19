@@ -71,8 +71,8 @@ export default defineComponent({
         getBreadcrumb()
       },
       {
-        immediate: true
-      }
+        immediate: true,
+      },
     )
 
     return () => (
@@ -82,7 +82,7 @@ export default defineComponent({
         </TransitionGroup>
       </ElBreadcrumb>
     )
-  }
+  },
 })
 </script>
 

@@ -10,7 +10,7 @@ const props = defineProps({
   modelValue: propTypes.bool.def(false),
   title: propTypes.string.def('Dialog'),
   fullscreen: propTypes.bool.def(true),
-  maxHeight: propTypes.oneOfType([String, Number]).def('500px')
+  maxHeight: propTypes.oneOfType([String, Number]).def('500px'),
 })
 
 const getBindValue = computed(() => {
@@ -45,14 +45,14 @@ watch(
     }
   },
   {
-    immediate: true
-  }
+    immediate: true,
+  },
 )
 
 const dialogStyle = computed(() => {
   console.log(unref(dialogHeight))
   return {
-    height: unref(dialogHeight)
+    height: unref(dialogHeight),
   }
 })
 </script>
@@ -64,8 +64,7 @@ const dialogStyle = computed(() => {
     destroy-on-close
     lock-scroll
     draggable
-    :close-on-click-modal="false"
-  >
+    :close-on-click-modal="false">
     <template #header>
       <div class="flex justify-between">
         <slot name="title">
@@ -76,8 +75,7 @@ const dialogStyle = computed(() => {
           class="mr-18px cursor-pointer is-hover mt-2px z-10"
           :icon="isFullscreen ? 'zmdi:fullscreen-exit' : 'zmdi:fullscreen'"
           color="var(--el-color-info)"
-          @click="toggleFull"
-        />
+          @click="toggleFull" />
       </div>
     </template>
 

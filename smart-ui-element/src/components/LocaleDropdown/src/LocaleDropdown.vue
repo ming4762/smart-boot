@@ -11,7 +11,7 @@ const { getPrefixCls } = useDesign()
 const prefixCls = getPrefixCls('locale-dropdown')
 
 defineProps({
-  color: propTypes.string.def('')
+  color: propTypes.string.def(''),
 })
 
 const localeStore = useLocaleStore()
@@ -25,7 +25,7 @@ const setLang = (lang: LocaleType) => {
   // 需要重新加载页面让整个语言多初始化
   window.location.reload()
   localeStore.setCurrentLocale({
-    lang
+    lang,
   })
   const { changeLocale } = useLocale()
   changeLocale(lang)
@@ -39,8 +39,7 @@ const setLang = (lang: LocaleType) => {
       icon="ion:language-sharp"
       class="cursor-pointer"
       :class="$attrs.class"
-      :color="color"
-    />
+      :color="color" />
     <template #dropdown>
       <ElDropdownMenu>
         <ElDropdownItem v-for="item in langMap" :key="item.lang" :command="item.lang">

@@ -40,13 +40,13 @@ export default {
     delOk: '确定',
     delCancel: '取消',
     delNoData: '请选择需要删除的数据',
-    delSuccess: '删除成功'
+    delSuccess: '删除成功',
   },
   error: {
     noPermission: `抱歉，您无权访问此页面。`,
     pageError: '抱歉，您访问的页面不存在。',
     networkError: '抱歉，服务器报告错误。',
-    returnToHome: '返回首页'
+    returnToHome: '返回首页',
   },
   setting: {
     projectSetting: '项目配置',
@@ -77,12 +77,12 @@ export default {
     tagsViewIcon: '标签页图标',
     dynamicRouter: '动态路由',
     reExperienced: '请重新退出登录体验',
-    fixedMenu: '固定菜单'
+    fixedMenu: '固定菜单',
   },
   size: {
     default: '默认',
     large: '大',
-    small: '小'
+    small: '小',
   },
   login: {
     welcome: '欢迎使用本系统',
@@ -99,7 +99,7 @@ export default {
     usernamePlaceholder: '请输入用户名',
     passwordPlaceholder: '请输入密码',
     code: '验证码',
-    codePlaceholder: '请输入验证码'
+    codePlaceholder: '请输入验证码',
   },
   router: {
     login: '登录',
@@ -144,10 +144,10 @@ export default {
     role: '角色管理',
     document: '文档',
     inputPassword: '密码输入框',
-    sticky: '黏性'
+    sticky: '黏性',
   },
   permission: {
-    hasPermission: '请设置操作权限值'
+    hasPermission: '请设置操作权限值',
   },
   analysis: {
     newUser: '新增用户',
@@ -183,7 +183,7 @@ export default {
     thursday: '周四',
     friday: '周五',
     saturday: '周六',
-    sunday: '周日'
+    sunday: '周日',
   },
   workplace: {
     goodMorning: '早安',
@@ -206,7 +206,7 @@ export default {
     dynamic: '动态',
     push: '推送',
     pushCode: 'Archer 推送 代码到 Github',
-    follow: '关注'
+    follow: '关注',
   },
   formDemo: {
     input: '输入框',
@@ -263,13 +263,13 @@ export default {
     set: '设置',
     subitem: '子项',
     formValidation: '表单验证',
-    verifyReset: '验证重置'
+    verifyReset: '验证重置',
   },
   guideDemo: {
     guide: '引导页',
     start: '开始',
     message:
-      '引导页对于一些第一次进入项目的人很有用，你可以简单介绍下项目的功能。引导页基于 intro.js'
+      '引导页对于一些第一次进入项目的人很有用，你可以简单介绍下项目的功能。引导页基于 intro.js',
   },
   iconDemo: {
     icon: '图标',
@@ -278,12 +278,12 @@ export default {
     recommendedUse: '推荐使用',
     recommendeDes:
       'Iconify组件基本包含所有的图标，你可以查询到你想要的任何图标。并且打包只会打包所用到的图标。',
-    accessAddress: '访问地址'
+    accessAddress: '访问地址',
   },
   echartDemo: {
     echart: '图表',
     echartDes:
-      '基于 echarts 二次封装组件，自适应宽度，只需传入 options 与 height 属性即可展示对应的图表。'
+      '基于 echarts 二次封装组件，自适应宽度，只需传入 options 与 height 属性即可展示对应的图表。',
   },
   countToDemo: {
     countTo: '数字动画',
@@ -296,13 +296,13 @@ export default {
     startVal: '开始值',
     start: '开始',
     pause: '暂停',
-    resume: '继续'
+    resume: '继续',
   },
   watermarkDemo: {
     watermark: '水印',
     createdWatermark: '创建水印',
     clearWatermark: '清除水印',
-    resetWatermark: '重置水印'
+    resetWatermark: '重置水印',
   },
   qrcodeDemo: {
     qrcode: '二维码',
@@ -315,21 +315,21 @@ export default {
     invalid: '失效',
     logoConfig: 'logo配置',
     logoStyle: 'logo样式',
-    size: '大小配置'
+    size: '大小配置',
   },
   highlightDemo: {
     highlight: '高亮',
     message: '种一棵树最好的时间是十年前，其次就是现在。',
     keys1: '十年前',
-    keys2: '现在'
+    keys2: '现在',
   },
   infotipDemo: {
     infotip: '信息提示',
     infotipDes: '基于 Highlight 组件二次封装',
-    title: '注意事项'
+    title: '注意事项',
   },
   levelDemo: {
-    menu: '多级菜单缓存'
+    menu: '多级菜单缓存',
   },
   searchDemo: {
     search: '查询',
@@ -345,10 +345,10 @@ export default {
     left: '左',
     center: '中',
     right: '右',
-    dynamicOptions: '动态选项'
+    dynamicOptions: '动态选项',
   },
   stickyDemo: {
-    sticky: '黏性'
+    sticky: '黏性',
   },
   tableDemo: {
     table: '表格',
@@ -376,11 +376,11 @@ export default {
     hiddenExpandedRows: '隐藏展开行',
     changeTitle: '修改标题',
     header: '头部',
-    selectAllNone: '全选/全不选'
+    selectAllNone: '全选/全不选',
   },
   richText: {
     richText: '富文本',
-    richTextDes: '基于 wangeditor 二次封装'
+    richTextDes: '基于 wangeditor 二次封装',
   },
   dialogDemo: {
     dialog: '弹窗',
@@ -388,12 +388,12 @@ export default {
     open: '打开',
     close: '关闭',
     combineWithForm: '与表单结合',
-    submit: '提交'
+    submit: '提交',
   },
   imageViewerDemo: {
     open: '打开',
     imageViewer: '图片预览',
-    imageViewerDes: '基于 ElementPlus 的 ImageViewer 组件二次封装'
+    imageViewerDes: '基于 ElementPlus 的 ImageViewer 组件二次封装',
   },
   descriptionsDemo: {
     descriptions: '描述',
@@ -403,7 +403,7 @@ export default {
     phone: '联系电话',
     email: '邮箱',
     addr: '地址',
-    form: '与 Form 组件组合'
+    form: '与 Form 组件组合',
   },
   exampleDemo: {
     title: '标题',
@@ -417,7 +417,7 @@ export default {
     important: '重要',
     content: '内容',
     save: '保存',
-    detail: '详情'
+    detail: '详情',
   },
   userDemo: {
     title: '用户管理',
@@ -429,10 +429,10 @@ export default {
     role: '角色',
     remark: '备注',
     remarkMessage1: '后端控制路由权限',
-    remarkMessage2: '前端控制路由权限'
+    remarkMessage2: '前端控制路由权限',
   },
   inputPasswordDemo: {
     title: '密码输入框',
-    inputPasswordDes: '基于 ElementPlus 的 Input 组件二次封装'
-  }
+    inputPasswordDes: '基于 ElementPlus 的 Input 组件二次封装',
+  },
 }

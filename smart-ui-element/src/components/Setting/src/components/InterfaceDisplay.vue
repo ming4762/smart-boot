@@ -130,7 +130,7 @@ watch(
     if (n === 'top') {
       appStore.setCollapse(false)
     }
-  }
+  },
 )
 </script>
 

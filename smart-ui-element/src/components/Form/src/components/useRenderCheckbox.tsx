@@ -21,6 +21,6 @@ export const useRenderCheckbox = () => {
   }
 
   return {
-    renderCheckboxOptions
+    renderCheckboxOptions,
   }
 }

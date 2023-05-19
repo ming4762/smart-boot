@@ -12,7 +12,7 @@ const propTypes = createTypes({
   string: undefined,
   number: undefined,
   object: undefined,
-  integer: undefined
+  integer: undefined,
 }) as PropTypes
 
 // 需要自定义扩展的类型
@@ -22,8 +22,8 @@ propTypes.extend([
     name: 'style',
     getter: true,
     type: [String, Object],
-    default: undefined
-  }
+    default: undefined,
+  },
 ])
 
 export { propTypes }

@@ -3,7 +3,7 @@ import type { RouteMeta } from 'vue-router'
 
 export const filterBreadcrumb = (
   routes: AppRouteRecordRaw[],
-  parentPath = ''
+  parentPath = '',
 ): AppRouteRecordRaw[] => {
   const res: AppRouteRecordRaw[] = []
 

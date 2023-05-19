@@ -19,19 +19,19 @@ const columns: TableColumn[] = [
   {
     field: 'index',
     label: t('userDemo.index'),
-    type: 'index'
+    type: 'index',
   },
   {
     field: 'username',
-    label: t('userDemo.username')
+    label: t('userDemo.username'),
   },
   {
     field: 'password',
-    label: t('userDemo.password')
+    label: t('userDemo.password'),
   },
   {
     field: 'role',
-    label: t('userDemo.role')
+    label: t('userDemo.role'),
   },
   {
     field: 'remark',
@@ -39,14 +39,14 @@ const columns: TableColumn[] = [
     formatter: (row: UserType) => {
       return h(
         'span',
-        row.username === 'admin' ? t('userDemo.remarkMessage1') : t('userDemo.remarkMessage2')
+        row.username === 'admin' ? t('userDemo.remarkMessage1') : t('userDemo.remarkMessage2'),
       )
-    }
+    },
   },
   {
     field: 'action',
-    label: t('userDemo.action')
-  }
+    label: t('userDemo.action'),
+  },
 ]
 
 const loading = ref(true)
@@ -57,8 +57,8 @@ const getTableList = async (params?: Params) => {
   const res = await getUserListApi({
     params: params || {
       pageIndex: 1,
-      pageSize: 10
-    }
+      pageSize: 10,
+    },
   })
   // .catch(() => {})
   // .finally(() => {

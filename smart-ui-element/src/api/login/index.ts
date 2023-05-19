@@ -1,4 +1,4 @@
-import request from '@/config/axios'
+import request from '@/config/axios/indexOkd'
 import type { UserType } from './types'
 
 interface RoleParams {
@@ -24,7 +24,7 @@ export const getUserListApi = ({ params }: AxiosConfig) => {
 }
 
 export const getAdminRoleApi = (
-  params: RoleParams
+  params: RoleParams,
 ): Promise<IResponse<AppCustomRouteRecordRaw[]>> => {
   return request.get({ url: '/role/list', params })
 }

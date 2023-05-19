@@ -23,8 +23,8 @@ const schema = reactive<FormSchema[]>([
     label: t('formDemo.input'),
     component: 'Input',
     formItemProps: {
-      rules: [required()]
-    }
+      rules: [required()],
+    },
   },
   {
     field: 'field2',
@@ -34,14 +34,14 @@ const schema = reactive<FormSchema[]>([
       options: [
         {
           label: 'option1',
-          value: '1'
+          value: '1',
         },
         {
           label: 'option2',
-          value: '2'
-        }
-      ]
-    }
+          value: '2',
+        },
+      ],
+    },
   },
   {
     field: 'field3',
@@ -51,14 +51,14 @@ const schema = reactive<FormSchema[]>([
       options: [
         {
           label: 'option-1',
-          value: '1'
+          value: '1',
         },
         {
           label: 'option-2',
-          value: '2'
-        }
-      ]
-    }
+          value: '2',
+        },
+      ],
+    },
   },
   {
     field: 'field4',
@@ -69,32 +69,32 @@ const schema = reactive<FormSchema[]>([
       options: [
         {
           label: 'option-1',
-          value: '1'
+          value: '1',
         },
         {
           label: 'option-2',
-          value: '2'
+          value: '2',
         },
         {
           label: 'option-3',
-          value: '3'
-        }
-      ]
-    }
+          value: '3',
+        },
+      ],
+    },
   },
   {
     field: 'field5',
     component: 'DatePicker',
     label: t('formDemo.datePicker'),
     componentProps: {
-      type: 'date'
-    }
+      type: 'date',
+    },
   },
   {
     field: 'field6',
     component: 'TimeSelect',
-    label: t('formDemo.timeSelect')
-  }
+    label: t('formDemo.timeSelect'),
+  },
 ])
 
 const getDictOne = async () => {

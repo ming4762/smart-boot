@@ -20,12 +20,12 @@ const props = defineProps({
   collapse: propTypes.bool.def(true),
   schema: {
     type: Array as PropType<DescriptionsSchema[]>,
-    default: () => []
+    default: () => [],
   },
   data: {
     type: Object as PropType<any>,
-    default: () => ({})
-  }
+    default: () => ({}),
+  },
 })
 
 const { getPrefixCls } = useDesign()
@@ -68,17 +68,15 @@ const toggleClick = () => {
   <div
     :class="[
       prefixCls,
-      'bg-[var(--el-color-white)] dark:(bg-[var(--el-bg-color)] border-[var(--el-border-color)] border-1px)'
-    ]"
-  >
+      'bg-[var(--el-color-white)] dark:(bg-[var(--el-bg-color)] border-[var(--el-border-color)] border-1px)',
+    ]">
     <div
       v-if="title"
       :class="[
         `${prefixCls}-header`,
-        'h-50px flex justify-between items-center border-bottom-1 border-solid border-[var(--tags-view-border-color)] px-10px cursor-pointer dark:border-[var(--el-border-color)]'
+        'h-50px flex justify-between items-center border-bottom-1 border-solid border-[var(--tags-view-border-color)] px-10px cursor-pointer dark:border-[var(--el-border-color)]',
       ]"
-      @click="toggleClick"
-    >
+      @click="toggleClick">
       <div :class="[`${prefixCls}-header__title`, 'relative font-18px font-bold ml-10px']">
         <div class="flex items-center">
           {{ title }}
@@ -96,24 +94,22 @@ const toggleClick = () => {
           :column="2"
           border
           :direction="mobile ? 'vertical' : 'horizontal'"
-          v-bind="getBindValue"
-        >
+          v-bind="getBindValue">
           <template v-if="slots['extra']" #extra>
             <slot name="extra"></slot>
           </template>
           <ElDescriptionsItem
             v-for="item in schema"
             :key="item.field"
-            v-bind="getBindItemValue(item)"
-          >
+            v-bind="getBindItemValue(item)">
             <template #label>
               <slot
                 :name="`${item.field}-label`"
                 :row="{
-                  label: item.label
-                }"
-                >{{ item.label }}</slot
-              >
+                  label: item.label,
+                }">
+                {{ item.label }}
+              </slot>
             </template>
 
             <template #default>

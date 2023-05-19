@@ -7,7 +7,7 @@ import { ref, reactive } from 'vue'
 import {
   getUserAccessSourceApi,
   getWeeklyUserActivityApi,
-  getMonthlySalesApi
+  getMonthlySalesApi,
 } from '@/api/dashboard/analysis'
 import { set } from 'lodash-es'
 import { EChartsOption } from 'echarts'
@@ -26,12 +26,12 @@ const getUserAccessSource = async () => {
     set(
       pieOptionsData,
       'legend.data',
-      res.data.map((v) => t(v.name))
+      res.data.map((v) => t(v.name)),
     )
     pieOptionsData!.series![0].data = res.data.map((v) => {
       return {
         name: t(v.name),
-        value: v.value
+        value: v.value,
       }
     })
   }
@@ -46,14 +46,14 @@ const getWeeklyUserActivity = async () => {
     set(
       barOptionsData,
       'xAxis.data',
-      res.data.map((v) => t(v.name))
+      res.data.map((v) => t(v.name)),
     )
     set(barOptionsData, 'series', [
       {
         name: t('analysis.activeQuantity'),
         data: res.data.map((v) => v.value),
-        type: 'bar'
-      }
+        type: 'bar',
+      },
     ])
   }
 }
@@ -67,7 +67,7 @@ const getMonthlySales = async () => {
     set(
       lineOptionsData,
       'xAxis.data',
-      res.data.map((v) => t(v.name))
+      res.data.map((v) => t(v.name)),
     )
     set(lineOptionsData, 'series', [
       {
@@ -76,7 +76,7 @@ const getMonthlySales = async () => {
         type: 'line',
         data: res.data.map((v) => v.estimate),
         animationDuration: 2800,
-        animationEasing: 'cubicInOut'
+        animationEasing: 'cubicInOut',
       },
       {
         name: t('analysis.actual'),
@@ -85,8 +85,8 @@ const getMonthlySales = async () => {
         itemStyle: {},
         data: res.data.map((v) => v.actual),
         animationDuration: 2800,
-        animationEasing: 'quadraticOut'
-      }
+        animationEasing: 'quadraticOut',
+      },
     ])
   }
 }

@@ -9,7 +9,7 @@ const { wsCache } = useCache()
 
 const elLocaleMap = {
   'zh-CN': zhCn,
-  en: en
+  en: en,
 }
 interface LocaleState {
   currentLocale: LocaleDropdownType
@@ -21,19 +21,19 @@ export const useLocaleStore = defineStore('locales', {
     return {
       currentLocale: {
         lang: wsCache.get('lang') || 'zh-CN',
-        elLocale: elLocaleMap[wsCache.get('lang') || 'zh-CN']
+        elLocale: elLocaleMap[wsCache.get('lang') || 'zh-CN'],
       },
       // 多语言
       localeMap: [
         {
           lang: 'zh-CN',
-          name: '简体中文'
+          name: '简体中文',
         },
         {
           lang: 'en',
-          name: 'English'
-        }
-      ]
+          name: 'English',
+        },
+      ],
     }
   },
   getters: {
@@ -42,7 +42,7 @@ export const useLocaleStore = defineStore('locales', {
     },
     getLocaleMap(): LocaleDropdownType[] {
       return this.localeMap
-    }
+    },
   },
   actions: {
     setCurrentLocale(localeMap: LocaleDropdownType) {
@@ -50,8 +50,8 @@ export const useLocaleStore = defineStore('locales', {
       this.currentLocale.lang = localeMap?.lang
       this.currentLocale.elLocale = elLocaleMap[localeMap?.lang]
       wsCache.set('lang', localeMap?.lang)
-    }
-  }
+    },
+  },
 })
 
 export const useLocaleStoreWithOut = () => {

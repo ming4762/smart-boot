@@ -37,10 +37,9 @@ const getCaches = computed((): string[] => {
         '!min-h-[calc(100%-var(--top-tool-height))]': fixedHeader && layout === 'cutMenu' && footer,
 
         '!min-h-[calc(100%-var(--top-tool-height)-var(--tags-view-height))]':
-          !fixedHeader && layout === 'cutMenu' && footer
-      }
-    ]"
-  >
+          !fixedHeader && layout === 'cutMenu' && footer,
+      },
+    ]">
     <router-view>
       <template #default="{ Component, route }">
         <keep-alive :include="getCaches">
