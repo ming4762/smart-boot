@@ -10,6 +10,5 @@ const prefixCls = getPrefixCls('backtop')
 <template>
   <ElBacktop
     :class="`${prefixCls}-backtop`"
-    :target="`.${variables.namespace}-layout-content-scrollbar .${variables.elNamespace}-scrollbar__wrap`"
-  />
+    :target="`.${variables.namespace}-layout-content-scrollbar .${variables.elNamespace}-scrollbar__wrap`" />
 </template>

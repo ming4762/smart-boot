@@ -14,7 +14,7 @@ import { CrudSchema, useCrudSchemas } from '@/hooks/web/useCrudSchemas'
 import { TableColumn } from '@/types/table'
 
 defineOptions({
-  name: 'ExamplePage'
+  name: 'ExamplePage',
 })
 
 const { push } = useRouter()
@@ -24,8 +24,8 @@ const { register, tableObject, methods } = useTable<TableData>({
   delListApi: delTableListApi,
   response: {
     list: 'list',
-    total: 'total'
-  }
+    total: 'total',
+  },
 })
 
 const { getList, setSearchParams } = methods
@@ -39,7 +39,7 @@ useEmitt({
       tableObject.currentPage = 1
     }
     getList()
-  }
+  },
 })
 
 const { t } = useI18n()
@@ -48,22 +48,22 @@ const crudSchemas = reactive<CrudSchema[]>([
   {
     field: 'index',
     label: t('tableDemo.index'),
-    type: 'index'
+    type: 'index',
   },
   {
     field: 'title',
     label: t('tableDemo.title'),
     search: {
-      show: true
-    }
+      show: true,
+    },
   },
   {
     field: 'author',
-    label: t('tableDemo.author')
+    label: t('tableDemo.author'),
   },
   {
     field: 'display_time',
-    label: t('tableDemo.displayTime')
+    label: t('tableDemo.displayTime'),
   },
   {
     field: 'importance',
@@ -72,33 +72,33 @@ const crudSchemas = reactive<CrudSchema[]>([
       return h(
         ElTag,
         {
-          type: cellValue === 1 ? 'success' : cellValue === 2 ? 'warning' : 'danger'
+          type: cellValue === 1 ? 'success' : cellValue === 2 ? 'warning' : 'danger',
         },
         () =>
           cellValue === 1
             ? t('tableDemo.important')
             : cellValue === 2
             ? t('tableDemo.good')
-            : t('tableDemo.commonly')
+            : t('tableDemo.commonly'),
       )
-    }
+    },
   },
   {
     field: 'pageviews',
-    label: t('tableDemo.pageviews')
+    label: t('tableDemo.pageviews'),
   },
   {
     field: 'content',
     label: t('exampleDemo.content'),
     table: {
-      show: false
-    }
+      show: false,
+    },
   },
   {
     field: 'action',
     width: '260px',
-    label: t('tableDemo.action')
-  }
+    label: t('tableDemo.action'),
+  },
 ])
 
 const { allSchemas } = useCrudSchemas(crudSchemas)
@@ -116,7 +116,7 @@ const delData = async (row: TableData | null, multiple: boolean) => {
   delLoading.value = true
   await delList(
     multiple ? selections.map((v) => v.id) : [tableObject.currentRow?.id as string],
-    multiple
+    multiple,
   ).finally(() => {
     delLoading.value = false
   })
@@ -145,10 +145,9 @@ const action = (row: TableData, type: string) => {
       :data="tableObject.tableList"
       :loading="tableObject.loading"
       :pagination="{
-        total: tableObject.total
+        total: tableObject.total,
       }"
-      @register="register"
-    >
+      @register="register">
       <template #action="{ row }">
         <ElButton type="primary" @click="action(row, 'edit')">
           {{ t('exampleDemo.edit') }}

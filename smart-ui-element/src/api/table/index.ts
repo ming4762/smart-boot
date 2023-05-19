@@ -1,4 +1,4 @@
-import request from '@/config/axios'
+import request from '@/config/axios/indexOkd'
 import type { TableData } from './types'
 
 export const getTableListApi = (params: any): Promise<IResponse> => {

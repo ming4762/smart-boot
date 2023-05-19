@@ -16,7 +16,7 @@ const createI18nOptions = async (): Promise<I18nOptions> => {
   setHtmlPageLang(locale.lang)
 
   localeStore.setCurrentLocale({
-    lang: locale.lang
+    lang: locale.lang,
     // elLocale: elLocal
   })
 
@@ -25,13 +25,13 @@ const createI18nOptions = async (): Promise<I18nOptions> => {
     locale: locale.lang,
     fallbackLocale: locale.lang,
     messages: {
-      [locale.lang]: message
+      [locale.lang]: message,
     },
     availableLocales: localeMap.map((v) => v.lang),
     sync: true,
     silentTranslationWarn: true,
     missingWarn: false,
-    silentFallbackWarn: true
+    silentFallbackWarn: true,
   }
 }
 

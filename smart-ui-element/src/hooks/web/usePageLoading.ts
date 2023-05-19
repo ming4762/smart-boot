@@ -13,6 +13,6 @@ export const usePageLoading = () => {
 
   return {
     loadStart,
-    loadDone
+    loadDone,
   }
 }

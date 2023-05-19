@@ -23,8 +23,8 @@ const props = defineProps({
     type: Function as PropType<(t: number, b: number, c: number, d: number) => number>,
     default(t: number, b: number, c: number, d: number) {
       return (c * (-Math.pow(2, (-10 * t) / d) + 1) * 1024) / 1023 + b
-    }
-  }
+    },
+  },
 })
 
 const emit = defineEmits(['mounted', 'callback'])
@@ -64,7 +64,7 @@ const state = reactive<{
   startTime: null,
   timestamp: null,
   remaining: null,
-  rAF: null
+  rAF: null,
 })
 
 const displayValue = toRef(state, 'displayValue')
@@ -138,7 +138,7 @@ const count = (timestamp: number) => {
         progress,
         state.localStartVal,
         endVal - state.localStartVal,
-        state.localDuration as number
+        state.localDuration as number,
       )
     }
   } else {
@@ -169,7 +169,7 @@ defineExpose({
   pauseResume,
   reset,
   start,
-  pause
+  pause,
 })
 </script>
 

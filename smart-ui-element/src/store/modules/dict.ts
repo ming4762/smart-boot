@@ -9,7 +9,7 @@ export interface DictState {
 export const useDictStore = defineStore('dict', {
   state: (): DictState => ({
     isSetDict: false,
-    dictObj: {}
+    dictObj: {},
   }),
   getters: {
     getDictObj(): Recordable {
@@ -17,7 +17,7 @@ export const useDictStore = defineStore('dict', {
     },
     getIsSetDict(): boolean {
       return this.isSetDict
-    }
+    },
   },
   actions: {
     setDictObj(dictObj: Recordable) {
@@ -25,8 +25,8 @@ export const useDictStore = defineStore('dict', {
     },
     setIsSetDict(isSetDict: boolean) {
       this.isSetDict = isSetDict
-    }
-  }
+    },
+  },
 })
 
 export const useDictStoreWithOut = () => {

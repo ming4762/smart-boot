@@ -18,8 +18,8 @@ const schema = reactive<FormSchema[]>([
     label: t('formDemo.input'),
     component: 'Input',
     formItemProps: {
-      rules: [required()]
-    }
+      rules: [required()],
+    },
   },
   {
     field: 'field2',
@@ -29,17 +29,17 @@ const schema = reactive<FormSchema[]>([
       options: [
         {
           label: 'option1',
-          value: '1'
+          value: '1',
         },
         {
           label: 'option2',
-          value: '2'
-        }
+          value: '2',
+        },
       ],
       onChange: (value: string) => {
         console.log(value)
-      }
-    }
+      },
+    },
   },
   {
     field: 'field3',
@@ -49,116 +49,116 @@ const schema = reactive<FormSchema[]>([
       options: [
         {
           label: 'option-1',
-          value: '1'
+          value: '1',
         },
         {
           label: 'option-2',
-          value: '2'
-        }
-      ]
-    }
+          value: '2',
+        },
+      ],
+    },
   },
   {
     field: 'field5',
     component: 'DatePicker',
     label: t('formDemo.datePicker'),
     componentProps: {
-      type: 'date'
-    }
+      type: 'date',
+    },
   },
   {
     field: 'field6',
     component: 'TimeSelect',
-    label: t('formDemo.timeSelect')
+    label: t('formDemo.timeSelect'),
   },
   {
     field: 'field8',
     label: t('formDemo.input'),
     component: 'Input',
     formItemProps: {
-      rules: [required()]
-    }
+      rules: [required()],
+    },
   },
   {
     field: 'field9',
     label: t('formDemo.input'),
     component: 'Input',
     formItemProps: {
-      rules: [required()]
-    }
+      rules: [required()],
+    },
   },
   {
     field: 'field10',
     label: t('formDemo.input'),
     component: 'Input',
     formItemProps: {
-      rules: [required()]
-    }
+      rules: [required()],
+    },
   },
   {
     field: 'field11',
     label: t('formDemo.input'),
     component: 'Input',
     formItemProps: {
-      rules: [required()]
-    }
+      rules: [required()],
+    },
   },
   {
     field: 'field12',
     label: t('formDemo.input'),
     component: 'Input',
     formItemProps: {
-      rules: [required()]
-    }
+      rules: [required()],
+    },
   },
   {
     field: 'field13',
     label: t('formDemo.input'),
     component: 'Input',
     formItemProps: {
-      rules: [required()]
-    }
+      rules: [required()],
+    },
   },
   {
     field: 'field14',
     label: t('formDemo.input'),
     component: 'Input',
     formItemProps: {
-      rules: [required()]
-    }
+      rules: [required()],
+    },
   },
   {
     field: 'field15',
     label: t('formDemo.input'),
     component: 'Input',
     formItemProps: {
-      rules: [required()]
-    }
+      rules: [required()],
+    },
   },
   {
     field: 'field16',
     label: t('formDemo.input'),
     component: 'Input',
     formItemProps: {
-      rules: [required()]
-    }
+      rules: [required()],
+    },
   },
   {
     field: 'field17',
     label: t('formDemo.input'),
     component: 'Input',
     formItemProps: {
-      rules: [required()]
-    }
+      rules: [required()],
+    },
   },
   {
     field: 'field18',
     label: t('formDemo.input'),
     component: 'Input',
     formItemProps: {
-      rules: [required()]
-    }
-  }
+      rules: [required()],
+    },
+  },
 ])
 
 const isGrid = ref(false)
@@ -221,7 +221,6 @@ const getDictOne = async () => {
       :layout="layout"
       :buttom-position="buttomPosition"
       expand
-      expand-field="field6"
-    />
+      expand-field="field6" />
   </ContentWrap>
 </template>

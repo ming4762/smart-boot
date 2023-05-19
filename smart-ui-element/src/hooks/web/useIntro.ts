@@ -14,27 +14,27 @@ export const useIntro = (setps?: Step[], options?: Options) => {
       element: `#${variables.namespace}-menu`,
       title: t('common.menu'),
       intro: t('common.menuDes'),
-      position: 'right'
+      position: 'right',
     },
     {
       element: `#${variables.namespace}-tool-header`,
       title: t('common.tool'),
       intro: t('common.toolDes'),
-      position: 'left'
+      position: 'left',
     },
     {
       element: `#${variables.namespace}-tags-view`,
       title: t('common.tagsView'),
       intro: t('common.tagsViewDes'),
-      position: 'bottom'
-    }
+      position: 'bottom',
+    },
   ]
 
   const defaultOptions: Options = options || {
     prevLabel: t('common.prevLabel'),
     nextLabel: t('common.nextLabel'),
     skipLabel: t('common.skipLabel'),
-    doneLabel: t('common.doneLabel')
+    doneLabel: t('common.doneLabel'),
   }
 
   const introRef: IntroJs = introJs()
@@ -42,6 +42,6 @@ export const useIntro = (setps?: Step[], options?: Options) => {
   introRef.addSteps(defaultSetps).setOptions(defaultOptions)
 
   return {
-    introRef
+    introRef,
   }
 }

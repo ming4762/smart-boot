@@ -42,9 +42,8 @@ export default defineComponent({
         class={[
           prefixCls,
           'h-[var(--top-tool-height)] relative px-[var(--top-tool-p-x)] flex items-center justify-between',
-          'dark:bg-[var(--el-bg-color)]'
-        ]}
-      >
+          'dark:bg-[var(--el-bg-color)]',
+        ]}>
         {layout.value !== 'top' ? (
           <div class="h-full flex items-center">
             {hamburger.value && layout.value !== 'cutMenu' ? (
@@ -63,14 +62,13 @@ export default defineComponent({
           {locale.value ? (
             <LocaleDropdown
               class="hover-trigger"
-              color="var(--top-header-text-color)"
-            ></LocaleDropdown>
+              color="var(--top-header-text-color)"></LocaleDropdown>
           ) : undefined}
           <UserInfo class="hover-trigger"></UserInfo>
         </div>
       </div>
     )
-  }
+  },
 })
 </script>
 

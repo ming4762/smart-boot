@@ -26,15 +26,14 @@ const alarmClock = useIcon({ icon: 'ep:alarm-clock' })
     :schema="[
       {
         label: t('iconDemo.recommendeDes'),
-        keys: ['Iconify']
+        keys: ['Iconify'],
       },
       {
         label: t('iconDemo.accessAddress'),
-        keys: [t('iconDemo.accessAddress')]
-      }
+        keys: [t('iconDemo.accessAddress')],
+      },
     ]"
-    @click="keyClick"
-  />
+    @click="keyClick" />
   <ContentWrap :title="t('iconDemo.localIcon')">
     <div class="flex justify-between">
       <Icon icon="svg-icon:peoples" />

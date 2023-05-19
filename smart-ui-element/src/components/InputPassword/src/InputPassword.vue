@@ -14,7 +14,7 @@ const prefixCls = getPrefixCls('input-password')
 const props = defineProps({
   // 是否显示密码强度
   strength: propTypes.bool.def(false),
-  modelValue: propTypes.string.def('')
+  modelValue: propTypes.string.def(''),
 })
 
 watch(
@@ -22,7 +22,7 @@ watch(
   (val: string) => {
     if (val === unref(valueRef)) return
     valueRef.value = val
-  }
+  },
 )
 
 const { configGlobal } = useConfigGlobal()
@@ -44,7 +44,7 @@ watch(
   () => valueRef.value,
   (val: string) => {
     emit('update:modelValue', val)
-  }
+  },
 )
 
 // 获取密码强度
@@ -55,7 +55,7 @@ const getPasswordStrength = computed(() => {
 })
 
 const getIconName = computed(() =>
-  unref(textType) === 'password' ? 'ant-design:eye-invisible-outlined' : 'ant-design:eye-outlined'
+  unref(textType) === 'password' ? 'ant-design:eye-invisible-outlined' : 'ant-design:eye-outlined',
 )
 </script>
 
@@ -69,8 +69,7 @@ const getIconName = computed(() =>
     <div
       v-if="strength"
       :class="`${prefixCls}__bar`"
-      class="relative h-6px mt-10px mb-6px mr-auto ml-auto"
-    >
+      class="relative h-6px mt-10px mb-6px mr-auto ml-auto">
       <div :class="`${prefixCls}__bar--fill`" :data-score="getPasswordStrength"></div>
     </div>
   </div>

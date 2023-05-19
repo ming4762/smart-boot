@@ -59,7 +59,7 @@ interface AllSchemas {
 
 // 过滤所有结构
 export const useCrudSchemas = (
-  crudSchema: CrudSchema[]
+  crudSchema: CrudSchema[],
 ): {
   allSchemas: AllSchemas
 } => {
@@ -68,7 +68,7 @@ export const useCrudSchemas = (
     searchSchema: [],
     tableColumns: [],
     formSchema: [],
-    detailSchema: []
+    detailSchema: [],
   })
 
   const searchSchema = filterSearchSchema(crudSchema, allSchemas)
@@ -84,7 +84,7 @@ export const useCrudSchemas = (
   allSchemas.detailSchema = detailSchema
 
   return {
-    allSchemas
+    allSchemas,
   }
 }
 
@@ -104,7 +104,7 @@ const filterSearchSchema = (crudSchema: CrudSchema[], allSchemas: AllSchemas): F
         componentProps: {},
         ...schemaItem.search,
         field: schemaItem?.search?.field || schemaItem.field,
-        label: schemaItem.search?.label || schemaItem.label
+        label: schemaItem.search?.label || schemaItem.label,
       }
 
       if (searchSchemaItem.dictName) {
@@ -121,7 +121,7 @@ const filterSearchSchema = (crudSchema: CrudSchema[], allSchemas: AllSchemas): F
             if (index !== -1) {
               allSchemas.searchSchema[index]!.componentProps!.options = filterOptions(
                 res,
-                searchSchemaItem.componentProps.optionsAlias?.labelField
+                searchSchemaItem.componentProps.optionsAlias?.labelField,
               )
             }
           }
@@ -150,10 +150,10 @@ const filterTableSchema = (crudSchema: CrudSchema[]): TableColumn[] => {
       if (schema?.table?.show !== false) {
         return {
           ...schema.table,
-          ...schema
+          ...schema,
         }
       }
-    }
+    },
   })
 
   // 第一次过滤会有 undefined 所以需要二次过滤
@@ -181,7 +181,7 @@ const filterFormSchema = (crudSchema: CrudSchema[], allSchemas: AllSchemas): For
         componentProps: {},
         ...schemaItem.form,
         field: schemaItem.field,
-        label: schemaItem.search?.label || schemaItem.label
+        label: schemaItem.search?.label || schemaItem.label,
       }
 
       if (formSchemaItem.dictName) {
@@ -198,7 +198,7 @@ const filterFormSchema = (crudSchema: CrudSchema[], allSchemas: AllSchemas): For
             if (index !== -1) {
               allSchemas.formSchema[index]!.componentProps!.options = filterOptions(
                 res,
-                formSchemaItem.componentProps.optionsAlias?.labelField
+                formSchemaItem.componentProps.optionsAlias?.labelField,
               )
             }
           }
@@ -229,7 +229,7 @@ const filterDescriptionsSchema = (crudSchema: CrudSchema[]): DescriptionsSchema[
       const descriptionsSchemaItem = {
         ...schemaItem.detail,
         field: schemaItem.field,
-        label: schemaItem.detail?.label || schemaItem.label
+        label: schemaItem.detail?.label || schemaItem.label,
       }
 
       // 删除不必要的字段

@@ -16,16 +16,16 @@ const emit = defineEmits(['visibleChange'])
 const props = defineProps({
   schema: {
     type: Array as PropType<contextMenuSchema[]>,
-    default: () => []
+    default: () => [],
   },
   trigger: {
     type: String as PropType<'click' | 'hover' | 'focus' | 'contextmenu'>,
-    default: 'contextmenu'
+    default: 'contextmenu',
   },
   tagItem: {
     type: Object as PropType<RouteLocationNormalizedLoaded>,
-    default: () => ({})
-  }
+    default: () => ({}),
+  },
 })
 
 const command = (item: contextMenuSchema) => {
@@ -40,7 +40,7 @@ const elDropdownMenuRef = ref<ComponentRef<typeof ElDropdown>>()
 
 defineExpose({
   elDropdownMenuRef,
-  tagItem: props.tagItem
+  tagItem: props.tagItem,
 })
 </script>
 
@@ -52,8 +52,7 @@ defineExpose({
     placement="bottom-start"
     @command="command"
     @visible-change="visibleChange"
-    popper-class="v-context-menu-popper"
-  >
+    popper-class="v-context-menu-popper">
     <slot></slot>
     <template #dropdown>
       <ElDropdownMenu>
@@ -62,9 +61,9 @@ defineExpose({
           :key="`dropdown${index}`"
           :divided="item.divided"
           :disabled="item.disabled"
-          :command="item"
-        >
-          <Icon :icon="item.icon" /> {{ t(item.label) }}
+          :command="item">
+          <Icon :icon="item.icon" />
+          {{ t(item.label) }}
         </ElDropdownItem>
       </ElDropdownMenu>
     </template>

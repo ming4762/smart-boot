@@ -15,7 +15,7 @@ const props = defineProps({
   // icon color
   color: propTypes.string,
   // icon size
-  size: propTypes.number.def(16)
+  size: propTypes.number.def(16),
 })
 
 const elRef = ref<ElRef>(null)
@@ -30,7 +30,7 @@ const getIconifyStyle = computed(() => {
   const { color, size } = props
   return {
     fontSize: `${size}px`,
-    color
+    color,
   }
 })
 
@@ -61,7 +61,7 @@ watch(
   () => props.icon,
   (icon: string) => {
     updateIcon(icon)
-  }
+  },
 )
 </script>
 

@@ -14,10 +14,10 @@ defineProps({
   schema: {
     type: Array as PropType<Array<string | TipSchema>>,
     required: true,
-    default: () => []
+    default: () => [],
   },
   showIndex: propTypes.bool.def(true),
-  highlightColor: propTypes.string.def('var(--el-color-primary)')
+  highlightColor: propTypes.string.def('var(--el-color-primary)'),
 })
 
 const emit = defineEmits(['click'])
@@ -31,9 +31,8 @@ const keyClick = (key: string) => {
   <div
     :class="[
       prefixCls,
-      'p-20px mb-20px border-1px border-solid border-[var(--el-color-primary)] bg-[var(--el-color-primary-light-9)]'
-    ]"
-  >
+      'p-20px mb-20px border-1px border-solid border-[var(--el-color-primary)] bg-[var(--el-color-primary-light-9)]',
+    ]">
     <div v-if="title" :class="[`${prefixCls}__header`, 'flex items-center']">
       <Icon icon="bi:exclamation-circle-fill" :size="22" color="var(--el-color-primary)" />
       <span :class="[`${prefixCls}__title`, 'pl-5px text-16px font-bold']">{{ title }}</span>
@@ -43,8 +42,7 @@ const keyClick = (key: string) => {
         <Highlight
           :keys="typeof item === 'string' ? [] : item.keys"
           :color="highlightColor"
-          @click="keyClick"
-        >
+          @click="keyClick">
           {{ showIndex ? `${$index + 1}、` : '' }}{{ typeof item === 'string' ? item : item.label }}
         </Highlight>
       </p>

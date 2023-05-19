@@ -51,8 +51,7 @@ export default defineComponent({
         {mobile.value && !collapse.value ? (
           <div
             class="absolute top-0 left-0 w-full h-full opacity-30 z-99 bg-[var(--el-color-black)]"
-            onClick={handleClickOutside}
-          ></div>
+            onClick={handleClickOutside}></div>
         ) : undefined}
 
         {renderLayout()}
@@ -62,7 +61,7 @@ export default defineComponent({
         <Setting></Setting>
       </section>
     )
-  }
+  },
 })
 </script>
 

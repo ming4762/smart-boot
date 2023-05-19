@@ -29,6 +29,6 @@ export const useNProgress = () => {
 
   return {
     start,
-    done
+    done,
   }
 }

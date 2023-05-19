@@ -3,7 +3,7 @@ import axios, {
   InternalAxiosRequestConfig,
   AxiosRequestHeaders,
   AxiosResponse,
-  AxiosError
+  AxiosError,
 } from 'axios'
 
 import qs from 'qs'
@@ -19,7 +19,7 @@ export const PATH_URL = base_url[import.meta.env.VITE_API_BASEPATH]
 // 创建axios实例
 const service: AxiosInstance = axios.create({
   baseURL: PATH_URL, // api 的 base_url
-  timeout: config.request_timeout // 请求超时时间
+  timeout: config.request_timeout, // 请求超时时间
 })
 
 // request拦截器
@@ -53,7 +53,7 @@ service.interceptors.request.use(
     // Do something with request error
     console.log(error) // for debug
     Promise.reject(error)
-  }
+  },
 )
 
 // response 拦截器
@@ -72,7 +72,7 @@ service.interceptors.response.use(
     console.log('err' + error) // for debug
     ElMessage.error(error.message)
     return Promise.reject(error)
-  }
+  },
 )
 
 export { service }

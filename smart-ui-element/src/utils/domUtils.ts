@@ -130,7 +130,7 @@ export function getViewportOffset(element: Element): ViewportOffsetResult {
     right: clientWidth - rectWidth - left,
     bottom: clientHeight - rectHeight - top,
     rightIncludeBody: clientWidth - left,
-    bottomIncludeBody: clientHeight - top
+    bottomIncludeBody: clientHeight - top,
   }
 }
 
@@ -138,7 +138,7 @@ export function getViewportOffset(element: Element): ViewportOffsetResult {
 export const on = function (
   element: HTMLElement | Document | Window,
   event: string,
-  handler: EventListenerOrEventListenerObject
+  handler: EventListenerOrEventListenerObject,
 ): void {
   if (element && event && handler) {
     element.addEventListener(event, handler, false)
@@ -149,7 +149,7 @@ export const on = function (
 export const off = function (
   element: HTMLElement | Document | Window,
   event: string,
-  handler: any
+  handler: any,
 ): void {
   if (element && event && handler) {
     element.removeEventListener(event, handler, false)
@@ -274,7 +274,7 @@ export const isInContainer = (el: Element, container: any) => {
       top: 0,
       right: window.innerWidth,
       bottom: window.innerHeight,
-      left: 0
+      left: 0,
     }
   } else {
     containerRect = container.getBoundingClientRect()

@@ -14,8 +14,8 @@ const open = () => {
       'https://img1.baidu.com/it/u=508846955,3814747122&fm=26&fmt=auto&gp=0.jpg',
       'https://img1.baidu.com/it/u=3536647690,3616605490&fm=26&fmt=auto&gp=0.jpg',
       'https://img1.baidu.com/it/u=4087287201,1148061266&fm=26&fmt=auto&gp=0.jpg',
-      'https://img2.baidu.com/it/u=3429163260,2974496379&fm=26&fmt=auto&gp=0.jpg'
-    ]
+      'https://img2.baidu.com/it/u=3429163260,2974496379&fm=26&fmt=auto&gp=0.jpg',
+    ],
   })
 }
 </script>
@@ -23,8 +23,7 @@ const open = () => {
 <template>
   <ContentWrap
     :title="t('imageViewerDemo.imageViewer')"
-    :message="t('imageViewerDemo.imageViewerDes')"
-  >
+    :message="t('imageViewerDemo.imageViewerDes')">
     <ElButton type="primary" @click="open">{{ t('imageViewerDemo.open') }}</ElButton>
   </ContentWrap>
 </template>

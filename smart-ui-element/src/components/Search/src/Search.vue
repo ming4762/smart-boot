@@ -15,7 +15,7 @@ const props = defineProps({
   // 生成Form的布局结构数组
   schema: {
     type: Array as PropType<FormSchema[]>,
-    default: () => []
+    default: () => [],
   },
   // 是否需要栅格布局
   isCol: propTypes.bool.def(false),
@@ -36,8 +36,8 @@ const props = defineProps({
   inline: propTypes.bool.def(true),
   model: {
     type: Object as PropType<Recordable>,
-    default: () => ({})
-  }
+    default: () => ({}),
+  },
 })
 
 const emit = defineEmits(['search', 'reset'])
@@ -58,16 +58,16 @@ const newSchema = computed(() => {
       {
         field: 'action',
         formItemProps: {
-          labelWidth: '0px'
-        }
-      }
+          labelWidth: '0px',
+        },
+      },
     ])
   }
   return schema
 })
 
 const { register, elFormRef, methods } = useForm({
-  model: props.model || {}
+  model: props.model || {},
 })
 
 const search = async () => {
@@ -89,7 +89,7 @@ const reset = async () => {
 
 const bottonButtonStyle = computed(() => {
   return {
-    textAlign: props.buttomPosition as unknown as 'left' | 'center' | 'right'
+    textAlign: props.buttomPosition as unknown as 'left' | 'center' | 'right',
   }
 })
 
@@ -107,8 +107,7 @@ const setVisible = () => {
     :inline="inline"
     :is-col="isCol"
     :schema="newSchema"
-    @register="register"
-  >
+    @register="register">
     <template #action>
       <div v-if="layout === 'inline'">
         <ElButton v-if="showSearch" type="primary" @click="search">

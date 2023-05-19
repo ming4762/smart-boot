@@ -22,14 +22,14 @@ const getKey = (namespace: string | undefined, key: string) => {
 }
 
 export const useI18n = (
-  namespace?: string
+  namespace?: string,
 ): {
   t: I18nGlobalTranslation
 } => {
   const normalFn = {
     t: (key: string) => {
       return getKey(namespace, key)
-    }
+    },
   }
 
   if (!i18n) {
@@ -45,7 +45,7 @@ export const useI18n = (
   }
   return {
     ...methods,
-    t: tFn
+    t: tFn,
   }
 }
 

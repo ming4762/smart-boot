@@ -18,8 +18,8 @@ const schema = reactive<FormSchema[]>([
     label: t('formDemo.input'),
     component: 'Input',
     formItemProps: {
-      rules: [required()]
-    }
+      rules: [required()],
+    },
   },
   {
     field: 'field2',
@@ -29,14 +29,14 @@ const schema = reactive<FormSchema[]>([
       options: [
         {
           label: 'option1',
-          value: '1'
+          value: '1',
         },
         {
           label: 'option2',
-          value: '2'
-        }
-      ]
-    }
+          value: '2',
+        },
+      ],
+    },
   },
   {
     field: 'field3',
@@ -46,14 +46,14 @@ const schema = reactive<FormSchema[]>([
       options: [
         {
           label: 'option-1',
-          value: '1'
+          value: '1',
         },
         {
           label: 'option-2',
-          value: '2'
-        }
-      ]
-    }
+          value: '2',
+        },
+      ],
+    },
   },
   {
     field: 'field4',
@@ -64,51 +64,51 @@ const schema = reactive<FormSchema[]>([
       options: [
         {
           label: 'option-1',
-          value: '1'
+          value: '1',
         },
         {
           label: 'option-2',
-          value: '2'
+          value: '2',
         },
         {
           label: 'option-3',
-          value: '3'
-        }
-      ]
-    }
+          value: '3',
+        },
+      ],
+    },
   },
   {
     field: 'field5',
     component: 'DatePicker',
     label: t('formDemo.datePicker'),
     componentProps: {
-      type: 'date'
-    }
+      type: 'date',
+    },
   },
   {
     field: 'field6',
     component: 'TimeSelect',
-    label: t('formDemo.timeSelect')
-  }
+    label: t('formDemo.timeSelect'),
+  },
 ])
 
 const formRef = ref<FormExpose>()
 
 const changeLabelWidth = (width: number | string) => {
   unref(formRef)?.setProps({
-    labelWidth: width
+    labelWidth: width,
   })
 }
 
 const changeSize = (size: string) => {
   unref(formRef)?.setProps({
-    size
+    size,
   })
 }
 
 const changeDisabled = (bool: boolean) => {
   unref(formRef)?.setProps({
-    disabled: bool
+    disabled: bool,
   })
 }
 
@@ -125,16 +125,16 @@ const changeSchema = (del: boolean) => {
           options: [
             {
               label: 'option1',
-              value: '1'
+              value: '1',
             },
             {
               label: 'option2',
-              value: '2'
-            }
-          ]
-        }
+              value: '2',
+            },
+          ],
+        },
       },
-      1
+      1,
     )
   }
 }
@@ -150,7 +150,7 @@ const setValue = (reset: boolean) => {
       field3: '2',
       field4: ['1', '3'],
       field5: '2022-01-27',
-      field6: '17:00'
+      field6: '17:00',
     })
   }
 }
@@ -162,7 +162,7 @@ const setLabel = () => {
     {
       field: 'field2',
       path: 'label',
-      value: `${t('formDemo.select')} ${index.value}`
+      value: `${t('formDemo.select')} ${index.value}`,
     },
     {
       field: 'field2',
@@ -170,18 +170,18 @@ const setLabel = () => {
       value: [
         {
           label: 'option-1',
-          value: '1'
+          value: '1',
         },
         {
           label: 'option-2',
-          value: '2'
+          value: '2',
         },
         {
           label: 'option-3',
-          value: '3'
-        }
-      ]
-    }
+          value: '3',
+        },
+      ],
+    },
   ])
   index.value++
 }
@@ -191,16 +191,16 @@ const addItem = () => {
     unref(formRef)?.addSchema({
       field: `field${unref(index)}`,
       label: `${t('formDemo.input')}${unref(index)}`,
-      component: 'Input'
+      component: 'Input',
     })
   } else {
     unref(formRef)?.addSchema(
       {
         field: `field${unref(index)}`,
         label: `${t('formDemo.input')}${unref(index)}`,
-        component: 'Input'
+        component: 'Input',
       },
-      unref(index)
+      unref(index),
     )
   }
   index.value++
@@ -223,8 +223,8 @@ const getDictOne = async () => {
       {
         field: 'field2',
         path: 'componentProps.options',
-        value: res.data
-      }
+        value: res.data,
+      },
     ])
   }
 }
@@ -251,14 +251,12 @@ const getDictOne = async () => {
     <ElButton @click="setValue(false)">{{ t('formDemo.setValue') }}</ElButton>
     <ElButton @click="setValue(true)">{{ t('formDemo.resetValue') }}</ElButton>
 
-    <ElButton @click="setLabel">
-      {{ t('formDemo.set') }} {{ t('formDemo.select') }} label
-    </ElButton>
+    <ElButton @click="setLabel">{{ t('formDemo.set') }} {{ t('formDemo.select') }} label</ElButton>
 
-    <ElButton @click="addItem"> {{ t('formDemo.add') }} {{ t('formDemo.subitem') }} </ElButton>
+    <ElButton @click="addItem">{{ t('formDemo.add') }} {{ t('formDemo.subitem') }}</ElButton>
 
-    <ElButton @click="formValidation"> {{ t('formDemo.formValidation') }} </ElButton>
-    <ElButton @click="verifyReset"> {{ t('formDemo.verifyReset') }} </ElButton>
+    <ElButton @click="formValidation">{{ t('formDemo.formValidation') }}</ElButton>
+    <ElButton @click="verifyReset">{{ t('formDemo.verifyReset') }}</ElButton>
 
     <ElButton @click="getDictOne">
       {{ t('searchDemo.dynamicOptions') }}

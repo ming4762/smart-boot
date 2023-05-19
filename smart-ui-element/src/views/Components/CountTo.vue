@@ -47,8 +47,7 @@ const pauseResume = () => {
         :prefix="prefix"
         :suffix="suffix"
         :autoplay="autoplay"
-        class="text-30px font-bold text-[var(--el-color-primary)]"
-      />
+        class="text-30px font-bold text-[var(--el-color-primary)]" />
     </div>
     <ElRow :gutter="20" justify="space-between">
       <ElCol :xl="8" :lg="8" :md="12" :sm="24" :xs="24">

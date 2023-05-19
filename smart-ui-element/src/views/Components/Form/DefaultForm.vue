@@ -35,7 +35,7 @@ const loadAll = () => {
     { value: 'mint-ui', link: 'https://github.com/ElemeFE/mint-ui' },
     { value: 'vuex', link: 'https://github.com/vuejs/vuex' },
     { value: 'vue-router', link: 'https://github.com/vuejs/vue-router' },
-    { value: 'babel', link: 'https://github.com/babel/babel' }
+    { value: 'babel', link: 'https://github.com/babel/babel' },
   ]
 }
 const handleSelect = (item: Recordable) => {
@@ -49,8 +49,8 @@ const initials = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j']
 const options = ref<ComponentOptions[]>(
   Array.from({ length: 1000 }).map((_, idx) => ({
     value: `Option ${idx + 1}`,
-    label: `${initials[idx % 10]}${idx}`
-  }))
+    label: `${initials[idx % 10]}${idx}`,
+  })),
 )
 const options2 = ref<ComponentOptions[]>(
   Array.from({ length: 10 }).map((_, idx) => {
@@ -60,10 +60,10 @@ const options2 = ref<ComponentOptions[]>(
       label: `Group ${label}`,
       options: Array.from({ length: 10 }).map((_, idx) => ({
         value: `Option ${idx + 1 + 10 * label}`,
-        label: `${initials[idx % 10]}${idx + 1 + 10 * label}`
-      }))
+        label: `${initials[idx % 10]}${idx + 1 + 10 * label}`,
+      })),
     }
-  })
+  }),
 )
 
 const options3: ComponentOptions[] = [
@@ -77,21 +77,21 @@ const options3: ComponentOptions[] = [
         children: [
           {
             value: 'consistency',
-            label: 'Consistency'
+            label: 'Consistency',
           },
           {
             value: 'feedback',
-            label: 'Feedback'
+            label: 'Feedback',
           },
           {
             value: 'efficiency',
-            label: 'Efficiency'
+            label: 'Efficiency',
           },
           {
             value: 'controllability',
-            label: 'Controllability'
-          }
-        ]
+            label: 'Controllability',
+          },
+        ],
       },
       {
         value: 'navigation',
@@ -99,15 +99,15 @@ const options3: ComponentOptions[] = [
         children: [
           {
             value: 'side nav',
-            label: 'Side Navigation'
+            label: 'Side Navigation',
           },
           {
             value: 'top nav',
-            label: 'Top Navigation'
-          }
-        ]
-      }
-    ]
+            label: 'Top Navigation',
+          },
+        ],
+      },
+    ],
   },
   {
     value: 'component',
@@ -119,25 +119,25 @@ const options3: ComponentOptions[] = [
         children: [
           {
             value: 'layout',
-            label: 'Layout'
+            label: 'Layout',
           },
           {
             value: 'color',
-            label: 'Color'
+            label: 'Color',
           },
           {
             value: 'typography',
-            label: 'Typography'
+            label: 'Typography',
           },
           {
             value: 'icon',
-            label: 'Icon'
+            label: 'Icon',
           },
           {
             value: 'button',
-            label: 'Button'
-          }
-        ]
+            label: 'Button',
+          },
+        ],
       },
       {
         value: 'form',
@@ -145,61 +145,61 @@ const options3: ComponentOptions[] = [
         children: [
           {
             value: 'radio',
-            label: 'Radio'
+            label: 'Radio',
           },
           {
             value: 'checkbox',
-            label: 'Checkbox'
+            label: 'Checkbox',
           },
           {
             value: 'input',
-            label: 'Input'
+            label: 'Input',
           },
           {
             value: 'input-number',
-            label: 'InputNumber'
+            label: 'InputNumber',
           },
           {
             value: 'select',
-            label: 'Select'
+            label: 'Select',
           },
           {
             value: 'cascader',
-            label: 'Cascader'
+            label: 'Cascader',
           },
           {
             value: 'switch',
-            label: 'Switch'
+            label: 'Switch',
           },
           {
             value: 'slider',
-            label: 'Slider'
+            label: 'Slider',
           },
           {
             value: 'time-picker',
-            label: 'TimePicker'
+            label: 'TimePicker',
           },
           {
             value: 'date-picker',
-            label: 'DatePicker'
+            label: 'DatePicker',
           },
           {
             value: 'datetime-picker',
-            label: 'DateTimePicker'
+            label: 'DateTimePicker',
           },
           {
             value: 'upload',
-            label: 'Upload'
+            label: 'Upload',
           },
           {
             value: 'rate',
-            label: 'Rate'
+            label: 'Rate',
           },
           {
             value: 'form',
-            label: 'Form'
-          }
-        ]
+            label: 'Form',
+          },
+        ],
       },
       {
         value: 'data',
@@ -207,29 +207,29 @@ const options3: ComponentOptions[] = [
         children: [
           {
             value: 'table',
-            label: 'Table'
+            label: 'Table',
           },
           {
             value: 'tag',
-            label: 'Tag'
+            label: 'Tag',
           },
           {
             value: 'progress',
-            label: 'Progress'
+            label: 'Progress',
           },
           {
             value: 'tree',
-            label: 'Tree'
+            label: 'Tree',
           },
           {
             value: 'pagination',
-            label: 'Pagination'
+            label: 'Pagination',
           },
           {
             value: 'badge',
-            label: 'Badge'
-          }
-        ]
+            label: 'Badge',
+          },
+        ],
       },
       {
         value: 'notice',
@@ -237,25 +237,25 @@ const options3: ComponentOptions[] = [
         children: [
           {
             value: 'alert',
-            label: 'Alert'
+            label: 'Alert',
           },
           {
             value: 'loading',
-            label: 'Loading'
+            label: 'Loading',
           },
           {
             value: 'message',
-            label: 'Message'
+            label: 'Message',
           },
           {
             value: 'message-box',
-            label: 'MessageBox'
+            label: 'MessageBox',
           },
           {
             value: 'notification',
-            label: 'Notification'
-          }
-        ]
+            label: 'Notification',
+          },
+        ],
       },
       {
         value: 'navigation',
@@ -263,25 +263,25 @@ const options3: ComponentOptions[] = [
         children: [
           {
             value: 'menu',
-            label: 'Menu'
+            label: 'Menu',
           },
           {
             value: 'tabs',
-            label: 'Tabs'
+            label: 'Tabs',
           },
           {
             value: 'breadcrumb',
-            label: 'Breadcrumb'
+            label: 'Breadcrumb',
           },
           {
             value: 'dropdown',
-            label: 'Dropdown'
+            label: 'Dropdown',
           },
           {
             value: 'steps',
-            label: 'Steps'
-          }
-        ]
+            label: 'Steps',
+          },
+        ],
       },
       {
         value: 'others',
@@ -289,32 +289,32 @@ const options3: ComponentOptions[] = [
         children: [
           {
             value: 'dialog',
-            label: 'Dialog'
+            label: 'Dialog',
           },
           {
             value: 'tooltip',
-            label: 'Tooltip'
+            label: 'Tooltip',
           },
           {
             value: 'popover',
-            label: 'Popover'
+            label: 'Popover',
           },
           {
             value: 'card',
-            label: 'Card'
+            label: 'Card',
           },
           {
             value: 'carousel',
-            label: 'Carousel'
+            label: 'Carousel',
           },
           {
             value: 'collapse',
-            label: 'Collapse'
-          }
-        ]
-      }
-    ]
-  }
+            label: 'Collapse',
+          },
+        ],
+      },
+    ],
+  },
 ]
 
 const generateData = () => {
@@ -327,7 +327,7 @@ const generateData = () => {
     data.push({
       value: i,
       desc: `Option ${i}`,
-      disabled: i % 4 === 0
+      disabled: i % 4 === 0,
     })
   }
   return data
@@ -340,7 +340,7 @@ const holidays = [
   '2021-10-04',
   '2021-10-05',
   '2021-10-06',
-  '2021-10-07'
+  '2021-10-07',
 ]
 
 const isHoliday = ({ dayjs }) => {
@@ -351,12 +351,12 @@ const schema = reactive<FormSchema[]>([
   {
     field: 'field1',
     label: t('formDemo.input'),
-    component: 'Divider'
+    component: 'Divider',
   },
   {
     field: 'field2',
     label: t('formDemo.default'),
-    component: 'Input'
+    component: 'Input',
   },
   {
     field: 'field3',
@@ -364,8 +364,8 @@ const schema = reactive<FormSchema[]>([
     component: 'Input',
     componentProps: {
       suffixIcon: useIcon({ icon: 'ep:calendar' }),
-      prefixIcon: useIcon({ icon: 'ep:calendar' })
-    }
+      prefixIcon: useIcon({ icon: 'ep:calendar' }),
+    },
   },
   {
     field: 'field4',
@@ -374,9 +374,9 @@ const schema = reactive<FormSchema[]>([
     componentProps: {
       slots: {
         suffix: true,
-        prefix: true
-      }
-    }
+        prefix: true,
+      },
+    },
   },
   {
     field: 'field5',
@@ -385,9 +385,9 @@ const schema = reactive<FormSchema[]>([
     componentProps: {
       slots: {
         prepend: true,
-        append: true
-      }
-    }
+        append: true,
+      },
+    },
   },
   {
     field: 'field6',
@@ -395,13 +395,13 @@ const schema = reactive<FormSchema[]>([
     component: 'Input',
     componentProps: {
       type: 'textarea',
-      rows: 1
-    }
+      rows: 1,
+    },
   },
   {
     field: 'field7',
     label: t('formDemo.autocomplete'),
-    component: 'Divider'
+    component: 'Divider',
   },
   {
     field: 'field8',
@@ -409,8 +409,8 @@ const schema = reactive<FormSchema[]>([
     component: 'Autocomplete',
     componentProps: {
       fetchSuggestions: querySearch,
-      onSelect: handleSelect
-    }
+      onSelect: handleSelect,
+    },
   },
   {
     field: 'field9',
@@ -420,34 +420,34 @@ const schema = reactive<FormSchema[]>([
       fetchSuggestions: querySearch,
       onSelect: handleSelect,
       slots: {
-        default: true
-      }
-    }
+        default: true,
+      },
+    },
   },
   {
     field: 'field10',
     component: 'Divider',
-    label: t('formDemo.inputNumber')
+    label: t('formDemo.inputNumber'),
   },
   {
     field: 'field11',
     label: t('formDemo.default'),
     component: 'InputNumber',
-    value: 0
+    value: 0,
   },
   {
     field: 'field12',
     label: t('formDemo.position'),
     component: 'InputNumber',
     componentProps: {
-      controlsPosition: 'right'
+      controlsPosition: 'right',
     },
-    value: 0
+    value: 0,
   },
   {
     field: 'field13',
     label: t('formDemo.select'),
-    component: 'Divider'
+    component: 'Divider',
   },
   {
     field: 'field14',
@@ -458,14 +458,14 @@ const schema = reactive<FormSchema[]>([
         {
           disabled: true,
           label: 'option1',
-          value: '1'
+          value: '1',
         },
         {
           label: 'option2',
-          value: '2'
-        }
-      ]
-    }
+          value: '2',
+        },
+      ],
+    },
   },
   {
     field: 'field15',
@@ -475,15 +475,15 @@ const schema = reactive<FormSchema[]>([
       options: [
         {
           label: 'option1',
-          value: '1'
+          value: '1',
         },
         {
           label: 'option2',
-          value: '2'
-        }
+          value: '2',
+        },
       ],
-      optionsSlot: true
-    }
+      optionsSlot: true,
+    },
   },
   {
     field: 'field16',
@@ -497,29 +497,29 @@ const schema = reactive<FormSchema[]>([
             {
               disabled: true,
               label: 'option1-1',
-              value: '1-1'
+              value: '1-1',
             },
             {
               label: 'option1-2',
-              value: '1-2'
-            }
-          ]
+              value: '1-2',
+            },
+          ],
         },
         {
           label: 'option2',
           options: [
             {
               label: 'option2-1',
-              value: '2-1'
+              value: '2-1',
             },
             {
               label: 'option2-2',
-              value: '2-2'
-            }
-          ]
-        }
-      ]
-    }
+              value: '2-2',
+            },
+          ],
+        },
+      ],
+    },
   },
   {
     field: 'field17',
@@ -533,43 +533,43 @@ const schema = reactive<FormSchema[]>([
             {
               label: 'option1-1',
               value: '1-1',
-              disabled: true
+              disabled: true,
             },
             {
               label: 'option1-2',
-              value: '1-2'
-            }
-          ]
+              value: '1-2',
+            },
+          ],
         },
         {
           label: 'option2',
           options: [
             {
               label: 'option2-1',
-              value: '2-1'
+              value: '2-1',
             },
             {
               label: 'option2-2',
-              value: '2-2'
-            }
-          ]
-        }
+              value: '2-2',
+            },
+          ],
+        },
       ],
-      optionsSlot: true
-    }
+      optionsSlot: true,
+    },
   },
   {
     field: 'field18',
     label: `${t('formDemo.selectV2')}`,
-    component: 'Divider'
+    component: 'Divider',
   },
   {
     field: 'field19',
     label: t('formDemo.default'),
     component: 'SelectV2',
     componentProps: {
-      options: options.value
-    }
+      options: options.value,
+    },
   },
   {
     field: 'field20',
@@ -578,17 +578,17 @@ const schema = reactive<FormSchema[]>([
     componentProps: {
       options: options.value,
       slots: {
-        default: true
-      }
-    }
+        default: true,
+      },
+    },
   },
   {
     field: 'field21',
     label: t('formDemo.selectGroup'),
     component: 'SelectV2',
     componentProps: {
-      options: options2.value
-    }
+      options: options2.value,
+    },
   },
   {
     field: 'field22',
@@ -597,22 +597,22 @@ const schema = reactive<FormSchema[]>([
     componentProps: {
       options: options2.value,
       slots: {
-        default: true
-      }
-    }
+        default: true,
+      },
+    },
   },
   {
     field: 'field23',
     label: t('formDemo.cascader'),
-    component: 'Divider'
+    component: 'Divider',
   },
   {
     field: 'field24',
     label: t('formDemo.default'),
     component: 'Cascader',
     componentProps: {
-      options: options3
-    }
+      options: options3,
+    },
   },
   {
     field: 'field25',
@@ -621,20 +621,20 @@ const schema = reactive<FormSchema[]>([
     componentProps: {
       options: options3,
       slots: {
-        default: true
-      }
-    }
+        default: true,
+      },
+    },
   },
   {
     field: 'field26',
     label: t('formDemo.switch'),
-    component: 'Divider'
+    component: 'Divider',
   },
   {
     field: 'field27',
     label: t('formDemo.default'),
     component: 'Switch',
-    value: false
+    value: false,
   },
   {
     field: 'field28',
@@ -643,19 +643,19 @@ const schema = reactive<FormSchema[]>([
     value: false,
     componentProps: {
       activeIcon: useIcon({ icon: 'ep:check' }),
-      inactiveIcon: useIcon({ icon: 'ep:close' })
-    }
+      inactiveIcon: useIcon({ icon: 'ep:close' }),
+    },
   },
   {
     field: 'field29',
     label: t('formDemo.rate'),
-    component: 'Divider'
+    component: 'Divider',
   },
   {
     field: 'field30',
     label: t('formDemo.default'),
     component: 'Rate',
-    value: null
+    value: null,
   },
   {
     field: 'field31',
@@ -667,24 +667,24 @@ const schema = reactive<FormSchema[]>([
       icons: [
         useIcon({ icon: 'ep:chat-round' }),
         useIcon({ icon: 'ep:chat-line-round' }),
-        useIcon({ icon: 'ep:chat-dot-round' })
-      ]
-    }
+        useIcon({ icon: 'ep:chat-dot-round' }),
+      ],
+    },
   },
   {
     field: 'field32',
     label: t('formDemo.colorPicker'),
-    component: 'Divider'
+    component: 'Divider',
   },
   {
     field: 'field33',
     label: t('formDemo.default'),
-    component: 'ColorPicker'
+    component: 'ColorPicker',
   },
   {
     field: 'field34',
     label: t('formDemo.transfer'),
-    component: 'Divider'
+    component: 'Divider',
   },
   {
     field: 'field35',
@@ -694,14 +694,14 @@ const schema = reactive<FormSchema[]>([
       props: {
         key: 'value',
         label: 'desc',
-        disabled: 'disabled'
+        disabled: 'disabled',
       },
-      data: generateData()
+      data: generateData(),
     },
     value: [],
     colProps: {
-      span: 24
-    }
+      span: 24,
+    },
   },
   {
     field: 'field36',
@@ -711,19 +711,19 @@ const schema = reactive<FormSchema[]>([
       props: {
         key: 'value',
         label: 'desc',
-        disabled: 'disabled'
+        disabled: 'disabled',
       },
       leftDefaultChecked: [2, 3],
       rightDefaultChecked: [1],
       data: generateData(),
       slots: {
-        default: true
-      }
+        default: true,
+      },
     },
     value: [1],
     colProps: {
-      span: 24
-    }
+      span: 24,
+    },
   },
   {
     field: 'field37',
@@ -733,24 +733,24 @@ const schema = reactive<FormSchema[]>([
       props: {
         key: 'value',
         label: 'desc',
-        disabled: 'disabled'
+        disabled: 'disabled',
       },
       leftDefaultChecked: [2, 3],
       rightDefaultChecked: [1],
       data: generateData(),
       renderContent: (h: Fn, option: Recordable) => {
         return h('span', null, `${option.value} - ${option.desc}`)
-      }
+      },
     },
     value: [1],
     colProps: {
-      span: 24
-    }
+      span: 24,
+    },
   },
   {
     field: 'field38',
     label: t('formDemo.radio'),
-    component: 'Divider'
+    component: 'Divider',
   },
   {
     field: 'field39',
@@ -761,14 +761,14 @@ const schema = reactive<FormSchema[]>([
         {
           disabled: true,
           label: 'option-1',
-          value: '1'
+          value: '1',
         },
         {
           label: 'option-2',
-          value: '2'
-        }
-      ]
-    }
+          value: '2',
+        },
+      ],
+    },
   },
   {
     field: 'field40',
@@ -779,19 +779,19 @@ const schema = reactive<FormSchema[]>([
         {
           disabled: true,
           label: 'option-1',
-          value: '1'
+          value: '1',
         },
         {
           label: 'option-2',
-          value: '2'
-        }
-      ]
-    }
+          value: '2',
+        },
+      ],
+    },
   },
   {
     field: 'field41',
     label: t('formDemo.checkbox'),
-    component: 'Divider'
+    component: 'Divider',
   },
   {
     field: 'field42',
@@ -803,18 +803,18 @@ const schema = reactive<FormSchema[]>([
         {
           disabled: true,
           label: 'option-1',
-          value: '1'
+          value: '1',
         },
         {
           label: 'option-2',
-          value: '2'
+          value: '2',
         },
         {
           label: 'option-3',
-          value: '23'
-        }
-      ]
-    }
+          value: '23',
+        },
+      ],
+    },
   },
   {
     field: 'field43',
@@ -826,42 +826,42 @@ const schema = reactive<FormSchema[]>([
         {
           disabled: true,
           label: 'option-1',
-          value: '1'
+          value: '1',
         },
         {
           label: 'option-2',
-          value: '2'
+          value: '2',
         },
         {
           label: 'option-3',
-          value: '23'
-        }
-      ]
-    }
+          value: '23',
+        },
+      ],
+    },
   },
   {
     field: 'field44',
     component: 'Divider',
-    label: t('formDemo.slider')
+    label: t('formDemo.slider'),
   },
   {
     field: 'field45',
     component: 'Slider',
     label: t('formDemo.default'),
-    value: 0
+    value: 0,
   },
   {
     field: 'field46',
     component: 'Divider',
-    label: t('formDemo.datePicker')
+    label: t('formDemo.datePicker'),
   },
   {
     field: 'field47',
     component: 'DatePicker',
     label: t('formDemo.default'),
     componentProps: {
-      type: 'date'
-    }
+      type: 'date',
+    },
   },
   {
     field: 'field48',
@@ -875,7 +875,7 @@ const schema = reactive<FormSchema[]>([
       shortcuts: [
         {
           text: t('formDemo.today'),
-          value: new Date()
+          value: new Date(),
         },
         {
           text: t('formDemo.yesterday'),
@@ -883,7 +883,7 @@ const schema = reactive<FormSchema[]>([
             const date = new Date()
             date.setTime(date.getTime() - 3600 * 1000 * 24)
             return date
-          }
+          },
         },
         {
           text: t('formDemo.aWeekAgo'),
@@ -891,10 +891,10 @@ const schema = reactive<FormSchema[]>([
             const date = new Date()
             date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
             return date
-          }
-        }
-      ]
-    }
+          },
+        },
+      ],
+    },
   },
   {
     field: 'field49',
@@ -902,48 +902,48 @@ const schema = reactive<FormSchema[]>([
     label: t('formDemo.week'),
     componentProps: {
       type: 'week',
-      format: `[${t('formDemo.week')}] ww`
-    }
+      format: `[${t('formDemo.week')}] ww`,
+    },
   },
   {
     field: 'field50',
     component: 'DatePicker',
     label: t('formDemo.year'),
     componentProps: {
-      type: 'year'
-    }
+      type: 'year',
+    },
   },
   {
     field: 'field51',
     component: 'DatePicker',
     label: t('formDemo.month'),
     componentProps: {
-      type: 'month'
-    }
+      type: 'month',
+    },
   },
   {
     field: 'field52',
     component: 'DatePicker',
     label: t('formDemo.dates'),
     componentProps: {
-      type: 'dates'
-    }
+      type: 'dates',
+    },
   },
   {
     field: 'field53',
     component: 'DatePicker',
     label: t('formDemo.daterange'),
     componentProps: {
-      type: 'daterange'
-    }
+      type: 'daterange',
+    },
   },
   {
     field: 'field54',
     component: 'DatePicker',
     label: t('formDemo.monthrange'),
     componentProps: {
-      type: 'monthrange'
-    }
+      type: 'monthrange',
+    },
   },
   {
     field: 'field55',
@@ -954,22 +954,22 @@ const schema = reactive<FormSchema[]>([
       format: 'YYYY/MM/DD',
       valueFormat: 'YYYY-MM-DD',
       slots: {
-        default: true
-      }
-    }
+        default: true,
+      },
+    },
   },
   {
     field: 'field56',
     component: 'Divider',
-    label: t('formDemo.dateTimePicker')
+    label: t('formDemo.dateTimePicker'),
   },
   {
     field: 'field57',
     component: 'DatePicker',
     label: t('formDemo.default'),
     componentProps: {
-      type: 'datetime'
-    }
+      type: 'datetime',
+    },
   },
   {
     field: 'field58',
@@ -980,7 +980,7 @@ const schema = reactive<FormSchema[]>([
       shortcuts: [
         {
           text: t('formDemo.today'),
-          value: new Date()
+          value: new Date(),
         },
         {
           text: t('formDemo.yesterday'),
@@ -988,7 +988,7 @@ const schema = reactive<FormSchema[]>([
             const date = new Date()
             date.setTime(date.getTime() - 3600 * 1000 * 24)
             return date
-          }
+          },
         },
         {
           text: t('formDemo.aWeekAgo'),
@@ -996,39 +996,39 @@ const schema = reactive<FormSchema[]>([
             const date = new Date()
             date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
             return date
-          }
-        }
-      ]
-    }
+          },
+        },
+      ],
+    },
   },
   {
     field: 'field59',
     component: 'DatePicker',
     label: t('formDemo.dateTimerange'),
     componentProps: {
-      type: 'datetimerange'
-    }
+      type: 'datetimerange',
+    },
   },
   {
     field: 'field60',
     component: 'Divider',
-    label: t('formDemo.timePicker')
+    label: t('formDemo.timePicker'),
   },
   {
     field: 'field61',
     component: 'TimePicker',
-    label: t('formDemo.default')
+    label: t('formDemo.default'),
   },
   {
     field: 'field62',
     component: 'Divider',
-    label: t('formDemo.timeSelect')
+    label: t('formDemo.timeSelect'),
   },
   {
     field: 'field63',
     component: 'TimeSelect',
-    label: t('formDemo.default')
-  }
+    label: t('formDemo.default'),
+  },
 ])
 </script>
 
@@ -1042,8 +1042,8 @@ const schema = reactive<FormSchema[]>([
         <Icon icon="ep:calendar" class="el-input__icon" />
       </template>
 
-      <template #field5-prepend> Http:// </template>
-      <template #field5-append> .com </template>
+      <template #field5-prepend>Http://</template>
+      <template #field5-append>.com</template>
 
       <template #field9-default="{ item }">
         <div class="value">{{ item.value }}</div>
@@ -1080,7 +1080,7 @@ const schema = reactive<FormSchema[]>([
 
       <template #field25-default="{ node, data }">
         <span>{{ data.label }}</span>
-        <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
+        <span v-if="!node.isLeaf">({{ data.children.length }})</span>
       </template>
 
       <template #field36-default="{ option }">

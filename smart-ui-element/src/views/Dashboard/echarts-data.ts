@@ -6,7 +6,7 @@ const { t } = useI18n()
 export const lineOptions: EChartsOption = {
   title: {
     text: t('analysis.monthlySales'),
-    left: 'center'
+    left: 'center',
   },
   xAxis: {
     data: [
@@ -21,35 +21,35 @@ export const lineOptions: EChartsOption = {
       t('analysis.september'),
       t('analysis.october'),
       t('analysis.november'),
-      t('analysis.december')
+      t('analysis.december'),
     ],
     boundaryGap: false,
     axisTick: {
-      show: false
-    }
+      show: false,
+    },
   },
   grid: {
     left: 20,
     right: 20,
     bottom: 20,
     top: 80,
-    containLabel: true
+    containLabel: true,
   },
   tooltip: {
     trigger: 'axis',
     axisPointer: {
-      type: 'cross'
+      type: 'cross',
     },
-    padding: [5, 10]
+    padding: [5, 10],
   },
   yAxis: {
     axisTick: {
-      show: false
-    }
+      show: false,
+    },
   },
   legend: {
     data: [t('analysis.estimate'), t('analysis.actual')],
-    top: 50
+    top: 50,
   },
   series: [
     {
@@ -58,7 +58,7 @@ export const lineOptions: EChartsOption = {
       type: 'line',
       data: [100, 120, 161, 134, 105, 160, 165, 114, 163, 185, 118, 123],
       animationDuration: 2800,
-      animationEasing: 'cubicInOut'
+      animationEasing: 'cubicInOut',
     },
     {
       name: t('analysis.actual'),
@@ -67,19 +67,19 @@ export const lineOptions: EChartsOption = {
       itemStyle: {},
       data: [120, 82, 91, 154, 162, 140, 145, 250, 134, 56, 99, 123],
       animationDuration: 2800,
-      animationEasing: 'quadraticOut'
-    }
-  ]
+      animationEasing: 'quadraticOut',
+    },
+  ],
 }
 
 export const pieOptions: EChartsOption = {
   title: {
     text: t('analysis.userAccessSource'),
-    left: 'center'
+    left: 'center',
   },
   tooltip: {
     trigger: 'item',
-    formatter: '{a} <br/>{b} : {c} ({d}%)'
+    formatter: '{a} <br/>{b} : {c} ({d}%)',
   },
   legend: {
     orient: 'vertical',
@@ -89,8 +89,8 @@ export const pieOptions: EChartsOption = {
       t('analysis.mailMarketing'),
       t('analysis.allianceAdvertising'),
       t('analysis.videoAdvertising'),
-      t('analysis.searchEngines')
-    ]
+      t('analysis.searchEngines'),
+    ],
   },
   series: [
     {
@@ -103,27 +103,27 @@ export const pieOptions: EChartsOption = {
         { value: 310, name: t('analysis.mailMarketing') },
         { value: 234, name: t('analysis.allianceAdvertising') },
         { value: 135, name: t('analysis.videoAdvertising') },
-        { value: 1548, name: t('analysis.searchEngines') }
-      ]
-    }
-  ]
+        { value: 1548, name: t('analysis.searchEngines') },
+      ],
+    },
+  ],
 }
 
 export const barOptions: EChartsOption = {
   title: {
     text: t('analysis.weeklyUserActivity'),
-    left: 'center'
+    left: 'center',
   },
   tooltip: {
     trigger: 'axis',
     axisPointer: {
-      type: 'shadow'
-    }
+      type: 'shadow',
+    },
   },
   grid: {
     left: 50,
     right: 20,
-    bottom: 20
+    bottom: 20,
   },
   xAxis: {
     type: 'category',
@@ -134,27 +134,27 @@ export const barOptions: EChartsOption = {
       t('analysis.thursday'),
       t('analysis.friday'),
       t('analysis.saturday'),
-      t('analysis.sunday')
+      t('analysis.sunday'),
     ],
     axisTick: {
-      alignWithLabel: true
-    }
+      alignWithLabel: true,
+    },
   },
   yAxis: {
-    type: 'value'
+    type: 'value',
   },
   series: [
     {
       name: t('analysis.activeQuantity'),
       data: [13253, 34235, 26321, 12340, 24643, 1322, 1324],
-      type: 'bar'
-    }
-  ]
+      type: 'bar',
+    },
+  ],
 }
 
 export const radarOption: EChartsOption = {
   legend: {
-    data: [t('workplace.personal'), t('workplace.team')]
+    data: [t('workplace.personal'), t('workplace.team')],
   },
   radar: {
     // shape: 'circle',
@@ -163,8 +163,8 @@ export const radarOption: EChartsOption = {
       { name: t('workplace.contribution'), max: 160 },
       { name: t('workplace.hot'), max: 300 },
       { name: t('workplace.yield'), max: 130 },
-      { name: t('workplace.follow'), max: 100 }
-    ]
+      { name: t('workplace.follow'), max: 100 },
+    ],
   },
   series: [
     {
@@ -173,15 +173,15 @@ export const radarOption: EChartsOption = {
       data: [
         {
           value: [42, 30, 20, 35, 80],
-          name: t('workplace.personal')
+          name: t('workplace.personal'),
         },
         {
           value: [50, 140, 290, 100, 90],
-          name: t('workplace.team')
-        }
-      ]
-    }
-  ]
+          name: t('workplace.team'),
+        },
+      ],
+    },
+  ],
 }
 
 export const wordOptions = {
@@ -202,108 +202,108 @@ export const wordOptions = {
             [
               Math.round(Math.random() * 160),
               Math.round(Math.random() * 160),
-              Math.round(Math.random() * 160)
+              Math.round(Math.random() * 160),
             ].join(',') +
             ')'
           )
-        }
+        },
       },
       emphasis: {
         textStyle: {
           shadowBlur: 10,
-          shadowColor: '#333'
-        }
+          shadowColor: '#333',
+        },
       },
       data: [
         {
           name: 'Sam S Club',
           value: 10000,
           textStyle: {
-            color: 'black'
+            color: 'black',
           },
           emphasis: {
             textStyle: {
-              color: 'red'
-            }
-          }
+              color: 'red',
+            },
+          },
         },
         {
           name: 'Macys',
-          value: 6181
+          value: 6181,
         },
         {
           name: 'Amy Schumer',
-          value: 4386
+          value: 4386,
         },
         {
           name: 'Jurassic World',
-          value: 4055
+          value: 4055,
         },
         {
           name: 'Charter Communications',
-          value: 2467
+          value: 2467,
         },
         {
           name: 'Chick Fil A',
-          value: 2244
+          value: 2244,
         },
         {
           name: 'Planet Fitness',
-          value: 1898
+          value: 1898,
         },
         {
           name: 'Pitch Perfect',
-          value: 1484
+          value: 1484,
         },
         {
           name: 'Express',
-          value: 1112
+          value: 1112,
         },
         {
           name: 'Home',
-          value: 965
+          value: 965,
         },
         {
           name: 'Johnny Depp',
-          value: 847
+          value: 847,
         },
         {
           name: 'Lena Dunham',
-          value: 582
+          value: 582,
         },
         {
           name: 'Lewis Hamilton',
-          value: 555
+          value: 555,
         },
         {
           name: 'KXAN',
-          value: 550
+          value: 550,
         },
         {
           name: 'Mary Ellen Mark',
-          value: 462
+          value: 462,
         },
         {
           name: 'Farrah Abraham',
-          value: 366
+          value: 366,
         },
         {
           name: 'Rita Ora',
-          value: 360
+          value: 360,
         },
         {
           name: 'Serena Williams',
-          value: 282
+          value: 282,
         },
         {
           name: 'NCAA baseball tournament',
-          value: 273
+          value: 273,
         },
         {
           name: 'Point Break',
-          value: 265
-        }
-      ]
-    }
-  ]
+          value: 265,
+        },
+      ],
+    },
+  ],
 }

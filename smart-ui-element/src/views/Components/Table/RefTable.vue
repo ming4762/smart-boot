@@ -15,7 +15,7 @@ const columns = reactive<TableColumn[]>([
   {
     field: 'index',
     label: t('tableDemo.index'),
-    type: 'index'
+    type: 'index',
   },
   {
     field: 'content',
@@ -23,15 +23,15 @@ const columns = reactive<TableColumn[]>([
     children: [
       {
         field: 'title',
-        label: t('tableDemo.title')
+        label: t('tableDemo.title'),
       },
       {
         field: 'author',
-        label: t('tableDemo.author')
+        label: t('tableDemo.author'),
       },
       {
         field: 'display_time',
-        label: t('tableDemo.displayTime')
+        label: t('tableDemo.displayTime'),
       },
       {
         field: 'importance',
@@ -40,38 +40,38 @@ const columns = reactive<TableColumn[]>([
           return h(
             ElTag,
             {
-              type: cellValue === 1 ? 'success' : cellValue === 2 ? 'warning' : 'danger'
+              type: cellValue === 1 ? 'success' : cellValue === 2 ? 'warning' : 'danger',
             },
             () =>
               cellValue === 1
                 ? t('tableDemo.important')
                 : cellValue === 2
                 ? t('tableDemo.good')
-                : t('tableDemo.commonly')
+                : t('tableDemo.commonly'),
           )
-        }
+        },
       },
       {
         field: 'pageviews',
-        label: t('tableDemo.pageviews')
-      }
-    ]
+        label: t('tableDemo.pageviews'),
+      },
+    ],
   },
   {
     field: 'action',
-    label: t('tableDemo.action')
-  }
+    label: t('tableDemo.action'),
+  },
 ])
 
 const { register, tableObject, methods } = useTable<TableData>({
   getListApi: getTableListApi,
   response: {
     list: 'list',
-    total: 'total'
+    total: 'total',
   },
   props: {
-    columns
-  }
+    columns,
+  },
 })
 
 const { getList } = methods
@@ -89,7 +89,7 @@ const paginationObj = ref<Pagination>()
 const showPagination = (show: boolean) => {
   if (show) {
     paginationObj.value = {
-      total: tableObject.total
+      total: tableObject.total,
     }
   } else {
     paginationObj.value = undefined
@@ -98,13 +98,13 @@ const showPagination = (show: boolean) => {
 
 const reserveIndex = (custom: boolean) => {
   unref(tableRef)?.setProps({
-    reserveIndex: custom
+    reserveIndex: custom,
   })
 }
 
 const showSelections = (show: boolean) => {
   unref(tableRef)?.setProps({
-    selection: show
+    selection: show,
   })
 }
 
@@ -115,15 +115,15 @@ const changeTitle = () => {
     {
       field: 'title',
       path: 'label',
-      value: `${t('tableDemo.title')}${unref(index)}`
-    }
+      value: `${t('tableDemo.title')}${unref(index)}`,
+    },
   ])
   index.value++
 }
 
 const showExpandedRows = (show: boolean) => {
   unref(tableRef)?.setProps({
-    expand: show
+    expand: show,
   })
 }
 
@@ -162,8 +162,7 @@ const selectAllNone = () => {
       :data="tableObject.tableList"
       :loading="tableObject.loading"
       :pagination="paginationObj"
-      @register="register"
-    >
+      @register="register">
       <template #action="data">
         <ElButton type="primary" @click="actionFn(data as TableSlotDefault)">
           {{ t('tableDemo.action') }}

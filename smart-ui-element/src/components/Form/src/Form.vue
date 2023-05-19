@@ -10,7 +10,7 @@ import {
   setComponentProps,
   setItemComponentSlots,
   initModel,
-  setFormItemSlots
+  setFormItemSlots,
 } from './helper'
 import { useRenderSelect } from './components/useRenderSelect'
 import { useRenderRadio } from './components/useRenderRadio'
@@ -32,21 +32,21 @@ export default defineComponent({
     // 生成Form的布局结构数组
     schema: {
       type: Array as PropType<FormSchema[]>,
-      default: () => []
+      default: () => [],
     },
     // 是否需要栅格布局
     isCol: propTypes.bool.def(true),
     // 表单数据对象
     model: {
       type: Object as PropType<Recordable>,
-      default: () => ({})
+      default: () => ({}),
     },
     // 是否自动设置placeholder
     autoSetPlaceholder: propTypes.bool.def(true),
     // 是否自定义内容
     isCustom: propTypes.bool.def(false),
     // 表单label宽度
-    labelWidth: propTypes.oneOfType([String, Number]).def('auto')
+    labelWidth: propTypes.oneOfType([String, Number]).def('auto'),
   },
   emits: ['register'],
   setup(props, { slots, expose, emit }) {
@@ -82,16 +82,15 @@ export default defineComponent({
     }
 
     const delSchema = (field: string) => {
-      const { schema } = unref(getProps)
-
+      const schema = unref(getProps).schema as FormSchema[]
       const index = findIndex(schema, (v: FormSchema) => v.field === field)
       if (index > -1) {
         schema.splice(index, 1)
       }
     }
 
-    const addSchema = (formSchema: FormSchema, index?: number) => {
-      const { schema } = unref(getProps)
+    const addSchema = (formSchema: FormSchema, index: number) => {
+      const schema = unref(getProps).schema as FormSchema[]
       if (index !== void 0) {
         schema.splice(index, 0, formSchema)
         return
@@ -121,7 +120,7 @@ export default defineComponent({
       delSchema,
       addSchema,
       setSchema,
-      getElFormRef
+      getElFormRef,
     })
 
     // 监听表单结构化数组，重新生成formModel
@@ -132,8 +131,8 @@ export default defineComponent({
       },
       {
         immediate: true,
-        deep: true
-      }
+        deep: true,
+      },
     )
 
     // 渲染包裹标签，是否使用栅格布局
@@ -174,7 +173,7 @@ export default defineComponent({
       // 单独给只有options属性的组件做判断
       const notRenderOptions = ['SelectV2', 'Cascader', 'Transfer']
       const slotsMap: Recordable = {
-        ...setItemComponentSlots(slots, item?.componentProps?.slots, item.field)
+        ...setItemComponentSlots(slots, item?.componentProps?.slots, item.field),
       }
       if (
         item?.component !== 'SelectV2' &&
@@ -199,9 +198,8 @@ export default defineComponent({
                       icon="ep:warning"
                       size={16}
                       color="var(--el-color-primary)"
-                      class="ml-2px relative top-1px"
-                    ></Icon>
-                  )
+                      class="ml-2px relative top-1px"></Icon>
+                  ),
                 }}
               </ElTooltip>
             </>
@@ -230,12 +228,11 @@ export default defineComponent({
                   {...(notRenderOptions.includes(item?.component as string) &&
                   item?.componentProps?.options
                     ? { options: item?.componentProps?.options || [] }
-                    : {})}
-                >
+                    : {})}>
                   {{ ...slotsMap }}
                 </Com>
               )
-            }
+            },
           }}
         </ElFormItem>
       )
@@ -278,18 +275,17 @@ export default defineComponent({
         ref={elFormRef}
         {...getFormBindValue()}
         model={props.isCustom ? props.model : formModel}
-        class={prefixCls}
-      >
+        class={prefixCls}>
         {{
           // 如果需要自定义，就什么都不渲染，而是提供默认插槽
           default: () => {
             const { isCustom } = unref(getProps)
             return isCustom ? getSlot(slots, 'default') : renderWrap()
-          }
+          },
         }}
       </ElForm>
     )
-  }
+  },
 })
 </script>
 

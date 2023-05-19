@@ -14,7 +14,7 @@ const { variables } = useDesign()
 const appStore = useAppStore()
 
 const props = defineProps({
-  size: propTypes.oneOf<ElementPlusSize>(['default', 'small', 'large']).def('default')
+  size: propTypes.oneOf<ElementPlusSize>(['default', 'small', 'large']).def('default'),
 })
 
 provide('configGlobal', props)
@@ -41,8 +41,8 @@ watch(
     }
   },
   {
-    immediate: true
-  }
+    immediate: true,
+  },
 )
 
 // 多语言相关
@@ -56,8 +56,7 @@ const currentLocale = computed(() => localeStore.currentLocale)
     :namespace="variables.elNamespace"
     :locale="currentLocale.elLocale"
     :message="{ max: 1 }"
-    :size="size"
-  >
+    :size="size">
     <slot></slot>
   </ElConfigProvider>
 </template>

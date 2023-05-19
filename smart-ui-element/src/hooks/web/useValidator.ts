@@ -14,7 +14,7 @@ export const useValidator = () => {
   const required = (message?: string) => {
     return {
       required: true,
-      message: message || t('common.required')
+      message: message || t('common.required'),
     }
   }
 
@@ -59,6 +59,6 @@ export const useValidator = () => {
     lengthRange,
     notSpace,
     notSpecialCharacters,
-    isEqual
+    isEqual,
   }
 }

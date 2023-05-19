@@ -11,37 +11,37 @@ const { t } = useI18n()
 defineProps({
   currentRow: {
     type: Object as PropType<Nullable<TableData>>,
-    default: () => null
-  }
+    default: () => null,
+  },
 })
 
 const schema = reactive<DescriptionsSchema[]>([
   {
     field: 'title',
     label: t('exampleDemo.title'),
-    span: 24
+    span: 24,
   },
   {
     field: 'author',
-    label: t('exampleDemo.author')
+    label: t('exampleDemo.author'),
   },
   {
     field: 'display_time',
-    label: t('exampleDemo.displayTime')
+    label: t('exampleDemo.displayTime'),
   },
   {
     field: 'importance',
-    label: t('exampleDemo.importance')
+    label: t('exampleDemo.importance'),
   },
   {
     field: 'pageviews',
-    label: t('exampleDemo.pageviews')
+    label: t('exampleDemo.pageviews'),
   },
   {
     field: 'content',
     label: t('exampleDemo.content'),
-    span: 24
-  }
+    span: 24,
+  },
 ])
 </script>
 

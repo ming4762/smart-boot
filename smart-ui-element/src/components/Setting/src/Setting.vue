@@ -52,7 +52,7 @@ const setHeaderTheme = (color: string) => {
     topHeaderBgColor: color,
     topHeaderTextColor: textColor,
     topHeaderHoverColor: textHoverColor,
-    topToolBorderColor
+    topToolBorderColor,
   })
   if (unref(layout) === 'top') {
     setMenuTheme(color)
@@ -87,7 +87,7 @@ const setMenuTheme = (color: string) => {
     // logo字体颜色
     logoTitleTextColor: isDarkColor ? '#fff' : 'inherit',
     // logo边框颜色
-    logoBorderColor: isDarkColor ? color : '#eee'
+    logoBorderColor: isDarkColor ? color : '#eee',
   }
   appStore.setTheme(theme)
   appStore.setCssVarTheme()
@@ -107,7 +107,7 @@ watch(
     } else {
       setMenuTheme(unref(menuTheme))
     }
-  }
+  },
 )
 
 // 拷贝
@@ -177,7 +177,7 @@ const copyConfig = async () => {
         // 头部边框颜色
         topToolBorderColor: '${appStore.getTheme.topToolBorderColor}'
       }
-    `
+    `,
   })
   if (!isSupported) {
     ElMessage.error(t('setting.copyFailed'))
@@ -203,8 +203,7 @@ const clear = () => {
   <div
     :class="prefixCls"
     class="fixed top-[45%] right-0 w-40px h-40px text-center leading-40px bg-[var(--el-color-primary)] cursor-pointer"
-    @click="drawer = true"
-  >
+    @click="drawer = true">
     <Icon icon="ant-design:setting-outlined" color="#fff" />
   </div>
 
@@ -234,10 +233,9 @@ const clear = () => {
           '#ee4f12',
           '#0096c7',
           '#9c27b0',
-          '#ff9800'
+          '#ff9800',
         ]"
-        @change="setSystemTheme"
-      />
+        @change="setSystemTheme" />
 
       <!-- 头部主题 -->
       <ElDivider>{{ t('setting.headerTheme') }}</ElDivider>
@@ -251,10 +249,9 @@ const clear = () => {
           '#24292e',
           '#394664',
           '#009688',
-          '#383f45'
+          '#383f45',
         ]"
-        @change="setHeaderTheme"
-      />
+        @change="setHeaderTheme" />
 
       <!-- 菜单主题 -->
       <template v-if="layout !== 'top'">
@@ -269,10 +266,9 @@ const clear = () => {
             '#191b24',
             '#383f45',
             '#001628',
-            '#344058'
+            '#344058',
           ]"
-          @change="setMenuTheme"
-        />
+          @change="setMenuTheme" />
       </template>
     </div>
 

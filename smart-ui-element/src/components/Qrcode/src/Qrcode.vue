@@ -14,24 +14,24 @@ const props = defineProps({
   // 二维码内容
   text: {
     type: [String, Array] as PropType<string | Recordable[]>,
-    default: null
+    default: null,
   },
   // qrcode.js配置项
   options: {
     type: Object as PropType<QRCodeRenderersOptions>,
-    default: () => ({})
+    default: () => ({}),
   },
   // 宽度
   width: propTypes.number.def(200),
   // logo
   logo: {
     type: [String, Object] as PropType<Partial<QrcodeLogo> | string>,
-    default: ''
+    default: '',
   },
   // 是否过期
   disabled: propTypes.bool.def(false),
   // 过期提示内容
-  disabledText: propTypes.string.def('')
+  disabledText: propTypes.string.def(''),
 })
 
 const emit = defineEmits(['done', 'click', 'disabled-click'])
@@ -51,7 +51,7 @@ const renderText = computed(() => String(props.text))
 const wrapStyle = computed(() => {
   return {
     width: props.width + 'px',
-    height: props.width + 'px'
+    height: props.width + 'px',
   }
 })
 
@@ -67,7 +67,7 @@ const initQrcode = async () => {
     const canvasRef = (await toCanvas(
       unref(wrapRef) as HTMLCanvasElement,
       unref(renderText),
-      options
+      options,
     )) as unknown as HTMLCanvasElement
     if (props.logo) {
       const url = await createLogoCode(canvasRef)
@@ -81,7 +81,7 @@ const initQrcode = async () => {
     const url = await toDataURL(renderText.value, {
       errorCorrectionLevel: 'H',
       width: props.width,
-      ...options
+      ...options,
     })
     ;(unref(wrapRef) as HTMLImageElement).src = url
     emit('done', url)
@@ -97,8 +97,8 @@ watch(
   },
   {
     deep: true,
-    immediate: true
-  }
+    immediate: true,
+  },
 )
 
 const createLogoCode = (canvasRef: HTMLCanvasElement) => {
@@ -110,9 +110,9 @@ const createLogoCode = (canvasRef: HTMLCanvasElement) => {
       borderSize: 0.05,
       crossOrigin: 'anonymous',
       borderRadius: 8,
-      logoRadius: 0
+      logoRadius: 0,
     },
-    isString(props.logo) ? {} : props.logo
+    isString(props.logo) ? {} : props.logo,
   )
   const {
     logoSize = 0.15,
@@ -120,7 +120,7 @@ const createLogoCode = (canvasRef: HTMLCanvasElement) => {
     borderSize = 0.05,
     crossOrigin = 'anonymous',
     borderRadius = 8,
-    logoRadius = 0
+    logoRadius = 0,
   } = logoOptions
   const logoSrc = isString(props.logo) ? props.logo : props.logo.src
   const logoWidth = canvasWidth * logoSize
@@ -227,8 +227,7 @@ const disabledClick = () => {
       v-if="disabled"
       :class="`${prefixCls}--disabled`"
       class="absolute top-0 left-0 flex w-full h-full items-center justify-center"
-      @click="disabledClick"
-    >
+      @click="disabledClick">
       <div class="absolute top-[50%] left-[50%] font-bold">
         <Icon icon="ep:refresh-right" :size="30" color="var(--el-color-primary)" />
         <div>{{ disabledText }}</div>

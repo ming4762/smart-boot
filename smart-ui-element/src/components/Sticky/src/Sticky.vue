@@ -16,8 +16,8 @@ const props = defineProps({
     validator: function (value: string) {
       return ['top', 'bottom'].indexOf(value) !== -1
     },
-    default: 'top'
-  }
+    default: 'top',
+  },
 })
 const width = ref('auto' as string)
 const height = ref('auto' as string)
@@ -61,7 +61,7 @@ const isScroll = (el: HTMLElement, isVertical?: boolean): boolean => {
     {
       undefined: 'overflow',
       true: 'overflow-y',
-      false: 'overflow-x'
+      false: 'overflow-x',
     } as const
   )[String(isVertical)]!
   const overflow = getStyle(el, key)
@@ -70,7 +70,7 @@ const isScroll = (el: HTMLElement, isVertical?: boolean): boolean => {
 
 const getScrollContainer = (
   el: HTMLElement,
-  isVertical: boolean
+  isVertical: boolean,
 ): Window | HTMLElement | undefined => {
   if (!isClient) return
   let parent = el
@@ -130,9 +130,8 @@ const reset = () => {
         zIndex: zIndex,
         position: isSticky ? 'fixed' : 'static',
         width: width,
-        height: height
-      }"
-    >
+        height: height,
+      }">
       <slot>
         <div>sticky</div>
       </slot>

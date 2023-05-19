@@ -11,12 +11,12 @@ const { t } = useI18n()
 defineProps({
   currentRow: {
     type: Object as PropType<Nullable<TableData>>,
-    default: () => null
+    default: () => null,
   },
   detailSchema: {
     type: Array as PropType<DescriptionsSchema[]>,
-    default: () => []
-  }
+    default: () => [],
+  },
 })
 </script>
 

@@ -24,7 +24,7 @@ const loginOut = () => {
   ElMessageBox.confirm(t('common.loginOutMessage'), t('common.reminder'), {
     confirmButtonText: t('common.ok'),
     cancelButtonText: t('common.cancel'),
-    type: 'warning'
+    type: 'warning',
   })
     .then(async () => {
       const res = await loginOutApi().catch(() => {})
@@ -49,8 +49,7 @@ const toDocument = () => {
       <img
         src="@/assets/imgs/avatar.jpg"
         alt=""
-        class="w-[calc(var(--logo-height)-25px)] rounded-[50%]"
-      />
+        class="w-[calc(var(--logo-height)-25px)] rounded-[50%]" />
       <span class="<lg:hidden text-14px pl-[5px] text-[var(--top-header-text-color)]">Archer</span>
     </div>
     <template #dropdown>

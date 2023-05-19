@@ -86,7 +86,7 @@ const refreshSelectedTag = async (view?: RouteLocationNormalizedLoaded) => {
   await nextTick()
   replace({
     path: '/redirect' + path,
-    query: query
+    query: query,
   })
 }
 
@@ -153,7 +153,7 @@ const moveToTarget = (currentTag: RouteLocationNormalizedLoaded) => {
       el: wrap$!,
       position: 'scrollLeft',
       to: 0,
-      duration: 500
+      duration: 500,
     })
     start()
   } else if ((lastTag?.to as RouteLocationNormalizedLoaded).fullPath === currentTag.fullPath) {
@@ -162,13 +162,13 @@ const moveToTarget = (currentTag: RouteLocationNormalizedLoaded) => {
       el: wrap$!,
       position: 'scrollLeft',
       to: wrap$!.scrollWidth - wrap$!.offsetWidth,
-      duration: 500
+      duration: 500,
     })
     start()
   } else {
     // find preTag and nextTag
     const currentIndex: number = tagList.findIndex(
-      (item) => (item?.to as RouteLocationNormalizedLoaded).fullPath === currentTag.fullPath
+      (item) => (item?.to as RouteLocationNormalizedLoaded).fullPath === currentTag.fullPath,
     )
     const tgsRefs = document.getElementsByClassName(`${prefixCls}__item`)
 
@@ -186,7 +186,7 @@ const moveToTarget = (currentTag: RouteLocationNormalizedLoaded) => {
         el: wrap$!,
         position: 'scrollLeft',
         to: afterNextTagOffsetLeft - wrap$!.offsetWidth,
-        duration: 500
+        duration: 500,
       })
       start()
     } else if (beforePrevTagOffsetLeft < unref(scrollLeftNumber)) {
@@ -194,7 +194,7 @@ const moveToTarget = (currentTag: RouteLocationNormalizedLoaded) => {
         el: wrap$!,
         position: 'scrollLeft',
         to: beforePrevTagOffsetLeft,
-        duration: 500
+        duration: 500,
       })
       start()
     }
@@ -238,7 +238,7 @@ const move = (to: number) => {
     el: wrap$!,
     position: 'scrollLeft',
     to: unref(scrollLeftNumber) + to,
-    duration: 500
+    duration: 500,
   })
   start()
 }
@@ -253,7 +253,7 @@ watch(
   () => {
     addTags()
     moveToCurrentTag()
-  }
+  },
 )
 </script>
 
@@ -261,17 +261,14 @@ watch(
   <div
     :id="prefixCls"
     :class="prefixCls"
-    class="flex w-full relative bg-[#fff] dark:bg-[var(--el-bg-color)]"
-  >
+    class="flex w-full relative bg-[#fff] dark:bg-[var(--el-bg-color)]">
     <span
       :class="`${prefixCls}__tool`"
       class="w-[var(--tags-view-height)] h-[var(--tags-view-height)] text-center leading-[var(--tags-view-height)] cursor-pointer"
-      @click="move(-200)"
-    >
+      @click="move(-200)">
       <Icon
         icon="ep:d-arrow-left"
-        :color="appStore.getIsDark ? 'var(--el-text-color-regular)' : '#333'"
-      />
+        :color="appStore.getIsDark ? 'var(--el-text-color-regular)' : '#333'" />
     </span>
     <div class="overflow-hidden flex-1">
       <ElScrollbar ref="scrollbarRef" class="h-full" @scroll="scroll">
@@ -285,7 +282,7 @@ watch(
                 disabled: selectedTag?.fullPath !== item.fullPath,
                 command: () => {
                   refreshSelectedTag(item)
-                }
+                },
               },
               {
                 icon: 'ant-design:close-outlined',
@@ -293,7 +290,7 @@ watch(
                 disabled: !!visitedViews?.length && selectedTag?.meta.affix,
                 command: () => {
                   closeSelectedTag(item)
-                }
+                },
               },
               {
                 divided: true,
@@ -305,7 +302,7 @@ watch(
                     selectedTag?.fullPath !== item.fullPath),
                 command: () => {
                   closeLeftTags()
-                }
+                },
               },
               {
                 icon: 'ant-design:vertical-left-outlined',
@@ -316,7 +313,7 @@ watch(
                     selectedTag?.fullPath !== item.fullPath),
                 command: () => {
                   closeRightTags()
-                }
+                },
               },
               {
                 divided: true,
@@ -325,15 +322,15 @@ watch(
                 disabled: selectedTag?.fullPath !== item.fullPath,
                 command: () => {
                   closeOthersTags()
-                }
+                },
               },
               {
                 icon: 'ant-design:line-outlined',
                 label: t('common.closeAll'),
                 command: () => {
                   closeAllTags()
-                }
-              }
+                },
+              },
             ]"
             v-for="item in visitedViews"
             :key="item.fullPath"
@@ -342,17 +339,15 @@ watch(
               `${prefixCls}__item`,
               item?.meta?.affix ? `${prefixCls}__item--affix` : '',
               {
-                'is-active': isActive(item)
-              }
+                'is-active': isActive(item),
+              },
             ]"
-            @visible-change="visibleChange"
-          >
+            @visible-change="visibleChange">
             <div>
               <router-link :ref="tagLinksRefs.set" :to="{ ...item }" custom v-slot="{ navigate }">
                 <div
                   @click="navigate"
-                  class="h-full flex justify-center items-center whitespace-nowrap pl-15px"
-                >
+                  class="h-full flex justify-center items-center whitespace-nowrap pl-15px">
                   <Icon
                     v-if="
                       item?.matched &&
@@ -362,16 +357,14 @@ watch(
                     "
                     :icon="item?.matched[1]?.meta?.icon"
                     :size="12"
-                    class="mr-5px"
-                  />
+                    class="mr-5px" />
                   {{ t(item?.meta?.title as string) }}
                   <Icon
                     :class="`${prefixCls}__item--close`"
                     color="#333"
                     icon="ant-design:close-outlined"
                     :size="12"
-                    @click.prevent.stop="closeSelectedTag(item)"
-                  />
+                    @click.prevent.stop="closeSelectedTag(item)" />
                 </div>
               </router-link>
             </div>
@@ -382,22 +375,18 @@ watch(
     <span
       :class="`${prefixCls}__tool`"
       class="w-[var(--tags-view-height)] h-[var(--tags-view-height)] text-center leading-[var(--tags-view-height)] cursor-pointer"
-      @click="move(200)"
-    >
+      @click="move(200)">
       <Icon
         icon="ep:d-arrow-right"
-        :color="appStore.getIsDark ? 'var(--el-text-color-regular)' : '#333'"
-      />
+        :color="appStore.getIsDark ? 'var(--el-text-color-regular)' : '#333'" />
     </span>
     <span
       :class="`${prefixCls}__tool`"
       class="w-[var(--tags-view-height)] h-[var(--tags-view-height)] text-center leading-[var(--tags-view-height)] cursor-pointer"
-      @click="refreshSelectedTag(selectedTag)"
-    >
+      @click="refreshSelectedTag(selectedTag)">
       <Icon
         icon="ant-design:reload-outlined"
-        :color="appStore.getIsDark ? 'var(--el-text-color-regular)' : '#333'"
-      />
+        :color="appStore.getIsDark ? 'var(--el-text-color-regular)' : '#333'" />
     </span>
     <ContextMenu
       trigger="click"
@@ -451,16 +440,13 @@ watch(
             closeAllTags()
           }
         }
-      ]"
-    >
+      ]">
       <span
         :class="`${prefixCls}__tool`"
-        class="w-[var(--tags-view-height)] h-[var(--tags-view-height)] text-center leading-[var(--tags-view-height)] cursor-pointer block"
-      >
+        class="w-[var(--tags-view-height)] h-[var(--tags-view-height)] text-center leading-[var(--tags-view-height)] cursor-pointer block">
         <Icon
           icon="ant-design:setting-outlined"
-          :color="appStore.getIsDark ? 'var(--el-text-color-regular)' : '#333'"
-        />
+          :color="appStore.getIsDark ? 'var(--el-text-color-regular)' : '#333'" />
       </span>
     </ContextMenu>
   </div>
