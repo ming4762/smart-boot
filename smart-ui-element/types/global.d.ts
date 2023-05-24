@@ -12,8 +12,6 @@ declare global {
 
   declare type ComponentRef<T> = InstanceType<T>
 
-  declare type LocaleType = 'zh-CN' | 'en'
-
   declare type AxiosHeaders =
     | 'application/json'
     | 'application/x-www-form-urlencoded'

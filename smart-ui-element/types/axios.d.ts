@@ -49,3 +49,19 @@ export interface Result<T = any> {
   data: T
   exceptionNo?: number
 }
+
+export interface UploadFileItemParams {
+  // File parameter interface field name
+  name?: string
+  // file name
+  file: File | Blob
+  // file name
+  filename?: string
+}
+// multipart/form-data: upload file
+export interface UploadFileParams {
+  // Other parameters
+  data?: Recordable
+  file: UploadFileItemParams | UploadFileItemParams[]
+  [key: string]: any
+}

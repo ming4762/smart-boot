@@ -8,12 +8,15 @@ import { usePermissionStoreWithOut } from '@/store/modules/permission'
 import { useDictStoreWithOut } from '@/store/modules/dict'
 import { usePageLoading } from '@/hooks/web/usePageLoading'
 import { getDictApi } from '@/api/common'
+import { useUserStore } from '@/store/modules/user'
 
 const permissionStore = usePermissionStoreWithOut()
 
 const appStore = useAppStoreWithOut()
 
 const dictStore = useDictStoreWithOut()
+
+const userStore = useUserStore()
 
 const { wsCache } = useCache()
 
@@ -26,7 +29,8 @@ const whiteList = ['/login'] // 不重定向白名单
 router.beforeEach(async (to, from, next) => {
   start()
   loadStart()
-  if (wsCache.get(appStore.getUserInfo)) {
+  const userInfo = userStore.getUserInfo
+  if (userInfo) {
     if (to.path === '/login') {
       next({ path: '/' })
     } else {
@@ -45,15 +49,12 @@ router.beforeEach(async (to, from, next) => {
 
       // 开发者可根据实际情况进行修改
       const roleRouters = wsCache.get('roleRouters') || []
-      const userInfo = wsCache.get(appStore.getUserInfo)
 
       // 是否使用动态路由
       if (appStore.getDynamicRouter) {
-        userInfo.role === 'admin'
-          ? await permissionStore.generateRoutes('admin', roleRouters as AppCustomRouteRecordRaw[])
-          : await permissionStore.generateRoutes('test', roleRouters as string[])
+        await permissionStore.generateRoutes(true, roleRouters as AppCustomRouteRecordRaw[])
       } else {
-        await permissionStore.generateRoutes('none')
+        await permissionStore.generateRoutes(false)
       }
 
       permissionStore.getAddRouters.forEach((route) => {

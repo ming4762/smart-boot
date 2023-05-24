@@ -7,7 +7,7 @@ import { CountTo } from '@/components/CountTo'
 import { formatTime } from '@/utils'
 import { Echart } from '@/components/Echart'
 import { EChartsOption } from 'echarts'
-import { radarOption } from './echarts-data'
+import { radarOption } from './analysis/echarts-data'
 import { Highlight } from '@/components/Highlight'
 import {
   getCountApi,

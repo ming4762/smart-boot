@@ -7,16 +7,16 @@ import type { RequestOptions, Result } from '/#/axios'
 import type { AxiosTransform, CreateAxiosOptions } from './axiosTransform'
 import { VAxios } from './Axios'
 import { checkStatus } from './checkStatus'
-import { useGlobSetting } from '/@/hooks/setting'
-import { useMessage } from '/@/hooks/web/useMessage'
-import { RequestEnum, ResultEnum, ContentTypeEnum } from '/@/enums/httpEnum'
+import { useGlobSetting } from '@/hooks/setting'
+import { useMessage } from '@/hooks/web/useMessage'
+import { RequestEnum, ResultEnum, ContentTypeEnum } from '@/enums/httpEnum'
 import { isBlob, isString } from '/@/utils/is'
 import { getToken } from '/@/utils/auth'
 import { setObjToUrlParams, deepMerge } from '/@/utils'
 import { useI18n } from '/@/hooks/web/useI18n'
 import { joinTimestamp, formatRequestDate } from './helper'
-import { useUserStoreWithOut } from '/@/store/modules/user'
-import { AxiosRetry } from '/@/utils/http/axios/axiosRetry'
+import { useUserStore } from '@/store/modules/user'
+import { AxiosRetry } from './axiosRetry'
 import { useLocaleStore } from '/@/store/modules/locale'
 
 const globSetting = useGlobSetting()
@@ -92,7 +92,7 @@ const transform: AxiosTransform = {
     // errorMessageMode='none' 一般是调用时明确表示不希望自动弹出错误提示
     if (continueDeal) {
       if (options.errorMessageMode === 'modal') {
-        createErrorModal({ title: t('sys.api.errorTip'), content: timeoutMsg })
+        createErrorModal({ title: t('sys.api.errorTip'), message: timeoutMsg })
       } else if (options.errorMessageMode === 'message') {
         createMessage.error(timeoutMsg)
       }
@@ -212,7 +212,7 @@ const transform: AxiosTransform = {
       }
       if (errMessage) {
         if (errorMessageMode === 'modal') {
-          createErrorModal({ title: t('sys.api.errorTip'), content: errMessage })
+          createErrorModal({ title: t('sys.api.errorTip'), message: errMessage })
         } else if (errorMessageMode === 'message') {
           createMessage.error(errMessage)
         }
@@ -291,6 +291,8 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
   )
 }
 export const defHttp = createAxios()
+
+export default defHttp
 
 export enum ApiServiceEnum {
   NONE = '',
