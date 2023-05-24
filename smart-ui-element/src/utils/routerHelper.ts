@@ -8,8 +8,7 @@ import type {
 } from 'vue-router'
 import { isUrl } from '@/utils/is'
 import { omit, cloneDeep } from 'lodash-es'
-
-const modules = import.meta.glob('../views/**/*.{vue,tsx}')
+import { warn } from '@/utils/log'
 
 /* Layout */
 export const Layout = () => import('@/layout/Layout.vue')
@@ -88,10 +87,61 @@ export const generateRoutesFn1 = (
   return res
 }
 
+/**
+ * 获取系统所有组件列表
+ */
+const getComponents = (): Record<string, () => Promise<Recordable>> => {
+  const result: Record<string, () => Promise<Recordable>> = {}
+
+  const viewsRecord = import.meta.glob('../views/**/*.{vue,tsx}')
+  Object.keys(viewsRecord).forEach((item) => {
+    result[item] = viewsRecord[item]
+  })
+
+  const modeuleViewsRecord = import.meta.glob('../modules/**/*.{vue,tsx}')
+  Object.keys(modeuleViewsRecord).forEach((item) => {
+    result[item] = modeuleViewsRecord[item]
+  })
+
+  return result
+}
+
+const modules = getComponents()
+
+const dynamicImport = (
+  dynamicViewsModules: Record<string, () => Promise<Recordable>>,
+  component: string,
+) => {
+  const keys = Object.keys(dynamicViewsModules)
+  const matchKeys = keys.filter((key) => {
+    if (component.startsWith('@')) {
+      const keyPath = '@' + key.replace('..', '')
+      return keyPath === component
+    }
+    const k = key.replace('../views', '')
+    const startFlag = component.startsWith('/')
+    const endFlag = component.endsWith('.vue') || component.endsWith('.tsx')
+    const startIndex = startFlag ? 0 : 1
+    const lastIndex = endFlag ? k.length : k.lastIndexOf('.')
+    return k.substring(startIndex, lastIndex) === component
+  })
+  if (matchKeys.length === 1) {
+    const matchKey = matchKeys[0]
+    return dynamicViewsModules[matchKey]
+  } else if (matchKeys.length > 1) {
+    warn(
+      'Please do not create `.vue` and `.TSX` files with the same file name in the same hierarchical directory under the views folder. This will cause dynamic introduction failure',
+    )
+    return
+  } else {
+    warn('找不到`' + component + '.vue` 或 `' + component + '.tsx`, 请自行创建!')
+    return
+  }
+}
+
 // 后端控制路由生成
 export const generateRoutesFn2 = (routes: AppCustomRouteRecordRaw[]): AppRouteRecordRaw[] => {
   const res: AppRouteRecordRaw[] = []
-
   for (const route of routes) {
     const data: AppRouteRecordRaw = {
       path: route.path,
@@ -100,14 +150,13 @@ export const generateRoutesFn2 = (routes: AppCustomRouteRecordRaw[]): AppRouteRe
       meta: route.meta,
     }
     if (route.component) {
-      const comModule = modules[`../${route.component}.vue`] || modules[`../${route.component}.tsx`]
       const component = route.component as string
-      if (!comModule && !component.includes('#')) {
-        console.error(`未找到${route.component}.vue文件或${route.component}.tsx文件，请创建`)
-      } else {
+      if (component.includes('#')) {
         // 动态加载路由文件，可根据实际情况进行自定义逻辑
         data.component =
-          component === '#' ? Layout : component.includes('##') ? getParentLayout() : comModule
+          component === '#' ? Layout : component.includes('##') ? getParentLayout() : null
+      } else {
+        data.component = dynamicImport(modules, component)
       }
     }
     // recursive child routes

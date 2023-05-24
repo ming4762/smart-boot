@@ -7,6 +7,8 @@ VITE_API_BASEPATH=pro
 # 打包路径
 VITE_BASE_PATH=/
 
+VITE_GLOB_API_URL=/basic-api
+
 # 是否删除debugger
 VITE_DROP_DEBUGGER=true
 
@@ -21,3 +23,5 @@ VITE_OUT_DIR=dist-pro
 
 # 标题
 VITE_APP_TITLE=ElementAdmin
+
+VITE_GLOB_API_URL_PREFIX=

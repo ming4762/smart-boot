@@ -30,7 +30,7 @@ export const useLocaleStore = defineStore('locales', {
           name: '简体中文',
         },
         {
-          lang: 'en',
+          lang: 'en-US',
           name: 'English',
         },
       ],
@@ -47,7 +47,7 @@ export const useLocaleStore = defineStore('locales', {
   actions: {
     setCurrentLocale(localeMap: LocaleDropdownType) {
       // this.locale = Object.assign(this.locale, localeMap)
-      this.currentLocale.lang = localeMap?.lang
+      this.currentLocale.lang = localeMap?.lang || 'zh-CN'
       this.currentLocale.elLocale = elLocaleMap[localeMap?.lang]
       wsCache.set('lang', localeMap?.lang)
     },

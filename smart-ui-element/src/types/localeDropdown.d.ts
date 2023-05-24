@@ -1,3 +1,5 @@
+import { LocaleType } from '/#/config'
+
 export interface Language {
   el: Recordable
   name: string

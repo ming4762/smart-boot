@@ -15,8 +15,7 @@ export const useRenderMenuItem = (
       const meta = (v.meta ?? {}) as RouteMeta
       if (!meta.hidden) {
         const { oneShowingChild, onlyOneChild } = hasOneShowingChild(v.children, v)
-        const fullPath = isUrl(v.path) ? v.path : pathResolve(parentPath, v.path) // getAllParentPath<AppRouteRecordRaw>(allRouters, v.path).join('/')
-
+        // const fullPath = isUrl(v.path) ? v.path : pathResolve(parentPath, v.path) // getAllParentPath<AppRouteRecordRaw>(allRouters, v.path).join('/')
         const { renderMenuTitle } = useRenderMenuTitle()
 
         if (
@@ -25,7 +24,8 @@ export const useRenderMenuItem = (
           !meta?.alwaysShow
         ) {
           return (
-            <ElMenuItem index={onlyOneChild ? pathResolve(fullPath, onlyOneChild.path) : fullPath}>
+            // <ElMenuItem index={onlyOneChild ? pathResolve(fullPath, onlyOneChild.path) : fullPath}>
+            <ElMenuItem index={v.path}>
               {{
                 default: () => renderMenuTitle(onlyOneChild ? onlyOneChild?.meta : meta),
               }}
@@ -37,13 +37,14 @@ export const useRenderMenuItem = (
           const preFixCls = getPrefixCls('menu-popper')
           return (
             <ElSubMenu
-              index={fullPath}
+              // index={fullPath}
+              index={v.path}
               popperClass={
                 menuMode === 'vertical' ? `${preFixCls}--vertical` : `${preFixCls}--horizontal`
               }>
               {{
                 title: () => renderMenuTitle(meta),
-                default: () => renderMenuItem(v.children!, fullPath),
+                default: () => renderMenuItem(v.children!, v.path),
               }}
             </ElSubMenu>
           )

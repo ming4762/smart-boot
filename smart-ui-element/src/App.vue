@@ -16,7 +16,7 @@ const currentSize = computed(() => appStore.getCurrentSize)
 
 const greyMode = computed(() => appStore.getGreyMode)
 
-const { wsCache } = useCache()
+const { wsCache } = useCache('localStorage')
 
 // 根据浏览器当前主题设置系统主题色
 const setDefaultTheme = () => {

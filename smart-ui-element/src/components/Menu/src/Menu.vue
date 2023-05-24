@@ -44,7 +44,6 @@ export default defineComponent({
     const routers = computed(() =>
       unref(layout) === 'cutMenu' ? permissionStore.getMenuTabRouters : permissionStore.getRouters,
     )
-
     const collapse = computed(() => appStore.getCollapse)
 
     const uniqueOpened = computed(() => appStore.getUniqueOpened)
@@ -58,7 +57,7 @@ export default defineComponent({
       return path
     })
 
-    const menuSelect = (index: string) => {
+    const menuSelect = (index: string, a, b, c, d) => {
       if (props.menuSelect) {
         props.menuSelect(index)
       }

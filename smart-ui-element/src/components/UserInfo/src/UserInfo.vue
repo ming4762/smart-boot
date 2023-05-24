@@ -2,11 +2,10 @@
 import { ElDropdown, ElDropdownMenu, ElDropdownItem, ElMessageBox } from 'element-plus'
 import { useI18n } from '@/hooks/web/useI18n'
 import { useCache } from '@/hooks/web/useCache'
-import { resetRouter } from '@/router'
 import { useRouter } from 'vue-router'
-import { loginOutApi } from '@/api/login'
 import { useDesign } from '@/hooks/web/useDesign'
 import { useTagsViewStore } from '@/store/modules/tagsView'
+import { useUserStore } from '@/store/modules/user'
 
 const tagsViewStore = useTagsViewStore()
 
@@ -27,13 +26,8 @@ const loginOut = () => {
     type: 'warning',
   })
     .then(async () => {
-      const res = await loginOutApi().catch(() => {})
-      if (res) {
-        wsCache.clear()
-        tagsViewStore.delAllViews()
-        resetRouter() // 重置静态路由表
-        replace('/login')
-      }
+      const userStore = useUserStore()
+      await userStore.logout(true)
     })
     .catch(() => {})
 }

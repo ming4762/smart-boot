@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { reactive, ref, unref, watch } from 'vue'
+import { computed, reactive, ref, unref, watch } from 'vue'
 import { Form } from '@/components/Form'
 import { useI18n } from '@/hooks/web/useI18n'
 import { ElButton, ElCheckbox, ElLink } from 'element-plus'
 import { useForm } from '@/hooks/web/useForm'
-import { loginApi, getTestRoleApi, getAdminRoleApi } from '@/api/login'
+import { loginApi, listUserMenuApi } from '@/api/login'
 import { useCache } from '@/hooks/web/useCache'
 import { useAppStore } from '@/store/modules/app'
 import { usePermissionStore } from '@/store/modules/permission'
@@ -13,12 +13,17 @@ import type { RouteLocationNormalizedLoaded, RouteRecordRaw } from 'vue-router'
 import { UserType } from '@/api/login/types'
 import { useValidator } from '@/hooks/web/useValidator'
 import { FormSchema } from '@/types/form'
+import { buildUUID } from '@/utils/uuid'
+import { ApiServiceEnum, defHttp } from '@/config/axios'
+import { createPassword } from '@/utils/auth'
+import { useUserStore } from '@/store/modules/user'
 
 const { required } = useValidator()
 
 const emit = defineEmits(['to-register'])
 
 const appStore = useAppStore()
+const userStore = useUserStore()
 
 const permissionStore = usePermissionStore()
 
@@ -27,6 +32,7 @@ const { currentRoute, addRoute, push } = useRouter()
 const { wsCache } = useCache()
 
 const { t } = useI18n()
+const captchaKey = ref(buildUUID())
 
 const rules = {
   username: [required()],
@@ -65,6 +71,18 @@ const schema = reactive<FormSchema[]>([
         width: '100%',
       },
       placeholder: t('login.passwordPlaceholder'),
+    },
+  },
+  {
+    field: 'captcha',
+    component: 'InputPassword',
+    colProps: {
+      span: 24,
+    },
+    componentProps: {
+      style: {
+        width: '100%',
+      },
     },
   },
   {
@@ -124,18 +142,30 @@ const signIn = async () => {
     if (isValid) {
       loading.value = true
       const { getFormData } = methods
-      const formData = await getFormData<UserType>()
+      const formData: any = await getFormData<UserType>()
 
       try {
-        const res = await loginApi(formData)
+        const res = await loginApi({
+          username: formData.username,
+          password: createPassword(formData.username, formData.password),
+          codeKey: unref(captchaKey),
+          code: formData.captcha,
+        })
 
         if (res) {
-          wsCache.set(appStore.getUserInfo, res.data)
+          const { token, permissions, roles, user } = res
+          // 设置用户信息
+          userStore.setUserInfo(user)
+          // 设置token
+          userStore.setToken(token)
+          // 设置角色和权限
+          userStore.setRoleList(roles)
+          userStore.setPermissionList(permissions)
           // 是否使用动态路由
           if (appStore.getDynamicRouter) {
             getRole()
           } else {
-            await permissionStore.generateRoutes('none').catch(() => {})
+            await permissionStore.generateRoutes(false).catch(() => {})
             permissionStore.getAddRouters.forEach((route) => {
               addRoute(route as RouteRecordRaw) // 动态添加可访问路由表
             })
@@ -143,6 +173,8 @@ const signIn = async () => {
             push({ path: redirect.value || permissionStore.addRouters[0].path })
           }
         }
+      } catch (e) {
+        handleChangeCaptcha()
       } finally {
         loading.value = false
       }
@@ -157,18 +189,12 @@ const getRole = async () => {
   const params = {
     roleName: formData.username,
   }
-  // admin - 模拟后端过滤菜单
-  // test - 模拟前端过滤菜单
-  const res =
-    formData.username === 'admin' ? await getAdminRoleApi(params) : await getTestRoleApi(params)
-  if (res) {
+  const routers = await listUserMenuApi()
+  if (routers) {
     const { wsCache } = useCache()
-    const routers = res.data || []
     wsCache.set('roleRouters', routers)
 
-    formData.username === 'admin'
-      ? await permissionStore.generateRoutes('admin', routers).catch(() => {})
-      : await permissionStore.generateRoutes('test', routers).catch(() => {})
+    permissionStore.generateRoutes(true, routers).catch(() => {})
 
     permissionStore.getAddRouters.forEach((route) => {
       addRoute(route as RouteRecordRaw) // 动态添加可访问路由表
@@ -181,6 +207,15 @@ const getRole = async () => {
 // 去注册页面
 const toRegister = () => {
   emit('to-register')
+}
+
+const computedCaptchaUrl = computed(() => {
+  return `${defHttp.getApiUrlByService(
+    ApiServiceEnum.SMART_AUTH,
+  )}/auth/createCaptcha?codeKey=${unref(captchaKey)}`
+})
+const handleChangeCaptcha = () => {
+  captchaKey.value = buildUUID()
 }
 </script>
 
@@ -202,6 +237,22 @@ const toRegister = () => {
         <ElCheckbox v-model="remember" :label="t('login.remember')" size="small" />
         <ElLink type="primary" :underline="false">{{ t('login.forgetPassword') }}</ElLink>
       </div>
+    </template>
+
+    <template #captcha="{ model }">
+      <el-row :gutter="16" style="width: 100%">
+        <el-col :span="16">
+          <el-input
+            size="large"
+            :placeholder="t('system.login.login-captcha')"
+            v-model="model.captcha" />
+        </el-col>
+        <el-col :span="8">
+          <el-tooltip :content="t('system.login.captchaRefreshTooltip')">
+            <img style="height: 40px" :src="computedCaptchaUrl" @click="handleChangeCaptcha" />
+          </el-tooltip>
+        </el-col>
+      </el-row>
     </template>
 
     <template #login>

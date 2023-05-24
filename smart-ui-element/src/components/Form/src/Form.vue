@@ -215,10 +215,14 @@ export default defineComponent({
                 typeof defineComponent
               >
 
-              const { autoSetPlaceholder } = unref(getProps)
-
+              const { autoSetPlaceholder, size } = unref(getProps)
               return slots[item.field] ? (
-                getSlot(slots, item.field, formModel.value)
+                getSlot(slots, item.field, {
+                  field: item.field,
+                  schema: item,
+                  model: formModel.value,
+                  size: size,
+                })
               ) : (
                 <Com
                   vModel={formModel.value[item.field]}

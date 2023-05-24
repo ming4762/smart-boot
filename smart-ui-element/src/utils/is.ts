@@ -10,6 +10,10 @@ export const isDef = <T = unknown>(val?: T): val is T => {
   return typeof val !== 'undefined'
 }
 
+export function isBlob(val: any): val is Blob {
+  return val !== null && is(val, 'Blob')
+}
+
 export const isUnDef = <T = unknown>(val?: T): val is T => {
   return !isDef(val)
 }
