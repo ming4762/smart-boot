@@ -78,7 +78,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch, toRefs, onMounted } from 'vue'
+import {defineComponent, ref, watch, toRefs, onMounted, unref} from 'vue'
 import type { Ref, PropType } from 'vue'
 
 import { MenuOutlined } from '@ant-design/icons-vue'
@@ -110,9 +110,22 @@ const copyField = [
 /**
  * 创建数据
  */
-const createDataFromTableData = (tableData: Array<any>, editData: Ref | undefined) => {
+const createDataFromTableData = (tableData: Array<any>, editData: Ref<Array<any>> | undefined) => {
   if (editData && editData.value) {
-    return editData.value
+    const tableDataMap: Record<string, any> = {}
+    tableData.forEach((item) => {
+      tableDataMap[item.javaProperty] = item
+    })
+    return unref(editData).map((item) => {
+      const itemData = {
+        ...item,
+      }
+      const tableDataItem = tableDataMap[item.javaProperty]
+      copyField.forEach((field) => {
+        itemData[field] = tableDataItem[field]
+      })
+      return itemData
+    })
   }
   return tableData.map((item) => {
     const data: any = {}
