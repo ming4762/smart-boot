@@ -1,8 +1,9 @@
 import type { AxiosRequestConfig } from 'axios'
+import { ApiServiceEnum } from '/@/utils/http/axios'
 
 export type ErrorMessageMode = 'none' | 'modal' | 'message' | undefined
 
-export type ApiService = 'smart-auth' | 'smart-system' | '' | 'smart-file' | 'smart-code'
+export type ApiService = ApiServiceEnum
 
 export interface SmartAxiosRequestConfig<D = any> extends AxiosRequestConfig<D> {
   // 指定请求发送的服务

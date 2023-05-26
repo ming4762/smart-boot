@@ -20,7 +20,7 @@ export function configHtmlPlugin(env: ViteEnv, isBuild: boolean) {
     minify: isBuild,
     pages: [
       {
-        entry: 'src/main.ts',
+        entry: '/src/main.ts',
         filename: 'index.html',
         template: 'index.html',
         injectOptions: {
@@ -40,11 +40,6 @@ export function configHtmlPlugin(env: ViteEnv, isBuild: boolean) {
               ]
             : [],
         },
-      },
-      {
-        filename: 'abc.html',
-        entry: 'src/abc.ts',
-        template: 'public/abc.html',
       },
     ],
   })

@@ -25,10 +25,14 @@ export interface SuccessOptions {
   msg: string
 }
 
+export interface MessageOptions {
+  message: string
+}
+
 export declare type NotificationPlacement = 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight'
 export declare type IconType = 'success' | 'info' | 'error' | 'warning'
 export interface ModalOptionsEx extends Omit<ModalFuncProps, 'iconType'> {
-  iconType: 'warning' | 'success' | 'error' | 'info'
+  iconType?: 'warning' | 'success' | 'error' | 'info'
 }
 export type ModalOptionsPartial = Partial<ModalOptionsEx> & Pick<ModalOptionsEx, 'content'>
 
@@ -113,7 +117,14 @@ function createWarningModal(options: ModalOptionsPartial) {
  * @param msg
  */
 const successMessage = ({ msg }: SuccessOptions) => {
-  Message.success(msg)
+  return Message.success(msg)
+}
+
+const warnMessage = (options: MessageOptions | string) => {
+  if (isString(options)) {
+    return Message.warning(options)
+  }
+  return Message.warning(options.message)
 }
 
 /**
@@ -163,5 +174,6 @@ export function useMessage() {
     errorMessage,
     createError500Modal,
     successMessage,
+    warnMessage,
   }
 }

@@ -1,9 +1,10 @@
 import { ref } from 'vue'
 
-import { message } from 'ant-design-vue'
-
 import { globalLoading } from '/@/modules/app/utils/AppUtils'
-import { defHttp } from '/@/utils/http/axios'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
+import { useMessage } from '/@/hooks/web/useMessage'
+
+const { errorMessage, successMessage } = useMessage()
 
 /**
  * 显示账户hook
@@ -33,6 +34,7 @@ export const useShowAccount = (t: Function) => {
     globalLoading(true)
     try {
       const result = await defHttp.post({
+        service: ApiServiceEnum.SMART_SYSTEM,
         url: '/sys/user/getById',
         data: userId.value,
       })
@@ -42,7 +44,7 @@ export const useShowAccount = (t: Function) => {
           accountData.value = result.userAccount
           modalVisible.value = true
         } else {
-          message.error(t('system.views.user.message.noAccount'))
+          errorMessage(t('system.views.user.message.noAccount'))
         }
       } else {
         userData.value = {}
@@ -60,11 +62,14 @@ export const useShowAccount = (t: Function) => {
     try {
       saveLoading.value = true
       await defHttp.post({
+        service: ApiServiceEnum.SMART_SYSTEM,
         url: '/sys/user/saveAccountSetting',
         data: accountData.value,
       })
       modalVisible.value = false
-      message.success(t('common.message.editSuccess'))
+      successMessage({
+        msg: t('common.message.editSuccess'),
+      })
     } finally {
       saveLoading.value = false
     }
