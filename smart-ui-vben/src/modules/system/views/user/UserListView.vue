@@ -34,11 +34,8 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, createVNode, ref, unref } from 'vue'
+import { computed, ref, unref } from 'vue'
 import { useI18n } from '/@/hooks/web/useI18n'
-
-import { message, Modal } from 'ant-design-vue'
-import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
 
 import { useLoadDictItem } from '/@/modules/system/hooks/dict/SysDictHooks'
 import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
@@ -47,6 +44,7 @@ import { useModal } from '/@/components/Modal'
 
 import { LayoutSeparate } from '/@/components/LayoutSeparate'
 import SysDeptTree from '/@/modules/system/views/dept/components/SysDeptTree.vue'
+import { useMessage } from '/@/hooks/web/useMessage'
 
 import {
   SmartTable,
@@ -68,6 +66,7 @@ import {
 import { SYS_USER_TYPE, SystemPermissions } from '/@/modules/system/constants/SystemConstants'
 
 const { t } = useI18n()
+const { warnMessage, errorMessage, createConfirm } = useMessage()
 const { getTableSize } = useSizeSetting()
 
 const { dictData: userTypeListRef } = useLoadDictItem(ref('SYSTEM_USER_TYPE'))
@@ -132,14 +131,16 @@ const getTableActions = (row): ActionItem[] => {
  */
 const validateOperateUser = (userList: Array<any>) => {
   if (userList.length === 0) {
-    message.warn(t('system.views.user.validate.selectUser'))
+    warnMessage({
+      message: t('system.views.user.validate.selectUser'),
+    })
     return false
   }
   if (!hasPermissionUpdateSystemUser) {
     // 如果没有修改系统用户的权限，判断用户中是否有系统用户
     const hasSysUser = userList.some(({ userType }: any) => userType === SYS_USER_TYPE)
     if (hasSysUser) {
-      message.error(t('system.views.user.validate.noSysUserUpdatePermission'))
+      errorMessage(t('system.views.user.validate.noSysUserUpdatePermission'))
       return false
     }
   }
@@ -157,11 +158,10 @@ const handleSetUseYn = (useYn: boolean) => {
   if (!result) {
     return false
   }
-  Modal.confirm({
+  createConfirm({
     title: t('system.views.user.validate.setUserUseYn', {
       msg: useYn ? t('common.message.use') : t('common.message.noUse'),
     }),
-    icon: createVNode(ExclamationCircleOutlined),
     onOk: async () => {
       await setUseYnApi(userList, useYn)
       // 重新加载数据
@@ -176,26 +176,27 @@ const handleSetUseYn = (useYn: boolean) => {
 const handleCreateAccount = () => {
   const userList = getCheckboxRecords(false)
   if (userList.length === 0) {
-    message.warn(t('system.views.user.validate.selectUser'))
+    warnMessage({
+      message: t('system.views.user.validate.selectUser'),
+    })
     return false
   }
   if (!hasPermissionUpdateSystemUser) {
     // 如果没有修改系统用户的权限，判断用户中是否有系统用户
     const hasSysUser = userList.some(({ userType }: any) => userType === SYS_USER_TYPE)
     if (hasSysUser) {
-      message.error(t('system.views.user.validate.noSysUserUpdatePermission'))
+      errorMessage(t('system.views.user.validate.noSysUserUpdatePermission'))
       return false
     }
   }
   // 判断是否有停用用户
   const hasNoUse = userList.some((item) => item.useYn === false)
   if (hasNoUse) {
-    message.warn(t('system.views.user.message.noUseUserNotCreateAccount'))
+    warnMessage(t('system.views.user.message.noUseUserNotCreateAccount'))
     return false
   }
-  Modal.confirm({
+  createConfirm({
     title: t('system.views.user.validate.createAccountConfirm'),
-    icon: createVNode(ExclamationCircleOutlined),
     onOk: () => createAccountApi(userList),
   })
 }
@@ -283,7 +284,7 @@ const [
       },
       {
         name: t('common.button.use'),
-        isAnt: true,
+        customRender: 'ant',
         auth: permissions.useYn,
         props: {
           onClick: () => handleSetUseYn(true),
@@ -292,7 +293,7 @@ const [
       },
       {
         name: t('common.button.noUse'),
-        isAnt: true,
+        customRender: 'ant',
         auth: permissions.useYn,
         props: {
           onClick: () => handleSetUseYn(false),
@@ -301,7 +302,7 @@ const [
       },
       {
         name: t('system.views.user.button.createAccount'),
-        isAnt: true,
+        customRender: 'ant',
         auth: permissions.createAccount,
         props: {
           onClick: () => handleCreateAccount(),
@@ -321,7 +322,7 @@ const [
             // 验证是否包含系统用户
             const sysUserValidate = userList.some((item: any) => item.userType === SYS_USER_TYPE)
             if (sysUserValidate) {
-              message.error(t('system.views.user.validate.sysUserNoDelete'))
+              errorMessage(t('system.views.user.validate.sysUserNoDelete'))
               return false
             }
             // 执行删除操作

@@ -4,19 +4,20 @@ import { SmartTableButton } from '/@/components/SmartTable'
 import { omit } from 'lodash-es'
 import { unref } from 'vue'
 import { isString } from '/@/utils/is'
+import type { ButtonProps } from '/@/components/Button'
 
 export type VxeTableRenderer =
-  | 'VxeTableToolButtonAntRenderer'
+  | 'VxeTableToolButtonCustomRenderer'
   | 'VxeTableToolButtonSlotRenderer'
   | 'VxeTableToolAntRenderer'
 
-export const VxeTableToolButtonAntRenderer: VxeTableRenderer = 'VxeTableToolButtonAntRenderer'
+export const VxeTableToolButtonCustomRenderer: VxeTableRenderer = 'VxeTableToolButtonCustomRenderer'
 
 export const VxeTableToolAntRenderer: VxeTableRenderer = 'VxeTableToolAntRenderer'
 
 export const VxeTableToolButtonSlotRenderer: VxeTableRenderer = 'VxeTableToolButtonSlotRenderer'
 
-VXETable.renderer.add(VxeTableToolButtonAntRenderer, {
+VXETable.renderer.add(VxeTableToolButtonCustomRenderer, {
   renderToolbarButton(
     _: VxeGlobalRendererHandles.RenderButtonOptions,
     params: VxeGlobalRendererHandles.RenderButtonParams,
@@ -38,7 +39,11 @@ VXETable.renderer.add(VxeTableToolButtonAntRenderer, {
     //   }
     //   buttonPros.disabled = true
     // }
-    return <a-button {...buttonPros}>{buttonPros.name}</a-button>
+    if (button.customRender === 'element') {
+      return <el-button {...buttonPros}>{buttonPros.name}</el-button>
+    } else {
+      return <a-button {...buttonPros}>{buttonPros.name}</a-button>
+    }
   },
 })
 
@@ -69,7 +74,7 @@ VXETable.renderer.add(VxeTableToolButtonSlotRenderer, {
     _: VxeGlobalRendererHandles.RenderButtonOptions,
     params: VxeGlobalRendererHandles.RenderButtonParams,
   ): VxeGlobalRendererHandles.RenderResult {
-    const button = params.button as SmartTableButton
+    const button = params.button as SmartTableButton & ButtonProps
     if (!button.slot || isString(button.slot)) {
       return ''
     }

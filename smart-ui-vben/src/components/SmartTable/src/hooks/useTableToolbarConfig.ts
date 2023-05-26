@@ -14,7 +14,7 @@ import { merge } from 'lodash-es'
 import { isBoolean, isPromise } from '/@/utils/is'
 
 import {
-  VxeTableToolButtonAntRenderer,
+  VxeTableToolButtonCustomRenderer,
   VxeTableToolAntRenderer,
   VxeTableToolButtonSlotRenderer,
 } from '../renderer/VxeTableButtonRenderer'
@@ -232,11 +232,11 @@ export const useTableToolbarConfig = (
         }
       }
       // 如果是ant 按钮使用VxeTableToolButtonRenderer进行渲染
-      if (item.isAnt) {
+      if (item.customRender) {
         return {
           size: tableButtonSizeMap[tableSize],
           buttonRender: {
-            name: VxeTableToolButtonAntRenderer,
+            name: VxeTableToolButtonCustomRenderer,
           },
           ...item,
           props,
@@ -260,7 +260,7 @@ const getDefaultAddButtonConfig = (t: Function): SmartTableButton => {
       type: 'primary',
     },
     buttonRender: {
-      name: VxeTableToolButtonAntRenderer,
+      name: VxeTableToolButtonCustomRenderer,
     },
   }
 }
@@ -275,7 +275,7 @@ const getDefaultEditButtonConfig = (t: Function): SmartTableButton => {
       type: 'default',
     },
     buttonRender: {
-      name: VxeTableToolButtonAntRenderer,
+      name: VxeTableToolButtonCustomRenderer,
     },
   }
 }
@@ -290,7 +290,7 @@ const getDefaultDeleteButtonConfig = (t: Function): SmartTableButton => {
       type: 'primary',
     },
     buttonRender: {
-      name: VxeTableToolButtonAntRenderer,
+      name: VxeTableToolButtonCustomRenderer,
     },
   }
 }

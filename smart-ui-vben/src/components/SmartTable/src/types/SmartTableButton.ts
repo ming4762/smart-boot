@@ -26,6 +26,8 @@ export type SmartTableButtonCode =
 
 export type SmartTableToolCode = 'show_search'
 
+export type SmartTableButtonCustomRender = 'ant' | 'element'
+
 export interface SmartTableButtonRender {
   name?: string
   props?: any
@@ -55,7 +57,7 @@ export interface SmartTableButton extends SmartTableBasicButtonDropdowns {
   buttonRender?: SmartTableButtonRender
   props?: ButtonProps | Ref<ButtonProps> | ComputedRef<ButtonProps>
   // 是否是ant-design按钮，false：使用vxe-table原有的按钮，true使用VxeTableToolButtonRenderer进行渲染
-  isAnt?: boolean
+  customRender?: SmartTableButtonCustomRender
   // 点击事件是否触发加载状态
   clickLoading?: boolean
   // 是否使用插槽

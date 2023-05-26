@@ -299,6 +299,8 @@ export enum ApiServiceEnum {
   SMART_FILE = 'smart-file',
   // 代码生成器
   SMART_CODE = 'smart-code',
+  // 消息服务，包括短信等
+  SMART_MESSAGE = 'smart-message',
 }
 
 // other api url
