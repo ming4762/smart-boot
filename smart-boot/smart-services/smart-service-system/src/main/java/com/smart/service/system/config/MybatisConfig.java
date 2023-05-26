@@ -22,7 +22,8 @@ import javax.sql.DataSource;
         MapperPackageConstants.MODULE_SYSTEM,
         MapperPackageConstants.MONITOR_SERVER,
         MapperPackageConstants.MODULE_FILE,
-        MapperPackageConstants.DATABASE_GENERATOR
+        MapperPackageConstants.DATABASE_GENERATOR,
+        MapperPackageConstants.MODULE_SMS
 })
 
 public class MybatisConfig {

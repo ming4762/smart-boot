@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.smart.sms.extensions.aliyun.SmartSmsAliyunAutoConfiguration

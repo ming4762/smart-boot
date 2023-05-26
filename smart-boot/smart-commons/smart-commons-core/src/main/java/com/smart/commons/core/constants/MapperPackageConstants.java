@@ -37,4 +37,9 @@ public interface MapperPackageConstants {
      * license模块
      */
     String MODULE_LICENSE = "";
+
+    /**
+     * 短信管理模块
+     */
+    String MODULE_SMS = "com.smart.sms.manager.mapper";
 }

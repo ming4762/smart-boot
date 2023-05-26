@@ -1,5 +1,13 @@
 package com.smart.commons.validate.utils;
 
+import com.smart.commons.validate.exception.ValidateException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
+import jakarta.validation.groups.Default;
+
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -12,6 +20,8 @@ public final class ValidatorUtils {
     private ValidatorUtils() {
         throw new IllegalStateException("Utility class");
     }
+
+    private static Validator validator;
 
     /**
      * 校验手机号
@@ -41,5 +51,23 @@ public final class ValidatorUtils {
     public static boolean checkIdCard(String idCard) {
         String regex = "[1-9]\\d{13,16}[a-zA-Z0-9]{1}";
         return Pattern.matches(regex,idCard);
+    }
+
+    public static boolean validate(Object data) {
+        initValidator();
+        Set<ConstraintViolation<Object>> validateResult = validator.validate(data, Default.class);
+        if (!validateResult.isEmpty()) {
+            throw new ValidateException(validateResult);
+        }
+        return true;
+    }
+
+    /**
+     * 初始化validator
+     */
+    private static void initValidator() {
+        try (ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory()) {
+            ValidatorUtils.validator = validatorFactory.getValidator();
+        }
     }
 }
