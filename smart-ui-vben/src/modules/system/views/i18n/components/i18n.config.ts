@@ -86,8 +86,16 @@ export const getI18nAddEditSchemas = (t: Function): FormSchema[] => {
     {
       label: t('system.views.i18n.i18n.titlePlatform'),
       field: 'platform',
-      component: 'Input',
+      component: 'Select',
       required: true,
+      componentProps: {
+        options: [
+          {
+            label: 'backstage',
+            value: 'backstage',
+          },
+        ],
+      },
     },
     {
       label: t('system.views.i18n.i18n.titleI18nCode'),
