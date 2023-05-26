@@ -6,11 +6,14 @@
         stripe
         height="auto"
         size="small"
+        cell-class-name="cursor-point"
         :columns="columns"
+        :row-config="{ isCurrent: true }"
+        @current-change="({ row }) => handleChangeGroup(row.groupId)"
         :data="data"
         :loading="tableLoading">
         <template #table-groupName="{ row }">
-          <div style="cursor: pointer" @click="() => handleChangeGroup(row.groupId)">
+          <div>
             <ContextMenu event="contextmenu">
               {{ row.groupName }}
               <template #menu>
@@ -212,7 +215,6 @@ export default defineComponent({
     const handleChangeGroup = (id: number) => {
       emit('change', id)
     }
-
     const handleMenuClick = (ident: string, groupId: number, event: Event) => {
       event.preventDefault()
       switch (ident) {
@@ -279,5 +281,8 @@ export default defineComponent({
   .button {
     width: 90%;
   }
+}
+::v-deep(.cursor-point) {
+  cursor: pointer;
 }
 </style>

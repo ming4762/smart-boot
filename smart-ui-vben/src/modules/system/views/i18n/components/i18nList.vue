@@ -75,7 +75,7 @@ const [registerTable, { getSearchForm, query, editByRowModal }] = useSmartTable(
   },
   sortConfig: {
     remote: true,
-    defaultSort: { field: 'seq', order: 'desc' },
+    defaultSort: { field: 'seq', order: 'asc' },
   },
   searchFormConfig: {
     searchWithSymbol: true,
@@ -112,11 +112,13 @@ const [registerTable, { getSearchForm, query, editByRowModal }] = useSmartTable(
     zoom: true,
     buttons: [
       {
-        isAnt: true,
         name: t('system.views.i18n.i18n.button.reload'),
+        customRender: 'ant',
         props: {
+          preIcon: 'ant-design:reload-outlined',
           type: 'primary',
           onClick: () => handleReload(),
+          size: 'small',
         },
       },
       { code: 'ModalAdd' },
@@ -128,8 +130,14 @@ const [registerTable, { getSearchForm, query, editByRowModal }] = useSmartTable(
     ajax: {
       query: ({ ajaxParameter }) => listI18nApi(ajaxParameter || {}),
       getById: (model) => getI18nByIdApi(model.i18nId),
-      save: ({ body: { insertRecords, updateRecords } }) =>
-        i18nSaveUpdateApi([...insertRecords, ...updateRecords][0]),
+      save: ({ body: { insertRecords, updateRecords } }) => {
+        if (insertRecords?.length > 0) {
+          insertRecords.forEach((item) => {
+            item.groupId = props.groupId
+          })
+        }
+        return i18nSaveUpdateApi([...insertRecords, ...updateRecords][0])
+      },
       delete: ({ body: { removeRecords } }) => i18nDeleteApi(removeRecords),
     },
   },
