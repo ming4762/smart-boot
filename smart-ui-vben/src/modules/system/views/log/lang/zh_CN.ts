@@ -24,6 +24,7 @@ export default {
           operationTypeQuery: '查询',
           params: '请求参数',
           result: '返回结果',
+          errorMessage: '异常信息',
         },
       },
     },

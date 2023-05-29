@@ -51,6 +51,9 @@
       <a-descriptions-item :label="$t('system.views.log.title.result')" :span="3">
         {{ detailsData.result }}
       </a-descriptions-item>
+      <a-descriptions-item :label="$t('system.views.log.title.errorMessage')" :span="3">
+        {{ detailsData.errorMessage }}
+      </a-descriptions-item>
     </a-descriptions>
   </BasicModal>
 </template>

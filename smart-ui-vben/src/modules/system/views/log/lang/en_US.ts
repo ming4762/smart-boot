@@ -24,6 +24,7 @@ export default {
           operationTypeQuery: 'Query',
           params: 'Request parameters',
           result: 'Return results',
+          errorMessage: 'Error message',
         },
       },
     },
