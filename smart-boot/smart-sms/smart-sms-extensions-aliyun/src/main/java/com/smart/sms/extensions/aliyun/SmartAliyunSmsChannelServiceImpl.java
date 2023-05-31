@@ -29,6 +29,11 @@ public class SmartAliyunSmsChannelServiceImpl implements SmartAliyunSmsChannelSe
 
     private static final int UP_LIMIT_PHONE = 1000;
 
+    /**
+     * 短信发送成功的code
+     */
+    private static final String SUCCESS_CODE = "OK";
+
     private static final Map<String, ClientCache> CLIENT_CACHE_MAP = new ConcurrentHashMap<>();
 
     protected ClientCache getClientCache(String properties) {
@@ -97,7 +102,10 @@ public class SmartAliyunSmsChannelServiceImpl implements SmartAliyunSmsChannelSe
         }
         try {
             SendSmsResponse sendSmsResponse = client.sendSmsWithOptions(sendSmsRequest, new RuntimeOptions());
-            return new SmsSendResult(sendSmsResponse.getBody().getRequestId(), JsonUtils.toJsonString(sendSmsResponse));
+            if (SUCCESS_CODE.equals(sendSmsResponse.getBody().getCode())) {
+                return new SmsSendResult(sendSmsResponse.getBody().getRequestId(), JsonUtils.toJsonString(sendSmsResponse));
+            }
+            throw new SmartSmsException(JsonUtils.toJsonString(sendSmsResponse));
         } catch (Exception e) {
             throw new SmartSmsException(e);
         }

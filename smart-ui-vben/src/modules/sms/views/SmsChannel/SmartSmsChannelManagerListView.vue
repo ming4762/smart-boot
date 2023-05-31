@@ -68,6 +68,9 @@ const [registerTable, { editByRowModal, query }] = useSmartTable({
   pagerConfig: true,
   border: true,
   useSearchForm: true,
+  sortConfig: {
+    remote: true,
+  },
   searchFormConfig: {
     schemas: getSearchFormSchemas(t),
     searchWithSymbol: true,
