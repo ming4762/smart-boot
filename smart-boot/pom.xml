@@ -39,7 +39,7 @@
         <jacob.version>1.20</jacob.version>
         <kettle.version>9.2.0.0</kettle.version>
         <xxl-job.version>2.3.1</xxl-job.version>
-        <druid.version>1.2.12</druid.version>
+        <druid.version>1.2.18</druid.version>
         <easy-captcha.version>1.6.2</easy-captcha.version>
         <ojdbc8.version>19.3.0.0</ojdbc8.version>
         <commons-lang.version>2.6</commons-lang.version>
@@ -54,6 +54,8 @@
         <knife4j-openapi3.version>4.1.0</knife4j-openapi3.version>
         <qiniu.version>7.12.1</qiniu.version>
         <wx-java.version>4.4.0</wx-java.version>
+        <aliyun.dysmsapi.version>2.0.23</aliyun.dysmsapi.version>
+        <tencentcloud.sdk.version>3.1.759</tencentcloud.sdk.version>
     </properties>
 
     <packaging>pom</packaging>
@@ -72,6 +74,7 @@
         <module>smart-modules</module>
         <module>smart-monitor</module>
         <module>smart-starter</module>
+        <module>smart-sms</module>
         <module>smart-services</module>
     </modules>
 
@@ -365,6 +368,11 @@
                 <artifactId>hutool-all</artifactId>
                 <version>${hutool.version}</version>
             </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-core</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
 
             <!--      阿里云OSS版本      -->
             <dependency>
@@ -408,6 +416,22 @@
                 <version>${wx-java.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.aliyun</groupId>
+                <artifactId>dysmsapi20170525</artifactId>
+                <version>${aliyun.dysmsapi.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.tencentcloudapi</groupId>
+                <artifactId>tencentcloud-sdk-java</artifactId>
+                <version>${tencentcloud.sdk.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.tencentcloudapi</groupId>
+                <artifactId>tencentcloud-sdk-java-sms</artifactId>
+                <version>${tencentcloud.sdk.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

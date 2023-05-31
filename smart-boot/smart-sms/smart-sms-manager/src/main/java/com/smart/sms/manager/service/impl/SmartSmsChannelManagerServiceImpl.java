@@ -1,7 +1,9 @@
 package com.smart.sms.manager.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.smart.commons.core.exception.BusinessException;
+import com.smart.commons.core.exception.SystemException;
 import com.smart.crud.service.BaseServiceImpl;
 import com.smart.sms.manager.mapper.SmartSmsChannelManagerMapper;
 import com.smart.sms.manager.model.SmartSmsChannelManagerPO;
@@ -9,6 +11,10 @@ import com.smart.sms.manager.service.SmartSmsChannelManagerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
 * smart_sms_channel_manager - 短信通道表 Service实现类
@@ -46,6 +52,44 @@ public class SmartSmsChannelManagerServiceImpl extends BaseServiceImpl<SmartSmsC
                 new UpdateWrapper<SmartSmsChannelManagerPO>().lambda()
                         .set(SmartSmsChannelManagerPO::getIsDefault, Boolean.TRUE)
                         .eq(SmartSmsChannelManagerPO::getId, id)
+        );
+    }
+
+    /**
+     * 获取默认的通道
+     *
+     * @return 默认短信通道信息
+     */
+    @Override
+    public SmartSmsChannelManagerPO getDefault() {
+        List<SmartSmsChannelManagerPO> list = this.list(
+                new QueryWrapper<SmartSmsChannelManagerPO>().lambda()
+                        .eq(SmartSmsChannelManagerPO::getIsDefault, Boolean.TRUE)
+                        .eq(SmartSmsChannelManagerPO::getUseYn, Boolean.TRUE)
+                        .eq(SmartSmsChannelManagerPO::getDeleteYn, Boolean.FALSE)
+        );
+        if (CollectionUtils.isEmpty(list)) {
+            return null;
+        }
+        if (list.size() > 1) {
+            throw new SystemException("系统发生错误，存在多个默认的短信通道，通道ID：" + list.stream().map(item -> item.getId().toString()).collect(Collectors.joining(",")));
+        }
+        return list.get(0);
+    }
+
+    /**
+     * 通过code获取短信通道
+     *
+     * @param code 通道code
+     * @return 短信通道机械能西
+     */
+    @Override
+    public SmartSmsChannelManagerPO getByCode(String code) {
+        return this.getOne(
+                new QueryWrapper<SmartSmsChannelManagerPO>().lambda()
+                        .eq(SmartSmsChannelManagerPO::getChannelCode, code)
+                        .eq(SmartSmsChannelManagerPO::getUseYn, Boolean.TRUE)
+                        .eq(SmartSmsChannelManagerPO::getDeleteYn, Boolean.FALSE)
         );
     }
 }

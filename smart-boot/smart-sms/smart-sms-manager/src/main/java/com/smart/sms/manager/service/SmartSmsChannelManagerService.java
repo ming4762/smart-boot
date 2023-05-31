@@ -16,4 +16,18 @@ public interface SmartSmsChannelManagerService extends BaseService<SmartSmsChann
      * @return 是否修改成功
      */
     boolean setDefault(Long id);
+
+
+    /**
+     * 获取默认的通道
+     * @return 默认短信通道信息
+     */
+    SmartSmsChannelManagerPO getDefault();
+
+    /**
+     * 通过code获取短信通道
+     * @param code 通道code
+     * @return 短信通道机械能西
+     */
+    SmartSmsChannelManagerPO getByCode(String code);
 }
