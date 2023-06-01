@@ -1,11 +1,11 @@
 package com.smart.sms.manager.pojo.parameter;
 
 import com.smart.sms.core.constants.SmartSmsChannelEnum;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**

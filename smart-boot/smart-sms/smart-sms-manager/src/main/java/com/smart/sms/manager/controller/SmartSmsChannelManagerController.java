@@ -10,7 +10,6 @@ import com.smart.sms.manager.model.SmartSmsChannelManagerPO;
 import com.smart.sms.manager.pojo.parameter.SmartSmsChannelManagerSaveUpdateParameter;
 import com.smart.sms.manager.service.SmartSmsChannelManagerService;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,8 +19,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.io.Serializable;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
 * smart_sms_channel_manager - 短信通道表 Controller
@@ -56,7 +57,7 @@ public class SmartSmsChannelManagerController extends BaseController<SmartSmsCha
             SmartSmsChannelManagerPO model = new SmartSmsChannelManagerPO();
             BeanUtils.copyProperties(item, model);
             return model;
-        }).toList();
+        }).collect(Collectors.toList());
         return super.batchSaveUpdate(modelList);
     }
 

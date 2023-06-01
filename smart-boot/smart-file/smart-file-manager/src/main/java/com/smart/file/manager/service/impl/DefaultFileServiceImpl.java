@@ -152,7 +152,7 @@ public class DefaultFileServiceImpl implements FileService, ApplicationContextAw
                             FileStorageDeleteParameter.builder()
                                     .storageProperties(fileStorage.getStorageConfig())
                                     .storageType(fileStorage.getStorageType())
-                                    .fileStoreKeyList(list.stream().map(SmartFilePO::getStorageStoreKey).toList())
+                                    .fileStoreKeyList(list.stream().map(SmartFilePO::getStorageStoreKey).collect(Collectors.toList()))
                                     .build()
                     );
                 });
@@ -236,7 +236,7 @@ public class DefaultFileServiceImpl implements FileService, ApplicationContextAw
                                     .storageProperties(fileStorage.getStorageConfig())
                                     .build()
                     );
-                }).toList();
+                }).collect(Collectors.toList());
     }
 
     protected FileHandlerResult saveFile(@NonNull SysFileBO file) {

@@ -1,11 +1,12 @@
 package com.smart.commons.validate.exception;
 
-import jakarta.validation.ConstraintViolation;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import javax.validation.ConstraintViolation;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 验证异常
@@ -20,7 +21,7 @@ public class ValidateException extends RuntimeException {
     public ValidateException(Set<ConstraintViolation<Object>> validateResult) {
         this.errorList = validateResult.stream()
                 .map(item -> new ValidateErrorData(item.getPropertyPath().toString(), item.getMessage()))
-                .toList();
+                .collect(Collectors.toList());
     }
 
     @Getter
