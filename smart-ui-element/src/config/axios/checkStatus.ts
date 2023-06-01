@@ -1,7 +1,7 @@
 import type { ErrorMessageMode } from '/#/axios'
-import { useMessage } from '/@/hooks/web/useMessage'
-import { useI18n } from '/@/hooks/web/useI18n'
-import { useUserStore } from '/@/store/modules/user'
+import { useMessage } from '@/hooks/web/useMessage'
+import { useI18n } from '@/hooks/web/useI18n'
+import { useUserStore } from '@/store/modules/user'
 
 const { createMessage, createErrorModal } = useMessage()
 const error = createMessage.error!

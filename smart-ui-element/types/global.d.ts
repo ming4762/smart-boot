@@ -21,6 +21,7 @@ declare global {
 
   declare type AxiosResponseType = 'arraybuffer' | 'blob' | 'document' | 'json' | 'text' | 'stream'
 
+  declare type TimeoutHandle = ReturnType<typeof setTimeout>
   declare interface AxiosConfig {
     params?: any
     data?: any

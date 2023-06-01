@@ -52,8 +52,10 @@ specifiers:
   prettier: ^2.8.7
   qrcode: ^1.5.1
   qs: ^6.11.1
+  resize-observer-polyfill: ^1.5.1
   rimraf: ^5.0.0
   rollup: ^3.20.2
+  sortablejs: ^1.15.0
   stylelint: ^15.4.0
   stylelint-config-html: ^1.1.0
   stylelint-config-prettier: ^9.0.5
@@ -82,6 +84,7 @@ specifiers:
   web-storage-cache: ^1.1.1
   windicss: ^3.5.6
   windicss-analysis: ^0.3.5
+  xe-utils: ^3.5.8
 
 dependencies:
   '@element-plus/icons-vue': registry.npmmirror.com/@element-plus/icons-vue/2.1.0_vue@3.3.4
@@ -104,13 +107,16 @@ dependencies:
   pinia: registry.npmmirror.com/pinia/2.1.3_typescript@5.0.4+vue@3.3.4
   qrcode: registry.npmmirror.com/qrcode/1.5.3
   qs: registry.npmmirror.com/qs/6.11.2
+  resize-observer-polyfill: registry.npmmirror.com/resize-observer-polyfill/1.5.1
+  sortablejs: registry.npmmirror.com/sortablejs/1.15.0
   url: registry.npmmirror.com/url/0.11.0
   vue: registry.npmmirror.com/vue/3.3.4
   vue-i18n: registry.npmmirror.com/vue-i18n/9.2.2_vue@3.3.4
   vue-router: registry.npmmirror.com/vue-router/4.2.1_vue@3.3.4
   vue-types: registry.npmmirror.com/vue-types/5.0.3_vue@3.3.4
-  vxe-table: registry.npmmirror.com/vxe-table/4.3.14_vue@3.3.4
+  vxe-table: registry.npmmirror.com/vxe-table/4.3.14_vue@3.3.4+xe-utils@3.5.8
   web-storage-cache: registry.npmmirror.com/web-storage-cache/1.1.1
+  xe-utils: registry.npmmirror.com/xe-utils/3.5.8
 
 devDependencies:
   '@commitlint/cli': registry.npmmirror.com/@commitlint/cli/17.6.3
@@ -9169,6 +9175,12 @@ packages:
     version: 2.0.0
     dev: false
 
+  registry.npmmirror.com/resize-observer-polyfill/1.5.1:
+    resolution: {integrity: sha512-LwZrotdHOo12nQuZlHEmtuXdqGoOD0OhaxopaNFxWzInpEgaLWoVuAMbTzixuosCx2nEG58ngzW3vxdWoxIgdg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/resize-observer-polyfill/-/resize-observer-polyfill-1.5.1.tgz}
+    name: resize-observer-polyfill
+    version: 1.5.1
+    dev: false
+
   registry.npmmirror.com/resolve-dir/1.0.1:
     resolution: {integrity: sha512-R7uiTjECzvOsWSfdM0QKFNBVFcK27aHOUwdvK53BcW8zqnGdYp0Fbj82cy54+2A4P2tFM22J5kRfe1R+lM/1yg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/resolve-dir/-/resolve-dir-1.0.1.tgz}
     name: resolve-dir
@@ -9603,6 +9615,12 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  registry.npmmirror.com/sortablejs/1.15.0:
+    resolution: {integrity: sha512-bv9qgVMjUMf89wAvM6AxVvS/4MX3sPeN0+agqShejLU5z5GX4C75ow1O2e5k4L6XItUyAK3gH6AxSbXrOM5e8w==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/sortablejs/-/sortablejs-1.15.0.tgz}
+    name: sortablejs
+    version: 1.15.0
+    dev: false
 
   registry.npmmirror.com/source-map-js/1.0.2:
     resolution: {integrity: sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/source-map-js/-/source-map-js-1.0.2.tgz}
@@ -10864,7 +10882,7 @@ packages:
       '@vue/server-renderer': registry.npmmirror.com/@vue/server-renderer/3.3.4_vue@3.3.4
       '@vue/shared': registry.npmmirror.com/@vue/shared/3.3.4
 
-  registry.npmmirror.com/vxe-table/4.3.14_vue@3.3.4:
+  registry.npmmirror.com/vxe-table/4.3.14_vue@3.3.4+xe-utils@3.5.8:
     resolution: {integrity: sha512-h9stK07pfvhQE68thKfaAmJO2AxC+xL7AM+1A56V8BR3l1OguY99q74TPtjaE9EVgXH6zu/bUzhoklNs7i1ebg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vxe-table/-/vxe-table-4.3.14.tgz}
     id: registry.npmmirror.com/vxe-table/4.3.14
     name: vxe-table
@@ -10874,6 +10892,7 @@ packages:
       xe-utils: ^3.5.0
     dependencies:
       vue: registry.npmmirror.com/vue/3.3.4
+      xe-utils: registry.npmmirror.com/xe-utils/3.5.8
     dev: false
 
   registry.npmmirror.com/wcwidth/1.0.1:
@@ -11034,6 +11053,12 @@ packages:
       imurmurhash: registry.npmmirror.com/imurmurhash/0.1.4
       signal-exit: registry.npmmirror.com/signal-exit/4.0.2
     dev: true
+
+  registry.npmmirror.com/xe-utils/3.5.8:
+    resolution: {integrity: sha512-JVWXjiuXuMCgoV2EO0zaJC1QDOt3SrJKAlKXQlf/+Qag+kCOcJw5Sel6L+BvFiBpllnzXOI18a9zKpr2/Y62ZA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/xe-utils/-/xe-utils-3.5.8.tgz}
+    name: xe-utils
+    version: 3.5.8
+    dev: false
 
   registry.npmmirror.com/xml-name-validator/4.0.0:
     resolution: {integrity: sha512-ICP2e+jsHvAj2E2lIHxa5tjXRlKDJo4IdvPvCXbXQGdzSfmSpNVyIKMvoZHjDY9DP0zV17iI85o90vRFXNccRw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/xml-name-validator/-/xml-name-validator-4.0.0.tgz}

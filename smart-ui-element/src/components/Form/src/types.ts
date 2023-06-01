@@ -1,4 +1,4 @@
-import { FormSchema } from '@/types/form'
+import { FormSchema, FormSetPropsType } from '@/types/form'
 
 export interface PlaceholderMoel {
   placeholder?: string
@@ -15,3 +15,12 @@ export type FormProps = {
   isCustom?: boolean
   labelWidth?: string | number
 } & Recordable
+
+export interface FormActionType {
+  setProps: (props: Recordable) => void
+  setValues: (data: Recordable) => void
+  getFormData: <T = Recordable | undefined>() => Promise<T>
+  setSchema: (schemaProps: FormSetPropsType[]) => void
+  addSchema: (formSchema: FormSchema, index?: number) => void
+  delSchema: (field: string) => void
+}
