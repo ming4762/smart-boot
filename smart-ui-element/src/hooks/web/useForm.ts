@@ -3,6 +3,7 @@ import type { ElForm } from 'element-plus'
 import { ref, unref, nextTick } from 'vue'
 import type { FormProps } from '@/components/Form/src/types'
 import { FormSchema, FormSetPropsType } from '@/types/form'
+import { FormActionType } from '@/components/Form'
 
 export const useForm = (props?: FormProps) => {
   // From实例
@@ -30,14 +31,7 @@ export const useForm = (props?: FormProps) => {
   }
 
   // 一些内置的方法
-  const methods: {
-    setProps: (props: Recordable) => void
-    setValues: (data: Recordable) => void
-    getFormData: <T = Recordable | undefined>() => Promise<T>
-    setSchema: (schemaProps: FormSetPropsType[]) => void
-    addSchema: (formSchema: FormSchema, index?: number) => void
-    delSchema: (field: string) => void
-  } = {
+  const methods: FormActionType = {
     setProps: async (props: FormProps = {}) => {
       const form = await getForm()
       form?.setProps(props)
