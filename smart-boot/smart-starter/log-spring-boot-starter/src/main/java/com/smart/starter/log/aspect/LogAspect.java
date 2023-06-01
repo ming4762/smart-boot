@@ -155,7 +155,7 @@ public final class LogAspect {
                 boolean saveLog = true;
                 // 错误信息
                 String errorMessage = null;
-                if (result instanceof Result result1) {
+                if (result instanceof Result<?> result1) {
                     code = result1.getCode();
                     if (BooleanUtils.isFalse(result1.isSuccess())) {
                         errorMessage = result1.getMessage();
