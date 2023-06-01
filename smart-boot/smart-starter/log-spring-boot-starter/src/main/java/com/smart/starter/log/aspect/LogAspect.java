@@ -157,9 +157,10 @@ public final class LogAspect {
                 // 错误信息
                 String errorMessage = null;
                 if (result instanceof Result) {
-                    code = ((Result) result).getCode();
-                    if (BooleanUtils.isFalse(((Result) result).isSuccess())) {
-                        errorMessage = ((Result) result).getMessage();
+                    code = ((Result<?>) result).getCode();
+                    if (BooleanUtils.isFalse(((Result<?>) result).isSuccess())) {
+                        errorMessage = ((Result<?>) result).getMessage();
+
                     }
                     List<Integer> saveCodeList = this.getCodeList();
                     // 如果设置了保存的编码，并且不包含保存的编码  则不保存日志
