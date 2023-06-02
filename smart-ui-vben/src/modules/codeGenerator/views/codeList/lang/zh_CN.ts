@@ -84,6 +84,7 @@ export default {
         },
         message: {
           saveConfirmContent: '非空字段：【{0}】未设置form',
+          noSelectSystem: '请选择系统',
         },
       },
       codeCreateForm: {

@@ -84,6 +84,7 @@ export default {
         },
         message: {
           saveConfirmContent: 'Non empty field: [{0}] has no form set',
+          noSelectSystem: 'Please select system',
         },
       },
       codeCreateForm: {

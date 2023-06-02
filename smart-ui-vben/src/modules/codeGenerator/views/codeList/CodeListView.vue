@@ -36,12 +36,17 @@ import { SmartVxeTableAction, SmartTable, useSmartTable } from '/@/components/Sm
 import CodeCreateModal from './components/CodeCreateModal.vue'
 import { LayoutSeparate } from '/@/components/LayoutSeparate'
 import SystemSimpleList from '/@/modules/system/components/system/SystemSimpleList.vue'
+import { errorMessage } from '/@/common/utils/SystemNotice'
 
 const { t } = useI18n()
 const router = useRouter()
 const { getTableSize } = useSizeSetting()
 
 const toDesign = (configId?: number) => {
+  if (!currentSystem?.id) {
+    errorMessage(t('generator.views.code.message.noSelectSystem'))
+    return false
+  }
   router.push({
     path: '/code/codeDesign',
     query: {
