@@ -5,6 +5,7 @@ import com.smart.system.model.SysDictItemPO;
 import com.smart.system.model.SysDictPO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
 * sys_dict - 系统字典表 Service
@@ -19,4 +20,11 @@ public interface SysDictService extends BaseService<SysDictPO> {
      * @return dict item list
      */
     List<SysDictItemPO> listItemByCode(String dictCode);
+
+    /**
+     * 通过code批量查询item
+     * @param dictCodeList 字典编码列表
+     * @return 字典编码为key，字典项为value的list
+     */
+    Map<String, List<SysDictItemPO>> listItemByCode(List<String> dictCodeList);
 }

@@ -59,7 +59,7 @@ public class SysDictItemPO extends BaseModel {
     /**
     * delete_yn - deleteYn
     */
-    private Byte deleteYn;
+    private Boolean deleteYn;
 
     /**
     * create_user_id - createUserId

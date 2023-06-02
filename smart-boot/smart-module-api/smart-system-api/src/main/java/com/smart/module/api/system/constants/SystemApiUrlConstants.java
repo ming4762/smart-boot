@@ -45,4 +45,11 @@ public interface SystemApiUrlConstants {
     String WECHAT_GET_BY_APP_OPENID = "/remote/system/wechat/getByAppOpenid";
 
     String WECHAT_GET_BY_APP_UNIONID = "/remote/system/wechat/getByUnionid";
+
+    /**
+     * 数据字典
+     */
+    String DICT_LIST_BY_CODE = "/remote/system/dict/listByDictCode";
+
+    String DICT_BATCH_LIST_BY_CODE = "/remote/system/dict/batchListByDictCode";
 }

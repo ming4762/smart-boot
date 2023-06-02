@@ -1,6 +1,5 @@
 package com.smart.system.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.common.collect.Lists;
 import com.smart.crud.service.BaseServiceImpl;
@@ -13,9 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
 * sys_dict - 系统字典表 Service实现类
@@ -59,18 +57,38 @@ public class SysDictServiceImpl extends BaseServiceImpl<SysDictMapper, SysDictPO
      */
     @Override
     public List<SysDictItemPO> listItemByCode(String dictCode) {
-        SysDictPO dict = this.getOne(
-                new LambdaQueryWrapper<SysDictPO>()
-                        .select(SysDictPO::getId)
-                        .eq(SysDictPO::getDictCode, dictCode)
-        );
-        if (dict == null) {
-            return new ArrayList<>(0);
+        return Optional.ofNullable(this.listItemByCode(List.of(dictCode)).get(dictCode))
+                .orElse(new ArrayList<>(0));
+    }
+
+    /**
+     * 通过code批量查询item
+     *
+     * @param dictCodeList 字典编码列表
+     * @return 字典编码为key，字典项为value的list
+     */
+    @Override
+    public Map<String, List<SysDictItemPO>> listItemByCode(List<String> dictCodeList) {
+        if (CollectionUtils.isEmpty(dictCodeList)) {
+            return Collections.emptyMap();
         }
-        return this.sysDictItemService.list(
-                new LambdaQueryWrapper<SysDictItemPO>()
-                        .eq(SysDictItemPO::getDictId, dict.getId())
-                        .orderByAsc(SysDictItemPO::getSeq)
+        List<SysDictPO> dictList = this.list(
+                new QueryWrapper<SysDictPO>().lambda()
+                        .select(SysDictPO::getId, SysDictPO::getDictCode)
+                        .in(SysDictPO::getDictCode, dictCodeList)
+                        .eq(SysDictPO::getUseYn, Boolean.TRUE)
         );
+        if (CollectionUtils.isEmpty(dictList)) {
+            return Collections.emptyMap();
+        }
+        Map<Long, String> dictIdCodeMap = dictList.stream()
+                .collect(Collectors.toMap(SysDictPO::getId, SysDictPO::getDictCode));
+        return this.sysDictItemService.list(
+                new QueryWrapper<SysDictItemPO>().lambda()
+                        .in(SysDictItemPO::getDictId, dictIdCodeMap.keySet())
+                        .eq(SysDictItemPO::getUseYn, Boolean.TRUE)
+                        .orderByAsc(SysDictItemPO::getSeq)
+        ).stream()
+                .collect(Collectors.groupingBy(item -> dictIdCodeMap.get(item.getDictId())));
     }
 }
