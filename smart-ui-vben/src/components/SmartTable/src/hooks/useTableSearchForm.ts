@@ -138,9 +138,7 @@ export const useTableSearchForm = (
       const { schemas } = searchFormConfig as Partial<SmartSearchFormProps>
       const result: { [index: string]: SmartSearchFormSchema } = {}
       schemas?.forEach((item) => {
-        if (item.searchSymbol) {
-          result[item.field] = item
-        }
+        result[item.field] = item
       })
       return result
     },
