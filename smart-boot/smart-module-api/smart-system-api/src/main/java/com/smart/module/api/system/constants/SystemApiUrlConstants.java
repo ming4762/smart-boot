@@ -52,4 +52,8 @@ public interface SystemApiUrlConstants {
     String DICT_LIST_BY_CODE = "/remote/system/dict/listByDictCode";
 
     String DICT_BATCH_LIST_BY_CODE = "/remote/system/dict/batchListByDictCode";
+
+    String TOOL_CREATE_SERIAL = "/remote/tool/serial/create";
+
+    String TOOL_CREATE_SERIAL_BATCH = "/remote/tool/serial/batchCreate";
 }

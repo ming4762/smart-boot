@@ -5,6 +5,7 @@ import com.smart.module.api.system.constants.SystemApiUrlConstants;
 import com.smart.module.api.system.dto.SysDictItemDTO;
 import com.smart.system.api.local.LocalSysDictApi;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,7 +34,7 @@ public class RemoteSysDictApiController implements SysDictApi {
      */
     @Override
     @PostMapping(SystemApiUrlConstants.DICT_LIST_BY_CODE)
-    public List<SysDictItemDTO> listByDictCode(String dictCode) {
+    public List<SysDictItemDTO> listByDictCode(@RequestBody String dictCode) {
         return this.localSysDictApi.listByDictCode(dictCode);
     }
 
@@ -45,7 +46,7 @@ public class RemoteSysDictApiController implements SysDictApi {
      */
     @Override
     @PostMapping(SystemApiUrlConstants.DICT_BATCH_LIST_BY_CODE)
-    public Map<String, List<SysDictItemDTO>> listByDictCode(List<String> dictCode) {
+    public Map<String, List<SysDictItemDTO>> listByDictCode(@RequestBody List<String> dictCode) {
         return this.localSysDictApi.listByDictCode(dictCode);
     }
 }

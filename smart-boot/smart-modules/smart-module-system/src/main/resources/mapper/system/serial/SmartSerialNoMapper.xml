@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smart.system.mapper.SmartSerialNoMapper">
+    <sql id="columnList">
+        id,
+        <!--   编号      -->
+        code,
+        <!--   名称      -->
+        name,
+        <!--   备注      -->
+        remark,
+        <!--   seq      -->
+        seq,
+        <!--   编码前缀      -->
+        prefix,
+        <!--   日期格式      -->
+        date_format,
+        <!--   流水长度      -->
+        serial_length,
+        <!--   最小值      -->
+        min_value,
+        <!--   最大值，-1不限制      -->
+        max_value,
+        <!--   步长      -->
+        step_value,
+        <!--   当前值      -->
+        current_value,
+        <!--   createTime      -->
+        create_time,
+        <!--   createBy      -->
+        create_by,
+        <!--   updateTime      -->
+        update_time,
+        <!--   updateUserId      -->
+        update_user_id,
+        <!--   useYn      -->
+        use_yn,
+        delete_yn
+    </sql>
+
+    <resultMap id="commonResultMap" type="com.smart.system.model.SmartSerialNoPO">
+        <!--   编号      -->
+        <result column="code" property="code" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   名称      -->
+        <result column="name" property="name" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   备注      -->
+        <result column="remark" property="remark" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   seq      -->
+        <result column="seq" property="seq" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        <!--   编码前缀      -->
+        <result column="prefix" property="prefix" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   日期格式      -->
+        <result column="date_format" property="dateFormat" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   流水长度      -->
+        <result column="serial_length" property="serialLength" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        <!--   最小值      -->
+        <result column="min_value" property="minValue" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   最大值，-1不限制      -->
+        <result column="max_value" property="maxValue" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   步长      -->
+        <result column="step_value" property="stepValue" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        <!--   当前值      -->
+        <result column="current_value" property="currentValue" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   createTime      -->
+        <result column="create_time" property="createTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+        <!--   createBy      -->
+        <result column="create_by" property="createBy" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   updateTime      -->
+        <result column="update_time" property="updateTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+        <!--   updateUserId      -->
+        <result column="update_user_id" property="updateUserId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   useYn      -->
+        <result column="use_yn" property="useYn" javaType="java.lang.Boolean" jdbcType="BIT"/>
+    </resultMap>
+</mapper>
