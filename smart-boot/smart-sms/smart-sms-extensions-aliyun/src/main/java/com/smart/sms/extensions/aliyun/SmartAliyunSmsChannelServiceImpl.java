@@ -14,6 +14,7 @@ import com.smart.sms.core.result.SmsSendResult;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -97,8 +98,8 @@ public class SmartAliyunSmsChannelServiceImpl implements SmartAliyunSmsChannelSe
                 )
                 .setSignName(sendParameter.getSignName())
                 .setTemplateCode(sendParameter.getTemplate());
-        if (StringUtils.isNotBlank(sendParameter.getTemplateParameter())) {
-            sendSmsRequest.setTemplateParam(sendParameter.getTemplateParameter());
+        if (!CollectionUtils.isEmpty(sendParameter.getTemplateParameter())) {
+            sendSmsRequest.setTemplateParam(JsonUtils.toJsonString(sendParameter.getTemplateParameter()));
         }
         try {
             SendSmsResponse sendSmsResponse = client.sendSmsWithOptions(sendSmsRequest, new RuntimeOptions());

@@ -5,10 +5,16 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.smart.commons.core.exception.BusinessException;
 import com.smart.commons.core.exception.SystemException;
 import com.smart.crud.service.BaseServiceImpl;
+import com.smart.sms.core.parameter.SmsSendParameter;
+import com.smart.sms.core.result.SmsSendResult;
+import com.smart.sms.core.service.SmartSmsService;
 import com.smart.sms.manager.mapper.SmartSmsChannelManagerMapper;
 import com.smart.sms.manager.model.SmartSmsChannelManagerPO;
+import com.smart.sms.manager.pojo.parameter.SmartSmsSendTestParameter;
 import com.smart.sms.manager.service.SmartSmsChannelManagerService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -24,6 +30,12 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class SmartSmsChannelManagerServiceImpl extends BaseServiceImpl<SmartSmsChannelManagerMapper, SmartSmsChannelManagerPO> implements SmartSmsChannelManagerService {
+
+    private final SmartSmsService smartSmsService;
+
+    public SmartSmsChannelManagerServiceImpl(@Lazy SmartSmsService smartSmsService) {
+        this.smartSmsService = smartSmsService;
+    }
 
     /**
      * 设置默认通道
@@ -91,5 +103,18 @@ public class SmartSmsChannelManagerServiceImpl extends BaseServiceImpl<SmartSmsC
                         .eq(SmartSmsChannelManagerPO::getUseYn, Boolean.TRUE)
                         .eq(SmartSmsChannelManagerPO::getDeleteYn, Boolean.FALSE)
         );
+    }
+
+    /**
+     * 发送短息你测试
+     *
+     * @param parameter 参数
+     * @return 是否发送成功
+     */
+    @Override
+    public SmsSendResult sendTest(SmartSmsSendTestParameter parameter) {
+        SmsSendParameter sendParameter = new SmsSendParameter();
+        BeanUtils.copyProperties(parameter, sendParameter);
+        return this.smartSmsService.send(parameter.getChannelId(), sendParameter);
     }
 }

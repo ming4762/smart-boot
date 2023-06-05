@@ -5,6 +5,8 @@
         <SmartVxeTableAction :actions="getActions(row)" />
       </template>
     </SmartTable>
+
+    <SendTestModal @register="registerTestSendModal" />
   </div>
 </template>
 
@@ -13,7 +15,7 @@ import { useI18n } from '/@/hooks/web/useI18n'
 import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
 import { replace } from 'lodash-es'
 
-import {createConfirm, successMessage} from '/@/common/utils/SystemNotice';
+import { createConfirm, successMessage } from '/@/common/utils/SystemNotice'
 import {
   ActionItem,
   SmartTable,
@@ -34,17 +36,24 @@ import {
   setDefaultApi,
 } from './SmartSmsChannelManagerListView.api'
 
+import SendTestModal from './components/SendTestModal.vue'
+import { useModal } from '/@/components/Modal'
+
 const { t } = useI18n()
 const { getTableSize } = useSizeSetting()
+
+const [registerTestSendModal, { openModal }] = useModal()
 
 const getActions = (row: Recordable): ActionItem[] => {
   return [
     {
       label: t('common.button.edit'),
       onClick: () => editByRowModal(row),
+      auth: 'smart:sms:update',
     },
     {
       label: t('smart.sms.channel.button.setDefault'),
+      auth: 'smart:sms:update',
       disabled: row.isDefault === true,
       onClick: () => {
         createConfirm({
@@ -57,6 +66,12 @@ const getActions = (row: Recordable): ActionItem[] => {
             await query()
           },
         })
+      },
+    },
+    {
+      label: t('smart.sms.channel.button.sendTest'),
+      onClick: () => {
+        openModal(true, { channelId: row.id })
       },
     },
   ]

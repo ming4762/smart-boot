@@ -6,8 +6,10 @@ import com.smart.commons.core.message.Result;
 import com.smart.crud.controller.BaseController;
 import com.smart.crud.query.IdParameter;
 import com.smart.crud.query.PageSortQuery;
+import com.smart.sms.core.result.SmsSendResult;
 import com.smart.sms.manager.model.SmartSmsChannelManagerPO;
 import com.smart.sms.manager.pojo.parameter.SmartSmsChannelManagerSaveUpdateParameter;
+import com.smart.sms.manager.pojo.parameter.SmartSmsSendTestParameter;
 import com.smart.sms.manager.service.SmartSmsChannelManagerService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -45,13 +47,6 @@ public class SmartSmsChannelManagerController extends BaseController<SmartSmsCha
     @Log(value = "批量添加修改短信通道表", type = LogOperationTypeEnum.UPDATE)
     @PreAuthorize("hasPermission('smart:sms', 'update')")
     public Result<Boolean> saveUpdateBatch(@RequestBody @Valid List<SmartSmsChannelManagerSaveUpdateParameter> parameterList) {
-        // 验证 isDefault 是否唯一
-//        long isDefaultCount = parameterList.stream()
-//                .filter(SmartSmsChannelManagerSaveUpdateParameter::getIsDefault)
-//                .count();
-//        if (isDefaultCount > 1) {
-//            throw new I18nException(SmartSmsI18nMessageEnum.ERROR_SAVE_MULTI_DEFAULT);
-//        }
         List<SmartSmsChannelManagerPO> modelList = parameterList.stream().map(item -> {
             SmartSmsChannelManagerPO model = new SmartSmsChannelManagerPO();
             BeanUtils.copyProperties(item, model);
@@ -85,5 +80,16 @@ public class SmartSmsChannelManagerController extends BaseController<SmartSmsCha
     @PreAuthorize("hasPermission('smart:sms', 'update')")
     public Result<Boolean> setDefault(@RequestBody IdParameter idParameter) {
         return Result.success(this.service.setDefault((Long)idParameter.getId()));
+    }
+
+    /**
+     * 发送测试
+     * @return 短信发送结果
+     */
+    @Operation(summary = "设置默认通道")
+    @PostMapping("sendTest")
+    @PreAuthorize("hasPermission('smart:sms', 'test')")
+    public Result<SmsSendResult> sendTest(@RequestBody @Valid SmartSmsSendTestParameter parameter) {
+        return Result.success(this.service.sendTest(parameter));
     }
 }

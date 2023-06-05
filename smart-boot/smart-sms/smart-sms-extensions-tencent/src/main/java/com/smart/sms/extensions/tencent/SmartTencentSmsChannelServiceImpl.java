@@ -13,7 +13,7 @@ import com.tencentcloudapi.sms.v20210111.models.SendSmsRequest;
 import com.tencentcloudapi.sms.v20210111.models.SendSmsResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -83,9 +83,8 @@ public class SmartTencentSmsChannelServiceImpl implements SmartTencentSmsChannel
         request.setTemplateId(sendParameter.getTemplate());
 
         // 获取参数
-        if (StringUtils.isNotBlank(sendParameter.getTemplateParameter())) {
-            Map<String, String> templateParameter = JsonUtils.parse(sendParameter.getTemplateParameter(), Map.class);
-            request.setTemplateParamSet(templateParameter.values().toArray(new String[0]));
+        if (!CollectionUtils.isEmpty(sendParameter.getTemplateParameter())) {
+            request.setTemplateParamSet(sendParameter.getTemplateParameter().values().toArray(new String[0]));
         }
         // 设置手机号
         request.setPhoneNumberSet(sendParameter.getPhoneNumberList().toArray(new String[0]));

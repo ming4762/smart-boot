@@ -90,7 +90,7 @@ export const getTableColumns = (): SmartColumn[] => {
     {
       title: '{common.table.operation}',
       field: 'operation',
-      width: 120,
+      width: 200,
       fixed: 'right',
       slots: {
         default: 'table-operation',

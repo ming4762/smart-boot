@@ -1,7 +1,9 @@
 package com.smart.sms.manager.service;
 
 import com.smart.crud.service.BaseService;
+import com.smart.sms.core.result.SmsSendResult;
 import com.smart.sms.manager.model.SmartSmsChannelManagerPO;
+import com.smart.sms.manager.pojo.parameter.SmartSmsSendTestParameter;
 
 /**
 * smart_sms_channel_manager - 短信通道表 Service
@@ -30,4 +32,11 @@ public interface SmartSmsChannelManagerService extends BaseService<SmartSmsChann
      * @return 短信通道机械能西
      */
     SmartSmsChannelManagerPO getByCode(String code);
+
+    /**
+     * 发送短息你测试
+     * @param parameter 参数
+     * @return 是否发送成功
+     */
+    SmsSendResult sendTest(SmartSmsSendTestParameter parameter);
 }

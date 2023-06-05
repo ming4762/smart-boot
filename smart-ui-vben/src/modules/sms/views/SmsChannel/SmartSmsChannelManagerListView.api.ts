@@ -1,4 +1,4 @@
-import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
+import {ApiServiceEnum, defHttp} from '/@/utils/http/axios'
 
 enum Api {
   list = '/smart/sms/channel/list',
@@ -6,6 +6,7 @@ enum Api {
   batchSaveUpdate = '/smart/sms/channel/saveUpdateBatch',
   delete = '/smart/sms/channel/batchDeleteById',
   setDefault = '/smart/sms/channel/setDefault',
+  sendTest = '/smart/sms/channel/sendTest',
 }
 
 export const listApi = (params) => {
@@ -49,5 +50,13 @@ export const setDefaultApi = (id: number) => {
     data: {
       id,
     },
+  })
+}
+
+export const sendTestApi = (data: Record<string, any>) => {
+  return defHttp.post({
+    service: ApiServiceEnum.SMART_MESSAGE,
+    url: Api.sendTest,
+    data,
   })
 }
