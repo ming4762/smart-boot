@@ -92,5 +92,8 @@ export default {
     email: 'Email',
     smsCode: 'SMS code',
     mobile: 'Mobile',
+
+    trueMobile: 'Please enter the correct phone number',
+    smsCodeSuccess: 'sms code send success',
   },
 }

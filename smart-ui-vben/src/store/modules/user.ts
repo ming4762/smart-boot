@@ -5,8 +5,13 @@ import { store } from '/@/store'
 import { PageEnum } from '/@/enums/pageEnum'
 import { ROLES_KEY, TOKEN_KEY, USER_INFO_KEY } from '/@/enums/cacheEnum'
 import { getAuthCache, setAuthCache } from '/@/utils/auth'
-import { ChangePasswordParams, GetUserInfoModel, LoginParams } from '/@/api/sys/model/userModel'
-import { doLogout, loginApi, changePasswordApi } from '/@/api/sys/user'
+import {
+  ChangePasswordParams,
+  GetUserInfoModel,
+  LoginParams,
+  MobileLoginParams
+} from '/@/api/sys/model/userModel'
+import {doLogout, loginApi, changePasswordApi, mobileLoginApi} from '/@/api/sys/user'
 import { useI18n } from '/@/hooks/web/useI18n'
 import { useMessage } from '/@/hooks/web/useMessage'
 import { router } from '/@/router'
@@ -96,14 +101,19 @@ export const useUserStore = defineStore({
         const { goHome = true, mode, ...loginParams } = params
         const data = await loginApi(loginParams, mode)
         const { token, permissions, roles, user } = data
-        user.realName = user.fullName
-        // save token
-        this.setToken(token)
-        this.setRoleList(roles)
-        return this.afterLoginAction(user, permissions, goHome)
+        return this.afterLoginAction(token, roles, user, permissions, goHome)
       } catch (error) {
         return Promise.reject(error)
       }
+    },
+    /**
+     * 手机号登录
+     */
+    async mobileLogin(params: MobileLoginParams) {
+      const data = await mobileLoginApi(params)
+
+      const { token, permissions, roles, user } = data
+      return this.afterLoginAction(token, roles, user, permissions, true)
     },
     async initRoute() {
       const permissionStore = usePermissionStore()
@@ -118,10 +128,17 @@ export const useUserStore = defineStore({
       this.routeInit = true
     },
     async afterLoginAction(
+      token: string,
+      roles: string[],
       userInfo: GetUserInfoModel,
       permissions: Array<string>,
       goHome?: boolean,
     ): Promise<GetUserInfoModel | null> {
+      userInfo.realName = userInfo.fullName
+      // save token
+      this.setToken(token)
+      this.setRoleList(roles)
+
       if (!this.getToken) return null
       // get user info
       this.setUserInfo({

@@ -69,7 +69,7 @@ export function useFormRules(formData?: Recordable) {
     const mobileFormRule = unref(getMobileFormRule)
 
     const mobileRule = {
-      sms: smsFormRule,
+      smsCode: smsFormRule,
       mobile: mobileFormRule,
     }
     switch (unref(currentState)) {

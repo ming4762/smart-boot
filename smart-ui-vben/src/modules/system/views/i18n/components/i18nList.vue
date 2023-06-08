@@ -101,6 +101,9 @@ const [registerTable, { getSearchForm, query, editByRowModal }] = useSmartTable(
   },
   addEditConfig: {
     formConfig: {
+      baseColProps: {
+        span: 24,
+      },
       schemas: getI18nAddEditSchemas(t),
       labelCol: { span: 5 },
       wrapperCol: { span: 17 },

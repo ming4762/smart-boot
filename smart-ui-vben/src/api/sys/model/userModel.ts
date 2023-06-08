@@ -8,6 +8,14 @@ export interface LoginParams {
   code?: string
 }
 
+/**
+ * 手机登录参数
+ */
+export interface MobileLoginParams {
+  phone: string
+  code: string
+}
+
 export interface RoleInfo {
   roleName: string
   value: string

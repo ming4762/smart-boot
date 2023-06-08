@@ -1,5 +1,10 @@
 import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
-import { ChangePasswordParams, LoginParams, LoginResultModel } from './model/userModel'
+import {
+  ChangePasswordParams,
+  LoginParams,
+  LoginResultModel,
+  MobileLoginParams,
+} from './model/userModel'
 
 import { ErrorMessageMode } from '/#/axios'
 
@@ -10,6 +15,10 @@ enum Api {
   GetPermCode = '/getPermCode',
   TestRetry = '/testRetry',
   changePassword = 'sys/auth/changePassword',
+
+  smsSendCode = '/auth/sms/createCode',
+
+  mobileLogin = '/auth/sms/login',
 }
 
 /**
@@ -66,4 +75,31 @@ export const changePasswordApi = (params: ChangePasswordParams) => {
     url: Api.changePassword,
     data: params,
   })
+}
+
+/**
+ * 发送短信验证码API
+ * @param phone 电话号码
+ */
+export const smsSendCodeApi = (phone: string) => {
+  return defHttp.postForm({
+    service: ApiServiceEnum.SMART_AUTH,
+    url: Api.smsSendCode,
+    data: {
+      phone,
+    },
+  })
+}
+
+export const mobileLoginApi = (params: MobileLoginParams, mode: ErrorMessageMode = 'modal') => {
+  return defHttp.postForm(
+    {
+      service: ApiServiceEnum.SMART_AUTH,
+      url: Api.mobileLogin,
+      data: params,
+    },
+    {
+      errorMessageMode: mode,
+    },
+  )
 }

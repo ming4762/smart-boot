@@ -7,16 +7,15 @@
           size="large"
           v-model:value="formData.mobile"
           :placeholder="t('sys.login.mobile')"
-          class="fix-auto-fill"
-        />
+          class="fix-auto-fill" />
       </FormItem>
-      <FormItem name="sms" class="enter-x">
+      <FormItem name="smsCode" class="enter-x">
         <CountdownInput
           size="large"
           class="fix-auto-fill"
-          v-model:value="formData.sms"
-          :placeholder="t('sys.login.smsCode')"
-        />
+          :sendCodeApi="handleSendCode"
+          v-model:value="formData.smsCode"
+          :placeholder="t('sys.login.smsCode')" />
       </FormItem>
 
       <FormItem class="enter-x">
@@ -31,33 +30,59 @@
   </template>
 </template>
 <script lang="ts" setup>
-  import { reactive, ref, computed, unref } from 'vue'
-  import { Form, Input, Button } from 'ant-design-vue'
-  import { CountdownInput } from '/@/components/CountDown'
-  import LoginFormTitle from './LoginFormTitle.vue'
-  import { useI18n } from '/@/hooks/web/useI18n'
-  import { useLoginState, useFormRules, useFormValid, LoginStateEnum } from './useLogin'
+import { reactive, ref, computed, unref } from 'vue'
+import { Form, Input, Button } from 'ant-design-vue'
+import { CountdownInput } from '/@/components/CountDown'
+import LoginFormTitle from './LoginFormTitle.vue'
+import { useI18n } from '/@/hooks/web/useI18n'
+import { useLoginState, useFormRules, useFormValid, LoginStateEnum } from './useLogin'
+import { smsSendCodeApi } from '/@/api/sys/user'
+import {errorMessage, successMessage} from '/@/common/utils/SystemNotice'
+import { useUserStore } from '/@/store/modules/user'
 
-  const FormItem = Form.Item
-  const { t } = useI18n()
-  const { handleBackLogin, getLoginState } = useLoginState()
-  const { getFormRules } = useFormRules()
+const FormItem = Form.Item
+const { t } = useI18n()
+const { handleBackLogin, getLoginState } = useLoginState()
+const { getFormRules } = useFormRules()
+const userStore = useUserStore()
 
-  const formRef = ref()
-  const loading = ref(false)
+const formRef = ref()
+const loading = ref(false)
 
-  const formData = reactive({
-    mobile: '',
-    sms: '',
-  })
+const formData = reactive({
+  mobile: '',
+  smsCode: '',
+})
 
-  const { validForm } = useFormValid(formRef)
+const { validForm } = useFormValid(formRef)
 
-  const getShow = computed(() => unref(getLoginState) === LoginStateEnum.MOBILE)
+const getShow = computed(() => unref(getLoginState) === LoginStateEnum.MOBILE)
 
-  async function handleLogin() {
-    const data = await validForm()
-    if (!data) return
-    console.log(data)
+const handleSendCode = async () => {
+  if (!formData.mobile || formData.mobile.trim() === '') {
+    errorMessage(t('sys.login.trueMobile'))
+    return false
   }
+  await smsSendCodeApi(formData.mobile)
+  successMessage({
+    msg: t('sys.login.smsCodeSuccess'),
+  })
+  return true
+}
+
+async function handleLogin() {
+  const data = await validForm()
+  if (!data) return
+
+  // 执行登录
+  try {
+    loading.value = true
+    await userStore.mobileLogin({
+      phone: data.mobile,
+      code: data.smsCode,
+    })
+  } finally {
+    loading.value = false
+  }
+}
 </script>
