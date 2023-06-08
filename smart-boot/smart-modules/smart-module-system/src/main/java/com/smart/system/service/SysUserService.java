@@ -120,4 +120,18 @@ public interface SysUserService extends BaseService<SysUserPO> {
      * @return SysUserWithDataScopeVO
      */
     SysUserWithDataScopeDTO getByIdWithDataScope(Long userId);
+
+    /**
+     * 通过手机号查询用户
+     * @param mobile 手机号
+     * @return 用户信息
+     */
+    SysUserPO getByMobile(@NonNull String mobile);
+
+    /**
+     * 通过用户名查询用户
+     * @param username 用户名
+     * @return 用户信息
+     */
+    SysUserPO getByUsername(@NonNull String username);
 }

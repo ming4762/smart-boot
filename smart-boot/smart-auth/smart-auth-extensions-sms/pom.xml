@@ -23,6 +23,12 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-message-api</artifactId>
+            <version>${smart-boot.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

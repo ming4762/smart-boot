@@ -8,6 +8,7 @@ import com.smart.module.api.system.SysUserApi;
 import com.smart.module.api.system.constants.UserAccountStatusEnum;
 import com.smart.module.api.system.dto.AccountLoginFailTimeUpdateDTO;
 import com.smart.module.api.system.dto.UserAccountLockDTO;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.event.AbstractAuthenticationFailureEvent;
 import org.springframework.security.authentication.event.AuthenticationFailureLockedEvent;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
@@ -47,7 +48,9 @@ public class AuthEventLockedHandler implements AuthEventHandler {
             this.handleLocked(event1);
             return;
         }
-        this.sysUserApi.updateLoginFailTime(new AccountLoginFailTimeUpdateDTO((String) event.getAuthentication().getPrincipal(), 1L));
+        if (event.getException() instanceof BadCredentialsException) {
+            this.sysUserApi.updateLoginFailTime(new AccountLoginFailTimeUpdateDTO((String) event.getAuthentication().getPrincipal(), 1L));
+        }
     }
 
     private void handleLocked(AuthenticationFailureLockedEvent event) {
@@ -57,10 +60,12 @@ public class AuthEventLockedHandler implements AuthEventHandler {
         }
         UserAccountLockDTO parameter = new UserAccountLockDTO();
         parameter.setUsername((String) event.getAuthentication().getPrincipal());
-        if (exception instanceof LongTimeNoLoginLockedException) {
+        if (exception instanceof LongTimeNoLoginLockedException longTimeNoLoginLockedException) {
             // 长时间未登录锁定
             parameter.setAccountStatus(UserAccountStatusEnum.LONG_TIME_LOCKED);
+            parameter.setUsername(longTimeNoLoginLockedException.getUser().getUsername());
         } else {
+            parameter.setUsername(((PasswordNoLifeLockedException) exception).getUser().getUsername());
             parameter.setAccountStatus(UserAccountStatusEnum.LONG_TIME_PASSWORD_MODIFY_LOCKED);
         }
         this.sysUserApi.lockAccount(parameter);

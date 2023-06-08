@@ -40,6 +40,8 @@ public class AuthSmsSecurityConfigurer extends SecurityConfigurerAdapter<Default
 
     private AuthSmsSecurityConfigurer() {}
 
+    private HttpSecurity builder;
+
     /**
      * SMS登录配置初始化
      * @return AuthSmsSecurityConfigurer
@@ -50,6 +52,7 @@ public class AuthSmsSecurityConfigurer extends SecurityConfigurerAdapter<Default
 
     @Override
     public void configure(HttpSecurity builder) {
+        this.builder = builder;
         builder
                 .authenticationProvider(this.getBean(SmsAuthenticationProvider.class, this.serviceProvider.authenticationProvider))
                 .addFilterBefore(this.createLoginFilter(), BasicAuthenticationFilter.class);
@@ -88,7 +91,7 @@ public class AuthSmsSecurityConfigurer extends SecurityConfigurerAdapter<Default
     protected SmsLoginFilter createSmsLoginFilter() {
         final SmsLoginFilter smsLoginFilter = new SmsLoginFilter(this.getUrl(SMS_LOGIN));
 
-        smsLoginFilter.setAuthenticationManager(this.getBean(AuthenticationManager.class, null));
+        smsLoginFilter.setAuthenticationManager(this.builder.getSharedObject(AuthenticationManager.class));
         // 设置登录成功handler
         smsLoginFilter.setAuthenticationSuccessHandler(this.getBean(AuthenticationSuccessHandler.class, this.handlerBuilder.getAuthenticationSuccessHandler()));
         // 设置登录失败handler
@@ -104,8 +107,9 @@ public class AuthSmsSecurityConfigurer extends SecurityConfigurerAdapter<Default
         if (Objects.nonNull(t)) {
             return t;
         }
+        ApplicationContext applicationContext = this.builder.getSharedObject(ApplicationContext.class);
         try {
-            return Optional.ofNullable(this.serviceProvider.applicationContext).map(item -> item.getBean(clazz)).orElse(null);
+            return Optional.ofNullable(applicationContext).map(item -> item.getBean(clazz)).orElse(null);
         } catch (NoSuchBeanDefinitionException e) {
             log.warn("获取bean发生错误: " + e.getMessage());
             return null;
@@ -126,16 +130,9 @@ public class AuthSmsSecurityConfigurer extends SecurityConfigurerAdapter<Default
      */
     public class ServiceProvider {
 
-        private ApplicationContext applicationContext;
-
         private SmsAuthenticationProvider authenticationProvider;
 
         private String baseUrl = "/auth/sms";
-
-        public ServiceProvider applicationContext(ApplicationContext applicationContext) {
-            this.applicationContext = applicationContext;
-            return this;
-        }
 
         public ServiceProvider baseUrl(String baseUrl) {
             this.baseUrl = baseUrl;

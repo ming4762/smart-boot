@@ -1,5 +1,6 @@
 package com.smart.sms.core.result;
 
+import com.smart.sms.core.constants.SmartSmsChannelEnum;
 import lombok.*;
 
 import java.io.Serializable;
@@ -25,4 +26,11 @@ public class SmsSendResult implements Serializable {
      * json格式的响应数据
      */
     private String responseData;
+
+    private Long channelId;
+
+    private String channelCode;
+
+    private SmartSmsChannelEnum channelType;
+
 }

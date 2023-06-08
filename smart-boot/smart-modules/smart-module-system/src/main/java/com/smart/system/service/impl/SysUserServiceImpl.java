@@ -578,8 +578,38 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
                 Arrays.stream(dept.getDataScope().split(","))
                         .filter(StringUtils::isNotBlank)
                         .map(DataPermissionScope::valueOf)
-                        .collect(Collectors.toList())
+                        .toList()
         );
         return vo;
+    }
+
+    /**
+     * 通过手机号查询用户
+     *
+     * @param mobile 手机号
+     * @return 用户信息
+     */
+    @Override
+    public SysUserPO getByMobile(@NonNull String mobile) {
+        return this.getOne(
+                new QueryWrapper<SysUserPO>().lambda()
+                        .eq(SysUserPO::getMobile, mobile)
+                        .eq(SysUserPO::getUseYn, Boolean.TRUE)
+        );
+    }
+
+    /**
+     * 通过用户名查询用户
+     *
+     * @param username 用户名
+     * @return 用户信息
+     */
+    @Override
+    public SysUserPO getByUsername(@NonNull String username) {
+        return this.getOne(
+                new QueryWrapper<SysUserPO>().lambda()
+                        .eq(SysUserPO::getUsername, username)
+                        .eq(SysUserPO::getUseYn, Boolean.TRUE)
+        );
     }
 }

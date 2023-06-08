@@ -104,7 +104,7 @@ public class SmartAliyunSmsChannelServiceImpl implements SmartAliyunSmsChannelSe
         try {
             SendSmsResponse sendSmsResponse = client.sendSmsWithOptions(sendSmsRequest, new RuntimeOptions());
             if (SUCCESS_CODE.equals(sendSmsResponse.getBody().getCode())) {
-                return new SmsSendResult(sendSmsResponse.getBody().getRequestId(), JsonUtils.toJsonString(sendSmsResponse));
+                return new SmsSendResult(sendSmsResponse.getBody().getRequestId(), JsonUtils.toJsonString(sendSmsResponse), null, null, null);
             }
             throw new SmartSmsException(JsonUtils.toJsonString(sendSmsResponse));
         } catch (Exception e) {

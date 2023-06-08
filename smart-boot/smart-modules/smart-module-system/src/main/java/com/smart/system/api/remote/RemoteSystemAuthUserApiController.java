@@ -3,7 +3,8 @@ package com.smart.system.api.remote;
 import com.smart.commons.core.dto.auth.UserRolePermission;
 import com.smart.module.api.system.SystemAuthUserApi;
 import com.smart.module.api.system.constants.SystemApiUrlConstants;
-import com.smart.module.api.system.dto.AuthUser;
+import com.smart.module.api.system.dto.AuthUserDTO;
+import com.smart.module.api.system.parameter.UserAccountUnLockParameter;
 import com.smart.module.api.system.parameter.WechatUserQueryParameter;
 import com.smart.system.service.impl.LocalSystemAuthUserApiImpl;
 import org.springframework.lang.NonNull;
@@ -34,30 +35,30 @@ public class RemoteSystemAuthUserApiController implements SystemAuthUserApi {
      */
     @PostMapping(SystemApiUrlConstants.GET_AUTH_USER_BY_USERNAME)
     @Override
-    public AuthUser getByUsername(@NonNull @RequestBody String username) {
+    public AuthUserDTO getByUsername(@NonNull @RequestBody String username) {
         return this.systemAuthUserApi.getByUsername(username);
     }
 
     /**
      * 通过电话查询用户
-     * @param phone 电话
+     * @param mobile 电话
      * @return 用户信息
      */
     @PostMapping(SystemApiUrlConstants.GET_AUTH_USER_BY_PHONE)
     @Override
-    public AuthUser getByPhone(@NonNull@RequestBody String phone) {
-        return this.systemAuthUserApi.getByPhone(phone);
+    public AuthUserDTO getByMobile(@NonNull@RequestBody String mobile) {
+        return this.systemAuthUserApi.getByMobile(mobile);
     }
 
     /**
      * 查询用户角色权限信息
-     * @param authUser 用户信息
+     * @param userId 用户ID
      * @return 权限角色信息
      */
     @PostMapping(SystemApiUrlConstants.QUERY_ROLE_PERMISSION)
     @Override
-    public UserRolePermission queryRolePermission(@NonNull @RequestBody AuthUser authUser) {
-        return this.systemAuthUserApi.queryRolePermission(authUser);
+    public UserRolePermission queryRolePermission(@NonNull @RequestBody Long userId) {
+        return this.systemAuthUserApi.queryRolePermission(userId);
     }
 
     /**
@@ -68,7 +69,7 @@ public class RemoteSystemAuthUserApiController implements SystemAuthUserApi {
      */
     @Override
     @PostMapping(SystemApiUrlConstants.WECHAT_GET_BY_APP_OPENID)
-    public AuthUser getByAppOpenid(WechatUserQueryParameter parameter) {
+    public AuthUserDTO getByAppOpenid(WechatUserQueryParameter parameter) {
         return SystemAuthUserApi.super.getByAppOpenid(parameter);
     }
 
@@ -80,7 +81,19 @@ public class RemoteSystemAuthUserApiController implements SystemAuthUserApi {
      */
     @Override
     @PostMapping(SystemApiUrlConstants.WECHAT_GET_BY_APP_UNIONID)
-    public AuthUser getByUnionid(WechatUserQueryParameter parameter) {
+    public AuthUserDTO getByUnionid(WechatUserQueryParameter parameter) {
         return SystemAuthUserApi.super.getByUnionid(parameter);
+    }
+
+    /**
+     * 结果用户账户
+     *
+     * @param parameter 参数
+     * @return 是否结果成功
+     */
+    @Override
+    @PostMapping(SystemApiUrlConstants.USER_ACCOUNT_UNLOCK)
+    public boolean unlockAccount(@RequestBody UserAccountUnLockParameter parameter) {
+        return this.systemAuthUserApi.unlockAccount(parameter);
     }
 }

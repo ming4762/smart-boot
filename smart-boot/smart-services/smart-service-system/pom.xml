@@ -54,6 +54,13 @@
 			<version>${smart-boot.version}</version>
 		</dependency>
 
+		<!--	短信登录支持	-->
+		<dependency>
+			<groupId>com.smart</groupId>
+			<artifactId>smart-auth-extensions-sms</artifactId>
+			<version>${smart-boot.version}</version>
+		</dependency>
+
 		<!--	基础支持：国际化、异常处理	-->
 		<dependency>
 			<groupId>com.smart</groupId>
@@ -66,12 +73,13 @@
 			<version>${project.parent.version}</version>
 		</dependency>
 
-		<!--	短信支持	-->
+		<!--	消息支持	-->
 		<dependency>
 			<groupId>com.smart</groupId>
-			<artifactId>smart-sms-manager</artifactId>
-			<version>${project.parent.version}</version>
+			<artifactId>smart-module-message</artifactId>
+			<version>${smart-boot.version}</version>
 		</dependency>
+		<!--	阿里云短信支持	-->
 		<dependency>
 			<groupId>com.smart</groupId>
 			<artifactId>smart-sms-extensions-aliyun</artifactId>

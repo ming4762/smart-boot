@@ -91,7 +91,7 @@ public class SmartTencentSmsChannelServiceImpl implements SmartTencentSmsChannel
         try {
             SendSmsResponse smsResponse = clientCache.getClient().SendSms(request);
 
-            return new SmsSendResult(smsResponse.getRequestId(), JsonUtils.toJsonString(smsResponse));
+            return new SmsSendResult(smsResponse.getRequestId(), JsonUtils.toJsonString(smsResponse), null, null, null);
         } catch (TencentCloudSDKException e) {
             throw new SmartSmsException(e);
         }

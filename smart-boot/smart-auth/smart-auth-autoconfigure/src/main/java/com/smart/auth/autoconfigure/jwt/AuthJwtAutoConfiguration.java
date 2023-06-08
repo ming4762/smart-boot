@@ -11,17 +11,20 @@ import com.smart.auth.core.handler.AuthSuccessDataHandler;
 import com.smart.auth.core.handler.SecurityLogoutHandler;
 import com.smart.auth.core.properties.AuthProperties;
 import com.smart.auth.core.service.AuthCache;
+import com.smart.auth.core.token.TokenRepository;
 import com.smart.auth.extensions.jwt.AuthJwtConfigure;
 import com.smart.auth.extensions.jwt.handler.JwtAuthSuccessDataHandler;
 import com.smart.auth.extensions.jwt.handler.JwtLogoutHandler;
 import com.smart.auth.extensions.jwt.resolver.JwtResolver;
 import com.smart.auth.extensions.jwt.service.JwtService;
 import com.smart.auth.extensions.jwt.token.JwtTokenRepository;
+import com.smart.auth.extensions.jwt.userdetails.RestUserDetailsServiceImpl;
 import com.smart.commons.core.utils.auth.RsaUtils;
 import com.smart.commons.jwt.JwtDecoder;
 import com.smart.commons.jwt.JwtEncoder;
 import com.smart.commons.jwt.NimbusJwtDecoder;
 import com.smart.commons.jwt.NimbusJwtEncoder;
+import com.smart.module.api.system.SystemAuthUserApi;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -29,12 +32,14 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.interfaces.RSAPublicKey;
+import java.util.List;
 
 /**
  * @author ShiZhongMing
@@ -145,4 +150,10 @@ public class AuthJwtAutoConfiguration {
         return new JwtTokenRepository(authProperties, authCache, jwtResolver);
     }
 
+
+    @Bean
+    @ConditionalOnMissingBean(UserDetailsService.class)
+    public UserDetailsService userDetailsService(List<TokenRepository> tokenRepositoryList, SystemAuthUserApi systemAuthUserApi) {
+        return new RestUserDetailsServiceImpl(tokenRepositoryList, systemAuthUserApi);
+    }
 }

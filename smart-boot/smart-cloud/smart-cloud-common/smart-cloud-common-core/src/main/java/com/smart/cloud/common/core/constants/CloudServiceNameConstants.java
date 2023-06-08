@@ -22,4 +22,6 @@ public interface CloudServiceNameConstants {
      */
     String FILE_SERVICE = "smart-cloud-file";
 
+    String MESSAGE_SERVICE = "smart-cloud-message";
+
 }

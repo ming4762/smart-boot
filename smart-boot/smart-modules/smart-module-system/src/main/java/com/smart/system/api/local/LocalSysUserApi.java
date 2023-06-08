@@ -21,7 +21,6 @@ import org.springframework.util.CollectionUtils;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author zhongming4762
@@ -58,7 +57,7 @@ public class LocalSysUserApi implements SysUserApi {
             SysUserDTO dto = new SysUserDTO();
             BeanUtils.copyProperties(item, dto);
             return dto;
-        }).collect(Collectors.toList());
+        }).toList();
     }
 
     /**
@@ -77,7 +76,7 @@ public class LocalSysUserApi implements SysUserApi {
                     SysUserDTO dto = new SysUserDTO();
                     BeanUtils.copyProperties(item, dto);
                     return dto;
-                }).collect(Collectors.toList());
+                }).toList();
     }
 
     /**
@@ -89,7 +88,7 @@ public class LocalSysUserApi implements SysUserApi {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean lockAccount(UserAccountLockDTO parameter) {
-        SysUserPO user = this.getUserByUsername(parameter.getUsername());
+        SysUserPO user = this.sysUserService.getByUsername(parameter.getUsername());
         if (user == null) {
             return false;
         }
@@ -110,7 +109,10 @@ public class LocalSysUserApi implements SysUserApi {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean updateLoginFailTime(AccountLoginFailTimeUpdateDTO parameter) {
-        SysUserPO user = this.getUserByUsername(parameter.getUsername());
+        SysUserPO user = this.sysUserService.getByUsername(parameter.getUsername());
+        if (user == null) {
+            user = this.sysUserService.getByMobile(parameter.getUsername());
+        }
         if (user == null) {
             return false;
         }
@@ -141,17 +143,4 @@ public class LocalSysUserApi implements SysUserApi {
             return this.sysUserAccountService.update(updateWrapper);
         }
     }
-
-    private SysUserPO getUserByUsername(String username) {
-        List<SysUserPO> userList = this.sysUserService.list(
-                new QueryWrapper<SysUserPO>().lambda()
-                        .select(SysUserPO::getUserId)
-                        .eq(SysUserPO::getUsername, username)
-        );
-        if (CollectionUtils.isEmpty(userList)) {
-            return null;
-        }
-        return userList.get(0);
-    }
-
 }

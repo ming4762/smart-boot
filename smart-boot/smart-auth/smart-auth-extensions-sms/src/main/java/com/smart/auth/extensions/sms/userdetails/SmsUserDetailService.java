@@ -1,4 +1,4 @@
-package com.smart.auth.core.userdetails;
+package com.smart.auth.extensions.sms.userdetails;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,9 +12,9 @@ public interface SmsUserDetailService {
 
     /**
      * 通过手机号加载用户信息
-     * @param phone 手机号
+     * @param mobile 手机号
      * @return 用户信息
      * @throws AuthenticationException 异常信息
      */
-    UserDetails loadUserByPhone(String phone) throws AuthenticationException;
+    UserDetails loadUserByMobile(String mobile) throws AuthenticationException;
 }

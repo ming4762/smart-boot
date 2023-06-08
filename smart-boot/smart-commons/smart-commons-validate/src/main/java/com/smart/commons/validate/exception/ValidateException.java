@@ -4,8 +4,10 @@ import jakarta.validation.ConstraintViolation;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 验证异常
@@ -25,9 +27,16 @@ public class ValidateException extends RuntimeException {
 
     @Getter
     @AllArgsConstructor
-    public static class ValidateErrorData {
+    public static class ValidateErrorData implements Serializable {
         private String propertyPath;
 
         private String message;
+    }
+
+    @Override
+    public String getMessage() {
+        return this.errorList.stream()
+                .map(ValidateErrorData::getMessage)
+                .collect(Collectors.joining(";"));
     }
 }

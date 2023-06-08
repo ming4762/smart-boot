@@ -13,9 +13,9 @@ import com.smart.auth.core.handler.DefaultAuthSuccessDataHandler;
 import com.smart.auth.core.properties.AuthProperties;
 import com.smart.auth.security.config.AuthMethodSecurityConfig;
 import com.smart.auth.security.event.AuthEventLockedHandler;
-import com.smart.auth.security.userdetails.DefaultUserDetailsServiceImpl;
+import com.smart.auth.security.event.AuthEventLogHandler;
+import com.smart.module.api.system.SysLogApi;
 import com.smart.module.api.system.SysUserApi;
-import com.smart.module.api.system.SystemAuthUserApi;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -30,7 +30,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.DefaultAuthenticationEventPublisher;
 import org.springframework.security.authorization.method.AuthorizationManagerBeforeMethodInterceptor;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
@@ -44,17 +43,6 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 @Import(AuthMethodSecurityConfig.class)
 @ComponentScan(basePackages = {"com.smart.auth.security.controller", "com.smart.auth.security.api"})
 public class AuthSecurity2AutoConfiguration {
-
-    /**
-     * 创建默认的 UserDetailsService
-     * @param systemAuthUserApi systemAuthUserApi
-     * @return UserDetailsService
-     */
-    @Bean
-    @ConditionalOnMissingBean(UserDetailsService.class)
-    public DefaultUserDetailsServiceImpl defaultUserDetailsService(SystemAuthUserApi systemAuthUserApi) {
-        return new DefaultUserDetailsServiceImpl(systemAuthUserApi);
-    }
 
     /**
      * 创建 AuthenticationSuccessHandler
@@ -131,7 +119,7 @@ public class AuthSecurity2AutoConfiguration {
     }
 
     /**
-     * 创建登录失败锁定期
+     * 创建登录失败锁定器
      * @param sysUserApi SysUserApi
      * @return AuthEventLockedHandler
      */
@@ -139,6 +127,17 @@ public class AuthSecurity2AutoConfiguration {
     @ConditionalOnMissingBean
     public AuthEventLockedHandler authEventLockedHandler(SysUserApi sysUserApi) {
         return new AuthEventLockedHandler(sysUserApi);
+    }
+
+    /**
+     * 创建登录日志处理器
+     * @param sysLogApi 日志API
+     * @return AuthEventLogHandler
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    public AuthEventLogHandler authEventLogHandler(SysLogApi sysLogApi) {
+        return new AuthEventLogHandler(sysLogApi);
     }
 
 }

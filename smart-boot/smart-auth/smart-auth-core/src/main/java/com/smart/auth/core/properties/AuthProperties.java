@@ -53,6 +53,11 @@ public class AuthProperties implements InitializingBean {
      */
     private AppsecretProperties appsecret = new AppsecretProperties();
 
+    /**
+     * 短信登录参数
+     */
+    private SmsProperties sms = new SmsProperties();
+
     @Override
     public void afterPropertiesSet() throws Exception {
         if (Boolean.TRUE.equals(this.jwt.enabled)) {
@@ -256,5 +261,23 @@ public class AuthProperties implements InitializingBean {
 
             private String metadataFilePath;
         }
+    }
+
+    /**
+     * 短信登录参数
+     */
+    @Getter
+    @Setter
+    public static class SmsProperties {
+
+        /**
+         * 短信签名
+         */
+        private String signName;
+
+        /**
+         * 短息模板
+         */
+        private String template;
     }
 }

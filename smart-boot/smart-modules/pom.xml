@@ -15,6 +15,7 @@
 
 	<modules>
 		<module>smart-module-document</module>
+		<module>smart-module-message</module>
 		<module>smart-module-system</module>
 	</modules>
 

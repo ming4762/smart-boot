@@ -16,6 +16,7 @@
     <modules>
         <module>smart-cloud-auth-api</module>
         <module>smart-cloud-file-api</module>
+        <module>smart-cloud-message-api</module>
         <module>smart-cloud-system-api</module>
     </modules>
 

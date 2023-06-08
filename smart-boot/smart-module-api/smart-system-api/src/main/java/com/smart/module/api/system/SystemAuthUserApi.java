@@ -1,7 +1,8 @@
 package com.smart.module.api.system;
 
 import com.smart.commons.core.dto.auth.UserRolePermission;
-import com.smart.module.api.system.dto.AuthUser;
+import com.smart.module.api.system.dto.AuthUserDTO;
+import com.smart.module.api.system.parameter.UserAccountUnLockParameter;
 import com.smart.module.api.system.parameter.WechatUserQueryParameter;
 import lombok.NonNull;
 import org.springframework.lang.Nullable;
@@ -19,33 +20,33 @@ public interface SystemAuthUserApi {
      * @return 用户信息
      */
     @Nullable
-    default AuthUser getByUsername(@NonNull String username) {
+    default AuthUserDTO getByUsername(@NonNull String username) {
         return null;
     }
 
     /**
      * 通过手机号查询用户
-     * @param phone 手机号
+     * @param mobile 手机号
      * @return 用户信息
      */
     @Nullable
-    default AuthUser getByPhone(@NonNull String phone) {
+    default AuthUserDTO getByMobile(@NonNull String mobile) {
         return null;
     }
 
     /**
      * 查询用户角色权限信息
-     * @param authUser 用户信息
+     * @param userId 用户ID
      * @return 权限角色信息
      */
-    UserRolePermission queryRolePermission(@NonNull AuthUser authUser);
+    UserRolePermission queryRolePermission(@NonNull Long userId);
 
     /**
      * 通过openid获取用户信息
      * @param parameter 参数
      * @return AuthUser
      */
-    default AuthUser getByAppOpenid(WechatUserQueryParameter parameter) {
+    default AuthUserDTO getByAppOpenid(WechatUserQueryParameter parameter) {
         return null;
     }
 
@@ -54,7 +55,14 @@ public interface SystemAuthUserApi {
      * @param parameter 参数
      * @return AuthUser
      */
-    default AuthUser getByUnionid(WechatUserQueryParameter parameter) {
+    default AuthUserDTO getByUnionid(WechatUserQueryParameter parameter) {
         return null;
     }
+
+    /**
+     * 结果用户账户
+     * @param parameter 参数
+     * @return 是否结果成功
+     */
+    boolean unlockAccount(UserAccountUnLockParameter parameter);
 }

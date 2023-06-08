@@ -1,10 +1,10 @@
 package com.smart.auth.extensions.wechat;
 
-import com.smart.auth.core.userdetails.WechatUserDetailService;
 import com.smart.auth.core.wechat.WechatAuthConfigProvider;
 import com.smart.auth.extensions.wechat.authentication.WechatAuthenticationProvider;
 import com.smart.auth.extensions.wechat.filter.WechatAppLoginFilter;
 import com.smart.auth.extensions.wechat.provider.WechatLoginProvider;
+import com.smart.auth.extensions.wechat.userdetails.WechatUserDetailService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;

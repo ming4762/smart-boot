@@ -1,6 +1,11 @@
 package com.smart.auth.core.exception;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.authentication.LockedException;
+
+import java.io.Serial;
 
 /**
  * 密码长时间未修改锁定
@@ -9,9 +14,25 @@ import org.springframework.security.authentication.LockedException;
  * @since 2.0.0
  */
 public class PasswordNoLifeLockedException extends LockedException {
+    @Serial
     private static final long serialVersionUID = -8176382060796649363L;
 
-    public PasswordNoLifeLockedException(String msg) {
+    @Getter
+    private final User user;
+
+    public PasswordNoLifeLockedException(String msg, User user) {
         super(msg);
+        this.user = user;
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    public static class User {
+        private final Long userId;
+
+        private final String username;
+
+        private final String fullName;
     }
 }

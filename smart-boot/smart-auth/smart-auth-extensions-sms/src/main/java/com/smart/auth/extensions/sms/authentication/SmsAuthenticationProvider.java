@@ -2,8 +2,8 @@ package com.smart.auth.extensions.sms.authentication;
 
 import com.smart.auth.core.i18n.AuthI18nMessage;
 import com.smart.auth.core.userdetails.RestUserDetails;
-import com.smart.auth.core.userdetails.SmsUserDetailService;
 import com.smart.auth.extensions.sms.provider.SmsCreateValidateProvider;
+import com.smart.auth.extensions.sms.userdetails.SmsUserDetailService;
 import com.smart.commons.core.i18n.I18nUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -43,7 +43,7 @@ public class SmsAuthenticationProvider implements AuthenticationProvider {
             throw new BadCredentialsException(I18nUtils.get(AuthI18nMessage.PHONE_CODE_ERROR));
         }
         // 通过手机号查询用户
-        final RestUserDetails restUserDetails = (RestUserDetails) this.smsUserDetailService.loadUserByPhone(phone);
+        final RestUserDetails restUserDetails = (RestUserDetails) this.smsUserDetailService.loadUserByMobile(phone);
         if (Objects.isNull(restUserDetails)) {
             throw new BadCredentialsException(I18nUtils.get(AuthI18nMessage.PHONE_CODE_ERROR));
         }

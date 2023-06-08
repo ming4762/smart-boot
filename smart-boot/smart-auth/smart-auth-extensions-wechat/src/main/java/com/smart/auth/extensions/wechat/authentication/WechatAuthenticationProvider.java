@@ -3,12 +3,12 @@ package com.smart.auth.extensions.wechat.authentication;
 import com.smart.auth.core.constants.AuthTypeEnum;
 import com.smart.auth.core.i18n.AuthI18nMessage;
 import com.smart.auth.core.userdetails.RestUserDetails;
-import com.smart.auth.core.userdetails.WechatUserDetailService;
 import com.smart.auth.core.wechat.WechatAuthConfigProvider;
 import com.smart.auth.extensions.wechat.exception.WechatNotBoundException;
 import com.smart.auth.extensions.wechat.model.WechatAppLoginResult;
 import com.smart.auth.extensions.wechat.model.WechatLoginResult;
 import com.smart.auth.extensions.wechat.provider.WechatLoginProvider;
+import com.smart.auth.extensions.wechat.userdetails.WechatUserDetailService;
 import com.smart.commons.core.i18n.I18nUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -70,7 +70,7 @@ public class WechatAuthenticationProvider implements AuthenticationProvider {
             userDetails = this.userDetailService.loadUserByUnionid(token.getAuthType(), appid, loginResult.getUnionid());
         }
         if (userDetails == null) {
-            userDetails = this.userDetailService.loadUserByOpenid(token.getAuthType(), appid, loginResult.getOpenid());
+            userDetails = this.userDetailService.loadUserByAppOpenid(token.getAuthType(), appid, loginResult.getOpenid());
         }
         if (userDetails == null) {
             // 微信用户未绑定

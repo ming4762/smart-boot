@@ -132,6 +132,11 @@ public class DefaultSmartSmsServiceImpl implements SmartSmsService {
         if (smsChannelService == null) {
             throw new SystemException("系统发生未知错误，不支持的通道类型，通道类型：" + channelData.getChannelType());
         }
-        return smsChannelService.send(channelData.getChannelProperties(), sendParameter);
+        SmsSendResult sendResult = smsChannelService.send(channelData.getChannelProperties(), sendParameter);
+
+        sendResult.setChannelId(channelData.getId());
+        sendResult.setChannelCode(channelData.getChannelCode());
+        sendResult.setChannelType(channelData.getChannelType());
+        return sendResult;
     }
 }
