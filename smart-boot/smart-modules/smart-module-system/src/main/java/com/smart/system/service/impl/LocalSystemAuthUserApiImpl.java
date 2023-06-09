@@ -100,7 +100,9 @@ public class LocalSystemAuthUserApiImpl implements SystemAuthUserApi {
                         )
                         .eq(SysUserPO :: getMobile, mobile)
         );
-
+        if (sysUser == null) {
+            return null;
+        }
         return this.createAuthUser(sysUser);
     }
 
