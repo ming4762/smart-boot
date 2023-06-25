@@ -27,6 +27,10 @@
         </Button>
       </FormItem>
     </Form>
+    <SmartDragVerifyModal
+      @register="registerCaptchaModal"
+      type="SLIDER"
+      @success="handleCaptchaValidateSuccess" />
   </template>
 </template>
 <script lang="ts" setup>
@@ -37,8 +41,10 @@ import LoginFormTitle from './LoginFormTitle.vue'
 import { useI18n } from '/@/hooks/web/useI18n'
 import { useLoginState, useFormRules, useFormValid, LoginStateEnum } from './useLogin'
 import { smsSendCodeApi } from '/@/api/sys/user'
-import {errorMessage, successMessage} from '/@/common/utils/SystemNotice'
+import { errorMessage, successMessage } from '/@/common/utils/SystemNotice'
 import { useUserStore } from '/@/store/modules/user'
+import { SmartDragVerifyModal } from '/@/components/SmartDragVerify'
+import { useModal } from '/@/components/Modal'
 
 const FormItem = Form.Item
 const { t } = useI18n()
@@ -58,12 +64,22 @@ const { validForm } = useFormValid(formRef)
 
 const getShow = computed(() => unref(getLoginState) === LoginStateEnum.MOBILE)
 
+const [registerCaptchaModal, { openModal, closeModal }] = useModal()
 const handleSendCode = async () => {
   if (!formData.mobile || formData.mobile.trim() === '') {
     errorMessage(t('sys.login.trueMobile'))
     return false
   }
-  await smsSendCodeApi(formData.mobile)
+  openModal(true, { abc: 123 })
+}
+
+const handleCaptchaValidateSuccess = (token: string) => {
+  closeModal()
+  handleDoSendCode(token)
+}
+
+const handleDoSendCode = async (token: string) => {
+  await smsSendCodeApi(formData.mobile, token)
   successMessage({
     msg: t('sys.login.smsCodeSuccess'),
   })

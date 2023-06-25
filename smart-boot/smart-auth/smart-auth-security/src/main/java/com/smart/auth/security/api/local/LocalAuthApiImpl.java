@@ -1,4 +1,4 @@
-package com.smart.auth.security.api;
+package com.smart.auth.security.api.local;
 
 import com.smart.auth.core.exception.IpBindAuthenticationException;
 import com.smart.auth.core.i18n.AuthI18nMessage;

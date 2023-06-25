@@ -1,5 +1,6 @@
-package com.smart.auth.security.api;
+package com.smart.auth.security.api.remote;
 
+import com.smart.auth.security.api.local.LocalAuthApiImpl;
 import com.smart.commons.core.message.Result;
 import com.smart.module.api.auth.AuthApi;
 import com.smart.module.api.auth.constants.SmartAuthApiUrlConstants;

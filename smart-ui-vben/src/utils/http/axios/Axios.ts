@@ -232,6 +232,27 @@ export class VAxios {
     return this.request({ ...config, method: 'POST' }, options)
   }
 
+  postWithCaptcha<T = any>(
+    captchaToken: string,
+    config: SmartAxiosRequestConfig,
+    options?: RequestOptions,
+  ): Promise<T> {
+    const headers = config.headers || {}
+    headers['captcha-token'] = captchaToken
+    return this.request({ ...config, method: 'POST' }, options)
+  }
+
+  postFormWithCaptcha<T = any>(
+    captchaToken: string,
+    config: SmartAxiosRequestConfig,
+    options?: RequestOptions,
+  ): Promise<T> {
+    const headers = config.headers || {}
+    headers['Content-Type'] = ContentTypeEnum.FORM_URLENCODED
+    headers['captcha-token'] = captchaToken
+    return this.request({ ...config, method: 'POST', headers }, options)
+  }
+
   postForm<T = any>(config: SmartAxiosRequestConfig, options?: RequestOptions): Promise<T> {
     const headers = config.headers || {}
     headers['Content-Type'] = ContentTypeEnum.FORM_URLENCODED

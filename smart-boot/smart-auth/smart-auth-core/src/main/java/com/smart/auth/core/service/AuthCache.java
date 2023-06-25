@@ -77,4 +77,11 @@ public interface AuthCache<K, V> {
      * @return 匹配结果
      */
     Set<K> matchKeys(@NonNull K matchKey);
+
+    /**
+     * 获取并删除
+     * @param key key
+     * @return 数据
+     */
+    V getAndRemove(@NonNull K key);
 }

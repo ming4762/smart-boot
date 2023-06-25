@@ -65,6 +65,7 @@ export default {
       noUse: 'deactivate',
       OperationSucceeded: 'Operation succeeded',
       noPermission: 'No permission',
+      captchaValidateFail: 'Captcha validate fail',
     },
   },
   app: {

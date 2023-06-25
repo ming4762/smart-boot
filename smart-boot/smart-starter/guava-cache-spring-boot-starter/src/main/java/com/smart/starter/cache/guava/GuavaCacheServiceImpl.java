@@ -194,4 +194,19 @@ public class GuavaCacheServiceImpl implements GuavaCacheService {
         return this.cache.asMap().keySet();
     }
 
+
+    /**
+     * 获取并删除
+     *
+     * @param key key
+     * @return 数据
+     */
+    @Override
+    public synchronized Object getAndRemove(@org.springframework.lang.NonNull Object key) {
+        Object data = this.get(key);
+        if (data != null) {
+            this.delete(key);
+        }
+        return data;
+    }
 }

@@ -78,6 +78,7 @@ const [registerTable, { editByRowModal }] = useSmartTable({
   searchFormConfig: {
     layout: 'inline',
     schemas: getSearchSchemas(t),
+    autoSubmitOnEnter: true,
     colon: true,
     searchWithSymbol: true,
     actionColOptions: {

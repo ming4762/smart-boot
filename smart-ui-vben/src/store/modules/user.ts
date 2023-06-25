@@ -9,9 +9,9 @@ import {
   ChangePasswordParams,
   GetUserInfoModel,
   LoginParams,
-  MobileLoginParams
+  MobileLoginParams,
 } from '/@/api/sys/model/userModel'
-import {doLogout, loginApi, changePasswordApi, mobileLoginApi} from '/@/api/sys/user'
+import { doLogout, loginApi, changePasswordApi, mobileLoginApi } from '/@/api/sys/user'
 import { useI18n } from '/@/hooks/web/useI18n'
 import { useMessage } from '/@/hooks/web/useMessage'
 import { router } from '/@/router'

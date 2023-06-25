@@ -65,6 +65,7 @@ export default {
       noUse: '停用',
       OperationSucceeded: '操作成功',
       noPermission: '无权限',
+      captchaValidateFail: '验证码验证失败',
     },
   },
   app: {

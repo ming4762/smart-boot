@@ -21,6 +21,10 @@ import java.util.List;
 @Setter
 public class AuthProperties implements InitializingBean {
 
+    /**
+     * 默认的验证码资源路径
+     */
+    private static final String DEFAULT_CAPTCHA_RESOURCE_PATH = "auth/captcha/*.jpg";
 
     private String prefix = "smart-session";
 
@@ -58,12 +62,18 @@ public class AuthProperties implements InitializingBean {
      */
     private SmsProperties sms = new SmsProperties();
 
+    /**
+     * 验证码参数
+     */
+    private AuthCaptchaProperties captcha = new AuthCaptchaProperties();
+
     @Override
     public void afterPropertiesSet() throws Exception {
         if (Boolean.TRUE.equals(this.jwt.enabled)) {
             Assert.notNull(this.jwt.privateKey, "JWT私钥路径不能为空");
             Assert.notNull(this.jwt.publicKey, "JWT公钥路径不能为空");
         }
+
     }
 
     @Getter

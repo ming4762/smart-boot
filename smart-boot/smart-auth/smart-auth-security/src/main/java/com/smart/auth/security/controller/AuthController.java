@@ -20,7 +20,11 @@ import com.smart.commons.core.utils.DigestUtils;
 import com.smart.commons.core.utils.IpUtils;
 import com.smart.commons.core.utils.JsonUtils;
 import com.smart.module.api.auth.AuthApi;
+import com.smart.module.api.auth.AuthCaptchaApi;
 import com.smart.module.api.auth.dto.AuthCacheDTO;
+import com.smart.module.api.auth.dto.AuthCaptchaDTO;
+import com.smart.module.api.auth.parameter.AuthCaptchaCreateParameter;
+import com.smart.module.api.auth.parameter.AuthCaptchaValidateParameter;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -56,10 +60,13 @@ public class AuthController {
 
     private final AuthApi authApi;
 
-    public AuthController(AuthProperties authProperties, List<TokenRepository> tokenRepositoryList, AuthApi authApi) {
+    private final AuthCaptchaApi authCaptchaApi;
+
+    public AuthController(AuthProperties authProperties, List<TokenRepository> tokenRepositoryList, AuthApi authApi, AuthCaptchaApi authCaptchaApi) {
         this.authProperties = authProperties;
         this.tokenRepositoryList = tokenRepositoryList;
         this.authApi = authApi;
+        this.authCaptchaApi = authCaptchaApi;
     }
 
     /**
@@ -163,5 +170,17 @@ public class AuthController {
             return Result.success(this.authApi.offlineByUsername(parameter.getUsername()));
         }
         return Result.success(false);
+    }
+
+    @PostMapping("public/auth/generateCaptcha")
+    @Operation(summary = "生成行为验证码")
+    public Result<AuthCaptchaDTO> generateCaptcha(@RequestBody @Valid AuthCaptchaCreateParameter parameter) {
+        return Result.success(this.authCaptchaApi.generate(parameter));
+    }
+
+    @PostMapping("public/auth/validateCaptcha")
+    @Operation(summary = "验证行为验证码")
+    public Result<String> validateCaptcha(@RequestBody @Valid AuthCaptchaValidateParameter parameter) {
+        return Result.success(this.authCaptchaApi.validate(parameter));
     }
 }

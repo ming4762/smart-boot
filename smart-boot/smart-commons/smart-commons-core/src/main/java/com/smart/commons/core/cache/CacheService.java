@@ -174,4 +174,11 @@ public interface CacheService {
      * @param prefixKey key匹配项
      */
     void matchDelete(@NonNull Object prefixKey);
+
+    /**
+     * 获取并删除
+     * @param key key
+     * @return 数据
+     */
+    Object getAndRemove(@NonNull Object key);
 }

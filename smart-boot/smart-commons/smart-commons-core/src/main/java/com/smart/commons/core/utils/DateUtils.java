@@ -1,11 +1,8 @@
 package com.smart.commons.core.utils;
 
-import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
-
-import java.text.ParseException;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -238,6 +235,16 @@ public final class DateUtils {
      */
     public static Instant parseInstant(@NonNull String formatStr) {
         return ISO_INSTANT_DATE_TIME_FORMATTER.parse(formatStr, Instant :: from);
+    }
+
+    /**
+     * LocalDateTime转Date
+     * @param localDateTime LocalDateTime
+     * @return Date
+     */
+    public static Date localDateTimeToDate(LocalDateTime localDateTime) {
+        ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
+        return Date.from(zonedDateTime.toInstant());
     }
 
 }

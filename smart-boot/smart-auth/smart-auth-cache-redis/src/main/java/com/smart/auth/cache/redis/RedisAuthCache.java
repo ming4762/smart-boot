@@ -111,4 +111,15 @@ public class RedisAuthCache extends AbstractAuthCache<String, Object> {
                 .map(item -> this.getRealKey(item.toString()))
                 .collect(Collectors.toSet());
     }
+
+    /**
+     * 获取并删除
+     *
+     * @param key key
+     * @return 数据
+     */
+    @Override
+    public Object getAndRemove(@NonNull String key) {
+        return this.cacheService.getAndRemove(this.getKey(key));
+    }
 }

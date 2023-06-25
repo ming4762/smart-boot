@@ -1,4 +1,4 @@
-import {isArray, isObject, isString} from '/@/utils/is'
+import { isArray, isObject, isString } from '/@/utils/is'
 
 const DATE_TIME_FORMAT = 'YYYY-MM-DD HH:mm:ss'
 

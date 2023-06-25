@@ -15,8 +15,6 @@ import java.util.Collection;
 @Getter
 @EqualsAndHashCode(callSuper = true)
 public class RestUsernamePasswordAuthenticationToken extends UsernamePasswordAuthenticationToken {
-    private static final long serialVersionUID = 6716611724147178341L;
-
     private final Boolean bindIp;
 
     private final String loginIp;

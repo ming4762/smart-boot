@@ -9,6 +9,8 @@ import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ScanOptions;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.data.redis.core.types.Expiration;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.lang.NonNull;
@@ -26,6 +28,8 @@ import java.util.concurrent.TimeUnit;
  * 2020/1/17 8:47 下午
  */
 public class RedisServiceImpl implements RedisService {
+
+    private static final RedisScript<Object> GET_AND_REMOVE_SCRIPT = new DefaultRedisScript<>("local res = redis.call('get',KEYS[1])  if res == nil  then return nil  else  redis.call('del',KEYS[1]) return res end", Object.class);
 
     private final RedisTemplate<Object, Object> redisTemplate;
 
@@ -297,5 +301,16 @@ public class RedisServiceImpl implements RedisService {
     @Override
     public Map<Object, Object> hashEntries(Object key) {
         return this.redisTemplate.opsForHash().entries(key);
+    }
+
+    /**
+     * 获取并删除
+     *
+     * @param key key
+     * @return 数据
+     */
+    @Override
+    public Object getAndRemove(@NonNull Object key) {
+        return this.redisTemplate.opsForValue().getAndDelete(key);
     }
 }

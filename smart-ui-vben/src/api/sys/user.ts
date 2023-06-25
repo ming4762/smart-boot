@@ -80,9 +80,10 @@ export const changePasswordApi = (params: ChangePasswordParams) => {
 /**
  * 发送短信验证码API
  * @param phone 电话号码
+ * @param captchaToken
  */
-export const smsSendCodeApi = (phone: string) => {
-  return defHttp.postForm({
+export const smsSendCodeApi = (phone: string, captchaToken) => {
+  return defHttp.postFormWithCaptcha(captchaToken, {
     service: ApiServiceEnum.SMART_AUTH,
     url: Api.smsSendCode,
     data: {
