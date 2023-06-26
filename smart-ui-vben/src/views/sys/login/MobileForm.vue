@@ -14,7 +14,7 @@
           ref="countInputRef"
           size="large"
           class="fix-auto-fill"
-          @click="handleSendCode"
+          @send="handleSendCode"
           :startHandler="handleDoSendCode"
           v-model:value="formData.smsCode"
           :placeholder="t('sys.login.smsCode')" />

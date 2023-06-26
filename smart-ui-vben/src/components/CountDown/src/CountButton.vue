@@ -1,5 +1,5 @@
 <template>
-  <Button v-bind="$attrs" :disabled="isStart" :loading="loading">
+  <Button v-bind="$attrs" :disabled="isStart" @click="handleSend" :loading="loading">
     {{ getButtonText }}
   </Button>
 </template>
@@ -22,8 +22,9 @@ const props = {
 export default defineComponent({
   name: 'CountButton',
   components: { Button },
+  emits: ['send'],
   props,
-  setup(props) {
+  setup(props, { emit }) {
     const loading = ref(false)
 
     const { currentCount, isStart, start, reset } = useCountdown(props.count)
@@ -34,6 +35,10 @@ export default defineComponent({
         ? t('component.countdown.normalText')
         : t('component.countdown.sendText', [unref(currentCount)])
     })
+
+    const handleSend = () => {
+      emit('send')
+    }
 
     watchEffect(() => {
       props.value === undefined && reset()
@@ -56,7 +61,7 @@ export default defineComponent({
         start()
       }
     }
-    return { handleStart, currentCount, loading, getButtonText, isStart }
+    return { handleStart, currentCount, loading, getButtonText, isStart, handleSend }
   },
 })
 </script>
