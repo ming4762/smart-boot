@@ -11,9 +11,11 @@
       </FormItem>
       <FormItem name="smsCode" class="enter-x">
         <CountdownInput
+          ref="countInputRef"
           size="large"
           class="fix-auto-fill"
-          :sendCodeApi="handleSendCode"
+          @click="handleSendCode"
+          :startHandler="handleDoSendCode"
           v-model:value="formData.smsCode"
           :placeholder="t('sys.login.smsCode')" />
       </FormItem>
@@ -52,8 +54,10 @@ const { handleBackLogin, getLoginState } = useLoginState()
 const { getFormRules } = useFormRules()
 const userStore = useUserStore()
 
+const countInputRef = ref()
 const formRef = ref()
 const loading = ref(false)
+const captchaTokenRef = ref('')
 
 const formData = reactive({
   mobile: '',
@@ -70,16 +74,17 @@ const handleSendCode = async () => {
     errorMessage(t('sys.login.trueMobile'))
     return false
   }
-  openModal(true, { abc: 123 })
+  openModal()
 }
 
 const handleCaptchaValidateSuccess = (token: string) => {
   closeModal()
-  handleDoSendCode(token)
+  captchaTokenRef.value = token
+  countInputRef.value?.start()
 }
 
-const handleDoSendCode = async (token: string) => {
-  await smsSendCodeApi(formData.mobile, token)
+const handleDoSendCode = async () => {
+  await smsSendCodeApi(formData.mobile, unref(captchaTokenRef))
   successMessage({
     msg: t('sys.login.smsCodeSuccess'),
   })

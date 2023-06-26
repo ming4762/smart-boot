@@ -10,6 +10,7 @@
     </div>
     <div class="slider-move">
       <BasicDragVerify
+        ref="basicDragVerifyRef"
         :width="props.width"
         @end="handleEnd"
         @start="handleStart"
@@ -45,6 +46,7 @@ const props = defineProps({
 const emit = defineEmits(['success'])
 
 const { t } = useI18n()
+const basicDragVerifyRef = ref()
 
 const { initConfig, start, move, end, createCaptchaParameter } = useSmartDragVerify()
 const captchaDataRef = ref<any>({})
@@ -75,6 +77,7 @@ const refresh = async () => {
   const bgImage = unref(bgImageRef)
   const sliderImage = unref(sliderImageRef)
   moveXRef.value = 0
+  basicDragVerifyRef.value?.resume()
   await nextTick(() => {
     initConfig(
       captchaDataRef.value.key,
