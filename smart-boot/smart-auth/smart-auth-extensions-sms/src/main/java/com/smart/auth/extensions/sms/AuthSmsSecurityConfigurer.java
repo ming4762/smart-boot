@@ -6,6 +6,7 @@ import com.smart.auth.extensions.sms.authentication.SmsAuthenticationProvider;
 import com.smart.auth.extensions.sms.filter.SmsCodeCreateFilter;
 import com.smart.auth.extensions.sms.filter.SmsLoginFilter;
 import com.smart.auth.extensions.sms.provider.SmsCreateValidateProvider;
+import com.smart.module.api.auth.AuthCaptchaApi;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
@@ -81,7 +82,7 @@ public class AuthSmsSecurityConfigurer extends SecurityConfigurerAdapter<Default
      * @return SmsCodeCreateFilter
      */
     protected SmsCodeCreateFilter createSmsCodeCreateFilter() {
-        return new SmsCodeCreateFilter(this.getBean(SmsCreateValidateProvider.class, null));
+        return new SmsCodeCreateFilter(this.getBean(SmsCreateValidateProvider.class, null), this.getBean(AuthCaptchaApi.class, null));
     }
 
     /**

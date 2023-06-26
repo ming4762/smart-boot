@@ -76,7 +76,8 @@ public enum AuthI18nMessage implements I18nMessage {
     // 不支持的登录类型
     WECHAT_LOGIN_TYPE_NOT_SUPPORT("auth.error.wechat.loginTypeNotSupport", "Unsupported WeChat login type"),
     WECHAT_USER_NOT_BOND("auth.error.wechat.userBindError", "WeChat user not bound"),
-    WECHAT_APP_APPID_NOT_CONFIG("auth.error.wechat.app.appidNotConfig", "Appid not config")
+    WECHAT_APP_APPID_NOT_CONFIG("auth.error.wechat.app.appidNotConfig", "Appid not config"),
+
     ;
 
 

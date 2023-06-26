@@ -1,12 +1,16 @@
 package com.smart.auth.security.api.local;
 
 import com.smart.auth.captcha.service.SmartAuthCaptchaService;
+import com.smart.auth.core.exception.AuthException;
+import com.smart.auth.core.i18n.AuthI18nMessage;
 import com.smart.auth.core.service.AuthCache;
+import com.smart.commons.core.i18n.I18nUtils;
 import com.smart.commons.core.utils.IdGenerator;
 import com.smart.module.api.auth.AuthCaptchaApi;
 import com.smart.module.api.auth.dto.AuthCaptchaDTO;
 import com.smart.module.api.auth.parameter.AuthCaptchaCreateParameter;
 import com.smart.module.api.auth.parameter.AuthCaptchaValidateParameter;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
@@ -53,7 +57,7 @@ public class LocalAuthCaptchaApi implements AuthCaptchaApi {
         boolean validate = this.smartAuthCaptchaService.validate(parameter);
         if (validate) {
             String token = IdGenerator.nextId() + "";
-            this.authCache.put(this.getCaptchaTokenKey(token), token, Duration.ofMillis(5));
+            this.authCache.put(this.getCaptchaTokenKey(token), token, Duration.ofMinutes(5));
             return token;
         }
         return null;
@@ -67,6 +71,9 @@ public class LocalAuthCaptchaApi implements AuthCaptchaApi {
      */
     @Override
     public boolean validateToken(String captchaToken) {
+        if (StringUtils.isBlank(captchaToken)) {
+            throw new AuthException(I18nUtils.get(AuthI18nMessage.CAPTCHA_EXPIRE_ERROR));
+        }
         return this.authCache.getAndRemove(this.getCaptchaTokenKey(captchaToken)) != null;
     }
 

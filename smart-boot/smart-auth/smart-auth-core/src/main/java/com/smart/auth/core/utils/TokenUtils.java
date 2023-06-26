@@ -11,6 +11,8 @@ import org.springframework.lang.Nullable;
  */
 public class TokenUtils {
 
+    public static final String HEADER_CAPTCHA_TOKEN = "Captcha-Token";
+
     private TokenUtils() {
         throw new IllegalStateException("Utility class");
     }
@@ -23,5 +25,15 @@ public class TokenUtils {
     @Nullable
     public static String getToken(HttpServletRequest request) {
         return request.getHeader(HttpHeaders.AUTHORIZATION);
+    }
+
+    /**
+     * 获取行为验证码token
+     * @param request 请求体
+     * @return token
+     */
+    @Nullable
+    public static String getCaptchaToken(HttpServletRequest request) {
+        return request.getHeader(HEADER_CAPTCHA_TOKEN);
     }
 }

@@ -1,10 +1,13 @@
 package com.smart.auth.extensions.sms.filter;
 
+import com.smart.auth.core.exception.AuthException;
 import com.smart.auth.core.i18n.AuthI18nMessage;
+import com.smart.auth.core.utils.TokenUtils;
 import com.smart.auth.extensions.sms.provider.SmsCreateValidateProvider;
 import com.smart.commons.core.i18n.I18nUtils;
 import com.smart.commons.core.message.Result;
 import com.smart.commons.core.utils.RestJsonWriter;
+import com.smart.module.api.auth.AuthCaptchaApi;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,12 +28,20 @@ public class SmsCodeCreateFilter extends OncePerRequestFilter {
 
     private final SmsCreateValidateProvider smsCreateValidateProvider;
 
-    public SmsCodeCreateFilter(SmsCreateValidateProvider smsCreateValidateProvider) {
+    private final AuthCaptchaApi authCaptchaApi;
+
+    public SmsCodeCreateFilter(SmsCreateValidateProvider smsCreateValidateProvider, AuthCaptchaApi authCaptchaApi) {
         this.smsCreateValidateProvider = smsCreateValidateProvider;
+        this.authCaptchaApi = authCaptchaApi;
     }
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws IOException {
+        // 验证行为验证码
+        boolean validateToken = this.authCaptchaApi.validateToken(TokenUtils.getCaptchaToken(request));
+        if (!validateToken) {
+            throw new AuthException(I18nUtils.get(AuthI18nMessage.CAPTCHA_ERROR));
+        }
         // 1、获取手机号
         final String phone = request.getParameter("phone");
         if (StringUtils.isBlank(phone)) {
