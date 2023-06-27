@@ -32,4 +32,13 @@ public interface SmartAuthApiUrlConstants {
     String GET_AUTH_CACHE = "/remote/auth/getAuthCache";
 
     String REMOVE_AUTH_CACHE = "/remote/auth/removeAuthCache";
+
+    /**
+     * 验证码验证接口
+     */
+    String AUTH_CAPTCHA_GENERATE = "/remote/auth/captcha/generate";
+
+    String AUTH_CAPTCHA_VALIDATE = "/remote/auth/captcha/validate";
+
+    String AUTH_CAPTCHA_VALIDATE_TOKEN = "/remote/auth/captcha/validateToken";
 }
