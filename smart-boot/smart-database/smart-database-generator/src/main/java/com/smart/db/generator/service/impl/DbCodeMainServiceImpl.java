@@ -26,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
-import java.io.Serializable;
 import java.io.StringWriter;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -74,10 +73,10 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
     @Override
     public List<? extends DbCodeMainPO> list(@NonNull QueryWrapper<DbCodeMainPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
         // 设置权限，超级管理员可以查看所有，普通用户只能查看自己的
-        if (!AuthUtils.isSuperAdmin()) {
-            queryWrapper.lambda()
-                    .eq(DbCodeMainPO :: getCreateUserId, AuthUtils.getNonNullCurrentUserId());
-        }
+//        if (!AuthUtils.isSuperAdmin()) {
+//            queryWrapper.lambda()
+//                    .eq(DbCodeMainPO :: getCreateUserId, AuthUtils.getNonNullCurrentUserId());
+//        }
         // 执行查询
         final List<? extends DbCodeMainPO> dbCodeMainList = super.list(queryWrapper, parameter, paging);
         if (CollectionUtils.isEmpty(dbCodeMainList)) {
