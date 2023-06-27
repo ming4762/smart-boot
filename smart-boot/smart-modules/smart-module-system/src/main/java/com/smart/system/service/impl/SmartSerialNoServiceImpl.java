@@ -63,7 +63,7 @@ public class SmartSerialNoServiceImpl extends BaseServiceImpl<SmartSerialNoMappe
                 .filter(code -> !codes.contains(code))
                 .collect(Collectors.joining(","));
         if (StringUtils.isNotBlank(notCode)) {
-            throw new SystemException("以下编码为找对编码规则：" + notCode);
+            throw new SystemException("以下编码未找对编码规则：" + notCode);
         }
         // 生成编码
         return parameterList.stream()
@@ -86,7 +86,7 @@ public class SmartSerialNoServiceImpl extends BaseServiceImpl<SmartSerialNoMappe
         List<Long> numberList = new ArrayList<>(parameter.getNumber());
         Long currentValue = serialConfig.getCurrentValue();
         // 判断是否重置当前值，日期变化重置当前值
-        if (LocalDate.now().isAfter(serialConfig.getLastCurrentDate())) {
+        if (serialConfig.getLastCurrentDate() == null || LocalDate.now().isAfter(serialConfig.getLastCurrentDate())) {
             currentValue = 1L;
         }
         for (int i = 0; i < parameter.getNumber(); i++) {
