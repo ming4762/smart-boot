@@ -239,7 +239,7 @@ export class VAxios {
   ): Promise<T> {
     const headers = config.headers || {}
     headers['captcha-token'] = captchaToken
-    return this.request({ ...config, method: 'POST' }, options)
+    return this.request({ ...config, method: 'POST', headers }, options)
   }
 
   postFormWithCaptcha<T = any>(

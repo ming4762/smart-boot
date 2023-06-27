@@ -42,6 +42,7 @@ import { listApi, batchSaveUpdateApi, deleteApi, getByIdApi } from './RoleListVi
 import { SystemPermissions } from '/@/modules/system/constants/SystemConstants'
 import RoleSetFunction from './RoleSetFunction.vue'
 import { useRoleSetUser } from './hook/useRoleSetUser'
+import { hasPermission } from '/@/common/auth/AuthUtils'
 
 const { t } = useI18n()
 const { getTableSize } = useSizeSetting()
@@ -106,12 +107,18 @@ const [registerTable, { editByRowModal }] = useSmartTable({
     },
   },
   printConfig: {},
+  authConfig: {
+    authHandler: hasPermission,
+  },
   toolbarConfig: {
     zoom: true,
     refresh: true,
     custom: true,
     print: true,
-    buttons: [{ code: 'ModalAdd' }, { code: 'delete' }],
+    buttons: [
+      { code: 'ModalAdd', auth: permissions.add },
+      { code: 'delete', auth: permissions.delete },
+    ],
   },
   addEditConfig: {
     formConfig: {

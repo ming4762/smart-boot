@@ -39,7 +39,10 @@ import { listApi, deleteApi, getByIdApi, saveApi } from './FunctionListView.api'
 import { useI18n } from '/@/hooks/web/useI18n'
 import StringUtils from '/@/utils/StringUtils'
 import { SmartVxeTableAction } from '/@/components/SmartTable'
+import { SystemPermissions } from '/@/modules/system/constants/SystemConstants'
+import { hasPermission } from '/@/common/auth/AuthUtils'
 
+const permissions = SystemPermissions.function
 const { t } = useI18n()
 const { getTableSize } = useSizeSetting()
 
@@ -49,7 +52,7 @@ const getTableActions = (row: Recordable): ActionItem[] => {
     {
       label: t('common.button.add'),
       icon: 'ant-design:plus-outlined',
-      disabled: row.functionType === 'FUNCTION',
+      disabled: row.functionType === 'FUNCTION' || !hasPermission(permissions.add),
       onClick: () => {
         currentRowRef.value = row
         const data: Recordable = {
@@ -79,6 +82,7 @@ const getTableActions = (row: Recordable): ActionItem[] => {
       label: t('common.button.edit'),
       icon: 'ant-design:edit-outlined',
       color: 'warning',
+      auth: permissions.update,
       onClick: () => {
         currentRowRef.value = row
         setTypeDisabled(['catalogue', 'menu', 'function'])
@@ -89,6 +93,7 @@ const getTableActions = (row: Recordable): ActionItem[] => {
       label: t('common.button.delete'),
       icon: 'ant-design:delete-outlined',
       danger: true,
+      auth: permissions.delete,
       onClick: () => {
         currentRowRef.value = row
         deleteByRow(row)
@@ -120,6 +125,12 @@ const [
   },
   columnConfig: {
     resizable: true,
+  },
+  authConfig: {
+    authHandler: hasPermission,
+    toolbar: {
+      ModalAdd: permissions.add,
+    },
   },
   treeConfig: {
     lazy: true,
