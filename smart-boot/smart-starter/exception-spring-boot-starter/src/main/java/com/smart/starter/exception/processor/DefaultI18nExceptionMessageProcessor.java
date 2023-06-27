@@ -22,7 +22,7 @@ public class DefaultI18nExceptionMessageProcessor extends AbstractI18nExceptionM
 
     @Override
     public Object message(I18nException e, long exceptionNo, @Nullable HttpServletRequest request) {
-        log.error(String.format("DataManagerException: 状态码 %s, 异常信息 %s", e.getCode(), e.getMessage()), e.getE());
+        log.error(String.format("I18nException: 状态码 %s, 异常信息 %s", e.getCode(), e.getMessage()), e.getE());
         return Result.failure(ResultCodeEnum.BUSINESS_ERROR.getCode(), I18nUtils.get(e.getI18nMessage(), e.getArgs()));
     }
 }
