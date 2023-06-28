@@ -597,7 +597,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
      */
     private void dealCodePageConfig(@NonNull DbTemplateCodeTableDTO dbTemplateCodeTable) {
         // 1、查询page配置
-        final List<DbCodePageConfigPO> codePageConfigList = this.listDbCodePageConfig(dbTemplateCodeTable.getId(), true);
+        final List<DbCodePageConfigPO> codePageConfigList = this.listDbCodePageConfig(dbTemplateCodeTable.getId(), false);
 
         final List<DbCodePageConfigTemplateVO> dbCodePageConfigTemplateList = codePageConfigList.stream().map(item -> {
             final DbCodePageConfigTemplateVO template = new DbCodePageConfigTemplateVO();
