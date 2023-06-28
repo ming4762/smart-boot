@@ -125,11 +125,11 @@ public class LocalSysUserApi implements SysUserApi {
                 .eq(SysUserAccountPO::getUserId, userId);
         // 重置登录失败次数
         if (parameter.getLoginFailTime() == 0L) {
+            updateWrapper.set(SysUserAccountPO::getLastLoginTime, LocalDateTime.now());
             if (userAccount.getLoginFailTime() > 0L) {
                 updateWrapper.set(SysUserAccountPO::getLoginFailTime, 0L);
-                return this.sysUserAccountService.update(updateWrapper);
             }
-            return true;
+            return this.sysUserAccountService.update(updateWrapper);
         } else {
             Long time = userAccount.getLoginFailTime() + 1;
             updateWrapper.set(SysUserAccountPO::getLoginFailTime, time);
