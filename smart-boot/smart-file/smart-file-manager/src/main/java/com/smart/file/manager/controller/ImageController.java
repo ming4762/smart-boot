@@ -1,6 +1,5 @@
 package com.smart.file.manager.controller;
 
-import com.smart.auth.core.annotation.TempToken;
 import com.smart.file.core.service.FileService;
 import com.smart.module.api.file.bo.FileDownloadResult;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -36,7 +35,6 @@ public class ImageController {
      * @param response HttpServletResponse
      */
     @GetMapping("public/file/show/{id}")
-    @TempToken(resource = "smart:file:download")
     public void show(@PathVariable("id") Long id, HttpServletResponse response) throws IOException {
         FileDownloadResult file = this.fileService.download(id);
         if (Objects.nonNull(file)) {

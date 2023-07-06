@@ -42,4 +42,9 @@ public interface MapperPackageConstants {
      * 短信管理模块
      */
     String MODULE_SMS = "com.smart.sms.manager.mapper";
+
+    /**
+     * 消息模块
+     */
+    String MODULE_MESSAGE = "com.smart.message.mapper";
 }

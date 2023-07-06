@@ -39,3 +39,20 @@ export function urlToBase64(url: string, mineType?: string): Promise<string> {
     img.src = url
   })
 }
+
+/**
+ * 文件转base64
+ * @param file
+ */
+export function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = () => {
+      resolve(reader.result as string)
+    }
+    reader.onerror = (e) => {
+      reject(e)
+    }
+  })
+}

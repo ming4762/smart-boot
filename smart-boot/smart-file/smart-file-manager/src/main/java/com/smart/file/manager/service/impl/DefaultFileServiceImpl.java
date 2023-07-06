@@ -57,9 +57,9 @@ public class DefaultFileServiceImpl implements FileService, ApplicationContextAw
         if (parameter.getFileStorageId() != null) {
             smartFileStorage = this.smartFileStorageService.getById(parameter.getFileStorageId());
         } else if (StringUtils.hasText(parameter.getFileStorageCode())) {
-            smartFileStorage = this.smartFileStorageService.getDefault();
-        } else {
             smartFileStorage = this.smartFileStorageService.getByCode(parameter.getFileStorageCode());
+        } else {
+            smartFileStorage = this.smartFileStorageService.getDefault();
         }
         if (smartFileStorage == null) {
             throw new SmartFileException(String.format("获取文件存储器失败，请检查是否存在对应的文件存储器，存储器编码：%s", parameter.getFileStorageCode()));

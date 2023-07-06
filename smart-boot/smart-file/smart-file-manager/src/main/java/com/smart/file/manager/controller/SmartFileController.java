@@ -71,7 +71,6 @@ public class SmartFileController extends BaseController<SmartFileService, SmartF
      */
     @Operation(summary = "上传文件")
     @PostMapping("upload")
-    @PreAuthorize("hasPermission('smart:file', 'upload')")
     @ResponseBody
     public Result<FileHandlerResult> upload(FileUploadDTO parameter) {
         return Result.success(this.fileService.save(parameter.getFile(), FileSaveParameter.builder()

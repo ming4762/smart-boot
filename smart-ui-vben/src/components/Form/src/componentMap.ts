@@ -78,6 +78,9 @@ import SmartApiSelectTable from './smartBoot/components/SmartApiSelectTable.vue'
 componentMap.set('SmartApiSelectDict', SmartApiSelectDict)
 componentMap.set('SmartApiSelectTable', SmartApiSelectTable)
 
+import { Tinymce } from '/@/components/Tinymce'
+componentMap.set('Tinymce', Tinymce)
+
 export function add(compName: ComponentType, component: Component) {
   componentMap.set(compName, component)
 }
