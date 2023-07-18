@@ -56,7 +56,6 @@ export default defineComponent({
     })
 
     function handleChange(info: Record<string, any>) {
-      console.log(info)
       const file = info.file
       const status = file?.status
       const data = file?.response?.data

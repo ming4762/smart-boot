@@ -16,6 +16,8 @@ export default {
       submit: '提交',
       reload: '重新加载',
       choose: '选择',
+      publish: '发布',
+      revoke: '撤销',
     },
     title: {
       details: '详情',

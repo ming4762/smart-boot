@@ -76,7 +76,7 @@
 		<!--	消息支持	-->
 		<dependency>
 			<groupId>com.smart</groupId>
-			<artifactId>smart-module-message</artifactId>
+			<artifactId>smart-message-manager</artifactId>
 			<version>${smart-boot.version}</version>
 		</dependency>
 		<!--	阿里云短信支持	-->

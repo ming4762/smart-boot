@@ -11,9 +11,6 @@ import './SmartTableSelect.less'
 
 export default defineComponent({
   name: 'SmartTableSelect',
-  components: {
-    SmartTableSelectModal,
-  },
   props: {
     // 是否支持多选
     multiple: propTypes.bool.def(true),
@@ -27,24 +24,30 @@ export default defineComponent({
       required: true,
     },
     disabled: propTypes.bool.def(false),
+    size: String as PropType<string>,
   },
   emits: ['update:value', 'change'],
   setup(props, { emit }) {
     const [registerModal, { openModal }] = useModal()
     const optionsRef = ref<Array<any>>([])
-    const handleSelectData = (options: any[], selectRows: any[]) => {
+
+    const handleOptionChange = (options) => {
       optionsRef.value = options
+    }
+    const handleSelectData = (options: any[]) => {
       emit(
         'update:value',
         options.map((item) => item.value),
       )
-      emit('change', selectRows)
+      emit(
+        'change',
+        options.map((item) => item.value),
+      )
     }
     const handleDeselect = (value) => {
-      emit(
-        'update:value',
-        (props.value as any[]).filter((item) => item !== value),
-      )
+      const data = (props.value as any[]).filter((item) => item !== value)
+      emit('update:value', data)
+      emit('change', data)
     }
     return {
       registerModal,
@@ -52,6 +55,7 @@ export default defineComponent({
       handleSelectData,
       optionsRef,
       handleDeselect,
+      handleOptionChange,
     }
   },
   render() {
@@ -70,6 +74,8 @@ export default defineComponent({
       optionsRef,
       value,
       handleDeselect,
+      handleOptionChange,
+      size,
     } = this
     const modalSlots: any = {
       table: $slots.table,
@@ -80,6 +86,8 @@ export default defineComponent({
           <a-col class="select">
             <a-select
               {...$attrs}
+              size={size}
+              disabled={disabled}
               style={{ width: '100%' }}
               options={optionsRef}
               open={false}
@@ -90,6 +98,7 @@ export default defineComponent({
           <a-col class="button">
             <a-button
               disabled={disabled}
+              size={size}
               type="primary"
               onClick={() => openModal(true, value || {})}>
               {$t('common.button.choose')}
@@ -100,6 +109,7 @@ export default defineComponent({
           {...$attrs}
           onRegister={registerModal}
           labelField={labelField}
+          onOptionChange={handleOptionChange}
           onSelectData={handleSelectData}
           valueField={valueField}
           // @ts-ignore

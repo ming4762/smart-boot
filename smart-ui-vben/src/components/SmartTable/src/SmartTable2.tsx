@@ -28,9 +28,6 @@ import { useToolbarEvent } from '/@/components/SmartTable/src/hooks/useToolbarEv
 
 export default defineComponent({
   name: 'SmartTable',
-  components: {
-    BasicForm,
-  },
   props: smartTableProps,
   emits: ['register', 'after-load', 'toolbar-tool-click', 'page-change', 'sort-change'],
   setup(props, { emit, slots, attrs }) {

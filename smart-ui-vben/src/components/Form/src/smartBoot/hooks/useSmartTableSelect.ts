@@ -73,15 +73,15 @@ export const useSmartTableSelect = (
   }
 
   const handleSetSelectRows = async () => {
-    await getTableInstance().setAllCheckboxRow(false)
+    await getTableInstance()?.setAllCheckboxRow(false)
     await setCheckboxRow(unref(selectRowsRef), true)
   }
 
   const handleSetRadioRow = async () => {
     const selectRows = unref(selectRowsRef)
     if (selectRows && selectRows.length > 0) {
-      await getTableInstance().clearRadioRow()
-      await getTableInstance().setRadioRow(selectRows[0])
+      await getTableInstance()?.clearRadioRow()
+      await getTableInstance()?.setRadioRow(selectRows[0])
     }
   }
 
@@ -147,6 +147,7 @@ export const useSmartTableSelect = (
    * @param dataList
    */
   const setSelectData = (dataList: any[]) => {
+    console.log('-----------------')
     selectRowsRef.value = dataList
   }
 
@@ -205,7 +206,8 @@ export const useSmartTableSelect = (
       return
     }
     if (checked) {
-      addSelectData([currentDataList])
+      const keyList = unref(selectRowsRef).map((item) => item[unref(valueFieldRef)])
+      addSelectData(currentDataList.filter((item) => !keyList.includes(item[unref(valueFieldRef)])))
     } else {
       removeSelectData(currentDataList)
     }

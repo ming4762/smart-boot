@@ -1,6 +1,6 @@
-import type {SmartColumn, SmartSearchFormSchema} from '/@/components/SmartTable'
-import type {FormSchema} from '/@/components/Form'
-import {ApiServiceEnum, defHttp} from '/@/utils/http/axios';
+import type { SmartColumn, SmartSearchFormSchema } from '/@/components/SmartTable'
+import type { FormSchema } from '/@/components/Form'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 
 /**
  * 表格列表

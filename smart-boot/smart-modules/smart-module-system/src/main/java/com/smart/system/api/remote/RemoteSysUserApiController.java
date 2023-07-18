@@ -5,6 +5,7 @@ import com.smart.module.api.system.constants.SystemApiUrlConstants;
 import com.smart.module.api.system.dto.AccountLoginFailTimeUpdateDTO;
 import com.smart.module.api.system.dto.SysUserDTO;
 import com.smart.module.api.system.dto.UserAccountLockDTO;
+import com.smart.module.api.system.parameter.RemoteSysUserListParameter;
 import com.smart.system.api.local.LocalSysUserApi;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -73,5 +74,17 @@ public class RemoteSysUserApiController implements SysUserApi {
     @PostMapping(SystemApiUrlConstants.RESET_LOGIN_FAIL_TIME)
     public boolean updateLoginFailTime(@RequestBody AccountLoginFailTimeUpdateDTO userId) {
         return this.localSysUserApi.updateLoginFailTime(userId);
+    }
+
+    /**
+     * 查询用户列表
+     *
+     * @param parameter 参数
+     * @return 用户列表
+     */
+    @Override
+    @PostMapping(SystemApiUrlConstants.LIST_USER)
+    public List<SysUserDTO> listUser(@RequestBody RemoteSysUserListParameter parameter) {
+        return this.localSysUserApi.listUser(parameter);
     }
 }

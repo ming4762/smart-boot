@@ -16,6 +16,8 @@ export default {
       submit: 'Submit',
       reload: 'Reload',
       choose: 'Choose',
+      publish: 'Publish',
+      revoke: 'Revoke',
     },
     title: {
       details: 'Details',

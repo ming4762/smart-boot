@@ -3,6 +3,7 @@ package com.smart.module.api.system;
 import com.smart.module.api.system.dto.AccountLoginFailTimeUpdateDTO;
 import com.smart.module.api.system.dto.SysUserDTO;
 import com.smart.module.api.system.dto.UserAccountLockDTO;
+import com.smart.module.api.system.parameter.RemoteSysUserListParameter;
 
 import java.util.List;
 
@@ -40,4 +41,11 @@ public interface SysUserApi {
      * @return 是否成功
      */
     boolean updateLoginFailTime(AccountLoginFailTimeUpdateDTO parameter);
+
+    /**
+     * 查询用户列表
+     * @param parameter 参数
+     * @return 用户列表
+     */
+    List<SysUserDTO> listUser(RemoteSysUserListParameter parameter);
 }

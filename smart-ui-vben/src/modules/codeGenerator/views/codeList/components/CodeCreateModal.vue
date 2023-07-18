@@ -32,7 +32,7 @@
 import { useI18n } from '/@/hooks/web/useI18n'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
-import { defHttp } from '/@/utils/http/axios'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 
 import { BasicModal, useModalInner } from '/@/components/Modal'
 import { BasicForm, useForm } from '/@/components/Form'
@@ -70,6 +70,7 @@ const [registerModal] = useModalInner((codeConfigData: Recordable) => {
 
 const listByIdApi = (ids) => {
   return defHttp.post({
+    service: ApiServiceEnum.SMART_CODE,
     url: 'db/code/template/listById',
     data: ids,
   })

@@ -28,6 +28,7 @@ public interface SystemApiUrlConstants {
     String LIST_USER_BY_ID = "/remote/system/user/listUserById";
     String LOCK_ACCOUNT = "/remote/system/user/lockAccount";
     String RESET_LOGIN_FAIL_TIME = "/remote/system/user/resetLoginFailTime";
+    String LIST_USER = "/remote/system/user/list";
 
     /**
      * 读取国际化信息

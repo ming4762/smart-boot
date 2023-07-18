@@ -9,7 +9,6 @@ import type { SmartSearchFormActionType } from '../types/SmartSearchFormType'
 import { isProdMode } from '/@/utils/env'
 import type { DynamicProps } from '/#/utils'
 import { getDynamicProps } from '/@/utils'
-import { error } from '/@/utils/log'
 import { VxeGridPropTypes } from 'vxe-table'
 
 type Props = Partial<DynamicProps<SmartTableProps>>
@@ -76,9 +75,8 @@ export const useSmartTable = (
   const getTableAction = (): TableActionType => {
     const table = unref(tableRef)
     if (!table) {
-      error(
-        'The table instance has not been obtained yet, please make sure the table is presented when performing the table operation!',
-      )
+      // @ts-ignore
+      return null
     }
     return table as TableActionType
   }
@@ -149,7 +147,7 @@ export const useSmartTable = (
       return getTableAction().setRadioRow(row)
     },
     setCheckboxRow(rows: any, checked: boolean): Promise<any> {
-      return getTableAction().setCheckboxRow(rows, checked)
+      return getTableAction()?.setCheckboxRow(rows, checked)
     },
     validateAddEdit: (nameList?: NamePath[]) => {
       return getTableAction().validateAddEdit(nameList)
@@ -158,7 +156,7 @@ export const useSmartTable = (
       return getTableAction().validateAddEdit(nameList)
     },
     getTableInstance: () => {
-      return getTableAction().getTableInstance()
+      return getTableAction()?.getTableInstance()
     },
     getData: (rowIndex?: number) => {
       return getTableAction().getData(rowIndex)

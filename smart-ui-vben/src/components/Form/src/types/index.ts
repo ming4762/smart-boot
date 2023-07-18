@@ -118,3 +118,5 @@ export type ComponentType =
   | 'SmartApiSelectDict'
   | 'SmartApiSelectTable'
   | 'Tinymce'
+  | 'SmartTableSelect'
+  | 'SmartUserTableSelect'

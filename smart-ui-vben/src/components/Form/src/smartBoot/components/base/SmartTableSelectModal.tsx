@@ -1,6 +1,6 @@
 import type { SmartTableProps } from '/@/components/SmartTable'
 
-import { computed, defineComponent, toRefs, unref } from 'vue'
+import { computed, defineComponent, toRefs, unref, watch } from 'vue'
 import { propTypes } from '/@/utils/propTypes'
 
 import { BasicModal, useModalInner } from '/@/components/Modal'
@@ -37,7 +37,7 @@ export default defineComponent({
     // 是否每次弹窗都加载数据
     alwaysLoad: propTypes.bool.def(false),
   },
-  emits: ['register', 'select-data'],
+  emits: ['register', 'select-data', 'option-change'],
   setup(props, { emit, slots }) {
     const { tableProps, selectTableProps, valueField, selectValues, alwaysLoad, multiple } =
       toRefs(props)
@@ -45,6 +45,23 @@ export default defineComponent({
     const hasTableSlot = computed<boolean>(() => {
       return slots.table !== undefined
     })
+
+    const emitSelectData = () => {
+      const selectOptions = getSelectOptions()
+      closeModal()
+      emit('option-change', selectOptions)
+      emit('select-data', selectOptions, unref(selectRowsRef))
+    }
+
+    const getSelectOptions = (): LabelValueOptions => {
+      return unref(selectRowsRef).map((item) => {
+        return {
+          label: item[props.labelField],
+          value: item[props.valueField],
+        }
+      })
+    }
+
     const {
       registerTable,
       handleCheckboxChange,
@@ -79,15 +96,13 @@ export default defineComponent({
       }
     })
 
+    watch(selectRowsRef, () => {
+      const selectOptions = getSelectOptions()
+      emit('option-change', selectOptions)
+    })
+
     const handleOk = () => {
-      const selectOptions: LabelValueOptions = unref(selectRowsRef).map((item) => {
-        return {
-          label: item[props.labelField],
-          value: item[props.valueField],
-        }
-      })
-      closeModal()
-      emit('select-data', selectOptions, unref(selectRowsRef))
+      emitSelectData()
     }
 
     return {

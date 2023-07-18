@@ -23,7 +23,6 @@ import javax.sql.DataSource;
         MapperPackageConstants.MONITOR_SERVER,
         MapperPackageConstants.MODULE_FILE,
         MapperPackageConstants.DATABASE_GENERATOR,
-        MapperPackageConstants.MODULE_SMS,
         MapperPackageConstants.MODULE_MESSAGE
 })
 

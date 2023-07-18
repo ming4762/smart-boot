@@ -11,4 +11,9 @@ public interface SmartMessageApiUrlConstants {
      * 发送短信接口
      */
     String SMS_SEND = "/remote/message/sms/send";
+
+    /**
+     * 发送消息接口
+     */
+    String SEND = "/remote/message/send";
 }

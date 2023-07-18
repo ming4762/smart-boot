@@ -6,6 +6,7 @@ import com.smart.module.api.system.constants.SystemApiUrlConstants;
 import com.smart.module.api.system.dto.AccountLoginFailTimeUpdateDTO;
 import com.smart.module.api.system.dto.SysUserDTO;
 import com.smart.module.api.system.dto.UserAccountLockDTO;
+import com.smart.module.api.system.parameter.RemoteSysUserListParameter;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -57,4 +58,14 @@ public interface RemoteSysUserApi extends SysUserApi {
     @Override
     @PostMapping(SystemApiUrlConstants.RESET_LOGIN_FAIL_TIME)
     boolean updateLoginFailTime(AccountLoginFailTimeUpdateDTO userId);
+
+    /**
+     * 查询用户列表
+     *
+     * @param parameter 参数
+     * @return 用户列表
+     */
+    @Override
+    @PostMapping(SystemApiUrlConstants.LIST_USER)
+    List<SysUserDTO> listUser(RemoteSysUserListParameter parameter);
 }

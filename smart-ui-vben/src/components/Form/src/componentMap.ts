@@ -75,8 +75,12 @@ componentMap.set('Divider', Divider)
 // ---- smart-boot 组件
 import SmartApiSelectDict from './smartBoot/components/SmartApiSelectDict.vue'
 import SmartApiSelectTable from './smartBoot/components/SmartApiSelectTable.vue'
+import SmartTableSelect from './smartBoot/components/base/SmartTableSelect'
+import SmartUserTableSelect from './smartBoot/components/user/SmartUserTableSelect.vue'
 componentMap.set('SmartApiSelectDict', SmartApiSelectDict)
 componentMap.set('SmartApiSelectTable', SmartApiSelectTable)
+componentMap.set('SmartTableSelect', SmartTableSelect)
+componentMap.set('SmartUserTableSelect', SmartUserTableSelect)
 
 import { Tinymce } from '/@/components/Tinymce'
 componentMap.set('Tinymce', Tinymce)

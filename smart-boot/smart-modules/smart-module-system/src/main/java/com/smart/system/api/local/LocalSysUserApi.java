@@ -1,5 +1,6 @@
 package com.smart.system.api.local;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -8,6 +9,7 @@ import com.smart.module.api.system.constants.UserAccountStatusEnum;
 import com.smart.module.api.system.dto.AccountLoginFailTimeUpdateDTO;
 import com.smart.module.api.system.dto.SysUserDTO;
 import com.smart.module.api.system.dto.UserAccountLockDTO;
+import com.smart.module.api.system.parameter.RemoteSysUserListParameter;
 import com.smart.system.model.SysUserAccountPO;
 import com.smart.system.model.SysUserPO;
 import com.smart.system.service.SysUserAccountService;
@@ -17,6 +19,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -142,5 +145,34 @@ public class LocalSysUserApi implements SysUserApi {
             }
             return this.sysUserAccountService.update(updateWrapper);
         }
+    }
+
+    /**
+     * 查询用户列表
+     *
+     * @param parameter 参数
+     * @return 用户列表
+     */
+    @Override
+    public List<SysUserDTO> listUser(RemoteSysUserListParameter parameter) {
+        LambdaQueryWrapper<SysUserPO> queryWrapper = new QueryWrapper<SysUserPO>().lambda();
+        if (parameter.getUseYn() != null) {
+            queryWrapper.eq(SysUserPO::getUseYn, parameter.getUseYn());
+        }
+        if (StringUtils.hasText(parameter.getFullName())) {
+            queryWrapper.like(SysUserPO::getFullName, parameter.getFullName());
+        }
+        if (StringUtils.hasText(parameter.getUsername())) {
+            queryWrapper.like(SysUserPO::getUsername, parameter.getUsername());
+        }
+        if (StringUtils.hasText(parameter.getUserType())) {
+            queryWrapper.eq(SysUserPO::getUserType, parameter.getUserType());
+        }
+        return this.sysUserService.list(queryWrapper).stream()
+                .map(item -> {
+                    SysUserDTO dto = new SysUserDTO();
+                    BeanUtils.copyProperties(item, dto);
+                    return dto;
+                }).toList();
     }
 }
