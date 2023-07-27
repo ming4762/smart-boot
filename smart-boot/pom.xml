@@ -71,11 +71,11 @@
         <module>smart-file</module>
         <module>smart-kettle</module>
         <module>smart-license</module>
+        <module>smart-message</module>
         <module>smart-module-api</module>
         <module>smart-modules</module>
         <module>smart-monitor</module>
         <module>smart-starter</module>
-        <module>smart-sms</module>
         <module>smart-services</module>
     </modules>
 
