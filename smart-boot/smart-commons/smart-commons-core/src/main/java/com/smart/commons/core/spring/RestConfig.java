@@ -1,9 +1,13 @@
 package com.smart.commons.core.spring;
 
 import com.smart.commons.core.utils.RestUtils;
-import jakarta.annotation.PostConstruct;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
+
+import java.time.Duration;
 
 /**
  * @author ShiZhongMing
@@ -13,14 +17,13 @@ import org.springframework.web.client.RestTemplate;
 @Configuration(proxyBeanMethods = false)
 public class RestConfig {
 
-    private final RestTemplate restTemplate;
-
-    public RestConfig(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-    }
-
-    @PostConstruct
-    public void init() {
-        RestUtils.setRestTemplate(this.restTemplate);
+    @Bean
+    @ConditionalOnMissingBean(RestTemplate.class)
+    public RestTemplate restTemplate(RestTemplateBuilder builder) {
+        RestTemplate restTemplate = builder.setConnectTimeout(Duration.ofMillis(5000L))
+                .setReadTimeout(Duration.ofMillis(50000L))
+                .build();
+        RestUtils.setRestTemplate(restTemplate);
+        return restTemplate;
     }
 }
