@@ -8,7 +8,6 @@ import com.smart.system.service.SysLogService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.lang.NonNull;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,7 +28,6 @@ public class SysLogController extends BaseController<SysLogService, SysLogPO> {
     @Override
     @PostMapping("list")
     @Operation(summary = "查询日志信息", method = "POST")
-    @PreAuthorize("hasPermission('sys:log', 'query')")
     public Result<Object> list(@RequestBody @NonNull PageSortQuery parameter) {
         return super.list(parameter);
     }
@@ -37,7 +35,6 @@ public class SysLogController extends BaseController<SysLogService, SysLogPO> {
     @Override
     @PostMapping("getById")
     @Operation(summary = "通过ID查询日志信息", method = "POST")
-    @PreAuthorize("hasPermission('sys:log', 'query')")
     public Result<SysLogPO> getById(@RequestBody Serializable id) {
         return super.getById(id);
     }
