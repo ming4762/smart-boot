@@ -16,8 +16,8 @@
               {{ getUserTypeMap[row.userType] }}
             </span>
           </template>
-          <template #search-userType="{ model }">
-            <a-select style="width: 100px" v-model:value="model.userType" allowClear>
+          <template #search-userType="{ model, size }">
+            <a-select style="width: 100px" :size="size" v-model:value="model.userType" allowClear>
               <a-select-option
                 v-for="item in userTypeListRef"
                 :key="'userType_' + item.dictItemCode"
@@ -148,29 +148,6 @@ const validateOperateUser = (userList: Array<any>) => {
 }
 
 /**
- * 启停用户
- * @param useYn
- */
-const handleSetUseYn = (useYn: boolean) => {
-  const userList = getCheckboxRecords(false)
-  // 验证用户
-  const result = validateOperateUser(userList)
-  if (!result) {
-    return false
-  }
-  createConfirm({
-    title: t('system.views.user.validate.setUserUseYn', {
-      msg: useYn ? t('common.message.use') : t('common.message.noUse'),
-    }),
-    onOk: async () => {
-      await setUseYnApi(userList, useYn)
-      // 重新加载数据
-      reload()
-    },
-  })
-}
-
-/**
  * 创建账户
  */
 const handleCreateAccount = () => {
@@ -228,7 +205,7 @@ const [
     actionColOptions: {
       span: undefined,
     },
-    size: 'default',
+    compact: true,
     labelCol: {
       span: 0,
     },
@@ -267,6 +244,7 @@ const [
       delete: deleteApi,
       save: saveUpdateWithDataScopeApi,
       getById: getByIdWithDataScopeApi,
+      useYn: setUseYnApi,
     },
   },
   toolbarConfig: {
@@ -280,24 +258,6 @@ const [
           onClick: () => {
             showAddModal({ deptId: unref(currentDeptId) })
           },
-        },
-      },
-      {
-        name: t('common.button.use'),
-        customRender: 'ant',
-        auth: permissions.useYn,
-        props: {
-          onClick: () => handleSetUseYn(true),
-          type: 'primary',
-        },
-      },
-      {
-        name: t('common.button.noUse'),
-        customRender: 'ant',
-        auth: permissions.useYn,
-        props: {
-          onClick: () => handleSetUseYn(false),
-          type: 'primary',
         },
       },
       {
@@ -329,6 +289,12 @@ const [
             deleteByCheckbox()
           },
         },
+      },
+      {
+        code: 'useYnTrue',
+      },
+      {
+        code: 'useYnFalse',
       },
     ],
   },

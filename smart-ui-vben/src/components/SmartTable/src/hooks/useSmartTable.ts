@@ -161,6 +161,12 @@ export const useSmartTable = (
     getData: (rowIndex?: number) => {
       return getTableAction().getData(rowIndex)
     },
+    useYnByCheckbox: (useYn: boolean) => {
+      return getTableAction().useYnByCheckbox(useYn)
+    },
+    useYnByRow: (row: any | any[], useYn: boolean) => {
+      return getTableAction().useYnByRow(row, useYn)
+    },
   }
   return [register, methods]
 }

@@ -32,12 +32,13 @@ interface TableAction {
   editByCheckbox: () => Promise<boolean> | boolean
   query: (opt?: FetchParams) => Promise<any>
   getSearchFormVisible: ComputedRef<boolean>
+  useYnByCheckbox: (useYn: boolean) => Promise<boolean | undefined>
 }
 
 export const useTableToolbarConfig = (
   tableProps: ComputedRef<SmartTableProps>,
   t: Function,
-  { deleteByCheckbox, showAddModal, editByCheckbox, query, getSearchFormVisible }: TableAction,
+  { deleteByCheckbox, showAddModal, editByCheckbox, query, getSearchFormVisible, useYnByCheckbox }: TableAction,
 ) => {
   // const configRef = ref<SmartTableToolbarConfig>({})
 
@@ -193,6 +194,20 @@ export const useTableToolbarConfig = (
           },
           item,
         ) as SmartTableButton
+      } else if (item.code === 'useYnFalse' || item.code === 'useYnTrue') {
+        const useYn = item.code === 'useYnTrue'
+        return merge(
+          { size: tableButtonSizeMap[tableSize] },
+          getDefaultUseYnButtonConfig(t, useYn),
+          {
+            props: {
+              onClick: () => {
+                useYnByCheckbox && useYnByCheckbox(useYn)
+              },
+            },
+          },
+          item,
+        ) as SmartTableButton
       }
       // props添加响应性
       const loading = ref(false)
@@ -287,6 +302,21 @@ const getDefaultDeleteButtonConfig = (t: Function): SmartTableButton => {
     props: {
       danger: true,
       preIcon: 'ant-design:edit-outlined',
+      type: 'primary',
+    },
+    buttonRender: {
+      name: VxeTableToolButtonCustomRenderer,
+    },
+  }
+}
+
+const getDefaultUseYnButtonConfig = (t: Function, useYn: boolean): SmartTableButton => {
+  return {
+    name: useYn ? t('common.button.use') : t('common.button.noUse'),
+    code: useYn ? 'useYnTrue' : 'useYnFalse',
+    props: {
+      danger: !useYn,
+      preIcon: useYn ? 'ant-design:check-outlined' : 'ant-design:close-outlined',
       type: 'primary',
     },
     buttonRender: {

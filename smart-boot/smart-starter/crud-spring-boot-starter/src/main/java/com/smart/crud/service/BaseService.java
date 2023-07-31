@@ -3,6 +3,7 @@ package com.smart.crud.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.smart.crud.model.BaseModel;
+import com.smart.crud.parameter.SetUseYnParameter;
 import com.smart.crud.query.PageSortQuery;
 import org.springframework.lang.NonNull;
 
@@ -25,4 +26,10 @@ public interface BaseService<T extends BaseModel> extends IService<T> {
      */
     List<? extends T> list(@NonNull QueryWrapper<T> queryWrapper, @NonNull PageSortQuery parameter, boolean paging);
 
+    /**
+     * 设置启停状态
+     * @param parameter 参数
+     * @return 是否设置成功
+     */
+    boolean setUseYn(@NonNull SetUseYnParameter parameter);
 }

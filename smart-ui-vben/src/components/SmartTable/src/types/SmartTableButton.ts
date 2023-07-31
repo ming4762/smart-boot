@@ -23,6 +23,8 @@ export type SmartTableButtonCode =
   | 'reset_custom'
   | 'ModalAdd'
   | 'ModalEdit'
+  | 'useYnTrue'
+  | 'useYnFalse'
 
 export type SmartTableToolCode = 'show_search'
 

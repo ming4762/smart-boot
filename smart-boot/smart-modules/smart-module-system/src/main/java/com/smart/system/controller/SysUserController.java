@@ -12,6 +12,7 @@ import com.smart.commons.core.log.LogOperationTypeEnum;
 import com.smart.commons.core.message.Result;
 import com.smart.commons.core.utils.TreeUtils;
 import com.smart.crud.controller.BaseController;
+import com.smart.crud.parameter.SetUseYnParameter;
 import com.smart.system.constants.UserDeptIdentEnum;
 import com.smart.system.model.*;
 import com.smart.system.pojo.dto.common.UseYnSetDTO;
@@ -232,23 +233,19 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
         return Result.success(this.service.listUserByRoleId(roleIdList));
     }
 
-
-
     /**
-     * 设置启用状态
-     * @return 结果
+     * 设置启用停用
+     *
+     * @param parameter 参数
+     * @return 是否设置成功
      */
+    @Override
     @PostMapping("setUseYn")
     @Log(value = "设置用户启停状态", type = LogOperationTypeEnum.UPDATE)
     @Operation(summary = "设置用户启停状态")
     @PreAuthorize("hasPermission('sys:user', 'setUseYn')")
-    public Result<Boolean> setUseYn(@RequestBody @Valid UseYnSetDTO parameter) {
-        Lists.partition(parameter.getIdList(), 500).forEach(list -> this.service.update(
-                new UpdateWrapper<SysUserPO>().lambda()
-                        .set(SysUserPO :: getUseYn, parameter.getUseYn())
-                        .in(SysUserPO :: getUserId, list)
-        ));
-        return Result.success(true);
+    public Result<Boolean> setUseYn(@RequestBody @Valid SetUseYnParameter parameter) {
+        return super.setUseYn(parameter);
     }
 
     /**

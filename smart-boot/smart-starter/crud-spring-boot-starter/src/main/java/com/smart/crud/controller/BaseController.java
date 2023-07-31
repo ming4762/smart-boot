@@ -2,6 +2,7 @@ package com.smart.crud.controller;
 
 import com.smart.commons.core.message.Result;
 import com.smart.crud.model.BaseModel;
+import com.smart.crud.parameter.SetUseYnParameter;
 import com.smart.crud.service.BaseService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -62,6 +63,15 @@ public abstract class BaseController<K extends BaseService<T>, T extends BaseMod
      */
     public Result<Boolean> batchSaveUpdate(@RequestBody List<T> modelList) {
         return Result.success(this.service.saveOrUpdateBatch(modelList));
+    }
+
+    /**
+     * 设置启用停用
+     * @param parameter 参数
+     * @return 是否设置成功
+     */
+    public Result<Boolean> setUseYn(@RequestBody SetUseYnParameter parameter) {
+        return Result.success(this.service.setUseYn(parameter));
     }
 
     /**

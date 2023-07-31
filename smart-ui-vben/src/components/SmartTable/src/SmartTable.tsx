@@ -91,13 +91,21 @@ export default defineComponent({
     )
 
     // -------------- 加载函数 ------------------------
-    const { reload, query, getProxyConfigRef, deleteByRow, deleteByCheckbox, getProxyEvents } =
-      useTableAjax(getTableProps, tableElRef, emit, {
-        commitVxeProxy,
-        getSearchFormParameter: searchFormAction.getSearchFormParameter,
-        getCheckboxRecords,
-        setLoading,
-      })
+    const {
+      reload,
+      query,
+      getProxyConfigRef,
+      deleteByRow,
+      deleteByCheckbox,
+      getProxyEvents,
+      useYnByCheckbox,
+      useYnByRow,
+    } = useTableAjax(getTableProps, tableElRef, emit, {
+      commitVxeProxy,
+      getSearchFormParameter: searchFormAction.getSearchFormParameter,
+      getCheckboxRecords,
+      setLoading,
+    })
 
     // -------------- 添加修改操作 ---------------------
     const [registerAddEditModal, { openModal: openAddEditModal }] = useModal()
@@ -143,6 +151,7 @@ export default defineComponent({
       editByCheckbox,
       query,
       getSearchFormVisible: searchFormAction.getSearchFormVisible,
+      useYnByCheckbox,
     })
 
     /**
@@ -232,6 +241,8 @@ export default defineComponent({
         }
         return getTableInstance().getData()
       },
+      useYnByCheckbox,
+      useYnByRow,
     }
 
     createTableContext({ ...tableAction, wrapRef, getBindValues: getTableBindValues })

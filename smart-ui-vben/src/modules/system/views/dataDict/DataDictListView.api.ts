@@ -42,7 +42,7 @@ export const deleteDictApi = (parameter: any[]) => {
   return defHttp.post({
     service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.deleteDict,
-    data: parameter,
+    data: parameter.map((item) => item.id),
   })
 }
 
@@ -74,6 +74,6 @@ export const deleteDictItemApi = (parameter: any[]) => {
   return defHttp.post({
     service: ApiServiceEnum.SMART_SYSTEM,
     url: Api.deleteItem,
-    data: parameter,
+    data: parameter.map((item) => item.id),
   })
 }

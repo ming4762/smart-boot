@@ -41,10 +41,12 @@ export interface SmartTableProxyConfig<T = any> extends VxeGridPropTypes.ProxyCo
     delete?(params: VxeGridPropTypes.ProxyAjaxDeleteParams, ...args: any[]): Promise<any>
     save?(params: VxeGridPropTypes.ProxyAjaxSaveParams, ...args: any[]): Promise<any>
     getById?(params: T): Promise<T>
+    useYn?(rows: T[], useYn: boolean): Promise<any>
   }
   // 删除回调
   afterDelete?: (result?: any) => void
   afterLoad?: (result: any) => any
+  afterUserYn?: (result: any) => void
 }
 
 /**
@@ -130,4 +132,6 @@ export interface TableActionType {
   validateAddEdit: (nameList?: NamePath[]) => Promise<any>
   getTableInstance: () => VxeGridInstance
   getData: (rowIndex?: number) => any[]
+  useYnByCheckbox: (useYn: boolean) => Promise<boolean | undefined>
+  useYnByRow: (row: any | any[], useYn: boolean) => Promise<boolean | undefined>
 }

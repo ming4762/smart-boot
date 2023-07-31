@@ -21,6 +21,10 @@ interface ActionType {
   getCheckboxRecords: (isFull: boolean) => Array<any>
 }
 
+import { useMessage } from '/@/hooks/web/useMessage'
+
+const { createConfirm, warnMessage, successMessage } = useMessage()
+
 export const useTableAjax = (
   propsRef: ComputedRef<SmartTableProps>,
   vxeGridRef: Ref<VxeGridInstance>,
@@ -194,6 +198,46 @@ export const useTableAjax = (
     })
   }
 
+  const useYnByCheckbox = async (useYn: boolean) => {
+    const rows = getCheckboxRecords(false)
+    if (!rows.length) {
+      warnMessage(t('common.notice.select'))
+      return false
+    }
+    return doUseYn(rows, useYn)
+  }
+
+  const useYnByRow = (row: any | any[], useYn: boolean) => {
+    if (isArray(row)) {
+      return doUseYn(row, useYn)
+    }
+    return doUseYn([row], useYn)
+  }
+
+  const doUseYn = async (rows: any[], useYn: boolean): Promise<boolean | undefined> => {
+    const proxyConfig = unref(propsRef)?.proxyConfig
+    const useYnMethod = proxyConfig?.ajax?.useYn
+    if (!useYnMethod) {
+      error('proxyConfig.ajax.useYn未配置，无法执行启用停用操作')
+      return false
+    }
+    if (rows.length === 0) {
+      return false
+    }
+    createConfirm({
+      content: useYn ? t('common.notice.useYnTrueConfirm') : t('common.notice.useYnFalseConfirm'),
+      onOk: async () => {
+        const result = await useYnMethod(rows, useYn)
+        successMessage({
+          msg: t('common.message.OperationSucceeded'),
+        })
+        const afterHandler = proxyConfig?.afterUserYn || query
+        afterHandler && afterHandler(result)
+        return Promise.resolve(true)
+      },
+    })
+  }
+
   return {
     reload,
     query,
@@ -201,5 +245,7 @@ export const useTableAjax = (
     deleteByRow,
     deleteByCheckbox,
     getProxyEvents,
+    useYnByCheckbox,
+    useYnByRow,
   }
 }
