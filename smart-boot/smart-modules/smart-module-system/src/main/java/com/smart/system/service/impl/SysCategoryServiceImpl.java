@@ -3,6 +3,8 @@ package com.smart.system.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.smart.crud.service.BaseServiceImpl;
+import com.smart.crud.utils.CrudUtils;
+import com.smart.system.mapper.CommonMapper;
 import com.smart.system.mapper.SysCategoryMapper;
 import com.smart.system.model.SysCategoryPO;
 import com.smart.system.service.SysCategoryService;
@@ -25,6 +27,12 @@ import java.util.stream.Collectors;
 */
 @Service
 public class SysCategoryServiceImpl extends BaseServiceImpl<SysCategoryMapper, SysCategoryPO> implements SysCategoryService {
+
+    private final CommonMapper commonMapper;
+
+    public SysCategoryServiceImpl(CommonMapper commonMapper) {
+        this.commonMapper = commonMapper;
+    }
 
     /**
      * 重写save方法，修改ID的生成策略
@@ -70,7 +78,12 @@ public class SysCategoryServiceImpl extends BaseServiceImpl<SysCategoryMapper, S
         this.deleteTree((Collection<? extends Serializable>) list, deleteIds);
         boolean result = super.removeByIds(deleteIds);
         // 更新上级hasChild
-        this.baseMapper.updateHasChild(deleteData.getParentId());
+        this.commonMapper.updateHasChild(
+                this.getTableName(),
+                CrudUtils.getDbField(SysCategoryPO::getParentId),
+                CrudUtils.getDbField(SysCategoryPO::getId),
+                deleteData.getParentId()
+        );
         return result;
     }
 

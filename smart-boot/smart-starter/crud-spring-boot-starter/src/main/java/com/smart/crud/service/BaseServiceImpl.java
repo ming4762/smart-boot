@@ -138,9 +138,7 @@ public abstract class BaseServiceImpl<K extends CrudBaseMapper<T>, T extends Bas
      * @return TableInfo
      */
     protected TableInfo getTableInfo() {
-        TableInfo tableInfo = TableInfoHelper.getTableInfo(this.entityClass);
-        Assert.notNull(tableInfo, "error: can not execute. because can not find cache of TableInfo for entity!");
-        return tableInfo;
+        return CrudUtils.getTableInfo(this.entityClass);
     }
 
 

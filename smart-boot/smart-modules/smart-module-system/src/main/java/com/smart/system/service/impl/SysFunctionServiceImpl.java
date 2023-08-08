@@ -128,8 +128,8 @@ public class SysFunctionServiceImpl extends BaseServiceImpl<SysFunctionMapper, S
     private void updateHasChild(Long id) {
         this.commonMapper.updateHasChild(
                 CrudUtils.getTableName(SysFunctionPO.class),
-                CrudUtils.getDbField(SysFunctionPO.class, "parentId"),
-                CrudUtils.getDbField(SysFunctionPO.class, "functionId"),
+                CrudUtils.getDbField(SysFunctionPO::getParentId),
+                CrudUtils.getDbField(SysFunctionPO::getFunctionId),
                 id
         );
     }

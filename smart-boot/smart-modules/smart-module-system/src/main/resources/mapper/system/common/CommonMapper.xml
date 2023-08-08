@@ -3,8 +3,8 @@
 <mapper namespace="com.smart.system.mapper.CommonMapper">
     <update id="updateHasChild">
         update ${tableName}
-        set has_child = (select IF(A.count_num > 0, 1, 0)
-            from (select count(*) count_num from ${tableName} where ${parentField} = #{id}) as A)
+        set has_child = (select case when A.count_num > 0 then 1 else 0 end
+            from (select count(*) count_num from ${tableName} where ${parentField} = #{id}) A)
         where ${idField} = #{id}
     </update>
 </mapper>

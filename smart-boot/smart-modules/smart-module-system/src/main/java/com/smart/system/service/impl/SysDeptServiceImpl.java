@@ -5,7 +5,9 @@ import com.smart.crud.constants.CrudCommonEnum;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.crud.service.BaseServiceImpl;
 import com.smart.crud.service.UserSetterService;
+import com.smart.crud.utils.CrudUtils;
 import com.smart.system.constants.UserDeptIdentEnum;
+import com.smart.system.mapper.CommonMapper;
 import com.smart.system.mapper.SysDeptMapper;
 import com.smart.system.model.SysDeptPO;
 import com.smart.system.model.SysUserDeptPO;
@@ -36,9 +38,12 @@ public class SysDeptServiceImpl extends BaseServiceImpl<SysDeptMapper, SysDeptPO
 
     private final SysUserDeptService sysUserDeptService;
 
-    public SysDeptServiceImpl(UserSetterService userSetterService, SysUserDeptService sysUserDeptService) {
+    private final CommonMapper commonMapper;
+
+    public SysDeptServiceImpl(UserSetterService userSetterService, SysUserDeptService sysUserDeptService, CommonMapper commonMapper) {
         this.userSetterService = userSetterService;
         this.sysUserDeptService = sysUserDeptService;
+        this.commonMapper = commonMapper;
     }
 
     @Override
@@ -85,7 +90,7 @@ public class SysDeptServiceImpl extends BaseServiceImpl<SysDeptMapper, SysDeptPO
         boolean result = super.removeByIds(deleteIds);
         // 更新hasChild
         if (!TOP_PARENT_ID.equals(dept.getParentId())) {
-            this.baseMapper.updateHasChild(dept.getParentId());
+            this.updateHasChild(dept.getParentId());
         }
         // 删除用户部门关联关系
         this.sysUserDeptService.remove(
@@ -158,9 +163,18 @@ public class SysDeptServiceImpl extends BaseServiceImpl<SysDeptMapper, SysDeptPO
     public boolean save(@NonNull SysDeptPO entity) {
         boolean result = super.save(entity);
         if (entity.getParentId() != null && !TOP_PARENT_ID.equals(entity.getParentId())) {
-            this.baseMapper.updateHasChild(entity.getParentId());
+            this.updateHasChild(entity.getParentId());
         }
         return result;
+    }
+
+    private void updateHasChild(Long id) {
+        this.commonMapper.updateHasChild(
+                this.getTableName(),
+                CrudUtils.getDbField(SysDeptPO::getParentId),
+                CrudUtils.getDbField(SysDeptPO::getDeptId),
+                id
+        );
     }
 
     /**
@@ -181,7 +195,7 @@ public class SysDeptServiceImpl extends BaseServiceImpl<SysDeptMapper, SysDeptPO
                 }).filter(Objects::nonNull)
                 .collect(Collectors.toList());
         if (!CollectionUtils.isEmpty(parentIdList)) {
-            parentIdList.forEach(item -> this.baseMapper.updateHasChild(item));
+            parentIdList.forEach(this::updateHasChild);
         }
         return result;
     }

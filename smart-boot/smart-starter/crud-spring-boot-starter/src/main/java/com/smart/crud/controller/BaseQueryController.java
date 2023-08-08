@@ -1,6 +1,7 @@
 package com.smart.crud.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.github.pagehelper.Page;
 import com.smart.commons.core.message.PageData;
 import com.smart.commons.core.message.Result;
@@ -162,13 +163,10 @@ public abstract class BaseQueryController<K extends BaseService<T>, T extends Ba
      * @param keyword 关键字
      */
     private void addKeyword(@NonNull QueryWrapper<T> queryWrapper, @NonNull String keyword) {
-        final Class<? extends BaseModel>  clazz = CrudUtils.getModelClassByType(getModelType());
-        if (clazz != null) {
-            final Field[] fieldList = clazz.getDeclaredFields();
-            if (fieldList.length > 0) {
-                queryWrapper.and(wrapper -> Arrays.asList(fieldList)
-                        .forEach(field -> wrapper.or().like(CrudUtils.getDbField(field), keyword)));
-            }
-        }
+        TableInfo tableInfo = CrudUtils.getTableInfo(CrudUtils.getModelClassByType(getModelType()));
+        queryWrapper.and(
+                wrapper -> tableInfo.getFieldList()
+                        .forEach(item -> wrapper.or().like(item.getColumn(), keyword))
+        );
     }
 }

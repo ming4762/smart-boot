@@ -1,11 +1,12 @@
 package com.smart.crud.utils;
 
 import com.baomidou.mybatisplus.annotation.IEnum;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
+import com.baomidou.mybatisplus.core.metadata.TableInfo;
+import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
+import com.baomidou.mybatisplus.core.toolkit.Assert;
 import com.baomidou.mybatisplus.core.toolkit.LambdaUtils;
 import com.baomidou.mybatisplus.core.toolkit.support.LambdaMeta;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
@@ -71,29 +72,21 @@ public final class CrudUtils {
      * type-class 缓存
      */
     private static final Map<Type, Class<? extends BaseModel>> TYPE_CLASS_CACHE = Maps.newConcurrentMap();
-
-    /**
-     * 实体类字段于数据库字段缓存
-     */
-    private static final Map<String, String> CLASS_FIELD_DB_FIELD_CACHE = Maps.newConcurrentMap();
-
     private static final Map<String, Field> CLASS_FIELD_NAME_MAPPING = Maps.newConcurrentMap();
 
-    private static final Map<Class<? extends BaseModel>, String> MODAL_TABLE_NAME_CACHE = Maps.newConcurrentMap();
+    public static <T extends BaseModel> String getTableName(Class<T> clazz) {
+        return getTableInfo(clazz).getTableName();
+    }
 
-    public static String getTableName(Class<? extends BaseModel> clazz) {
-        if (MODAL_TABLE_NAME_CACHE.containsKey(clazz)) {
-            return MODAL_TABLE_NAME_CACHE.get(clazz);
-        }
-        TableName annotation = clazz.getAnnotation(TableName.class);
-        String tableName;
-        if (annotation != null) {
-            tableName = annotation.value();
-        } else {
-            tableName = com.smart.commons.core.utils.StringUtils.humpToLine(clazz.getSimpleName());
-        }
-        MODAL_TABLE_NAME_CACHE.put(clazz, tableName);
-        return tableName;
+    /**
+     * 获取table info
+     * @param clazz 实体类
+     * @return TableInfo
+     */
+    public static <T extends BaseModel> TableInfo getTableInfo(Class<T> clazz) {
+        TableInfo tableInfo = TableInfoHelper.getTableInfo(clazz);
+        Assert.notNull(tableInfo, "error: can not execute. because can not find cache of TableInfo for entity!");
+        return tableInfo;
     }
 
     /**
@@ -153,15 +146,15 @@ public final class CrudUtils {
      * @return 数据库字段名
      */
     @Nullable
-    public static String getDbField(@NonNull Class<? extends BaseModel> clazz, @NonNull String fieldName) {
-        final String key  = clazz.getName() + fieldName;
-        if (CLASS_FIELD_DB_FIELD_CACHE.containsKey(key)) {
-            return CLASS_FIELD_DB_FIELD_CACHE.get(key);
+    public static <T extends BaseModel> String getDbField(@NonNull Class<T> clazz, @NonNull String fieldName) {
+        TableInfo tableInfo = getTableInfo(clazz);
+        List<TableFieldInfo> tableFieldInfoList = tableInfo.getFieldList().stream()
+                .filter(item -> StringUtils.equals(item.getProperty(), fieldName))
+                .toList();
+        if (CollectionUtils.isEmpty(tableFieldInfoList)) {
+            return null;
         }
-        Field field = getClassField(clazz, fieldName);
-        String dbField = getDbField(field);
-        CLASS_FIELD_DB_FIELD_CACHE.put(key, dbField);
-        return dbField;
+        return tableFieldInfoList.get(0).getColumn();
     }
 
     public static Field getClassField(@NonNull Class<? extends BaseModel> clazz, @NonNull String fieldName) {
@@ -178,49 +171,14 @@ public final class CrudUtils {
     }
 
     /**
-     * 根据实体类属性获取数据库字段名称
-     * 1、优先从注解获取
-     * 2、如果没有注解，属性名去除驼峰表示作为数据库字段
-     */
-    @NonNull
-    public static String getDbField(@NonNull Field field) {
-        String dbField = null;
-        TableId tableIdField = field.getAnnotation(TableId.class);
-        if (tableIdField != null) {
-            dbField = tableIdField.value();
-        }
-        if (StringUtils.isEmpty(dbField)) {
-            TableField tableField = field.getAnnotation(TableField.class);
-            if (tableField != null) {
-                dbField = tableField.value();
-            }
-        }
-        if (StringUtils.isEmpty(dbField)) {
-            // 如果未指定数据库字段，通过驼峰表示获取
-            dbField = getDefaultDbField(field.getName());
-        }
-        return dbField;
-    }
-
-    /**
      * 获取数据库字段
      * @param column 字段function
      * @return 数据库字段
      */
-    public static String getDbField(@NonNull SFunction<?, ?> column) {
+    public static <T extends BaseModel> String getDbField(@NonNull SFunction<T, ?> column) {
         LambdaMeta meta = LambdaUtils.extract(column);
         String property = PropertyNamer.methodToProperty(meta.getImplMethodName());
         return getDbField((Class<? extends BaseModel>) meta.getInstantiatedClass(), property);
-    }
-
-    /**
-     * 获取默认的数据库字段
-     * @param fieldName 字段名
-     * @return 数据库字段名
-     */
-    @NonNull
-    public static String getDefaultDbField(@NonNull String fieldName) {
-        return com.smart.commons.core.utils.StringUtils.humpToLine(fieldName);
     }
 
     /**

@@ -38,12 +38,4 @@
         <!--   updateBy      -->
         <result column="update_by" property="updateBy" javaType="java.lang.String" jdbcType="VARCHAR"/>
     </resultMap>
-
-
-    <update id="updateHasChild">
-        update sys_category
-        set has_child = (select IF(A.count_num > 0, 1, 0)
-                         from (select count(*) count_num from sys_category where parent_id = #{id}) as A)
-        where id = #{id}
-    </update>
 </mapper>

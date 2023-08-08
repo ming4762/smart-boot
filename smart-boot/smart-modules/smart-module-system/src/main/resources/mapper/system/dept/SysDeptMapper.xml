@@ -70,11 +70,4 @@
         <!--   备注      -->
         <result column="remark" property="remark" javaType="java.lang.String" jdbcType="VARCHAR"/>
     </resultMap>
-
-    <update id="updateHasChild">
-        update sys_dept
-        set has_child = (select IF(A.count_num > 0, 1, 0)
-                         from (select count(*) count_num from sys_dept where parent_id = #{id}) as A)
-        where dept_id = #{id}
-    </update>
 </mapper>
