@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
+import com.baomidou.mybatisplus.core.toolkit.Assert;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.Page;
 import com.google.common.collect.Lists;
@@ -21,10 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author shizhongming
@@ -110,6 +109,38 @@ public abstract class BaseServiceImpl<K extends CrudBaseMapper<T>, T extends Bas
                         .in(tableInfo.getKeyColumn(), list)
         ));
         return true;
+    }
+
+    /**
+     * 是否是添加操作
+     * @param entity 实体
+     * @return 是否是添加操作
+     */
+    protected boolean isAdd(@NonNull T entity) {
+        TableInfo tableInfo = this.getTableInfo();
+        String keyProperty = tableInfo.getKeyProperty();
+        Assert.notEmpty(keyProperty, "error: can not execute. because can not find column for id from entity!");
+        Object idVal = tableInfo.getPropertyValue(entity, tableInfo.getKeyProperty());
+        return StringUtils.checkValNull(idVal) || Objects.isNull(getById((Serializable) idVal));
+    }
+
+    /**
+     * 获取表名
+     * @return 表名
+     */
+    protected String getTableName() {
+        TableInfo tableInfo = this.getTableInfo();
+        return tableInfo.getTableName();
+    }
+
+    /**
+     * 获取tableInfo
+     * @return TableInfo
+     */
+    protected TableInfo getTableInfo() {
+        TableInfo tableInfo = TableInfoHelper.getTableInfo(this.entityClass);
+        Assert.notNull(tableInfo, "error: can not execute. because can not find cache of TableInfo for entity!");
+        return tableInfo;
     }
 
 

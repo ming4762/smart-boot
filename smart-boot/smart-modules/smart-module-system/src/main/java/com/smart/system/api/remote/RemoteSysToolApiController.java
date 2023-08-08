@@ -3,6 +3,9 @@ package com.smart.system.api.remote;
 import com.smart.module.api.system.SysToolApi;
 import com.smart.module.api.system.constants.SystemApiUrlConstants;
 import com.smart.module.api.system.dto.SerialCodeCreateDTO;
+import com.smart.module.api.system.dto.SmartChangeLogListDTO;
+import com.smart.module.api.system.parameter.RemoteChangeLogListParameter;
+import com.smart.module.api.system.parameter.RemoteChangeLogSaveParameter;
 import com.smart.module.api.system.parameter.SerialCodeCreateParameter;
 import com.smart.system.api.local.LocalSysToolApi;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,5 +51,29 @@ public class RemoteSysToolApiController implements SysToolApi {
     @PostMapping(SystemApiUrlConstants.TOOL_CREATE_SERIAL_BATCH)
     public List<SerialCodeCreateDTO> createSerial(@RequestBody List<SerialCodeCreateParameter> parameterList) {
         return this.localSysToolApi.createSerial(parameterList);
+    }
+
+    /**
+     * 保存修改记录
+     *
+     * @param parameter 参数
+     * @return 是否保存成功
+     */
+    @Override
+    @PostMapping(SystemApiUrlConstants.TOOL_CHANGE_LOG_SAVE)
+    public boolean saveChangeLog(@RequestBody RemoteChangeLogSaveParameter parameter) {
+        return this.localSysToolApi.saveChangeLog(parameter);
+    }
+
+    /**
+     * 查询修改记录
+     *
+     * @param parameter 参数
+     * @return 修改记录列表
+     */
+    @Override
+    @PostMapping(SystemApiUrlConstants.TOOL_CHANGE_LIST)
+    public List<SmartChangeLogListDTO> listChangeLog(@RequestBody RemoteChangeLogListParameter parameter) {
+        return this.localSysToolApi.listChangeLog(parameter);
     }
 }

@@ -2,8 +2,12 @@ package com.smart.system.api.local;
 
 import com.smart.module.api.system.SysToolApi;
 import com.smart.module.api.system.dto.SerialCodeCreateDTO;
+import com.smart.module.api.system.dto.SmartChangeLogListDTO;
+import com.smart.module.api.system.parameter.RemoteChangeLogListParameter;
+import com.smart.module.api.system.parameter.RemoteChangeLogSaveParameter;
 import com.smart.module.api.system.parameter.SerialCodeCreateParameter;
 import com.smart.system.service.SmartSerialNoService;
+import com.smart.system.service.change.SmartChangeLogService;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
@@ -20,8 +24,11 @@ public class LocalSysToolApi implements SysToolApi {
 
     private final SmartSerialNoService smartSerialNoService;
 
-    public LocalSysToolApi(SmartSerialNoService smartSerialNoService) {
+    private final SmartChangeLogService smartChangeLogService;
+
+    public LocalSysToolApi(SmartSerialNoService smartSerialNoService, SmartChangeLogService smartChangeLogService) {
         this.smartSerialNoService = smartSerialNoService;
+        this.smartChangeLogService = smartChangeLogService;
     }
 
     /**
@@ -46,5 +53,27 @@ public class LocalSysToolApi implements SysToolApi {
     @Override
     public List<SerialCodeCreateDTO> createSerial(List<SerialCodeCreateParameter> parameterList) {
         return this.smartSerialNoService.createSerial(parameterList);
+    }
+
+    /**
+     * 保存修改记录
+     *
+     * @param parameter 参数
+     * @return 是否保存成功
+     */
+    @Override
+    public boolean saveChangeLog(RemoteChangeLogSaveParameter parameter) {
+        return this.smartChangeLogService.saveChangeLog(parameter);
+    }
+
+    /**
+     * 查询修改记录
+     *
+     * @param parameter 参数
+     * @return 修改记录列表
+     */
+    @Override
+    public List<SmartChangeLogListDTO> listChangeLog(RemoteChangeLogListParameter parameter) {
+        return this.smartChangeLogService.listChangeLog(parameter);
     }
 }

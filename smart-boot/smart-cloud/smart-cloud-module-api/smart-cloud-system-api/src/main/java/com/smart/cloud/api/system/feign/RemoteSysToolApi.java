@@ -4,6 +4,9 @@ import com.smart.cloud.common.core.constants.CloudServiceNameConstants;
 import com.smart.module.api.system.SysToolApi;
 import com.smart.module.api.system.constants.SystemApiUrlConstants;
 import com.smart.module.api.system.dto.SerialCodeCreateDTO;
+import com.smart.module.api.system.dto.SmartChangeLogListDTO;
+import com.smart.module.api.system.parameter.RemoteChangeLogListParameter;
+import com.smart.module.api.system.parameter.RemoteChangeLogSaveParameter;
 import com.smart.module.api.system.parameter.SerialCodeCreateParameter;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,4 +39,24 @@ public interface RemoteSysToolApi extends SysToolApi {
     @Override
     @PostMapping(SystemApiUrlConstants.TOOL_CREATE_SERIAL_BATCH)
     List<SerialCodeCreateDTO> createSerial(List<SerialCodeCreateParameter> parameterList);
+
+    /**
+     * 保存修改记录
+     *
+     * @param parameter 参数
+     * @return 是否保存成功
+     */
+    @Override
+    @PostMapping(SystemApiUrlConstants.TOOL_CHANGE_LOG_SAVE)
+    boolean saveChangeLog(RemoteChangeLogSaveParameter parameter);
+
+    /**
+     * 查询修改记录
+     *
+     * @param parameter 参数
+     * @return 修改记录列表
+     */
+    @Override
+    @PostMapping(SystemApiUrlConstants.TOOL_CHANGE_LIST)
+    List<SmartChangeLogListDTO> listChangeLog(RemoteChangeLogListParameter parameter);
 }

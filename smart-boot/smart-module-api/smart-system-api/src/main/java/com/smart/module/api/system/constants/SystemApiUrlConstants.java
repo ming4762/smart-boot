@@ -59,6 +59,15 @@ public interface SystemApiUrlConstants {
     String TOOL_CREATE_SERIAL_BATCH = "/remote/tool/serial/batchCreate";
 
     /**
+     * 保存修改记录
+     */
+    String TOOL_CHANGE_LOG_SAVE = "/remote/tool/changeLog/save";
+    /**
+     * 查询修改记录
+     */
+    String TOOL_CHANGE_LIST = "/remote/tool/changeLog/list";
+
+    /**
      * 用户账户
      */
     String USER_ACCOUNT_UNLOCK = "/remote/account/unlock";

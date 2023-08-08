@@ -56,6 +56,8 @@ export default {
       deleteChoose: 'Please select the data to delete',
       select: 'Please select',
       choseOne: 'Please select a row of data',
+      useYnTrueConfirm: 'Are you sure you want to perform the enable operation?',
+      useYnFalseConfirm: 'Are you sure you want to perform the deactivation operation?',
     },
     message: {
       saveSuccess: 'Saved successfully',
