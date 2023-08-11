@@ -28,4 +28,12 @@ public class SmartChangeLogPO extends BaseModelCreateUserTime {
     private String businessData;
 
     private SmartChangeLogEnum operateType;
+
+
+    /**
+     * 预留参数
+     */
+    private String params1;
+    private String params2;
+    private String params3;
 }

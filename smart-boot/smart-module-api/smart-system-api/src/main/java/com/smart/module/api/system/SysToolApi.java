@@ -108,6 +108,9 @@ public interface SysToolApi {
      * @param <T> 泛型
      */
     default <T> boolean saveChangeLog(CommonChangeLogSaveParameter parameter, @Nullable T beforeData, @Nullable T afterData, Set<String> fieldList, Set<String> excludeList) {
+        if (excludeList == null) {
+            excludeList = DEFAULT_EXCLUDE_LIST;
+        }
         if (beforeData == null && afterData == null) {
             throw new SystemException("记录日志错误，原数据和修改后数据不能同时为空");
         }
@@ -126,9 +129,10 @@ public interface SysToolApi {
         RemoteChangeLogSaveParameter remoteChangeLogSaveParameter = new RemoteChangeLogSaveParameter();
         BeanUtils.copyProperties(parameter, remoteChangeLogSaveParameter);
         // 删除和新增操作不保存详细修改记录
-        if (SmartChangeLogEnum.UPDATE.equals(parameter.getOperateType())) {
+        if (SmartChangeLogEnum.UPDATE.equals(parameter.getOperateType()) || this.isSaveCreateDetail(parameter)) {
             Set<Field> fields = new HashSet<>(16);
             ReflectUtils.getAllFields(aClass, fields);
+            Set<String> finalExcludeList = excludeList;
             List<RemoteChangeLogSaveParameter.Detail> detailList = fields.stream()
                     .filter(item -> {
                         if (CollectionUtils.isEmpty(fieldList)) {
@@ -136,16 +140,26 @@ public interface SysToolApi {
                         }
                         return fieldList.contains(item.getName());
                     }).filter(item -> {
-                        if (CollectionUtils.isEmpty(excludeList)) {
+                        if (CollectionUtils.isEmpty(finalExcludeList)) {
                             return true;
                         }
-                        return !excludeList.contains(item.getName());
-                    }).map(field -> this.getDetail(aClass, field, beforeData, afterData)).filter(Objects::nonNull)
+                        return !finalExcludeList.contains(item.getName());
+                    }).map(field -> this.getDetail(parameter.getIgnoreAfterNull(), aClass, field, beforeData, afterData)).filter(Objects::nonNull)
                     .toList();
             remoteChangeLogSaveParameter.setDetailList(detailList);
         }
         return this.saveChangeLog(remoteChangeLogSaveParameter);
     }
+
+    /**
+     * 是否保存添加详情
+     * @param parameter 参数
+     * @return 是否保存添加详情
+     */
+    private boolean isSaveCreateDetail(CommonChangeLogSaveParameter parameter) {
+        return SmartChangeLogEnum.CREATE.equals(parameter.getOperateType()) && Boolean.TRUE.equals(parameter.getSaveCreateDetail());
+    }
+
 
     /**
      * 获取详情
@@ -157,7 +171,7 @@ public interface SysToolApi {
      * @return 如果值相同则返回null
      */
     @SneakyThrows(Exception.class)
-    private <T> RemoteChangeLogSaveParameter.Detail getDetail(Class<?> aClass, Field field, @Nullable T beforeData, @Nullable T afterData) {
+    private <T> RemoteChangeLogSaveParameter.Detail getDetail(Boolean ignoreAfterNull, Class<?> aClass, Field field, @Nullable T beforeData, @Nullable T afterData) {
         PropertyDescriptor propertyDescriptor = BeanUtils.getPropertyDescriptor(aClass, field.getName());
         if (propertyDescriptor == null) {
             throw new SystemException(String.format("保存记录失败，实体类无法获取getter函数，class：%s，字典：%s", aClass.getName(), field.getName()));
@@ -166,6 +180,9 @@ public interface SysToolApi {
         Object beforeValue = beforeData == null ? null : readMethod.invoke(beforeData);
         Object afterValue = afterData == null ? null : readMethod.invoke(afterData);
         if (Objects.equals(beforeValue, afterValue)) {
+            return null;
+        }
+        if (Boolean.TRUE.equals(ignoreAfterNull) && afterValue == null) {
             return null;
         }
         return new RemoteChangeLogSaveParameter.Detail(

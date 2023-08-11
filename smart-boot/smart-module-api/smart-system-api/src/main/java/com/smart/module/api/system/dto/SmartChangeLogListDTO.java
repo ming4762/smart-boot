@@ -35,6 +35,10 @@ public class SmartChangeLogListDTO implements Serializable {
 
     protected String createBy;
 
+    private String params1;
+    private String params2;
+    private String params3;
+
     private List<Detail> detailList;
 
     @Getter

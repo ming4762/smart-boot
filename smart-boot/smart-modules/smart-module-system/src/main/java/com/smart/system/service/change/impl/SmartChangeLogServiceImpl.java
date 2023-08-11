@@ -55,6 +55,9 @@ public class SmartChangeLogServiceImpl extends BaseServiceImpl<SmartChangeLogMap
         changeLog.setBusinessId(parameter.getBusinessId());
         changeLog.setBusinessData(parameter.getBusinessData());
         changeLog.setOperateType(parameter.getOperateType());
+        changeLog.setParams1(parameter.getParams1());
+        changeLog.setParams2(parameter.getParams2());
+        changeLog.setParams3(parameter.getParams3());
         this.save(changeLog);
         if (!CollectionUtils.isEmpty(parameter.getDetailList())) {
             this.smartChangeLogDetailService.saveBatch(
