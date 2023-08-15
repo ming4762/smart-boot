@@ -16,7 +16,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <spring-boot.version>3.0.2</spring-boot.version>
+        <spring-boot.version>3.1.2</spring-boot.version>
         <spring-cloud.version>2022.0.1</spring-cloud.version>
         <smart-boot.version>3.0.0-SNAPSHOT</smart-boot.version>
         <spring-cloud-alibaba.version>2022.0.0.0-RC2</spring-cloud-alibaba.version>

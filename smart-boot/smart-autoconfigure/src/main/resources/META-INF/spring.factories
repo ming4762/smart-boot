@@ -1,4 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.smart.autoconfigure.license.server.SmartLicenseServerAutoConfiguration,\
-  com.smart.autoconfigure.license.client.SmartLicenseClientAutoConfiguration,\
-  com.smart.autoconfigure.license.client.SmartLicenseValidatorAutoConfiguration

@@ -104,7 +104,7 @@ public class AliyunOssServiceImpl implements AliyunOssService, DisposableBean {
     public String getAddress(@NonNull FileStorageGetParameter parameter) {
         OssClientCache clientCache = this.getOssClientCache(parameter.getStorageProperties());
 
-        Date expiration = new Date(new Date().getTime() + 3600 * 1000);
+        Date expiration = new Date(System.currentTimeMillis() + 3600 * 1000);
         URL url = clientCache.getOssClient().generatePresignedUrl(clientCache.getProperties().getBucketName(), this.getObject(parameter.getFileStorageKey()), expiration);
         return url.toString();
     }

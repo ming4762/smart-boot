@@ -1,4 +1,4 @@
-package com.smart.autoconfigure.license.server;
+package com.smart.license.server.starter;
 
 import com.smart.license.server.DefaultLicenseGenerator;
 import com.smart.license.server.LicenseDataProvider;

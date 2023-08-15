@@ -1,4 +1,4 @@
-package com.smart.autoconfigure.license.client;
+package com.smart.license.client.starter;
 
 import com.smart.license.client.DefaultLicenseVerifier;
 import com.smart.license.client.LicenseInstallListener;
