@@ -231,7 +231,7 @@ public class DefaultFileServiceImpl implements FileService, ApplicationContextAw
                     return fileStorageService.getAddress(
                             FileStorageGetParameter.builder()
                                     .storageType(fileStorage.getStorageType())
-                                    .fileStorageKey(fileStorage.getStorageCode())
+                                    .fileStorageKey(item.getStorageStoreKey())
                                     .storageProperties(fileStorage.getStorageConfig())
                                     .build()
                     );
