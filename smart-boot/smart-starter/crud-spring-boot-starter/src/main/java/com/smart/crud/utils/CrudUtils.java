@@ -148,6 +148,9 @@ public final class CrudUtils {
     @Nullable
     public static <T extends BaseModel> String getDbField(@NonNull Class<T> clazz, @NonNull String fieldName) {
         TableInfo tableInfo = getTableInfo(clazz);
+        if (StringUtils.equals(fieldName, tableInfo.getKeyProperty())) {
+            return tableInfo.getKeyColumn();
+        }
         List<TableFieldInfo> tableFieldInfoList = tableInfo.getFieldList().stream()
                 .filter(item -> StringUtils.equals(item.getProperty(), fieldName))
                 .toList();
