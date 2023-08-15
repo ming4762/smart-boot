@@ -17,6 +17,8 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.lang.NonNull;
 
 import java.io.InputStream;
+import java.net.URL;
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -100,7 +102,11 @@ public class AliyunOssServiceImpl implements AliyunOssService, DisposableBean {
      */
     @Override
     public String getAddress(@NonNull FileStorageGetParameter parameter) {
-        throw new UnsupportedOperationException("暂未支持");
+        OssClientCache clientCache = this.getOssClientCache(parameter.getStorageProperties());
+
+        Date expiration = new Date(new Date().getTime() + 3600 * 1000);
+        URL url = clientCache.getOssClient().generatePresignedUrl(clientCache.getProperties().getBucketName(), this.getObject(parameter.getFileStorageKey()), expiration);
+        return url.toString();
     }
 
     /**

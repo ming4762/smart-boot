@@ -1,6 +1,8 @@
 package com.smart.file.manager.controller;
 
 import com.smart.auth.core.annotation.TempToken;
+import com.smart.commons.core.message.Result;
+import com.smart.crud.query.IdParameter;
 import com.smart.file.core.service.FileService;
 import com.smart.module.api.file.bo.FileDownloadResult;
 import io.swagger.v3.oas.annotations.Operation;
@@ -8,14 +10,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 /**
  * @author zhongming4762
@@ -52,5 +54,15 @@ public class FileController {
                 IOUtils.copy(inputStream, response.getOutputStream());
             }
         }
+    }
+
+    @PostMapping("smart/file/getAddress")
+    @ResponseBody
+    public Result<String> getAddress(@RequestBody IdParameter idParameter) {
+        List<String> addressList = this.fileService.listAddress(List.of((Long) idParameter.getId()));
+        if (!CollectionUtils.isEmpty(addressList)) {
+            return Result.success(addressList.get(0));
+        }
+        return Result.failure("获取连接失败");
     }
 }
