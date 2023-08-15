@@ -4,6 +4,7 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.http.*;
 import org.springframework.lang.NonNull;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.RestTemplate;
 
@@ -33,6 +34,29 @@ public class RestUtils {
         }
         final HttpEntity<?> httpEntity = new HttpEntity<>(parameter, httpHeaders);
 
+        return restTemplate.exchange(url, httpMethod, httpEntity, clazz, uriVariables);
+    }
+
+    /**
+     * 发送form请求
+     * @param url URL
+     * @param httpMethod 请求方式
+     * @param headers 请求头
+     * @param parameter 参数
+     * @param clazz 返回类型
+     * @param uriVariables URL参数
+     * @return 请求结果
+     * @param <T> 泛型
+     */
+    public static <T> ResponseEntity<T> restForm(@NonNull String url, @NonNull HttpMethod httpMethod, Map<String, String> headers, MultiValueMap<String, ?> parameter, @NonNull Class<T> clazz, Object ...uriVariables) {
+        final HttpHeaders httpHeaders = new HttpHeaders();
+        if (!CollectionUtils.isEmpty(headers)) {
+            headers.forEach(httpHeaders :: add);
+        }
+        if (httpHeaders.getContentType() == null) {
+            httpHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
+        }
+        HttpEntity<MultiValueMap<String, ?>> httpEntity = new HttpEntity<>(parameter, httpHeaders);
         return restTemplate.exchange(url, httpMethod, httpEntity, clazz, uriVariables);
     }
 
