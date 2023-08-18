@@ -63,7 +63,10 @@ export const usePermissionStore = defineStore({
   }),
   getters: {
     getPermCodeList(): string[] | number[] {
-      return this.permCodeList || getAuthCache(PERMISSION_KEY) || []
+      if (this.permCodeList && this.permCodeList.length > 0) {
+        return this.permCodeList
+      }
+      return getAuthCache(PERMISSION_KEY) || []
     },
     getBackMenuList(): Menu[] {
       return this.backMenuList
