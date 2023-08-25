@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration  scan="true" scanPeriod="10 seconds">
+    <!-- 引入spring boot默认的logback配置文件 -->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <!--  spring参数  -->
+    <springProperty scope="context" name="APP.NAME" source="spring.application.name" defaultValue="smart-boot" />
+    <springProperty scope="context" name="LOGO.PATH" source="smart.log.path" defaultValue="/log" />
+    <springProperty scope="context" name="LOG.MAX_FILE_SIZE" source="smart.log.maxFileSize" defaultValue="20MB" />
+    <springProperty scope="context" name="LOG.MAX_HISTORY" source="smart.log.maxHistory" defaultValue="30" />
+    <springProperty scope="context" name="LOG.TOTAL_SIZE" source="smart.log.totalSize" defaultValue="10GB" />
+
+    <contextName>${APP.NAME}</contextName>
+
+
+    <!--  打印到控制台  -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!--此日志appender是为开发使用，只配置最底级别，控制台输出的日志级别是大于或等于此级别的日志信息-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>debug</level>
+        </filter>
+        <encoder>
+            <Pattern>${CONSOLE_LOG_PATTERN}</Pattern>
+            <!-- 设置字符集 -->
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!--  记录所有日志  -->
+    <appender name="ALL_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGO.PATH}/${APP.NAME}/all/all.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+            <!-- 设置字符集 -->
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOGO.PATH}/${APP.NAME}/all/all-%d{yyyy-MM-dd_HH-mm}.%i.log</fileNamePattern>
+            <!--单个日志文件最大100M，到了这个值，就会再创建一个日志文件，日志文件的名字最后+1-->
+            <maxFileSize>${LOG.MAX_FILE_SIZE}</maxFileSize>
+            <!--日志文件保留天数-->
+            <maxHistory>${LOG.MAX_HISTORY}</maxHistory>
+            <!--所有的日志文件最大20G，超过就会删除旧的日志-->
+            <totalSizeCap>${LOG.TOTAL_SIZE}</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <!--  记录WARN日志  -->
+    <appender name="WARN_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGO.PATH}/${APP.NAME}/warn/warn.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+            <!-- 设置字符集 -->
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOGO.PATH}/${APP.NAME}/warn/warn-%d{yyyy-MM-dd_HH-mm}.%i.log</fileNamePattern>
+            <!--单个日志文件最大100M，到了这个值，就会再创建一个日志文件，日志文件的名字最后+1-->
+            <maxFileSize>${LOG.MAX_FILE_SIZE}</maxFileSize>
+            <!--日志文件保留天数-->
+            <maxHistory>${LOG.MAX_HISTORY}</maxHistory>
+            <!--所有的日志文件最大20G，超过就会删除旧的日志-->
+            <totalSizeCap>${LOG.TOTAL_SIZE}</totalSizeCap>
+        </rollingPolicy>
+
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!--  记录WARN日志  -->
+    <appender name="ERROR_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGO.PATH}/${APP.NAME}/error/error.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+            <!-- 设置字符集 -->
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOGO.PATH}/${APP.NAME}/error/error-%d{yyyy-MM-dd_HH-mm}.%i.log</fileNamePattern>
+            <!--单个日志文件最大100M，到了这个值，就会再创建一个日志文件，日志文件的名字最后+1-->
+            <maxFileSize>${LOG.MAX_FILE_SIZE}</maxFileSize>
+            <!--日志文件保留天数-->
+            <maxHistory>${LOG.MAX_HISTORY}</maxHistory>
+            <!--所有的日志文件最大20G，超过就会删除旧的日志-->
+            <totalSizeCap>${LOG.TOTAL_SIZE}</totalSizeCap>
+        </rollingPolicy>
+
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <springProfile name="dev">
+        <root level="INFO">
+            <appender-ref ref="STDOUT" />
+            <appender-ref ref="ALL_LOG" />
+        </root>
+    </springProfile>
+    <springProfile name="uat">
+        <root level="INFO">
+            <appender-ref ref="STDOUT" />
+            <appender-ref ref="ALL_LOG" />
+            <appender-ref ref="WARN_LOG" />
+            <appender-ref ref="ERROR_LOG" />
+        </root>
+    </springProfile>
+    <springProfile name="pro">
+        <root level="INFO">
+            <appender-ref ref="STDOUT" />
+            <appender-ref ref="ALL_LOG" />
+            <appender-ref ref="WARN_LOG" />
+            <appender-ref ref="ERROR_LOG" />
+        </root>
+    </springProfile>
+</configuration>
