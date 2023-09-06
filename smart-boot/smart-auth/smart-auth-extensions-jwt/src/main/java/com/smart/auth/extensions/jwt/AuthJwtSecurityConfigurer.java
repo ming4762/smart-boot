@@ -11,13 +11,15 @@ import com.smart.auth.extensions.jwt.filter.JwtAuthenticationFilter;
 import com.smart.auth.extensions.jwt.filter.JwtLoginFilter;
 import com.smart.auth.extensions.jwt.filter.JwtLogoutFilter;
 import com.smart.auth.extensions.jwt.service.JwtService;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.FilterChainProxy;
@@ -34,6 +36,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -45,9 +48,7 @@ import java.util.Optional;
  * @since 1.0
  */
 @Slf4j
-public class AuthJwtSecurityConfigurer extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
-
-    private HttpSecurity builder;
+public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, H> {
 
     /**
      * 默认的登录地址
@@ -66,8 +67,13 @@ public class AuthJwtSecurityConfigurer extends SecurityConfigurerAdapter<Default
      * jwt 初始化
      * @return jwt
      */
-    public static AuthJwtSecurityConfigurer jwt() {
-        return new AuthJwtSecurityConfigurer();
+    public static <H extends HttpSecurityBuilder<H>> AuthJwtSecurityConfigurer<H> jwt() {
+        return new AuthJwtSecurityConfigurer<>();
+    }
+
+    public H config(Customizer<AuthJwtSecurityConfigurer<H>> customizer) {
+        customizer.customize(this);
+        return this.getBuilder();
     }
 
     /**
@@ -100,7 +106,7 @@ public class AuthJwtSecurityConfigurer extends SecurityConfigurerAdapter<Default
     }
 
     @Override
-    public void configure(HttpSecurity builder) {
+    public void configure(H builder) {
         // 构建
         builder
                 .authenticationProvider(this.getAuthenticationProvider())
@@ -122,8 +128,7 @@ public class AuthJwtSecurityConfigurer extends SecurityConfigurerAdapter<Default
      * @param builder HttpSecurity
      */
     @Override
-    public void init(HttpSecurity builder) {
-        this.builder = builder;
+    public void init(H builder) {
         builder.setSharedObject(SecurityContextRepository.class, this.postProcess(new JwtSecurityContextRepository()));
         // 初始化bean
         this.initBean();
@@ -155,7 +160,7 @@ public class AuthJwtSecurityConfigurer extends SecurityConfigurerAdapter<Default
      */
     private JwtLoginFilter jwtLoginFilter() {
         final JwtLoginFilter jwtLoginFilter = new JwtLoginFilter(this.jwtContext, this.serviceProvider.bindIp);
-        jwtLoginFilter.setAuthenticationManager(this.builder.getSharedObject(AuthenticationManager.class));
+        jwtLoginFilter.setAuthenticationManager(this.getBuilder().getSharedObject(AuthenticationManager.class));
         jwtLoginFilter.setFilterProcessesUrl(this.getLoginUrl());
 
         jwtLoginFilter.setAuthenticationSuccessHandler(this.getBean(AuthenticationSuccessHandler.class, this.serviceProvider.authenticationSuccessHandler));
@@ -190,14 +195,6 @@ public class AuthJwtSecurityConfigurer extends SecurityConfigurerAdapter<Default
     }
 
     /**
-     * 获取服务配置类
-     * @return 服务配置类
-     */
-    public ServiceProvider serviceProvider() {
-        return this.serviceProvider;
-    }
-
-    /**
      * 创建JWT 上下文
      * @return JWT上下文
      */
@@ -213,7 +210,7 @@ public class AuthJwtSecurityConfigurer extends SecurityConfigurerAdapter<Default
         if (Objects.nonNull(t)) {
             return t;
         }
-        ApplicationContext applicationContext = this.builder.getSharedObject(ApplicationContext.class);
+        ApplicationContext applicationContext = this.getBuilder().getSharedObject(ApplicationContext.class);
         try {
             return Optional.ofNullable(applicationContext).map(item -> item.getBean(clazz)).orElse(null);
         } catch (NoSuchBeanDefinitionException e) {
@@ -223,9 +220,80 @@ public class AuthJwtSecurityConfigurer extends SecurityConfigurerAdapter<Default
     }
 
     /**
+     * 设置登录URL
+     * @param loginUrl 登录URL
+     * @return this
+     */
+    public AuthJwtSecurityConfigurer<H> loginUrl(String loginUrl) {
+        this.serviceProvider.setLoginUrl(loginUrl);
+        return this;
+    }
+
+    /**
+     * 设置登出URL
+     * @param logoutUrl 登出URL
+     * @return this
+     */
+    public AuthJwtSecurityConfigurer<H> logoutUrl(String logoutUrl) {
+        this.serviceProvider.setLogoutUrl(logoutUrl);
+        return this;
+    }
+
+    /**
+     * 设置登录成功处理器
+     * @param authenticationSuccessHandler 登录成功处理器
+     * @return this
+     */
+    public AuthJwtSecurityConfigurer<H> authenticationSuccessHandler(AuthenticationSuccessHandler authenticationSuccessHandler) {
+        this.serviceProvider.setAuthenticationSuccessHandler(authenticationSuccessHandler);
+        return this;
+    }
+
+    /**
+     * 设置登录失败处理
+     * @param authenticationFailureHandler 登录失败处理器
+     * @return this
+     */
+    public AuthJwtSecurityConfigurer<H> authenticationFailureHandler(AuthenticationFailureHandler authenticationFailureHandler) {
+        this.serviceProvider.setAuthenticationFailureHandler(authenticationFailureHandler);
+        return this;
+    }
+
+    /**
+     * 设置登出成功处理器
+     * @param logoutSuccessHandler 登出成功处理器
+     * @return this
+     */
+    public AuthJwtSecurityConfigurer<H> logoutSuccessHandler(LogoutSuccessHandler logoutSuccessHandler) {
+        this.serviceProvider.setLogoutSuccessHandler(logoutSuccessHandler);
+        return this;
+    }
+
+    /**
+     * 添加登出执行器
+     * @param logoutHandler 登出执行器
+     * @return this
+     */
+    public AuthJwtSecurityConfigurer<H> addLogoutHandler(LogoutHandler logoutHandler) {
+        this.serviceProvider.logoutHandlerList.add(logoutHandler);
+        return this;
+    }
+
+    public AuthJwtSecurityConfigurer<H> jwtAuth(boolean jwtAuth) {
+        this.serviceProvider.jwtAuth = jwtAuth;
+        return this;
+    }
+
+    public AuthJwtSecurityConfigurer<H> bindIp(boolean bindIp) {
+        this.serviceProvider.bindIp = bindIp;
+        return this;
+    }
+
+    /**
      * 服务配置类
      */
-    public class ServiceProvider {
+    @Setter
+    private static class ServiceProvider {
         private AuthProperties authProperties;
 
         private AuthCache<String, Object> authCache;
@@ -236,7 +304,7 @@ public class AuthJwtSecurityConfigurer extends SecurityConfigurerAdapter<Default
         /**
          * 是否使用jwt认证器
          */
-        private Boolean jwtAuth = true;
+        private Boolean jwtAuth;
 
         private AuthenticationSuccessHandler authenticationSuccessHandler;
 
@@ -250,62 +318,13 @@ public class AuthJwtSecurityConfigurer extends SecurityConfigurerAdapter<Default
         /**
          * 是否绑定IP
          */
-        private Boolean bindIp = Boolean.TRUE;
+        private Boolean bindIp;
 
-        public AuthJwtSecurityConfigurer and() {
-            return AuthJwtSecurityConfigurer.this;
+        public ServiceProvider() {
+            this.bindIp = true;
+            this.jwtAuth = true;
+            this.logoutHandlerList = new ArrayList<>();
         }
-
-        public ServiceProvider bindIp(boolean bindIp) {
-            this.bindIp = bindIp;
-            return this;
-        }
-
-        public ServiceProvider jwtAuth(boolean jwtAuth) {
-            this.jwtAuth = jwtAuth;
-            return this;
-        }
-
-        public ServiceProvider authenticationSuccessHandler(AuthenticationSuccessHandler authenticationSuccessHandler) {
-            this.authenticationSuccessHandler = authenticationSuccessHandler;
-            return this;
-        }
-
-        public ServiceProvider logoutSuccessHandler(LogoutSuccessHandler logoutSuccessHandler) {
-            this.logoutSuccessHandler = logoutSuccessHandler;
-            return this;
-        }
-
-        public ServiceProvider logoutHandler(List<LogoutHandler> logoutHandlerList) {
-            this.logoutHandlerList = logoutHandlerList;
-            return this;
-        }
-
-        public ServiceProvider authenticationSuccessHandler(AuthenticationFailureHandler authenticationFailureHandler) {
-            this.authenticationFailureHandler = authenticationFailureHandler;
-            return this;
-        }
-
-        public ServiceProvider properties(AuthProperties authProperties) {
-            this.authProperties = authProperties;
-            return this;
-        }
-
-        public ServiceProvider authCache(AuthCache<String, Object> authCache) {
-            this.authCache = authCache;
-            return this;
-        }
-
-        public ServiceProvider loginUrl(String loginUrl) {
-            this.loginUrl = loginUrl;
-            return this;
-        }
-
-        public ServiceProvider logoutUrl(String logoutUrl) {
-            this.logoutUrl = logoutUrl;
-            return this;
-        }
-
     }
 
 }

@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -28,23 +29,16 @@ public class SecurityConfig extends AuthWebSecurityConfigurerAdapter {
 
     @SneakyThrows(Exception.class)
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, ApplicationContext applicationContext) {
-        super.configure(http);
-        http
-                .formLogin().disable()
-                .logout().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                // jwt支持
-                .and().apply(AuthJwtSecurityConfigurer.jwt())
-                .serviceProvider()
-                .jwtAuth(false)
-                .bindIp(false)
-                .and().and()
-                // 验证码
-                .apply(AuthCaptchaSecurityConfigurer.captcha())
-                .serviceProvider()
-                .applicationContext(applicationContext)
-                .loginUrl(AuthJwtSecurityConfigurer.LOGIN_URL);
-        return http.build();
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, ApplicationContext applicationContext) {
+        super.configure(httpSecurity);
+
+        httpSecurity.formLogin(AbstractHttpConfigurer::disable)
+                    .logout(AbstractHttpConfigurer::disable)
+                    .sessionManagement(http -> http.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                    .apply(AuthJwtSecurityConfigurer.jwt())
+                            .config(http -> http.jwtAuth(false).bindIp(false))
+                    .apply(AuthCaptchaSecurityConfigurer.captcha())
+                            .config(http -> http.addLoginUrl(AuthJwtSecurityConfigurer.LOGIN_URL));
+        return httpSecurity.build();
     }
 }

@@ -9,9 +9,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.security.web.SecurityFilterChain;
@@ -27,30 +28,29 @@ import java.util.*;
  * 2023/4/3
  */
 @Slf4j
-public class SmartAuthWechatAppConfigurer extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
-
-    private HttpSecurity builder;
+public class SmartAuthWechatAppConfigurer<H extends HttpSecurityBuilder<H>> extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, H> {
 
     private static final String DEFAULT_LOGIN_URL = "/wechat/auth/appLogin";
 
-    public static SmartAuthWechatAppConfigurer wechatApp() {
-        return new SmartAuthWechatAppConfigurer();
+    public static <H extends HttpSecurityBuilder<H>> SmartAuthWechatAppConfigurer<H> wechatApp() {
+        return new SmartAuthWechatAppConfigurer<>();
+    }
+
+    public H config(Customizer<SmartAuthWechatAppConfigurer<H>> customizer) {
+        customizer.customize(this);
+        return this.getBuilder();
     }
 
     private final ServiceProvider serviceProvider = new ServiceProvider();
-    public ServiceProvider serviceProvider() {
-        return this.serviceProvider;
-    }
 
     @Override
-    public void init(HttpSecurity builder) {
-        this.builder = builder;
+    public void init(H builder) {
         AuthenticationManagerBuilder authenticationManagerBuilder = builder.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.parentAuthenticationManager(null);
     }
 
     @Override
-    public void configure(HttpSecurity builder) {
+    public void configure(H builder) {
         builder
                 .authenticationProvider(this.createAuthenticationProvider())
                 .addFilterBefore(this.createLoginFilter(), BasicAuthenticationFilter.class);
@@ -65,7 +65,7 @@ public class SmartAuthWechatAppConfigurer extends SecurityConfigurerAdapter<Defa
     }
 
     private WechatAuthenticationProvider createAuthenticationProvider() {
-        ApplicationContext applicationContext = this.builder.getSharedObject(ApplicationContext.class);
+        ApplicationContext applicationContext = this.getBuilder().getSharedObject(ApplicationContext.class);
         List<WechatLoginProvider> wechatLoginProviderList = Arrays.stream(applicationContext.getBeanNamesForType(WechatLoginProvider.class))
                 .map(item -> applicationContext.getBean(item, WechatLoginProvider.class))
                 .toList();
@@ -76,17 +76,17 @@ public class SmartAuthWechatAppConfigurer extends SecurityConfigurerAdapter<Defa
 
     private WechatAppLoginFilter createWechatAppLoginFilter() {
         WechatAppLoginFilter loginFilter = new WechatAppLoginFilter(this.serviceProvider.loginUrl);
-        loginFilter.setAuthenticationManager(this.builder.getSharedObject(AuthenticationManager.class));
+        loginFilter.setAuthenticationManager(this.getBuilder().getSharedObject(AuthenticationManager.class));
         loginFilter.setAuthenticationFailureHandler(this.getBean(AuthenticationFailureHandler.class, this.serviceProvider.authenticationFailureHandler));
         loginFilter.setAuthenticationSuccessHandler(this.getBean(AuthenticationSuccessHandler.class, this.serviceProvider.authenticationSuccessHandler));
         return loginFilter;
     }
 
     private <T> T getBean(Class<T> clazz, T t) {
-        ApplicationContext applicationContext = this.builder.getSharedObject(ApplicationContext.class);
         if (Objects.nonNull(t)) {
             return t;
         }
+        ApplicationContext applicationContext = this.getBuilder().getSharedObject(ApplicationContext.class);
         try {
             return Optional.ofNullable(applicationContext).map(item -> item.getBean(clazz)).orElse(null);
         } catch (NoSuchBeanDefinitionException e) {
@@ -95,31 +95,30 @@ public class SmartAuthWechatAppConfigurer extends SecurityConfigurerAdapter<Defa
         }
     }
 
-    public class ServiceProvider {
-        private String loginUrl = DEFAULT_LOGIN_URL;
+    public SmartAuthWechatAppConfigurer<H> loginUrl(String loginUrl) {
+        this.serviceProvider.loginUrl = loginUrl;
+        return this;
+    }
+
+    public SmartAuthWechatAppConfigurer<H> authenticationSuccessHandler(AuthenticationSuccessHandler authenticationSuccessHandler) {
+        this.serviceProvider.authenticationSuccessHandler = authenticationSuccessHandler;
+        return this;
+    }
+
+    public SmartAuthWechatAppConfigurer<H> authenticationFailureHandler(AuthenticationFailureHandler authenticationFailureHandler) {
+        this.serviceProvider.authenticationFailureHandler = authenticationFailureHandler;
+        return this;
+    }
+
+    private static class ServiceProvider {
+        private String loginUrl;
 
         private AuthenticationSuccessHandler authenticationSuccessHandler;
 
         private AuthenticationFailureHandler authenticationFailureHandler;
 
-        public ServiceProvider loginUrl(String loginUrl) {
-            this.loginUrl = loginUrl;
-            return this;
-        }
-
-        public ServiceProvider authenticationSuccessHandler(AuthenticationFailureHandler authenticationFailureHandler) {
-            this.authenticationFailureHandler = authenticationFailureHandler;
-            return this;
-        }
-
-
-        public ServiceProvider authenticationSuccessHandler(AuthenticationSuccessHandler authenticationSuccessHandler) {
-            this.authenticationSuccessHandler = authenticationSuccessHandler;
-            return this;
-        }
-
-        public SmartAuthWechatAppConfigurer and() {
-            return SmartAuthWechatAppConfigurer.this;
+        public ServiceProvider() {
+            this.loginUrl = DEFAULT_LOGIN_URL;
         }
     }
 

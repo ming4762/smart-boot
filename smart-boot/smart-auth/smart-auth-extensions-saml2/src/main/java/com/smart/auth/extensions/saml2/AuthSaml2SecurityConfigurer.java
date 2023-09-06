@@ -6,8 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
 import org.springframework.security.saml.*;
 import org.springframework.security.saml.context.SAMLContextProvider;
 import org.springframework.security.saml.log.SAMLLogger;
@@ -26,9 +27,10 @@ import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.util.Assert;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * SAML2配置类
@@ -37,39 +39,27 @@ import java.util.List;
  * @since 1.0
  */
 @Slf4j
-public class AuthSaml2SecurityConfigurer extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
+public class AuthSaml2SecurityConfigurer<H extends HttpSecurityBuilder<H>> extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, H> {
 
     private static final String URL_SUFFIX = "/**";
 
-    private final ServiceProvider serviceProvider = new ServiceProvider();
+    public static <H extends HttpSecurityBuilder<H>> AuthSaml2SecurityConfigurer<H> saml2() {
+        return new AuthSaml2SecurityConfigurer<>();
+    }
 
-    private static final AuthSaml2SecurityConfigurer AUTH_SAML_2_SECURITY_CONFIGURER = new AuthSaml2SecurityConfigurer();
+    public H config(Customizer<AuthSaml2SecurityConfigurer<H>> customizer) {
+        customizer.customize(this);
+        return this.getBuilder();
+    }
 
     @Override
-    public void init(HttpSecurity builder) throws Exception {
-        Assert.notNull(this.serviceProvider.applicationContext, "applicationContext is null, please init it");
+    public void configure(H builder) {
         // 创建 ExtendedMetadata
         builder
-                .formLogin().disable()
-                .httpBasic().disable()
-                .authorizeHttpRequests()
-//                .antMatchers(this.getUrl(SamlUrlConstants.COMMON)).permitAll()
-                .and()
                 .authenticationProvider(this.getBean(SAMLAuthenticationProvider.class));
         // 添加Filter
         builder.addFilterBefore(this.createMetadataGeneratorFilter(), ChannelProcessingFilter.class)
                 .addFilterAfter(this.createSamlFilter(), BasicAuthenticationFilter.class);
-
-        builder.logout().disable();
-    }
-
-
-    public static AuthSaml2SecurityConfigurer saml2() {
-        return AUTH_SAML_2_SECURITY_CONFIGURER;
-    }
-
-    public ServiceProvider serviceProvider() {
-        return this.serviceProvider;
     }
 
     private String getUrl(SamlUrlConstants samlUrlConstants) {
@@ -133,7 +123,7 @@ public class AuthSaml2SecurityConfigurer extends SecurityConfigurerAdapter<Defau
      */
     private SAMLLogoutFilter samlLogoutFilter() {
         final SAMLLogoutFilter samlLogoutFilter =  new SAMLLogoutFilter(
-                this.getBean(LogoutSuccessHandler.class),
+                Objects.requireNonNull(this.getBean(LogoutSuccessHandler.class)),
                 new LogoutHandler[]{this.getBean(LogoutHandler.class)},
                 new LogoutHandler[]{this.getBean(LogoutHandler.class)}
                 );
@@ -150,32 +140,13 @@ public class AuthSaml2SecurityConfigurer extends SecurityConfigurerAdapter<Defau
      * @return bean实体
      */
     private <T> T getBean(Class<T> clazz) {
-       try {
-           return this.serviceProvider.applicationContext.getBean(clazz);
-       } catch (NoSuchBeanDefinitionException e) {
-           log.error("未找到Bean", e);
-           throw e;
-       }
-    }
-
-    /**
-     * 服务配置类
-     */
-    public class ServiceProvider {
-
-        private ApplicationContext applicationContext;
-
-        public ServiceProvider applicationContext(ApplicationContext applicationContext) {
-            this.applicationContext = applicationContext;
-            return this;
+        ApplicationContext applicationContext = this.getBuilder().getSharedObject(ApplicationContext.class);
+        try {
+            return Optional.ofNullable(applicationContext).map(item -> item.getBean(clazz)).orElse(null);
+        } catch (NoSuchBeanDefinitionException e) {
+            log.warn("获取bean发生错误: " + e.getMessage());
+            return null;
         }
-
-        public AuthSaml2SecurityConfigurer and() {
-            return AuthSaml2SecurityConfigurer.this;
-        }
-
     }
-
-
 
 }

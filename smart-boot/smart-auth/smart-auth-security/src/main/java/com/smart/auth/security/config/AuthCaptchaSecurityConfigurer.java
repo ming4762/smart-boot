@@ -5,12 +5,13 @@ import com.smart.auth.security.filter.AuthCaptchaFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -22,7 +23,7 @@ import java.util.Optional;
  * @since 2.0.0
  */
 @Slf4j
-public class AuthCaptchaSecurityConfigurer extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
+public class AuthCaptchaSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, H> {
 
     public static final String CREATE_URL = "/auth/createCaptcha";
 
@@ -30,21 +31,28 @@ public class AuthCaptchaSecurityConfigurer extends SecurityConfigurerAdapter<Def
 
     private final ServiceProvider serviceProvider = new ServiceProvider();
 
-    public static AuthCaptchaSecurityConfigurer captcha() {
-        return new AuthCaptchaSecurityConfigurer();
+    public static <H extends HttpSecurityBuilder<H>> AuthCaptchaSecurityConfigurer<H> captcha() {
+        return new AuthCaptchaSecurityConfigurer<>();
+    }
+
+
+    public H config(Customizer<AuthCaptchaSecurityConfigurer<H>> customizer) {
+        customizer.customize(this);
+        return this.getBuilder();
     }
 
     @Override
-    public void init(HttpSecurity builder) {
-        builder.addFilterBefore(new AuthCaptchaFilter(Optional.ofNullable(this.serviceProvider.createUrl).orElse(CREATE_URL), this.serviceProvider.loginUrls, this.getBean(AuthCache.class, null)), BasicAuthenticationFilter.class);
+    public void configure(H builder) {
+        builder.addFilterBefore(new AuthCaptchaFilter(this.serviceProvider.createUrl, this.serviceProvider.loginUrls, this.getBean(AuthCache.class, null)), BasicAuthenticationFilter.class);
     }
 
     private <T> T getBean(Class<T> clazz, T t) {
         if (Objects.nonNull(t)) {
             return t;
         }
+        ApplicationContext applicationContext = this.getBuilder().getSharedObject(ApplicationContext.class);
         try {
-            return Optional.ofNullable(this.serviceProvider.applicationContext).map(item -> item.getBean(clazz)).orElse(null);
+            return Optional.ofNullable(applicationContext).map(item -> item.getBean(clazz)).orElse(null);
         } catch (NoSuchBeanDefinitionException e) {
             log.warn("获取bean发生错误: " + e.getMessage());
             return null;
@@ -52,37 +60,33 @@ public class AuthCaptchaSecurityConfigurer extends SecurityConfigurerAdapter<Def
     }
 
     /**
-     * 获取服务配置类
-     * @return 服务配置类
+     * 设置生成的URL
+     * @param createUrl 创建验证码的URL
+     * @return this
      */
-    public ServiceProvider serviceProvider() {
-        return this.serviceProvider;
+    public AuthCaptchaSecurityConfigurer<H> createUrl(String createUrl) {
+        this.serviceProvider.createUrl = createUrl;
+        return this;
     }
 
-    public class ServiceProvider {
+    /**
+     * 设置登录的URL
+     * @param loginUrl 登录URL
+     * @return this
+     */
+    public AuthCaptchaSecurityConfigurer<H> addLoginUrl(String loginUrl) {
+        this.serviceProvider.loginUrls.add(loginUrl);
+        return this;
+    }
+
+    private static class ServiceProvider {
         private String createUrl;
 
-        private List<String> loginUrls;
+        private final List<String> loginUrls;
 
-        private ApplicationContext applicationContext;
-
-        public ServiceProvider applicationContext(ApplicationContext applicationContext) {
-            this.applicationContext = applicationContext;
-            return this;
-        }
-
-        public ServiceProvider createUrl(String createUrl) {
-            this.createUrl = createUrl;
-            return this;
-        }
-
-        public ServiceProvider loginUrl(String ...loginUrls) {
-            this.loginUrls = Arrays.asList(loginUrls);
-            return this;
-        }
-
-        public AuthCaptchaSecurityConfigurer and() {
-            return AuthCaptchaSecurityConfigurer.this;
+        public ServiceProvider() {
+            this.loginUrls = new ArrayList<>(16);
+            this.createUrl = CREATE_URL;
         }
     }
 }

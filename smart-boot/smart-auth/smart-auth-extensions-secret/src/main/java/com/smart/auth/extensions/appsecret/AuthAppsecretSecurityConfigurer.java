@@ -12,8 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.access.ExceptionTranslationFilter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -27,18 +28,23 @@ import java.util.Optional;
  * @since 1.0
  */
 @Slf4j
-public class AuthAppsecretSecurityConfigurer extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
+public class AuthAppsecretSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, H> {
 
     private final ServiceProvider serviceProvider = new ServiceProvider();
 
     private AuthAppsecretSecurityConfigurer() {}
 
-    public static AuthAppsecretSecurityConfigurer appsecret() {
-        return new AuthAppsecretSecurityConfigurer();
+    public static <H extends HttpSecurityBuilder<H>> AuthAppsecretSecurityConfigurer<H> appsecret() {
+        return new AuthAppsecretSecurityConfigurer<>();
+    }
+
+    public H config(Customizer<AuthAppsecretSecurityConfigurer<H>> customizer) {
+        customizer.customize(this);
+        return this.getBuilder();
     }
 
     @Override
-    public void init(HttpSecurity builder) {
+    public void configure(H builder) {
         builder
                 .authenticationProvider(this.getBean(AppsecretAuthenticationProvider.class, this.serviceProvider.appsecretAuthenticationProvider))
                 .addFilterBefore(this.createAppsecretLoginFilter(), BasicAuthenticationFilter.class)
@@ -66,8 +72,9 @@ public class AuthAppsecretSecurityConfigurer extends SecurityConfigurerAdapter<D
         if (Objects.nonNull(t)) {
             return t;
         }
+        ApplicationContext applicationContext = this.getBuilder().getSharedObject(ApplicationContext.class);
         try {
-            return Optional.ofNullable(this.serviceProvider.applicationContext).map(item -> item.getBean(clazz)).orElse(null);
+            return Optional.ofNullable(applicationContext).map(item -> item.getBean(clazz)).orElse(null);
         } catch (NoSuchBeanDefinitionException e) {
             log.warn("获取bean发生错误: " + e.getMessage());
             return null;
@@ -75,20 +82,42 @@ public class AuthAppsecretSecurityConfigurer extends SecurityConfigurerAdapter<D
     }
 
 
-    /**
-     * 获取服务配置类
-     * @return 服务配置类
-     */
-    public ServiceProvider serviceProvider() {
-        return this.serviceProvider;
+    public AuthAppsecretSecurityConfigurer<H> loginUrl(String loginUrl) {
+        this.serviceProvider.loginUrl = loginUrl;
+        return this;
     }
 
-    public class ServiceProvider {
-        /**
-         * 必须设置 spring上下文
-         */
-        private ApplicationContext applicationContext;
+    public AuthAppsecretSecurityConfigurer<H> authenticationFailureHandler(AuthenticationFailureHandler authenticationFailureHandler) {
+        this.serviceProvider.authenticationFailureHandler = authenticationFailureHandler;
+        return this;
+    }
 
+    public AuthAppsecretSecurityConfigurer<H> accessTokenStore(AccessTokenStore accessTokenStore) {
+        this.serviceProvider.accessTokenStore = accessTokenStore;
+        return this;
+    }
+
+    public AuthAppsecretSecurityConfigurer<H> appNoncestrStore(AppNoncestrStore appNoncestrStore) {
+        this.serviceProvider.appNoncestrStore = appNoncestrStore;
+        return this;
+    }
+
+    public AuthAppsecretSecurityConfigurer<H> appLoginSuccessHandler(AppLoginSuccessHandler appLoginSuccessHandler) {
+        this.serviceProvider.appLoginSuccessHandler = appLoginSuccessHandler;
+        return this;
+    }
+
+    public AuthAppsecretSecurityConfigurer<H> appsecretAuthenticationProvider(AppsecretAuthenticationProvider appsecretAuthenticationProvider) {
+        this.serviceProvider.appsecretAuthenticationProvider = appsecretAuthenticationProvider;
+        return this;
+    }
+
+    public AuthAppsecretSecurityConfigurer<H> signProvider(SignProvider signProvider) {
+        this.serviceProvider.signProvider = signProvider;
+        return this;
+    }
+
+    private static class ServiceProvider {
         /**
          * 登录地址
          */
@@ -109,50 +138,5 @@ public class AuthAppsecretSecurityConfigurer extends SecurityConfigurerAdapter<D
         private AppsecretAuthenticationProvider appsecretAuthenticationProvider;
 
         private SignProvider signProvider;
-
-        public ServiceProvider applicationContext(ApplicationContext applicationContext) {
-            this.applicationContext = applicationContext;
-            return this;
-        }
-
-        public ServiceProvider signProvider(SignProvider signProvider) {
-            this.signProvider = signProvider;
-            return this;
-        }
-
-        public ServiceProvider AppNoncestrStore(AppNoncestrStore appNoncestrStore) {
-            this.appNoncestrStore = appNoncestrStore;
-            return this;
-        }
-
-        public ServiceProvider appsecretAuthenticationProvider(AppsecretAuthenticationProvider appsecretAuthenticationProvider) {
-            this.appsecretAuthenticationProvider = appsecretAuthenticationProvider;
-            return this;
-        }
-
-        public ServiceProvider appLoginSuccessHandler(AppLoginSuccessHandler appLoginSuccessHandler) {
-            this.appLoginSuccessHandler = appLoginSuccessHandler;
-            return this;
-        }
-
-        public ServiceProvider authenticationFailureHandler(AuthenticationFailureHandler authenticationFailureHandler) {
-            this.authenticationFailureHandler = authenticationFailureHandler;
-            return this;
-        }
-
-
-        public ServiceProvider loginUrl(String url) {
-            this.loginUrl = url;
-            return this;
-        }
-
-        public ServiceProvider accessTokenStore(AccessTokenStore accessTokenStore) {
-            this.accessTokenStore = accessTokenStore;
-            return this;
-        }
-
-        public AuthAppsecretSecurityConfigurer and() {
-            return AuthAppsecretSecurityConfigurer.this;
-        }
     }
 }
