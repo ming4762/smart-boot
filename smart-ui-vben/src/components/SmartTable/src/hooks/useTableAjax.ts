@@ -43,64 +43,69 @@ export const useTableAjax = (
     if (ajax.query) {
       queryAjax = {
         query: async (params, args) => {
-          const { form, filters, page, sorts, sort, $grid } =
-            params as VxeGridPropTypes.ProxyAjaxQueryParams
-          let fetchParams: FetchParams = {}
-          if (args && args.length > 0) {
-            fetchParams = args[0]
-          }
-          const searchParameter: SmartTableAjaxQueryParams = merge(
-            {
-              $grid,
-              form,
-              filters,
-              page,
-              sorts,
-              sort,
-            },
-            fetchParams,
-          )
-          let ajaxParameter: Recordable = {
-            ...form,
-            ...page,
-          }
-          if (sorts.length > 0) {
-            const sortNameList: string[] = []
-            const sortOrderList: string[] = []
-            for (const item of sorts) {
-              sortNameList.push(item.field)
-              sortOrderList.push(item.order)
+          try {
+            const { form, filters, page, sorts, sort, $grid } =
+              params as VxeGridPropTypes.ProxyAjaxQueryParams
+            let fetchParams: FetchParams = {}
+            if (args && args.length > 0) {
+              fetchParams = args[0]
             }
-            ajaxParameter.sortName = sortNameList.join(',')
-            ajaxParameter.sortOrder = sortOrderList.join(',')
-          }
-          const { searchForm, searchSymbolForm, noSymbolForm, searchWithSymbol } =
-            getSearchFormParameter()
-          if (useSearchForm) {
-            if (searchWithSymbol) {
-              // 处理搜索符号
-              searchParameter.searchFormSymbol = searchSymbolForm
-              Object.assign(
-                ajaxParameter,
-                {
-                  parameter: searchSymbolForm,
-                },
-                noSymbolForm,
-              )
-            } else {
-              Object.assign(ajaxParameter, searchForm)
+            const searchParameter: SmartTableAjaxQueryParams = merge(
+              {
+                $grid,
+                form,
+                filters,
+                page,
+                sorts,
+                sort,
+              },
+              fetchParams,
+            )
+            let ajaxParameter: Recordable = {
+              ...form,
+              ...page,
             }
-            searchParameter.searchForm = searchForm
+            if (sorts.length > 0) {
+              const sortNameList: string[] = []
+              const sortOrderList: string[] = []
+              for (const item of sorts) {
+                sortNameList.push(item.field)
+                sortOrderList.push(item.order)
+              }
+              ajaxParameter.sortName = sortNameList.join(',')
+              ajaxParameter.sortOrder = sortOrderList.join(',')
+            }
+            const { searchForm, searchSymbolForm, noSymbolForm, searchWithSymbol } =
+              getSearchFormParameter()
+            if (useSearchForm) {
+              if (searchWithSymbol) {
+                // 处理搜索符号
+                searchParameter.searchFormSymbol = searchSymbolForm
+                Object.assign(
+                  ajaxParameter,
+                  {
+                    parameter: searchSymbolForm,
+                  },
+                  noSymbolForm,
+                )
+              } else {
+                Object.assign(ajaxParameter, searchForm)
+              }
+              searchParameter.searchForm = searchForm
+            }
+            ajaxParameter = omit(ajaxParameter, ['total'])
+            ajaxParameter = merge(ajaxParameter, searchParameter.searchInfo)
+            // 添加额外的查询条件
+            searchParameter.ajaxParameter = ajaxParameter
+            let result = await ajax.query!(searchParameter)
+            if (proxyConfig.afterLoad) {
+              result = proxyConfig.afterLoad(result)
+            }
+            return result
+          } catch (e) {
+            console.log(e)
+            throw e
           }
-          ajaxParameter = omit(ajaxParameter, ['total'])
-          ajaxParameter = merge(ajaxParameter, searchParameter.searchInfo)
-          // 添加额外的查询条件
-          searchParameter.ajaxParameter = ajaxParameter
-          let result = await ajax.query!(searchParameter)
-          if (proxyConfig.afterLoad) {
-            result = proxyConfig.afterLoad(result)
-          }
-          return result
         },
       }
     }
