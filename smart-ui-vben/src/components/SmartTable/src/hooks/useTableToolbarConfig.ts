@@ -97,7 +97,7 @@ export const useTableToolbarConfig = (
           return {
             ...button,
             props: {
-              ...button.props,
+              ...unref(button.props),
               disabled: true,
             },
           }

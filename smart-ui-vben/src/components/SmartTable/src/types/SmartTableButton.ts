@@ -43,8 +43,8 @@ export interface SmartTableBasicButtonDropdowns {
   // 按钮状态
   status?: SmartTableButtonStatus
   code?: SmartTableButtonCode
-  visible?: boolean
-  disabled?: boolean
+  visible?: boolean | ComputedRef<boolean>
+  disabled?: boolean | ComputedRef<boolean>
   icon?: string
   round?: boolean
   circle?: boolean

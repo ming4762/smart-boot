@@ -117,6 +117,7 @@ const [registerTable, { getSearchForm, query, editByRowModal }] = useSmartTable(
       {
         name: t('system.views.i18n.i18n.button.reload'),
         customRender: 'ant',
+        auth: permissions.reload,
         props: {
           preIcon: 'ant-design:reload-outlined',
           type: 'primary',
