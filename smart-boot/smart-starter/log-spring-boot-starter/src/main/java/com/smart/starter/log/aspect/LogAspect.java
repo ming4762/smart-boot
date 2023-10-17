@@ -1,12 +1,12 @@
 package com.smart.starter.log.aspect;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.smart.commons.core.exception.BaseException;
 import com.smart.commons.core.log.Log;
 import com.smart.commons.core.log.LogSourceEnum;
 import com.smart.commons.core.message.Result;
+import com.smart.commons.core.utils.BeanUtils;
 import com.smart.commons.core.utils.IpUtils;
 import com.smart.commons.core.utils.JsonUtils;
 import com.smart.module.api.system.constants.LogIdentEnum;
@@ -25,6 +25,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.lang.Nullable;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -42,7 +43,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public final class LogAspect {
 
-    private static final Set<Class<?>> EXCLUDE_CLASS = Sets.newHashSet(ServletRequest.class);
+    private static final Set<Class<?>> EXCLUDE_CLASS = Sets.newHashSet(ServletRequest.class, InputStreamResource.class);
 
     /**
      * 保存日志的编码集合
@@ -232,13 +233,24 @@ public final class LogAspect {
      */
     private Map<String, Object> getParameter(ProceedingJoinPoint point) {
         final Map<String, Object> parameter = AopUtils.getParameterMap(point);
-        final Map<String, Object> result = Maps.newHashMap();
-        parameter.forEach((key, value) -> {
-            if (Objects.isNull(value) || EXCLUDE_CLASS.stream().noneMatch(item -> item.isAssignableFrom(value.getClass()))) {
-                result.put(key, value);
-            }
-        });
+        Map<String, Object> result = BeanUtils.beanToMapDeep(parameter);
+        this.removeExcludeClass(result);
         return result;
+    }
+
+    private void removeExcludeClass(Map<String, Object> parameter) {
+        Iterator<Map.Entry<String, Object>> iterator = parameter.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, Object> entry = iterator.next();
+            Object value = entry.getValue();
+            if (value != null) {
+                if (EXCLUDE_CLASS.stream().anyMatch(item -> item.isAssignableFrom(value.getClass()))) {
+                    iterator.remove();
+                } else if (Map.class.isAssignableFrom(value.getClass())) {
+                    this.removeExcludeClass((Map<String, Object>) value);
+                }
+            }
+        }
     }
 
     /**
