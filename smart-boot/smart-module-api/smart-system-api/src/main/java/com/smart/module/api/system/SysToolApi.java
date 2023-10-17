@@ -147,6 +147,10 @@ public interface SysToolApi {
                     }).map(field -> this.getDetail(parameter.getIgnoreAfterNull(), aClass, field, beforeData, afterData)).filter(Objects::nonNull)
                     .toList();
             remoteChangeLogSaveParameter.setDetailList(detailList);
+            if (CollectionUtils.isEmpty(detailList)) {
+                // 没有修改内容，直接返回
+                return true;
+            }
         }
         return this.saveChangeLog(remoteChangeLogSaveParameter);
     }
