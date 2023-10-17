@@ -1,5 +1,6 @@
 package com.smart.commons.core.utils;
 
+import cn.hutool.core.bean.BeanUtil;
 import lombok.SneakyThrows;
 import org.springframework.util.CollectionUtils;
 
@@ -7,6 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author ShiZhongMing
@@ -39,5 +41,24 @@ public class BeanUtils {
             targetList.add(target);
         }
         return targetList;
+    }
+
+    /**
+     * 深层次bean转为map
+     * @param object 需要转换的bean
+     * @return 转换的map
+     */
+    public static Map<String, Object> beanToMapDeep(Object object) {
+        Map<String, Object> map = BeanUtil.beanToMap(object);
+        if (CollectionUtils.isEmpty(map)) {
+            return map;
+        }
+        map.forEach((key, value) -> {
+            Map<String, Object> map1 = BeanUtil.beanToMap(value);
+            if (!CollectionUtils.isEmpty(map1)) {
+                map.put(key, beanToMapDeep(value));
+            }
+        });
+        return map;
     }
 }
