@@ -5,7 +5,6 @@ import com.smart.auth.core.handler.RestAuthenticationEntryPoint;
 import com.smart.auth.core.matcher.ExtensionPathMatcher;
 import com.smart.auth.core.properties.AuthProperties;
 import lombok.SneakyThrows;
-import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.http.HttpMethod;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -36,11 +35,11 @@ public class AuthWebSecurityConfigurerAdapter {
                                 configurer -> configurer.authenticationEntryPoint(new RestAuthenticationEntryPoint())
                                                         .accessDeniedHandler(new AuthAccessDeniedHandler())
                         );
-        this.ignore(httpSecurity);
-        // 开发模式不拦截
-        if (BooleanUtils.isTrue(this.authProperties.getDevelopment())) {
-            httpSecurity.authorizeHttpRequests(registry -> registry.anyRequest().permitAll());
-        }
+//        this.ignore(httpSecurity);
+//        // 开发模式不拦截
+//        if (BooleanUtils.isTrue(this.authProperties.getDevelopment())) {
+//            httpSecurity.authorizeHttpRequests(registry -> registry.anyRequest().permitAll());
+//        }
     }
 
     @SneakyThrows(Exception.class)
