@@ -1,14 +1,18 @@
 package com.smart.system.controller;
 
+import com.smart.commons.core.i18n.I18nException;
 import com.smart.commons.core.log.Log;
 import com.smart.commons.core.log.LogOperationTypeEnum;
 import com.smart.commons.core.message.Result;
 import com.smart.crud.controller.BaseController;
 import com.smart.crud.query.PageSortQuery;
+import com.smart.system.i18n.SystemI18nMessage;
 import com.smart.system.model.SysDictItemPO;
 import com.smart.system.service.SysDictItemService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +31,7 @@ import java.util.List;
 @RestController
 @RequestMapping("sys/dictItem")
 @Tag(name = "数据字典-字典项管理")
+@Slf4j
 public class SysDictItemController extends BaseController<SysDictItemService, SysDictItemPO> {
 
 
@@ -43,7 +48,12 @@ public class SysDictItemController extends BaseController<SysDictItemService, Sy
     @Log(value = "批量保存/更新字典序表", type = LogOperationTypeEnum.UPDATE)
     @PreAuthorize("hasPermission('sys:dictItem', 'save') or hasPermission('sys:dictItem', 'update')")
     public Result<Boolean> batchSaveUpdate(@RequestBody List<SysDictItemPO> modelList) {
-        return super.batchSaveUpdate(modelList);
+        try {
+            return super.batchSaveUpdate(modelList);
+        } catch (DuplicateKeyException e) {
+            log.error(e.getMessage(), e);
+            throw new I18nException(SystemI18nMessage.SYSTEM_DICT_ITEM_CODE_DUPLICATE);
+        }
     }
 
     @Operation(summary = "通过ID批量删除字典序表")

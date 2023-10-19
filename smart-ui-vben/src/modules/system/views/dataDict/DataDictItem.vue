@@ -66,6 +66,7 @@ const [registerTable, { reload }] = useSmartTable({
     ajax: {
       query: ({ ajaxParameter }) => {
         const parameter = {
+          sortName: 'seq',
           ...ajaxParameter,
           parameter: {
             ...ajaxParameter?.parameter,
