@@ -23,11 +23,11 @@ public class UserUserGroupSaveDTO implements Serializable {
     @Serial
     private static final long serialVersionUID = -6508219832444270076L;
 
-    @Schema(title = "用户ID", required = true)
+    @Schema(title = "用户ID", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "用户ID不能为空")
     private Long userId;
 
-    @Schema(title = "用户组ID", required = true)
+    @Schema(title = "用户组ID", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "用户组ID不能为空")
     @Length(min = 1, message = "用户组ID不能为空")
     private List<Long> groupIdList;

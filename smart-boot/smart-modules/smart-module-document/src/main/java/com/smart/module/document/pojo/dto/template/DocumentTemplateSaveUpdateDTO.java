@@ -26,15 +26,15 @@ public class DocumentTemplateSaveUpdateDTO implements Serializable {
     @Schema(name = "模板文件")
     private transient MultipartFile file;
 
-    @Schema(name = "模板编码", required = true)
+    @Schema(name = "模板编码", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "模板编码不能为空")
     private String templateCode;
 
-    @Schema(name = "模板名字", required = true)
+    @Schema(name = "模板名字", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "模板名字不能为空")
     private String templateName;
 
-    @Schema(name = "模板标识", required = true)
+    @Schema(name = "模板标识", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "模板标识不能为空")
     private TemplateIdentEnum ident;
 

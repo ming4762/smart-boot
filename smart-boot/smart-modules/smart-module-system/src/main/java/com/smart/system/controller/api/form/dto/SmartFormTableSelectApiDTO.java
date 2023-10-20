@@ -19,15 +19,15 @@ import java.io.Serializable;
 @ToString
 public class SmartFormTableSelectApiDTO implements Serializable {
 
-    @Schema(title = "实体类名", example = "com.smart.system.model.SysUserPO", required = true)
+    @Schema(title = "实体类名", example = "com.smart.system.model.SysUserPO", requiredMode = Schema.RequiredMode.REQUIRED)
     private String modelClassName;
 
-    @Schema(title = "value对应字段名称", example = "userId", required = true)
+    @Schema(title = "value对应字段名称", example = "userId", requiredMode = Schema.RequiredMode.REQUIRED)
     private String valueFieldName;
 
-    @Schema(title = "label对应字段名称", example = "username", required = true)
+    @Schema(title = "label对应字段名称", example = "username", requiredMode = Schema.RequiredMode.REQUIRED)
     private String labelFieldName;
 
-    @Schema(title = "查询条件", required = true)
+    @Schema(title = "查询条件", requiredMode = Schema.RequiredMode.REQUIRED)
     private PageSortQuery queryParameter;
 }

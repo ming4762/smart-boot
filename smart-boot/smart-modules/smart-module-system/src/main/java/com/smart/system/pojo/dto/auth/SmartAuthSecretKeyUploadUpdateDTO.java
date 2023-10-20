@@ -30,19 +30,19 @@ public class SmartAuthSecretKeyUploadUpdateDTO implements Serializable {
 
     private Long systemId;
 
-    @Schema(title = "序号", required = true)
+    @Schema(title = "序号", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "序号不能为空")
     private Integer seq;
 
-    @Schema(title = "密钥库密码", required = true)
+    @Schema(title = "密钥库密码", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "密钥库密码不能为空")
     private String storePassword;
 
-    @Schema(title = "私钥密码", required = true)
+    @Schema(title = "私钥密码", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "私钥密码不能为空")
     private String keyPassword;
 
-    @Schema(title = "私钥别称", required = true)
+    @Schema(title = "私钥别称", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "私钥别称不能为空")
     private String alias;
 

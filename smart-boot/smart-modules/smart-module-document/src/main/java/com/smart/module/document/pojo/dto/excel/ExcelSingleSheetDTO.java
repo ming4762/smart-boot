@@ -27,7 +27,7 @@ public class ExcelSingleSheetDTO implements Serializable {
      * 模板编码
      */
     @NotNull(message = "模板编码不能为空")
-    @Schema(title = "模板编码", required = true)
+    @Schema(title = "模板编码", requiredMode = Schema.RequiredMode.REQUIRED)
     private String templateCode;
 
     /**

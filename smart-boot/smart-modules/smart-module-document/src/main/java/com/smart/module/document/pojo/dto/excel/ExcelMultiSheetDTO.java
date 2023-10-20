@@ -39,6 +39,6 @@ public class ExcelMultiSheetDTO implements Serializable {
     /**
      * 数据列表
      */
-    @Schema(title = "填充数据列表", required = true)
+    @Schema(title = "填充数据列表", requiredMode = Schema.RequiredMode.REQUIRED)
     private List<ExcelFillWithCodeData> dataList;
 }

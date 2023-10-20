@@ -32,7 +32,7 @@ public class BarcodeGeneratorData extends AbstractCodeGeneratorData implements S
 
     @Serial
     private static final long serialVersionUID = 8103868991406837545L;
-    @Schema(title = "条形码内容", required = true)
+    @Schema(title = "条形码内容", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "条形码内容不能为空")
     private String content;
 

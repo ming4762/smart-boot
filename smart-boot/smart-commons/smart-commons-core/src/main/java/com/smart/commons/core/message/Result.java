@@ -28,13 +28,13 @@ import java.util.Optional;
 public class Result<T> {
 
     private static final long serialVersionUID = 9144229906004159463L;
-    @Schema(description = "状态码", example = "200", required = true)
+    @Schema(description = "状态码", example = "200", requiredMode = Schema.RequiredMode.REQUIRED)
     private Integer code = ResultCodeEnum.SUCCESS.getCode();
 
     @Schema(description = "返回信息", example = "成功")
     private String message = null;
 
-    @Schema(description = "接口返回状态", example = "true", required = true)
+    @Schema(description = "接口返回状态", example = "true", requiredMode = Schema.RequiredMode.REQUIRED)
     private boolean success = true;
 
     @Schema(description = "接口返回数据")

@@ -36,14 +36,14 @@ public class SysUserGroupPO extends BaseModelUserTime {
     /**
      * 用户组名称
      */
-    @Schema(title = "用户组名称", description = "用户组名称", required = true)
+    @Schema(title = "用户组名称", description = "用户组名称", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "用户组名称不能为空")
     private String groupName;
 
     /**
      * 用户组编码
      */
-    @Schema(description = "用户组编码", required = true)
+    @Schema(description = "用户组编码", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "用户组编码不能为空")
     private String groupCode;
 

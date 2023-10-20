@@ -24,7 +24,7 @@ public class QrcodeGeneratorData extends AbstractCodeGeneratorData implements Se
 
     @Serial
     private static final long serialVersionUID = -7354137234049035062L;
-    @Schema(title = "条形码内容", required = true)
+    @Schema(title = "条形码内容", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "条形码内容不能为空")
     private String content;
 }
