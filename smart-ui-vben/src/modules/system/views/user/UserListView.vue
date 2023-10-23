@@ -26,6 +26,17 @@
               </a-select-option>
             </a-select>
           </template>
+          <template #table-accountStatus="{ row }">
+            <a-tooltip :title="getLockedMessage(row.userAccount?.accountStatus)">
+              <span
+                :style="{
+                  color: getAccountData(row.userAccount?.accountStatus).color,
+                  fontWeight: 'bold',
+                }">
+                {{ getAccountData(row.userAccount?.accountStatus).label }}
+              </span>
+            </a-tooltip>
+          </template>
         </SmartTable>
       </template>
     </LayoutSeparate>
@@ -62,8 +73,10 @@ import {
   getByIdWithDataScopeApi,
   setUseYnApi,
   createAccountApi,
+  unlockUserAccountApi,
 } from './UserListView.api'
 import { SYS_USER_TYPE, SystemPermissions } from '/@/modules/system/constants/SystemConstants'
+import { successMessage } from '/@/common/utils/SystemNotice'
 
 const { t } = useI18n()
 const { warnMessage, errorMessage, createConfirm } = useMessage()
@@ -78,6 +91,47 @@ const getUserTypeMap = computed(() => {
   }
   return result
 })
+
+const accountLockedMessage = {
+  LOGIN_FAIL_LOCKED: '多次登录失败锁定',
+  LONG_TIME_LOCKED: '超出指定时间未登录锁定',
+  LONG_TIME_PASSWORD_MODIFY_LOCKED: '超出指定时间未修改密码锁定',
+}
+
+const getLockedMessage = (status: string | null | undefined) => {
+  if (!status || status === 'NORMAL') {
+    return '正常'
+  }
+  return accountLockedMessage[status]
+}
+
+/**
+ * 账户状态
+ */
+const accountStatusMap = {
+  empty: {
+    label: '未创建',
+    color: '#A9A9A9',
+  },
+  NORMAL: {
+    label: '正常',
+    color: '#228B22',
+  },
+  LOCKED: {
+    label: '锁定',
+    color: 'red',
+  },
+}
+
+const getAccountData = (status: string | null | undefined) => {
+  if (status === undefined || status === null) {
+    return accountStatusMap.empty
+  }
+  if (status === 'NORMAL') {
+    return accountStatusMap.NORMAL
+  }
+  return accountStatusMap.LOCKED
+}
 
 /**
  * 权限处理
@@ -100,7 +154,7 @@ const handleDeptSelected = (selectedKeys: Array<number>) => {
     currentDeptId.value = null
   }
   // 重新加载数据
-  reload()
+  query()
 }
 
 /**
@@ -123,8 +177,30 @@ const getTableActions = (row): ActionItem[] => {
       disabled: !hasPermission('sys:account:query') || !hasSystemUserUpdate(row.userType),
       onClick: () => openModal(true, row),
     },
+    {
+      label: t('system.views.user.button.unlockUserAccount'),
+      auth: permissions.unlockUserAccount,
+      disabled:
+        !hasPermission(permissions.unlockUserAccount) ||
+        (row.userAccount && row.userAccount.accountStatus === 'NORMAL'),
+      onClick: () => handleUnlockUserAccount(row.userId),
+    },
   ]
 }
+
+const handleUnlockUserAccount = (id: number) => {
+  createConfirm({
+    content: t('system.views.user.message.confirmUnlockUserAccount'),
+    onOk: async () => {
+      await unlockUserAccountApi(id)
+      successMessage({
+        msg: t('system.views.user.message.unlockUserAccountSuccess'),
+      })
+      await query()
+    },
+  })
+}
+
 /**
  * 用户操作验证
  * @param userList
@@ -180,7 +256,7 @@ const handleCreateAccount = () => {
 
 const [
   registerTable,
-  { editByRowModal, getCheckboxRecords, reload, deleteByCheckbox, showAddModal },
+  { editByRowModal, getCheckboxRecords, query, deleteByCheckbox, showAddModal },
 ] = useSmartTable({
   columns: getTableColumns(t),
   stripe: true,

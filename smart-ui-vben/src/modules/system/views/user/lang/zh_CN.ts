@@ -20,10 +20,12 @@ export default {
           email: '邮箱',
           mobile: '手机号',
           userType: '用户类型',
+          accountStatus: '账户状态',
         },
         button: {
           createAccount: '创建账户',
           showAccount: '账户信息',
+          unlockUserAccount: '解锁账户',
         },
         account: {
           title: '账户信息',
@@ -68,6 +70,8 @@ export default {
           createAccountSuccess: '创建账户成功',
           deleteValidate: '确定要{msg}该用户吗？',
           noAccount: '该用户未创建账户',
+          confirmUnlockUserAccount: '确定要解锁账户吗？',
+          unlockUserAccountSuccess: '账户解锁成功',
         },
       },
     },

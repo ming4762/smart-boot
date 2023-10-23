@@ -100,13 +100,6 @@ public class AuthSecurity2AutoConfiguration {
         return new AuthenticationFailureEventInitializer(eventPublisher);
     }
 
-    @SneakyThrows(Exception.class)
-//    @Bean
-//    @ConditionalOnMissingBean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) {
-        return configuration.getAuthenticationManager();
-    }
-
     /**
      * 创建URL权限认证器
      * @param urlMappingProvider URL映射

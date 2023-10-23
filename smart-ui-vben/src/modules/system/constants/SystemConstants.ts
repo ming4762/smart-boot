@@ -9,6 +9,7 @@ export const SystemPermissions = {
     setRole: 'sys:user:setRole',
     useYn: 'sys:user:setUseYn',
     createAccount: 'sys:account:add',
+    unlockUserAccount: 'sys:user:unlockUserAccount',
   },
   role: {
     add: 'sys:role:save',

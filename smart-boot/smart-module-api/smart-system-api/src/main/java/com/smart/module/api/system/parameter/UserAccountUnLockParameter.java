@@ -24,8 +24,8 @@ public class UserAccountUnLockParameter implements Serializable {
 
     /**
      * 账户状态
-     * 不为空，只有改状态的账户才会结果
-     * 空 锁定状态的账户都会结果
+     * 不为空，只有该状态的账户才会解锁
+     * 空 锁定状态的账户都会解锁
      */
     @Nullable
     private UserAccountStatusEnum accountStatus;

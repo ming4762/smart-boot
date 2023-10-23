@@ -13,6 +13,7 @@ enum Api {
   createAccount = 'sys/user/createAccount',
   saveAccountSetting = 'sys/user/saveAccountSetting',
   deptTreeList = 'sys/dept/list',
+  unlockUserAccount = 'sys/user/unlockUserAccount',
 }
 
 export const listApi = (ajaxParameter) => {
@@ -113,4 +114,14 @@ export const getDeptTreeListApi = async () => {
       0,
     ) || []
   )
+}
+
+export const unlockUserAccountApi = (id: number) => {
+  return defHttp.post({
+    service: ApiServiceEnum.SMART_SYSTEM,
+    url: Api.unlockUserAccount,
+    data: {
+      id,
+    }
+  })
 }

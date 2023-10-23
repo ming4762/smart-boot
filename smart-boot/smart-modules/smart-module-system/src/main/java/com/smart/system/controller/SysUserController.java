@@ -1,7 +1,6 @@
 package com.smart.system.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.smart.auth.core.annotation.NonUrlCheck;
@@ -13,9 +12,11 @@ import com.smart.commons.core.message.Result;
 import com.smart.commons.core.utils.TreeUtils;
 import com.smart.crud.controller.BaseController;
 import com.smart.crud.parameter.SetUseYnParameter;
+import com.smart.crud.query.IdParameter;
+import com.smart.module.api.system.SystemAuthUserApi;
+import com.smart.module.api.system.parameter.UserAccountUnLockParameter;
 import com.smart.system.constants.UserDeptIdentEnum;
 import com.smart.system.model.*;
-import com.smart.system.pojo.dto.common.UseYnSetDTO;
 import com.smart.system.pojo.dto.user.UserAccountSaveDTO;
 import com.smart.system.pojo.dto.user.UserListDTO;
 import com.smart.system.pojo.dto.user.UserSetRoleDTO;
@@ -62,10 +63,13 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
 
     private final SysUserDeptService sysUserDeptService;
 
-    public SysUserController(SysUserRoleService sysUserRoleService, SysUserAccountService sysUserAccountService, SysUserDeptService sysUserDeptService) {
+    private final SystemAuthUserApi systemAuthUserApi;
+
+    public SysUserController(SysUserRoleService sysUserRoleService, SysUserAccountService sysUserAccountService, SysUserDeptService sysUserDeptService, SystemAuthUserApi systemAuthUserApi) {
         this.sysUserRoleService = sysUserRoleService;
         this.sysUserAccountService = sysUserAccountService;
         this.sysUserDeptService = sysUserDeptService;
+        this.systemAuthUserApi = systemAuthUserApi;
     }
 
     /**
@@ -288,5 +292,13 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
             return Result.success();
         }
         return Result.success(dataList.get(0));
+    }
+
+    @PostMapping("unlockUserAccount")
+    @Operation(summary = "解锁账号")
+    @PreAuthorize("hasPermission('sys:user', 'unlockUserAccount')")
+    @Log(value = "解锁账号", type = LogOperationTypeEnum.UPDATE)
+    public Result<Boolean> unlockUserAccount(@RequestBody IdParameter parameter) {
+        return Result.success(this.systemAuthUserApi.unlockAccount(new UserAccountUnLockParameter((Long) parameter.getId(), null)));
     }
 }

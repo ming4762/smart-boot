@@ -147,7 +147,8 @@ public class SysUserAccountServiceImpl extends BaseServiceImpl<SysUserAccountMap
                     updateWrapper.set(SysUserAccountPO::getLastLoginTime, LocalDateTime.now());
             case LONG_TIME_PASSWORD_MODIFY_LOCKED ->
                     // 长时间密码未修改锁定解锁
-                    updateWrapper.set(SysUserAccountPO::getPasswordModifyTime, LocalDateTime.now());
+                    updateWrapper.set(SysUserAccountPO::getPasswordModifyTime, LocalDateTime.now())
+                            .set(SysUserAccountPO::getLastLoginTime, LocalDateTime.now());
             default -> {
                 // do noting
             }

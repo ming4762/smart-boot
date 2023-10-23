@@ -37,6 +37,14 @@ export const getTableColumns = (t: Function): SmartColumn[] => {
       },
     },
     {
+      title: '{system.views.user.table.accountStatus}',
+      field: 'account',
+      width: 100,
+      slots: {
+        default: 'table-accountStatus',
+      },
+    },
+    {
       title: '{system.views.user.table.email}',
       field: 'email',
       minWidth: 160,
@@ -97,7 +105,7 @@ export const getTableColumns = (t: Function): SmartColumn[] => {
     {
       title: '{common.table.operation}',
       field: 'operation',
-      width: 140,
+      width: 180,
       fixed: 'right',
       slots: {
         default: 'table-operation',

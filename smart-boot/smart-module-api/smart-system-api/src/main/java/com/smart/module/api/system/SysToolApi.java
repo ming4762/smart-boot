@@ -172,6 +172,7 @@ public interface SysToolApi {
      * @param field Field
      * @param beforeData beforeData
      * @param afterData afterData
+     * @param ignoreAfterNull 是否忽略修改为null
      * @return 如果值相同则返回null
      */
     @SneakyThrows(Exception.class)
