@@ -78,6 +78,17 @@ public enum AuthI18nMessage implements I18nMessage {
     WECHAT_USER_NOT_BOND("auth.error.wechat.userBindError", "WeChat user not bound"),
     WECHAT_APP_APPID_NOT_CONFIG("auth.error.wechat.app.appidNotConfig", "Appid not config"),
 
+    // --------- access secret 认证
+    ACCESS_SECRET_TOKEN_EMPTY("auth.access.secret.token.empty", "Authentication information does not exist"),
+    ACCESS_SECRET_FORMAT_ERROR("auth.access.secret.token.format.error" ,"Authentication format error, expected {PREFIX}:{ACCESS_KEY}:{SIGN}"),
+    ACCESS_SECRET_ACCESS_KEY_ERROR("auth.access.secret.accessKey.error", "Access key error"),
+    ACCESS_SECRET_ACCESS_KEY_EXPIRE("auth.access.secret.accessKey", "Access key has expired"),
+    ACCESS_SECRET_IP_UNAUTHORIZED("auth.access.secret.ip.unauthorized", "IP Unauthorized"),
+    ACCESS_SECRET_SIGN_ERROR("auth.access.secret.sign.error", "Verification of signature failed, Please check if the signature is correct"),
+    ACCESS_SECRET_DATE_ERROR("auth.access.secret.date.error", "Date format error"),
+    ACCESS_SECRET_DATE_EXPIRE("auth.access.secret.date.expire", "Date has expired"),
+    ACCESS_SECRET_NONCE_USED("auth.access.secret.nonce.used", "Random strings can only be used once"),
+    ACCESS_SECRET_NONCE_ERROR("auth.access.secret.nonce.error", "Random string does not exist"),
     ;
 
 

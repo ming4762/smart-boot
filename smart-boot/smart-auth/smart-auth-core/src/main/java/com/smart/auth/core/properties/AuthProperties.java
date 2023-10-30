@@ -67,8 +67,13 @@ public class AuthProperties implements InitializingBean {
      */
     private AuthCaptchaProperties captcha = new AuthCaptchaProperties();
 
+    /**
+     * access secret模式配置
+     */
+    private AuthAccessSecretProperties accessSecret = new AuthAccessSecretProperties();
+
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         if (Boolean.TRUE.equals(this.jwt.enabled)) {
             Assert.notNull(this.jwt.privateKey, "JWT私钥路径不能为空");
             Assert.notNull(this.jwt.publicKey, "JWT公钥路径不能为空");
@@ -289,5 +294,24 @@ public class AuthProperties implements InitializingBean {
          * 短息模板
          */
         private String template;
+    }
+
+    /**
+     * ACCESS SECRET 认证参数
+     */
+    @Getter
+    @Setter
+    public static class AuthAccessSecretProperties {
+        /**
+         * 匹配的URL
+         */
+        private List<String> urlMatcher;
+
+        private String tokenPrefix = "SMART-BOOT";
+
+        /**
+         * 过期时间默认5分钟
+         */
+        private Duration expire = Duration.ofMinutes(10);
     }
 }

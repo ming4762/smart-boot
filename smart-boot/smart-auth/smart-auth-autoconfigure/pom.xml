@@ -50,6 +50,13 @@
 			<version>${smart-boot.version}</version>
 			<optional>true</optional>
 		</dependency>
+
+		<dependency>
+			<groupId>com.smart</groupId>
+			<artifactId>smart-auth-extensions-access-secret</artifactId>
+			<version>${smart-boot.version}</version>
+			<optional>true</optional>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-autoconfigure</artifactId>
