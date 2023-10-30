@@ -22,14 +22,7 @@ public class SysAuthAccessSecretSaveUpdateDTO implements Serializable {
     * 
     */
     private Long id;
-    /**
-    * Access key
-    */
-    private String accessKey;
-    /**
-    * Secret key
-    */
-    private String secretKey;
+
     /**
     * 过期时间
     */

@@ -310,7 +310,7 @@ public class AuthProperties implements InitializingBean {
         private String tokenPrefix = "SMART-BOOT";
 
         /**
-         * 过期时间默认5分钟
+         * 过期时间默认10分钟
          */
         private Duration expire = Duration.ofMinutes(10);
     }

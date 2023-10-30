@@ -1,12 +1,15 @@
 package com.smart.service.system.config;
 
 import com.smart.auth.core.properties.AuthProperties;
+import com.smart.auth.extensions.access.secret.AuthAccessSecretSecurityConfigurer;
 import com.smart.auth.extensions.jwt.AuthJwtSecurityConfigurer;
+import com.smart.auth.extensions.sms.AuthSmsSecurityConfigurer;
 import com.smart.auth.security.config.AuthCaptchaSecurityConfigurer;
 import com.smart.auth.security.config.AuthWebSecurityConfigurerAdapter;
 import lombok.SneakyThrows;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -28,6 +31,7 @@ public class SecurityConfig extends AuthWebSecurityConfigurerAdapter {
 
     @SneakyThrows(Exception.class)
     @Bean
+    @Order(0)
     public SecurityFilterChain securityFilterChainConfig(HttpSecurity httpSecurity) {
         super.configure(httpSecurity);
         httpSecurity.formLogin(AbstractHttpConfigurer::disable)
@@ -39,7 +43,22 @@ public class SecurityConfig extends AuthWebSecurityConfigurerAdapter {
                             .config(Customizer.withDefaults())
                     // 验证码配置
                     .apply(AuthCaptchaSecurityConfigurer.captcha())
-                    .config(configurer -> configurer.addLoginUrl(AuthJwtSecurityConfigurer.LOGIN_URL));
+                    .config(configurer -> configurer.addLoginUrl(AuthJwtSecurityConfigurer.LOGIN_URL))
+                .apply(AuthSmsSecurityConfigurer.sms());
+        return httpSecurity.build();
+    }
+
+    @SneakyThrows({Exception.class})
+    @Bean
+    @Order(Integer.MIN_VALUE)
+    public SecurityFilterChain secretSecurityFilterChain(HttpSecurity httpSecurity) {
+        super.configure(httpSecurity);
+        httpSecurity.formLogin(AbstractHttpConfigurer::disable)
+                .logout(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .apply(AuthAccessSecretSecurityConfigurer.build())
+                .config(http -> http.addUrlMatcher("/access/api/**"));
         return httpSecurity.build();
     }
 

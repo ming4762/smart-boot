@@ -75,4 +75,7 @@ public class SysUserPO extends BaseModelUserTime implements BaseUser {
 
     private Boolean useYn;
 
+//    @TableLogicKey
+//    private Long deleteKey;
+
 }

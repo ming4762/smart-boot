@@ -105,8 +105,11 @@ public class AuthAccessSecretAuthenticationFilter implements Filter {
         if (accessSecretData.getExpireDate() != null && LocalDateTime.now().isAfter(accessSecretData.getExpireDate())) {
             this.throwException(AuthI18nMessage.ACCESS_SECRET_ACCESS_KEY_EXPIRE);
         }
-        if (StringUtils.hasText(accessSecretData.getAccessIp()) && !accessSecretData.getAccessIp().equals(IpUtils.getIpAddr(servletRequest))) {
-            this.throwException(AuthI18nMessage.ACCESS_SECRET_IP_UNAUTHORIZED);
+        if (StringUtils.hasText(accessSecretData.getAccessIp())) {
+            List<String> ipList = Arrays.asList(accessSecretData.getAccessIp().split(","));
+            if (!ipList.contains(IpUtils.getIpAddr(servletRequest))) {
+                this.throwException(AuthI18nMessage.ACCESS_SECRET_IP_UNAUTHORIZED);
+            }
         }
         // 计算sign
         String encryptKey = String.join(SPLIT, List.of(httpMethod, contentType, date, nonce));

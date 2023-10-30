@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
 * sys_auth_access_secret -  Controller
@@ -38,22 +38,26 @@ public class SysAuthAccessSecretController extends BaseController<SysAuthAccessS
         return super.list(parameter);
     }
 
-    @Operation(summary = "批量添加修改")
-    @PostMapping("saveUpdateBatch")
-    @Log(value = "批量添加修改", type = LogOperationTypeEnum.UPDATE)
-    public Result<Boolean> saveUpdateBatch(@RequestBody @Valid List<SysAuthAccessSecretSaveUpdateDTO> parameterList) {
-      	List<SysAuthAccessSecretPO> modelList = parameterList.stream().map(item -> {
-            SysAuthAccessSecretPO model = new SysAuthAccessSecretPO();
-            BeanUtils.copyProperties(item, model);
-            return model;
-        }).collect(Collectors.toList());
-        return super.batchSaveUpdate(modelList);
+    /**
+     * 添加更新
+     *
+     * @param parameter 参数
+     */
+    @Operation(summary = "添加修改Access Secret")
+    @PostMapping("saveUpdate")
+    @Log(value = "添加修改Access Secret", type = LogOperationTypeEnum.UPDATE)
+    @PreAuthorize("hasPermission('sys:auth:accessSecret', 'save') or hasPermission('sys:auth:accessSecret', 'update')")
+    public Result<Boolean> saveUpdate(@RequestBody @Valid SysAuthAccessSecretSaveUpdateDTO parameter) {
+        SysAuthAccessSecretPO model = new SysAuthAccessSecretPO();
+        BeanUtils.copyProperties(parameter, model);
+        return super.saveUpdate(model);
     }
 
     @Override
     @Operation(summary = "通过ID批量删除")
     @PostMapping("batchDeleteById")
     @Log(value = "通过ID批量删除", type = LogOperationTypeEnum.DELETE)
+    @PreAuthorize("hasPermission('sys:auth:accessSecret', 'delete')")
     public Result<Boolean> batchDeleteById(@RequestBody List<Serializable> idList) {
         if (CollectionUtils.isEmpty(idList)) {
             return Result.success(false);

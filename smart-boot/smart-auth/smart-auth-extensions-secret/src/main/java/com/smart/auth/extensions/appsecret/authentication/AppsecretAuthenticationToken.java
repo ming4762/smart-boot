@@ -4,6 +4,7 @@ import lombok.EqualsAndHashCode;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collection;
 
@@ -14,6 +15,7 @@ import java.util.Collection;
  */
 @EqualsAndHashCode(callSuper = true)
 public class AppsecretAuthenticationToken extends AbstractAuthenticationToken {
+    @Serial
     private static final long serialVersionUID = -3223772613702203952L;
 
     private final Serializable principal;
