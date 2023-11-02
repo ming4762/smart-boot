@@ -4,7 +4,7 @@
     :class="getFormClass"
     ref="formElRef"
     :model="formModel"
-    @keypress.enter="handleEnterPress">
+    @keyup.enter="handleEnterPress">
     <Row v-bind="getRow">
       <slot name="formHeader"></slot>
       <template v-for="schema in getSchema" :key="schema.field">
