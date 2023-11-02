@@ -22,7 +22,20 @@ public class CommonQuery implements Serializable {
     @Serial
     private static final long serialVersionUID = 25607615568253403L;
 
+    /**
+     * 查询参数
+     */
     private Map<String, Serializable> parameter = new HashMap<>(0);
+
+    /**
+     * 外层 or 内层 and查询参数，例如：or (name = '李白' and status <> '活着')
+     */
+    private List<Map<String, Serializable>> orAndParameter = new ArrayList<>(0);
+
+    /**
+     * 外层and 内层 or查询参数，例如：and (name = '李白' and status <> '活着')
+     */
+    private List<Map<String, Serializable>> andOrParameter = new ArrayList<>(0);
 
     /**
      * 查询的属性列表

@@ -1,12 +1,10 @@
 package com.smart.system.model;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.smart.crud.model.BaseModelUserTime;
 import com.smart.crud.model.BaseUser;
+import com.smart.crud.plus.logic.TableLogicKey;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -75,7 +73,7 @@ public class SysUserPO extends BaseModelUserTime implements BaseUser {
 
     private Boolean useYn;
 
-//    @TableLogicKey
-//    private Long deleteKey;
+    @TableLogicKey
+    private Long deleteKey;
 
 }

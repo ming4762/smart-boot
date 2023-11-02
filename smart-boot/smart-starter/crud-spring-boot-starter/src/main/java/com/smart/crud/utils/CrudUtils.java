@@ -14,15 +14,19 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.smart.commons.core.exception.BaseException;
+import com.smart.commons.core.exception.SystemException;
 import com.smart.commons.core.utils.ExceptionUtils;
 import com.smart.crud.model.BaseModel;
 import com.smart.crud.model.Sort;
+import com.smart.crud.plus.logic.TableLogicKey;
+import com.smart.crud.plus.metadata.TableLogicKeyFieldInfo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.reflection.property.PropertyNamer;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.util.CollectionUtils;
@@ -73,6 +77,11 @@ public final class CrudUtils {
      */
     private static final Map<Type, Class<? extends BaseModel>> TYPE_CLASS_CACHE = Maps.newConcurrentMap();
     private static final Map<String, Field> CLASS_FIELD_NAME_MAPPING = Maps.newConcurrentMap();
+
+    /**
+     * 存储逻辑删除key
+     */
+    private static final Map<Class<?>, TableLogicKeyFieldInfo> TABLE_LOGIC_KEY_CACHE = Maps.newConcurrentMap();
 
     public static <T extends BaseModel> String getTableName(Class<T> clazz) {
         return getTableInfo(clazz).getTableName();
@@ -235,6 +244,58 @@ public final class CrudUtils {
         return queryWrapper;
     }
 
+    // -------------- 逻辑删除支持 ------------------
+
+    public static TableLogicKeyFieldInfo getTableLogicKeyField(Class<? extends BaseModel> clazz) {
+        return getTableLogicKeyField(getTableInfo(clazz));
+    }
+
+    /**
+     * 获取逻辑删除key列
+     * @param tableInfo TableInfo
+     * @return TableFieldInfo
+     */
+    public static TableLogicKeyFieldInfo getTableLogicKeyField(TableInfo tableInfo) {
+        Class<?> entityType = tableInfo.getEntityType();
+        if (TABLE_LOGIC_KEY_CACHE.containsKey(entityType)) {
+            TableLogicKeyFieldInfo logicKeyFieldInfo = TABLE_LOGIC_KEY_CACHE.get(entityType);
+            if (logicKeyFieldInfo.getTableLogicKey() == null) {
+                return null;
+            }
+            return logicKeyFieldInfo;
+        }
+        List<TableLogicKeyFieldInfo> logicKeyFieldInfoList = tableInfo.getFieldList().stream()
+                .map(item -> {
+                    TableLogicKey tableLogicKey = AnnotationUtils.getAnnotation(item.getField(), TableLogicKey.class);
+                    if (tableLogicKey == null) {
+                        return null;
+                    }
+                    return new TableLogicKeyFieldInfo(item, tableLogicKey);
+                }).filter(Objects::nonNull)
+                .toList();
+        if (CollectionUtils.isEmpty(logicKeyFieldInfoList)) {
+            TABLE_LOGIC_KEY_CACHE.put(entityType, new TableLogicKeyFieldInfo());
+            return null;
+        }
+        if (logicKeyFieldInfoList.size() > 1) {
+            throw new SystemException("实体类只能有一个TableLogicKey字段，请检查实体类，实体类：" + tableInfo.getEntityType().getName());
+        }
+        TABLE_LOGIC_KEY_CACHE.put(entityType, logicKeyFieldInfoList.get(0));
+        return logicKeyFieldInfoList.get(0);
+    }
+
+    /**
+     * 实体类是否设置了逻辑删除key
+     * @param tableInfo TableInfo
+     * @return boolean
+     */
+    public static boolean hasTableLogicKey(TableInfo tableInfo) {
+        return getTableLogicKeyField(tableInfo) != null;
+    }
+
+    // --------------------------------------------------------------
+
+
     private static <T extends BaseModel> void createBaseQueryWrapperFromParameters(@NonNull Map<String, Serializable> parameter, @NonNull Class<? extends BaseModel> clazz, @NonNull Wrapper<T> queryWrapper) {
         final String symbolSplit = "@";
         parameter.forEach((key, value) -> {
@@ -243,7 +304,7 @@ public final class CrudUtils {
                 // 获取符号
                 final String symbol = keySplit.length > 1 ? keySplit[1] : null;
                 if (StringUtils.isEmpty(symbol)) {
-                    log.warn("参数无效，未找到符号，key:{}", key);
+                    log.warn("参数无效，未找到符号，实体类：{}，key:{}", clazz.getName(), key);
                 } else {
                     final String dbFieldName = getDbField(clazz, keySplit[0]);
                     final Field field = getClassField(clazz, keySplit[0]);

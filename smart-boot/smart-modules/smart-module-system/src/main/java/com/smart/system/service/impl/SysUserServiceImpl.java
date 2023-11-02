@@ -2,7 +2,6 @@ package com.smart.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.smart.auth.core.userdetails.RestUserDetails;
@@ -234,11 +233,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
                     new QueryWrapper<SysUserRolePO>().lambda()
                             .in(SysUserRolePO::getUserId, list)
             );
-            this.update(
-                    new UpdateWrapper<SysUserPO>().lambda()
-                            .set(SysUserPO :: getDeleteYn, true)
-                            .in(SysUserPO :: getUserId, list)
-            );
+            super.removeByIds(list);
         });
         return true;
     }
