@@ -11,7 +11,7 @@ export const useRoleSetUser = (t: Function) => {
 
   const handleShowSetUser = async (role: Recordable) => {
     currentRole.value = role
-    openModal(true)
+    openModal(true, { a: 1 })
     try {
       setModalProps({ loading: true })
       const result = await listUserByRoleIdApi([role.roleId])

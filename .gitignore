@@ -45,3 +45,9 @@ node_modules/
 package-lock.json
 
 smart-ui/dist/
+
+node_modules
+.DS_Store
+dist
+.cache
+.turbo
