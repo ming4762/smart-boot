@@ -25,4 +25,6 @@ public class RoleMenuSaveDTO implements Serializable {
 
     @NotNull(message = "菜单ID不能为空")
     private List<Long> functionIdList;
+
+    private List<Long> halfFunctionIdList;
 }

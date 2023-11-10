@@ -74,16 +74,32 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRoleMapper, SysRolePO
                 new QueryWrapper<SysRoleFunctionPO>().lambda()
                 .eq(SysRoleFunctionPO :: getRoleId, parameter.getRoleId())
         );
+        List<SysRoleFunctionPO> modelList = new ArrayList<>(16);
         // 保存
         if (!CollectionUtils.isEmpty(parameter.getFunctionIdList())) {
-            return this.sysRoleFunctionService.saveBatch(
-                parameter.getFunctionIdList().stream().map(item -> {
-                    final SysRoleFunctionPO sysRoleFunction = new SysRoleFunctionPO();
-                    sysRoleFunction.setFunctionId(item);
-                    sysRoleFunction.setRoleId(parameter.getRoleId());
-                    return sysRoleFunction;
-                }).toList()
+            modelList.addAll(
+                    parameter.getFunctionIdList().stream().map(item -> {
+                        final SysRoleFunctionPO sysRoleFunction = new SysRoleFunctionPO();
+                        sysRoleFunction.setFunctionId(item);
+                        sysRoleFunction.setRoleId(parameter.getRoleId());
+                        sysRoleFunction.setHalfYn(false);
+                        return sysRoleFunction;
+                    }).toList());
+        }
+
+        if (!CollectionUtils.isEmpty(parameter.getHalfFunctionIdList())) {
+            modelList.addAll(
+                    parameter.getHalfFunctionIdList().stream().map(item -> {
+                        final SysRoleFunctionPO sysRoleFunction = new SysRoleFunctionPO();
+                        sysRoleFunction.setFunctionId(item);
+                        sysRoleFunction.setRoleId(parameter.getRoleId());
+                        sysRoleFunction.setHalfYn(true);
+                        return sysRoleFunction;
+                    }).toList()
             );
+        }
+        if (!modelList.isEmpty()) {
+            this.sysRoleFunctionService.saveBatch(modelList);
         }
         return true;
     }

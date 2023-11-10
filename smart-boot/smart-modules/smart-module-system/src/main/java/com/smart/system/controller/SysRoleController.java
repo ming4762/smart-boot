@@ -113,6 +113,7 @@ public class SysRoleController extends BaseController<SysRoleService, SysRolePO>
                         new QueryWrapper<SysRoleFunctionPO>().lambda()
                         .select(SysRoleFunctionPO :: getFunctionId)
                         .eq(SysRoleFunctionPO :: getRoleId, roleId)
+                        .eq(SysRoleFunctionPO::getHalfYn, Boolean.FALSE)
                 ).stream().map(SysRoleFunctionPO :: getFunctionId)
                 .toList()
         );

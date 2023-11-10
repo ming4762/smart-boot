@@ -7,8 +7,8 @@
     <a-layout-content style="background: white; overflow: auto">
       <a-spin :spinning="dataLoading">
         <a-tree
+          ref="treeRef"
           v-model:checkedKeys="checkedKeysModel"
-          check-strictly
           :tree-data="functionTreeData"
           checkable />
       </a-spin>
@@ -50,14 +50,19 @@ export default defineComponent({
       type: Number as PropType<number>,
       default: null,
     },
+    client: {
+      type: String as PropType<string>,
+      default: '',
+    },
   },
   setup(props) {
-    const { roleId } = toRefs(props)
+    const { roleId, client } = toRefs(props)
+    const treeRef = ref()
     // 树形控件数据
     const functionTreeData = ref<Array<any>>([])
     const dataLoading = ref(false)
     const saveLoading = ref(false)
-    const checkedKeysModel = ref<any>([])
+    const checkedKeysModel = ref([])
 
     /**
      * 加载功能树函数
@@ -69,6 +74,9 @@ export default defineComponent({
           service: ApiServiceEnum.SMART_SYSTEM,
           url: 'sys/function/list',
           data: {
+            parameter: {
+              'client@=': client.value,
+            },
             sortName: 'seq',
           },
         })
@@ -93,13 +101,16 @@ export default defineComponent({
      * 加载角色对应的功能ID
      */
     const loadRoleFunctions = async () => {
-      if (roleId.value !== null) {
+      if (roleId.value !== null && client.value !== '') {
         dataLoading.value = true
         try {
           checkedKeysModel.value = await defHttp.post({
             service: ApiServiceEnum.SMART_SYSTEM,
             url: 'sys/role/listFunctionId',
-            data: unref(roleId),
+            params: {
+              roleId: unref(roleId),
+              client: unref(client),
+            },
           })
         } finally {
           dataLoading.value = false
@@ -110,6 +121,7 @@ export default defineComponent({
      * 执行保存操作
      */
     const handleSave = async () => {
+      const tree = unref(treeRef)
       if (roleId.value === null) {
         message.error('请先选定角色')
         return false
@@ -121,7 +133,8 @@ export default defineComponent({
           url: 'sys/role/saveRoleMenu',
           data: {
             roleId: roleId.value,
-            functionIdList: checkedKeysModel.value.checked,
+            functionIdList: tree.checkedKeys,
+            halfFunctionIdList: tree.halfCheckedKeys,
           },
         })
         message.success('保存成功')
@@ -130,6 +143,7 @@ export default defineComponent({
       }
     }
     watch(roleId, loadRoleFunctions)
+    watch(client, loadFunctionTreeData)
     onMounted(loadFunctionTreeData)
     return {
       functionTreeData,
@@ -138,6 +152,7 @@ export default defineComponent({
       checkedKeysModel,
       handleSave,
       permissions: SystemPermissions.role,
+      treeRef,
     }
   },
 })

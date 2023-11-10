@@ -24,4 +24,6 @@ public class SysRoleFunctionPO extends BaseModelCreateUserTime {
     private Long roleId;
 
     private Long functionId;
+
+    private Boolean halfYn;
 }
