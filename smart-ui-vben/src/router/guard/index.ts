@@ -13,6 +13,7 @@ import nProgress from 'nprogress'
 import projectSetting from '/@/settings/projectSetting'
 import { createParamMenuGuard } from './paramMenuGuard'
 import { createUserMenuLoadGuard } from './userMenuLoadGuard'
+import { createMenuAccessLogGuard } from '/@/router/guard/menuAccessLogGuard'
 
 // Don't change the order of creation
 export function setupRouterGuard(router: Router) {
@@ -26,6 +27,7 @@ export function setupRouterGuard(router: Router) {
   createParamMenuGuard(router) // must after createPermissionGuard (menu has been built.)
   createStateGuard(router)
   createUserMenuLoadGuard(router)
+  createMenuAccessLogGuard(router)
 }
 
 /**
