@@ -14,6 +14,7 @@ import { MULTIPLE_TABS_KEY } from '/@/enums/cacheEnum'
 
 import projectSetting from '/@/settings/projectSetting'
 import { useUserStore } from '/@/store/modules/user'
+import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 
 export interface MultipleTabState {
   cacheTabList: Set<string>
@@ -119,6 +120,15 @@ export const useMultipleTabStore = defineStore({
     },
 
     async addTab(route: RouteLocationNormalized) {
+      if (route.meta.key) {
+        defHttp.post({
+          service: ApiServiceEnum.SMART_SYSTEM,
+          url: 'sys/menuAccessLog/save',
+          data: {
+            functionId: route.meta.key,
+          },
+        })
+      }
       const { path, name, fullPath, params, query, meta } = getRawRoute(route)
       // 404  The page does not need to add a tab
       if (

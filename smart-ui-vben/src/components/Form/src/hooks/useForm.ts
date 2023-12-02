@@ -116,6 +116,16 @@ export function useForm(props?: Props): UseFormReturnType {
       const form = await getForm()
       return form.validateFields(nameList)
     },
+    awaitInitialized: async () => {
+      while (true) {
+        const form = unref(formRef)
+        if (form) {
+          return
+        } else {
+          await nextTick()
+        }
+      }
+    },
   }
 
   return [register, methods]

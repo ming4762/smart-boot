@@ -67,7 +67,7 @@ export default defineComponent({
   name: 'BasicForm',
   components: { FormItem, Form, Row, FormAction },
   props: basicProps,
-  emits: ['advanced-change', 'reset', 'submit', 'register', 'field-value-change'],
+  emits: ['advanced-change', 'reset', 'submit', 'register', 'field-value-change', 'initialized'],
   setup(props, { emit, attrs }) {
     const formModel = reactive<Recordable>({})
     const modalFn = useModalContext()
@@ -84,6 +84,18 @@ export default defineComponent({
     const propsRef = ref<Partial<FormProps>>({})
     const schemaRef = ref<Nullable<FormSchema[]>>(null)
     const formElRef = ref<Nullable<FormActionType>>(null)
+
+    onMounted(() => emitInitialized())
+
+    const emitInitialized = async () => {
+      const formInstance = unref(formElRef)
+      if (formInstance) {
+        emit('initialized')
+      } else {
+        await nextTick()
+        await emitInitialized()
+      }
+    }
 
     const { prefixCls } = useDesign('basic-form')
 
