@@ -26,7 +26,7 @@ public class FtpChannelProvider implements JschChannelProvider<ChannelSftp>, Ini
     @Override
     public ChannelSftp getChannel(String key) {
         Integer waitersNum = this.objectPool.getNumWaitersByKey().get(key);
-        if (waitersNum > 0) {
+        if (waitersNum != null && waitersNum > 0) {
             log.warn("线程池暂无空闲channel");
             return null;
         }

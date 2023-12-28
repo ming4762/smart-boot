@@ -16,11 +16,14 @@ public enum ChannelTypeEnum {
     /**
      * Channel 类型 sftp
      */
-    SFTP(ChannelSftp.class);
+    SFTP("sftp", ChannelSftp.class);
+
+    private final String type;
 
     private final Class<? extends Channel> channelClass;
 
-    ChannelTypeEnum(Class<? extends Channel> channelClass) {
+    ChannelTypeEnum(String type, Class<? extends Channel> channelClass) {
+        this.type = type;
         this.channelClass = channelClass;
     }
 }

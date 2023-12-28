@@ -48,7 +48,7 @@ public class ChannelKeyedPooledObjectFactory<T extends Channel> implements Keyed
     @Override
     public PooledObject<T> makeObject(String key) throws Exception {
         Session session = this.sessionGenericKeyedObjectPool.borrowObject(key);
-        T channel = (T) session.openChannel(this.type.name());
+        T channel = (T) session.openChannel(this.type.getType());
         return new DefaultPooledObject<>(channel);
     }
 
