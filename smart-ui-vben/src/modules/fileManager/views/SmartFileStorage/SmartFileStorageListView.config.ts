@@ -275,6 +275,7 @@ export const getFormSchemas = (t: Function): FormSchema[] => {
     ...getAliyunOssFormSchemas(t),
     // --------------- 七牛云
     ...getQiniuFormSchemas(t),
+    ...getFtpFormSchemas(t),
   ]
 }
 
@@ -403,6 +404,56 @@ const getQiniuFormSchemas = (t: Function): FormSchema[] => {
       show: ({ model }) => {
         return model.storageType === 'QINIU'
       },
+    },
+  ]
+}
+
+const getFtpFormSchemas = (t: Function): FormSchema[] => {
+  return [
+    {
+      field: 'storageConfig.FTP.host',
+      component: 'Input',
+      label: t('smart.file.storage.title.host'),
+      show: ({ model }) => {
+        return model.storageType === 'FTP'
+      },
+      required: ({ model }) => model.storageType === 'FTP',
+    },
+    {
+      field: 'storageConfig.FTP.port',
+      component: 'InputNumber',
+      label: t('smart.file.storage.title.port'),
+      show: ({ model }) => {
+        return model.storageType === 'FTP'
+      },
+      required: ({ model }) => model.storageType === 'FTP',
+    },
+    {
+      field: 'storageConfig.FTP.basePath',
+      component: 'Input',
+      label: t('smart.file.storage.title.basePath'),
+      show: ({ model }) => {
+        return model.storageType === 'FTP'
+      },
+      required: ({ model }) => model.storageType === 'FTP',
+    },
+    {
+      field: 'storageConfig.FTP.username',
+      component: 'Input',
+      label: t('smart.file.storage.title.username'),
+      show: ({ model }) => {
+        return model.storageType === 'FTP'
+      },
+      required: ({ model }) => model.storageType === 'FTP',
+    },
+    {
+      field: 'storageConfig.FTP.password',
+      component: 'Input',
+      label: t('smart.file.storage.title.password'),
+      show: ({ model }) => {
+        return model.storageType === 'FTP'
+      },
+      required: ({ model }) => model.storageType === 'FTP',
     },
   ]
 }

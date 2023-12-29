@@ -44,6 +44,11 @@ public class DiskFilePathBO {
 
     private String timestamp;
 
+    /**
+     * 是否使用原始文件名
+     */
+    private boolean useOriginalFilename;
+
     public DiskFilePathBO(String basePath, FileStorageSaveParameter parameter) {
         this.basePath = basePath;
         this.filename = parameter.getFilename();
@@ -56,14 +61,32 @@ public class DiskFilePathBO {
             this.folderPath = FORMATTER.format(Instant.now());
         }
         this.timestamp = String.valueOf(System.currentTimeMillis());
+        this.useOriginalFilename = parameter.isUseOriginalFilename();
     }
 
     /**
      * 获取文件夹路径
      * @return 文件夹路径
      */
+    @Deprecated
     public String getFolderPath() {
         return this.basePath + FILE_SEPARATOR + this.folderPath;
+    }
+
+    /**
+     * 获取绝对路径
+     * @return 绝对路径
+     */
+    public String getAbsolutePath() {
+        return this.basePath + FILE_SEPARATOR + this.folderPath;
+    }
+
+    /**
+     * 获取相对路径
+     * @return 相对路径
+     */
+    public String getRelativePath() {
+        return this.folderPath;
     }
 
     /**
@@ -80,7 +103,7 @@ public class DiskFilePathBO {
      * @return 文件路径
      */
     public String getFilePath(boolean deleteFirstSeparator) {
-        String path = this.getFolderPath() + FILE_SEPARATOR + this.getDiskFilename();
+        String path = this.getAbsolutePath() + FILE_SEPARATOR + this.getDiskFilename();
         if (deleteFirstSeparator && path.startsWith(FILE_SEPARATOR)) {
             return path.substring(1);
         }
@@ -92,6 +115,9 @@ public class DiskFilePathBO {
      * @return 文件名
      */
     public String getDiskFilename() {
+        if (this.useOriginalFilename) {
+            return this.filename;
+        }
         if (!this.filename.contains(POINT_STR)) {
             return this.filename + ID_CUT + this.timestamp;
         }

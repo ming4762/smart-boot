@@ -42,7 +42,7 @@ public class AliyunOssServiceImpl implements AliyunOssService, DisposableBean {
 
     @Getter
     @AllArgsConstructor
-    private static class OssClientCache {
+    protected static class OssClientCache {
         private OSS ossClient;
 
         private SmartFileStorageAliyunOssProperties properties;

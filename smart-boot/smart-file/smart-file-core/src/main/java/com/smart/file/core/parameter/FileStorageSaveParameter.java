@@ -34,6 +34,11 @@ public class FileStorageSaveParameter extends FileStorageCommonParameter {
     @Nullable
     private String folder;
 
+    /**
+     * 是否使用原始文件名
+     */
+    private boolean useOriginalFilename;
+
     public String getFolder() {
         return this.folder == null ? "" : this.folder;
     }

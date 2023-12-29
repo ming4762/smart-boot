@@ -57,6 +57,7 @@
         <aliyun.dysmsapi.version>2.0.23</aliyun.dysmsapi.version>
         <tencentcloud.sdk.version>3.1.759</tencentcloud.sdk.version>
         <tianai-captcha.version>1.4.1</tianai-captcha.version>
+        <commons-net.version>3.10.0</commons-net.version>
     </properties>
 
     <packaging>pom</packaging>
@@ -438,6 +439,11 @@
                 <groupId>cloud.tianai.captcha</groupId>
                 <artifactId>tianai-captcha</artifactId>
                 <version>${tianai-captcha.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-net</groupId>
+                <artifactId>commons-net</artifactId>
+                <version>${commons-net.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
