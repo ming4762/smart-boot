@@ -299,6 +299,14 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
     @PreAuthorize("hasPermission('sys:user', 'unlockUserAccount')")
     @Log(value = "解锁账号", type = LogOperationTypeEnum.UPDATE)
     public Result<Boolean> unlockUserAccount(@RequestBody IdParameter parameter) {
-        return Result.success(this.systemAuthUserApi.unlockAccount(new UserAccountUnLockParameter((Long) parameter.getId(), null)));
+        return Result.success(this.systemAuthUserApi.unlockAccount(new UserAccountUnLockParameter(parameter.getId(), null)));
+    }
+
+    @PostMapping("resetPassword")
+    @Operation(summary = "重置用户密码")
+    @PreAuthorize("hasPermission('sys:user', 'resetPassword')")
+    @Log(value = "解锁账号", type = LogOperationTypeEnum.UPDATE)
+    public Result<String> resetPassword(@RequestBody IdParameter parameter) {
+        return Result.success(this.service.resetPassword(parameter.getId()));
     }
 }

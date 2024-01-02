@@ -134,4 +134,11 @@ public interface SysUserService extends BaseService<SysUserPO> {
      * @return 用户信息
      */
     SysUserPO getByUsername(@NonNull String username);
+
+    /**
+     * 重置用户密码
+     * @param userId 用户ID
+     * @return 重置后的密码
+     */
+    String resetPassword(Long userId);
 }

@@ -24,6 +24,8 @@ export default {
         button: {
           createAccount: 'Create account',
           showAccount: 'Account info',
+          unlockUserAccount: 'Unlock account',
+          resetPassword: 'Rest password',
         },
         account: {
           title: 'Account info',

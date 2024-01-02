@@ -2,12 +2,14 @@ package com.smart.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.auth.core.utils.AuthUtils;
 import com.smart.commons.core.dto.auth.Permission;
 import com.smart.commons.core.dto.auth.UserRolePermission;
+import com.smart.commons.core.exception.SystemException;
 import com.smart.commons.core.i18n.I18nUtils;
 import com.smart.commons.core.utils.DigestUtils;
 import com.smart.commons.core.utils.PropertyUtils;
@@ -31,6 +33,7 @@ import com.smart.system.pojo.vo.user.SysUserListVO;
 import com.smart.system.pojo.vo.user.SysUserWithDataScopeDTO;
 import com.smart.system.service.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -245,8 +248,18 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
      */
     @Override
     public boolean save(@NonNull SysUserPO entity) {
-        entity.setPassword(DigestUtils.sha256(entity.getUsername() + DEFAULT_PASSWORD + SALT, 2));
+        entity.setPassword(this.createPassword(entity.getUsername(), DEFAULT_PASSWORD));
         return super.save(entity);
+    }
+
+    /**
+     * 创建密码密文
+     * @param username 用户名
+     * @param password 密码
+     * @return 密码
+     */
+    protected String createPassword(String username, String password) {
+        return DigestUtils.sha256(username + password + SALT, 2);
     }
 
     /**
@@ -606,5 +619,28 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
                         .eq(SysUserPO::getUsername, username)
                         .eq(SysUserPO::getUseYn, Boolean.TRUE)
         );
+    }
+
+    /**
+     * 重置用户密码
+     *
+     * @param userId 用户ID
+     * @return 重置后的密码
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public String resetPassword(Long userId) {
+        SysUserPO sysUser = this.getById(userId);
+        if (sysUser == null) {
+            throw new SystemException("通过ID查询用户失败，ID：" + userId);
+        }
+        String password = RandomStringUtils.randomAlphabetic(15);
+        String secretPassword = this.createPassword(sysUser.getUsername(), password);
+        this.update(
+                new UpdateWrapper<SysUserPO>().lambda()
+                        .set(SysUserPO::getPassword, secretPassword)
+                        .eq(SysUserPO::getUserId, userId)
+        );
+        return password;
     }
 }

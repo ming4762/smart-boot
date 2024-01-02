@@ -74,6 +74,7 @@ import {
   setUseYnApi,
   createAccountApi,
   unlockUserAccountApi,
+  resetPassword,
 } from './UserListView.api'
 import { SYS_USER_TYPE, SystemPermissions } from '/@/modules/system/constants/SystemConstants'
 import { successMessage } from '/@/common/utils/SystemNotice'
@@ -371,6 +372,32 @@ const [
       },
       {
         code: 'useYnFalse',
+      },
+      {
+        name: t('system.views.user.button.resetPassword'),
+        auth: permissions.unlockPassword,
+        customRender: 'ant',
+        props: {
+          type: 'primary',
+          onClick: () => {
+            const selectRows = getCheckboxRecords(false)
+            if (selectRows.length !== 1) {
+              warnMessage('请选择一条数据')
+              return
+            }
+            createConfirm({
+              title: '重置密码',
+              content: '确定要重置密码吗？',
+              onOk: async () => {
+                const newPassword = await resetPassword(selectRows[0].userId)
+                createConfirm({
+                  title: '请保存密码',
+                  content: newPassword,
+                })
+              },
+            })
+          },
+        },
       },
     ],
   },

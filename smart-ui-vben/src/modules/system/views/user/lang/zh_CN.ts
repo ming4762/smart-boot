@@ -26,6 +26,7 @@ export default {
           createAccount: '创建账户',
           showAccount: '账户信息',
           unlockUserAccount: '解锁账户',
+          resetPassword: '重置密码',
         },
         account: {
           title: '账户信息',

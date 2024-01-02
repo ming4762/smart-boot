@@ -4,8 +4,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serializable;
-
 /**
  * @author ShiZhongMing
  * 2022/1/29
@@ -16,5 +14,5 @@ import java.io.Serializable;
 public class IdParameter {
 
     @NotNull(message = "ID不能为空")
-    private Serializable id;
+    private Long id;
 }
