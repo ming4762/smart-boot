@@ -70,6 +70,7 @@ public class DefaultFileServiceImpl implements FileService, ApplicationContextAw
                 .storageType(smartFileStorage.getStorageType())
                 .storageProperties(smartFileStorage.getStorageConfig())
                 .fileStorageId(smartFileStorage.getId())
+                .useOriginalFilename(parameter.isUseOriginalFilename())
                 .build();
     }
 

@@ -31,6 +31,11 @@ public class FileSaveCommonParameter implements Serializable {
     @Nullable
     private String folder;
 
+    /**
+     * 是否使用原始文件名
+     */
+    private boolean useOriginalFilename;
+
     public String getFolder() {
         return this.folder == null ? "" : this.folder;
     }
