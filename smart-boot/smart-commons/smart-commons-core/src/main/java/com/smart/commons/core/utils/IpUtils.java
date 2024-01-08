@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Optional;
 
 
@@ -16,6 +18,11 @@ import java.util.Optional;
 public class IpUtils {
 
 	private static final String UNKNOWN = "unknown";
+
+	private static final String LOCALHOST_IP = "127.0.0.1";
+	// 客户端与服务器同为一台机器，获取的 ip 有时候是 ipv6 格式
+	private static final String LOCALHOST_IPV6 = "0:0:0:0:0:0:0:1";
+	private static final String SEPARATOR = ",";
 
 	private IpUtils() {
 		throw new IllegalStateException("Utility class");
@@ -41,7 +48,7 @@ public class IpUtils {
 			if (org.apache.commons.lang3.StringUtils.isEmpty(ip) || UNKNOWN.equalsIgnoreCase(ip)) {
 				ip = request.getHeader("Proxy-Client-IP");
 			}
-			if (org.apache.commons.lang3.StringUtils.isEmpty(ip) || ip.length() == 0 || UNKNOWN.equalsIgnoreCase(ip)) {
+			if (org.apache.commons.lang3.StringUtils.isEmpty(ip) || ip.isEmpty() || UNKNOWN.equalsIgnoreCase(ip)) {
 				ip = request.getHeader("WL-Proxy-Client-IP");
 			}
 			if (org.apache.commons.lang3.StringUtils.isEmpty(ip) || UNKNOWN.equalsIgnoreCase(ip)) {
@@ -52,11 +59,29 @@ public class IpUtils {
 			}
 			if (org.apache.commons.lang3.StringUtils.isEmpty(ip) || UNKNOWN.equalsIgnoreCase(ip)) {
 				ip = request.getRemoteAddr();
+				if (LOCALHOST_IP.equalsIgnoreCase(ip) || LOCALHOST_IPV6.equalsIgnoreCase(ip)) {
+					// 根据网卡取本机配置的 IP
+					InetAddress iNet = null;
+					try {
+						iNet = InetAddress.getLocalHost();
+					} catch (UnknownHostException e) {
+						log.error(e.getMessage(), e);
+					}
+					if (iNet != null) {
+						ip = iNet.getHostAddress();
+					}
+				}
 			}
 		} catch (Exception e) {
 			log.error("IPUtils ERROR ", e);
 		}
-		return ip;
+		// 对于通过多个代理的情况，分割出第一个 IP
+		if (ip != null && ip.length() > 15) {
+			if (ip.contains(SEPARATOR)) {
+				ip = ip.substring(0, ip.indexOf(SEPARATOR));
+			}
+		}
+		return LOCALHOST_IPV6.equals(ip) ? LOCALHOST_IP : ip;
 	}
 
 }
