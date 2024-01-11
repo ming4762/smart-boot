@@ -23,4 +23,8 @@ public class PageCache {
     public static Page<?> get() {
         return PAGE_THREAD_LOCAL.get();
     }
+
+    public static void clear() {
+        PAGE_THREAD_LOCAL.remove();
+    }
 }

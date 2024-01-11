@@ -81,11 +81,15 @@ public abstract class BaseServiceImpl<K extends CrudBaseMapper<T>, T extends Bas
         if (!paging && org.apache.commons.lang3.StringUtils.isNotBlank(parameter.getSortName())) {
             this.analysisOrder(queryWrapper, parameter.getSortName(), parameter.getSortOrder());
         }
-        final Page<?> page = PageCache.get();
-        if (page != null) {
-            CrudPageHelper.setPage(page);
+        try {
+            final Page<?> page = PageCache.get();
+            if (page != null) {
+                CrudPageHelper.setPage(page);
+            }
+            return super.list(queryWrapper);
+        } finally {
+            PageCache.clear();
         }
-        return super.list(queryWrapper);
     }
 
     /**
