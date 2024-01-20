@@ -2,18 +2,7 @@ import type { SmartColumn, SmartSearchFormSchema } from '/@/components/SmartTabl
 import type { FormSchema } from '/@/components/Form'
 import { ApiServiceEnum, defHttp } from '/@/utils/http/axios'
 
-export const getMessageTypeEnum = (t: Function) => {
-  return [
-    {
-      label: t('smart.message.systemMessage.form.messageType.announcement'),
-      value: 'ANNOUNCEMENT',
-    },
-    {
-      label: t('smart.message.systemMessage.form.messageType.systemMessage'),
-      value: 'SYSTEM_MESSAGE',
-    },
-  ]
-}
+import { getMessageTypeEnum, getMessagePriorityEnum } from '../../SmartMessageConstants'
 
 export const getMessageSendStatusEnum = (t: Function) => {
   return [
@@ -28,26 +17,6 @@ export const getMessageSendStatusEnum = (t: Function) => {
     {
       label: t('smart.message.systemMessage.form.sendStatus.CANCEL'),
       value: 'CANCEL',
-    },
-  ]
-}
-
-export const getMessagePriorityEnum = (t: Function) => {
-  return [
-    {
-      label: t('smart.message.systemMessage.form.messagePriority.LOW'),
-      value: 'LOW',
-      color: 'green',
-    },
-    {
-      label: t('smart.message.systemMessage.form.messagePriority.MIDDLE'),
-      value: 'MIDDLE',
-      color: 'orange',
-    },
-    {
-      label: t('smart.message.systemMessage.form.messagePriority.HIGH'),
-      value: 'HIGH',
-      color: 'pink',
     },
   ]
 }
@@ -99,22 +68,24 @@ export const getTableColumns = (t: Function): SmartColumn[] => {
       field: 'messageType',
       title: '{smart.message.systemMessage.title.messageType}',
       width: 120,
-      slots: {
-        default: ({ row }) => {
-          if (!row.messageType) {
-            return ''
-          }
-          const enumList = messageTypeEnum.filter((item) => item.value === row.messageType)
-          if (enumList.length === 0) {
-            return ''
-          }
-          const data = enumList[0]
-          return (
-            <a-tag color={data.value === 'ANNOUNCEMENT' ? '#2db7f5' : '#87d068'}>
-              {data.label}
-            </a-tag>
-          )
-        },
+      dynamicClass: ({ row }) => {
+        const messageType = row.messageType
+        if (!messageType) {
+          return ''
+        }
+        return messageType === 'ANNOUNCEMENT' ? 'text-color--success-bold' : 'text-color--link-bold'
+      },
+      formatter: ({ row }) => {
+        const messageType = row.messageType
+        if (!messageType) {
+          return ''
+        }
+        const enumList = messageTypeEnum.filter((item) => item.value === row.messageType)
+        if (enumList.length === 0) {
+          return ''
+        }
+        const data = enumList[0]
+        return data.label
       },
     },
     {
@@ -192,12 +163,14 @@ export const getTableColumns = (t: Function): SmartColumn[] => {
     {
       field: 'sendTime',
       title: '{smart.message.systemMessage.title.sendTime}',
-      width: 120,
+      width: 165,
+      sortable: true,
     },
     {
       field: 'cancelTime',
       title: '{smart.message.systemMessage.title.cancelTime}',
-      width: 120,
+      width: 165,
+      sortable: true,
     },
     {
       field: 'useYn',
@@ -209,6 +182,7 @@ export const getTableColumns = (t: Function): SmartColumn[] => {
       field: 'createTime',
       title: '{common.table.createTime}',
       width: 170,
+      sortable: true,
     },
     {
       field: 'createBy',
@@ -219,6 +193,7 @@ export const getTableColumns = (t: Function): SmartColumn[] => {
       field: 'updateTime',
       title: '{common.table.updateTime}',
       width: 170,
+      sortable: true,
     },
     {
       field: 'updateBy',

@@ -1,4 +1,9 @@
-import type { SuccessOptions, ModalOptionsEx } from '/@/hooks/web/useMessage'
+import type {
+  SuccessOptions,
+  ModalOptionsEx,
+  MessageOptions,
+  ModalOptionsPartial,
+} from '/@/hooks/web/useMessage'
 import { useMessage } from '/@/hooks/web/useMessage'
 
 export const errorMessage = (e: any) => {
@@ -14,4 +19,14 @@ export const successMessage = (options: SuccessOptions) => {
 export const createConfirm = (options: ModalOptionsEx) => {
   const { createConfirm } = useMessage()
   return createConfirm(options)
+}
+
+export const warnMessage = (options: MessageOptions) => {
+  const { warnMessage } = useMessage()
+  return warnMessage(options)
+}
+
+export const createWaringModal = (options: ModalOptionsPartial) => {
+  const { createWarningModal } = useMessage()
+  createWarningModal(options)
 }

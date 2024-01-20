@@ -30,6 +30,13 @@ const tableProps: SmartTableProps = {
       query: ({ ajaxParameter }) => listUserApi(ajaxParameter),
     },
   },
+  checkboxConfig: {
+    rowTrigger: 'multiple',
+    highlight: true,
+  },
+  rowConfig: {
+    isHover: true,
+  },
   searchFormConfig: {
     compact: true,
     colon: true,

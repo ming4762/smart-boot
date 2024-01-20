@@ -16,7 +16,7 @@ import { useI18n } from '/@/hooks/web/useI18n'
 import { useSizeSetting } from '/@/hooks/setting/UseSizeSetting'
 import { useModal } from '/@/components/Modal'
 
-import SystemMessageShowModal from './components/SystemMessageShowModal.vue'
+import SystemMessageShowModal from '../../components/SystemMessageShowModal.vue'
 
 import {
   ActionItem,
@@ -125,6 +125,12 @@ const [registerTable, { editByRowModal, deleteByRow, query }] = useSmartTable({
   sortConfig: {
     remote: true,
   },
+  columnConfig: {
+    resizable: true,
+  },
+  checkboxConfig: {
+    highlight: true,
+  },
   pagerConfig: true,
   showOverflow: 'tooltip',
   useSearchForm: true,
@@ -133,12 +139,10 @@ const [registerTable, { editByRowModal, deleteByRow, query }] = useSmartTable({
     schemas: getSearchFormSchemas(t),
     searchWithSymbol: true,
     colon: true,
+    autoSubmitOnEnter: true,
     layout: 'inline',
     actionColOptions: {
       span: undefined,
-    },
-    labelCol: {
-      span: 8,
     },
   },
   addEditConfig: {
@@ -165,7 +169,7 @@ const [registerTable, { editByRowModal, deleteByRow, query }] = useSmartTable({
   toolbarConfig: {
     zoom: true,
     refresh: true,
-    custom: true,
+    column: true,
     buttons: [
       {
         code: 'ModalAdd',

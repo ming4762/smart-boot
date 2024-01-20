@@ -24,8 +24,8 @@ import { computed, ref, unref } from 'vue'
 
 import { useModalInner, BasicModal } from '/@/components/Modal'
 import { useI18n } from '/@/hooks/web/useI18n'
-import { getMessagePriorityEnum } from '../SmartMessageSystemListView.config'
-import { getDetailByIdApi } from '../SmartMessageSystemListView.api'
+import { getDetailByIdApi } from '../views/SystemMessage/SmartMessageSystemListView.api'
+import { getMessagePriorityEnum } from '/@/modules/message/SmartMessageConstants'
 
 const { t } = useI18n()
 

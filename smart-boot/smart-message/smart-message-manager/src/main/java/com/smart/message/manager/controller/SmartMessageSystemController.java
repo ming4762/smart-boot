@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
 * smart_message_system - 系统消息表 Controller
@@ -49,7 +48,7 @@ public class SmartMessageSystemController extends BaseController<SmartMessageSys
             SmartMessageSystemPO model = new SmartMessageSystemPO();
             BeanUtils.copyProperties(item, model);
             return model;
-        }).collect(Collectors.toList());
+        }).toList();
         return super.batchSaveUpdate(modelList);
     }
 

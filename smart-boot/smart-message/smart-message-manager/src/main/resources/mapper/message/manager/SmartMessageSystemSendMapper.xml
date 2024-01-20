@@ -28,6 +28,28 @@
         update_by
     </sql>
 
+    <!--  查询发送的消息  -->
+    <select id="listSendMessage" resultType="com.smart.message.manager.pojo.dbo.SmartMessageSendMessageDO">
+        select A.id,
+               A.message_id,
+               A.user_id receive_user_id,
+               A.read_yn,
+               A.read_time,
+               A.star_yn,
+               A.create_time send_time,
+               A.create_user_id send_user_id,
+               A.create_by send_user_name,
+               B.title,
+               B.abstract_content,
+               B.message_type,
+               B.priority,
+               B.business_ident,
+               B.business_id
+        from smart_message_system_send A
+                 join smart_message_system B on A.message_id = B.id
+            ${ew.customSqlSegment}
+    </select>
+
     <resultMap id="commonResultMap" type="com.smart.message.manager.model.SmartMessageSystemSendPO">
         <!--   id      -->
         <result column="id" property="id" javaType="java.lang.Long" jdbcType="BIGINT"/>
