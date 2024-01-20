@@ -78,7 +78,7 @@ public class AuthAccessSecretAuthenticationFilter implements Filter {
     private void filter(HttpServletRequest servletRequest) {
         String token =  servletRequest.getHeader(HttpHeaders.AUTHORIZATION);
         String httpMethod = servletRequest.getMethod();
-        String contentType = servletRequest.getHeader(HttpHeaders.CONTENT_TYPE);
+        String contentType = servletRequest.getHeader(HttpHeaders.CONTENT_TYPE).split(";")[0];
         String date = servletRequest.getHeader(HttpHeaders.DATE);
         String nonce = servletRequest.getHeader(NONCE_KEY);
 
