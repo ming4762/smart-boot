@@ -65,6 +65,9 @@ const commonTableProps: SmartTableProps = {
 
 const tableProps = reactive<SmartTableProps>({
   useSearchForm: true,
+  checkboxConfig: {
+    rowTrigger: 'multiple',
+  },
   searchFormConfig: {
     compact: true,
     colon: true,
