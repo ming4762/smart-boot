@@ -6,6 +6,7 @@ import com.smart.commons.core.log.Log;
 import com.smart.commons.core.log.LogOperationTypeEnum;
 import com.smart.commons.core.message.Result;
 import com.smart.crud.controller.BaseController;
+import com.smart.crud.query.IdParameter;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.system.model.SysRoleFunctionPO;
 import com.smart.system.model.SysRolePO;
@@ -102,17 +103,17 @@ public class SysRoleController extends BaseController<SysRoleService, SysRolePO>
 
     /**
      * 获取角色对应的功能ID集合
-     * @param roleId 角色ID
+     * @param parameter 角色ID
      * @return 功能ID集合
      */
     @Operation(summary = "获取角色对应的功能ID集合")
     @PostMapping("listFunctionId")
-    public Result<List<Long>> listFunctionId(@RequestBody Long roleId) {
+    public Result<List<Long>> listFunctionId(@RequestBody IdParameter parameter) {
         return Result.success(
                 this.sysRoleFunctionService.list(
                         new QueryWrapper<SysRoleFunctionPO>().lambda()
                         .select(SysRoleFunctionPO :: getFunctionId)
-                        .eq(SysRoleFunctionPO :: getRoleId, roleId)
+                        .eq(SysRoleFunctionPO :: getRoleId, parameter.getId())
                         .eq(SysRoleFunctionPO::getHalfYn, Boolean.FALSE)
                 ).stream().map(SysRoleFunctionPO :: getFunctionId)
                 .toList()

@@ -26,6 +26,7 @@ export default {
           showAccount: 'Account info',
           unlockUserAccount: 'Unlock account',
           resetPassword: 'Rest password',
+          setRole: 'Set role',
         },
         account: {
           title: 'Account info',

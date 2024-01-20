@@ -643,4 +643,35 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         );
         return password;
     }
+
+    /**
+     * 批量查询用户的角色信息
+     *
+     * @param userIdList 用户ID列表
+     * @return 用户角色细腻系
+     */
+    @Override
+    public Map<Long, List<SysRolePO>> listUserRole(List<Long> userIdList) {
+        if (CollectionUtils.isEmpty(userIdList)) {
+            return Collections.emptyMap();
+        }
+        List<SysUserRolePO> sysUserRoleList = this.sysUserRoleService.list(
+                new QueryWrapper<SysUserRolePO>().lambda()
+                        .in(SysUserRolePO::getUserId, userIdList)
+                        .eq(SysUserRolePO::getEnable, Boolean.TRUE)
+        );
+        if (CollectionUtils.isEmpty(sysUserRoleList)) {
+            return Collections.emptyMap();
+        }
+        Set<Long> roleIds = sysUserRoleList.stream().map(SysUserRolePO::getRoleId).collect(Collectors.toSet());
+        Map<Long, SysRolePO> roleIdMap = this.sysRoleService.list(
+                new QueryWrapper<SysRolePO>().lambda()
+                        .in(SysRolePO::getRoleId, roleIds)
+                        .eq(SysRolePO::getUseYn, Boolean.TRUE)
+        ).stream().collect(Collectors.toMap(SysRolePO::getRoleId, item -> item));
+        if (CollectionUtils.isEmpty(roleIdMap)) {
+            return Collections.emptyMap();
+        }
+        return null;
+    }
 }

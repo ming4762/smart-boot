@@ -89,6 +89,7 @@ const [registerTable, { editByRowModal }] = useSmartTable({
   },
   useSearchForm: true,
   searchFormConfig: {
+    compact: true,
     colon: true,
     searchWithSymbol: true,
     schemas: getSearchSchemas(t),

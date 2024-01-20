@@ -15,6 +15,7 @@ import org.springframework.lang.NonNull;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * @author jackson
@@ -141,4 +142,11 @@ public interface SysUserService extends BaseService<SysUserPO> {
      * @return 重置后的密码
      */
     String resetPassword(Long userId);
+
+    /**
+     * 批量查询用户的角色信息
+     * @param userIdList 用户ID列表
+     * @return 用户角色细腻系
+     */
+    Map<Long, List<SysRolePO>> listUserRole(List<Long> userIdList);
 }

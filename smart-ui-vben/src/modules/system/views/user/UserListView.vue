@@ -41,6 +41,7 @@
       </template>
     </LayoutSeparate>
     <UserAccountUpdateModal @register="registerAccountModal" />
+    <UserSetRole @register="registerSetRoleModal" />
   </div>
 </template>
 
@@ -64,6 +65,7 @@ import {
   ActionItem,
 } from '/@/components/SmartTable'
 import UserAccountUpdateModal from './account/UserAccountUpdateModal.vue'
+import UserSetRole from './components/UserSetRole.vue'
 
 import { getAddEditFormSchemas, getSearchSchemas, getTableColumns } from './UserListView.config'
 import {
@@ -98,6 +100,8 @@ const accountLockedMessage = {
   LONG_TIME_LOCKED: '超出指定时间未登录锁定',
   LONG_TIME_PASSWORD_MODIFY_LOCKED: '超出指定时间未修改密码锁定',
 }
+
+const [registerSetRoleModal, { openModal: openSetRoleModal }] = useModal()
 
 const getLockedMessage = (status: string | null | undefined) => {
   if (!status || status === 'NORMAL') {
@@ -379,6 +383,7 @@ const [
         customRender: 'ant',
         props: {
           type: 'primary',
+          preIcon: 'ant-design:unlock-outlined',
           onClick: () => {
             const selectRows = getCheckboxRecords(false)
             if (selectRows.length !== 1) {
@@ -396,6 +401,23 @@ const [
                 })
               },
             })
+          },
+        },
+      },
+      {
+        name: t('system.views.user.button.setRole'),
+        auth: permissions.setRole,
+        customRender: 'ant',
+        props: {
+          type: 'primary',
+          preIcon: 'ant-design:team-outlined',
+          onClick: () => {
+            const selectRows = getCheckboxRecords(false)
+            if (selectRows.length !== 1) {
+              warnMessage('请选择一条数据')
+              return
+            }
+            openSetRoleModal(true, { userId: selectRows[0].userId })
           },
         },
       },

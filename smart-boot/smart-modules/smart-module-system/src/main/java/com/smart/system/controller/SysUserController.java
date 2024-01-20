@@ -309,4 +309,10 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
     public Result<String> resetPassword(@RequestBody IdParameter parameter) {
         return Result.success(this.service.resetPassword(parameter.getId()));
     }
+
+    @PostMapping("listUserRole")
+    @Operation(summary = "查询用户的角色信息")
+    public Result<List<SysRolePO>> listUserRole(@RequestBody IdParameter parameter) {
+
+    }
 }

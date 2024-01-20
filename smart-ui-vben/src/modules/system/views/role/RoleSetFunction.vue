@@ -50,13 +50,9 @@ export default defineComponent({
       type: Number as PropType<number>,
       default: null,
     },
-    client: {
-      type: String as PropType<string>,
-      default: '',
-    },
   },
   setup(props) {
-    const { roleId, client } = toRefs(props)
+    const { roleId } = toRefs(props)
     const treeRef = ref()
     // 树形控件数据
     const functionTreeData = ref<Array<any>>([])
@@ -74,9 +70,6 @@ export default defineComponent({
           service: ApiServiceEnum.SMART_SYSTEM,
           url: 'sys/function/list',
           data: {
-            parameter: {
-              'client@=': client.value,
-            },
             sortName: 'seq',
           },
         })
@@ -101,15 +94,14 @@ export default defineComponent({
      * 加载角色对应的功能ID
      */
     const loadRoleFunctions = async () => {
-      if (roleId.value !== null && client.value !== '') {
+      if (roleId.value !== null) {
         dataLoading.value = true
         try {
           checkedKeysModel.value = await defHttp.post({
             service: ApiServiceEnum.SMART_SYSTEM,
             url: 'sys/role/listFunctionId',
             params: {
-              roleId: unref(roleId),
-              client: unref(client),
+              id: unref(roleId),
             },
           })
         } finally {
@@ -143,7 +135,6 @@ export default defineComponent({
       }
     }
     watch(roleId, loadRoleFunctions)
-    watch(client, loadFunctionTreeData)
     onMounted(loadFunctionTreeData)
     return {
       functionTreeData,

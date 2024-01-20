@@ -27,6 +27,7 @@ export default {
           showAccount: '账户信息',
           unlockUserAccount: '解锁账户',
           resetPassword: '重置密码',
+          setRole: '设置角色',
         },
         account: {
           title: '账户信息',
