@@ -51,11 +51,13 @@ export const getTableColumns = (t: Function): SmartColumn[] => {
       field: 'sendTime',
       title: '{smart.message.smartMyMessage.title.sendTime}',
       width: 165,
+      sortable: true,
     },
     {
       field: 'priority',
       title: '{smart.message.systemMessage.title.priority}',
       width: 120,
+      sortable: true,
       slots: {
         default: ({ row }) => {
           if (!row.priority) {
@@ -79,16 +81,18 @@ export const getTableColumns = (t: Function): SmartColumn[] => {
     {
       field: 'readYn',
       title: '{smart.message.smartMyMessage.title.readYn}',
-      width: 90,
+      width: 100,
       autoClass: 'Boolean',
       formatter: ({ row }) => {
         return row.readYn === true ? t('common.form.yes') : t('common.form.no')
       },
+      sortable: true,
     },
     {
       field: 'readTime',
       title: '{smart.message.smartMyMessage.title.readTime}',
       width: 165,
+      sortable: true,
     },
     {
       title: '{common.table.operation}',
@@ -108,6 +112,27 @@ export const getSearchFormSchemas = (t: Function): SmartSearchFormSchema[] => {
       field: 'title',
       label: t('smart.message.systemMessage.title.title'),
       component: 'Input',
+    },
+    {
+      field: 'readYn',
+      label: t('smart.message.smartMyMessage.title.readYn'),
+      component: 'Select',
+      searchSymbol: '=',
+      componentProps: {
+        style: {
+          width: '100px',
+        },
+        options: [
+          {
+            label: t('common.form.yes'),
+            value: 1,
+          },
+          {
+            label: t('common.form.no'),
+            value: 0,
+          },
+        ],
+      },
     },
   ]
 }

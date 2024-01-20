@@ -30,8 +30,8 @@ export default {
       noUse: '停用',
       delete: 'Y',
       noDelete: 'N',
-      yes: 'Y',
-      no: 'N',
+      yes: '是',
+      no: '否',
     },
     formValidate: {
       seq: '请输入序号',
