@@ -1,6 +1,7 @@
 package com.smart.module.api.message.parameter;
 
 import com.smart.module.api.message.constants.MessageChannelEnum;
+import com.smart.module.api.message.constants.MessagePriorityEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -39,6 +40,9 @@ public class RemoteMessageSendParameter implements Serializable {
 
     @Schema(description = "模板数据")
     private LinkedHashMap<String, String> templateData;
+
+    @Schema(description = "优先级")
+    private MessagePriorityEnum priority;
 
     /**
      * 消息通道

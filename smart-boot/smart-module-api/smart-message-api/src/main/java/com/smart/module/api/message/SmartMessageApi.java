@@ -1,9 +1,13 @@
 package com.smart.module.api.message;
 
+import com.smart.module.api.message.constants.MessageChannelEnum;
 import com.smart.module.api.message.dto.MessageSendDTO;
 import com.smart.module.api.message.dto.SmsSendDTO;
 import com.smart.module.api.message.parameter.RemoteMessageSendParameter;
 import com.smart.module.api.message.parameter.RemoteSmsSendParameter;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 消息模块API
@@ -24,5 +28,5 @@ public interface SmartMessageApi {
      * @param parameter 消息发送参数
      * @return 消息发送结果
      */
-    MessageSendDTO send(RemoteMessageSendParameter parameter);
+    Map<MessageChannelEnum, List<MessageSendDTO>> send(RemoteMessageSendParameter parameter);
 }

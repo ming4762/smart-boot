@@ -6,10 +6,10 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.smart.crud.model.BaseModelUserTime;
 import com.smart.crud.mybatis.handler.LongSplitTypeHandler;
-import com.smart.message.manager.constants.MessagePriorityEnum;
 import com.smart.message.manager.constants.MessageSendStatusEnum;
 import com.smart.message.manager.constants.MessageTypeEnum;
 import com.smart.message.manager.constants.ReceiveUserTypeEnum;
+import com.smart.module.api.message.constants.MessagePriorityEnum;
 import lombok.Getter;
 import lombok.Setter;
 

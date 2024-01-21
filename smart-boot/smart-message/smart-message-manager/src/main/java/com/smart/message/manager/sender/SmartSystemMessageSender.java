@@ -2,7 +2,6 @@ package com.smart.message.manager.sender;
 
 import com.message.core.service.SmartMessageSender;
 import com.smart.commons.core.utils.IdGenerator;
-import com.smart.message.manager.constants.MessagePriorityEnum;
 import com.smart.message.manager.constants.MessageSendStatusEnum;
 import com.smart.message.manager.constants.MessageTypeEnum;
 import com.smart.message.manager.model.SmartMessageSystemPO;
@@ -62,7 +61,7 @@ public class SmartSystemMessageSender implements SmartMessageSender {
         model.setContent(parameter.getContent());
         model.setMessageType(MessageTypeEnum.SYSTEM_MESSAGE);
         model.setSendStatus(MessageSendStatusEnum.SEND);
-        model.setPriority(MessagePriorityEnum.MIDDLE);
+        model.setPriority(parameter.getPriority());
         model.setSendTime(LocalDateTime.now());
 
         model.setUserIds(new ArrayList<>(parameter.getToUserIds()));
