@@ -1,11 +1,12 @@
 package com.smart.message.manager.pojo.dbo;
 
-import com.smart.message.manager.constants.MessagePriorityEnum;
 import com.smart.message.manager.constants.MessageTypeEnum;
+import com.smart.module.api.message.constants.MessagePriorityEnum;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -19,6 +20,8 @@ import java.time.LocalDateTime;
 @ToString
 public class SmartMessageSendMessageDO implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = 1379478936625227979L;
     /**
      * id - id
      */

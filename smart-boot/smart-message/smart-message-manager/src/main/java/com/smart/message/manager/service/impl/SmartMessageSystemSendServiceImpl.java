@@ -42,6 +42,9 @@ public class SmartMessageSystemSendServiceImpl extends BaseServiceImpl<SmartMess
             // 标题查询条件
             queryWrapper.like(LambdaUtil.getFieldName(SmartMessageSendParameter::getTitle), parameter.getTitle());
         }
+        if (parameter.getMessageType() != null) {
+            queryWrapper.eq(LambdaUtil.getFieldName(SmartMessageSendParameter::getMessageType), parameter.getMessageType().getValue());
+        }
         queryWrapper.lambda()
                 .eq(SmartMessageSystemSendPO::getUserId, AuthUtils.getCurrentUserId());
         return this.baseMapper.listSendMessage(queryWrapper);

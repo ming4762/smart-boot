@@ -2,6 +2,7 @@ package com.smart.module.api.message.dto;
 
 import lombok.*;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -17,6 +18,8 @@ import java.io.Serializable;
 @Builder
 public class MessageSendDTO implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = 3896391008459249751L;
     /**
      * 系统消息发送结果
      */
@@ -29,6 +32,8 @@ public class MessageSendDTO implements Serializable {
     @AllArgsConstructor
     @ToString
     public static class SystemMessageSendDTO implements Serializable {
+        @Serial
+        private static final long serialVersionUID = -5723191833115453567L;
         private Long messageId;
     }
 }

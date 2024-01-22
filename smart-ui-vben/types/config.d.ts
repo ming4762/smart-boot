@@ -162,6 +162,8 @@ export interface GlobConfig {
   shortName: string
   // 是否是单体架构
   isStandalone: boolean
+  // 真实后台地址
+  realApiUrl?: string
 }
 export interface GlobEnvConfig {
   // Site title
@@ -178,4 +180,6 @@ export interface GlobEnvConfig {
    * 后台api模式，standalone：单体架构，cloud：微服务架构
    */
   VITE_GLOB_API_MODE?: ApiMode
+  // 后台真实地址
+  VITE_GLOB_REAL_API_URL?: string
 }

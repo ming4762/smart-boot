@@ -1,13 +1,14 @@
 package com.smart.message.manager.pojo.paramteter;
 
-import com.smart.message.manager.constants.MessagePriorityEnum;
 import com.smart.message.manager.constants.MessageTypeEnum;
 import com.smart.message.manager.constants.ReceiveUserTypeEnum;
+import com.smart.module.api.message.constants.MessagePriorityEnum;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -22,6 +23,8 @@ import java.util.List;
 public class SmartMessageSystemSaveUpdateParameter implements Serializable {
 
 
+    @Serial
+    private static final long serialVersionUID = 7390529990910800219L;
     /**
     * 
     */

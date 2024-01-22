@@ -18,6 +18,7 @@ public enum MessageChannelEnum {
     EMAIL("EMAIL", "邮件消息"),
     WECHAT("WECHAT", "微信消息"),
     DINGDING("DINGDING", "钉钉消息"),
+    WEB_SOCKET("WEB_SOCKET", "web socket消息")
     ;
 
     private final String value;

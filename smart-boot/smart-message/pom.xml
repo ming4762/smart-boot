@@ -17,6 +17,7 @@
 		<module>smart-message-core</module>
 		<module>smart-message-manager</module>
 		<module>smart-message-sms</module>
+		<module>smart-message-websocket</module>
 	</modules>
 
 	<properties>

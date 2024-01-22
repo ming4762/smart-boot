@@ -159,6 +159,12 @@
             </dependency>
 
             <dependency>
+                <groupId>com.smart</groupId>
+                <artifactId>smart-message-core</artifactId>
+                <version>${smart-boot.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
