@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -25,6 +26,15 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 public class RemoteMessageSendParameter implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 488223451300400617L;
+
+    /**
+     * 标记发送消息的ID
+     * 如果是系统创建的消息，则执行更新，否则是执行插入
+     */
+    private Long messageId;
 
     @Schema(description = "接收人ID集合", requiredMode = Schema.RequiredMode.REQUIRED)
     private Set<Long> toUserIds;
@@ -63,6 +73,8 @@ public class RemoteMessageSendParameter implements Serializable {
     @NoArgsConstructor
     @Builder
     public static class SmsSendParameter implements Serializable {
+        @Serial
+        private static final long serialVersionUID = 6229881767018505658L;
         /**
          * 发送的手机号码列表
          */
@@ -92,6 +104,8 @@ public class RemoteMessageSendParameter implements Serializable {
     @Setter
     @AllArgsConstructor
     public static class BusinessParameter implements Serializable {
+        @Serial
+        private static final long serialVersionUID = 1992225195508397364L;
         /**
          * business_ident - 业务标识位
          */

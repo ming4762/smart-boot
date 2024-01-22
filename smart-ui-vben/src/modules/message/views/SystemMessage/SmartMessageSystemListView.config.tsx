@@ -254,7 +254,7 @@ export const getFormSchemas = (t: Function): FormSchema[] => {
       componentProps: {
         options: getMessagePriorityEnum(t),
       },
-      defaultValue: 'HIGH',
+      defaultValue: 'H',
     },
     {
       field: 'receiveUserType',

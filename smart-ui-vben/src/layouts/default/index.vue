@@ -10,6 +10,7 @@
         <LayoutFooter />
       </Layout>
     </Layout>
+    <MessageHandler />
   </Layout>
 </template>
 
@@ -22,6 +23,7 @@ import LayoutHeader from './header/index.vue'
 import LayoutContent from './content/index.vue'
 import LayoutSideBar from './sider/index.vue'
 import LayoutMultipleHeader from './header/MultipleHeader.vue'
+import MessageHandler from './message/MessageHandler.vue'
 
 import { useHeaderSetting } from '/@/hooks/setting/useHeaderSetting'
 import { useMenuSetting } from '/@/hooks/setting/useMenuSetting'
@@ -39,6 +41,7 @@ export default defineComponent({
     LayoutSideBar,
     LayoutMultipleHeader,
     Layout,
+    MessageHandler,
   },
   setup() {
     const { prefixCls } = useDesign('default-layout')

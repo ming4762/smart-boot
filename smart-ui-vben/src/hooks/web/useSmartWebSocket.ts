@@ -45,7 +45,7 @@ export const initWebSocket = () => {
   }
 }
 
-export const useRegisterMessageHandler = (key: string, handler: WebSocketHandler) => {
+export const useRegisterWebsocketMessageHandler = (key: string, handler: WebSocketHandler) => {
   messageHandlerMap.set(key, handler)
 
   onUnmounted(() => {

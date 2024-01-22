@@ -15,17 +15,17 @@ export const getMessagePriorityEnum = (t: Function) => {
   return [
     {
       label: t('smart.message.systemMessage.form.messagePriority.LOW'),
-      value: 'LOW',
+      value: 'L',
       color: 'green',
     },
     {
       label: t('smart.message.systemMessage.form.messagePriority.MIDDLE'),
-      value: 'MIDDLE',
+      value: 'M',
       color: 'orange',
     },
     {
       label: t('smart.message.systemMessage.form.messagePriority.HIGH'),
-      value: 'HIGH',
+      value: 'H',
       color: 'pink',
     },
   ]

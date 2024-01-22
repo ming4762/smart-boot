@@ -19,6 +19,7 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Primary;
@@ -41,6 +42,7 @@ import java.util.stream.Collectors;
  */
 @Component
 @Primary
+@Slf4j
 public class LocalSmartMessageApi implements SmartMessageApi {
 
     private final SmartSmsService smartSmsService;
@@ -110,6 +112,9 @@ public class LocalSmartMessageApi implements SmartMessageApi {
         }
         parameter.getMessageChannels().forEach(item -> {
             List<SmartMessageSender> messageSenderList = this.smartMessageSenderMap.get(item);
+            if (CollectionUtils.isEmpty(messageSenderList)) {
+                log.warn("不支持的消息通道：{}", item.getRemark());
+            }
             result.put(item, messageSenderList.stream().map(sender -> sender.send(parameter)).toList());
         });
         this.applicationContext.publishEvent(new SmartMessageSendEvent(parameter, result, this));

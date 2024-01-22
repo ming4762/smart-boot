@@ -1,6 +1,10 @@
 package com.smart.message.manager.sender;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.message.core.service.SmartMessageSender;
+import com.smart.auth.core.utils.AuthUtils;
 import com.smart.commons.core.utils.IdGenerator;
 import com.smart.message.manager.constants.MessageSendStatusEnum;
 import com.smart.message.manager.constants.MessageTypeEnum;
@@ -55,23 +59,44 @@ public class SmartSystemMessageSender implements SmartMessageSender {
     @Transactional(rollbackFor = Exception.class)
     public MessageSendDTO send(RemoteMessageSendParameter parameter) {
         SmartMessageSystemPO model = new SmartMessageSystemPO();
-        Long messageId = IdGenerator.nextId();
-        model.setId(messageId);
-        model.setTitle(parameter.getTitle());
-        model.setContent(parameter.getContent());
-        model.setMessageType(MessageTypeEnum.SYSTEM_MESSAGE);
-        model.setSendStatus(MessageSendStatusEnum.SEND);
-        model.setPriority(parameter.getPriority());
-        model.setSendTime(LocalDateTime.now());
-
-        model.setUserIds(new ArrayList<>(parameter.getToUserIds()));
-        if (parameter.getBusiness() != null) {
-            model.setBusinessIdent(parameter.getBusiness().getBusinessIdent());
-            model.setBusinessId(parameter.getBusiness().getBusinessId());
-            model.setBusinessData(parameter.getBusiness().getBusinessData());
+        boolean isAdd = true;
+        if (parameter.getMessageId() != null) {
+            SmartMessageSystemPO smartMessageSystem = this.smartMessageSystemService.getOne(
+                    new QueryWrapper<SmartMessageSystemPO>().lambda()
+                            .select(SmartMessageSystemPO::getId)
+                            .eq(SmartMessageSystemPO::getId, parameter.getMessageId())
+            );
+            if (smartMessageSystem != null) {
+                isAdd = false;
+            }
         }
-        this.smartMessageSystemService.save(model);
+        Long messageId = isAdd ? IdGenerator.nextId() : parameter.getMessageId();
+        if (isAdd) {
+            model.setId(messageId);
+            model.setTitle(parameter.getTitle());
+            model.setContent(parameter.getContent());
+            model.setMessageType(MessageTypeEnum.SYSTEM_MESSAGE);
+            model.setSendStatus(MessageSendStatusEnum.SEND);
+            model.setPriority(parameter.getPriority());
+            model.setSendTime(LocalDateTime.now());
 
+            model.setUserIds(new ArrayList<>(parameter.getToUserIds()));
+            if (parameter.getBusiness() != null) {
+                model.setBusinessIdent(parameter.getBusiness().getBusinessIdent());
+                model.setBusinessId(parameter.getBusiness().getBusinessId());
+                model.setBusinessData(parameter.getBusiness().getBusinessData());
+            }
+            this.smartMessageSystemService.save(model);
+        } else {
+            LambdaUpdateWrapper<SmartMessageSystemPO> updateWrapper = new UpdateWrapper<SmartMessageSystemPO>().lambda()
+                    .set(SmartMessageSystemPO::getSendStatus, MessageSendStatusEnum.SEND.getValue())
+                    .set(SmartMessageSystemPO::getSendUserId, AuthUtils.getNonNullCurrentUserId())
+                    .set(SmartMessageSystemPO::getSendTime, LocalDateTime.now())
+                    // TODO:待完善 使用公共函数转
+                    .set(SmartMessageSystemPO::getUserIds, String.join(",", parameter.getToUserIds().stream().map(Object::toString).toList()));
+            // 更新消息表
+            this.smartMessageSystemService.update(updateWrapper);
+        }
         // 保存阅读记录表
         List<SmartMessageSystemSendPO> messageSendList = parameter.getToUserIds().stream()
                 .map(userId -> {

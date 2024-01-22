@@ -1,9 +1,7 @@
 package com.smart.message.manager.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.smart.auth.core.utils.AuthUtils;
 import com.smart.crud.service.BaseServiceImpl;
 import com.smart.message.manager.constants.MessageSendStatusEnum;
 import com.smart.message.manager.constants.ReceiveUserTypeEnum;
@@ -13,16 +11,22 @@ import com.smart.message.manager.model.SmartMessageSystemSendPO;
 import com.smart.message.manager.pojo.vo.SmartMessageSystemDetailVO;
 import com.smart.message.manager.service.SmartMessageSystemSendService;
 import com.smart.message.manager.service.SmartMessageSystemService;
+import com.smart.module.api.message.SmartMessageApi;
+import com.smart.module.api.message.constants.MessageChannelEnum;
+import com.smart.module.api.message.parameter.RemoteMessageSendParameter;
 import com.smart.module.api.system.SysUserApi;
 import com.smart.module.api.system.dto.SysUserDTO;
 import com.smart.module.api.system.parameter.RemoteSysUserListParameter;
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
 * smart_message_system - 系统消息表 Service实现类
@@ -36,9 +40,12 @@ public class SmartMessageSystemServiceImpl extends BaseServiceImpl<SmartMessageS
 
     private final SmartMessageSystemSendService smartMessageSystemSendService;
 
-    public SmartMessageSystemServiceImpl(SysUserApi sysUserApi, SmartMessageSystemSendService smartMessageSystemSendService) {
+    private final SmartMessageApi smartMessageApi;
+
+    public SmartMessageSystemServiceImpl(SysUserApi sysUserApi, SmartMessageSystemSendService smartMessageSystemSendService, @Lazy SmartMessageApi smartMessageApi) {
         this.sysUserApi = sysUserApi;
         this.smartMessageSystemSendService = smartMessageSystemSendService;
+        this.smartMessageApi = smartMessageApi;
     }
 
     /**
@@ -70,10 +77,7 @@ public class SmartMessageSystemServiceImpl extends BaseServiceImpl<SmartMessageS
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean publish(SmartMessageSystemPO data) {
-        LambdaUpdateWrapper<SmartMessageSystemPO> updateWrapper = new UpdateWrapper<SmartMessageSystemPO>().lambda()
-                .set(SmartMessageSystemPO::getSendStatus, MessageSendStatusEnum.SEND.getValue())
-                .set(SmartMessageSystemPO::getSendUserId, AuthUtils.getNonNullCurrentUserId())
-                .set(SmartMessageSystemPO::getSendTime, LocalDateTime.now());
+
         List<Long> userIds = data.getUserIds();
         if (ReceiveUserTypeEnum.ALL_USER.equals(data.getReceiveUserType())) {
             userIds = this.sysUserApi.listUser(
@@ -82,19 +86,16 @@ public class SmartMessageSystemServiceImpl extends BaseServiceImpl<SmartMessageS
                                     .build()
                     ).stream().map(SysUserDTO::getUserId)
                     .toList();
-            updateWrapper.set(SmartMessageSystemPO::getUserIds, userIds);
         }
-        // 更新消息表
-        this.update(updateWrapper);
-        // 插入阅读记录表
-        this.smartMessageSystemSendService.saveBatch(
-                userIds.stream()
-                        .map(item -> {
-                            SmartMessageSystemSendPO model = new SmartMessageSystemSendPO();
-                            model.setMessageId(data.getId());
-                            model.setUserId(item);
-                            return model;
-                        }).toList()
+        // 发送消息
+        this.smartMessageApi.send(
+                RemoteMessageSendParameter.builder()
+                        .messageId(data.getId())
+                        .toUserIds(new HashSet<>(userIds))
+                        .content(data.getContent())
+                        .priority(data.getPriority())
+                        .messageChannels(Set.of(MessageChannelEnum.SYSTEM, MessageChannelEnum.WEB_SOCKET))
+                        .build()
         );
         return true;
     }
