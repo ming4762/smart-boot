@@ -2,12 +2,17 @@ package com.smart.auth.extensions.jwt.token;
 
 import com.google.common.collect.Lists;
 import com.smart.auth.core.constants.LoginTypeEnum;
+import com.smart.auth.core.model.PermissionGrantedAuthority;
+import com.smart.auth.core.model.RestUserDetailsImpl;
+import com.smart.auth.core.model.RoleGrantedAuthority;
+import com.smart.auth.core.model.SmartGrantedAuthority;
 import com.smart.auth.core.properties.AuthProperties;
 import com.smart.auth.core.service.AuthCache;
 import com.smart.auth.core.token.TokenData;
 import com.smart.auth.core.token.TokenRepository;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.auth.extensions.jwt.resolver.JwtResolver;
+import com.smart.commons.core.dto.auth.Permission;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
@@ -63,7 +68,15 @@ public class JwtTokenRepository implements TokenRepository {
         // 保存jwt到cache中
         LocalDateTime currentTime = LocalDateTime.now();
         String token = this.jwtResolver.create(user);
-        this.authCache.put(this.getTokenKey(user.getUsername(), token), new TokenData(token, currentTime, currentTime, timeout, user), timeout);
+
+        TokenData tokenData = new TokenData(token, currentTime, currentTime, timeout, user);
+        if (Boolean.TRUE.equals(this.authProperties.getJwt().getPermissionCache())) {
+            Set<Permission> permissions = user.getPermissions();
+            Set<String> roles = user.getRoles();
+            tokenData.setRoles(roles);
+            tokenData.setPermissions(permissions);
+        }
+        this.authCache.put(this.getTokenKey(user.getUsername(), token), tokenData, timeout);
         return token;
     }
 
@@ -82,6 +95,14 @@ public class JwtTokenRepository implements TokenRepository {
         // 获取有效期
         TokenData jwtData = (TokenData) this.authCache.get(tokenKey);
         if (jwtData != null) {
+            if (Boolean.TRUE.equals(this.authProperties.getJwt().getPermissionCache())) {
+                Set<SmartGrantedAuthority> authorities = new HashSet<>(jwtData.getPermissions().size() + jwtData.getRoles().size());
+                // 添加权限信息
+                jwtData.getPermissions().forEach(permission -> authorities.add(new PermissionGrantedAuthority(permission)));
+                // 添加角色信息
+                jwtData.getRoles().forEach(item -> authorities.add(new RoleGrantedAuthority(item)));
+                ((RestUserDetailsImpl) user).setAuthorities(authorities);
+            }
             jwtData.setRefreshTime(LocalDateTime.now());
             this.authCache.put(tokenKey, jwtData, jwtData.getTimeout());
             this.authCache.expire(attributeKey, jwtData.getTimeout());

@@ -4,6 +4,7 @@ import com.smart.auth.core.model.PermissionGrantedAuthority;
 import com.smart.auth.core.model.RestUserDetailsImpl;
 import com.smart.auth.core.model.RoleGrantedAuthority;
 import com.smart.auth.core.model.SmartGrantedAuthority;
+import com.smart.auth.core.properties.AuthProperties;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.auth.extensions.jwt.resolver.JwtResolver;
 import com.smart.commons.core.dto.auth.Permission;
@@ -48,20 +49,25 @@ public class JwtService implements JwtResolver {
 
     private JwtEncoder jwtEncoder;
 
+    private AuthProperties authProperties;
+
     @Override
     public RestUserDetails resolver(@NonNull String jwtStr) {
         Jwt jwt = this.jwtDecoder.decode(jwtStr);
         Map<String, Object> claims = jwt.getClaims();
         RestUserDetailsImpl userDetails = JsonUtils.parse((String) claims.get(USER_KEY), RestUserDetailsImpl.class);
-        List<String> roleStrList = JsonUtils.parseCollection((String) claims.get(ROLE_KEY), String.class);
-        List<Permission> permissionList = JsonUtils.parseCollection((String) claims.get(PERMISSION_KEY), Permission.class);
-        Set<SmartGrantedAuthority> authorities = new HashSet<>(permissionList.size() + roleStrList.size());
-        // 添加权限信息
-        permissionList.forEach(permission -> authorities.add(new PermissionGrantedAuthority(permission)));
-        // 添加角色信息
-        roleStrList.forEach(item -> authorities.add(new RoleGrantedAuthority(item)));
 
-        userDetails.setAuthorities(authorities);
+        if (!Boolean.TRUE.equals(this.authProperties.getJwt().getPermissionCache())) {
+            List<String> roleStrList = JsonUtils.parseCollection((String) claims.get(ROLE_KEY), String.class);
+            List<Permission> permissionList = JsonUtils.parseCollection((String) claims.get(PERMISSION_KEY), Permission.class);
+            Set<SmartGrantedAuthority> authorities = new HashSet<>(permissionList.size() + roleStrList.size());
+            // 添加权限信息
+            permissionList.forEach(permission -> authorities.add(new PermissionGrantedAuthority(permission)));
+            // 添加角色信息
+            roleStrList.forEach(item -> authorities.add(new RoleGrantedAuthority(item)));
+
+            userDetails.setAuthorities(authorities);
+        }
         // 设置token
         userDetails.setToken(jwtStr);
         return userDetails;
@@ -69,20 +75,19 @@ public class JwtService implements JwtResolver {
 
     @Override
     public String create(RestUserDetails userDetails) {
-        Set<String> roles = userDetails.getRoles();
-        Set<Permission> permissions = userDetails.getPermissions();
-
+        JwtClaimsSet.Builder builder = JwtClaimsSet.builder()
+                .issuedAt(Instant.now())
+                .id(userDetails.getUserId().toString())
+                .claim(USER_KEY, JsonUtils.toJsonString(userDetails));
+        if (!Boolean.TRUE.equals(this.authProperties.getJwt().getPermissionCache())) {
+            Set<String> roles = userDetails.getRoles();
+            Set<Permission> permissions = userDetails.getPermissions();
+            builder.claim(ROLE_KEY, JsonUtils.toJsonString(roles))
+                    .claim(PERMISSION_KEY, JsonUtils.toJsonString(permissions));
+        }
         JwtEncoderParameters parameters = JwtEncoderParameters.builder()
                 .jwsHeader(JwsHeader.builder().algorithm(SignatureAlgorithm.RS256).build())
-                .claims(
-                        JwtClaimsSet.builder()
-                                .issuedAt(Instant.now())
-                                .id(userDetails.getUserId().toString())
-                                .claim(USER_KEY, JsonUtils.toJsonString(userDetails))
-                                .claim(ROLE_KEY, JsonUtils.toJsonString(roles))
-                                .claim(PERMISSION_KEY, JsonUtils.toJsonString(permissions))
-                                .build()
-                )
+                .claims(builder.build())
                 .build();
         return this.jwtEncoder.encode(parameters).getTokenValue();
     }
@@ -102,5 +107,10 @@ public class JwtService implements JwtResolver {
     @Autowired
     public void setJwtEncoder(JwtEncoder jwtEncoder) {
         this.jwtEncoder = jwtEncoder;
+    }
+
+    @Autowired
+    public void setAuthProperties(AuthProperties authProperties) {
+        this.authProperties = authProperties;
     }
 }
