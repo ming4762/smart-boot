@@ -13,6 +13,8 @@ public class TokenUtils {
 
     public static final String HEADER_CAPTCHA_TOKEN = "Captcha-Token";
 
+    private static final String UPGRADE_WEBSOCKET = "websocket";
+
     private TokenUtils() {
         throw new IllegalStateException("Utility class");
     }
@@ -24,6 +26,9 @@ public class TokenUtils {
      */
     @Nullable
     public static String getToken(HttpServletRequest request) {
+        if (UPGRADE_WEBSOCKET.equals(request.getHeader(HttpHeaders.UPGRADE))) {
+            return request.getHeader(com.google.common.net.HttpHeaders.SEC_WEBSOCKET_PROTOCOL);
+        }
         return request.getHeader(HttpHeaders.AUTHORIZATION);
     }
 

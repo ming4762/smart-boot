@@ -8,7 +8,7 @@ const { permissionCacheType } = projectSetting
 const isLocal = permissionCacheType === CacheTypeEnum.LOCAL
 
 export function getToken() {
-  return getAuthCache(TOKEN_KEY)
+  return getAuthCache<string | null>(TOKEN_KEY)
 }
 
 export function getAuthCache<T>(key: BasicKeys) {

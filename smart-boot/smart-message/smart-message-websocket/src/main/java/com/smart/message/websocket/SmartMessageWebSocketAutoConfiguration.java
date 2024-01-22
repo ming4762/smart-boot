@@ -1,7 +1,9 @@
 package com.smart.message.websocket;
 
+import com.smart.message.websocket.filter.WebsocketFilter;
 import com.smart.message.websocket.sender.SmartMessageWebSocketSender;
 import com.smart.message.websocket.server.WebSocket;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -29,5 +31,18 @@ public class SmartMessageWebSocketAutoConfiguration {
     @Bean
     public SmartMessageWebSocketSender smartMessageWebSocketSender(WebSocket webSocket) {
         return new SmartMessageWebSocketSender(webSocket);
+    }
+
+    @Bean
+    public WebsocketFilter websocketFilter() {
+        return new WebsocketFilter();
+    }
+
+    @Bean
+    public FilterRegistrationBean<WebsocketFilter> webSocketfilterRegistrationBean(WebsocketFilter filter) {
+        FilterRegistrationBean<WebsocketFilter> filterRegistrationBean = new FilterRegistrationBean<>();
+        filterRegistrationBean.setFilter(filter);
+        filterRegistrationBean.addUrlPatterns("/websocket/*");
+        return filterRegistrationBean;
     }
 }

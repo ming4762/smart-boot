@@ -2,6 +2,7 @@ import { useGlobSetting } from '/@/hooks/setting'
 import { getCurrentUserId } from '/@/common/auth/AuthUtils'
 import { useWebSocket, WebSocketResult } from '@vueuse/core'
 import { onUnmounted, unref } from 'vue'
+import { getToken } from '/@/utils/auth'
 
 export interface WebSocketHandler {
   open?: () => void
@@ -19,7 +20,7 @@ const messageHandlerMap: Map<string, WebSocketHandler> = new Map()
  */
 export const initWebSocket = () => {
   const webSocketUrl = getWebSocketUrl()
-  console.log('===============')
+  const token = getToken() || ''
   webSocketResult = useWebSocket(webSocketUrl, {
     autoReconnect: {
       retries: 5,
@@ -29,6 +30,7 @@ export const initWebSocket = () => {
       message: 'ping',
       interval: 10 * 1000,
     },
+    protocols: [token],
   })
   console.log(webSocketResult)
   if (webSocketResult) {
@@ -64,14 +66,14 @@ const getWebSocketUrl = () => {
 const onOpen = () => {
   console.log('[WebSocket] 连接成功')
   messageHandlerMap.forEach((item) => {
-    item.open?.apply(this)
+    item.open?.apply(null)
   })
 }
 
 const onClose = (e) => {
   console.log('[WebSocket] 连接断开：', e)
   messageHandlerMap.forEach((item) => {
-    item.close?.apply(this)
+    item.close?.apply(null)
   })
 }
 
