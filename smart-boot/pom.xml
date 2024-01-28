@@ -16,12 +16,12 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <spring-boot.version>3.1.2</spring-boot.version>
-        <spring-cloud.version>2022.0.1</spring-cloud.version>
+        <spring-boot.version>3.2.2</spring-boot.version>
+        <spring-cloud.version>2023.0.0</spring-cloud.version>
         <smart-boot.version>3.0.0-SNAPSHOT</smart-boot.version>
-        <spring-cloud-alibaba.version>2022.0.0.0-RC2</spring-cloud-alibaba.version>
+        <spring-cloud-alibaba.version>2022.0.0.0</spring-cloud-alibaba.version>
 
-        <guava.version>31.1-jre</guava.version>
+        <guava.version>33.0.0-jre</guava.version>
         <jjwt.version>0.11.5</jjwt.version>
         <opensaml.version>2.6.4</opensaml.version>
         <commons-collections4.version>4.4</commons-collections4.version>
@@ -32,13 +32,13 @@
         <jsch.version>0.1.55</jsch.version>
         <pagehelper.version>1.4.6</pagehelper.version>
 
-        <mybatis-plus-boot-starter.version>3.5.3</mybatis-plus-boot-starter.version>
+        <mybatis-plus-boot-starter.version>3.5.5</mybatis-plus-boot-starter.version>
         <jodconverter.version>4.4.2</jodconverter.version>
         <google.zxing.version>3.5.0</google.zxing.version>
         <jxls.version>2.11.0</jxls.version>
         <jacob.version>1.20</jacob.version>
         <kettle.version>9.2.0.0</kettle.version>
-        <xxl-job.version>2.3.1</xxl-job.version>
+        <xxl-job.version>2.4.0</xxl-job.version>
         <druid.version>1.2.18</druid.version>
         <easy-captcha.version>1.6.2</easy-captcha.version>
         <ojdbc8.version>19.3.0.0</ojdbc8.version>
@@ -49,7 +49,7 @@
         <nimbus-jose-jwt.version>9.23</nimbus-jose-jwt.version>
         <truelicense.version>1.33</truelicense.version>
         <minio.version>8.4.6</minio.version>
-        <hutool.version>5.8.12</hutool.version>
+        <hutool.version>5.8.25</hutool.version>
         <aliyun.oss.version>3.16.1</aliyun.oss.version>
         <knife4j-openapi3.version>4.1.0</knife4j-openapi3.version>
         <qiniu.version>7.12.1</qiniu.version>
