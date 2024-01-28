@@ -9,8 +9,8 @@ import com.smart.system.model.SysDeptPO;
 import com.smart.system.pojo.dto.dept.SysDeptSaveUpdateDTO;
 import com.smart.system.service.SysDeptService;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.validation.Valid;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
 * sys_dept - 部门表 Controller
@@ -37,7 +36,6 @@ public class SysDeptController extends BaseController<SysDeptService, SysDeptPO>
     @Override
     @PostMapping("list")
     @Operation(summary = "查询角色列表（支持分页、实体类属性查询）")
-    @PreAuthorize("hasPermission('sys:dept', 'query')")
     public Result<Object> list(@RequestBody @NonNull PageSortQuery parameter) {
         return super.list(parameter);
     }
@@ -63,7 +61,7 @@ public class SysDeptController extends BaseController<SysDeptService, SysDeptPO>
             SysDeptPO dept = new SysDeptPO();
             BeanUtils.copyProperties(item, dept);
             return dept;
-        }).collect(Collectors.toList());
+        }).toList();
         return Result.success(this.service.saveOrUpdateBatch(list));
     }
 
@@ -82,7 +80,6 @@ public class SysDeptController extends BaseController<SysDeptService, SysDeptPO>
     @Override
     @Operation(summary = "通过ID查询")
     @PostMapping("getById")
-    @PreAuthorize("hasPermission('sys:dept', 'query')")
     public Result<SysDeptPO> getById(@RequestBody Serializable id) {
         return super.getById(id);
     }

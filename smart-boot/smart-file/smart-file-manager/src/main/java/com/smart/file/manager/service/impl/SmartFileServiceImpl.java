@@ -50,7 +50,7 @@ public class SmartFileServiceImpl extends BaseServiceImpl<SmartFileMapper, Smart
                             BeanUtils.copyProperties(item, vo);
                             vo.setFileStorage(fileStorageMap.get(vo.getFileStorageId()));
                             return vo;
-                        }).collect(Collectors.toList());
+                        }).toList();
             }
         }
         return dataList;

@@ -8,7 +8,6 @@ import com.smart.db.generator.constants.RuleTypeEnum;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author ShiZhongMing
@@ -99,8 +98,8 @@ public class DbGeneratorDocumentCreator {
      */
     private static List<DocumentVO> createFormRuleDocument() {
         return Lists.newArrayList(
-                new DocumentVO("ruleType", "验证类型", "String", Arrays.stream(RuleTypeEnum.values()).map(Enum::toString).collect(Collectors.toList()), null, false),
-                new DocumentVO("ruleTrigger", "验证时机", "List", Arrays.stream(RuleTriggerEnum.values()).map(Enum::toString).collect(Collectors.toList()), null, false),
+                new DocumentVO("ruleType", "验证类型", "String", Arrays.stream(RuleTypeEnum.values()).map(Enum::toString).toList(), null, false),
+                new DocumentVO("ruleTrigger", "验证时机", "List", Arrays.stream(RuleTriggerEnum.values()).map(Enum::toString).toList(), null, false),
                 new DocumentVO("len", "长度", "Long", null, null, true),
                 new DocumentVO("max", "最大值", "Long", null, null, true),
                 new DocumentVO("min", "最小值）", "Long", null, null, true),
@@ -148,7 +147,7 @@ public class DbGeneratorDocumentCreator {
                 new DocumentVO("readonly", "是否只读", "Boolean", null, "false", false),
                 new DocumentVO("hidden", "是否隐藏", "Boolean", null, null, false),
 
-                new DocumentVO("controlType", "控件类型", "String", Arrays.stream(FromControlTypeEnum.values()).map(Enum::name).collect(Collectors.toList()), null, false),
+                new DocumentVO("controlType", "控件类型", "String", Arrays.stream(FromControlTypeEnum.values()).map(Enum::name).toList(), null, false),
                 new DocumentVO("seq", "序号", "Integer", null, null, false),
 
                 new DocumentVO("useTableSearch", "是否查询数据库", "Boolean", null, "false", true),

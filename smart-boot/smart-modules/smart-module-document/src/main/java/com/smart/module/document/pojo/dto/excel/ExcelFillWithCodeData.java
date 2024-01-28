@@ -23,7 +23,7 @@ public class ExcelFillWithCodeData implements Serializable {
     @Serial
     private static final long serialVersionUID = 6166427918974129035L;
     @Schema(title = "填充数据")
-    private Map<String, Object> data;
+    private Map<String, ? extends Serializable> data;
 
     @Schema(title = "条形码")
     private Map<String, BarcodeGeneratorData> barcodeMap;

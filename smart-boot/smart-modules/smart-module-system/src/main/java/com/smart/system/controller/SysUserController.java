@@ -313,6 +313,6 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
     @PostMapping("listUserRole")
     @Operation(summary = "查询用户的角色信息")
     public Result<List<SysRolePO>> listUserRole(@RequestBody IdParameter parameter) {
-
+        return Result.success();
     }
 }

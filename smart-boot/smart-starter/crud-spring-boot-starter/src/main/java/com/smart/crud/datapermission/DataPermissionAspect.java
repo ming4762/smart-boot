@@ -79,8 +79,8 @@ public class DataPermissionAspect {
                 DataPermissionHolder.setSql(sql.toString());
             }
             var param = point.getArgs().length > 0 ? point.getArgs()[0] : null;
-            if (param instanceof CommonQuery) {
-                ((CommonQuery) param).getParameter().put(CrudCommonEnum.DATA_PERMISSION.name(), sql.toString());
+            if (param instanceof CommonQuery commonQuery) {
+                commonQuery.getParameter().put(CrudCommonEnum.DATA_PERMISSION.name(), sql.toString());
             }
         }
     }

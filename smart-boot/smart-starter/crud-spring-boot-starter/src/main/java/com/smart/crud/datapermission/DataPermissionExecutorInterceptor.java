@@ -45,6 +45,6 @@ public class DataPermissionExecutorInterceptor implements Interceptor {
         var sql = boundSql.getSql() + String.format(" AND (%s)", permissionSql.substring(4));
         var newBoundSql = new BoundSql(ms.getConfiguration(), sql, boundSql.getParameterMappings(), parameter);
         var cacheKey = executor.createCacheKey(ms, parameter, rowBound, boundSql);
-        return executor.query(ms, parameter, rowBound, resultHandler, null, newBoundSql);
+        return executor.query(ms, parameter, rowBound, resultHandler, cacheKey, newBoundSql);
     }
 }

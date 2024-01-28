@@ -59,7 +59,7 @@ public class FileController {
     @PostMapping("smart/file/getAddress")
     @ResponseBody
     public Result<String> getAddress(@RequestBody IdParameter idParameter) {
-        List<String> addressList = this.fileService.listAddress(List.of((Long) idParameter.getId()));
+        List<String> addressList = this.fileService.listAddress(List.of(idParameter.getId()));
         if (!CollectionUtils.isEmpty(addressList)) {
             return Result.success(addressList.get(0));
         }

@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +19,7 @@ import java.util.Map;
 @Getter
 @Setter
 public class CodeEyePosition implements Serializable {
+    @Serial
     private static final long serialVersionUID = -718291455736205252L;
 
     private static final PointPosition POS = new PointPosition();

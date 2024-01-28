@@ -47,7 +47,7 @@ public class DiskFilePathBO {
     /**
      * 是否使用原始文件名
      */
-    private boolean useOriginalFilename;
+    private Boolean useOriginalFilename = Boolean.FALSE;
 
     public DiskFilePathBO(String basePath, FileStorageSaveParameter parameter) {
         this.basePath = basePath;
@@ -115,7 +115,7 @@ public class DiskFilePathBO {
      * @return 文件名
      */
     public String getDiskFilename() {
-        if (this.useOriginalFilename) {
+        if (Boolean.TRUE.equals(this.useOriginalFilename)) {
             return this.filename;
         }
         if (!this.filename.contains(POINT_STR)) {

@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
 * sys_tenant - 租户表 Controller
@@ -49,7 +48,7 @@ public class SysTenantController extends BaseController<SysTenantService, SysTen
             SysTenantPO model = new SysTenantPO();
             BeanUtils.copyProperties(item, model);
             return model;
-        }).collect(Collectors.toList());
+        }).toList();
         return super.batchSaveUpdate(modelList);
     }
 

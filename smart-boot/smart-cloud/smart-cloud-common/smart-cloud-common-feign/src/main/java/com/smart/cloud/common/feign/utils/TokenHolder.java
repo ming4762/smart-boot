@@ -6,6 +6,9 @@ package com.smart.cloud.common.feign.utils;
  */
 public class TokenHolder {
 
+    private TokenHolder() {
+        throw new IllegalStateException("Utility class");
+    }
 
     private static final ThreadLocal<String> THREAD_LOCAL = new ThreadLocal<>();
 

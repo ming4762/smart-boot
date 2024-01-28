@@ -51,7 +51,6 @@ public class SmartFileController extends BaseController<SmartFileService, SmartF
     @PostMapping("list")
     @Operation(summary = "查询文件列表", method = "POST")
     @PreAuthorize("hasPermission('smart:file', 'query')")
-    @ResponseBody
     public Result<Object> list(@RequestBody @NonNull PageSortQuery parameter) {
         parameter.getParameter().put(CrudCommonEnum.WITH_ALL.name(), true);
         // 权限控制
@@ -71,7 +70,6 @@ public class SmartFileController extends BaseController<SmartFileService, SmartF
      */
     @Operation(summary = "上传文件")
     @PostMapping("upload")
-    @ResponseBody
     public Result<FileHandlerResult> upload(FileUploadDTO parameter) {
         return Result.success(this.fileService.save(parameter.getFile(), FileSaveParameter.builder()
                 .filename(parameter.getFileName())
@@ -93,7 +91,6 @@ public class SmartFileController extends BaseController<SmartFileService, SmartF
             @Parameter(name = "files", description = "文件集合", required = true),
             @Parameter(name = "type", description = "文件类型"),
     })
-    @ResponseBody
     public Result<List<FileHandlerResult>> batchUpload(
             @RequestParam("files")List<MultipartFile> multipartFileList,
             @RequestParam(value = "type", required = false) String type
@@ -116,7 +113,6 @@ public class SmartFileController extends BaseController<SmartFileService, SmartF
     @PreAuthorize("hasPermission('smart:file', 'delete')")
     @PostMapping("batchDeleteFile")
     @Operation(summary = "批量删除文件")
-    @ResponseBody
     public Result<List<FileHandlerResult>> batchDeleteFile(@RequestBody List<Long> ids)  {
         return Result.success(
                 this.fileService.batchDelete(ids)

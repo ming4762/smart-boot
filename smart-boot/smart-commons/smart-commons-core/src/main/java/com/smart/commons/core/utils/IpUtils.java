@@ -20,7 +20,9 @@ public class IpUtils {
 	private static final String UNKNOWN = "unknown";
 
 	private static final String LOCALHOST_IP = "127.0.0.1";
-	// 客户端与服务器同为一台机器，获取的 ip 有时候是 ipv6 格式
+	/**
+	 * 客户端与服务器同为一台机器，获取的 ip 有时候是 ipv6 格式
+	 */
 	private static final String LOCALHOST_IPV6 = "0:0:0:0:0:0:0:1";
 	private static final String SEPARATOR = ",";
 

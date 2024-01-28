@@ -57,8 +57,10 @@ public class BarcodeGeneratorData extends AbstractCodeGeneratorData implements S
     @Getter
     @Setter
     @Schema(title = "条形码字体设置")
-    public static class CodeFont {
+    public static class CodeFont implements Serializable {
 
+        @Serial
+        private static final long serialVersionUID = 3761090056078591644L;
         @Schema(title = "字体名字")
         private String name;
 

@@ -1,7 +1,6 @@
 package com.smart.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.google.common.collect.ImmutableList;
 import com.smart.crud.constants.CrudCommonEnum;
 import com.smart.crud.model.CreateUpdateUserSetter;
 import com.smart.crud.query.PageSortQuery;
@@ -94,7 +93,7 @@ public class SysFunctionServiceImpl extends BaseServiceImpl<SysFunctionMapper, S
         }
         SysFunctionVO vo = new SysFunctionVO();
         vo.setFunction(function);
-        List<SysFunctionVO> voList = ImmutableList.of(vo);
+        List<SysFunctionVO> voList = List.of(vo);
         this.queryCreateUpdateUser(voList);
         this.queryParent(voList);
         return voList.get(0);

@@ -53,7 +53,7 @@ public class FileStorageNfsServiceImpl implements FileStorageService {
         try {
             DiskFilePathBO diskFilePath = new DiskFilePathBO(properties.getBasePath(), parameter);
             // 创建并进入路径
-            JschUtils.createDirectories(channelSftp, diskFilePath.getFolderPath());
+            JschUtils.createDirectories(channelSftp, diskFilePath.getAbsolutePath());
             channelSftp.put(inputStream, diskFilePath.getDiskFilename());
             return diskFilePath.getFileId();
         } finally {
@@ -69,7 +69,7 @@ public class FileStorageNfsServiceImpl implements FileStorageService {
         try {
             for (String key : parameter.getFileStoreKeyList()) {
                 DiskFilePathBO diskFilePath = DiskFilePathBO.createById(key, properties.getBasePath());
-                channelSftp.cd(diskFilePath.getFolderPath());
+                channelSftp.cd(diskFilePath.getAbsolutePath());
                 channelSftp.rm(diskFilePath.getDiskFilename());
             }
         } finally {
@@ -80,12 +80,11 @@ public class FileStorageNfsServiceImpl implements FileStorageService {
     @SneakyThrows(SftpException.class)
     @Override
     public InputStream download(@NonNull FileStorageGetParameter parameter) {
-//        throw new UnsupportedOperationException("NFS方式不支持该方式下载文件，请通过download(String id, OutputStream outputStream)下载文件");
         SmartFileStorageSftpProperties properties = this.getProperties(parameter.getStorageProperties());
         ChannelSftp channelSftp = this.channelProvider.getChannel(parameter.getStorageProperties());
         try {
             DiskFilePathBO diskFilePath = DiskFilePathBO.createById(parameter.getFileStorageKey(), properties.getBasePath());
-            channelSftp.cd(diskFilePath.getFolderPath());
+            channelSftp.cd(diskFilePath.getAbsolutePath());
             return channelSftp.get(diskFilePath.getDiskFilename());
         } finally {
             this.channelProvider.returnChannel(parameter.getStorageProperties(), channelSftp);
@@ -99,7 +98,7 @@ public class FileStorageNfsServiceImpl implements FileStorageService {
         ChannelSftp channelSftp = this.channelProvider.getChannel(parameter.getStorageProperties());
         try {
             DiskFilePathBO diskFilePath = DiskFilePathBO.createById(parameter.getFileStorageKey(), properties.getBasePath());
-            channelSftp.cd(diskFilePath.getFolderPath());
+            channelSftp.cd(diskFilePath.getAbsolutePath());
             try (final InputStream inputStream = channelSftp.get(diskFilePath.getDiskFilename())) {
                 IOUtils.copy(inputStream, outputStream);
             }

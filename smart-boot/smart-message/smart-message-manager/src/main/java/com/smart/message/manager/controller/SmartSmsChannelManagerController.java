@@ -79,7 +79,7 @@ public class SmartSmsChannelManagerController extends BaseController<SmartSmsCha
     @PostMapping("setDefault")
     @PreAuthorize("hasPermission('smart:sms', 'update')")
     public Result<Boolean> setDefault(@RequestBody IdParameter idParameter) {
-        return Result.success(this.service.setDefault((Long)idParameter.getId()));
+        return Result.success(this.service.setDefault(idParameter.getId()));
     }
 
     /**

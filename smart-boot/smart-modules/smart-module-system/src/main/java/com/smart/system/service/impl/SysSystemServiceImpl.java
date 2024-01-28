@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author zhongming4762
@@ -75,7 +74,7 @@ public class SysSystemServiceImpl extends BaseServiceImpl<SysSystemMapper, SysSy
                                 sysSystemUser.setSystemId(parameter.getSystemId());
                                 sysSystemUser.setUserId(item);
                                 return sysSystemUser;
-                            }).collect(Collectors.toList())
+                            }).toList()
             );
         }
         return true;

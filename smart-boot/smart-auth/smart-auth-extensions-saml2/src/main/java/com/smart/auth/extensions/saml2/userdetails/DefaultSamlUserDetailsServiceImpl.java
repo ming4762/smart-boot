@@ -1,13 +1,9 @@
 package com.smart.auth.extensions.saml2.userdetails;
 
-import com.smart.auth.core.constants.AuthTypeEnum;
-import com.smart.auth.core.model.RestUserDetailsImpl;
 import com.smart.auth.core.token.TokenRepository;
 import com.smart.auth.core.userdetails.AbstractUserDetailsService;
 import com.smart.module.api.system.SystemAuthUserApi;
-import com.smart.module.api.system.dto.AuthUser;
 import com.smart.module.api.system.dto.AuthUserDTO;
-import org.springframework.lang.NonNull;
 import org.springframework.security.saml.SAMLCredential;
 import org.springframework.security.saml.userdetails.SAMLUserDetailsService;
 

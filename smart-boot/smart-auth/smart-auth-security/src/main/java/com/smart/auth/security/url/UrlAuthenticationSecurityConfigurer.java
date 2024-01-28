@@ -22,8 +22,6 @@ public class UrlAuthenticationSecurityConfigurer extends SecurityConfigurerAdapt
     public void configure(HttpSecurity builder) throws Exception {
         UrlAuthorizationManager authorizationManager = new UrlAuthorizationManager();
         this.postProcess(authorizationManager);
-        builder.authorizeHttpRequests()
-                .anyRequest()
-                .access(authorizationManager);
+        builder.authorizeHttpRequests(request -> request.anyRequest().access(authorizationManager));
     }
 }

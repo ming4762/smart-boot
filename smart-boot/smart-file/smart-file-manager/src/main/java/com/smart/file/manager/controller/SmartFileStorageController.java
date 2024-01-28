@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
 * smart_file_storage - 文件存储器配置 Controller
@@ -70,7 +69,7 @@ public class SmartFileStorageController extends BaseController<SmartFileStorageS
             SmartFileStoragePO model = new SmartFileStoragePO();
             BeanUtils.copyProperties(item, model);
             return model;
-        }).collect(Collectors.toList());
+        }).toList();
         return super.batchSaveUpdate(modelList);
     }
 

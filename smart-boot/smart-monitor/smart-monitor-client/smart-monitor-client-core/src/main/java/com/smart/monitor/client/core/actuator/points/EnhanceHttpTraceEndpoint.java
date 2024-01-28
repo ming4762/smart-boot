@@ -34,9 +34,4 @@ public class EnhanceHttpTraceEndpoint extends HttpExchangesEndpoint {
         }
         return this.repository.findAll();
     }
-
-    @Override
-    public HttpExchangesDescriptor httpExchanges() {
-        return super.httpExchanges();
-    }
 }

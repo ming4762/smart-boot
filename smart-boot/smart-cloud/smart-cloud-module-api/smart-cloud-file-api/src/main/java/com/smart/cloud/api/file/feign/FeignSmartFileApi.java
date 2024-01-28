@@ -1,7 +1,6 @@
 package com.smart.cloud.api.file.feign;
 
 import com.smart.cloud.common.core.constants.CloudServiceNameConstants;
-import com.smart.module.api.file.SmartFileApi;
 import com.smart.module.api.file.bo.FileHandlerResult;
 import com.smart.module.api.file.constants.SmartFileApiUrlConstants;
 import com.smart.module.api.file.dto.RemoteFileSaveParameter;

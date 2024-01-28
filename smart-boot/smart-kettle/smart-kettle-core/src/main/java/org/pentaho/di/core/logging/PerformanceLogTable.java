@@ -143,6 +143,7 @@ public class PerformanceLogTable extends BaseLogTable implements Cloneable, LogT
                             case INPUT_BUFFER_ROWS -> value = snapShot.getInputBufferSize();
                             case OUTPUT_BUFFER_ROWS -> value = snapShot.getOutputBufferSize();
                             default -> {
+                                // do nothing
                             }
                         }
                     }

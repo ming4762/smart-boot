@@ -125,6 +125,7 @@ public class StepLogTable extends BaseLogTable implements Cloneable, LogTableInt
                             case ERRORS -> value = combi.step.getErrors();
                             case LOG_FIELD -> value = this.getLogBuffer(combi.step, combi.step.getLogChannel().getLogChannelId(), status, null);
                             default -> {
+                                // do nothing
                             }
                         }
                     }

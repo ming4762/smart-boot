@@ -2,7 +2,6 @@ package com.smart.file.manager.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.google.common.collect.ImmutableList;
 import com.smart.crud.service.BaseServiceImpl;
 import com.smart.file.manager.mapper.SmartFileStorageMapper;
 import com.smart.file.manager.model.SmartFileStoragePO;
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
 * smart_file_storage - 文件存储器配置 Service实现类
@@ -32,7 +32,7 @@ public class SmartFileStorageServiceImpl extends BaseServiceImpl<SmartFileStorag
         this.update(
                 new UpdateWrapper<SmartFileStoragePO>().lambda()
                         .set(SmartFileStoragePO::getDefaultStorage, false)
-                        .notIn(SmartFileStoragePO::getId, ImmutableList.of(id))
+                        .notIn(SmartFileStoragePO::getId, List.of(id))
         );
         this.update(
                 new UpdateWrapper<SmartFileStoragePO>().lambda()

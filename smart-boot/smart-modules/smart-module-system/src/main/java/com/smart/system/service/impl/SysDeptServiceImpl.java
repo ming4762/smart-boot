@@ -193,7 +193,7 @@ public class SysDeptServiceImpl extends BaseServiceImpl<SysDeptMapper, SysDeptPO
                     }
                     return null;
                 }).filter(Objects::nonNull)
-                .collect(Collectors.toList());
+                .toList();
         if (!CollectionUtils.isEmpty(parentIdList)) {
             parentIdList.forEach(this::updateHasChild);
         }

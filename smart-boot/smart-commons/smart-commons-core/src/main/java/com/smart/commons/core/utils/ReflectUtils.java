@@ -66,6 +66,6 @@ public final class ReflectUtils {
     public static List<Field> getField(@NonNull Class<?> clazz) {
         return Arrays.stream(clazz.getDeclaredFields())
                 .filter(ReflectUtils:: isNotStatic)
-                .collect(Collectors.toList());
+                .toList();
     }
 }

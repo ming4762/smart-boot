@@ -1,7 +1,5 @@
 package com.smart.commons.core.utils.auth;
 
-import com.smart.commons.core.utils.Base64Utils;
-import com.smart.commons.core.utils.IdGenerator;
 import lombok.SneakyThrows;
 
 import javax.crypto.Mac;
@@ -9,7 +7,6 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.UUID;
 
 /**
  * @author shizhongming

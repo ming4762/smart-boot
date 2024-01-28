@@ -30,7 +30,7 @@ public abstract class AbstractServerInfo implements ServerInfo {
                 .map(this::getMacByInetAddress)
                 .filter(Objects::nonNull)
                 .distinct()
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**

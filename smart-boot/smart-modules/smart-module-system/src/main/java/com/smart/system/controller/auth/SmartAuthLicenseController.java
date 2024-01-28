@@ -10,9 +10,9 @@ import com.smart.system.pojo.dto.license.SmartAuthLicenseSaveUpdateDTO;
 import com.smart.system.pojo.dto.system.SmartAuthLicenseListBySystemDTO;
 import com.smart.system.service.auth.SmartAuthLicenseService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.SneakyThrows;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpHeaders;
@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
 * smart_auth_license - 许可证管理 Controller
@@ -59,7 +58,7 @@ public class SmartAuthLicenseController extends BaseController<SmartAuthLicenseS
                     SmartAuthLicensePO model = new SmartAuthLicensePO();
                     BeanUtils.copyProperties(item, model);
                     return model;
-                }).collect(Collectors.toList());
+                }).toList();
 
         return super.batchSaveUpdate(list);
     }

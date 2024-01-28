@@ -26,5 +26,5 @@ public class ExcelFillDataDTO implements Serializable {
     @NotNull(message = "模板编码不能为空")
     private String templateCode;
 
-    private Map<String, Object> data;
+    private Map<String, ? extends Serializable> data;
 }

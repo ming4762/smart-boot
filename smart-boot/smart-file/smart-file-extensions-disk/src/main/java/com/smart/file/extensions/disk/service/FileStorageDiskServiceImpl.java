@@ -55,7 +55,7 @@ public class FileStorageDiskServiceImpl implements FileStorageService {
         SmartFileStorageDiskProperties diskProperties = this.getDiskProperties(parameter);
         DiskFilePathBO diskFilePath = new DiskFilePathBO(diskProperties.getBasePath(), parameter);
         // 获取文件路径
-        final Path folderPath = Paths.get(diskFilePath.getFolderPath());
+        final Path folderPath = Paths.get(diskFilePath.getAbsolutePath());
         if (Files.notExists(folderPath)) {
             Files.createDirectories(folderPath);
         }

@@ -15,8 +15,8 @@ import com.smart.system.pojo.dto.system.SystemSetUserDTO;
 import com.smart.system.service.SysSystemService;
 import com.smart.system.service.SysSystemUserService;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.validation.Valid;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
 * sys_system - 系统管理表 Controller
@@ -108,7 +107,7 @@ public class SysSystemController extends BaseController<SysSystemService, SysSys
                         new QueryWrapper<SysSystemUserPO>().lambda()
                                 .select(SysSystemUserPO::getUserId)
                                 .eq(SysSystemUserPO::getSystemId, parameter.getId())
-                ).stream().map(SysSystemUserPO::getUserId).collect(Collectors.toList())
+                ).stream().map(SysSystemUserPO::getUserId).toList()
         );
     }
 }

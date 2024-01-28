@@ -18,7 +18,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
 * sys_category - 分类字段 Service实现类
@@ -96,7 +95,7 @@ public class SysCategoryServiceImpl extends BaseServiceImpl<SysCategoryMapper, S
                     new QueryWrapper<SysCategoryPO>().lambda()
                             .select(SysCategoryPO::getId)
                             .in(SysCategoryPO::getParentId, list)
-            ).stream().map(SysCategoryPO::getId).collect(Collectors.toList());
+            ).stream().map(SysCategoryPO::getId).toList();
             if (!CollectionUtils.isEmpty(children)) {
                 this.deleteTree(children, deleteIds);
             }
