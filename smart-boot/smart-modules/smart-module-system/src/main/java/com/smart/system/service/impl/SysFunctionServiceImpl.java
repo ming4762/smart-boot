@@ -10,9 +10,11 @@ import com.smart.crud.utils.CrudUtils;
 import com.smart.system.mapper.CommonMapper;
 import com.smart.system.mapper.SysFunctionMapper;
 import com.smart.system.model.SysFunctionPO;
+import com.smart.system.model.SysRoleFunctionPO;
 import com.smart.system.pojo.vo.SysFunctionListVO;
 import com.smart.system.pojo.vo.function.SysFunctionVO;
 import com.smart.system.service.SysFunctionService;
+import com.smart.system.service.SysRoleFunctionService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
@@ -35,8 +37,11 @@ public class SysFunctionServiceImpl extends BaseServiceImpl<SysFunctionMapper, S
 
     private final CommonMapper commonMapper;
 
-    public SysFunctionServiceImpl(CommonMapper commonMapper) {
+    private final SysRoleFunctionService sysRoleFunctionService;
+
+    public SysFunctionServiceImpl(CommonMapper commonMapper, SysRoleFunctionService sysRoleFunctionService) {
         this.commonMapper = commonMapper;
+        this.sysRoleFunctionService = sysRoleFunctionService;
     }
 
     @Override
@@ -45,6 +50,11 @@ public class SysFunctionServiceImpl extends BaseServiceImpl<SysFunctionMapper, S
         if (CollectionUtils.isEmpty(idList)) {
             return false;
         }
+        // 删除功能角色中间关联表
+        this.sysRoleFunctionService.remove(
+                new QueryWrapper<SysRoleFunctionPO>().lambda()
+                        .in(SysRoleFunctionPO::getFunctionId, idList)
+        );
         Set<Long> parentIds = this.listByIds((Collection<? extends Serializable>) idList)
                 .stream().map(SysFunctionPO::getParentId)
                 .collect(Collectors.toSet());
