@@ -110,12 +110,13 @@ public class SysRoleController extends BaseController<SysRoleService, SysRolePO>
     @PostMapping("listFunctionId")
     public Result<List<Long>> listFunctionId(@RequestBody IdParameter parameter) {
         return Result.success(
-                this.sysRoleFunctionService.list(
-                        new QueryWrapper<SysRoleFunctionPO>().lambda()
-                        .select(SysRoleFunctionPO :: getFunctionId)
-                        .eq(SysRoleFunctionPO :: getRoleId, parameter.getId())
-                        .eq(SysRoleFunctionPO::getHalfYn, Boolean.FALSE)
-                ).stream().map(SysRoleFunctionPO :: getFunctionId)
+                this.sysRoleFunctionService.listRoleFunction(
+                        new QueryWrapper<SysRoleFunctionPO>()
+                                .eq("b.has_child", 0).lambda()
+                                .eq(SysRoleFunctionPO :: getRoleId, parameter.getId())
+                                .eq(SysRoleFunctionPO::getHalfYn, Boolean.FALSE)
+                )
+                .stream().map(SysRoleFunctionPO :: getFunctionId)
                 .toList()
         );
     }
