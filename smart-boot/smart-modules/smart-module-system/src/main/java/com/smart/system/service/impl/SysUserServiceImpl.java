@@ -672,6 +672,17 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         if (CollectionUtils.isEmpty(roleIdMap)) {
             return Collections.emptyMap();
         }
-        return null;
+        return sysUserRoleList.stream()
+                .collect(
+                        Collectors.groupingBy(
+                                SysUserRolePO::getUserId,
+                                Collectors.collectingAndThen(
+                                        Collectors.toList(),
+                                        list -> list.stream()
+                                                .map(item -> roleIdMap.get(item.getRoleId()))
+                                                .toList()
+                                )
+                        )
+                );
     }
 }

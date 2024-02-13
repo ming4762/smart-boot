@@ -40,10 +40,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.Serializable;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -313,6 +310,8 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
     @PostMapping("listUserRole")
     @Operation(summary = "查询用户的角色信息")
     public Result<List<SysRolePO>> listUserRole(@RequestBody IdParameter parameter) {
-        return Result.success();
+        return Result.success(
+                this.service.listUserRole(List.of(parameter.getId())).getOrDefault(parameter.getId(), Collections.emptyList())
+        );
     }
 }
