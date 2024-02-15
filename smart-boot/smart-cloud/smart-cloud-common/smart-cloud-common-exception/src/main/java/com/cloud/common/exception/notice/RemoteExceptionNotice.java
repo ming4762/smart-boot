@@ -40,7 +40,7 @@ public class RemoteExceptionNotice extends AbstractCommonExcludeExceptionNotice 
             SysExceptionSaveDTO dto = SysExceptionSaveDTO.builder()
                     .id(exceptionNo)
                     .exceptionMessage(e.toString())
-                    .stackTrace(ExceptionUtils.stackTraceToString(e))
+                    .stackTrace(ExceptionUtils.throwableToString(e, true))
                     .requestIp(IpUtils.getIpAddr(request))
                     .serverIp(InetAddress.getLocalHost().getHostAddress())
                     .requestPath(request.getServletPath())

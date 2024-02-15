@@ -38,7 +38,7 @@ public class DbExceptionNotice extends AbstractCommonExcludeExceptionNotice {
             SysExceptionPO sysException = SysExceptionPO.builder()
                     .id(exceptionNo)
                     .exceptionMessage(e.toString())
-                    .stackTrace(ExceptionUtils.stackTraceToString(e))
+                    .stackTrace(ExceptionUtils.throwableToString(e, true))
                     .requestIp(IpUtils.getIpAddr(request))
                     .serverIp(InetAddress.getLocalHost().getHostAddress())
                     .requestPath(request.getServletPath())

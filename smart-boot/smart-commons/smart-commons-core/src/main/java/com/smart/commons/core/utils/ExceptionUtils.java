@@ -23,7 +23,29 @@ public final class ExceptionUtils {
      * @param e 异常信息
      * @return 转为String的对战信息
      */
-    public static String stackTraceToString(Exception e) {
+    public static String throwableToString(Throwable e) {
+        return throwableToString(e, true);
+    }
+
+    public static String throwableToString(Throwable e, boolean withCause) {
+        StringBuilder builder = new StringBuilder(stackTraceToString(e));
+        if (withCause) {
+            doThrowableToString(builder, e.getCause());
+        }
+        return builder.toString();
+    }
+
+    private static void doThrowableToString(StringBuilder builder, Throwable e) {
+        if (e != null) {
+            builder.append("\nCaused by: ")
+                    .append(stackTraceToString(e));
+            if (e.getCause() != null) {
+                doThrowableToString(builder, e.getCause());
+            }
+        }
+    }
+
+    private static String stackTraceToString(Throwable e) {
         StackTraceElement[] stackTraceElements = e.getStackTrace();
         List<String> stackTraceList = new ArrayList<>(stackTraceElements.length + 1);
         stackTraceList.add(e.toString());
