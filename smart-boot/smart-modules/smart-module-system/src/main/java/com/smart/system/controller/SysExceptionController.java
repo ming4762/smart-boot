@@ -5,10 +5,11 @@ import com.smart.crud.controller.BaseController;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.system.model.SysExceptionPO;
 import com.smart.system.pojo.dto.exception.ExceptionFeedbackDTO;
+import com.smart.system.pojo.dto.exception.SysExceptionMarkResolvedParameter;
 import com.smart.system.service.SysExceptionService;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.validation.Valid;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,5 +51,11 @@ public class SysExceptionController extends BaseController<SysExceptionService, 
     @Operation(summary = "用户反馈异常信息接口")
     public Result<Boolean> feedback(@RequestBody @Valid ExceptionFeedbackDTO parameter) {
         return Result.success(this.service.feedback(parameter));
+    }
+
+    @PostMapping(value = "markResolved")
+    @Operation(summary = "标记异常已解决")
+    public Result<Boolean> markResolved(@RequestBody @Valid SysExceptionMarkResolvedParameter parameter) {
+        return Result.success(this.service.markResolved(parameter));
     }
 }
