@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.smart</groupId>
-        <artifactId>smart-cloud</artifactId>
+        <artifactId>smart-cloud-services</artifactId>
         <version>3.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>smart-cloud-auth</artifactId>
@@ -71,6 +71,11 @@
             <groupId>com.smart</groupId>
             <artifactId>smart-cloud-common-i18n</artifactId>
             <version>${smart-boot.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba.nacos</groupId>
+            <artifactId>logback-adapter</artifactId>
         </dependency>
 
     </dependencies>

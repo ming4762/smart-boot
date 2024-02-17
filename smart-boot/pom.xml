@@ -58,6 +58,7 @@
         <tencentcloud.sdk.version>3.1.759</tencentcloud.sdk.version>
         <tianai-captcha.version>1.4.1</tianai-captcha.version>
         <commons-net.version>3.10.0</commons-net.version>
+        <nacos.logback-adapter.version>1.0.0</nacos.logback-adapter.version>
     </properties>
 
     <packaging>pom</packaging>
@@ -457,6 +458,11 @@
                 <groupId>commons-net</groupId>
                 <artifactId>commons-net</artifactId>
                 <version>${commons-net.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.nacos</groupId>
+                <artifactId>logback-adapter</artifactId>
+                <version>${nacos.logback-adapter.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -447,7 +447,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
             if (!CollectionUtils.isEmpty(localeList) && StringUtils.isNotBlank(item.getI18nCode()) && item.getI18nCode().startsWith(I18N_LEFT) && item.getI18nCode().endsWith(I18N_RIGHT)) {
                 String i18nCode = item.getI18nCode().replace(I18N_LEFT, "").replace(I18N_RIGHT, "");
                 vo.setLocales(
-                        localeList.stream().collect(Collectors.toMap(Locale::toLanguageTag, locale -> {
+                        localeList.stream().collect(Collectors.toMap(Locale::toString, locale -> {
                             try {
                                 return I18nUtils.get(i18nCode, locale);
                             } catch (NoSuchMessageException e) {

@@ -86,6 +86,9 @@ public class AuthProperties implements InitializingBean {
     public static class JwtProperties {
         private Boolean enabled = Boolean.FALSE;
 
+        /**
+         * 是否使用缓存存储权限信息
+         */
         private Boolean permissionCache = Boolean.FALSE;
 
         private String privateKey = "classpath:auth/jwt/key/pri.key";

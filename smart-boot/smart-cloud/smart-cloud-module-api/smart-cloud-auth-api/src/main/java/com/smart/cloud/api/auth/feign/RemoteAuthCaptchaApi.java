@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
  * @author zhongming4762
  * 2023/6/27
  */
-@FeignClient(value = CloudServiceNameConstants.AUTH_SERVICE, contextId = "remoteAuthApi")
+@FeignClient(value = CloudServiceNameConstants.AUTH_SERVICE, contextId = "remoteAuthCaptchaApi")
 public interface RemoteAuthCaptchaApi extends AuthCaptchaApi {
 
     /**

@@ -11,6 +11,8 @@ spring:
         namespace: @profiles.active@
       config:
         namespace: @profiles.active@
+      username: nacos
+      password: nacos
   config:
     import:
       - optional:nacos:application-@profiles.active@.yml

@@ -31,8 +31,7 @@
         <dependency>
             <groupId>com.smart</groupId>
             <artifactId>smart-cloud-common-core</artifactId>
-            <version>3.0.0-SNAPSHOT</version>
-            <scope>compile</scope>
+            <version>${smart-boot.version}</version>
         </dependency>
     </dependencies>
 
