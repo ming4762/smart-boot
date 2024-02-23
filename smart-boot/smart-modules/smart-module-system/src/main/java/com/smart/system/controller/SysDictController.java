@@ -6,6 +6,7 @@ import com.smart.commons.core.message.Result;
 import com.smart.crud.controller.BaseController;
 import com.smart.crud.query.IdParameter;
 import com.smart.crud.query.PageSortQuery;
+import com.smart.crud.query.StringParameter;
 import com.smart.system.model.SysDictItemPO;
 import com.smart.system.model.SysDictPO;
 import com.smart.system.service.SysDictService;
@@ -69,7 +70,7 @@ public class SysDictController extends BaseController<SysDictService, SysDictPO>
 
     @Operation(summary = "通过code查询item")
     @PostMapping("listItemByCode")
-    public Result<List<SysDictItemPO>> listItemByCode(@RequestBody String dictCode) {
-        return Result.success(this.service.listItemByCode(dictCode));
+    public Result<List<SysDictItemPO>> listItemByCode(@RequestBody StringParameter parameter) {
+        return Result.success(this.service.listItemByCode(parameter.getValue()));
     }
 }
