@@ -1,13 +1,16 @@
 package com.smart.system.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.smart.commons.core.data.Tree;
 import com.smart.commons.core.exception.BusinessException;
 import com.smart.commons.core.i18n.I18nUtils;
 import com.smart.commons.core.log.Log;
 import com.smart.commons.core.log.LogOperationTypeEnum;
 import com.smart.commons.core.message.Result;
+import com.smart.commons.core.utils.TreeUtils;
 import com.smart.crud.controller.BaseController;
 import com.smart.crud.query.PageSortQuery;
+import com.smart.crud.query.StringParameter;
 import com.smart.i18n.source.ReloadableMessageSource;
 import com.smart.system.i18n.SystemI18nMessage;
 import com.smart.system.model.SysI18nGroupPO;
@@ -24,13 +27,17 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * @author ShiZhongMing
@@ -52,13 +59,28 @@ public class SysI18nController extends BaseController<SysI18nService, SysI18nPO>
         this.messageSource = messageSource;
     }
 
-    @PostMapping("listGroup")
+    @PostMapping("listGroupTree")
     @Operation(summary = "查询国际化组信息")
-    public Result<List<SysI18nGroupPO>> listGroup() {
+    public Result<List<Tree<SysI18nGroupPO>>> listGroupTree() {
+        List<SysI18nGroupPO> groupList = this.sysI18nGroupService.list(
+                new QueryWrapper<SysI18nGroupPO>().lambda()
+                        .orderByAsc(SysI18nGroupPO::getSeq, SysI18nGroupPO::getCreateTime)
+        );
+        if (CollectionUtils.isEmpty(groupList)) {
+            return Result.success(Collections.emptyList());
+        }
         return Result.success(
-                this.sysI18nGroupService.list(
-                        new QueryWrapper<SysI18nGroupPO>().lambda()
-                        .orderByAsc(SysI18nGroupPO :: getSeq, SysI18nGroupPO :: getCreateTime)
+                TreeUtils.buildList(
+                        groupList.stream()
+                                .map(item -> {
+                                    Tree<SysI18nGroupPO> tree = new Tree<>();
+                                    tree.setId(item.getGroupId());
+                                    tree.setText(item.getGroupName());
+                                    tree.setParentId(item.getParentId());
+                                    tree.setData(item);
+                                    return tree;
+                                }).toList(),
+                        0L
                 )
         );
     }
@@ -130,5 +152,16 @@ public class SysI18nController extends BaseController<SysI18nService, SysI18nPO>
     public Result<Boolean> reload() {
         this.messageSource.reload();
         return Result.success(true);
+    }
+
+    /**
+     * 查询前台国际化信息
+     * @return 前台国际化
+     */
+    @PostMapping("listFront")
+    @Operation(summary = "查询前台国际化信息")
+    public Result<Map<String, String>> listFront(@RequestBody StringParameter parameter) {
+        Locale locale = Locale.forLanguageTag(parameter.getValue());
+        return Result.success(this.service.readByLocale(locale));
     }
 }

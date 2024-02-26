@@ -26,5 +26,10 @@ public class SysI18nGroupPO extends BaseModelUserTime {
 
     private String groupName;
 
+    /**
+     * 上级ID
+     */
+    private Long parentId;
+
     private Integer seq;
 }

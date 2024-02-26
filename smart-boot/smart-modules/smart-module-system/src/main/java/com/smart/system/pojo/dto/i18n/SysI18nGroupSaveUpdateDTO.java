@@ -30,4 +30,6 @@ public class SysI18nGroupSaveUpdateDTO implements Serializable {
     private Integer seq;
 
     private Long groupId;
+
+    private Long parentId;
 }
