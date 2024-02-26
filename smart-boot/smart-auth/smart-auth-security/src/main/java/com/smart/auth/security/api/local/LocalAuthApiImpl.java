@@ -4,7 +4,6 @@ import com.smart.auth.core.exception.IpBindAuthenticationException;
 import com.smart.auth.core.i18n.AuthI18nMessage;
 import com.smart.auth.core.properties.AuthProperties;
 import com.smart.auth.core.service.AuthCache;
-import com.smart.auth.core.token.TokenData;
 import com.smart.auth.core.token.TokenRepository;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.auth.core.utils.AuthCheckUtils;
@@ -101,9 +100,7 @@ public class LocalAuthApiImpl implements AuthApi {
     public AuthUserDetailsDTO getUserDetails(@NonNull String token) {
         RestUserDetails userDetails = null;
         for (TokenRepository tokenRepository : this.tokenRepositoryList) {
-            userDetails = Optional.ofNullable(tokenRepository.getData(token))
-                    .map(TokenData::getUser)
-                    .orElse(null);
+            userDetails = tokenRepository.getUser(token);
             if (userDetails != null) {
                 break;
             }

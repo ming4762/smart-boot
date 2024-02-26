@@ -95,14 +95,8 @@ public class JwtTokenRepository implements TokenRepository {
         // 获取有效期
         TokenData jwtData = (TokenData) this.authCache.get(tokenKey);
         if (jwtData != null) {
-            if (Boolean.TRUE.equals(this.authProperties.getJwt().getPermissionCache())) {
-                Set<SmartGrantedAuthority> authorities = new HashSet<>(jwtData.getPermissions().size() + jwtData.getRoles().size());
-                // 添加权限信息
-                jwtData.getPermissions().forEach(permission -> authorities.add(new PermissionGrantedAuthority(permission)));
-                // 添加角色信息
-                jwtData.getRoles().forEach(item -> authorities.add(new RoleGrantedAuthority(item)));
-                ((RestUserDetailsImpl) user).setAuthorities(authorities);
-            }
+            RestUserDetailsImpl userFromCacheData = (RestUserDetailsImpl)this.getUserFromCacheData(jwtData);
+            ((RestUserDetailsImpl)user).setAuthorities(new HashSet<>(userFromCacheData.getAuthorities()));
             jwtData.setRefreshTime(LocalDateTime.now());
             this.authCache.put(tokenKey, jwtData, jwtData.getTimeout());
             this.authCache.expire(attributeKey, jwtData.getTimeout());
@@ -249,4 +243,33 @@ public class JwtTokenRepository implements TokenRepository {
     public int getOrder() {
         return 0;
     }
+
+    /**
+     * 通过TOKEN获取用户信息
+     *
+     * @param token token
+     * @return 用户信息
+     */
+    @Override
+    public RestUserDetails getUser(String token) {
+        TokenData tokenData = this.getData(token);
+        return this.getUserFromCacheData(tokenData);
+    }
+
+    private RestUserDetails getUserFromCacheData(TokenData tokenData) {
+        if (tokenData == null) {
+            return null;
+        }
+        RestUserDetails user = tokenData.getUser();
+        if (Boolean.TRUE.equals(this.authProperties.getJwt().getPermissionCache())) {
+            Set<SmartGrantedAuthority> authorities = new HashSet<>(tokenData.getPermissions().size() + tokenData.getRoles().size());
+            // 添加权限信息
+            tokenData.getPermissions().forEach(permission -> authorities.add(new PermissionGrantedAuthority(permission)));
+            // 添加角色信息
+            tokenData.getRoles().forEach(item -> authorities.add(new RoleGrantedAuthority(item)));
+            ((RestUserDetailsImpl) user).setAuthorities(authorities);
+        }
+        return user;
+    }
+
 }

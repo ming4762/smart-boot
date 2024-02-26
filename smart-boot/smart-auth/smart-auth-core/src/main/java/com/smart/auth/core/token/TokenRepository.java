@@ -79,4 +79,11 @@ public interface TokenRepository extends Ordered {
      * @return TokenData
      */
     TokenData getData(String token);
+
+    /**
+     * 通过TOKEN获取用户信息
+     * @param token token
+     * @return 用户信息
+     */
+    RestUserDetails getUser(String token);
 }
