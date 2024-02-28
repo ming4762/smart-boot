@@ -52,9 +52,14 @@
             <version>${smart-boot.version}</version>
         </dependency>
 
+        <!--    数据库驱动    -->
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle.ojdbc</groupId>
+            <artifactId>ojdbc8</artifactId>
         </dependency>
 
         <dependency>
@@ -70,6 +75,11 @@
         <dependency>
             <groupId>com.alibaba.nacos</groupId>
             <artifactId>logback-adapter</artifactId>
+        </dependency>
+        <!--    Spring Cloud LoadBalancer 缓存    -->
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
         </dependency>
 
     </dependencies>

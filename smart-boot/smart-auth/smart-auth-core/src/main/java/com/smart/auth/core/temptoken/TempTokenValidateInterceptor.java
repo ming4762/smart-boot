@@ -4,6 +4,7 @@ import com.smart.auth.core.annotation.TempToken;
 import com.smart.auth.core.model.TempTokenData;
 import com.smart.commons.core.message.Result;
 import com.smart.commons.core.utils.IpUtils;
+import com.smart.commons.core.utils.JsonUtils;
 import com.smart.commons.core.utils.RestJsonWriter;
 import com.smart.module.api.auth.AuthApi;
 import jakarta.servlet.http.HttpServletRequest;
@@ -71,7 +72,8 @@ public class TempTokenValidateInterceptor implements HandlerInterceptor {
             return message;
         }
         // 从缓存中获取信息
-        final TempTokenData data = (TempTokenData) this.authApi.getAuthCache(token);
+        Object authCache = this.authApi.getAuthCache(token);
+        final TempTokenData data = authCache == null ? null : JsonUtils.parse(JsonUtils.toJsonString(authCache), TempTokenData.class);
         if (Objects.isNull(data)) {
             message = "Temp Token validate fail，token is expire";
             log.warn(message);

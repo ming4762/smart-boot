@@ -3,7 +3,7 @@ package com.smart.auth.extensions.jwt.context;
 import com.smart.auth.core.authentication.RestUsernamePasswordAuthenticationToken;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.auth.core.utils.TokenUtils;
-import com.smart.auth.extensions.jwt.resolver.JwtResolver;
+import com.smart.auth.extensions.jwt.token.JwtTokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +15,8 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.security.web.context.HttpRequestResponseHolder;
 import org.springframework.security.web.context.SecurityContextRepository;
 
+import java.util.List;
+
 
 /**
  * @author ShiZhongMing
@@ -24,7 +26,7 @@ import org.springframework.security.web.context.SecurityContextRepository;
 @Slf4j
 public class JwtSecurityContextRepository implements SecurityContextRepository {
 
-    private JwtResolver jwtResolver;
+    private List<JwtTokenRepository> repositoryList;
 
 
     @Override
@@ -36,7 +38,13 @@ public class JwtSecurityContextRepository implements SecurityContextRepository {
         }
         // 解析jwt
         try {
-            RestUserDetails user = jwtResolver.resolver(jwt);
+            RestUserDetails user = null;
+            for (JwtTokenRepository repository : this.repositoryList) {
+                user = repository.getUser(jwt);
+                if (user != null) {
+                    break;
+                }
+            }
             if (user == null) {
                 return generateNewContext();
             }
@@ -75,7 +83,7 @@ public class JwtSecurityContextRepository implements SecurityContextRepository {
     }
 
     @Autowired
-    public void setJwtResolver(JwtResolver jwtResolver) {
-        this.jwtResolver = jwtResolver;
+    public void setRepositoryList(List<JwtTokenRepository> repositoryList) {
+        this.repositoryList = repositoryList;
     }
 }

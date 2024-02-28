@@ -67,6 +67,8 @@ public class JwtService implements JwtResolver {
             roleStrList.forEach(item -> authorities.add(new RoleGrantedAuthority(item)));
 
             userDetails.setAuthorities(authorities);
+        } else {
+
         }
         // 设置token
         userDetails.setToken(jwtStr);

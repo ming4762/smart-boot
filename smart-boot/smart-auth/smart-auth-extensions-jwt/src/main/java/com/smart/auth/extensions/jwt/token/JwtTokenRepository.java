@@ -95,8 +95,6 @@ public class JwtTokenRepository implements TokenRepository {
         // 获取有效期
         TokenData jwtData = (TokenData) this.authCache.get(tokenKey);
         if (jwtData != null) {
-            RestUserDetailsImpl userFromCacheData = (RestUserDetailsImpl)this.getUserFromCacheData(jwtData);
-            ((RestUserDetailsImpl)user).setAuthorities(new HashSet<>(userFromCacheData.getAuthorities()));
             jwtData.setRefreshTime(LocalDateTime.now());
             this.authCache.put(tokenKey, jwtData, jwtData.getTimeout());
             this.authCache.expire(attributeKey, jwtData.getTimeout());
