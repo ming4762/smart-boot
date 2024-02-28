@@ -6,11 +6,13 @@ spring:
     name: @artifactId@
   cloud:
     nacos:
-      server-addr: localhost:8848
+      server-addr: @nacos.server-addr@
       discovery:
-        namespace: @profiles.active@
+        namespace: @nacos.namespace@
       config:
-        namespace: @profiles.active@
+        namespace: @nacos.namespace@
+      username: @nacos.username@
+      password: @nacos.password@
   config:
     import:
       - optional:nacos:application-@profiles.active@.yml
