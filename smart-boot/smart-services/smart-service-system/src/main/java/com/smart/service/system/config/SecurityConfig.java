@@ -39,12 +39,10 @@ public class SecurityConfig extends AuthWebSecurityConfigurerAdapter {
                     .httpBasic(AbstractHttpConfigurer::disable)
                     .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                     // JWT配置
-                    .apply(AuthJwtSecurityConfigurer.jwt())
-                            .config(Customizer.withDefaults())
+                    .with(AuthJwtSecurityConfigurer.jwt(), Customizer.withDefaults())
                     // 验证码配置
-                    .apply(AuthCaptchaSecurityConfigurer.captcha())
-                    .config(configurer -> configurer.addLoginUrl(AuthJwtSecurityConfigurer.LOGIN_URL))
-                .apply(AuthSmsSecurityConfigurer.sms());
+                    .with(AuthCaptchaSecurityConfigurer.captcha(), configurer -> configurer.addLoginUrl(AuthJwtSecurityConfigurer.LOGIN_URL))
+                    .with(AuthSmsSecurityConfigurer.sms(), Customizer.withDefaults());
         return httpSecurity.build();
     }
 
@@ -57,8 +55,7 @@ public class SecurityConfig extends AuthWebSecurityConfigurerAdapter {
                 .logout(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .apply(AuthAccessSecretSecurityConfigurer.build())
-                .config(http -> http.addUrlMatcher("/access/api/**"));
+                .with(AuthAccessSecretSecurityConfigurer.build(), http -> http.addUrlMatcher("/access/api/**"));
         return httpSecurity.build();
     }
 
