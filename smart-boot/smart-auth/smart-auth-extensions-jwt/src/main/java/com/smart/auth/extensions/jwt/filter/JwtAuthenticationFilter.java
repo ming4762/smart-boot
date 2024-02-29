@@ -45,14 +45,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!(principal instanceof RestUserDetails user)) {
-            throw new BadCredentialsException(I18nUtils.get(AuthI18nMessage.ERROR_TOKEN_EMPTY));
-        }
         // 验证JWT是否有效
         String jwt = TokenUtils.getToken(request);
         if (StringUtils.isBlank(jwt)) {
             throw new AuthenticationServiceException(I18nUtils.get(AuthI18nMessage.ERROR_TOKEN_EMPTY));
+        }
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!(principal instanceof RestUserDetails user)) {
+            throw new BadCredentialsException(I18nUtils.get(AuthI18nMessage.ERROR_TOKEN_EXPIRE));
         }
         // 验证JWT
         boolean validate = this.tokenRepositoryList.stream().anyMatch(item -> item.validate(jwt, user));
