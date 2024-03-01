@@ -25,23 +25,23 @@ public class CloseableFTPClient implements Closeable {
 
     @SneakyThrows({SocketException.class, IOException.class})
     public CloseableFTPClient(SmartFileStorageFtpProperties properties) {
-        FTPClient ftpClient = new FTPClient();
-        ftpClient.connect(properties.getHost(), properties.getPort());
+        FTPClient ftp = new FTPClient();
+        ftp.connect(properties.getHost(), properties.getPort());
         if (StringUtils.hasText(properties.getUsername())) {
-            ftpClient.login(properties.getUsername(), properties.getPassword());
+            ftp.login(properties.getUsername(), properties.getPassword());
         } else {
-            ftpClient.login(DEFAULT_USER_NAME, "");
+            ftp.login(DEFAULT_USER_NAME, "");
         }
-        ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
-        this.ftpClient = ftpClient;
+        ftp.setFileType(FTP.BINARY_FILE_TYPE);
+        this.ftpClient = ftp;
     }
 
     @Override
     public void close() throws IOException {
-        if (this.ftpClient != null) {
-            this.ftpClient.abort();
-            this.ftpClient.logout();
-            this.ftpClient.disconnect();
+        if (this.ftpClient != null && (!this.ftpClient.completePendingCommand())) {
+                this.ftpClient.logout();
+                this.ftpClient.disconnect();
+
         }
     }
 }

@@ -3,6 +3,7 @@ package com.smart.file.core.properties;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -15,6 +16,8 @@ import java.io.Serializable;
 @Setter
 public class SmartFileStorageFtpProperties implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = -1453106334682555483L;
     private String host;
 
     private Integer port = 21;
@@ -24,5 +27,7 @@ public class SmartFileStorageFtpProperties implements Serializable {
     private String username;
 
     private String password;
+
+    private String encoding;
 
 }
