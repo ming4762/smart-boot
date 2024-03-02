@@ -1,6 +1,7 @@
 package com.smart.crud;
 
 import com.smart.crud.mybatis.plugin.CreateUpdateUserTimeMybatisInterceptor;
+import com.smart.crud.mybatis.plugin.LogicDeleteFieldInjectMybatisInterceptor;
 import com.smart.crud.service.UserProvider;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -21,6 +22,12 @@ public class CrudMybatisInterceptorAutoConfiguration {
     @ConditionalOnMissingBean
     public CreateUpdateUserTimeMybatisInterceptor createUpdateUserTimeMybatisInterceptor(UserProvider userProvider) {
         return new CreateUpdateUserTimeMybatisInterceptor(userProvider);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public LogicDeleteFieldInjectMybatisInterceptor deleteFieldInjectMybatisInterceptor(UserProvider userProvider) {
+        return new LogicDeleteFieldInjectMybatisInterceptor(userProvider);
     }
 
 }

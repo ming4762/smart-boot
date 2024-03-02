@@ -16,10 +16,11 @@ import com.google.common.collect.Maps;
 import com.smart.commons.core.exception.BaseException;
 import com.smart.commons.core.exception.SystemException;
 import com.smart.commons.core.utils.ExceptionUtils;
+import com.smart.crud.constants.UserPropertyEnum;
 import com.smart.crud.model.BaseModel;
 import com.smart.crud.model.Sort;
 import com.smart.crud.plus.logic.TableLogicKey;
-import com.smart.crud.plus.metadata.TableLogicKeyFieldInfo;
+import com.smart.crud.plus.metadata.TableLogicDeleteFieldInfo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -81,7 +82,7 @@ public final class CrudUtils {
     /**
      * 存储逻辑删除key
      */
-    private static final Map<Class<?>, TableLogicKeyFieldInfo> TABLE_LOGIC_KEY_CACHE = Maps.newConcurrentMap();
+    private static final Map<Class<?>, TableLogicDeleteFieldInfo> TABLE_LOGIC_KEY_CACHE = Maps.newConcurrentMap();
 
     public static <T extends BaseModel> String getTableName(Class<T> clazz) {
         return getTableInfo(clazz).getTableName();
@@ -246,7 +247,7 @@ public final class CrudUtils {
 
     // -------------- 逻辑删除支持 ------------------
 
-    public static TableLogicKeyFieldInfo getTableLogicKeyField(Class<? extends BaseModel> clazz) {
+    public static TableLogicDeleteFieldInfo getTableLogicKeyField(Class<? extends BaseModel> clazz) {
         return getTableLogicKeyField(getTableInfo(clazz));
     }
 
@@ -255,33 +256,41 @@ public final class CrudUtils {
      * @param tableInfo TableInfo
      * @return TableFieldInfo
      */
-    public static TableLogicKeyFieldInfo getTableLogicKeyField(TableInfo tableInfo) {
+    public static TableLogicDeleteFieldInfo getTableLogicKeyField(TableInfo tableInfo) {
         Class<?> entityType = tableInfo.getEntityType();
         if (TABLE_LOGIC_KEY_CACHE.containsKey(entityType)) {
-            TableLogicKeyFieldInfo logicKeyFieldInfo = TABLE_LOGIC_KEY_CACHE.get(entityType);
-            if (logicKeyFieldInfo.getTableLogicKey() == null) {
-                return null;
+            return TABLE_LOGIC_KEY_CACHE.get(entityType);
+        }
+        List<TableFieldInfo> logicDeleteKeyFields = tableInfo.getFieldList().stream().filter(item -> {
+            TableLogicKey tableLogicKey = AnnotationUtils.getAnnotation(item.getField(), TableLogicKey.class);
+            return tableLogicKey != null;
+        }).toList();
+        TableLogicDeleteFieldInfo deleteFieldInfo = getTableLogicDeleteFieldInfo(tableInfo);
+        if (!CollectionUtils.isEmpty(logicDeleteKeyFields)) {
+            if (logicDeleteKeyFields.size() > 1) {
+                throw new SystemException("实体类只能有一个TableLogicKey字段，请检查实体类，实体类：" + tableInfo.getEntityType().getName());
             }
-            return logicKeyFieldInfo;
+            deleteFieldInfo.setDeleteKeyFieldInfo(logicDeleteKeyFields.get(0));
+            deleteFieldInfo.setTableLogicKey(AnnotationUtils.getAnnotation(logicDeleteKeyFields.get(0).getField(), TableLogicKey.class));
         }
-        List<TableLogicKeyFieldInfo> logicKeyFieldInfoList = tableInfo.getFieldList().stream()
-                .map(item -> {
-                    TableLogicKey tableLogicKey = AnnotationUtils.getAnnotation(item.getField(), TableLogicKey.class);
-                    if (tableLogicKey == null) {
-                        return null;
-                    }
-                    return new TableLogicKeyFieldInfo(item, tableLogicKey);
-                }).filter(Objects::nonNull)
-                .toList();
-        if (CollectionUtils.isEmpty(logicKeyFieldInfoList)) {
-            TABLE_LOGIC_KEY_CACHE.put(entityType, new TableLogicKeyFieldInfo());
-            return null;
+        TABLE_LOGIC_KEY_CACHE.put(entityType, deleteFieldInfo);
+        return deleteFieldInfo;
+    }
+
+    private static TableLogicDeleteFieldInfo getTableLogicDeleteFieldInfo(TableInfo tableInfo) {
+        TableLogicDeleteFieldInfo deleteFieldInfo = new TableLogicDeleteFieldInfo();
+        for (TableFieldInfo tableFieldInfo : tableInfo.getFieldList()) {
+            if (UserPropertyEnum.DELETE_TIME.getName().equals(tableFieldInfo.getProperty())) {
+                deleteFieldInfo.setDeleteTimeFieldInfo(tableFieldInfo);
+            }
+            if (UserPropertyEnum.DELETE_BY.getName().equals(tableFieldInfo.getProperty())) {
+                deleteFieldInfo.setDeleteByFieldInfo(tableFieldInfo);
+            }
+            if (UserPropertyEnum.DELETE_USER_ID.getName().equals(tableFieldInfo.getProperty())) {
+                deleteFieldInfo.setDeleteUserIdFieldInfo(tableFieldInfo);
+            }
         }
-        if (logicKeyFieldInfoList.size() > 1) {
-            throw new SystemException("实体类只能有一个TableLogicKey字段，请检查实体类，实体类：" + tableInfo.getEntityType().getName());
-        }
-        TABLE_LOGIC_KEY_CACHE.put(entityType, logicKeyFieldInfoList.get(0));
-        return logicKeyFieldInfoList.get(0);
+        return deleteFieldInfo;
     }
 
     /**

@@ -7,12 +7,17 @@ import com.smart.crud.utils.CrudUtils;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlSource;
 
+import java.io.Serial;
+
 /**
  * @author shizhongming
  * 2023/10/31 15:12
  * @since 3.0.0
  */
 public class SmartDelete extends AbstractSmartMethod{
+
+    @Serial
+    private static final long serialVersionUID = 8701454358884931568L;
 
     /**
      * @since 3.5.0
@@ -45,7 +50,7 @@ public class SmartDelete extends AbstractSmartMethod{
         if (tableInfo.isWithLogicDelete()) {
             if (CrudUtils.hasTableLogicKey(tableInfo)) {
                 sql = String.format(smartSqlMethod.getSql(), tableInfo.getTableName(), sqlLogicSet(tableInfo),
-                        this.sqlLogicKeySet(tableInfo),
+                        this.sqlLogicDeleteFieldSet(tableInfo, ENTITY_DOT),
                         sqlWhereEntityWrapper(true, tableInfo),
                         sqlComment());
             } else {

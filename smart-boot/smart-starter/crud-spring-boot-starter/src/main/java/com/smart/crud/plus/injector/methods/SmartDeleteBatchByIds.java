@@ -1,14 +1,17 @@
 package com.smart.crud.plus.injector.methods;
 
 import com.baomidou.mybatisplus.core.enums.SqlMethod;
-import com.baomidou.mybatisplus.core.injector.methods.DeleteBatchByIds;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.toolkit.sql.SqlScriptUtils;
 import com.smart.crud.plus.enums.SmartSqlMethod;
-import com.smart.crud.plus.metadata.TableLogicKeyFieldInfo;
+import com.smart.crud.plus.metadata.TableLogicDeleteFieldInfo;
 import com.smart.crud.utils.CrudUtils;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlSource;
+
+import java.io.Serial;
+
+import static com.smart.crud.constants.SmartCrudConstants.DELETE_FIELDS_DOT;
 
 /**
  * 根据集合删除
@@ -19,6 +22,9 @@ import org.apache.ibatis.mapping.SqlSource;
  */
 public class SmartDeleteBatchByIds extends AbstractSmartMethod {
 
+
+    @Serial
+    private static final long serialVersionUID = -1282922352525893633L;
 
     public SmartDeleteBatchByIds() {
         super(SqlMethod.DELETE_BATCH_BY_IDS.getMethod());
@@ -35,19 +41,12 @@ public class SmartDeleteBatchByIds extends AbstractSmartMethod {
     @Override
     public MappedStatement injectMappedStatement(Class<?> mapperClass, Class<?> modelClass, TableInfo tableInfo) {
         String sql;
-        SqlMethod sqlMethod = SqlMethod.LOGIC_DELETE_BATCH_BY_IDS;
         if (tableInfo.isWithLogicDelete()) {
-            TableLogicKeyFieldInfo tableLogicKeyField = CrudUtils.getTableLogicKeyField(tableInfo);
-            if (tableLogicKeyField == null) {
-                sql = new DeleteBatchByIds().logicDeleteScript(tableInfo, sqlMethod);
-            } else {
-                // 设置了逻辑删除key
-               sql = this.logicDeleteScriptWithDeleteKey(tableInfo, tableLogicKeyField);
-            }
+            sql = this.logicDeleteScriptWithDeleteKey(tableInfo);
             SqlSource sqlSource = languageDriver.createSqlSource(configuration, sql, Object.class);
             return addUpdateMappedStatement(mapperClass, modelClass, methodName, sqlSource);
         } else {
-            sqlMethod = SqlMethod.DELETE_BATCH_BY_IDS;
+            SqlMethod sqlMethod = SqlMethod.DELETE_BATCH_BY_IDS;
             sql = String.format(sqlMethod.getSql(), tableInfo.getTableName(), tableInfo.getKeyColumn(),
                     SqlScriptUtils.convertForeach(
                             SqlScriptUtils.convertChoose("@org.apache.ibatis.type.SimpleTypeRegistry@isSimpleType(item.getClass())",
@@ -58,11 +57,10 @@ public class SmartDeleteBatchByIds extends AbstractSmartMethod {
         }
     }
 
-    protected String logicDeleteScriptWithDeleteKey(TableInfo tableInfo, TableLogicKeyFieldInfo tableLogicKeyField) {
+    protected String logicDeleteScriptWithDeleteKey(TableInfo tableInfo) {
         return String.format(SmartSqlMethod.LOGIC_DELETE_BATCH_BY_IDS_WITH_KEY.getSql(),
                 tableInfo.getTableName(),
-                sqlLogicSet(tableInfo),
-                this.sqlLogicKeySet(tableInfo),
+                SqlScriptUtils.convertSet(this.sqlLogicDeleteFieldSet(tableInfo, DELETE_FIELDS_DOT)),
                 tableInfo.getKeyColumn(),
                 SqlScriptUtils.convertForeach(
                         SqlScriptUtils.convertChoose("@org.apache.ibatis.type.SimpleTypeRegistry@isSimpleType(item.getClass())",

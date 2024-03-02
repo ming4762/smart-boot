@@ -5,6 +5,7 @@ import com.smart.crud.plus.logic.TableLogicKey;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * @author shizhongming
@@ -14,9 +15,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 @NoArgsConstructor
-public class TableLogicKeyFieldInfo {
+@Setter
+public class TableLogicDeleteFieldInfo {
 
-    private TableFieldInfo fieldInfo;
+    private TableFieldInfo deleteKeyFieldInfo;
 
     private TableLogicKey tableLogicKey;
+
+    private TableFieldInfo deleteByFieldInfo;
+
+    private TableFieldInfo deleteTimeFieldInfo;
+
+    private TableFieldInfo deleteUserIdFieldInfo;
 }

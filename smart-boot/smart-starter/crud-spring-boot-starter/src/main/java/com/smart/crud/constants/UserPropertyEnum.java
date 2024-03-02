@@ -7,6 +7,7 @@ import lombok.Getter;
  * @author shizhongming
  * 2020/3/30 7:00 下午
  */
+@Getter
 public enum UserPropertyEnum {
 
     /**
@@ -20,10 +21,14 @@ public enum UserPropertyEnum {
     // 更新时间
     UPDATE_TIME("updateTime"),
     CREATE_USER("createBy"),
-    UPDATE_USER("updateBy");
+    UPDATE_USER("updateBy"),
 
+    // 删除
+    DELETE_TIME("deleteTime"),
+    DELETE_USER_ID("deleteUserId"),
+    DELETE_BY("deleteBy")
+    ;
 
-    @Getter
     private final String name;
 
     UserPropertyEnum(String name) {

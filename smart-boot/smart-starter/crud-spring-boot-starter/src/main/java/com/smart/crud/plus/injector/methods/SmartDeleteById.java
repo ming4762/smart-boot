@@ -5,13 +5,16 @@ import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.sql.SqlScriptUtils;
+import com.smart.crud.constants.SmartCrudConstants;
 import com.smart.crud.plus.enums.SmartSqlMethod;
 import com.smart.crud.utils.CrudUtils;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlSource;
 
+import java.io.Serial;
 import java.util.List;
 
+import static com.smart.crud.constants.SmartCrudConstants.DELETE_FIELDS_DOT;
 import static java.util.stream.Collectors.joining;
 
 /**
@@ -22,6 +25,9 @@ import static java.util.stream.Collectors.joining;
  * @since 3.0.0
  */
 public class SmartDeleteById extends AbstractSmartMethod {
+
+    @Serial
+    private static final long serialVersionUID = 5112502573877941762L;
 
     /**
      * @since 3.5.0
@@ -57,28 +63,23 @@ public class SmartDeleteById extends AbstractSmartMethod {
                     .filter(f -> !f.isLogicDelete())
                     .toList();
             boolean hasTableLogicKey = CrudUtils.hasTableLogicKey(tableInfo);
+            String deleteId = SmartCrudConstants.DELETE_ID;
             if (CollectionUtils.isNotEmpty(fieldInfos)) {
                 String sqlSet = "SET " + SqlScriptUtils.convertIf(fieldInfos.stream()
                         .map(i -> i.getSqlSet(EMPTY)).collect(joining(EMPTY)), "!@org.apache.ibatis.type.SimpleTypeRegistry@isSimpleType(_parameter.getClass())", true)
                         + tableInfo.getLogicDeleteSql(false, false);
                 if (hasTableLogicKey) {
-                    sql = String.format(smartSqlMethod.getSql(), tableInfo.getTableName(), sqlSet, this.sqlLogicKeySet(tableInfo), tableInfo.getKeyColumn(),
-                            tableInfo.getKeyProperty(), tableInfo.getLogicDeleteSql(true, true));
+                    sql = String.format(smartSqlMethod.getSql(), tableInfo.getTableName(), sqlSet, this.sqlLogicDeleteFieldSet(tableInfo, DELETE_FIELDS_DOT), tableInfo.getKeyColumn(),
+                            deleteId, tableInfo.getLogicDeleteSql(true, true));
                 } else {
                     sql = String.format(sqlMethod.getSql(), tableInfo.getTableName(), sqlSet, tableInfo.getKeyColumn(),
-                            tableInfo.getKeyProperty(), tableInfo.getLogicDeleteSql(true, true));
+                            deleteId, tableInfo.getLogicDeleteSql(true, true));
                 }
             } else {
-                if (hasTableLogicKey) {
-                    sql = String.format(smartSqlMethod.getSql(), tableInfo.getTableName(), sqlLogicSet(tableInfo),
-                            this.sqlLogicKeySet(tableInfo),
-                            tableInfo.getKeyColumn(), tableInfo.getKeyProperty(),
-                            tableInfo.getLogicDeleteSql(true, true));
-                } else {
-                    sql = String.format(sqlMethod.getSql(), tableInfo.getTableName(), sqlLogicSet(tableInfo),
-                            tableInfo.getKeyColumn(), tableInfo.getKeyProperty(),
-                            tableInfo.getLogicDeleteSql(true, true));
-                }
+                sql = String.format(smartSqlMethod.getSql(), tableInfo.getTableName(),
+                        SqlScriptUtils.convertSet(this.sqlLogicDeleteFieldSet(tableInfo, DELETE_FIELDS_DOT)),
+                        tableInfo.getKeyColumn(), deleteId,
+                        tableInfo.getLogicDeleteSql(true, true));
             }
             SqlSource sqlSource = languageDriver.createSqlSource(configuration, sql, Object.class);
             return addUpdateMappedStatement(mapperClass, modelClass, methodName, sqlSource);

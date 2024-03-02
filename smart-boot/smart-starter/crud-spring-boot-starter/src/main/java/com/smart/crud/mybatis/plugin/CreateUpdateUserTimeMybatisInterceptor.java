@@ -1,6 +1,7 @@
 package com.smart.crud.mybatis.plugin;
 
 import com.smart.crud.constants.UserPropertyEnum;
+import com.smart.crud.model.BaseModel;
 import com.smart.crud.service.UserProvider;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -45,6 +46,9 @@ public class CreateUpdateUserTimeMybatisInterceptor implements Interceptor {
         }
         if (parameter.getClass().equals(MapperMethod.ParamMap.class)) {
             parameter = ((MapperMethod.ParamMap<?>) parameter).values().iterator().next();
+        }
+        if (!(parameter instanceof BaseModel)) {
+            return invocation.proceed();
         }
         if (sqlCommandType == SqlCommandType.INSERT) {
             // 插入操作

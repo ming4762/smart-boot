@@ -7,6 +7,7 @@ import com.smart.crud.utils.CrudUtils;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlSource;
 
+import java.io.Serial;
 import java.util.Map;
 
 /**
@@ -15,6 +16,9 @@ import java.util.Map;
  * @since 3.0.0
  */
 public class SmartDeleteByMap extends AbstractSmartMethod {
+
+    @Serial
+    private static final long serialVersionUID = -7443604353347817047L;
 
     /**
      * @since 3.5.0
@@ -45,7 +49,7 @@ public class SmartDeleteByMap extends AbstractSmartMethod {
         SqlMethod sqlMethod = SqlMethod.LOGIC_DELETE_BY_MAP;
         if (tableInfo.isWithLogicDelete()) {
             if (CrudUtils.hasTableLogicKey(tableInfo)) {
-                sql = String.format(SmartSqlMethod.LOGIC_DELETE_BY_MAP.getSql(), tableInfo.getTableName(), sqlLogicSet(tableInfo), this.sqlLogicKeySet(tableInfo), sqlWhereByMap(tableInfo));
+                sql = String.format(SmartSqlMethod.LOGIC_DELETE_BY_MAP.getSql(), tableInfo.getTableName(), sqlLogicSet(tableInfo), this.sqlLogicDeleteFieldSet(tableInfo, ENTITY_DOT), sqlWhereByMap(tableInfo));
             } else {
                 sql = String.format(sqlMethod.getSql(), tableInfo.getTableName(), sqlLogicSet(tableInfo), sqlWhereByMap(tableInfo));
             }
