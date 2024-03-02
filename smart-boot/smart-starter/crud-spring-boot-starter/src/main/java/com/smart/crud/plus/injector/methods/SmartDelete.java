@@ -2,12 +2,14 @@ package com.smart.crud.plus.injector.methods;
 
 import com.baomidou.mybatisplus.core.enums.SqlMethod;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
+import com.baomidou.mybatisplus.core.toolkit.sql.SqlScriptUtils;
 import com.smart.crud.plus.enums.SmartSqlMethod;
-import com.smart.crud.utils.CrudUtils;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlSource;
 
 import java.io.Serial;
+
+import static com.smart.crud.constants.SmartCrudConstants.DELETE_FIELDS_DOT;
 
 /**
  * @author shizhongming
@@ -45,24 +47,16 @@ public class SmartDelete extends AbstractSmartMethod{
     @Override
     public MappedStatement injectMappedStatement(Class<?> mapperClass, Class<?> modelClass, TableInfo tableInfo) {
         String sql;
-        SqlMethod sqlMethod = SqlMethod.LOGIC_DELETE;
         SmartSqlMethod smartSqlMethod = SmartSqlMethod.LOGIC_DELETE;
         if (tableInfo.isWithLogicDelete()) {
-            if (CrudUtils.hasTableLogicKey(tableInfo)) {
-                sql = String.format(smartSqlMethod.getSql(), tableInfo.getTableName(), sqlLogicSet(tableInfo),
-                        this.sqlLogicDeleteFieldSet(tableInfo, ENTITY_DOT),
-                        sqlWhereEntityWrapper(true, tableInfo),
-                        sqlComment());
-            } else {
-                sql = String.format(sqlMethod.getSql(), tableInfo.getTableName(), sqlLogicSet(tableInfo),
-                        sqlWhereEntityWrapper(true, tableInfo),
-                        sqlComment());
-            }
-
+            sql = String.format(smartSqlMethod.getSql(), tableInfo.getTableName(),
+                    SqlScriptUtils.convertSet(this.sqlLogicDeleteFieldSet(tableInfo, DELETE_FIELDS_DOT)),
+                    sqlWhereEntityWrapper(true, tableInfo),
+                    sqlComment());
             SqlSource sqlSource = languageDriver.createSqlSource(configuration, sql, modelClass);
             return addUpdateMappedStatement(mapperClass, modelClass, methodName, sqlSource);
         } else {
-            sqlMethod = SqlMethod.DELETE;
+            SqlMethod sqlMethod = SqlMethod.DELETE;
             sql = String.format(sqlMethod.getSql(), tableInfo.getTableName(),
                     sqlWhereEntityWrapper(true, tableInfo),
                     sqlComment());

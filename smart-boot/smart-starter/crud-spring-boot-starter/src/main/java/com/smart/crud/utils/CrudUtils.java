@@ -299,7 +299,7 @@ public final class CrudUtils {
      * @return boolean
      */
     public static boolean hasTableLogicKey(TableInfo tableInfo) {
-        return getTableLogicKeyField(tableInfo) != null;
+        return getTableLogicKeyField(tableInfo).getTableLogicKey() != null;
     }
 
     // --------------------------------------------------------------
