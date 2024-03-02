@@ -65,11 +65,13 @@ public class SmartDeleteById extends AbstractSmartMethod {
             boolean hasTableLogicKey = CrudUtils.hasTableLogicKey(tableInfo);
             String deleteId = SmartCrudConstants.DELETE_ID;
             if (CollectionUtils.isNotEmpty(fieldInfos)) {
-                String sqlSet = "SET " + SqlScriptUtils.convertIf(fieldInfos.stream()
+                String sqlSet = SqlScriptUtils.convertIf(fieldInfos.stream()
                         .map(i -> i.getSqlSet(EMPTY)).collect(joining(EMPTY)), "!@org.apache.ibatis.type.SimpleTypeRegistry@isSimpleType(_parameter.getClass())", true)
                         + tableInfo.getLogicDeleteSql(false, false);
                 if (hasTableLogicKey) {
-                    sql = String.format(smartSqlMethod.getSql(), tableInfo.getTableName(), sqlSet, this.sqlLogicDeleteFieldSet(tableInfo, DELETE_FIELDS_DOT), tableInfo.getKeyColumn(),
+                    sql = String.format(smartSqlMethod.getSql(), tableInfo.getTableName(),
+                            SqlScriptUtils.convertSet(sqlSet + ", \n" + this.sqlLogicDeleteFieldSet(tableInfo, DELETE_FIELDS_DOT)),
+                            tableInfo.getKeyColumn(),
                             deleteId, tableInfo.getLogicDeleteSql(true, true));
                 } else {
                     sql = String.format(sqlMethod.getSql(), tableInfo.getTableName(), sqlSet, tableInfo.getKeyColumn(),
