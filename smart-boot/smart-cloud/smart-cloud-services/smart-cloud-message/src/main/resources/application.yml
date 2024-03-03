@@ -1,0 +1,19 @@
+server:
+  port: 8095
+
+spring:
+  application:
+    name: @artifactId@
+  cloud:
+    nacos:
+      server-addr: @nacos.server-addr@
+      discovery:
+        namespace: @nacos.namespace@
+      config:
+        namespace: @nacos.namespace@
+      username: @nacos.username@
+      password: @nacos.password@
+  config:
+    import:
+      - optional:nacos:application-@profiles.active@.yml
+      - optional:nacos:${spring.application.name}-@profiles.active@.yml

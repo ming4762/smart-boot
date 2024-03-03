@@ -18,6 +18,7 @@
         <module>smart-cloud-code</module>
         <module>smart-cloud-file</module>
         <module>smart-cloud-gateway</module>
+        <module>smart-cloud-message</module>
         <module>smart-cloud-system</module>
     </modules>
 
