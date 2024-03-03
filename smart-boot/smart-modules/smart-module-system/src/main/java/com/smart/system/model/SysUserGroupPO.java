@@ -62,4 +62,5 @@ public class SysUserGroupPO extends BaseModelUserTime {
      */
     @Schema(description = "启用")
     private Boolean useYn;
+
 }

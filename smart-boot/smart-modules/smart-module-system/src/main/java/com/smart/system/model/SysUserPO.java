@@ -10,6 +10,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.io.Serial;
+import java.time.LocalDateTime;
 
 /**
  * 用户实体类
@@ -75,5 +76,11 @@ public class SysUserPO extends BaseModelUserTime implements BaseUser {
 
     @TableLogicKey
     private Long deleteKey;
+
+    private Long deleteUserId;
+
+    private String deleteBy;
+
+    private LocalDateTime deleteTime;
 
 }
