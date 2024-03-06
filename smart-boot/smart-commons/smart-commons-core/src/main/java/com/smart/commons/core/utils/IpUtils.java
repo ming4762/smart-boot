@@ -2,12 +2,12 @@ package com.smart.commons.core.utils;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.lang.NonNull;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.Optional;
+import java.net.*;
+import java.util.*;
 
 
 /**
@@ -25,6 +25,16 @@ public class IpUtils {
 	 */
 	private static final String LOCALHOST_IPV6 = "0:0:0:0:0:0:0:1";
 	private static final String SEPARATOR = ",";
+
+	/**
+	 * 真实物理网卡名称列表
+	 */
+	private static final List<String> REAL_DISPLAY_NAME = List.of(
+			"Intel",
+			"Realtek",
+			"Atheros",
+			"Broadcom"
+	);
 
 	private IpUtils() {
 		throw new IllegalStateException("Utility class");
@@ -60,18 +70,9 @@ public class IpUtils {
 				ip = request.getHeader("HTTP_X_FORWARDED_FOR");
 			}
 			if (org.apache.commons.lang3.StringUtils.isEmpty(ip) || UNKNOWN.equalsIgnoreCase(ip)) {
-				ip = request.getRemoteAddr();
-				if (LOCALHOST_IP.equalsIgnoreCase(ip) || LOCALHOST_IPV6.equalsIgnoreCase(ip)) {
-					// 根据网卡取本机配置的 IP
-					InetAddress iNet = null;
-					try {
-						iNet = InetAddress.getLocalHost();
-					} catch (UnknownHostException e) {
-						log.error(e.getMessage(), e);
-					}
-					if (iNet != null) {
-						ip = iNet.getHostAddress();
-					}
+				List<String> realLocalIpList = getRealLocalIpList();
+				if (!realLocalIpList.isEmpty()) {
+					ip = realLocalIpList.get(0);
 				}
 			}
 		} catch (Exception e) {
@@ -86,4 +87,71 @@ public class IpUtils {
 		return LOCALHOST_IPV6.equals(ip) ? LOCALHOST_IP : ip;
 	}
 
+
+	/**
+	 * 获取本机所有网卡IP地址 包括虚拟网卡
+	 * @return IP地址列表
+	 */
+	public static List<String> getLocalIpList() {
+		List<String> ipList = new ArrayList<>(16);
+        try {
+            Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
+			while (networkInterfaces.hasMoreElements()) {
+				NetworkInterface networkInterface = networkInterfaces.nextElement();
+				Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
+				while (inetAddresses.hasMoreElements()) {
+					InetAddress inetAddress = inetAddresses.nextElement();
+					if (inetAddress instanceof Inet4Address) {
+						ipList.add(inetAddress.getHostAddress());
+					}
+				}
+			}
+        } catch (SocketException e) {
+            log.error(e.getMessage(), e);
+        }
+		return ipList;
+    }
+
+	/**
+	 * 获取真实IP地址（真实物理网卡）
+	 * @return IP地址列表
+	 */
+	@NonNull
+	public static List<String> getRealLocalIpList() {
+		List<String> realIpList = new LinkedList<>();
+        try {
+            Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
+			while (networkInterfaces.hasMoreElements()) {
+				NetworkInterface networkInterface = networkInterfaces.nextElement();
+				// 去除回环接口，子接口，未运行接口
+				if (networkInterface.isLoopback() || networkInterface.isVirtual() || !networkInterface.isUp()) {
+					continue;
+				}
+				// 判断网卡名字是否是真实网卡名字
+				String displayName = networkInterface.getDisplayName();
+				boolean match = REAL_DISPLAY_NAME.stream()
+						.anyMatch(displayName::contains);
+				if (!match) {
+					continue;
+				}
+				Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
+				while (inetAddresses.hasMoreElements()) {
+					InetAddress inetAddress = inetAddresses.nextElement();
+					if (!(inetAddress instanceof Inet4Address)) {
+						continue;
+					}
+					realIpList.add(inetAddress.getHostAddress());
+				}
+			}
+        } catch (SocketException e) {
+			log.error(e.getMessage(), e);
+			return Collections.emptyList();
+        }
+        return realIpList;
+	}
+
+	public static void main(String[] args) {
+		List<String> localIpList = getRealLocalIpList();
+		localIpList.forEach(System.out::println);
+	}
 }
