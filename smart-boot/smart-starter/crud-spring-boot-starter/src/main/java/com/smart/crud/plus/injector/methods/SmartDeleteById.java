@@ -88,7 +88,7 @@ public class SmartDeleteById extends AbstractSmartMethod {
         } else {
             sqlMethod = SqlMethod.DELETE_BY_ID;
             sql = String.format(sqlMethod.getSql(), tableInfo.getTableName(), tableInfo.getKeyColumn(),
-                    tableInfo.getKeyProperty());
+                    SmartCrudConstants.DELETE_ID);
             SqlSource sqlSource = languageDriver.createSqlSource(configuration, sql, Object.class);
             return this.addDeleteMappedStatement(mapperClass, methodName, sqlSource);
         }
