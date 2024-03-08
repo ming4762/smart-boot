@@ -39,7 +39,7 @@
         <jacob.version>1.20</jacob.version>
         <kettle.version>9.2.0.0</kettle.version>
         <xxl-job.version>2.4.0</xxl-job.version>
-        <druid.version>1.2.18</druid.version>
+        <druid.version>1.2.20</druid.version>
         <easy-captcha.version>1.6.2</easy-captcha.version>
         <ojdbc8.version>19.3.0.0</ojdbc8.version>
         <commons-lang.version>2.6</commons-lang.version>
@@ -59,6 +59,7 @@
         <tianai-captcha.version>1.4.1</tianai-captcha.version>
         <commons-net.version>3.10.0</commons-net.version>
         <nacos.logback-adapter.version>1.0.0</nacos.logback-adapter.version>
+        <nashorn.version>15.4</nashorn.version>
     </properties>
 
     <packaging>pom</packaging>
@@ -472,6 +473,16 @@
                 <groupId>com.alibaba.nacos</groupId>
                 <artifactId>logback-adapter</artifactId>
                 <version>${nacos.logback-adapter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-3-starter</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openjdk.nashorn</groupId>
+                <artifactId>nashorn-core</artifactId>
+                <version>${nashorn.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

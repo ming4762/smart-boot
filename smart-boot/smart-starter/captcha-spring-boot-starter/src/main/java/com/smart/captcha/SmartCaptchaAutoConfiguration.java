@@ -69,13 +69,13 @@ public class SmartCaptchaAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public SmartCaptchaHandler textSmartCaptchaHandler(CacheService cacheService) {
+    public SmartTextCaptchaHandlerImpl textSmartCaptchaHandler(CacheService cacheService) {
         return new SmartTextCaptchaHandlerImpl(cacheService);
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public SmartCaptchaHandler imageSmartCaptchaHandler(ImageCaptchaGenerator imageCaptchaGenerator, ImageCaptchaValidator imageCaptchaValidator, CacheService cacheService) {
+    public SmartImageCaptchaHandlerImpl imageSmartCaptchaHandler(ImageCaptchaGenerator imageCaptchaGenerator, ImageCaptchaValidator imageCaptchaValidator, CacheService cacheService) {
         return new SmartImageCaptchaHandlerImpl(imageCaptchaGenerator, imageCaptchaValidator, cacheService);
     }
 
