@@ -8,10 +8,14 @@ import com.smart.auth.core.token.TokenData;
 import com.smart.auth.core.token.TokenRepository;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.auth.core.utils.AuthUtils;
+import com.smart.auth.security.pojo.dto.AuthPropertiesDTO;
 import com.smart.auth.security.pojo.dto.OfflineDTO;
 import com.smart.auth.security.pojo.dto.OnlineUserQueryDTO;
 import com.smart.auth.security.pojo.dto.TempTokenApplyDTO;
 import com.smart.auth.security.pojo.vo.OnlineUserVO;
+import com.smart.commons.core.captcha.dto.CaptchaGenerateDTO;
+import com.smart.commons.core.captcha.dto.CaptchaGenerateParameter;
+import com.smart.commons.core.captcha.dto.CaptchaValidateParameter;
 import com.smart.commons.core.i18n.I18nUtils;
 import com.smart.commons.core.log.Log;
 import com.smart.commons.core.log.LogOperationTypeEnum;
@@ -22,9 +26,6 @@ import com.smart.commons.core.utils.JsonUtils;
 import com.smart.module.api.auth.AuthApi;
 import com.smart.module.api.auth.AuthCaptchaApi;
 import com.smart.module.api.auth.dto.AuthCacheDTO;
-import com.smart.module.api.auth.dto.AuthCaptchaDTO;
-import com.smart.module.api.auth.parameter.AuthCaptchaCreateParameter;
-import com.smart.module.api.auth.parameter.AuthCaptchaValidateParameter;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -174,13 +175,24 @@ public class AuthController {
 
     @PostMapping("public/auth/generateCaptcha")
     @Operation(summary = "生成行为验证码")
-    public Result<AuthCaptchaDTO> generateCaptcha(@RequestBody @Valid AuthCaptchaCreateParameter parameter) {
+    public Result<CaptchaGenerateDTO> generateCaptcha(@RequestBody @Valid CaptchaGenerateParameter parameter) {
         return Result.success(this.authCaptchaApi.generate(parameter));
     }
 
     @PostMapping("public/auth/validateCaptcha")
     @Operation(summary = "验证行为验证码")
-    public Result<String> validateCaptcha(@RequestBody @Valid AuthCaptchaValidateParameter parameter) {
+    public Result<Boolean> validateCaptcha(@RequestBody @Valid CaptchaValidateParameter parameter) {
         return Result.success(this.authCaptchaApi.validate(parameter));
+    }
+
+
+    @PostMapping("public/auth/getAuthProperties")
+    @Operation(summary = "获取认证参数")
+    public Result<AuthPropertiesDTO> getAuthProperties() {
+        AuthPropertiesDTO dto = new AuthPropertiesDTO();
+        dto.setCaptchaEnabled(this.authProperties.getCaptcha().getEnabled());
+        dto.setCaptchaType(this.authProperties.getCaptcha().getType());
+        dto.setCaptchaIdent(this.authProperties.getCaptcha().getType().getIdent());
+        return Result.success(dto);
     }
 }

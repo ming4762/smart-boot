@@ -1,8 +1,6 @@
 package com.smart.auth.extensions.sms.filter;
 
-import com.smart.auth.core.exception.AuthException;
 import com.smart.auth.core.i18n.AuthI18nMessage;
-import com.smart.auth.core.utils.TokenUtils;
 import com.smart.auth.extensions.sms.provider.SmsCreateValidateProvider;
 import com.smart.commons.core.i18n.I18nUtils;
 import com.smart.commons.core.message.Result;
@@ -38,10 +36,10 @@ public class SmsCodeCreateFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws IOException {
         // 验证行为验证码
-        boolean validateToken = this.authCaptchaApi.validateToken(TokenUtils.getCaptchaToken(request));
-        if (!validateToken) {
-            throw new AuthException(I18nUtils.get(AuthI18nMessage.CAPTCHA_ERROR));
-        }
+//        boolean validateToken = this.authCaptchaApi.validateToken(TokenUtils.getCaptchaToken(request));
+//        if (!validateToken) {
+//            throw new AuthException(I18nUtils.get(AuthI18nMessage.CAPTCHA_ERROR));
+//        }
         // 1、获取手机号
         final String phone = request.getParameter("phone");
         if (StringUtils.isBlank(phone)) {

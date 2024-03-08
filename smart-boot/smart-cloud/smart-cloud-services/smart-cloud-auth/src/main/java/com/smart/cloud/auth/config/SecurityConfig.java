@@ -8,6 +8,7 @@ import lombok.SneakyThrows;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -36,7 +37,7 @@ public class SecurityConfig extends AuthWebSecurityConfigurerAdapter {
                     .logout(AbstractHttpConfigurer::disable)
                     .sessionManagement(http -> http.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .with(AuthJwtSecurityConfigurer.jwt(), http -> http.jwtAuth(false).bindIp(false))
-                .with(AuthCaptchaSecurityConfigurer.captcha(), http -> http.addLoginUrl(AuthJwtSecurityConfigurer.LOGIN_URL));
+                .with(AuthCaptchaSecurityConfigurer.captcha(), Customizer.withDefaults());
         return httpSecurity.build();
     }
 }

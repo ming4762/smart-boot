@@ -14,6 +14,7 @@
 	<packaging>pom</packaging>
 
 	<modules>
+		<module>captcha-spring-boot-starter</module>
 		<module>crud-spring-boot-starter</module>
 		<module>exception-spring-boot-starter</module>
 		<module>guava-cache-spring-boot-starter</module>

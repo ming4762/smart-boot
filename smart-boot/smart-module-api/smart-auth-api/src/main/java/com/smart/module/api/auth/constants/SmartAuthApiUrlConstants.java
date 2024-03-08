@@ -39,6 +39,4 @@ public interface SmartAuthApiUrlConstants {
     String AUTH_CAPTCHA_GENERATE = "/remote/auth/captcha/generate";
 
     String AUTH_CAPTCHA_VALIDATE = "/remote/auth/captcha/validate";
-
-    String AUTH_CAPTCHA_VALIDATE_TOKEN = "/remote/auth/captcha/validateToken";
 }

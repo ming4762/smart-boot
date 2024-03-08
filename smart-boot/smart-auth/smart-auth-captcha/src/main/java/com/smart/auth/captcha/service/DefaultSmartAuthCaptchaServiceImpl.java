@@ -7,10 +7,11 @@ import cloud.tianai.captcha.validator.ImageCaptchaValidator;
 import cloud.tianai.captcha.validator.common.model.dto.ImageCaptchaTrack;
 import com.smart.auth.core.properties.AuthCaptchaProperties;
 import com.smart.auth.core.service.AuthCache;
+import com.smart.commons.core.captcha.constants.CaptchaTypeEnum;
 import com.smart.commons.core.utils.DateUtils;
 import com.smart.commons.core.utils.IdGenerator;
-import com.smart.module.api.auth.constants.AuthCaptchaTypeEnum;
 import com.smart.module.api.auth.dto.AuthCaptchaDTO;
+import com.smart.module.api.auth.parameter.AuthCaptchaCreateParameter;
 import com.smart.module.api.auth.parameter.AuthCaptchaValidateParameter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
@@ -51,18 +52,23 @@ public class DefaultSmartAuthCaptchaServiceImpl implements SmartAuthCaptchaServi
      */
     @Override
     public AuthCaptchaDTO generate() {
-        return this.generate(AuthCaptchaTypeEnum.SLIDER);
+        return this.generate(
+                AuthCaptchaCreateParameter.builder()
+                        .type(CaptchaTypeEnum.SLIDER)
+                        .expireIn(this.properties.getExpireIn())
+                        .build()
+        );
     }
 
     /**
      * 生成验证码
      *
-     * @param type 验证码类型
+     * @param parameter 验证码类型
      * @return 验证码数据
      */
     @Override
-    public AuthCaptchaDTO generate(AuthCaptchaTypeEnum type) {
-        ImageCaptchaInfo imageCaptchaInfo = this.imageCaptchaGenerator.generateCaptchaImage(type.name());
+    public AuthCaptchaDTO generate(AuthCaptchaCreateParameter parameter) {
+        ImageCaptchaInfo imageCaptchaInfo = this.imageCaptchaGenerator.generateCaptchaImage(parameter.getType().name());
         return this.buildDto(imageCaptchaInfo);
     }
 
@@ -110,7 +116,7 @@ public class DefaultSmartAuthCaptchaServiceImpl implements SmartAuthCaptchaServi
         Map<String, Object> validData = this.imageCaptchaValidator.generateImageCaptchaValidData(imageCaptchaInfo);
 
         String key = IdGenerator.nextId() + "";
-        this.authCache.put(this.getCacheKey(key), validData, this.properties.getTimeout());
+        this.authCache.put(this.getCacheKey(key), validData, this.properties.getExpireIn());
 
         dto.setKey(key);
 

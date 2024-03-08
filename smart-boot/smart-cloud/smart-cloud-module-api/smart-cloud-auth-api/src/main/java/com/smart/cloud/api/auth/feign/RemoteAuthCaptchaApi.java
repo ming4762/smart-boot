@@ -1,11 +1,11 @@
 package com.smart.cloud.api.auth.feign;
 
 import com.smart.cloud.common.core.constants.CloudServiceNameConstants;
+import com.smart.commons.core.captcha.dto.CaptchaGenerateDTO;
+import com.smart.commons.core.captcha.dto.CaptchaGenerateParameter;
+import com.smart.commons.core.captcha.dto.CaptchaValidateParameter;
 import com.smart.module.api.auth.AuthCaptchaApi;
 import com.smart.module.api.auth.constants.SmartAuthApiUrlConstants;
-import com.smart.module.api.auth.dto.AuthCaptchaDTO;
-import com.smart.module.api.auth.parameter.AuthCaptchaCreateParameter;
-import com.smart.module.api.auth.parameter.AuthCaptchaValidateParameter;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -25,7 +25,7 @@ public interface RemoteAuthCaptchaApi extends AuthCaptchaApi {
      */
     @Override
     @PostMapping(SmartAuthApiUrlConstants.AUTH_CAPTCHA_GENERATE)
-    AuthCaptchaDTO generate(AuthCaptchaCreateParameter parameter);
+    CaptchaGenerateDTO generate(CaptchaGenerateParameter parameter);
 
     /**
      * 验证码验证
@@ -35,15 +35,6 @@ public interface RemoteAuthCaptchaApi extends AuthCaptchaApi {
      */
     @Override
     @PostMapping(SmartAuthApiUrlConstants.AUTH_CAPTCHA_VALIDATE)
-    String validate(AuthCaptchaValidateParameter parameter);
+    boolean validate(CaptchaValidateParameter parameter);
 
-    /**
-     * 验证 验证码token是否有效
-     *
-     * @param captchaToken 验证码token
-     * @return 是否验证成功
-     */
-    @Override
-    @PostMapping(SmartAuthApiUrlConstants.AUTH_CAPTCHA_VALIDATE_TOKEN)
-    boolean validateToken(String captchaToken);
 }

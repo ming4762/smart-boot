@@ -26,14 +26,34 @@ public class AuthProperties implements InitializingBean {
      */
     private static final String DEFAULT_CAPTCHA_RESOURCE_PATH = "auth/captcha/*.jpg";
 
+    /**
+     * 认证缓存前缀
+     */
     private String prefix = "smart-session";
 
+    /**
+     * 登录URL
+     */
+    private String loginUrl = "/auth/login";
+
+    /**
+     * JWT配置
+     */
     private JwtProperties jwt = new JwtProperties();
 
+    /**
+     * session配置
+     */
     private Session session = new Session();
 
+    /**
+     * SAML2配置
+     */
     private Saml2 saml2 = new Saml2();
 
+    /**
+     * 忽略权限验证配置
+     */
     private IgnoreConfig ignores = new IgnoreConfig();
 
     /**
@@ -48,13 +68,9 @@ public class AuthProperties implements InitializingBean {
     private Boolean development = Boolean.FALSE;
 
     /**
-     * 用户状态配置
-     */
-    private UserStatus status = new UserStatus();
-
-    /**
      * appsecret 配置
      */
+    @Deprecated(forRemoval = true)
     private AppsecretProperties appsecret = new AppsecretProperties();
 
     /**
@@ -106,30 +122,6 @@ public class AuthProperties implements InitializingBean {
          * 超时时间，默认60S
          */
         private Duration timeout = Duration.ofSeconds(60);
-    }
-
-    @Getter
-    @Setter
-    public static class UserStatus {
-        /**
-         * 登录失败锁定次数
-         */
-        private Integer loginFailLockTime = 5;
-
-        /**
-         * 最大访问连接数，单个用户可同时登录的数量，0：不限制
-         */
-        private Long maxConnections = 1L;
-
-        /**
-         * 指定天数未登录账户锁定，0：永不锁定
-         */
-        private Long maxDaysSinceLogin = 30L;
-
-        /**
-         * 密码必须修改的天使，0：不限制
-         */
-        private Long passwordLifeDays = 90L;
     }
 
     @Getter

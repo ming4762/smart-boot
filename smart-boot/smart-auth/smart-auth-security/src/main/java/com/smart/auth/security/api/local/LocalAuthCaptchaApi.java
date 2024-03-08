@@ -1,20 +1,12 @@
 package com.smart.auth.security.api.local;
 
-import com.smart.auth.captcha.service.SmartAuthCaptchaService;
-import com.smart.auth.core.exception.AuthException;
-import com.smart.auth.core.i18n.AuthI18nMessage;
-import com.smart.auth.core.service.AuthCache;
-import com.smart.commons.core.i18n.I18nUtils;
-import com.smart.commons.core.utils.IdGenerator;
+import com.smart.captcha.service.SmartCaptchaService;
+import com.smart.commons.core.captcha.dto.CaptchaGenerateDTO;
+import com.smart.commons.core.captcha.dto.CaptchaGenerateParameter;
+import com.smart.commons.core.captcha.dto.CaptchaValidateParameter;
 import com.smart.module.api.auth.AuthCaptchaApi;
-import com.smart.module.api.auth.dto.AuthCaptchaDTO;
-import com.smart.module.api.auth.parameter.AuthCaptchaCreateParameter;
-import com.smart.module.api.auth.parameter.AuthCaptchaValidateParameter;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
-
-import java.time.Duration;
 
 /**
  * @author zhongming4762
@@ -24,15 +16,10 @@ import java.time.Duration;
 @Primary
 public class LocalAuthCaptchaApi implements AuthCaptchaApi {
 
-    private static final String CAPTCHA_TOKEN_KEY = "auth_captcha_token_";
+    private final SmartCaptchaService smartCaptchaService;
 
-    private final AuthCache<String, Object> authCache;
-
-    private final SmartAuthCaptchaService smartAuthCaptchaService;
-
-    public LocalAuthCaptchaApi(AuthCache<String, Object> authCache, SmartAuthCaptchaService smartAuthCaptchaService) {
-        this.authCache = authCache;
-        this.smartAuthCaptchaService = smartAuthCaptchaService;
+    public LocalAuthCaptchaApi(SmartCaptchaService smartCaptchaService) {
+        this.smartCaptchaService = smartCaptchaService;
     }
 
     /**
@@ -42,8 +29,8 @@ public class LocalAuthCaptchaApi implements AuthCaptchaApi {
      * @return 生成的验证码
      */
     @Override
-    public AuthCaptchaDTO generate(AuthCaptchaCreateParameter parameter) {
-        return this.smartAuthCaptchaService.generate(parameter.getType());
+    public CaptchaGenerateDTO generate(CaptchaGenerateParameter parameter) {
+        return this.smartCaptchaService.generate(parameter);
     }
 
     /**
@@ -53,31 +40,7 @@ public class LocalAuthCaptchaApi implements AuthCaptchaApi {
      * @return 是否验证成功
      */
     @Override
-    public String validate(AuthCaptchaValidateParameter parameter) {
-        boolean validate = this.smartAuthCaptchaService.validate(parameter);
-        if (validate) {
-            String token = IdGenerator.nextId() + "";
-            this.authCache.put(this.getCaptchaTokenKey(token), token, Duration.ofMinutes(5));
-            return token;
-        }
-        return null;
-    }
-
-    /**
-     * 验证 验证码token是否有效
-     *
-     * @param captchaToken 验证码token
-     * @return 是否验证成功
-     */
-    @Override
-    public boolean validateToken(String captchaToken) {
-        if (StringUtils.isBlank(captchaToken)) {
-            throw new AuthException(I18nUtils.get(AuthI18nMessage.CAPTCHA_EXPIRE_ERROR));
-        }
-        return this.authCache.getAndRemove(this.getCaptchaTokenKey(captchaToken)) != null;
-    }
-
-    private String getCaptchaTokenKey(String token) {
-        return CAPTCHA_TOKEN_KEY + token;
+    public boolean validate(CaptchaValidateParameter parameter) {
+        return this.smartCaptchaService.validate(parameter);
     }
 }

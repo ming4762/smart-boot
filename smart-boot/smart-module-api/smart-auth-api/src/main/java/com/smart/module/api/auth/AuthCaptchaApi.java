@@ -1,8 +1,8 @@
 package com.smart.module.api.auth;
 
-import com.smart.module.api.auth.dto.AuthCaptchaDTO;
-import com.smart.module.api.auth.parameter.AuthCaptchaCreateParameter;
-import com.smart.module.api.auth.parameter.AuthCaptchaValidateParameter;
+import com.smart.commons.core.captcha.dto.CaptchaGenerateDTO;
+import com.smart.commons.core.captcha.dto.CaptchaGenerateParameter;
+import com.smart.commons.core.captcha.dto.CaptchaValidateParameter;
 
 /**
  * 验证码API
@@ -16,7 +16,7 @@ public interface AuthCaptchaApi {
      * @param parameter 参数
      * @return 生成的验证码
      */
-    AuthCaptchaDTO generate(AuthCaptchaCreateParameter parameter);
+    CaptchaGenerateDTO generate(CaptchaGenerateParameter parameter);
 
 
     /**
@@ -24,13 +24,6 @@ public interface AuthCaptchaApi {
      * @param parameter 参数
      * @return 验证码生成的临时token
      */
-    String validate(AuthCaptchaValidateParameter parameter);
+    boolean validate(CaptchaValidateParameter parameter);
 
-
-    /**
-     * 验证 验证码token是否有效
-     * @param captchaToken 验证码token
-     * @return 是否验证成功
-     */
-    boolean validateToken(String captchaToken);
 }

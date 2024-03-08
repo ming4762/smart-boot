@@ -50,11 +50,6 @@ import java.util.Optional;
 @Slf4j
 public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, H> {
 
-    /**
-     * 默认的登录地址
-     */
-    public static final String LOGIN_URL = "/auth/login";
-
     private final ServiceProvider serviceProvider = new ServiceProvider();
 
     private JwtService jwtService;
@@ -102,7 +97,7 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
     }
 
     private String getLoginUrl() {
-        return Optional.ofNullable(this.serviceProvider.loginUrl).orElse(LOGIN_URL);
+        return this.getAuthProperties().getLoginUrl();
     }
 
     @Override
@@ -219,15 +214,6 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
         }
     }
 
-    /**
-     * 设置登录URL
-     * @param loginUrl 登录URL
-     * @return this
-     */
-    public AuthJwtSecurityConfigurer<H> loginUrl(String loginUrl) {
-        this.serviceProvider.setLoginUrl(loginUrl);
-        return this;
-    }
 
     /**
      * 设置登出URL
@@ -297,8 +283,6 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
         private AuthProperties authProperties;
 
         private AuthCache<String, Object> authCache;
-
-        private String loginUrl;
 
         private String logoutUrl;
         /**

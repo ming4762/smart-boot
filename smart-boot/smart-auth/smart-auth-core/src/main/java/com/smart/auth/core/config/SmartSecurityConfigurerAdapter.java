@@ -37,4 +37,8 @@ public class SmartSecurityConfigurerAdapter<H extends HttpSecurityBuilder<H>> ex
             return null;
         }
     }
+
+    protected <T> T getBean(Class<T> clazz) {
+        return this.getBean(clazz, null);
+    }
 }

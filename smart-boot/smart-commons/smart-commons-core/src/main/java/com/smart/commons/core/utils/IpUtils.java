@@ -149,9 +149,4 @@ public class IpUtils {
         }
         return realIpList;
 	}
-
-	public static void main(String[] args) {
-		List<String> localIpList = getRealLocalIpList();
-		localIpList.forEach(System.out::println);
-	}
 }

@@ -1,27 +1,30 @@
 package com.smart.auth.security.filter;
 
-import com.smart.auth.core.exception.CaptchaException;
 import com.smart.auth.core.i18n.AuthI18nMessage;
-import com.smart.auth.core.service.AuthCache;
-import com.smart.auth.core.utils.CaptchaUtils;
+import com.smart.auth.core.properties.AuthProperties;
+import com.smart.captcha.exception.CaptchaException;
+import com.smart.commons.core.captcha.dto.CaptchaGenerateDTO;
+import com.smart.commons.core.captcha.dto.CaptchaGenerateParameter;
+import com.smart.commons.core.captcha.dto.CaptchaValidateParameter;
 import com.smart.commons.core.i18n.I18nUtils;
 import com.smart.commons.core.message.Result;
+import com.smart.commons.core.utils.JsonUtils;
 import com.smart.commons.core.utils.RestJsonWriter;
+import com.smart.module.api.auth.AuthCaptchaApi;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.List;
 
 /**
  * 验证码创建 验证拦截器
@@ -31,50 +34,70 @@ import java.util.List;
  */
 public class AuthCaptchaFilter extends OncePerRequestFilter {
 
-    private final String createUrl;
+    private final AuthProperties authProperties;
 
-    private final List<String> loginUrls;
+    private final AuthCaptchaApi authCaptchaApi;
 
-    private final AuthCache<String, Object> authCache;
-
-    public AuthCaptchaFilter(String createUrl, List<String> loginUrls, AuthCache<String, Object> authCache) {
-        this.createUrl = createUrl;
-        this.loginUrls = loginUrls;
-        this.authCache = authCache;
+    public AuthCaptchaFilter(AuthProperties authProperties, AuthCaptchaApi authCaptchaApi) {
+        this.authCaptchaApi = authCaptchaApi;
+        this.authProperties = authProperties;
     }
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
-        String key = request.getParameter("codeKey");
-        Assert.notNull(key, "验证码验证发生错误，key为null");
         if (this.isCreate(request)) {
             response.setContentType(MediaType.IMAGE_PNG_VALUE);
-            CaptchaUtils.out(response.getOutputStream(), key, authCache);
+            CaptchaGenerateParameter generateParameter = this.authProperties.getCaptcha().getType().isText() ? this.createTextParameter() : this.createImageParameter();
+            CaptchaGenerateDTO result = this.authCaptchaApi.generate(generateParameter);
+            RestJsonWriter.writeJson(response, Result.success(result));
         } else if (this.isValidate(request)) {
             // 验证验证码
             String code = request.getParameter("code");
+            Result<Object> errorResult = Result.failure(HttpStatus.UNAUTHORIZED.value(), I18nUtils.get(AuthI18nMessage.CAPTCHA_ERROR));
+            if (!StringUtils.hasText(code)) {
+                RestJsonWriter.writeJson(response, errorResult);
+                return;
+            }
             try {
-                if (StringUtils.isBlank(code) || !CaptchaUtils.validate(key, code, authCache)) {
-                    CaptchaUtils.invalid(key, authCache);
-                    RestJsonWriter.writeJson(response, Result.failure(HttpStatus.UNAUTHORIZED.value(), I18nUtils.get(AuthI18nMessage.CAPTCHA_ERROR)));
+                CaptchaValidateParameter validateParameter = JsonUtils.parse(code, CaptchaValidateParameter.class);
+                boolean validate = this.authCaptchaApi.validate(validateParameter);
+                if (!validate) {
+                    RestJsonWriter.writeJson(response, errorResult);
                     return;
                 }
             } catch (CaptchaException e) {
                 RestJsonWriter.writeJson(response, Result.failure(HttpStatus.UNAUTHORIZED.value(), e.getMessage()));
                 return;
             }
-            CaptchaUtils.invalid(key, authCache);
             filterChain.doFilter(request, response);
         }
     }
 
 
+    private CaptchaGenerateParameter createTextParameter() {
+        CaptchaGenerateParameter.TextParameter textParameter = new CaptchaGenerateParameter.TextParameter();
+        BeanUtils.copyProperties(this.authProperties.getCaptcha().getText(), textParameter);
+        return CaptchaGenerateParameter.builder()
+                .type(this.authProperties.getCaptcha().getType())
+                .text(textParameter)
+                .build();
+    }
+
+    private CaptchaGenerateParameter createImageParameter() {
+        CaptchaGenerateParameter.ImageParameter imageParameter = new CaptchaGenerateParameter.ImageParameter();
+        BeanUtils.copyProperties(this.authProperties.getCaptcha().getImage(), imageParameter);
+        return CaptchaGenerateParameter.builder()
+                .type(this.authProperties.getCaptcha().getType())
+                .image(imageParameter)
+                .build();
+    }
+
     private boolean isCreate(@NonNull HttpServletRequest request) {
-        return (new AntPathRequestMatcher(createUrl, HttpMethod.GET.name())).matches(request);
+        return (new AntPathRequestMatcher(this.authProperties.getCaptcha().getCreateUrl(), HttpMethod.POST.name())).matches(request);
     }
 
     private boolean isValidate(@NonNull HttpServletRequest request) {
-        return loginUrls.stream().anyMatch(item -> (new AntPathRequestMatcher(item)).matches(request));
+        return new AntPathRequestMatcher(this.authProperties.getLoginUrl()).matches(request);
     }
 
     @Override

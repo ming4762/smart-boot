@@ -65,6 +65,12 @@
 			<artifactId>smart-auth-captcha</artifactId>
 			<version>${smart-boot.version}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>com.smart</groupId>
+			<artifactId>captcha-spring-boot-starter</artifactId>
+			<version>${smart-boot.version}</version>
+		</dependency>
 	</dependencies>
 
 </project>
