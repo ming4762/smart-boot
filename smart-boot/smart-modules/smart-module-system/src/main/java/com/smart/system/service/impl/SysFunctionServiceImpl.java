@@ -117,6 +117,7 @@ public class SysFunctionServiceImpl extends BaseServiceImpl<SysFunctionMapper, S
      * @return boolean
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean saveOrUpdate(SysFunctionPO entity) {
         boolean result = super.saveOrUpdate(entity);
         this.updateHasChild(entity.getParentId());
@@ -129,6 +130,7 @@ public class SysFunctionServiceImpl extends BaseServiceImpl<SysFunctionMapper, S
      * @param entityList 实体对象集合
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean saveOrUpdateBatch(Collection<SysFunctionPO> entityList) {
         boolean result = super.saveOrUpdateBatch(entityList);
         entityList.forEach(item -> this.updateHasChild(item.getParentId()));
@@ -140,7 +142,7 @@ public class SysFunctionServiceImpl extends BaseServiceImpl<SysFunctionMapper, S
         this.commonMapper.updateHasChild(
                 tableInfo.getTableName(),
                 tableInfo.getTableFiled(SysFunctionPO::getParentId).getColumn(),
-                tableInfo.getTableFiled(SysFunctionPO::getFunctionId).getColumn(),
+                tableInfo.getKeyColumn(),
                 id
         );
     }

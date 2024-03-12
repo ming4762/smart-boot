@@ -2,8 +2,8 @@ package com.smart.crud.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
-import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.baomidou.mybatisplus.core.toolkit.Assert;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -33,8 +33,6 @@ import java.util.*;
 public abstract class BaseServiceImpl<K extends CrudBaseMapper<T>, T extends BaseModel> extends ServiceImpl<K, T> implements BaseService<T> {
 
     private static final String SORT_ASC = "ASC";
-
-    private static final String COLUMN_USE_YN = "use_yn";
 
     /**
      * 重写批量删除方法，如果ID只有一个调用removeById方法
@@ -107,10 +105,12 @@ public abstract class BaseServiceImpl<K extends CrudBaseMapper<T>, T extends Bas
         if (parameter.getUseYn() == null) {
             throw new SystemException("设置启停失败，启停状态不能为空");
         }
-        TableInfo tableInfo = TableInfoHelper.getTableInfo(this.entityClass);
+        SmartTableInfo tableInfo = this.getTableInfo();
+        TableFieldInfo useYnField = tableInfo.getUseYnField();
+        Assert.notNull(useYnField, "实体类缺少@TableUseYnField，实体类：" + tableInfo.getEntityType().getName());
         Lists.partition(parameter.getIdList(), 500).forEach(list -> this.update(
                 new UpdateWrapper<T>()
-                        .set(COLUMN_USE_YN, parameter.getUseYn())
+                        .set(useYnField.getColumn(), parameter.getUseYn())
                         .in(tableInfo.getKeyColumn(), list)
         ));
         return true;

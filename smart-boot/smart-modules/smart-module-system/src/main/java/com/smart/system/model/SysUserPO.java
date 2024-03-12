@@ -2,6 +2,7 @@ package com.smart.system.model;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.smart.crud.annotation.TableUseYnField;
 import com.smart.crud.model.BaseModelUserTime;
 import com.smart.crud.model.BaseUser;
 import com.smart.crud.plus.logic.TableLogicKey;
@@ -72,6 +73,7 @@ public class SysUserPO extends BaseModelUserTime implements BaseUser {
     @TableLogic
     private Boolean deleteYn;
 
+    @TableUseYnField
     private Boolean useYn;
 
     @TableLogicKey

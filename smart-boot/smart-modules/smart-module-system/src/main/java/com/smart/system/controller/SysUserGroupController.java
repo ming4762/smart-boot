@@ -6,6 +6,7 @@ import com.smart.commons.core.log.Log;
 import com.smart.commons.core.log.LogOperationTypeEnum;
 import com.smart.commons.core.message.Result;
 import com.smart.crud.controller.BaseController;
+import com.smart.crud.parameter.SetUseYnParameter;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.system.model.SysUserGroupPO;
 import com.smart.system.model.SysUserPO;
@@ -145,5 +146,20 @@ public class SysUserGroupController extends BaseController<SysUserGroupService, 
     @Operation(summary = "通过ID查询用户组信息")
     public Result<SysUserGroupPO> getById(@RequestBody Serializable id) {
         return super.getById(id);
+    }
+
+    /**
+     * 设置启用停用
+     *
+     * @param parameter 参数
+     * @return 是否设置成功
+     */
+    @Override
+    @PostMapping("setUseYn")
+    @Operation(summary = "启用停用")
+    @Log(value = "启用停用用户组", type = LogOperationTypeEnum.UPDATE)
+    @PreAuthorize("hasPermission('sys:userGroup', 'useYn')")
+    public Result<Boolean> setUseYn(@RequestBody @Valid SetUseYnParameter parameter) {
+        return super.setUseYn(parameter);
     }
 }
