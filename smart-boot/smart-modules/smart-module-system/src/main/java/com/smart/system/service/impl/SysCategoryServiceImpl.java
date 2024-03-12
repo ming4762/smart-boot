@@ -2,8 +2,8 @@ package com.smart.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.smart.crud.plus.metadata.SmartTableInfo;
 import com.smart.crud.service.BaseServiceImpl;
-import com.smart.crud.utils.CrudUtils;
 import com.smart.system.mapper.CommonMapper;
 import com.smart.system.mapper.SysCategoryMapper;
 import com.smart.system.model.SysCategoryPO;
@@ -77,10 +77,11 @@ public class SysCategoryServiceImpl extends BaseServiceImpl<SysCategoryMapper, S
         this.deleteTree((Collection<? extends Serializable>) list, deleteIds);
         boolean result = super.removeByIds(deleteIds);
         // 更新上级hasChild
+        SmartTableInfo tableInfo = this.getTableInfo();
         this.commonMapper.updateHasChild(
                 this.getTableName(),
-                CrudUtils.getDbField(SysCategoryPO::getParentId),
-                CrudUtils.getDbField(SysCategoryPO::getId),
+                tableInfo.getTableFiled(SysCategoryPO::getParentId).getColumn(),
+                tableInfo.getTableFiled(SysCategoryPO::getId).getColumn(),
                 deleteData.getParentId()
         );
         return result;

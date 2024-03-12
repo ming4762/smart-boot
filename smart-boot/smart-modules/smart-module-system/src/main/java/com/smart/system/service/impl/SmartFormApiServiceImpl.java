@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.smart.commons.core.exception.SystemException;
 import com.smart.crud.model.BaseModel;
 import com.smart.crud.model.Sort;
+import com.smart.crud.plus.metadata.SmartTableInfo;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.crud.utils.CrudUtils;
 import com.smart.system.controller.api.form.dto.SmartFormTableSelectApiDTO;
@@ -41,10 +42,11 @@ public class SmartFormApiServiceImpl implements SmartFormApiService {
         if (!BaseModel.class.isAssignableFrom(clazz)) {
             throw new SystemException(String.format("不是实体类，请检查类名是否正确，限定名：：%s", parameter.getModelClassName()));
         }
-        String tableName = CrudUtils.getTableName((Class<? extends BaseModel>) clazz);
+        SmartTableInfo tableInfo = CrudUtils.getTableInfo(clazz);
+        String tableName = tableInfo.getTableName();
         // 获取字典名
-        String labelName = CrudUtils.getDbField((Class<? extends BaseModel>) clazz, parameter.getLabelFieldName());
-        String valueName = CrudUtils.getDbField((Class<? extends BaseModel>) clazz, parameter.getValueFieldName());
+        String labelName = tableInfo.getTableFiled(parameter.getLabelFieldName()).getColumn();
+        String valueName = tableInfo.getTableFiled(parameter.getValueFieldName()).getColumn();
         // 创建查询条件
         QueryWrapper<? extends BaseModel> queryWrapper = null;
         PageSortQuery pageSortQuery = parameter.getQueryParameter();

@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 /**
  * @author shizhongming
  * 2023/10/31 14:00
@@ -16,11 +19,13 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @Setter
-public class TableLogicDeleteFieldInfo {
+public class TableLogicDeleteFieldInfo implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = 7460831304058200430L;
     private TableFieldInfo deleteKeyFieldInfo;
 
-    private TableLogicKey tableLogicKey;
+    private transient TableLogicKey tableLogicKey;
 
     private TableFieldInfo deleteByFieldInfo;
 

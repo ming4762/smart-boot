@@ -2,10 +2,10 @@ package com.smart.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.smart.crud.constants.CrudCommonEnum;
+import com.smart.crud.plus.metadata.SmartTableInfo;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.crud.service.BaseServiceImpl;
 import com.smart.crud.service.UserSetterService;
-import com.smart.crud.utils.CrudUtils;
 import com.smart.system.constants.UserDeptIdentEnum;
 import com.smart.system.mapper.CommonMapper;
 import com.smart.system.mapper.SysDeptMapper;
@@ -169,10 +169,11 @@ public class SysDeptServiceImpl extends BaseServiceImpl<SysDeptMapper, SysDeptPO
     }
 
     private void updateHasChild(Long id) {
+        SmartTableInfo tableInfo = this.getTableInfo();
         this.commonMapper.updateHasChild(
-                this.getTableName(),
-                CrudUtils.getDbField(SysDeptPO::getParentId),
-                CrudUtils.getDbField(SysDeptPO::getDeptId),
+                tableInfo.getTableName(),
+                tableInfo.getTableFiled(SysDeptPO::getParentId).getColumn(),
+                tableInfo.getTableFiled(SysDeptPO::getDeptId).getColumn(),
                 id
         );
     }

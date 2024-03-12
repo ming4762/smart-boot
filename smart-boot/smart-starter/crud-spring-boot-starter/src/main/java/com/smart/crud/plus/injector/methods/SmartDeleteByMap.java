@@ -3,6 +3,7 @@ package com.smart.crud.plus.injector.methods;
 import com.baomidou.mybatisplus.core.enums.SqlMethod;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.smart.crud.plus.enums.SmartSqlMethod;
+import com.smart.crud.plus.metadata.SmartTableInfo;
 import com.smart.crud.utils.CrudUtils;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlSource;
@@ -45,10 +46,11 @@ public class SmartDeleteByMap extends AbstractSmartMethod {
      */
     @Override
     public MappedStatement injectMappedStatement(Class<?> mapperClass, Class<?> modelClass, TableInfo tableInfo) {
+        SmartTableInfo smartTableInfo = CrudUtils.getTableInfo(modelClass);
         String sql;
         SqlMethod sqlMethod = SqlMethod.LOGIC_DELETE_BY_MAP;
         if (tableInfo.isWithLogicDelete()) {
-            if (CrudUtils.hasTableLogicKey(tableInfo)) {
+            if (smartTableInfo.hasTableLogicKey()) {
                 sql = String.format(SmartSqlMethod.LOGIC_DELETE_BY_MAP.getSql(), tableInfo.getTableName(), sqlLogicSet(tableInfo), this.sqlLogicDeleteFieldSet(tableInfo, ENTITY_DOT), sqlWhereByMap(tableInfo));
             } else {
                 sql = String.format(sqlMethod.getSql(), tableInfo.getTableName(), sqlLogicSet(tableInfo), sqlWhereByMap(tableInfo));

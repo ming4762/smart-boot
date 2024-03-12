@@ -1,12 +1,13 @@
 package com.smart.crud.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.TableInfo;
+import com.baomidou.mybatisplus.core.toolkit.reflect.GenericTypeUtils;
 import com.github.pagehelper.Page;
 import com.smart.commons.core.message.PageData;
 import com.smart.commons.core.message.Result;
 import com.smart.crud.model.BaseModel;
 import com.smart.crud.model.Sort;
+import com.smart.crud.plus.metadata.SmartTableInfo;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.crud.service.BaseService;
 import com.smart.crud.utils.CrudUtils;
@@ -20,8 +21,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.io.Serializable;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -34,9 +33,21 @@ import java.util.stream.Collectors;
 @Slf4j
 public abstract class BaseQueryController<K extends BaseService<T>, T extends BaseModel> {
 
+    protected final Class<?>[] typeArguments = GenericTypeUtils.resolveTypeArguments(getClass(), BaseQueryController.class);
+
+    protected final Class<T> entityClass = currentModelClass();
+
+    public Class<T> getEntityClass() {
+        return entityClass;
+    }
+
     @Autowired
     protected K service;
 
+
+    protected Class<T> currentModelClass() {
+        return (Class<T>) this.typeArguments[1];
+    }
 
     /**
      * list查询方法
@@ -46,10 +57,10 @@ public abstract class BaseQueryController<K extends BaseService<T>, T extends Ba
     public Result<Object> list(@NonNull PageSortQuery parameter) {
         final Page<T> page = this.doPage(parameter);
         PageCache.set(page);
-        final QueryWrapper<T> queryWrapper = CrudUtils.createQueryWrapperFromParameters(parameter.getParameter(), this.getModelType());
+        final QueryWrapper<T> queryWrapper = CrudUtils.createQueryWrapperFromParameters(parameter.getParameter(), this.getEntityClass());
         // 设置查询字段
         if (!parameter.getPropertyList().isEmpty()) {
-            CrudUtils.setQueryField(parameter.getPropertyList(), this.getModelType(), queryWrapper);
+            CrudUtils.setQueryField(parameter.getPropertyList(), this.getEntityClass(), queryWrapper);
         }
         String keyword = parameter.getKeyword();
         if (org.apache.commons.lang3.StringUtils.isNotBlank(keyword)) {
@@ -133,8 +144,7 @@ public abstract class BaseQueryController<K extends BaseService<T>, T extends Ba
     @Nullable
     protected String analysisOrder(@Nullable String sortName, @Nullable String sortOrder) {
         if (StringUtils.hasLength(sortName)) {
-            final Class<? extends BaseModel> clazz = CrudUtils.getModelClassByType(this.getModelType());
-            final List<Sort> sortList = CrudUtils.analysisOrder(sortName, sortOrder, clazz);
+            final List<Sort> sortList = CrudUtils.analysisOrder(sortName, sortOrder, this.getEntityClass());
             if (sortList.isEmpty()) {
                 return null;
             }
@@ -148,20 +158,12 @@ public abstract class BaseQueryController<K extends BaseService<T>, T extends Ba
 
 
     /**
-     * 获取实体类类型
-     * @return 实体类类型
-     */
-    private Type getModelType() {
-        return ((ParameterizedType)this.getClass().getGenericSuperclass()).getActualTypeArguments()[1];
-    }
-
-    /**
      * 添加关键字查询
      * @param queryWrapper 查询条件
      * @param keyword 关键字
      */
     private void addKeyword(@NonNull QueryWrapper<T> queryWrapper, @NonNull String keyword) {
-        TableInfo tableInfo = CrudUtils.getTableInfo(CrudUtils.getModelClassByType(getModelType()));
+        SmartTableInfo tableInfo = CrudUtils.getTableInfo(this.getEntityClass());
         queryWrapper.and(
                 wrapper -> tableInfo.getFieldList()
                         .forEach(item -> wrapper.or().like(item.getColumn(), keyword))

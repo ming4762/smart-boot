@@ -7,37 +7,26 @@ import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.baomidou.mybatisplus.core.toolkit.Assert;
-import com.baomidou.mybatisplus.core.toolkit.LambdaUtils;
-import com.baomidou.mybatisplus.core.toolkit.support.LambdaMeta;
-import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.smart.commons.core.exception.BaseException;
-import com.smart.commons.core.exception.SystemException;
-import com.smart.commons.core.utils.ExceptionUtils;
-import com.smart.crud.constants.UserPropertyEnum;
 import com.smart.crud.model.BaseModel;
 import com.smart.crud.model.Sort;
-import com.smart.crud.plus.logic.TableLogicKey;
-import com.smart.crud.plus.metadata.TableLogicDeleteFieldInfo;
+import com.smart.crud.plus.metadata.SmartTableInfo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.reflection.property.PropertyNamer;
-import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.ReflectionUtils;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -45,6 +34,7 @@ import java.util.stream.Collectors;
  * Crud工具类
  * @author shizhongming
  * 2020/1/10 10:00 下午
+ *
  */
 @Slf4j
 public final class CrudUtils {
@@ -73,18 +63,11 @@ public final class CrudUtils {
 
     private static final String SYMBOL_NOT_EQUAL = "<>";
 
-    /**
-     * type-class 缓存
-     */
-    private static final Map<Type, Class<? extends BaseModel>> TYPE_CLASS_CACHE = Maps.newConcurrentMap();
-    private static final Map<String, Field> CLASS_FIELD_NAME_MAPPING = Maps.newConcurrentMap();
+    private static final String SEARCH_SYMBOL_SPLIT = "@";
 
-    /**
-     * 存储逻辑删除key
-     */
-    private static final Map<Class<?>, TableLogicDeleteFieldInfo> TABLE_LOGIC_KEY_CACHE = Maps.newConcurrentMap();
+    private static final Map<Class<?>, SmartTableInfo> SMART_TABLE_INFO_CACHE = Maps.newConcurrentMap();
 
-    public static <T extends BaseModel> String getTableName(Class<T> clazz) {
+    public static String getTableName(Class<?> clazz) {
         return getTableInfo(clazz).getTableName();
     }
 
@@ -93,34 +76,15 @@ public final class CrudUtils {
      * @param clazz 实体类
      * @return TableInfo
      */
-    public static <T extends BaseModel> TableInfo getTableInfo(Class<T> clazz) {
+    public static SmartTableInfo getTableInfo(Class<?> clazz) {
+        if (SMART_TABLE_INFO_CACHE.containsKey(clazz)) {
+            return SMART_TABLE_INFO_CACHE.get(clazz);
+        }
         TableInfo tableInfo = TableInfoHelper.getTableInfo(clazz);
         Assert.notNull(tableInfo, "error: can not execute. because can not find cache of TableInfo for entity!");
-        return tableInfo;
-    }
-
-    /**
-     * 通过类型获取实体类Class
-     * @param type 实体类type
-     * @return 实体类class
-     */
-    @SuppressWarnings({"rawtypes"})
-    @Nullable
-    public static Class<? extends BaseModel> getModelClassByType(@NonNull Type type) {
-        if (TYPE_CLASS_CACHE.containsKey(type)) {
-            return TYPE_CLASS_CACHE.get(type);
-        }
-        Class<? extends BaseModel> classGet = null;
-        try {
-            final Class clazz = Class.forName(type.getTypeName());
-            if (BaseModel.class.isAssignableFrom(clazz)) {
-                classGet = clazz;
-            }
-        } catch (ClassNotFoundException e) {
-            log.error(e.getMessage(), e);
-        }
-        TYPE_CLASS_CACHE.put(type, classGet);
-        return TYPE_CLASS_CACHE.get(type);
+        SmartTableInfo smartTableInfo = SmartTableInfo.create(tableInfo);
+        SMART_TABLE_INFO_CACHE.put(clazz, smartTableInfo);
+        return smartTableInfo;
     }
 
     /**
@@ -132,6 +96,7 @@ public final class CrudUtils {
      */
     @NonNull
     public static List<Sort> analysisOrder(@NonNull String sortName, @Nullable String sortOrder, Class<? extends BaseModel> clazz) {
+        SmartTableInfo tableInfo = getTableInfo(clazz);
         final String[] sortNameList = sortName.split(",");
         final List<String> sortOrderList = sortOrder == null ? new ArrayList<>() : Arrays.asList(sortOrder.split(","));
         final List<Sort> sortList = Lists.newLinkedList();
@@ -139,7 +104,7 @@ public final class CrudUtils {
             final String name = sortNameList[i].trim();
             final String order = sortOrderList.size() > i ? sortOrderList.get(i).trim() : "asc";
             // 获取数据库字段
-            final String dbName = CrudUtils.getDbField(clazz, name);
+            final String dbName = tableInfo.getTableFiled(name).getColumn();
             if (StringUtils.isEmpty(dbName)) {
                 log.warn("未找到排序字段对应的数据库字段：{}，该排序属性被忽略", name);
             } else {
@@ -150,86 +115,22 @@ public final class CrudUtils {
     }
 
     /**
-     * 通过实体类类型、实体类属性名称获取数据库字段名
-     * @param clazz 实体类类型
-     * @param fieldName 实体类属性名称
-     * @return 数据库字段名
-     */
-    @Nullable
-    public static <T extends BaseModel> String getDbField(@NonNull Class<T> clazz, @NonNull String fieldName) {
-        TableInfo tableInfo = getTableInfo(clazz);
-        if (StringUtils.equals(fieldName, tableInfo.getKeyProperty())) {
-            return tableInfo.getKeyColumn();
-        }
-        List<TableFieldInfo> tableFieldInfoList = tableInfo.getFieldList().stream()
-                .filter(item -> StringUtils.equals(item.getProperty(), fieldName))
-                .toList();
-        if (CollectionUtils.isEmpty(tableFieldInfoList)) {
-            return null;
-        }
-        return tableFieldInfoList.get(0).getColumn();
-    }
-
-    public static Field getClassField(@NonNull Class<? extends BaseModel> clazz, @NonNull String fieldName) {
-        final String key  = clazz.getName() + fieldName;
-        if (CLASS_FIELD_NAME_MAPPING.containsKey(key)) {
-            return CLASS_FIELD_NAME_MAPPING.get(key);
-        }
-        Field field = ReflectionUtils.findField(clazz, fieldName);
-        if (field == null) {
-            throw new BaseException(String.format("实体类字段不存在，请检查，field：%s", fieldName));
-        }
-        CLASS_FIELD_NAME_MAPPING.put(key, field);
-        return field;
-    }
-
-    /**
-     * 获取数据库字段
-     * @param column 字段function
-     * @return 数据库字段
-     */
-    public static <T extends BaseModel> String getDbField(@NonNull SFunction<T, ?> column) {
-        LambdaMeta meta = LambdaUtils.extract(column);
-        String property = PropertyNamer.methodToProperty(meta.getImplMethodName());
-        return getDbField((Class<? extends BaseModel>) meta.getInstantiatedClass(), property);
-    }
-
-    /**
      * 设置查询的字段
      * @param fieldList 实体类字段列表
-     * @param type 类型
+     * @param modelClass 类型
      * @param queryWrapper 查询参数
      * @param <T> 泛型
      */
-    public static <T extends BaseModel> void setQueryField(@NonNull List<String> fieldList, @NonNull Type type, @NonNull QueryWrapper<T> queryWrapper) {
-        final Class<? extends BaseModel> clazz = getModelClassByType(type);
-        if (clazz != null && !fieldList.isEmpty()) {
-            queryWrapper.select(fieldList.stream()
-                    .map(item -> getDbField(clazz, item))
-                    .filter(StringUtils::isNotEmpty)
-                    .toArray(String[]::new));
+    public static <T extends BaseModel> void setQueryField(@NonNull List<String> fieldList, @NonNull Class<?> modelClass, @NonNull QueryWrapper<T> queryWrapper) {
+        if (CollectionUtils.isEmpty(fieldList)) {
+            return;
         }
+        SmartTableInfo tableInfo = getTableInfo(modelClass);
+        queryWrapper.select(fieldList.stream()
+                .map(item -> Optional.ofNullable(tableInfo.getTableFiled(item)).map(TableFieldInfo::getColumn).orElse(null))
+                .filter(StringUtils::isNotEmpty)
+                .toArray(String[]::new));
     }
-
-    /**
-     * 从参数创建QueryWrapper
-     * @param parameter 参数
-     * @param type 类型
-     * @param <T> 实体类类型
-     * @return 查询参数
-     */
-    @NonNull
-    public static <T extends BaseModel> QueryWrapper<T> createQueryWrapperFromParameters(@NonNull Map<String, Serializable> parameter, @NonNull Type type) {
-        final Class<? extends BaseModel> clazz = getModelClassByType(type);
-        if (clazz != null) {
-            return createQueryWrapperFromParameters(parameter, clazz);
-        } else {
-            log.warn("未找到实体类类型");
-        }
-        return new QueryWrapper<>();
-    }
-
-
 
     /**
      * 从参数创建QueryWrapper
@@ -239,99 +140,38 @@ public final class CrudUtils {
      * @return 查询参数
      */
     @NonNull
-    public static <T extends BaseModel> QueryWrapper<T> createQueryWrapperFromParameters(@NonNull Map<String, Serializable> parameter, @NonNull Class<? extends BaseModel> clazz) {
+    public static <T extends BaseModel> QueryWrapper<T> createQueryWrapperFromParameters(@NonNull Map<String, Serializable> parameter, @NonNull Class<?> clazz) {
         final QueryWrapper<T> queryWrapper = new QueryWrapper<>();
         createBaseQueryWrapperFromParameters(parameter, clazz, queryWrapper);
         return queryWrapper;
     }
 
-    // -------------- 逻辑删除支持 ------------------
 
-    public static TableLogicDeleteFieldInfo getTableLogicKeyField(Class<? extends BaseModel> clazz) {
-        return getTableLogicKeyField(getTableInfo(clazz));
-    }
-
-    /**
-     * 获取逻辑删除key列
-     * @param tableInfo TableInfo
-     * @return TableFieldInfo
-     */
-    public static TableLogicDeleteFieldInfo getTableLogicKeyField(TableInfo tableInfo) {
-        Class<?> entityType = tableInfo.getEntityType();
-        if (TABLE_LOGIC_KEY_CACHE.containsKey(entityType)) {
-            return TABLE_LOGIC_KEY_CACHE.get(entityType);
+    private static <T extends BaseModel> void createBaseQueryWrapperFromParameters(@NonNull Map<String, Serializable> parameter, @NonNull Class<?> clazz, @NonNull Wrapper<T> queryWrapper) {
+        SmartTableInfo tableInfo = getTableInfo(clazz);
+        for (Map.Entry<String, Serializable> entry : parameter.entrySet()) {
+            String key = entry.getKey();
+            Serializable value = entry.getValue();
+            if (!key.contains(SEARCH_SYMBOL_SPLIT)) {
+                continue;
+            }
+            String[] keySplit = key.split(SEARCH_SYMBOL_SPLIT);
+            // 获取符号
+            final String symbol = keySplit.length > 1 ? keySplit[1] : null;
+            if (StringUtils.isBlank(symbol)) {
+                log.warn("参数无效，未找到符号，实体类：{}，key:{}", clazz.getName(), key);
+                continue;
+            }
+            TableFieldInfo tableFiled = tableInfo.getTableFiled(keySplit[0]);
+            if (tableFiled == null) {
+                log.warn("参数无效，未找到实体类对应属性：{}", keySplit[0]);
+            }
+            CrudUtils.dealValue(key, value, queryWrapper, symbol, tableFiled.getField(), tableFiled.getColumn());
         }
-        List<TableFieldInfo> logicDeleteKeyFields = tableInfo.getFieldList().stream().filter(item -> {
-            TableLogicKey tableLogicKey = AnnotationUtils.getAnnotation(item.getField(), TableLogicKey.class);
-            return tableLogicKey != null;
-        }).toList();
-        TableLogicDeleteFieldInfo deleteFieldInfo = getTableLogicDeleteFieldInfo(tableInfo);
-        if (!CollectionUtils.isEmpty(logicDeleteKeyFields)) {
-            if (logicDeleteKeyFields.size() > 1) {
-                throw new SystemException("实体类只能有一个TableLogicKey字段，请检查实体类，实体类：" + tableInfo.getEntityType().getName());
-            }
-            deleteFieldInfo.setDeleteKeyFieldInfo(logicDeleteKeyFields.get(0));
-            deleteFieldInfo.setTableLogicKey(AnnotationUtils.getAnnotation(logicDeleteKeyFields.get(0).getField(), TableLogicKey.class));
-        }
-        TABLE_LOGIC_KEY_CACHE.put(entityType, deleteFieldInfo);
-        return deleteFieldInfo;
     }
 
-    private static TableLogicDeleteFieldInfo getTableLogicDeleteFieldInfo(TableInfo tableInfo) {
-        TableLogicDeleteFieldInfo deleteFieldInfo = new TableLogicDeleteFieldInfo();
-        for (TableFieldInfo tableFieldInfo : tableInfo.getFieldList()) {
-            if (UserPropertyEnum.DELETE_TIME.getName().equals(tableFieldInfo.getProperty())) {
-                deleteFieldInfo.setDeleteTimeFieldInfo(tableFieldInfo);
-            }
-            if (UserPropertyEnum.DELETE_BY.getName().equals(tableFieldInfo.getProperty())) {
-                deleteFieldInfo.setDeleteByFieldInfo(tableFieldInfo);
-            }
-            if (UserPropertyEnum.DELETE_USER_ID.getName().equals(tableFieldInfo.getProperty())) {
-                deleteFieldInfo.setDeleteUserIdFieldInfo(tableFieldInfo);
-            }
-        }
-        return deleteFieldInfo;
-    }
-
-    /**
-     * 实体类是否设置了逻辑删除key
-     * @param tableInfo TableInfo
-     * @return boolean
-     */
-    public static boolean hasTableLogicKey(TableInfo tableInfo) {
-        return getTableLogicKeyField(tableInfo).getTableLogicKey() != null;
-    }
-
-    // --------------------------------------------------------------
-
-
-    private static <T extends BaseModel> void createBaseQueryWrapperFromParameters(@NonNull Map<String, Serializable> parameter, @NonNull Class<? extends BaseModel> clazz, @NonNull Wrapper<T> queryWrapper) {
-        final String symbolSplit = "@";
-        parameter.forEach((key, value) -> {
-            if (key.contains(symbolSplit)) {
-                final String[] keySplit = key.split(symbolSplit);
-                // 获取符号
-                final String symbol = keySplit.length > 1 ? keySplit[1] : null;
-                if (StringUtils.isEmpty(symbol)) {
-                    log.warn("参数无效，未找到符号，实体类：{}，key:{}", clazz.getName(), key);
-                } else {
-                    final String dbFieldName = getDbField(clazz, keySplit[0]);
-                    final Field field = getClassField(clazz, keySplit[0]);
-                    if (dbFieldName == null) {
-                        log.warn("参数无效，未找到实体类对应属性：{}", keySplit[0]);
-                    } else {
-                        try {
-                            CrudUtils.dealValue(key, value, queryWrapper, symbol, field, dbFieldName);
-                        } catch (InvocationTargetException | IllegalAccessException e) {
-                            ExceptionUtils.doThrow(e);
-                        }
-                    }
-                }
-            }
-        });
-    }
-
-    private static <T> void dealValue(@NonNull String key, @Nullable Object value, @NonNull Wrapper<T> queryWrapper, @Nullable String symbol, @NonNull Field field, @Nullable String dbFieldName) throws InvocationTargetException, IllegalAccessException {
+    @SneakyThrows({IllegalAccessException.class, InvocationTargetException.class})
+    private static <T> void dealValue(@NonNull String key, @Nullable Object value, @NonNull Wrapper<T> queryWrapper, @Nullable String symbol, @NonNull Field field, @Nullable String dbFieldName) {
         if (!Objects.isNull(value)) {
             // 处理value
             Object enumValue = dealEnumValue(value, field);
@@ -376,7 +216,7 @@ public final class CrudUtils {
                 // 集合类
                 List<? extends IEnum<?>> enumList = ((Collection<?>) value).stream().map(enumMap::get)
                         .filter(Objects::nonNull)
-                        .collect(Collectors.toList());
+                        .toList();
                 if (CollectionUtils.isEmpty(enumList)) {
                     return null;
                 }

@@ -3,6 +3,7 @@ package com.smart.system.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.smart.crud.constants.CrudCommonEnum;
 import com.smart.crud.model.CreateUpdateUserSetter;
+import com.smart.crud.plus.metadata.SmartTableInfo;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.crud.service.BaseServiceImpl;
 import com.smart.crud.service.UserSetterService;
@@ -135,10 +136,11 @@ public class SysFunctionServiceImpl extends BaseServiceImpl<SysFunctionMapper, S
     }
 
     private void updateHasChild(Long id) {
+        SmartTableInfo tableInfo = CrudUtils.getTableInfo(SysFunctionPO.class);
         this.commonMapper.updateHasChild(
-                CrudUtils.getTableName(SysFunctionPO.class),
-                CrudUtils.getDbField(SysFunctionPO::getParentId),
-                CrudUtils.getDbField(SysFunctionPO::getFunctionId),
+                tableInfo.getTableName(),
+                tableInfo.getTableFiled(SysFunctionPO::getParentId).getColumn(),
+                tableInfo.getTableFiled(SysFunctionPO::getFunctionId).getColumn(),
                 id
         );
     }

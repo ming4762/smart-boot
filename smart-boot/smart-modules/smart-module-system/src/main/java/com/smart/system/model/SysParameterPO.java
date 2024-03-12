@@ -3,6 +3,7 @@ package com.smart.system.model;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.smart.crud.annotation.TableUseYnField;
 import com.smart.crud.model.BaseModelUserTime;
 import lombok.Getter;
 import lombok.Setter;
@@ -56,6 +57,7 @@ public class SysParameterPO extends BaseModelUserTime {
     /**
     * use_yn - useYn
     */
+    @TableUseYnField
     private Boolean useYn;
 
     /**

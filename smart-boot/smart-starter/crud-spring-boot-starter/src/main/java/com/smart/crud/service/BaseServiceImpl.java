@@ -14,6 +14,7 @@ import com.smart.crud.mapper.CrudBaseMapper;
 import com.smart.crud.model.BaseModel;
 import com.smart.crud.model.Sort;
 import com.smart.crud.parameter.SetUseYnParameter;
+import com.smart.crud.plus.metadata.SmartTableInfo;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.crud.utils.CrudPageHelper;
 import com.smart.crud.utils.CrudUtils;
@@ -141,7 +142,7 @@ public abstract class BaseServiceImpl<K extends CrudBaseMapper<T>, T extends Bas
      * 获取tableInfo
      * @return TableInfo
      */
-    protected TableInfo getTableInfo() {
+    protected SmartTableInfo getTableInfo() {
         return CrudUtils.getTableInfo(this.entityClass);
     }
 
