@@ -29,6 +29,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * table info
+ * 在plus原有基础上进行功能增强
  * @author shizhongming
  * 2024/3/11 16:22
  * @since 3.0.0

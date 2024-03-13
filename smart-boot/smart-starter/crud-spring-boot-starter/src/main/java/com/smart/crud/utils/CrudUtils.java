@@ -95,7 +95,7 @@ public final class CrudUtils {
      * @return 排序信息
      */
     @NonNull
-    public static List<Sort> analysisOrder(@NonNull String sortName, @Nullable String sortOrder, Class<? extends BaseModel> clazz) {
+    public static List<Sort> analysisOrder(@NonNull String sortName, @Nullable String sortOrder, Class<?> clazz) {
         SmartTableInfo tableInfo = getTableInfo(clazz);
         final String[] sortNameList = sortName.split(",");
         final List<String> sortOrderList = sortOrder == null ? new ArrayList<>() : Arrays.asList(sortOrder.split(","));
