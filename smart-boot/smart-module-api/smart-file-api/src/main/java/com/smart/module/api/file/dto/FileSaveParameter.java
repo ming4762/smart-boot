@@ -4,6 +4,10 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.lang.Nullable;
 
+import java.io.Serial;
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 /**
  * 文件服务调用文件存储参数
  * @author zhongming4762
@@ -17,6 +21,8 @@ import org.springframework.lang.Nullable;
 @NoArgsConstructor
 public class FileSaveParameter extends FileSaveCommonParameter {
 
+    @Serial
+    private static final long serialVersionUID = 435614322630656879L;
     /**
      * 文件存储器ID，优先级高
      */
@@ -32,4 +38,14 @@ public class FileSaveParameter extends FileSaveCommonParameter {
      */
     @Nullable
     private String type;
+
+    /**
+     * 过期时长，优先级比expireAt高
+     */
+    private Duration expireIn;
+
+    /**
+     * 过期时间，优先级比expireIn低
+     */
+    private LocalDateTime expireAt;
 }

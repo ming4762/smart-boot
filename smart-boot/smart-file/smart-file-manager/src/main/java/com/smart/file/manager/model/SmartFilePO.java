@@ -2,11 +2,14 @@ package com.smart.file.manager.model;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.smart.crud.model.BaseModelCreateUserTime;
+import com.smart.crud.plus.logic.TableLogicKey;
 import lombok.*;
 
 import java.io.Serial;
+import java.time.LocalDateTime;
 
 /**
  * @author jackson
@@ -68,4 +71,15 @@ public class SmartFilePO extends BaseModelCreateUserTime {
      * 文件存储器ID
      */
     private Long fileStorageId;
+
+    /**
+     * 过期时间
+     */
+    private LocalDateTime expireTime;
+
+    @TableLogic
+    private Boolean deleteYn;
+
+    @TableLogicKey
+    private Long deleteKey;
 }

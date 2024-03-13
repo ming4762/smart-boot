@@ -2,6 +2,7 @@ package com.smart.file.manager.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.smart.crud.constants.CrudCommonEnum;
+import com.smart.crud.plus.metadata.SmartTableInfo;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.crud.service.BaseServiceImpl;
 import com.smart.file.manager.mapper.SmartFileMapper;
@@ -16,6 +17,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -38,6 +40,13 @@ public class SmartFileServiceImpl extends BaseServiceImpl<SmartFileMapper, Smart
 
     @Override
     public List<? extends SmartFilePO> list(@NonNull QueryWrapper<SmartFilePO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
+        SmartTableInfo tableInfo = this.getTableInfo();
+        // 排除已过期未删除数据
+        String expireTimeColumn = tableInfo.getTableFiled(SmartFilePO::getExpireTime).getColumn();
+        queryWrapper.and(
+                query -> query.isNull(expireTimeColumn)
+                        .or(wrapper -> wrapper.ge(expireTimeColumn, LocalDateTime.now()))
+        );
         List<? extends SmartFilePO> dataList = super.list(queryWrapper, parameter, paging);
         if (Boolean.TRUE.equals(parameter.getParameter().get(CrudCommonEnum.WITH_ALL.name()))) {
             Set<Long> fileStorageIds = dataList.stream().map(SmartFilePO::getFileStorageId).collect(Collectors.toSet());

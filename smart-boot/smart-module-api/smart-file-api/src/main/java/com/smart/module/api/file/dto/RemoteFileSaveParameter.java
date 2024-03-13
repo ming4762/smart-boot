@@ -7,6 +7,8 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.Serial;
+
 /**
  * @author zhongming4762
  * 2023/3/21
@@ -18,5 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Setter
 public class RemoteFileSaveParameter extends FileSaveParameter {
 
+    @Serial
+    private static final long serialVersionUID = -6836820080390963264L;
     private transient MultipartFile multipartFile;
 }

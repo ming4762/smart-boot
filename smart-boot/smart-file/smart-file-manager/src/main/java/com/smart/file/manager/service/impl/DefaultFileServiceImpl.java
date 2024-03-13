@@ -30,6 +30,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -125,6 +126,7 @@ public class DefaultFileServiceImpl implements FileService, ApplicationContextAw
      * @return 删除结果
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public List<FileHandlerResult> batchDelete(@NonNull Collection<Long> fileIds) {
         List<SmartFilePO> sysFileList = this.sysFileService.listByIds(fileIds);
         if (CollectionUtils.isEmpty(sysFileList)) {
@@ -174,6 +176,11 @@ public class DefaultFileServiceImpl implements FileService, ApplicationContextAw
     public FileDownloadResult download(@NonNull Long id) {
         SmartFilePO sysFileData = this.sysFileService.getById(id);
         if (sysFileData == null) {
+            return null;
+        }
+        // 判断文件是否过期
+        if (sysFileData.getExpireTime() != null && LocalDateTime.now().isAfter(sysFileData.getExpireTime())) {
+            // 文件已经过期，但是还未被删除
             return null;
         }
         SmartFileStoragePO fileStorageData = this.smartFileStorageService.getById(sysFileData.getFileStorageId());
