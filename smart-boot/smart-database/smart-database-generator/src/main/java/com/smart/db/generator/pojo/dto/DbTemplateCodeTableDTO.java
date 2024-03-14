@@ -81,8 +81,6 @@ public class DbTemplateCodeTableDTO extends DbCodeMainPO {
 
     private List<ButtonListEnum> rowButtonList;
 
-
-
     @Getter
     @Setter
     @ToString

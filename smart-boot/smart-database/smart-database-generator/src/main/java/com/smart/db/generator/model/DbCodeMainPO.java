@@ -82,4 +82,9 @@ public class DbCodeMainPO extends BaseModelUserTime {
      * 行按钮类型
      */
     private RowButtonTypeEnum rowButtonType;
+
+    /**
+     * 权限前缀
+     */
+    private String permissionPrefix;
 }
