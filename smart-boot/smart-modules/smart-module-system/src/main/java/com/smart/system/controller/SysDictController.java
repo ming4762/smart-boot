@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
 * sys_dict - 系统字典表 Controller
@@ -72,5 +73,14 @@ public class SysDictController extends BaseController<SysDictService, SysDictPO>
     @PostMapping("listItemByCode")
     public Result<List<SysDictItemPO>> listItemByCode(@RequestBody StringParameter parameter) {
         return Result.success(this.service.listItemByCode(parameter.getValue()));
+    }
+
+    @Operation(summary = "批量通过code查询item")
+    @PostMapping("batchListItemByCode")
+    public Result<Map<String, List<SysDictItemPO>>> batchListItemByCode(@RequestBody List<String> dictCodeList) {
+        if (CollectionUtils.isEmpty(dictCodeList)) {
+            return Result.success();
+        }
+        return Result.success(this.service.listItemByCode(dictCodeList));
     }
 }
