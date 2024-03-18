@@ -6,6 +6,7 @@ import com.smart.crud.parameter.SetUseYnParameter;
 import com.smart.crud.service.BaseService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -70,7 +71,7 @@ public abstract class BaseController<K extends BaseService<T>, T extends BaseMod
      * @param parameter 参数
      * @return 是否设置成功
      */
-    public Result<Boolean> setUseYn(@RequestBody SetUseYnParameter parameter) {
+    public Result<Boolean> setUseYn(@RequestBody @Valid SetUseYnParameter parameter) {
         return Result.success(this.service.setUseYn(parameter));
     }
 
