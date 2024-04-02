@@ -8,26 +8,40 @@
         tenant_code,
         <!--   租户名字      -->
         tenant_name,
+        <!--   简称      -->
+        tenant_short_name,
+        <!--   类型      -->
+        type,
         <!--   联系人      -->
         contacts,
         <!--   联系人电话      -->
         contact_phone,
+        <!--   邮箱      -->
+        email,
+        <!--   隔离策略      -->
+        isolation_strategy,
+        <!--   行业      -->
+        industry,
         <!--   域名      -->
         domain,
-        <!--   可用人数，-1不限制      -->
+        <!--   可用人数      -->
         available_user_num,
+        <!--   地区      -->
+        region,
         <!--   地址      -->
         address,
         <!--   LOGO      -->
         logo_id,
-        <!--   开始时间      -->
-        start_time,
+        <!--   生效时间      -->
+        effect_time,
         <!--   过期时间      -->
-        end_time,
+        expire_time,
         <!--   备注      -->
         remark,
         <!--   序号      -->
         seq,
+        <!--   useYn      -->
+        use_yn,
         <!--   createTime      -->
         create_time,
         <!--   createUserId      -->
@@ -40,10 +54,16 @@
         update_user_id,
         <!--   updateBy      -->
         update_by,
-        <!--   useYn      -->
-        use_yn,
         <!--   deleteYn      -->
-        delete_yn
+        delete_yn,
+        <!--   deleteKey   索引   -->
+        delete_key,
+        <!--   deleteTime      -->
+        delete_time,
+        <!--   deleteUserId      -->
+        delete_user_id,
+        <!--   deleteBy      -->
+        delete_by
     </sql>
 
     <resultMap id="commonResultMap" type="com.smart.system.model.tenant.SysTenantPO">
@@ -53,26 +73,40 @@
         <result column="tenant_code" property="tenantCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
         <!--   租户名字      -->
         <result column="tenant_name" property="tenantName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   简称      -->
+        <result column="tenant_short_name" property="tenantShortName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   类型      -->
+        <result column="type" property="type" javaType="java.lang.String" jdbcType="CHAR"/>
         <!--   联系人      -->
         <result column="contacts" property="contacts" javaType="java.lang.String" jdbcType="VARCHAR"/>
         <!--   联系人电话      -->
         <result column="contact_phone" property="contactPhone" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   邮箱      -->
+        <result column="email" property="email" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   隔离策略      -->
+        <result column="isolation_strategy" property="isolationStrategy" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   行业      -->
+        <result column="industry" property="industry" javaType="java.lang.String" jdbcType="VARCHAR"/>
         <!--   域名      -->
         <result column="domain" property="domain" javaType="java.lang.String" jdbcType="VARCHAR"/>
-        <!--   可用人数，-1不限制      -->
+        <!--   可用人数      -->
         <result column="available_user_num" property="availableUserNum" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   地区      -->
+        <result column="region" property="region" javaType="java.lang.String" jdbcType="VARCHAR"/>
         <!--   地址      -->
         <result column="address" property="address" javaType="java.lang.String" jdbcType="VARCHAR"/>
         <!--   LOGO      -->
         <result column="logo_id" property="logoId" javaType="java.lang.Long" jdbcType="BIGINT"/>
-        <!--   开始时间      -->
-        <result column="start_time" property="startTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+        <!--   生效时间      -->
+        <result column="effect_time" property="effectTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
         <!--   过期时间      -->
-        <result column="end_time" property="endTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+        <result column="expire_time" property="expireTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
         <!--   备注      -->
         <result column="remark" property="remark" javaType="java.lang.String" jdbcType="VARCHAR"/>
         <!--   序号      -->
         <result column="seq" property="seq" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        <!--   useYn      -->
+        <result column="use_yn" property="useYn" javaType="java.lang.Boolean" jdbcType="BIT"/>
         <!--   createTime      -->
         <result column="create_time" property="createTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
         <!--   createUserId      -->
@@ -85,9 +119,15 @@
         <result column="update_user_id" property="updateUserId" javaType="java.lang.Long" jdbcType="BIGINT"/>
         <!--   updateBy      -->
         <result column="update_by" property="updateBy" javaType="java.lang.String" jdbcType="VARCHAR"/>
-        <!--   useYn      -->
-        <result column="use_yn" property="useYn" javaType="java.lang.Boolean" jdbcType="BIT"/>
         <!--   deleteYn      -->
         <result column="delete_yn" property="deleteYn" javaType="java.lang.Boolean" jdbcType="BIT"/>
+        <!--   deleteKey   索引   -->
+        <result column="delete_key" property="deleteKey" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   deleteTime      -->
+        <result column="delete_time" property="deleteTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+        <!--   deleteUserId      -->
+        <result column="delete_user_id" property="deleteUserId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   deleteBy      -->
+        <result column="delete_by" property="deleteBy" javaType="java.lang.String" jdbcType="VARCHAR"/>
     </resultMap>
 </mapper>

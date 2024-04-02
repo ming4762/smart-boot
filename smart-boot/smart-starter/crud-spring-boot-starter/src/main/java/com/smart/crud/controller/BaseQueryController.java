@@ -3,15 +3,22 @@ package com.smart.crud.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.reflect.GenericTypeUtils;
 import com.github.pagehelper.Page;
+import com.smart.commons.core.constants.LabelValueEnum;
+import com.smart.commons.core.dto.common.LabelValueData;
 import com.smart.commons.core.message.PageData;
 import com.smart.commons.core.message.Result;
+import com.smart.commons.core.utils.EnumUtils;
 import com.smart.crud.model.BaseModel;
 import com.smart.crud.model.Sort;
 import com.smart.crud.plus.metadata.SmartTableInfo;
+import com.smart.crud.query.ClassParameter;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.crud.service.BaseService;
 import com.smart.crud.utils.CrudUtils;
 import com.smart.crud.utils.PageCache;
+import jakarta.validation.Valid;
+import lombok.Getter;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
@@ -35,11 +42,8 @@ public abstract class BaseQueryController<K extends BaseService<T>, T extends Ba
 
     protected final Class<?>[] typeArguments = GenericTypeUtils.resolveTypeArguments(getClass(), BaseQueryController.class);
 
+    @Getter
     protected final Class<T> entityClass = currentModelClass();
-
-    public Class<T> getEntityClass() {
-        return entityClass;
-    }
 
     @Autowired
     protected K service;
@@ -92,6 +96,20 @@ public abstract class BaseQueryController<K extends BaseService<T>, T extends Ba
         return Result.success(this.service.listByIds(ids));
     }
 
+
+    /**
+     * 查询枚举类 listEnumLabelValue
+     * @param parameter 枚举类类型
+     * @return label value
+     */
+    @SneakyThrows(ClassNotFoundException.class)
+    public Result<List<LabelValueData>> listEnumLabelValue(@RequestBody @Valid ClassParameter parameter) {
+        Class<?> aClass = Class.forName(parameter.getClassName());
+        if (!LabelValueEnum.class.isAssignableFrom(aClass)) {
+            throw new IllegalArgumentException("类型错误，只能是com.smart.commons.core.constants.LabelValueEnum的子类，并且是枚举类");
+        }
+        return Result.success(EnumUtils.convertLabelValue((Class<? extends LabelValueEnum>) aClass));
+    }
 
     /**
      * 执行分页

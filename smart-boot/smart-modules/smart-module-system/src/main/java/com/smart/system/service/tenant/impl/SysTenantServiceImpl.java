@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 /**
 * sys_tenant - 租户表 Service实现类
 * @author SmartCodeGenerator
-* 2023-2-26
+* 2024年3月29日 上午10:42:40
 */
 @Service
 public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTenantPO> implements SysTenantService {

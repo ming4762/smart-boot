@@ -1,10 +1,14 @@
 package com.smart.system.controller.tenant;
 
+import com.smart.commons.core.dto.common.LabelValueData;
 import com.smart.commons.core.log.Log;
 import com.smart.commons.core.log.LogOperationTypeEnum;
 import com.smart.commons.core.message.Result;
+import com.smart.commons.core.utils.EnumUtils;
 import com.smart.crud.controller.BaseController;
+import com.smart.crud.parameter.SetUseYnParameter;
 import com.smart.crud.query.PageSortQuery;
+import com.smart.system.constants.SysTenantIsolationStrategyEnum;
 import com.smart.system.model.tenant.SysTenantPO;
 import com.smart.system.pojo.dto.tenant.SysTenantSaveUpdateDTO;
 import com.smart.system.service.tenant.SysTenantService;
@@ -23,18 +27,18 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
-* sys_tenant - 租户表 Controller
-* @author SmartCodeGenerator
-* 2023-2-26 12:18:21
-*/
+ * sys_tenant - 租户表 Controller
+ * @author SmartCodeGenerator
+ * 2024年3月29日 下午1:40:04
+ */
 @RestController
-@RequestMapping("sys/tenant")
+@RequestMapping("/sys/tenant/manager")
 public class SysTenantController extends BaseController<SysTenantService, SysTenantPO> {
+
 
     @Override
     @PostMapping("list")
     @Operation(summary = "查询角色列表（支持分页、实体类属性查询）")
-    @PreAuthorize("hasPermission('sys:tenant', 'query')")
     public Result<Object> list(@RequestBody @NonNull PageSortQuery parameter) {
         return super.list(parameter);
     }
@@ -42,9 +46,9 @@ public class SysTenantController extends BaseController<SysTenantService, SysTen
     @Operation(summary = "批量添加修改租户表")
     @PostMapping("saveUpdateBatch")
     @Log(value = "批量添加修改租户表", type = LogOperationTypeEnum.UPDATE)
-    @PreAuthorize("hasPermission('sys:tenant', 'save') or hasPermission('sys:tenant', 'update')")
+    @PreAuthorize("hasPermission('sys:tenant:manager', 'save') or hasPermission('sys:tenant:manager', 'update')")
     public Result<Boolean> saveUpdateBatch(@RequestBody @Valid List<SysTenantSaveUpdateDTO> parameterList) {
-      	List<SysTenantPO> modelList = parameterList.stream().map(item -> {
+        List<SysTenantPO> modelList = parameterList.stream().map(item -> {
             SysTenantPO model = new SysTenantPO();
             BeanUtils.copyProperties(item, model);
             return model;
@@ -55,8 +59,8 @@ public class SysTenantController extends BaseController<SysTenantService, SysTen
     @Override
     @Operation(summary = "通过ID批量删除租户表")
     @PostMapping("batchDeleteById")
-    @PreAuthorize("hasPermission('sys:tenant', 'delete')")
     @Log(value = "通过ID批量删除租户表", type = LogOperationTypeEnum.DELETE)
+    @PreAuthorize("hasPermission('sys:tenant:manager', 'delete')")
     public Result<Boolean> batchDeleteById(@RequestBody List<Serializable> idList) {
         if (CollectionUtils.isEmpty(idList)) {
             return Result.success(false);
@@ -67,8 +71,32 @@ public class SysTenantController extends BaseController<SysTenantService, SysTen
     @Override
     @Operation(summary = "通过ID查询")
     @PostMapping("getById")
-    @PreAuthorize("hasPermission('sys:tenant', 'query')")
     public Result<SysTenantPO> getById(@RequestBody Serializable id) {
         return super.getById(id);
+    }
+
+    /**
+     * 设置启用停用
+     *
+     * @param parameter 参数
+     * @return 是否设置成功
+     */
+    @Override
+    @Operation(summary = "启用停用租户表")
+    @PostMapping("setUseYn")
+    @Log(value = "启用停用租户表", type = LogOperationTypeEnum.DELETE)
+    @PreAuthorize("hasPermission('sys:tenant:manager', 'setUseYn')")
+    public Result<Boolean> setUseYn(@RequestBody @Valid SetUseYnParameter parameter) {
+        return super.setUseYn(parameter);
+    }
+
+    /**
+     * 查询隔离策略
+     * @return 隔离策略
+     */
+    @Operation(summary = "查询隔离策略")
+    @PostMapping("listIsolationStrategy")
+    public Result<List<LabelValueData>> listIsolationStrategy() {
+        return Result.success(EnumUtils.convertLabelValue(SysTenantIsolationStrategyEnum.class));
     }
 }

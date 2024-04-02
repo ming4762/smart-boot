@@ -42,4 +42,9 @@ public interface MapperPackageConstants {
      * 消息模块
      */
     String MODULE_MESSAGE = "com.smart.message.manager.mapper";
+
+    /**
+     * kettle模块扫描
+     */
+    String MODULE_KETTLE = "com.smart.kettle.manager.mapper";
 }

@@ -6,7 +6,7 @@ import com.smart.system.model.tenant.SysTenantPO;
 /**
 * sys_tenant - 租户表 mapper层
 * @author SmartCodeGenerator
-* 2023-2-26
+* 2024年3月29日 上午10:42:40
 */
 public interface SysTenantMapper extends CrudBaseMapper<SysTenantPO> {
 }

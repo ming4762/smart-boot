@@ -2,23 +2,30 @@ package com.smart.system.model.tenant;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.smart.crud.model.BaseModelUserTime;
+import com.smart.crud.annotation.TableUseYnField;
+import com.smart.crud.model.BaseModel;
+import com.smart.crud.plus.logic.TableLogicKey;
+import com.smart.system.constants.SysTenantIsolationStrategyEnum;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
 import java.time.LocalDateTime;
 
 /**
 * sys_tenant - 租户表
 * @author SmartCodeGenerator
-* 2023-2-26 12:18:21
+* 2024年3月29日 上午10:42:39
 */
 @Getter
 @Setter
 @TableName("sys_tenant")
-public class SysTenantPO extends BaseModelUserTime {
+public class SysTenantPO extends BaseModel {
 
+    @Serial
+    private static final long serialVersionUID = 3718421432325722666L;
     /**
     * id - id
     */
@@ -36,6 +43,16 @@ public class SysTenantPO extends BaseModelUserTime {
     private String tenantName;
 
     /**
+    * tenant_short_name - 简称
+    */
+    private String tenantShortName;
+
+    /**
+    * type - 类型
+    */
+    private String type;
+
+    /**
     * contacts - 联系人
     */
     private String contacts;
@@ -46,14 +63,34 @@ public class SysTenantPO extends BaseModelUserTime {
     private String contactPhone;
 
     /**
+    * email - 邮箱
+    */
+    private String email;
+
+    /**
+    * isolation_strategy - 隔离策略
+    */
+    private SysTenantIsolationStrategyEnum isolationStrategy;
+
+    /**
+    * industry - 行业
+    */
+    private String industry;
+
+    /**
     * domain - 域名
     */
     private String domain;
 
     /**
-    * available_user_num - 可用人数，-1不限制
+    * available_user_num - 可用人数
     */
     private Long availableUserNum;
+
+    /**
+    * region - 地区
+    */
+    private String region;
 
     /**
     * address - 地址
@@ -66,14 +103,14 @@ public class SysTenantPO extends BaseModelUserTime {
     private Long logoId;
 
     /**
-    * start_time - 开始时间
+    * effect_time - 生效时间
     */
-    private LocalDateTime startTime;
+    private LocalDateTime effectTime;
 
     /**
-    * end_time - 过期时间
+    * expire_time - 过期时间
     */
-    private LocalDateTime endTime;
+    private LocalDateTime expireTime;
 
     /**
     * remark - 备注
@@ -88,11 +125,64 @@ public class SysTenantPO extends BaseModelUserTime {
     /**
     * use_yn - useYn
     */
+    @TableUseYnField
     private Boolean useYn;
+
+    /**
+    * create_time - createTime
+    */
+    private LocalDateTime createTime;
+
+    /**
+    * create_user_id - createUserId
+    */
+    private Long createUserId;
+
+    /**
+    * create_by - createBy
+    */
+    private String createBy;
+
+    /**
+    * update_time - updateTime
+    */
+    private LocalDateTime updateTime;
+
+    /**
+    * update_user_id - updateUserId
+    */
+    private Long updateUserId;
+
+    /**
+    * update_by - updateBy
+    */
+    private String updateBy;
 
     /**
     * delete_yn - deleteYn
     */
+    @TableLogic
     private Boolean deleteYn;
+
+    /**
+    * delete_key - deleteKey
+    */
+    @TableLogicKey
+    private Long deleteKey;
+
+    /**
+    * delete_time - deleteTime
+    */
+    private LocalDateTime deleteTime;
+
+    /**
+    * delete_user_id - deleteUserId
+    */
+    private Long deleteUserId;
+
+    /**
+    * delete_by - deleteBy
+    */
+    private String deleteBy;
 
 }
