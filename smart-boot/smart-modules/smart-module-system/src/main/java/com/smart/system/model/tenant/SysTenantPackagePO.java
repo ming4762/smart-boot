@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.smart.crud.annotation.TableUseYnField;
 import com.smart.crud.model.BaseModel;
 import com.smart.crud.plus.logic.TableLogicKey;
-import com.smart.system.constants.SysTenantIsolationStrategyEnum;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,17 +14,17 @@ import java.io.Serial;
 import java.time.LocalDateTime;
 
 /**
-* sys_tenant - 租户表
+* sys_tenant_package - 租户产品套餐
 * @author SmartCodeGenerator
-* 2024年3月29日 上午10:42:39
+* 2024年4月2日 下午3:02:14
 */
 @Getter
 @Setter
-@TableName("sys_tenant")
-public class SysTenantPO extends BaseModel {
+@TableName("sys_tenant_package")
+public class SysTenantPackagePO extends BaseModel {
 
     @Serial
-    private static final long serialVersionUID = 3718421432325722666L;
+    private static final long serialVersionUID = -227243760091329362L;
     /**
     * id - id
     */
@@ -33,74 +32,14 @@ public class SysTenantPO extends BaseModel {
     private Long id;
 
     /**
-    * tenant_code - 租户编号
+    * package_code - 产品包编码
     */
-    private String tenantCode;
+    private String packageCode;
 
     /**
-    * tenant_name - 租户名字
+    * package_name - 产品包名
     */
-    private String tenantName;
-
-    /**
-    * tenant_short_name - 简称
-    */
-    private String tenantShortName;
-
-    /**
-    * type - 类型
-    */
-    private String type;
-
-    /**
-    * contacts - 联系人
-    */
-    private String contacts;
-
-    /**
-    * contact_phone - 联系人电话
-    */
-    private String contactPhone;
-
-    /**
-    * email - 邮箱
-    */
-    private String email;
-
-    /**
-    * isolation_strategy - 隔离策略
-    */
-    private SysTenantIsolationStrategyEnum isolationStrategy;
-
-    /**
-    * industry - 行业
-    */
-    private String industry;
-
-    /**
-    * domain - 域名
-    */
-    private String domain;
-
-    /**
-    * available _user_num - 可用人数
-    */
-    private Long availableUserNum;
-
-    /**
-    * region - 地区
-    */
-    private String region;
-
-    /**
-    * address - 地址
-    */
-    private String address;
-
-    /**
-    * logo_id - LOGO
-    */
-    private Long logoId;
+    private String packageName;
 
     /**
     * effect_time - 生效时间
@@ -176,13 +115,13 @@ public class SysTenantPO extends BaseModel {
     private LocalDateTime deleteTime;
 
     /**
-    * delete_user_id - deleteUserId
-    */
-    private Long deleteUserId;
-
-    /**
     * delete_by - deleteBy
     */
     private String deleteBy;
+
+    /**
+    * delete_user_id - deleteUserId
+    */
+    private Long deleteUserId;
 
 }
