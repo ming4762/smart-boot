@@ -1,13 +1,18 @@
 package com.smart.system.controller.tenant;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.smart.commons.core.log.Log;
 import com.smart.commons.core.log.LogOperationTypeEnum;
 import com.smart.commons.core.message.Result;
 import com.smart.crud.controller.BaseController;
 import com.smart.crud.parameter.SetUseYnParameter;
+import com.smart.crud.query.IdParameter;
 import com.smart.crud.query.PageSortQuery;
+import com.smart.system.model.tenant.SysTenantPackageFunctionPO;
 import com.smart.system.model.tenant.SysTenantPackagePO;
+import com.smart.system.pojo.dto.tenant.SysTenantPackageSaveFunctionDTO;
 import com.smart.system.pojo.dto.tenant.SysTenantPackageSaveUpdateDTO;
+import com.smart.system.service.tenant.SysTenantPackageFunctionService;
 import com.smart.system.service.tenant.SysTenantPackageService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -32,6 +37,12 @@ import java.util.List;
 @RequestMapping("/sys/tenant/package/")
 public class SysTenantPackageController extends BaseController<SysTenantPackageService, SysTenantPackagePO> {
 
+
+    private final SysTenantPackageFunctionService sysTenantPackageFunctionService;
+
+    public SysTenantPackageController(SysTenantPackageFunctionService sysTenantPackageFunctionService) {
+        this.sysTenantPackageFunctionService = sysTenantPackageFunctionService;
+    }
 
     @Override
     @PostMapping("list")
@@ -85,5 +96,32 @@ public class SysTenantPackageController extends BaseController<SysTenantPackageS
     @PreAuthorize("hasPermission('sys:tenant:package', 'setUseYn')")
     public Result<Boolean> setUseYn(@RequestBody @Valid SetUseYnParameter parameter) {
         return super.setUseYn(parameter);
+    }
+
+    /**
+     * 获取套餐包对应的功能ID集合
+     * @param parameter 角色ID
+     * @return 功能ID集合
+     */
+    @Operation(summary = "获取角色对应的功能ID集合")
+    @PostMapping("listFunctionId")
+    public Result<List<Long>> listFunctionId(@RequestBody IdParameter parameter) {
+        return Result.success(
+                this.sysTenantPackageFunctionService.listPackageFunction(
+                                new QueryWrapper<SysTenantPackageFunctionPO>()
+                                        .eq("b.has_child", 0).lambda()
+                                        .eq(SysTenantPackageFunctionPO :: getTenantPackageId, parameter.getId())
+                                        .eq(SysTenantPackageFunctionPO::getHalfYn, Boolean.FALSE)
+                        )
+                        .stream().map(SysTenantPackageFunctionPO :: getFunctionId)
+                        .toList()
+        );
+    }
+
+    @Operation(summary = "保存租户套餐功能")
+    @PostMapping("savePackageFunction")
+    @PreAuthorize("hasPermission('sys:tenant:package', 'savePackageFunction')")
+    public Result<Boolean> savePackageFunction(@RequestBody @Valid SysTenantPackageSaveFunctionDTO parameter) {
+        return Result.success(this.service.savePackageFunction(parameter));
     }
 }
