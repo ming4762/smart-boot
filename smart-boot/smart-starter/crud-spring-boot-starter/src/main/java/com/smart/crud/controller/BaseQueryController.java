@@ -116,7 +116,7 @@ public abstract class BaseQueryController<K extends BaseService<T>, T extends Ba
      * @param parameter 参数信息
      * @return 分页信息
      */
-    protected Page<T> doPage(@NonNull PageSortQuery parameter) {
+    protected <P> Page<P> doPage(@NonNull PageSortQuery parameter) {
         return this.createPage(parameter.getLimit(), parameter.getOffset(), parameter.getPage(), parameter.getSortName(), parameter.getSortOrder());
     }
 
@@ -131,8 +131,8 @@ public abstract class BaseQueryController<K extends BaseService<T>, T extends Ba
      * @return 分页信息
      */
     @Nullable
-    private Page<T> createPage(@Nullable Integer limit, @Nullable Integer offset, @Nullable Integer pageNum, @Nullable String sortName, @Nullable String sortOrder) {
-        Page<T> page = null;
+    private <P> Page<P> createPage(@Nullable Integer limit, @Nullable Integer offset, @Nullable Integer pageNum, @Nullable String sortName, @Nullable String sortOrder) {
+        Page<P> page = null;
         if (Objects.nonNull(limit)) {
             // 解析排序字段
             final String orderMessage = this.analysisOrder(sortName, sortOrder);

@@ -4,6 +4,7 @@ import com.smart.system.model.SysExceptionPO;
 import com.smart.system.model.SysUserPO;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serial;
 
@@ -14,6 +15,7 @@ import java.io.Serial;
  */
 @Getter
 @Setter
+@ToString
 public class SysExceptionListVO extends SysExceptionPO {
     @Serial
     private static final long serialVersionUID = 7297923753641156750L;

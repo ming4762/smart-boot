@@ -3,6 +3,7 @@ package com.smart.system.pojo.dto.tenant;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -16,6 +17,7 @@ import java.util.List;
  */
 @Getter
 @Setter
+@ToString
 public class SysTenantPackageSaveFunctionDTO implements Serializable {
     @Serial
     private static final long serialVersionUID = 5780220805930917493L;

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smart.system.mapper.tenant.SysTenantUserMapper">
+    <sql id="columnList">
+        <!--   id 主键  索引   -->
+        id,
+        <!--   tenantId      -->
+        tenant_id,
+        <!--   userId      -->
+        user_id,
+        <!--   createTime      -->
+        create_time,
+        <!--   createUserId      -->
+        create_user_id,
+        <!--   createBy      -->
+        create_by
+    </sql>
+
+    <resultMap id="commonResultMap" type="com.smart.system.model.tenant.SysTenantUserPO">
+        <!--   id 主键  索引   -->
+        <id column="id" property="id" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   tenantId      -->
+        <result column="tenant_id" property="tenantId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   userId      -->
+        <result column="user_id" property="userId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   createTime      -->
+        <result column="create_time" property="createTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+        <!--   createUserId      -->
+        <result column="create_user_id" property="createUserId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   createBy      -->
+        <result column="create_by" property="createBy" javaType="java.lang.String" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--  查询租户对应用户  -->
+    <select id="listTenantUser" resultType="com.smart.system.pojo.dbo.tenant.SysTenantUserListDO">
+        select B.id,
+               B.tenant_id,
+               B.create_by,
+               B.create_time,
+               B.create_user_id,
+               B.user_id,
+               A.username,
+               A.full_name,
+               A.email,
+               A.mobile
+        from sys_user A
+        join sys_tenant_user B on A.user_id = B.user_id
+            ${ew.customSqlSegment}
+    </select>
+</mapper>

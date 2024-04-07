@@ -1,16 +1,21 @@
 package com.smart.system.controller.tenant;
 
+import com.github.pagehelper.Page;
 import com.smart.commons.core.dto.common.LabelValueData;
 import com.smart.commons.core.log.Log;
 import com.smart.commons.core.log.LogOperationTypeEnum;
+import com.smart.commons.core.message.PageData;
 import com.smart.commons.core.message.Result;
 import com.smart.commons.core.utils.EnumUtils;
 import com.smart.crud.controller.BaseController;
 import com.smart.crud.parameter.SetUseYnParameter;
 import com.smart.crud.query.PageSortQuery;
+import com.smart.crud.utils.CrudPageHelper;
 import com.smart.system.constants.SysTenantIsolationStrategyEnum;
+import com.smart.system.model.SysUserPO;
 import com.smart.system.model.tenant.SysTenantPO;
-import com.smart.system.pojo.dto.tenant.SysTenantSaveUpdateDTO;
+import com.smart.system.pojo.dbo.tenant.SysTenantUserListDO;
+import com.smart.system.pojo.dto.tenant.*;
 import com.smart.system.service.tenant.SysTenantService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -98,5 +103,37 @@ public class SysTenantController extends BaseController<SysTenantService, SysTen
     @PostMapping("listIsolationStrategy")
     public Result<List<LabelValueData>> listIsolationStrategy() {
         return Result.success(EnumUtils.convertLabelValue(SysTenantIsolationStrategyEnum.class));
+    }
+
+    @Operation(summary = "查询租户对应用户")
+    @PostMapping("listTenantUser")
+    public Result<PageData<SysTenantUserListDO>> listTenantUser(@RequestBody SysTenantUserListDTO parameter) {
+        Page<SysTenantUserListDO> page = this.doPage(parameter);
+        CrudPageHelper.setPage(page);
+        this.service.listTenantUser(parameter);
+        return Result.success(new PageData<>(page.getResult(), page.getTotal()));
+    }
+
+    @Operation(summary = "查询未绑定租户的用户")
+    @PostMapping("listNoBindUser")
+    public Result<PageData<SysUserPO>> listNoBindUser(@RequestBody @Valid SysTenantListNoBindUserDTO parameter) {
+        Page<SysUserPO> page = this.doPage(parameter);
+        CrudPageHelper.setPage(page);
+        this.service.listNoBindUser(parameter);
+        return Result.success(new PageData<>(page.getResult(), page.getTotal()));
+    }
+
+    @Operation(summary = "绑定用户")
+    @PostMapping("bindTenantUser")
+    @PreAuthorize("hasPermission('sys:tenant:manager', 'bindUser')")
+    public Result<Boolean> bindTenantUser(@RequestBody @Valid SysTenantBindUserDTO parameter) {
+        return Result.success(this.service.bindTenantUser(parameter));
+    }
+
+    @Operation(summary = "解绑用户")
+    @PostMapping("removeBindUser")
+    @PreAuthorize("hasPermission('sys:tenant:manager', 'bindUser')")
+    public Result<Boolean> removeBindUser(@RequestBody @Valid SysTenantRemoveBindUserDTO parameter) {
+        return Result.success(this.service.removeBindUser(parameter));
     }
 }
