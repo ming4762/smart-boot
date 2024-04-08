@@ -123,15 +123,15 @@ public class IpUtils {
             Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
 			while (networkInterfaces.hasMoreElements()) {
 				NetworkInterface networkInterface = networkInterfaces.nextElement();
-				// 去除回环接口，子接口，未运行接口
-				if (networkInterface.isLoopback() || networkInterface.isVirtual() || !networkInterface.isUp()) {
-					continue;
-				}
 				// 判断网卡名字是否是真实网卡名字
 				String displayName = networkInterface.getDisplayName();
 				boolean match = REAL_DISPLAY_NAME.stream()
 						.anyMatch(displayName::contains);
 				if (!match) {
+					continue;
+				}
+				// 去除回环接口，子接口，未运行接口
+				if (networkInterface.isLoopback() || networkInterface.isVirtual() || !networkInterface.isUp()) {
 					continue;
 				}
 				Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
