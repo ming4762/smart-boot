@@ -129,6 +129,11 @@ public class SysTenantPO extends BaseModel {
     private Boolean useYn;
 
     /**
+     * 是否只读
+     */
+    private Boolean readonly;
+
+    /**
     * create_time - createTime
     */
     private LocalDateTime createTime;

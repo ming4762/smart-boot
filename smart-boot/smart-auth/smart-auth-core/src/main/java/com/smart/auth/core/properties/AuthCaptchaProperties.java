@@ -93,7 +93,7 @@ public class AuthCaptchaProperties implements Serializable {
         /**
          * 是否忽略大小写，默认忽略
          */
-        private Boolean ignoreCase;
+        private Boolean ignoreCase = Boolean.TRUE;
 
     }
 

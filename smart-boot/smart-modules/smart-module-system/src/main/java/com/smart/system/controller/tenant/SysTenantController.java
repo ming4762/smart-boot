@@ -9,11 +9,13 @@ import com.smart.commons.core.message.Result;
 import com.smart.commons.core.utils.EnumUtils;
 import com.smart.crud.controller.BaseController;
 import com.smart.crud.parameter.SetUseYnParameter;
+import com.smart.crud.query.IdParameter;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.crud.utils.CrudPageHelper;
 import com.smart.system.constants.SysTenantIsolationStrategyEnum;
 import com.smart.system.model.SysUserPO;
 import com.smart.system.model.tenant.SysTenantPO;
+import com.smart.system.model.tenant.SysTenantPackagePO;
 import com.smart.system.pojo.dbo.tenant.SysTenantUserListDO;
 import com.smart.system.pojo.dto.tenant.*;
 import com.smart.system.service.tenant.SysTenantService;
@@ -135,5 +137,11 @@ public class SysTenantController extends BaseController<SysTenantService, SysTen
     @PreAuthorize("hasPermission('sys:tenant:manager', 'bindUser')")
     public Result<Boolean> removeBindUser(@RequestBody @Valid SysTenantRemoveBindUserDTO parameter) {
         return Result.success(this.service.removeBindUser(parameter));
+    }
+
+    @Operation(summary = "根据租户ID查询没有绑定的套餐")
+    @PostMapping("listNoBindPackageByTenantId")
+    public Result<List<SysTenantPackagePO>> listNoBindPackageByTenantId(@RequestBody IdParameter parameter) {
+        return Result.success(this.service.listNoBindPackageByTenantId(parameter));
     }
 }

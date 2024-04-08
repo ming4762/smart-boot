@@ -1,8 +1,10 @@
 package com.smart.system.service.tenant;
 
+import com.smart.crud.query.IdParameter;
 import com.smart.crud.service.BaseService;
 import com.smart.system.model.SysUserPO;
 import com.smart.system.model.tenant.SysTenantPO;
+import com.smart.system.model.tenant.SysTenantPackagePO;
 import com.smart.system.pojo.dbo.tenant.SysTenantUserListDO;
 import com.smart.system.pojo.dto.tenant.SysTenantBindUserDTO;
 import com.smart.system.pojo.dto.tenant.SysTenantListNoBindUserDTO;
@@ -44,4 +46,11 @@ public interface SysTenantService extends BaseService<SysTenantPO> {
      * @return 是否解绑成功
      */
     boolean removeBindUser(SysTenantRemoveBindUserDTO parameter);
+
+    /**
+     * 根据租户ID查询没有绑定的套餐
+     * @param parameter 参数
+     * @return 套餐包列表
+     */
+    List<SysTenantPackagePO> listNoBindPackageByTenantId(IdParameter parameter);
 }
