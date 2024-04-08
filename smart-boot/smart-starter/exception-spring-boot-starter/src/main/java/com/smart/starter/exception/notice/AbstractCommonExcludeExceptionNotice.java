@@ -8,6 +8,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
 import java.util.List;
 
@@ -31,7 +32,8 @@ public abstract class AbstractCommonExcludeExceptionNotice extends AbstractExcep
                 // 业务异常不通知
                 BusinessException.class,
                 I18nException.class,
-                AccessDeniedException.class
+                AccessDeniedException.class,
+                HandlerMethodValidationException.class
         );
     }
 }

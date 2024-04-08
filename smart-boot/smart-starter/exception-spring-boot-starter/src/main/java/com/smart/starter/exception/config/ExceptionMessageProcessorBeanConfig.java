@@ -81,4 +81,9 @@ public class ExceptionMessageProcessorBeanConfig {
     public DefaultAsyncRequestTimeoutExceptionProcessor defaultAsyncRequestTimeoutExceptionProcessor() {
         return new DefaultAsyncRequestTimeoutExceptionProcessor();
     }
+
+    @Bean
+    public DefaultHandlerMethodValidationExceptionProcessor defaultHandlerMethodValidationExceptionProcessor() {
+        return new DefaultHandlerMethodValidationExceptionProcessor();
+    }
 }
