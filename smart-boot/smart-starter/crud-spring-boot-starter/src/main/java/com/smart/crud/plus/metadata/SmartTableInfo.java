@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.toolkit.LambdaUtils;
 import com.baomidou.mybatisplus.core.toolkit.support.LambdaMeta;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.smart.commons.core.proyx.ExtendMethodInterceptor;
+import com.smart.crud.annotation.TableTenantField;
 import com.smart.crud.annotation.TableUseYnField;
 import com.smart.crud.constants.UserPropertyEnum;
 import com.smart.crud.plus.logic.TableLogicKey;
@@ -72,6 +73,11 @@ public class SmartTableInfo extends TableInfo {
     private TableLogicDeleteFieldInfo deleteField;
 
     /**
+     * 租户字段
+     */
+    private TableFieldInfo tenantField;
+
+    /**
      * 是否有逻辑删除key
      * @return 是否有逻辑删除key
      */
@@ -79,6 +85,14 @@ public class SmartTableInfo extends TableInfo {
         return Optional.ofNullable(this.deleteField)
                 .map(TableLogicDeleteFieldInfo::getTableLogicKey)
                 .orElse(null) != null;
+    }
+
+    /**
+     * 是否支持租户
+     * @return 是否支持租户
+     */
+    public boolean supportTenant() {
+        return this.tenantField != null;
     }
 
     /**
@@ -111,14 +125,23 @@ public class SmartTableInfo extends TableInfo {
 
     private static void initField(SmartTableInfo smartTableInfo, TableInfo tableInfo) {
         AtomicInteger useYnNum = new AtomicInteger();
+        AtomicInteger tenantNum = new AtomicInteger();
         tableInfo.getFieldList().forEach(field -> {
+            // 处理启用停用字段
             TableUseYnField tableUseYnField = AnnotationUtils.getAnnotation(field.getField(), TableUseYnField.class);
             if (tableUseYnField != null) {
                 smartTableInfo.useYnField = field;
                 useYnNum.getAndAdd(1);
             }
+            // 处理租户字段
+            TableTenantField tableTenantField = AnnotationUtils.getAnnotation(field.getField(), TableTenantField.class);
+            if (tableTenantField != null) {
+                smartTableInfo.tenantField = field;
+                tenantNum.getAndAdd(1);
+            }
         });
         Assert.isTrue(useYnNum.get() <= 1, "@TableUseYnField not support more than one in Class: \"%s\"", tableInfo.getEntityType().getName());
+        Assert.isTrue(tenantNum.get() <= 1, "@TableTenantField not support more than one in Class: \"%s\"", tableInfo.getEntityType().getName());
         if (tableInfo.isWithLogicDelete()) {
             List<TableFieldInfo> logicDeleteKeyFields = tableInfo.getFieldList().stream().filter(item -> {
                 TableLogicKey tableLogicKey = AnnotationUtils.getAnnotation(item.getField(), TableLogicKey.class);

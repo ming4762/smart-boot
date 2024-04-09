@@ -1,9 +1,15 @@
 package com.smart.auth.autoconfigure;
 
 import com.smart.auth.core.event.AuthEventListener;
+import com.smart.auth.core.token.TokenRepository;
+import com.smart.auth.core.userdetails.DefaultUserDetailsBuilderImpl;
+import com.smart.auth.core.userdetails.UserDetailsBuilder;
+import com.smart.module.api.system.SystemAuthUserApi;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.List;
 
 /**
  * @author ShiZhongMing
@@ -21,6 +27,12 @@ public class SmartAuthAutoConfiguration {
     @ConditionalOnMissingBean(AuthEventListener.class)
     public AuthEventListener authEventListener() {
         return new AuthEventListener();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public UserDetailsBuilder userDetailsBuilder(SystemAuthUserApi systemAuthUserApi, List<TokenRepository> tokenRepositoryList) {
+        return new DefaultUserDetailsBuilderImpl(systemAuthUserApi, tokenRepositoryList);
     }
 
 }

@@ -1,6 +1,6 @@
 package com.smart.module.api.system.parameter;
 
-import com.smart.module.api.system.constants.UserAccountStatusEnum;
+import com.smart.commons.core.dto.auth.UserAccountStatusEnum;
 import lombok.*;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;

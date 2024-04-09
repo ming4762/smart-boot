@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.smart.crud.mapper.CrudBaseMapper;
 import com.smart.system.model.tenant.SysTenantUserPO;
+import com.smart.system.pojo.dbo.tenant.SysTenantListByUserDO;
 import com.smart.system.pojo.dbo.tenant.SysTenantUserListDO;
 import org.apache.ibatis.annotations.Param;
 
@@ -22,4 +23,11 @@ public interface SysTenantUserMapper extends CrudBaseMapper<SysTenantUserPO> {
      * @return 用户列表
      */
     List<SysTenantUserListDO> listTenantUser(@Param(Constants.WRAPPER)Wrapper<SysTenantUserPO> parameter);
+
+    /**
+     * 根据用户ID查询满足条件的一个租户
+     * @param userId 用户ID
+     * @return 租户信息
+     */
+    SysTenantListByUserDO selectOneTenantByUser(@Param("userId") Long userId);
 }

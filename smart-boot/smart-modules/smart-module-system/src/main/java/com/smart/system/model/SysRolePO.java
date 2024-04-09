@@ -3,6 +3,7 @@ package com.smart.system.model;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.smart.crud.annotation.TableTenantField;
 import com.smart.crud.model.BaseModelUserTime;
 import lombok.Getter;
 import lombok.Setter;
@@ -55,4 +56,10 @@ public class SysRolePO extends BaseModelUserTime {
      * 序号
      */
     private Integer seq;
+
+    /**
+     * 租户ID
+     */
+    @TableTenantField
+    private Long tenantId;
 }

@@ -1,8 +1,9 @@
 package com.smart.system.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.smart.commons.core.dto.auth.UserRolePermission;
+import com.smart.commons.core.dto.auth.UserAccountData;
 import com.smart.crud.service.BaseService;
+import com.smart.module.api.system.dto.QueryUserAccountDTO;
 import com.smart.system.constants.FunctionTypeEnum;
 import com.smart.system.model.SysFunctionPO;
 import com.smart.system.model.SysRolePO;
@@ -102,11 +103,10 @@ public interface SysUserService extends BaseService<SysUserPO> {
 
     /**
      * 查询用户角色权限信息
-     * @param userId 用户ID
-     * @param types 功能类型
-     * @return 角色权限信息
+     * @param parameter 参数
+     * @return 用户账户信息
      */
-    UserRolePermission queryUserRolePermission(@NonNull Long userId, @NonNull List<FunctionTypeEnum> types);
+    UserAccountData queryUserAccount(QueryUserAccountDTO parameter);
 
     /**
      * 添加/更新用户(带有数据权限)

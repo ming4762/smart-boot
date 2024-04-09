@@ -9,10 +9,11 @@ import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.auth.core.utils.AuthCheckUtils;
 import com.smart.auth.core.utils.TokenUtils;
 import com.smart.auth.core.utils.request.MatcherHttpServletRequest;
-import com.smart.commons.core.dto.auth.UserRolePermission;
+import com.smart.commons.core.dto.auth.UserAccountData;
 import com.smart.commons.core.http.HttpStatus;
 import com.smart.commons.core.i18n.I18nUtils;
 import com.smart.commons.core.message.Result;
+import com.smart.commons.core.tenant.SmartTenantHolder;
 import com.smart.commons.core.utils.IpUtils;
 import com.smart.module.api.auth.AuthApi;
 import com.smart.module.api.auth.dto.AuthCacheDTO;
@@ -82,7 +83,7 @@ public class LocalAuthApiImpl implements AuthApi {
     public boolean offlineByUsername(@NonNull String username) {
         boolean result = false;
         for (TokenRepository repository : this.tokenRepositoryList) {
-            result = repository.invalidateByUsername(username);
+            result = repository.invalidateByUsername(SmartTenantHolder.get(), username);
             if (result) {
                 break;
             }
@@ -109,9 +110,10 @@ public class LocalAuthApiImpl implements AuthApi {
             return null;
         }
 
-        UserRolePermission rolePermission = new UserRolePermission();
-        rolePermission.setRoleCodes(userDetails.getRoles());
-        rolePermission.setPermissions(userDetails.getPermissions());
+        UserAccountData userAccountData = new UserAccountData();
+        userAccountData.setRoleCodes(userDetails.getRoles());
+        userAccountData.setPermissions(userDetails.getPermissions());
+        userAccountData.setTenant(userDetails.getUserTenant());
         return AuthUserDetailsDTO.builder()
                 .userId(userDetails.getUserId())
                 .username(userDetails.getUsername())
@@ -121,7 +123,7 @@ public class LocalAuthApiImpl implements AuthApi {
                 .loginIp(userDetails.getLoginIp())
                 .bindIp(userDetails.getBindIp())
                 .ipWhiteList(userDetails.getIpWhiteList())
-                .rolePermission(rolePermission)
+                .userAccountData(userAccountData)
                 .build();
     }
 

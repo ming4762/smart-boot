@@ -2,7 +2,7 @@ package com.smart.auth.autoconfigure.sms;
 
 import com.smart.auth.core.properties.AuthProperties;
 import com.smart.auth.core.service.AuthCache;
-import com.smart.auth.core.token.TokenRepository;
+import com.smart.auth.core.userdetails.UserDetailsBuilder;
 import com.smart.auth.extensions.sms.AuthSmsConfigure;
 import com.smart.auth.extensions.sms.authentication.SmsAuthenticationProvider;
 import com.smart.auth.extensions.sms.provider.DefaultSmsCreateValidateProviderImpl;
@@ -15,8 +15,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.List;
 
 /**
  * @author ShiZhongMing
@@ -41,7 +39,7 @@ public class AuthSmsAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public SmsUserDetailService smsUserDetailService(List<TokenRepository> tokenRepositoryList, SystemAuthUserApi systemAuthUserApi) {
-        return new DefaultSmsUserDetailServiceImpl(tokenRepositoryList, systemAuthUserApi);
+    public SmsUserDetailService smsUserDetailService(SystemAuthUserApi systemAuthUserApi, UserDetailsBuilder userDetailsBuilder) {
+        return new DefaultSmsUserDetailServiceImpl(systemAuthUserApi, userDetailsBuilder);
     }
 }

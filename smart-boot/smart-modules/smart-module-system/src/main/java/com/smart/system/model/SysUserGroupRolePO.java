@@ -3,6 +3,7 @@ package com.smart.system.model;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.smart.crud.annotation.TableTenantField;
 import com.smart.crud.model.BaseModelCreateUserTime;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,4 +36,7 @@ public class SysUserGroupRolePO extends BaseModelCreateUserTime {
      * 是否启用
      */
     private Boolean useYn;
+
+    @TableTenantField
+    private Long tenantId;
 }

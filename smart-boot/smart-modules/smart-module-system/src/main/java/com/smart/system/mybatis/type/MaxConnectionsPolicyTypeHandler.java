@@ -1,6 +1,6 @@
 package com.smart.system.mybatis.type;
 
-import com.smart.module.api.system.constants.MaxConnectionsPolicyEnum;
+import com.smart.commons.core.dto.auth.MaxConnectionsPolicyEnum;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 

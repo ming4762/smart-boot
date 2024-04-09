@@ -129,9 +129,9 @@ public class SysTenantPO extends BaseModel {
     private Boolean useYn;
 
     /**
-     * 是否只读
+     * 是否平台管理租户
      */
-    private Boolean readonly;
+    private Boolean platformYn;
 
     /**
     * create_time - createTime

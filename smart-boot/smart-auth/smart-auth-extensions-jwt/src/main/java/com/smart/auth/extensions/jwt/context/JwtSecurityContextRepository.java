@@ -1,6 +1,7 @@
 package com.smart.auth.extensions.jwt.context;
 
 import com.smart.auth.core.authentication.RestUsernamePasswordAuthenticationToken;
+import com.smart.auth.core.token.TokenRepository;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.auth.core.utils.TokenUtils;
 import com.smart.auth.extensions.jwt.token.JwtTokenRepository;
@@ -63,6 +64,15 @@ public class JwtSecurityContextRepository implements SecurityContextRepository {
     @Override
     public void saveContext(SecurityContext context, HttpServletRequest request, HttpServletResponse response) {
         // do Nothing
+        RestUserDetails user = (RestUserDetails) context.getAuthentication().getPrincipal();
+        String token = null;
+        for (TokenRepository tokenRepository : repositoryList) {
+            token = tokenRepository.save(user);
+            if (org.springframework.util.StringUtils.hasText(token)) {
+                break;
+            }
+        }
+        user.setToken(token);
     }
 
     @Override

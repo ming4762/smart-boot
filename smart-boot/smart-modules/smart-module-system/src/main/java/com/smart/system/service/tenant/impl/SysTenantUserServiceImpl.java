@@ -3,6 +3,7 @@ package com.smart.system.service.tenant.impl;
 import com.smart.crud.service.BaseServiceImpl;
 import com.smart.system.mapper.tenant.SysTenantUserMapper;
 import com.smart.system.model.tenant.SysTenantUserPO;
+import com.smart.system.pojo.dbo.tenant.SysTenantListByUserDO;
 import com.smart.system.service.tenant.SysTenantUserService;
 import org.springframework.stereotype.Service;
 
@@ -14,4 +15,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class SysTenantUserServiceImpl extends BaseServiceImpl<SysTenantUserMapper, SysTenantUserPO> implements SysTenantUserService {
 
+    /**
+     * 根据用户ID查询满足条件的一个租户
+     *
+     * @param userId 用户ID
+     * @return 租户信息
+     */
+    @Override
+    public SysTenantListByUserDO selectOneTenantByUser(Long userId) {
+        return this.baseMapper.selectOneTenantByUser(userId);
+    }
 }

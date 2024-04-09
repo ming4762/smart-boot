@@ -1,9 +1,10 @@
 package com.smart.system.api.remote;
 
-import com.smart.commons.core.dto.auth.UserRolePermission;
+import com.smart.commons.core.dto.auth.UserAccountData;
 import com.smart.module.api.system.SystemAuthUserApi;
 import com.smart.module.api.system.constants.SystemApiUrlConstants;
 import com.smart.module.api.system.dto.AuthUserDTO;
+import com.smart.module.api.system.dto.QueryUserAccountDTO;
 import com.smart.module.api.system.parameter.UserAccountUnLockParameter;
 import com.smart.module.api.system.parameter.WechatUserQueryParameter;
 import com.smart.system.service.impl.LocalSystemAuthUserApiImpl;
@@ -52,13 +53,13 @@ public class RemoteSystemAuthUserApiController implements SystemAuthUserApi {
 
     /**
      * 查询用户角色权限信息
-     * @param userId 用户ID
+     * @param parameter 参数
      * @return 权限角色信息
      */
     @PostMapping(SystemApiUrlConstants.QUERY_ROLE_PERMISSION)
     @Override
-    public UserRolePermission queryRolePermission(@NonNull @RequestBody Long userId) {
-        return this.systemAuthUserApi.queryRolePermission(userId);
+    public UserAccountData queryUserAccount(@NonNull @RequestBody QueryUserAccountDTO parameter) {
+        return this.systemAuthUserApi.queryUserAccount(parameter);
     }
 
     /**

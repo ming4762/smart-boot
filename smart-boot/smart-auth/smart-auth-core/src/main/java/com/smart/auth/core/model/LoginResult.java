@@ -3,6 +3,7 @@ package com.smart.auth.core.model;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import lombok.*;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Set;
 
@@ -19,6 +20,7 @@ import java.util.Set;
 @AllArgsConstructor
 public class LoginResult implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -5416368660527838625L;
 
     private RestUserDetails user;

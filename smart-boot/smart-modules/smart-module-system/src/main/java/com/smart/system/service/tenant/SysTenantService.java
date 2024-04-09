@@ -10,6 +10,7 @@ import com.smart.system.pojo.dto.tenant.SysTenantBindUserDTO;
 import com.smart.system.pojo.dto.tenant.SysTenantListNoBindUserDTO;
 import com.smart.system.pojo.dto.tenant.SysTenantRemoveBindUserDTO;
 import com.smart.system.pojo.dto.tenant.SysTenantUserListDTO;
+import org.springframework.lang.NonNull;
 
 import java.util.List;
 
@@ -53,4 +54,12 @@ public interface SysTenantService extends BaseService<SysTenantPO> {
      * @return 套餐包列表
      */
     List<SysTenantPackagePO> listNoBindPackageByTenantId(IdParameter parameter);
+
+    /**
+     * 根据用户查询租户
+     * @param userId 用户ID
+     * @return 租户列表
+     */
+    @NonNull
+    List<SysTenantPO> listTenantByUserId(@NonNull Long userId);
 }

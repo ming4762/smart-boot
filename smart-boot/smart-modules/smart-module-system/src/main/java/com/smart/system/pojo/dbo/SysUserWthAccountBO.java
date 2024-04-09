@@ -1,6 +1,6 @@
 package com.smart.system.pojo.dbo;
 
-import com.smart.module.api.system.constants.UserAccountStatusEnum;
+import com.smart.commons.core.dto.auth.UserAccountStatusEnum;
 import com.smart.system.model.SysUserPO;
 import lombok.Getter;
 import lombok.Setter;

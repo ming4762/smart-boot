@@ -46,5 +46,27 @@
         from sys_user A
         join sys_tenant_user B on A.user_id = B.user_id
             ${ew.customSqlSegment}
+
+    </select>
+
+    <!--  根据用户ID查询满足条件的一个租户  -->
+    <select id="selectOneTenantByUser" resultType="com.smart.system.pojo.dbo.tenant.SysTenantListByUserDO">
+        select A.id tenantId,
+            A.tenant_code,
+            A.tenant_name,
+            A.tenant_short_name,
+            A.platform_yn
+        from sys_tenant A
+        JOIN sys_tenant_user B ON A.id = B.tenant_id
+        WHERE user_id = 1526412196446240
+            AND A.delete_yn = 0
+            AND A.use_yn = 1
+            AND (
+                (A.expire_time is null AND A.expire_time Is null)
+                OR
+                (A.effect_time &lt;= sysdate() AND A.expire_time &gt;= sysdate())
+            )
+        order by IF(B.default_yn, 1, 2), A.seq
+        limit 1
     </select>
 </mapper>

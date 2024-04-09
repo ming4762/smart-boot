@@ -1,7 +1,5 @@
-package com.smart.module.api.system.dto;
+package com.smart.commons.core.dto.auth;
 
-import com.smart.commons.core.dto.auth.MaxConnectionsPolicyEnum;
-import com.smart.commons.core.dto.auth.UserAccountStatusEnum;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -11,40 +9,30 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 用户账户DTO
- * @author zhongming4762
- * 2023/3/11
+ * 用户账户信息
+ * @author shizhongming
+ * 2024/4/8 18:50
+ * @since 3.0.0
  */
 @Getter
 @Setter
 @ToString
-public class SysUserAccountDTO implements Serializable {
+public class UserAccountDTO implements Serializable {
 
     @Serial
-    private static final long serialVersionUID = -1711863528993825816L;
-    private Long userId;
-
-    /**
-     * 登录失败次数
-     */
+    private static final long serialVersionUID = -5049297174154462028L;
     private Long loginFailTime;
 
     private UserAccountStatusEnum accountStatus;
-
-    private Boolean initialPasswordYn;
-
     /**
      * 上次登录时间
      */
     private LocalDateTime lastLoginTime;
-
-    private String ipWhiteList;
-
     private Long maxConnections;
 
     private Long maxDaysSinceLogin;
-
     private Long passwordLifeDays;
+    private String ipWhiteList;
 
     /**
      * 超出最大连接数执行策略

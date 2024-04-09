@@ -7,13 +7,11 @@ import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import com.smart.auth.core.handler.AuthLogoutSuccessHandler;
-import com.smart.auth.core.handler.AuthSuccessDataHandler;
 import com.smart.auth.core.handler.SecurityLogoutHandler;
 import com.smart.auth.core.properties.AuthProperties;
 import com.smart.auth.core.service.AuthCache;
-import com.smart.auth.core.token.TokenRepository;
+import com.smart.auth.core.userdetails.UserDetailsBuilder;
 import com.smart.auth.extensions.jwt.AuthJwtConfigure;
-import com.smart.auth.extensions.jwt.handler.JwtAuthSuccessDataHandler;
 import com.smart.auth.extensions.jwt.handler.JwtLogoutHandler;
 import com.smart.auth.extensions.jwt.resolver.JwtResolver;
 import com.smart.auth.extensions.jwt.service.JwtService;
@@ -39,7 +37,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.interfaces.RSAPublicKey;
-import java.util.List;
 
 /**
  * @author ShiZhongMing
@@ -128,16 +125,6 @@ public class AuthJwtAutoConfiguration {
     }
 
     /**
-     * 创建 AuthSuccessDataHandler
-     * @return JwtAuthSuccessDataHandler
-     */
-    @Bean
-    @ConditionalOnMissingBean(JwtAuthSuccessDataHandler.class)
-    public AuthSuccessDataHandler jwtAuthSuccessDataHandler() {
-        return new JwtAuthSuccessDataHandler();
-    }
-
-    /**
      * 创建JWT token存储器
      * @param authProperties properties
      * @param authCache 缓存器
@@ -153,7 +140,7 @@ public class AuthJwtAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(UserDetailsService.class)
-    public UserDetailsService userDetailsService(List<TokenRepository> tokenRepositoryList, SystemAuthUserApi systemAuthUserApi) {
-        return new RestUserDetailsServiceImpl(tokenRepositoryList, systemAuthUserApi);
+    public UserDetailsService userDetailsService(UserDetailsBuilder userDetailsBuilder, SystemAuthUserApi systemAuthUserApi) {
+        return new RestUserDetailsServiceImpl(systemAuthUserApi, userDetailsBuilder);
     }
 }

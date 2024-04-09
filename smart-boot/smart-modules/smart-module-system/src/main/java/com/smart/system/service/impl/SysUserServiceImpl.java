@@ -8,9 +8,12 @@ import com.google.common.collect.Sets;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.auth.core.utils.AuthUtils;
 import com.smart.commons.core.dto.auth.Permission;
-import com.smart.commons.core.dto.auth.UserRolePermission;
+import com.smart.commons.core.dto.auth.UserAccountDTO;
+import com.smart.commons.core.dto.auth.UserAccountData;
+import com.smart.commons.core.dto.auth.UserTenantDTO;
 import com.smart.commons.core.exception.SystemException;
 import com.smart.commons.core.i18n.I18nUtils;
+import com.smart.commons.core.tenant.SmartTenantHolder;
 import com.smart.commons.core.utils.DigestUtils;
 import com.smart.commons.core.utils.PropertyUtils;
 import com.smart.crud.constants.CrudCommonEnum;
@@ -19,24 +22,29 @@ import com.smart.crud.datapermission.DataPermissionScope;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.crud.service.BaseServiceImpl;
 import com.smart.crud.service.UserSetterService;
+import com.smart.module.api.system.dto.QueryUserAccountDTO;
 import com.smart.system.constants.FunctionTypeEnum;
 import com.smart.system.constants.UserDeptIdentEnum;
 import com.smart.system.mapper.SysUserGroupRoleMapper;
 import com.smart.system.mapper.SysUserGroupUserMapper;
 import com.smart.system.mapper.SysUserMapper;
+import com.smart.system.mapper.tenant.SysTenantMapper;
 import com.smart.system.model.*;
+import com.smart.system.model.tenant.SysTenantPO;
 import com.smart.system.pojo.dbo.SysUserWthAccountBO;
+import com.smart.system.pojo.dbo.tenant.SysTenantListByUserDO;
 import com.smart.system.pojo.dto.user.UserListDTO;
 import com.smart.system.pojo.dto.user.UserSetRoleDTO;
 import com.smart.system.pojo.vo.SysFunctionListVO;
 import com.smart.system.pojo.vo.user.SysUserListVO;
 import com.smart.system.pojo.vo.user.SysUserWithDataScopeDTO;
 import com.smart.system.service.*;
+import com.smart.system.service.tenant.SysTenantUserService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -54,6 +62,7 @@ import java.util.stream.Stream;
  */
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO> implements SysUserService {
 
     private static final String SYSTEM_USER_TYPE = "SYSTEM_USER";
@@ -73,35 +82,17 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
     private static final String I18N_RIGHT = "}";
 
     private final SysUserRoleService sysUserRoleService;
-
     private final SysUserDeptService sysUserDeptService;
-
     private final SysUserGroupUserMapper sysUserGroupUserMapper;
-
     private final SysUserGroupRoleMapper sysUserGroupRoleMapper;
-
-    private SysRoleService sysRoleService;
-
+    private final SysRoleService sysRoleService;
     private final SysRoleFunctionService sysRoleFunctionService;
-
-    private SysFunctionService sysFunctionService;
-
+    private final SysFunctionService sysFunctionService;
     private final UserSetterService userSetterService;
-
     private final SysUserAccountService sysUserAccountService;
-
     private final SysDeptService sysDeptService;
-
-    public SysUserServiceImpl(SysUserRoleService sysUserRoleService, SysUserGroupUserMapper sysUserGroupUserMapper, SysUserGroupRoleMapper sysUserGroupRoleMapper, SysRoleFunctionService sysRoleFunctionService, UserSetterService userSetterService, SysUserAccountService sysUserAccountService, SysUserDeptService sysUserDeptService, SysDeptService sysDeptService) {
-        this.sysUserRoleService = sysUserRoleService;
-        this.sysUserGroupUserMapper = sysUserGroupUserMapper;
-        this.sysUserGroupRoleMapper = sysUserGroupRoleMapper;
-        this.sysRoleFunctionService = sysRoleFunctionService;
-        this.userSetterService = userSetterService;
-        this.sysUserAccountService = sysUserAccountService;
-        this.sysUserDeptService = sysUserDeptService;
-        this.sysDeptService = sysDeptService;
-    }
+    private final SysTenantUserService sysTenantUserService;
+    private final SysTenantMapper sysTenantMapper;
 
     @Override
     public List<? extends SysUserPO> list(@NonNull QueryWrapper<SysUserPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
@@ -191,16 +182,16 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         final Set<Long> userGroupIdSet = this.sysUserGroupUserMapper.selectList(
                 new QueryWrapper<SysUserGroupUserPO>().lambda()
                         .select(SysUserGroupUserPO::getUserGroupId)
-                    .eq(SysUserGroupUserPO :: getUserId, userId)
-                    .eq(SysUserGroupUserPO :: getUseYn, Boolean.TRUE)
+                        .eq(SysUserGroupUserPO :: getUserId, userId)
+                        .eq(SysUserGroupUserPO :: getUseYn, Boolean.TRUE)
         ).stream().map(SysUserGroupUserPO :: getUserGroupId).collect(Collectors.toSet());
         // 通过用户组查询角色ID
         if (!userGroupIdSet.isEmpty()) {
             final Set<Long> groupRoleIdSet = this.sysUserGroupRoleMapper.selectList(
                     new QueryWrapper<SysUserGroupRolePO>().lambda()
                             .select(SysUserGroupRolePO :: getRoleId)
-                    .in(SysUserGroupRolePO :: getGroupId, userGroupIdSet)
-                    .eq(SysUserGroupRolePO :: getUseYn, Boolean.TRUE)
+                            .in(SysUserGroupRolePO :: getGroupId, userGroupIdSet)
+                            .eq(SysUserGroupRolePO :: getUseYn, Boolean.TRUE)
             ).stream().map(SysUserGroupRolePO :: getRoleId).collect(Collectors.toSet());
             roleIdSet.addAll(groupRoleIdSet);
         }
@@ -347,16 +338,40 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         return this.listUserFunctionWithLocale(userDetails.getUserId(), List.of(FunctionTypeEnum.CATALOG, FunctionTypeEnum.MENU), localeList);
     }
 
+    /**
+     * 查询用户角色权限信息
+     * @param parameter 参数
+     * @return 用户账户信息
+     */
     @Override
     @Transactional(readOnly = true)
-    public UserRolePermission queryUserRolePermission(@NonNull Long userId, @NonNull List<FunctionTypeEnum> types) {
-        UserRolePermission userRolePermission = new UserRolePermission();
-        // 1、查询角色信息
-        List<SysRolePO> sysRoleList = this.listRole(userId);
-        if (CollectionUtils.isEmpty(sysRoleList)) {
-            return userRolePermission;
+    public UserAccountData queryUserAccount(QueryUserAccountDTO parameter) {
+        UserAccountData userAccountData = new UserAccountData();
+        // 查询租户信息
+        UserTenantDTO userTenant = this.queryUserTenant(parameter);
+        userAccountData.setTenant(userTenant);
+        if (userTenant == null) {
+            return userAccountData;
         }
-        userRolePermission.setRoleCodes(
+        SmartTenantHolder.set(userTenant.getTenantId());
+        // 查询账户信息
+        SysUserAccountPO sysUserAccount = this.sysUserAccountService.getOne(
+                new LambdaQueryWrapper<>(SysUserAccountPO.class)
+                        .eq(SysUserAccountPO::getUserId, parameter.getUserId())
+        );
+        if (sysUserAccount == null) {
+            return userAccountData;
+        }
+        UserAccountDTO account = new UserAccountDTO();
+        BeanUtils.copyProperties(sysUserAccount, account);
+        userAccountData.setAccount(account);
+
+        // 1、查询角色信息
+        List<SysRolePO> sysRoleList = this.listRole(parameter.getUserId());
+        if (CollectionUtils.isEmpty(sysRoleList)) {
+            return userAccountData;
+        }
+        userAccountData.setRoleCodes(
                 sysRoleList.stream().map(SysRolePO::getRoleCode).collect(Collectors.toSet())
         );
         var roleIds = sysRoleList.stream().map(SysRolePO::getRoleId).collect(Collectors.toSet());
@@ -367,16 +382,14 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
                         .in(SysRoleFunctionPO :: getRoleId, roleIds)
         ).stream().map(SysRoleFunctionPO :: getFunctionId).collect(Collectors.toSet());
         if (CollectionUtils.isEmpty(functionIds)) {
-            return userRolePermission;
+            return userAccountData;
         }
         //3、查询function列表
         var queryWrapper = new QueryWrapper<SysFunctionPO>().lambda()
                 .select(SysFunctionPO::getUrl, SysFunctionPO::getPermission, SysFunctionPO::getHttpMethod)
                 .in(SysFunctionPO :: getFunctionId, functionIds)
+                .eq(SysFunctionPO::getFunctionType, FunctionTypeEnum.FUNCTION.getValue())
                 .orderByAsc(SysFunctionPO :: getSeq);
-        if (!CollectionUtils.isEmpty(types)) {
-            queryWrapper.in(SysFunctionPO :: getFunctionType, types.stream().map(FunctionTypeEnum::getValue).toList());
-        }
         var permissions = this.sysFunctionService.list(queryWrapper).stream()
                 .flatMap(item -> {
                     var url = item.getUrl();
@@ -394,8 +407,34 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
                             .authority(item.getPermission())
                             .build());
                 }).collect(Collectors.toSet());
-        userRolePermission.setPermissions(permissions);
-        return userRolePermission;
+        userAccountData.setPermissions(permissions);
+        return userAccountData;
+    }
+
+    /**
+     * 查询租户信息
+     * @param parameter 参数
+     * @return 租户信息
+     */
+    private UserTenantDTO queryUserTenant(QueryUserAccountDTO parameter) {
+        if (parameter.getTenantId() == null) {
+            // 查询用户默认租户或第一个租户
+            SysTenantListByUserDO tenant = this.sysTenantUserService.selectOneTenantByUser(parameter.getUserId());
+            if (tenant == null) {
+                return null;
+            }
+            UserTenantDTO tenantDto = new UserTenantDTO();
+            BeanUtils.copyProperties(tenant, tenantDto);
+            return tenantDto;
+        }
+        SysTenantPO sysTenant = this.sysTenantMapper.selectById(parameter.getTenantId());
+        if (sysTenant == null) {
+            return null;
+        }
+        UserTenantDTO tenantDto = new UserTenantDTO();
+        BeanUtils.copyProperties(sysTenant, tenantDto);
+        tenantDto.setTenantId(parameter.getTenantId());
+        return tenantDto;
     }
 
     /**
@@ -507,17 +546,6 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
                 .orderByAsc(SysUserPO :: getSeq)
         );
     }
-
-    @Autowired
-    public void setSysFunctionService(SysFunctionService sysFunctionService) {
-        this.sysFunctionService = sysFunctionService;
-    }
-
-    @Autowired
-    public void setSysRoleService(SysRoleService sysRoleService) {
-        this.sysRoleService = sysRoleService;
-    }
-
 
     @Override
     public List<SysUserWthAccountBO> listUserWithAccount(QueryWrapper<SysUserPO> parameter) {

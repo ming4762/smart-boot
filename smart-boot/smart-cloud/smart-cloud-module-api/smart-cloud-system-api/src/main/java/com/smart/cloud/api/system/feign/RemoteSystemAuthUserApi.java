@@ -1,10 +1,11 @@
 package com.smart.cloud.api.system.feign;
 
 import com.smart.cloud.common.core.constants.CloudServiceNameConstants;
-import com.smart.commons.core.dto.auth.UserRolePermission;
+import com.smart.commons.core.dto.auth.UserAccountData;
 import com.smart.module.api.system.SystemAuthUserApi;
 import com.smart.module.api.system.constants.SystemApiUrlConstants;
 import com.smart.module.api.system.dto.AuthUserDTO;
+import com.smart.module.api.system.dto.QueryUserAccountDTO;
 import com.smart.module.api.system.parameter.UserAccountUnLockParameter;
 import com.smart.module.api.system.parameter.WechatUserQueryParameter;
 import lombok.NonNull;
@@ -45,12 +46,12 @@ public interface RemoteSystemAuthUserApi extends SystemAuthUserApi {
     /**
      * 查询用户角色权限信息
      *
-     * @param userId 用户ID
+     * @param parameter 参数
      * @return 权限角色信息
      */
     @Override
     @PostMapping(SystemApiUrlConstants.QUERY_ROLE_PERMISSION)
-    UserRolePermission queryRolePermission(@NonNull Long userId);
+    UserAccountData queryUserAccount(@NonNull QueryUserAccountDTO parameter);
 
     /**
      * 通过openid获取用户信息

@@ -3,9 +3,10 @@ package com.smart.system.model;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.smart.commons.core.dto.auth.MaxConnectionsPolicyEnum;
+import com.smart.commons.core.dto.auth.UserAccountStatusEnum;
+import com.smart.crud.annotation.TableTenantField;
 import com.smart.crud.model.BaseModelCreateUserTime;
-import com.smart.module.api.system.constants.MaxConnectionsPolicyEnum;
-import com.smart.module.api.system.constants.UserAccountStatusEnum;
 import com.smart.system.mybatis.type.MaxConnectionsPolicyTypeHandler;
 import com.smart.system.mybatis.type.UserAccountStatusTypeHandler;
 import lombok.*;
@@ -78,5 +79,8 @@ public class SysUserAccountPO extends BaseModelCreateUserTime {
      * 账户锁定时间
      */
     private LocalDateTime lockTime;
+
+    @TableTenantField
+    private Long tenantId;
 
 }

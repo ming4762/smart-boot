@@ -1,10 +1,11 @@
 package com.smart.module.api.system.dto;
 
-import com.smart.module.api.system.constants.UserAccountStatusEnum;
+import com.smart.commons.core.dto.auth.UserAccountStatusEnum;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -18,6 +19,8 @@ import java.io.Serializable;
 public class UserAccountLockDTO implements Serializable {
 
 
+    @Serial
+    private static final long serialVersionUID = -5073969003934135717L;
     private String username;
 
     private UserAccountStatusEnum accountStatus;

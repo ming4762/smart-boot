@@ -1,23 +1,21 @@
 package com.smart.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.smart.commons.core.dto.auth.UserRolePermission;
+import com.smart.commons.core.dto.auth.UserAccountData;
 import com.smart.module.api.system.SystemAuthUserApi;
 import com.smart.module.api.system.dto.AuthUserDTO;
+import com.smart.module.api.system.dto.QueryUserAccountDTO;
 import com.smart.module.api.system.parameter.UserAccountUnLockParameter;
 import com.smart.module.api.system.parameter.WechatUserQueryParameter;
-import com.smart.system.constants.FunctionTypeEnum;
-import com.smart.system.model.SysUserAccountPO;
 import com.smart.system.model.SysUserPO;
 import com.smart.system.service.SysUserAccountService;
 import com.smart.system.service.SysUserService;
-import org.springframework.beans.BeanUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -27,17 +25,11 @@ import java.util.Objects;
  */
 @Service
 @Primary
+@RequiredArgsConstructor
 public class LocalSystemAuthUserApiImpl implements SystemAuthUserApi {
 
     private final SysUserService sysUserService;
-
     private final SysUserAccountService sysUserAccountService;
-
-    public LocalSystemAuthUserApiImpl(SysUserService sysUserService, SysUserAccountService sysAuthUserService) {
-        this.sysUserService = sysUserService;
-        this.sysUserAccountService = sysAuthUserService;
-    }
-
 
     /**
      * 通过用户名查询用户
@@ -69,21 +61,13 @@ public class LocalSystemAuthUserApiImpl implements SystemAuthUserApi {
      * @return AuthUser
      */
     protected AuthUserDTO createAuthUser(SysUserPO user) {
-        AuthUserDTO dto = AuthUserDTO.builder()
+        return AuthUserDTO.builder()
                 .userId(user.getUserId())
                 .username(user.getUsername())
                 .password(user.getPassword())
                 .fullName(user.getFullName())
                 .mobile(user.getMobile())
                 .build();
-        // 查询用户账户状态
-        SysUserAccountPO userAccount = this.sysUserAccountService.getById(user.getUserId());
-        if (userAccount != null) {
-            AuthUserDTO.UserAccountDTO account = new AuthUserDTO.UserAccountDTO();
-            BeanUtils.copyProperties(userAccount, account);
-            dto.setAccount(account);
-        }
-        return dto;
     }
 
     @Nullable
@@ -108,12 +92,12 @@ public class LocalSystemAuthUserApiImpl implements SystemAuthUserApi {
 
     /**
      * 查询用户角色权限信息
-     * @param userId 用户ID
+     * @param parameter 参数
      * @return 权限角色信息
      */
     @Override
-    public UserRolePermission queryRolePermission(@NonNull Long userId) {
-        return this.sysUserService.queryUserRolePermission(userId, List.of(FunctionTypeEnum.FUNCTION));
+    public UserAccountData queryUserAccount(@NonNull QueryUserAccountDTO parameter) {
+        return this.sysUserService.queryUserAccount(parameter);
     }
 
     /**

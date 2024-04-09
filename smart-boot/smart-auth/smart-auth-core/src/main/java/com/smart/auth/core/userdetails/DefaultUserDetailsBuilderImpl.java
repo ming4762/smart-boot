@@ -11,13 +11,17 @@ import com.smart.auth.core.model.RoleGrantedAuthority;
 import com.smart.auth.core.model.SmartGrantedAuthority;
 import com.smart.auth.core.token.TokenData;
 import com.smart.auth.core.token.TokenRepository;
-import com.smart.commons.core.dto.auth.UserRolePermission;
+import com.smart.commons.core.dto.auth.MaxConnectionsPolicyEnum;
+import com.smart.commons.core.dto.auth.UserAccountDTO;
+import com.smart.commons.core.dto.auth.UserAccountData;
+import com.smart.commons.core.dto.auth.UserAccountStatusEnum;
 import com.smart.commons.core.i18n.I18nUtils;
+import com.smart.commons.core.tenant.SmartTenantHolder;
 import com.smart.module.api.system.SystemAuthUserApi;
-import com.smart.module.api.system.constants.MaxConnectionsPolicyEnum;
-import com.smart.module.api.system.constants.UserAccountStatusEnum;
 import com.smart.module.api.system.dto.AuthUserDTO;
+import com.smart.module.api.system.dto.QueryUserAccountDTO;
 import com.smart.module.api.system.parameter.UserAccountUnLockParameter;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.DisabledException;
@@ -27,35 +31,37 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * @author zhongming4762
- * 2023/6/7 14:38
+ * @author shizhongming
+ * 2024/4/9 9:56
+ * @since 3.0.0
  */
-public abstract class AbstractUserDetailsService {
-
-    private final List<TokenRepository> tokenRepositoryList;
+@RequiredArgsConstructor
+public class DefaultUserDetailsBuilderImpl implements UserDetailsBuilder {
 
     private final SystemAuthUserApi systemAuthUserApi;
-
-    protected AbstractUserDetailsService(List<TokenRepository> tokenRepositoryList, SystemAuthUserApi systemAuthUserApi) {
-        this.tokenRepositoryList = tokenRepositoryList;
-        this.systemAuthUserApi = systemAuthUserApi;
-    }
+    private final List<TokenRepository> tokenRepositoryList;
 
     /**
-     * 创建 RestUserDetails
+     * 构建 RestUserDetails
+     *
      * @param user 用户信息
      * @return RestUserDetails
      */
-    protected RestUserDetails getUserDetails(@Nullable AuthUserDTO user) {
+    @Override
+    public RestUserDetails buildUserDetails(@Nullable AuthUserDTO user) {
         if (user == null) {
             return null;
         }
+        UserAccountData userAccountData = this.systemAuthUserApi.queryUserAccount(new QueryUserAccountDTO(user.getUserId(), SmartTenantHolder.get()));
+        if (userAccountData == null) {
+            return null;
+        }
         // 验证账户
-        boolean validateAccount = this.validateAccount(user);
+        boolean validateAccount = this.validateAccount(user, userAccountData);
         if (!validateAccount) {
             return null;
         }
-        AuthUserDTO.UserAccountDTO userAccount = user.getAccount();
+        UserAccountDTO userAccount = userAccountData.getAccount();
 
         RestUserDetailsImpl restUserDetails = new RestUserDetailsImpl();
         restUserDetails.setUserId(user.getUserId());
@@ -73,32 +79,33 @@ public abstract class AbstractUserDetailsService {
                                         .toList()
                         ).orElse(new ArrayList<>(0))
         );
+
         // 设置账户锁定状态
         restUserDetails.setAccountNonLocked(UserAccountStatusEnum.NORMAL.equals(userAccount.getAccountStatus()));
         if (UserAccountStatusEnum.LOGIN_FAIL_LOCKED.equals(userAccount.getAccountStatus())) {
             // 用户登录失败锁定执行解锁策略
-            restUserDetails.setAccountNonLocked(this.unLockPasswordErrorLock(user));
+            restUserDetails.setAccountNonLocked(this.unLockPasswordErrorLock(user, userAccountData));
         }
-
         // 设置权限信息
         Set<SmartGrantedAuthority> grantedAuthoritySet = Sets.newHashSet();
-        UserRolePermission userRolePermission = this.systemAuthUserApi.queryRolePermission(user.getUserId());
         // 添加角色
         grantedAuthoritySet.addAll(
-                userRolePermission.getRoleCodes().stream()
+                userAccountData.getRoleCodes().stream()
                         .map(RoleGrantedAuthority::new).collect(Collectors.toSet())
         );
         // 添加权限
         grantedAuthoritySet.addAll(
-                userRolePermission.getPermissions().stream()
+                userAccountData.getPermissions().stream()
                         .map(PermissionGrantedAuthority::new).toList()
         );
         restUserDetails.setAuthorities(grantedAuthoritySet);
+        // 设置租户信息
+        restUserDetails.setUserTenant(userAccountData.getTenant());
         return restUserDetails;
     }
 
-    protected boolean unLockPasswordErrorLock(AuthUserDTO user) {
-        AuthUserDTO.UserAccountDTO userAccount = user.getAccount();
+    protected boolean unLockPasswordErrorLock(AuthUserDTO user, UserAccountData userAccountData) {
+        UserAccountDTO userAccount = userAccountData.getAccount();
         Long unlockSecond = userAccount.getPasswordErrorUnlockSecond();
         if (unlockSecond <= 0) {
             // 未设置自动解锁时间
@@ -116,8 +123,8 @@ public abstract class AbstractUserDetailsService {
      * @param user 用户信息
      * @return 是否正常成功
      */
-    protected boolean validateAccount(AuthUserDTO user) {
-        AuthUserDTO.UserAccountDTO userAccount = user.getAccount();
+    protected boolean validateAccount(AuthUserDTO user, UserAccountData userAccountData) {
+        UserAccountDTO userAccount = userAccountData.getAccount();
         if (userAccount == null) {
             throw new DisabledException(I18nUtils.get(AuthI18nMessage.ACCOUNT_NOT_CREATED));
         }
@@ -130,7 +137,7 @@ public abstract class AbstractUserDetailsService {
             throw new PasswordNoLifeLockedException(I18nUtils.get(AuthI18nMessage.ACCOUNT_PASSWORD_NO_MODIFY_LOCKED), new PasswordNoLifeLockedException.User(user.getUserId(), user.getUsername(), user.getFullName()));
         }
         // 验证用户登录数
-        this.loginConnectionNum(user);
+        this.loginConnectionNum(user, userAccountData);
         return true;
     }
 
@@ -139,14 +146,14 @@ public abstract class AbstractUserDetailsService {
      * 超出连接数的按照策略进行处理
      * @param user 用户信息
      */
-    protected void loginConnectionNum(AuthUserDTO user) {
-        AuthUserDTO.UserAccountDTO userAccount = user.getAccount();
+    protected void loginConnectionNum(AuthUserDTO user, UserAccountData userAccountData) {
+        UserAccountDTO userAccount = userAccountData.getAccount();
         Long connectionNum = userAccount.getMaxConnections();
         if (connectionNum <= 0) {
             return;
         }
         List<TokenData> tokenDataList = this.tokenRepositoryList.stream()
-                .flatMap(item -> item.listData(user.getUsername()).stream())
+                .flatMap(item -> item.listData(userAccountData.getTenant().getTenantId(), user.getUsername()).stream())
                 .toList();
         if (tokenDataList.size() < connectionNum) {
             // 未达到连接数上限
@@ -164,5 +171,4 @@ public abstract class AbstractUserDetailsService {
                     .ifPresent(tokenData -> this.tokenRepositoryList.forEach(item -> item.invalidateByToken(tokenData.getToken())));
         }
     }
-
 }

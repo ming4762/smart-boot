@@ -4,6 +4,7 @@ import com.smart.auth.core.handler.AuthAccessDeniedHandler;
 import com.smart.auth.core.handler.RestAuthenticationEntryPoint;
 import com.smart.auth.core.matcher.ExtensionPathMatcher;
 import com.smart.auth.core.properties.AuthProperties;
+import com.smart.auth.security.filter.SmartAuthTenantFilter;
 import lombok.SneakyThrows;
 import org.springframework.http.HttpMethod;
 import org.springframework.lang.NonNull;
@@ -12,6 +13,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
+import org.springframework.security.web.context.SecurityContextHolderFilter;
 
 /**
  * 默认的web配置器
@@ -34,7 +36,8 @@ public class AuthWebSecurityConfigurerAdapter {
                         .exceptionHandling(
                                 configurer -> configurer.authenticationEntryPoint(new RestAuthenticationEntryPoint())
                                                         .accessDeniedHandler(new AuthAccessDeniedHandler())
-                        );
+                                // 添加tenant注入拦截器
+                        ).addFilterAfter(new SmartAuthTenantFilter(), SecurityContextHolderFilter.class);
 //        this.ignore(httpSecurity);
 //        // 开发模式不拦截
 //        if (BooleanUtils.isTrue(this.authProperties.getDevelopment())) {

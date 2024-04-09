@@ -23,10 +23,12 @@ import com.smart.system.service.tenant.SysTenantPackageService;
 import com.smart.system.service.tenant.SysTenantService;
 import com.smart.system.service.tenant.SysTenantUserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -144,7 +146,7 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
         long count = this.count(
                 new LambdaQueryWrapper<>(SysTenantPO.class)
                         .in(SysTenantPO::getId, idList)
-                        .eq(SysTenantPO::getReadonly, Boolean.TRUE)
+                        .eq(SysTenantPO::getPlatformYn, Boolean.TRUE)
         );
         if (count > 0) {
             throw new BusinessException("不能删除不可编辑租户");
@@ -171,12 +173,31 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
             long count = this.count(
                     new LambdaQueryWrapper<>(SysTenantPO.class)
                             .in(SysTenantPO::getId, idList)
-                            .eq(SysTenantPO::getReadonly, Boolean.TRUE)
+                            .eq(SysTenantPO::getPlatformYn, Boolean.TRUE)
             );
             if (count > 0) {
                 throw new BusinessException("不能修改不可编辑租户");
             }
         }
         return super.saveOrUpdateBatch(entityList);
+    }
+
+    /**
+     * 根据用户查询租户
+     *
+     * @param userId 用户ID
+     * @return 租户列表
+     */
+    @NonNull
+    @Override
+    public List<SysTenantPO> listTenantByUserId(@NonNull Long userId) {
+        LocalDateTime now = LocalDateTime.now();
+        LambdaQueryWrapper<SysTenantPO> queryWrapper = new LambdaQueryWrapper<>(SysTenantPO.class)
+                .eq(SysTenantPO::getUseYn, Boolean.TRUE)
+                .and(
+                        wrapper -> wrapper.and(query -> query.isNull(SysTenantPO::getEffectTime).isNull(SysTenantPO::getExpireTime))
+                                .or(query -> query.le(SysTenantPO::getExpireTime, now).ge(SysTenantPO::getExpireTime, now))
+                ).apply("id in (select M.tenant_id from sys_tenant_user M where M.user_id = {0})", userId);
+        return this.list(queryWrapper);
     }
 }

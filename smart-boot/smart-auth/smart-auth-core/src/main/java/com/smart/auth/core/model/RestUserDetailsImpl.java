@@ -6,6 +6,7 @@ import com.smart.auth.core.constants.AuthTypeEnum;
 import com.smart.auth.core.constants.LoginTypeEnum;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.commons.core.dto.auth.Permission;
+import com.smart.commons.core.dto.auth.UserTenantDTO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -74,6 +75,9 @@ public class RestUserDetailsImpl implements RestUserDetails, Serializable {
 
     @Getter
     private Long loginFailTime;
+
+    @Getter
+    private UserTenantDTO userTenant;
 
     /**
      * 账户是否锁定

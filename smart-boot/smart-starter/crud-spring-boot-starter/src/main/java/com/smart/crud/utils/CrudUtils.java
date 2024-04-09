@@ -88,6 +88,18 @@ public final class CrudUtils {
     }
 
     /**
+     * 根据表明获取table info
+     * @param tableName 表名
+     * @return SmartTableInfo
+     */
+    public static SmartTableInfo getTableInfo(String tableName) {
+        TableInfo tableInfo = TableInfoHelper.getTableInfo(tableName);
+        Assert.notNull(tableInfo, "error: can not execute. because can not find cache of TableInfo for tableName!");
+        return getTableInfo(tableInfo.getEntityType());
+    }
+
+
+    /**
      * 解析排序字段
      * @param sortName 以逗号分隔的实体类属性名称
      * @param sortOrder 以逗号分隔的排序方法

@@ -116,7 +116,7 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRoleMapper, SysRolePO
             return false;
         }
         this.sysUserRoleService.saveBatch(
-                parameter.getUserIdList().stream().map(item -> new SysUserRolePO(item, parameter.getRoleId(), true)).toList()
+                parameter.getUserIdList().stream().map(item -> new SysUserRolePO(item, parameter.getRoleId(), true, null)).toList()
         );
         return true;
     }

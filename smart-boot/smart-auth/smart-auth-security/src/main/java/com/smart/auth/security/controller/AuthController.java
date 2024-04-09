@@ -20,6 +20,7 @@ import com.smart.commons.core.i18n.I18nUtils;
 import com.smart.commons.core.log.Log;
 import com.smart.commons.core.log.LogOperationTypeEnum;
 import com.smart.commons.core.message.Result;
+import com.smart.commons.core.tenant.SmartTenantHolder;
 import com.smart.commons.core.utils.DigestUtils;
 import com.smart.commons.core.utils.IpUtils;
 import com.smart.commons.core.utils.JsonUtils;
@@ -128,7 +129,7 @@ public class AuthController {
         }
         // 查询所有存储的用户信息
         List<TokenData> userTokenDataList = this.tokenRepositoryList.stream()
-                .flatMap(item -> (parameter.getUsername() == null ? item.listData() : item.listData(parameter.getUsername())).stream())
+                .flatMap(item -> (parameter.getUsername() == null ? item.listData() : item.listData(SmartTenantHolder.get(), parameter.getUsername())).stream())
                 .toList();
         Map<Long, List<TokenData>> tokenMap = userTokenDataList.stream()
                 .collect(Collectors.groupingBy(item -> item.getUser().getUserId()));

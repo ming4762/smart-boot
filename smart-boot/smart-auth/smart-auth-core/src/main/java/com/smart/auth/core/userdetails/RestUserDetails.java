@@ -3,6 +3,7 @@ package com.smart.auth.core.userdetails;
 import com.smart.auth.core.constants.AuthTypeEnum;
 import com.smart.auth.core.constants.LoginTypeEnum;
 import com.smart.commons.core.dto.auth.Permission;
+import com.smart.commons.core.dto.auth.UserTenantDTO;
 import lombok.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -110,4 +111,10 @@ public interface RestUserDetails extends UserDetails {
      * @return true：未锁定
      */
     Boolean getAccountNonLocked();
+
+    /**
+     * 获取租户信息
+     * @return 租户信息
+     */
+    UserTenantDTO getUserTenant();
 }

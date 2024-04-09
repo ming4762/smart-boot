@@ -3,6 +3,7 @@ package com.smart.system.model;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.smart.crud.annotation.TableTenantField;
 import com.smart.crud.annotation.TableUseYnField;
 import com.smart.crud.model.BaseModelUserTime;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -64,5 +65,8 @@ public class SysUserGroupPO extends BaseModelUserTime {
     @Schema(description = "启用")
     @TableUseYnField
     private Boolean useYn;
+
+    @TableTenantField
+    private Long tenantId;
 
 }

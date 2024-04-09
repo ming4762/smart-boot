@@ -9,4 +9,6 @@ import com.smart.system.model.tenant.SysTenantPO;
 * 2024年3月29日 上午10:42:40
 */
 public interface SysTenantMapper extends CrudBaseMapper<SysTenantPO> {
+
+
 }

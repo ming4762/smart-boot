@@ -39,6 +39,11 @@ public class SysTenantUserPO extends BaseModel {
     private Long userId;
 
     /**
+     * default_yn 是否默认租户
+     */
+    private Boolean defaultYn;
+
+    /**
     * create_time - createTime
     */
     private LocalDateTime createTime;

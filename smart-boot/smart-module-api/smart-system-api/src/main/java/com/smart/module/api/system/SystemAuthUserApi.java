@@ -1,7 +1,8 @@
 package com.smart.module.api.system;
 
-import com.smart.commons.core.dto.auth.UserRolePermission;
+import com.smart.commons.core.dto.auth.UserAccountData;
 import com.smart.module.api.system.dto.AuthUserDTO;
+import com.smart.module.api.system.dto.QueryUserAccountDTO;
 import com.smart.module.api.system.parameter.UserAccountUnLockParameter;
 import com.smart.module.api.system.parameter.WechatUserQueryParameter;
 import lombok.NonNull;
@@ -36,10 +37,10 @@ public interface SystemAuthUserApi {
 
     /**
      * 查询用户角色权限信息
-     * @param userId 用户ID
-     * @return 权限角色信息
+     * @param parameter 参数
+     * @return 账户信息
      */
-    UserRolePermission queryRolePermission(@NonNull Long userId);
+    UserAccountData queryUserAccount(@NonNull QueryUserAccountDTO parameter);
 
     /**
      * 通过openid获取用户信息

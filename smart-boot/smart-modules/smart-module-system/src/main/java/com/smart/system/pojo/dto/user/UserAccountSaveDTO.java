@@ -1,7 +1,7 @@
 package com.smart.system.pojo.dto.user;
 
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.smart.module.api.system.constants.MaxConnectionsPolicyEnum;
+import com.smart.commons.core.dto.auth.MaxConnectionsPolicyEnum;
 import com.smart.system.mybatis.type.MaxConnectionsPolicyTypeHandler;
 import lombok.Getter;
 import lombok.Setter;

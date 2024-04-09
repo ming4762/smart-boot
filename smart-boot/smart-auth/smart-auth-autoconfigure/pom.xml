@@ -14,12 +14,7 @@
 	<properties>
 	</properties>
 	<dependencies>
-		<dependency>
-			<groupId>com.smart</groupId>
-			<artifactId>smart-auth-extensions-secret</artifactId>
-			<version>${project.parent.version}</version>
-			<optional>true</optional>
-		</dependency>
+
 		<dependency>
 			<groupId>com.smart</groupId>
 			<artifactId>smart-auth-extensions-sms</artifactId>

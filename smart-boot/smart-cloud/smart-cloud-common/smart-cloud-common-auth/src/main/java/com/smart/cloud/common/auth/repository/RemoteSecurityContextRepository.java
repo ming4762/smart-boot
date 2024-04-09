@@ -66,12 +66,12 @@ public class RemoteSecurityContextRepository implements SecurityContextRepositor
         restUserDetails.setLoginTime(dto.getLoginTime());
         Set<SmartGrantedAuthority> grantedAuthoritySet = Sets.newHashSet();
         grantedAuthoritySet.addAll(
-                dto.getRolePermission().getRoleCodes().stream()
+                dto.getUserAccountData().getRoleCodes().stream()
                         .map(RoleGrantedAuthority::new).toList()
         );
         // 添加权限
         grantedAuthoritySet.addAll(
-                dto.getRolePermission().getPermissions()
+                dto.getUserAccountData().getPermissions()
                         .stream()
                         .map(PermissionGrantedAuthority::new).toList()
         );
@@ -80,6 +80,7 @@ public class RemoteSecurityContextRepository implements SecurityContextRepositor
         restUserDetails.setBindIp(dto.getBindIp());
         restUserDetails.setIpWhiteList(dto.getIpWhiteList());
         restUserDetails.setToken(token);
+        restUserDetails.setUserTenant(dto.getUserAccountData().getTenant());
         if (cache != null) {
             cache.put(token, restUserDetails);
         }

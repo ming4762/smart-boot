@@ -106,7 +106,7 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
         builder
                 .authenticationProvider(this.getAuthenticationProvider())
                 // 添加登录 登出过滤器
-                .addFilterAfter(this.createJwtFilterChainProxy(), BasicAuthenticationFilter.class);
+                .addFilterAfter(this.createJwtFilterChainProxy(builder), BasicAuthenticationFilter.class);
         if (Boolean.TRUE.equals(this.serviceProvider.jwtAuth)) {
             // 添加认证过滤器
             builder.addFilterAfter(this.postProcess(new JwtAuthenticationFilter(this.jwtContext)), ExceptionTranslationFilter.class);
@@ -137,10 +137,10 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
      * 创建jwt 拦截器链
      * @return 拦截器链
      */
-    private FilterChainProxy createJwtFilterChainProxy() {
+    private FilterChainProxy createJwtFilterChainProxy(H builder) {
         final List<SecurityFilterChain> chains = Lists.newArrayList();
         // 创建登录过滤器
-        final JwtLoginFilter jwtLoginFilter = this.jwtLoginFilter();
+        final JwtLoginFilter jwtLoginFilter = this.jwtLoginFilter(builder);
         chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher(this.getLoginUrl()), jwtLoginFilter));
 
         // 创建logout过滤器
@@ -153,7 +153,7 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
      * 创建登录过滤器
      * @return 登录过滤器
      */
-    private JwtLoginFilter jwtLoginFilter() {
+    private JwtLoginFilter jwtLoginFilter(H builder) {
         final JwtLoginFilter jwtLoginFilter = new JwtLoginFilter(this.jwtContext, this.serviceProvider.bindIp);
         jwtLoginFilter.setAuthenticationManager(this.getBuilder().getSharedObject(AuthenticationManager.class));
         jwtLoginFilter.setFilterProcessesUrl(this.getLoginUrl());
@@ -161,6 +161,7 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
         jwtLoginFilter.setAuthenticationSuccessHandler(this.getBean(AuthenticationSuccessHandler.class, this.serviceProvider.authenticationSuccessHandler));
         // 设置登录失败handler
         jwtLoginFilter.setAuthenticationFailureHandler(this.getBean(AuthenticationFailureHandler.class, this.serviceProvider.authenticationFailureHandler));
+        jwtLoginFilter.setSecurityContextRepository(builder.getSharedObject(SecurityContextRepository.class));
         return jwtLoginFilter;
     }
 

@@ -16,12 +16,12 @@ import java.util.Set;
  */
 @Getter
 @Setter
-public class UserRolePermission implements Serializable {
+public class UserAccountData implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -3632192598130979878L;
 
-    public UserRolePermission() {
+    public UserAccountData() {
         this.roleCodes = new HashSet<>(0);
         this.permissions = new HashSet<>(0);
     }
@@ -35,4 +35,15 @@ public class UserRolePermission implements Serializable {
      * 权限信息
      */
     private Set<Permission> permissions;
+
+    /**
+     * 账户信息
+     */
+    private UserAccountDTO account;
+
+    /**
+     * 租户信息
+     */
+    private UserTenantDTO tenant;
+
 }

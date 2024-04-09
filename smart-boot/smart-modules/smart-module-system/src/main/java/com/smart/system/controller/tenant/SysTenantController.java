@@ -1,6 +1,7 @@
 package com.smart.system.controller.tenant;
 
 import com.github.pagehelper.Page;
+import com.smart.auth.core.utils.AuthUtils;
 import com.smart.commons.core.dto.common.LabelValueData;
 import com.smart.commons.core.log.Log;
 import com.smart.commons.core.log.LogOperationTypeEnum;
@@ -143,5 +144,11 @@ public class SysTenantController extends BaseController<SysTenantService, SysTen
     @PostMapping("listNoBindPackageByTenantId")
     public Result<List<SysTenantPackagePO>> listNoBindPackageByTenantId(@RequestBody IdParameter parameter) {
         return Result.success(this.service.listNoBindPackageByTenantId(parameter));
+    }
+
+    @Operation(summary = "查询当前用户的租户")
+    @PostMapping("listCurrentUserTenant")
+    public Result<List<SysTenantPO>> listCurrentUserTenant() {
+        return Result.success(this.service.listTenantByUserId(AuthUtils.getNonNullCurrentUserId()));
     }
 }
