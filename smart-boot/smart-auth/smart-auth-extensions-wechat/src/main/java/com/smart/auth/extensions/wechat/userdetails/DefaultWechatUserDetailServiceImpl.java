@@ -1,28 +1,23 @@
 package com.smart.auth.extensions.wechat.userdetails;
 
 import com.smart.auth.core.constants.AuthTypeEnum;
-import com.smart.auth.core.token.TokenRepository;
-import com.smart.auth.core.userdetails.AbstractUserDetailsService;
 import com.smart.auth.core.userdetails.RestUserDetails;
+import com.smart.auth.core.userdetails.UserDetailsBuilder;
 import com.smart.module.api.system.SystemAuthUserApi;
 import com.smart.module.api.system.dto.AuthUserDTO;
 import com.smart.module.api.system.parameter.WechatUserQueryParameter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.AuthenticationException;
-
-import java.util.List;
 
 /**
  * @author zhongming4762
  * 2023/6/7
  */
-public class DefaultWechatUserDetailServiceImpl extends AbstractUserDetailsService implements WechatUserDetailService {
+@RequiredArgsConstructor
+public class DefaultWechatUserDetailServiceImpl implements WechatUserDetailService {
 
     private final SystemAuthUserApi systemAuthUserApi;
-
-    protected DefaultWechatUserDetailServiceImpl(List<TokenRepository> tokenRepositoryList, SystemAuthUserApi systemAuthUserApi) {
-        super(tokenRepositoryList, systemAuthUserApi);
-        this.systemAuthUserApi = systemAuthUserApi;
-    }
+    private final UserDetailsBuilder userDetailsBuilder;
 
     /**
      * 通过微信openid加载用户信息
@@ -41,7 +36,7 @@ public class DefaultWechatUserDetailServiceImpl extends AbstractUserDetailsServi
                         .openid(openid)
                         .build()
         );
-        return this.getUserDetails(user);
+        return userDetailsBuilder.buildUserDetails(user);
     }
 
     /**
@@ -61,6 +56,6 @@ public class DefaultWechatUserDetailServiceImpl extends AbstractUserDetailsServi
                         .unionid(unionid)
                         .build()
         );
-        return this.getUserDetails(user);
+        return userDetailsBuilder.buildUserDetails(user);
     }
 }

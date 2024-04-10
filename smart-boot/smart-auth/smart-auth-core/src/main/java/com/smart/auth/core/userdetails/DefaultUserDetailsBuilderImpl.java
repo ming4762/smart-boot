@@ -52,7 +52,7 @@ public class DefaultUserDetailsBuilderImpl implements UserDetailsBuilder {
         if (user == null) {
             return null;
         }
-        UserAccountData userAccountData = this.systemAuthUserApi.queryUserAccount(new QueryUserAccountDTO(user.getUserId(), SmartTenantHolder.get()));
+        UserAccountData userAccountData = this.systemAuthUserApi.queryUserAccount(new QueryUserAccountDTO(user.getUserId(), SmartTenantHolder.getTenantId()));
         if (userAccountData == null) {
             return null;
         }

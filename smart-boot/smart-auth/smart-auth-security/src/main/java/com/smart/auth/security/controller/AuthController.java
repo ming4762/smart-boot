@@ -129,7 +129,7 @@ public class AuthController {
         }
         // 查询所有存储的用户信息
         List<TokenData> userTokenDataList = this.tokenRepositoryList.stream()
-                .flatMap(item -> (parameter.getUsername() == null ? item.listData() : item.listData(SmartTenantHolder.get(), parameter.getUsername())).stream())
+                .flatMap(item -> (parameter.getUsername() == null ? item.listData() : item.listData(SmartTenantHolder.getTenantId(), parameter.getUsername())).stream())
                 .toList();
         Map<Long, List<TokenData>> tokenMap = userTokenDataList.stream()
                 .collect(Collectors.groupingBy(item -> item.getUser().getUserId()));

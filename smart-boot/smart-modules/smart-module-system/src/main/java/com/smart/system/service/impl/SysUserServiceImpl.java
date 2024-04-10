@@ -353,11 +353,12 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         if (userTenant == null) {
             return userAccountData;
         }
-        SmartTenantHolder.set(userTenant.getTenantId());
+        SmartTenantHolder.set(userTenant);
         // 查询账户信息
         SysUserAccountPO sysUserAccount = this.sysUserAccountService.getOne(
                 new LambdaQueryWrapper<>(SysUserAccountPO.class)
                         .eq(SysUserAccountPO::getUserId, parameter.getUserId())
+                        .eq(SysUserAccountPO::getTenantId, userTenant.getTenantId())
         );
         if (sysUserAccount == null) {
             return userAccountData;

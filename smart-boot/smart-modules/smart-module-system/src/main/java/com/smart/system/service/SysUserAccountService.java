@@ -28,7 +28,7 @@ public interface SysUserAccountService extends BaseService<SysUserAccountPO> {
      * @param userIdList 用户ID列表
      * @return 是否创建成功
      */
-    boolean createAccount(@NonNull List<Long> userIdList);
+    boolean createAccount(@NonNull Long tenantId, @NonNull List<Long> userIdList);
 
     /**
      * 结果账户

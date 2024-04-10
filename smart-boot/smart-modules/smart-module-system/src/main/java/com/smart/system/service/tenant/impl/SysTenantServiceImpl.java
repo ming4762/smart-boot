@@ -2,6 +2,7 @@ package com.smart.system.service.tenant.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.smart.commons.core.exception.BusinessException;
 import com.smart.crud.plus.metadata.SmartTableInfo;
 import com.smart.crud.query.IdParameter;
@@ -57,6 +58,7 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
      */
     @Override
     public List<SysTenantUserListDO> listTenantUser(SysTenantUserListDTO parameter) {
+        SmartTableInfo tableInfo = CrudUtils.getTableInfo(SysTenantUserPO.class);
         SmartTableInfo userTableInfo = CrudUtils.getTableInfo(SysUserPO.class);
         QueryWrapper<SysTenantUserPO> queryWrapper = new QueryWrapper<>();
         if (parameter.getFullName() != null) {
@@ -65,8 +67,8 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
         if (parameter.getUsername() != null) {
             queryWrapper.like(userTableInfo.getTableFiled(SysUserPO::getUsername).getColumn(), parameter.getUsername());
         }
-        queryWrapper.lambda()
-                .eq(SysTenantUserPO::getTenantId, parameter.getTenantId());
+        TableFieldInfo tableFiled = tableInfo.getTableFiled(SysTenantUserPO::getTenantId);
+        queryWrapper.eq("B." + tableFiled.getColumn(), parameter.getTenantId());
         return this.sysTenantUserMapper.listTenantUser(queryWrapper);
     }
 

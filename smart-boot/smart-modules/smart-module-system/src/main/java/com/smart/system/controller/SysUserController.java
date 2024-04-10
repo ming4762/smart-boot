@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.smart.auth.core.annotation.NonUrlCheck;
+import com.smart.auth.core.utils.AuthUtils;
 import com.smart.commons.core.data.Tree;
 import com.smart.commons.core.http.HttpStatus;
 import com.smart.commons.core.log.Log;
@@ -262,7 +263,7 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
         if (CollectionUtils.isEmpty(userIdList)) {
             return Result.success(false);
         }
-        return Result.success(this.sysUserAccountService.createAccount(userIdList));
+        return Result.success(this.sysUserAccountService.createAccount(AuthUtils.getNonNullCurrentTenantId(), userIdList));
     }
 
     @PostMapping("saveAccountSetting")

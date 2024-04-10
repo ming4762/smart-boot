@@ -12,6 +12,7 @@ import com.smart.auth.core.properties.AuthProperties;
 import com.smart.auth.core.service.AuthCache;
 import com.smart.auth.core.userdetails.UserDetailsBuilder;
 import com.smart.auth.extensions.jwt.AuthJwtConfigure;
+import com.smart.auth.extensions.jwt.context.JwtSecurityContextRepository;
 import com.smart.auth.extensions.jwt.handler.JwtLogoutHandler;
 import com.smart.auth.extensions.jwt.resolver.JwtResolver;
 import com.smart.auth.extensions.jwt.service.JwtService;
@@ -32,6 +33,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.web.context.SecurityContextRepository;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -142,5 +144,11 @@ public class AuthJwtAutoConfiguration {
     @ConditionalOnMissingBean(UserDetailsService.class)
     public UserDetailsService userDetailsService(UserDetailsBuilder userDetailsBuilder, SystemAuthUserApi systemAuthUserApi) {
         return new RestUserDetailsServiceImpl(systemAuthUserApi, userDetailsBuilder);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public SecurityContextRepository securityContextRepository() {
+        return new JwtSecurityContextRepository();
     }
 }

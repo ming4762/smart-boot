@@ -2,22 +2,19 @@ package com.smart.auth.extensions.jwt;
 
 import com.google.common.collect.Lists;
 import com.smart.auth.core.authentication.RestAuthenticationProvider;
+import com.smart.auth.core.config.SmartSecurityConfigurerAdapter;
 import com.smart.auth.core.handler.SecurityLogoutHandler;
 import com.smart.auth.core.properties.AuthProperties;
 import com.smart.auth.core.service.AuthCache;
 import com.smart.auth.extensions.jwt.context.JwtContext;
-import com.smart.auth.extensions.jwt.context.JwtSecurityContextRepository;
 import com.smart.auth.extensions.jwt.filter.JwtAuthenticationFilter;
 import com.smart.auth.extensions.jwt.filter.JwtLoginFilter;
 import com.smart.auth.extensions.jwt.filter.JwtLogoutFilter;
 import com.smart.auth.extensions.jwt.service.JwtService;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -48,7 +45,7 @@ import java.util.Optional;
  * @since 1.0
  */
 @Slf4j
-public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, H> {
+public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends SmartSecurityConfigurerAdapter<H> {
 
     private final ServiceProvider serviceProvider = new ServiceProvider();
 
@@ -124,7 +121,7 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
      */
     @Override
     public void init(H builder) {
-        builder.setSharedObject(SecurityContextRepository.class, this.postProcess(new JwtSecurityContextRepository()));
+        builder.setSharedObject(SecurityContextRepository.class, this.getBean(SecurityContextRepository.class));
         // 初始化bean
         this.initBean();
         // 创建上下文
@@ -201,20 +198,6 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
                 .authProperties(this.getBean(AuthProperties.class, this.serviceProvider.authProperties))
                 .build();
     }
-
-    private <T> T getBean(Class<T> clazz, T t) {
-        if (Objects.nonNull(t)) {
-            return t;
-        }
-        ApplicationContext applicationContext = this.getBuilder().getSharedObject(ApplicationContext.class);
-        try {
-            return Optional.ofNullable(applicationContext).map(item -> item.getBean(clazz)).orElse(null);
-        } catch (NoSuchBeanDefinitionException e) {
-            log.warn("获取bean发生错误: " + e.getMessage());
-            return null;
-        }
-    }
-
 
     /**
      * 设置登出URL

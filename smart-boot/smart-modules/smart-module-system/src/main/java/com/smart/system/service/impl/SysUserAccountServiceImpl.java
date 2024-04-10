@@ -68,7 +68,7 @@ public class SysUserAccountServiceImpl extends BaseServiceImpl<SysUserAccountMap
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean createAccount(@NonNull List<Long> userIdList) {
+    public boolean createAccount(@NonNull Long tenantId, @NonNull List<Long> userIdList) {
         // 查询用户信息
         List<SysUserPO> userList = this.sysUserMapper.selectBatchIds(userIdList);
         if (CollectionUtils.isEmpty(userList)) {
@@ -94,7 +94,8 @@ public class SysUserAccountServiceImpl extends BaseServiceImpl<SysUserAccountMap
         List<SysUserAccountPO> existAccountList = this.list(
                 new QueryWrapper<SysUserAccountPO>().lambda()
                 .select(SysUserAccountPO :: getUserId)
-                .in(SysUserAccountPO :: getUserId, userMap.keySet())
+                        .eq(SysUserAccountPO::getTenantId, tenantId)
+                        .in(SysUserAccountPO :: getUserId, userMap.keySet())
         );
         if (!CollectionUtils.isEmpty(existAccountList)) {
             // 账户已经存在抛出异常
@@ -117,6 +118,7 @@ public class SysUserAccountServiceImpl extends BaseServiceImpl<SysUserAccountMap
         List<SysUserAccountPO> userAccountList = userList.stream()
                 .map(item -> SysUserAccountPO.builder()
                         .userId(item.getUserId())
+                        .tenantId(tenantId)
                         .lastLoginTime(currentTime)
                         .passwordModifyTime(currentTime)
                         .maxConnections(Long.valueOf(sysParameter.get(SysParameterCodeEnum.AUTH_MAX_CONNECTIONS.getCode())))

@@ -3,6 +3,8 @@ package com.smart.auth.core.utils;
 import com.smart.auth.core.constants.RoleEnum;
 import com.smart.auth.core.exception.AuthException;
 import com.smart.auth.core.userdetails.RestUserDetails;
+import com.smart.commons.core.dto.auth.UserTenantDTO;
+import com.smart.commons.core.exception.SystemException;
 import com.smart.commons.core.http.HttpStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -110,5 +112,43 @@ public final class AuthUtils {
     public static boolean hasPermission(@NonNull String permission) {
         return getNonNullCurrentUser().getPermissions().stream()
                 .anyMatch(item -> StringUtils.equals(permission, item.getAuthority()));
+    }
+
+    /**
+     * 当前用户是否是平台管理租户
+     * @return boolean
+     */
+    public static boolean isPlatformTenant() {
+        return Optional.ofNullable(getCurrentUser())
+                .map(RestUserDetails::getUserTenant)
+                .map(item -> Boolean.TRUE.equals(item.getPlatformYn()))
+                .orElse(false);
+
+    }
+
+    /**
+     * 获取当前租户ID
+     * @return 租户ID
+     */
+    public static Long getCurrentTenantId() {
+        return Optional.ofNullable(getCurrentUser())
+                .map(RestUserDetails::getUserTenant)
+                .map(UserTenantDTO::getTenantId)
+                .orElse(null);
+    }
+
+    /**
+     * 获取当前租户ID
+     * @return 租户ID
+     */
+    public static Long getNonNullCurrentTenantId() {
+        Long tenantId = Optional.ofNullable(getCurrentUser())
+                .map(RestUserDetails::getUserTenant)
+                .map(UserTenantDTO::getTenantId)
+                .orElse(null);
+        if (tenantId == null) {
+            throw new SystemException("获取租户失败");
+        }
+        return tenantId;
     }
 }

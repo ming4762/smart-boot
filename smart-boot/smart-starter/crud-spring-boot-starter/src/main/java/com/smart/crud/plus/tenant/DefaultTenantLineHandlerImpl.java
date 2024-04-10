@@ -22,7 +22,7 @@ public class DefaultTenantLineHandlerImpl implements TenantLineHandler {
      */
     @Override
     public Expression getTenantId() {
-        Long tenantId = SmartTenantHolder.get();
+        Long tenantId = SmartTenantHolder.getTenantId();
         if (tenantId == null) {
             return null;
         }

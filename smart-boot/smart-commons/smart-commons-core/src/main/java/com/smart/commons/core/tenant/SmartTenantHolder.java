@@ -1,5 +1,10 @@
 package com.smart.commons.core.tenant;
 
+import com.smart.commons.core.dto.auth.UserTenantDTO;
+import org.springframework.lang.Nullable;
+
+import java.util.Optional;
+
 /**
  * 租户ID存储器
  * @author shizhongming
@@ -12,19 +17,25 @@ public class SmartTenantHolder {
         throw new IllegalStateException("Utility class");
     }
 
-    private static final ThreadLocal<Long> THREAD_LOCAL = new ThreadLocal<>();
+    private static final ThreadLocal<UserTenantDTO> THREAD_LOCAL = new ThreadLocal<>();
 
     /**
      * 设置租户ID
-     * @param tenantId 租户ID
+     * @param tenant 租户
      */
-    public static void set(Long tenantId) {
+    public static void set(UserTenantDTO tenant) {
         THREAD_LOCAL.remove();
-        THREAD_LOCAL.set(tenantId);
+        THREAD_LOCAL.set(tenant);
     }
 
-    public static Long get() {
+    @Nullable
+    public static UserTenantDTO get() {
         return THREAD_LOCAL.get();
+    }
+
+    @Nullable
+    public static Long getTenantId() {
+        return Optional.ofNullable(get()).map(UserTenantDTO::getTenantId).orElse(null);
     }
 
     public static void clear() {

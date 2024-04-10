@@ -19,11 +19,14 @@ import com.smart.system.model.tenant.SysTenantPO;
 import com.smart.system.model.tenant.SysTenantPackagePO;
 import com.smart.system.pojo.dbo.tenant.SysTenantUserListDO;
 import com.smart.system.pojo.dto.tenant.*;
+import com.smart.system.service.SysUserAccountService;
 import com.smart.system.service.tenant.SysTenantService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,8 +44,10 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/sys/tenant/manager")
+@RequiredArgsConstructor
 public class SysTenantController extends BaseController<SysTenantService, SysTenantPO> {
 
+    private final SysUserAccountService sysUserAccountService;
 
     @Override
     @PostMapping("list")
@@ -150,5 +155,15 @@ public class SysTenantController extends BaseController<SysTenantService, SysTen
     @PostMapping("listCurrentUserTenant")
     public Result<List<SysTenantPO>> listCurrentUserTenant() {
         return Result.success(this.service.listTenantByUserId(AuthUtils.getNonNullCurrentUserId()));
+    }
+
+    @Operation(summary = "创建用户对应租户账户")
+    @PostMapping("createTenantUserAccount")
+    public Result<Boolean> createTenantUserAccount(@RequestBody @Valid SysCreateTenantUserAccountDTO parameter) {
+        // 验证用户是否是平台账户
+        if (!AuthUtils.isPlatformTenant()) {
+            throw new AccessDeniedException("非平台管理租户无权限创建其他租户账户");
+        }
+        return Result.success(this.sysUserAccountService.createAccount(parameter.getTenantId(), parameter.getUserIdList()));
     }
 }

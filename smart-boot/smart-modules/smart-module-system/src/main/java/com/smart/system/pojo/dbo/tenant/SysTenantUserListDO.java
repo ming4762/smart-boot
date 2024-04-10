@@ -49,4 +49,9 @@ public class SysTenantUserListDO implements Serializable {
      * create_by - createBy
      */
     private String createBy;
+
+    /**
+     * 账户ID
+     */
+    private Long accountId;
 }

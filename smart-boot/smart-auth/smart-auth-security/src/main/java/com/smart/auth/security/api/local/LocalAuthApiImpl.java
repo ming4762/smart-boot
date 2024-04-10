@@ -83,7 +83,7 @@ public class LocalAuthApiImpl implements AuthApi {
     public boolean offlineByUsername(@NonNull String username) {
         boolean result = false;
         for (TokenRepository repository : this.tokenRepositoryList) {
-            result = repository.invalidateByUsername(SmartTenantHolder.get(), username);
+            result = repository.invalidateByUsername(SmartTenantHolder.getTenantId(), username);
             if (result) {
                 break;
             }
