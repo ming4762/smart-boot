@@ -12,6 +12,7 @@ import com.smart.auth.core.token.TokenData;
 import com.smart.auth.core.token.TokenRepository;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.auth.extensions.jwt.resolver.JwtResolver;
+import com.smart.commons.core.dto.auth.AuthRole;
 import com.smart.commons.core.dto.auth.Permission;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
@@ -71,7 +72,7 @@ public class JwtTokenRepository implements TokenRepository {
         TokenData tokenData = new TokenData(token, currentTime, currentTime, timeout, user);
         if (Boolean.TRUE.equals(this.authProperties.getJwt().getPermissionCache())) {
             Set<Permission> permissions = user.getPermissions();
-            Set<String> roles = user.getRoles();
+            Set<AuthRole> roles = user.getRoles();
             tokenData.setRoles(roles);
             tokenData.setPermissions(permissions);
         }

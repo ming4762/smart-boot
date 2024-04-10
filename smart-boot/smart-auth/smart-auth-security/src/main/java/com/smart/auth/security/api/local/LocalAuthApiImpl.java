@@ -7,13 +7,13 @@ import com.smart.auth.core.service.AuthCache;
 import com.smart.auth.core.token.TokenRepository;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.auth.core.utils.AuthCheckUtils;
+import com.smart.auth.core.utils.AuthUtils;
 import com.smart.auth.core.utils.TokenUtils;
 import com.smart.auth.core.utils.request.MatcherHttpServletRequest;
 import com.smart.commons.core.dto.auth.UserAccountData;
 import com.smart.commons.core.http.HttpStatus;
 import com.smart.commons.core.i18n.I18nUtils;
 import com.smart.commons.core.message.Result;
-import com.smart.commons.core.tenant.SmartTenantHolder;
 import com.smart.commons.core.utils.IpUtils;
 import com.smart.module.api.auth.AuthApi;
 import com.smart.module.api.auth.dto.AuthCacheDTO;
@@ -83,7 +83,7 @@ public class LocalAuthApiImpl implements AuthApi {
     public boolean offlineByUsername(@NonNull String username) {
         boolean result = false;
         for (TokenRepository repository : this.tokenRepositoryList) {
-            result = repository.invalidateByUsername(SmartTenantHolder.getTenantId(), username);
+            result = repository.invalidateByUsername(AuthUtils.getNonNullCurrentTenantId(), username);
             if (result) {
                 break;
             }

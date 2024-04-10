@@ -7,6 +7,7 @@ import com.smart.auth.core.model.SmartGrantedAuthority;
 import com.smart.auth.core.properties.AuthProperties;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.auth.extensions.jwt.resolver.JwtResolver;
+import com.smart.commons.core.dto.auth.AuthRole;
 import com.smart.commons.core.dto.auth.Permission;
 import com.smart.commons.core.utils.JsonUtils;
 import com.smart.commons.jwt.Jwt;
@@ -58,7 +59,7 @@ public class JwtService implements JwtResolver {
         RestUserDetailsImpl userDetails = JsonUtils.parse((String) claims.get(USER_KEY), RestUserDetailsImpl.class);
 
         if (!Boolean.TRUE.equals(this.authProperties.getJwt().getPermissionCache())) {
-            List<String> roleStrList = JsonUtils.parseCollection((String) claims.get(ROLE_KEY), String.class);
+            List<AuthRole> roleStrList = JsonUtils.parseCollection((String) claims.get(ROLE_KEY), AuthRole.class);
             List<Permission> permissionList = JsonUtils.parseCollection((String) claims.get(PERMISSION_KEY), Permission.class);
             Set<SmartGrantedAuthority> authorities = new HashSet<>(permissionList.size() + roleStrList.size());
             // 添加权限信息
@@ -82,7 +83,7 @@ public class JwtService implements JwtResolver {
                 .id(userDetails.getUserId().toString())
                 .claim(USER_KEY, JsonUtils.toJsonString(userDetails));
         if (!Boolean.TRUE.equals(this.authProperties.getJwt().getPermissionCache())) {
-            Set<String> roles = userDetails.getRoles();
+            Set<AuthRole> roles = userDetails.getRoles();
             Set<Permission> permissions = userDetails.getPermissions();
             builder.claim(ROLE_KEY, JsonUtils.toJsonString(roles))
                     .claim(PERMISSION_KEY, JsonUtils.toJsonString(permissions));

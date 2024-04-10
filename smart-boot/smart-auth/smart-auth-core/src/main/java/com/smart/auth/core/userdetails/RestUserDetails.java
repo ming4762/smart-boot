@@ -2,6 +2,7 @@ package com.smart.auth.core.userdetails;
 
 import com.smart.auth.core.constants.AuthTypeEnum;
 import com.smart.auth.core.constants.LoginTypeEnum;
+import com.smart.commons.core.dto.auth.AuthRole;
 import com.smart.commons.core.dto.auth.Permission;
 import com.smart.commons.core.dto.auth.UserTenantDTO;
 import lombok.NonNull;
@@ -35,7 +36,7 @@ public interface RestUserDetails extends UserDetails {
      * @return 角色编码列表
      */
     @NonNull
-    Set<String> getRoles();
+    Set<AuthRole> getRoles();
 
     /**
      * 获取权限

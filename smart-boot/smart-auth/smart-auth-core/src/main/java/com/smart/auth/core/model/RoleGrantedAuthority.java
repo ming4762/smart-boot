@@ -1,10 +1,13 @@
 package com.smart.auth.core.model;
 
 import com.smart.auth.core.constants.GrantedAuthorityTypeEnum;
+import com.smart.commons.core.dto.auth.AuthRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.NonNull;
+
+import java.io.Serial;
 
 /**
  * @author jackson
@@ -14,16 +17,17 @@ import org.springframework.lang.NonNull;
 @NoArgsConstructor
 @Data
 public class RoleGrantedAuthority implements SmartGrantedAuthority {
+    @Serial
     private static final long serialVersionUID = 4316900997007482876L;
 
     private static final String ROLE_START = "ROLE_";
 
-    private String roleCode;
+    private AuthRole authRole;
 
     @Override
     @NonNull
     public String getAuthority() {
-        return ROLE_START + this.roleCode;
+        return ROLE_START + this.authRole.getRoleCode();
     }
 
     @Override
@@ -43,6 +47,6 @@ public class RoleGrantedAuthority implements SmartGrantedAuthority {
 
     @Override
     public String getAuthorityValue() {
-        return this.roleCode;
+        return this.authRole.getRoleCode();
     }
 }

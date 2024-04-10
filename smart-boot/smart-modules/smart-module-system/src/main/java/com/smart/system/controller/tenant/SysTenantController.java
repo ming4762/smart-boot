@@ -56,17 +56,14 @@ public class SysTenantController extends BaseController<SysTenantService, SysTen
         return super.list(parameter);
     }
 
-    @Operation(summary = "批量添加修改租户表")
-    @PostMapping("saveUpdateBatch")
-    @Log(value = "批量添加修改租户表", type = LogOperationTypeEnum.UPDATE)
+    @Operation(summary = "添加修改租户表")
+    @PostMapping("saveUpdate")
+    @Log(value = "添加修改租户表", type = LogOperationTypeEnum.UPDATE)
     @PreAuthorize("hasPermission('sys:tenant:manager', 'save') or hasPermission('sys:tenant:manager', 'update')")
-    public Result<Boolean> saveUpdateBatch(@RequestBody @Valid List<SysTenantSaveUpdateDTO> parameterList) {
-        List<SysTenantPO> modelList = parameterList.stream().map(item -> {
-            SysTenantPO model = new SysTenantPO();
-            BeanUtils.copyProperties(item, model);
-            return model;
-        }).toList();
-        return super.batchSaveUpdate(modelList);
+    public Result<Boolean> saveUpdate(@RequestBody @Valid SysTenantSaveUpdateDTO parameter) {
+        SysTenantPO model = new SysTenantPO();
+        BeanUtils.copyProperties(parameter, model);
+        return super.saveUpdate(model);
     }
 
     @Override

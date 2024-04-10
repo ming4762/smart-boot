@@ -29,7 +29,7 @@ public class UserAccountData implements Serializable {
     /**
      * 角色编码
      */
-    private Set<String> roleCodes;
+    private Set<AuthRole> roleCodes;
 
     /**
      * 权限信息

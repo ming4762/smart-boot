@@ -64,20 +64,18 @@ public interface SysUserService extends BaseService<SysUserPO> {
 
     /**
      * 查询用户功能
-     * @param userId 用户ID
      * @param types 查询的功能类型
      * @return 用户ID表
      */
-    List<SysFunctionPO> listUserFunction(@NonNull Long userId, List<FunctionTypeEnum> types);
+    List<SysFunctionPO> listUserFunction(List<FunctionTypeEnum> types);
 
     /**
      * 查询用户功能，带有国际化信息
-     * @param userId 用户ID
      * @param types 菜单类型
      * @param localeList 语言
      * @return 菜单信息
      */
-    List<SysFunctionListVO> listUserFunctionWithLocale(@NonNull Long userId, List<FunctionTypeEnum> types, List<Locale> localeList);
+    List<SysFunctionListVO> listUserFunctionWithLocale(List<FunctionTypeEnum> types, List<Locale> localeList);
 
     /**
      * 设置角色

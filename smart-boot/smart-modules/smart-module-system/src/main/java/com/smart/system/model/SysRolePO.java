@@ -5,8 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.smart.crud.annotation.TableTenantField;
 import com.smart.crud.model.BaseModelUserTime;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serial;
 
@@ -17,6 +16,9 @@ import java.io.Serial;
 @TableName("sys_role")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class SysRolePO extends BaseModelUserTime {
 
     @Serial
@@ -36,6 +38,11 @@ public class SysRolePO extends BaseModelUserTime {
      * 角色编码
      */
     private String roleCode;
+
+    /**
+     * 是否是超级管理员角色
+     */
+    private Boolean superAdminYn;
 
     /**
      * 备注

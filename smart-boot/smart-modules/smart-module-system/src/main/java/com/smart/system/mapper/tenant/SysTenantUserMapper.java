@@ -6,6 +6,8 @@ import com.smart.crud.mapper.CrudBaseMapper;
 import com.smart.system.model.tenant.SysTenantUserPO;
 import com.smart.system.pojo.dbo.tenant.SysTenantListByUserDO;
 import com.smart.system.pojo.dbo.tenant.SysTenantUserListDO;
+import com.smart.system.pojo.dto.tenant.SysListTenantFunctionDTO;
+import com.smart.system.pojo.dto.tenant.SysListTenantRoleFunctionDTO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -30,4 +32,18 @@ public interface SysTenantUserMapper extends CrudBaseMapper<SysTenantUserPO> {
      * @return 租户信息
      */
     SysTenantListByUserDO selectOneTenantByUser(@Param("userId") Long userId);
+
+    /**
+     * 根据租户角色查询功能ID
+     * @param parameter 参数
+     * @return functionIdList
+     */
+    List<Long> listTenantRoleFunctionIds(SysListTenantRoleFunctionDTO parameter);
+
+    /**
+     * 查询租户所有有效订阅菜单ID
+     * @param parameter 参数
+     * @return 菜单ID
+     */
+    List<Long> listTenantFunctionIds(SysListTenantFunctionDTO parameter);
 }

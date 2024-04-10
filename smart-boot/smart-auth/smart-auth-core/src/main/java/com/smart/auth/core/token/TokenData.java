@@ -1,6 +1,7 @@
 package com.smart.auth.core.token;
 
 import com.smart.auth.core.userdetails.RestUserDetails;
+import com.smart.commons.core.dto.auth.AuthRole;
 import com.smart.commons.core.dto.auth.Permission;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -54,5 +55,5 @@ public class TokenData implements Serializable {
     /**
      * 角色信息
      */
-    private Set<String> roles;
+    private Set<AuthRole> roles;
 }

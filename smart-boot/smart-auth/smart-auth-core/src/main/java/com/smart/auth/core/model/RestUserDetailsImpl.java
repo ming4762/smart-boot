@@ -5,6 +5,7 @@ import com.google.common.collect.Sets;
 import com.smart.auth.core.constants.AuthTypeEnum;
 import com.smart.auth.core.constants.LoginTypeEnum;
 import com.smart.auth.core.userdetails.RestUserDetails;
+import com.smart.commons.core.dto.auth.AuthRole;
 import com.smart.commons.core.dto.auth.Permission;
 import com.smart.commons.core.dto.auth.UserTenantDTO;
 import lombok.Getter;
@@ -99,13 +100,13 @@ public class RestUserDetailsImpl implements RestUserDetails, Serializable {
     @Override
     @NonNull
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    public Set<String> getRoles() {
+    public Set<AuthRole> getRoles() {
         if (Objects.isNull(this.authorities)) {
             return Sets.newHashSet();
         }
         return this.authorities.stream()
                 .filter(SmartGrantedAuthority::isRole)
-                .map(SmartGrantedAuthority::getAuthorityValue)
+                .map(item -> ((RoleGrantedAuthority) item).getAuthRole())
                 .collect(Collectors.toSet());
     }
 

@@ -1,6 +1,7 @@
 package com.smart.auth.core.model;
 
 import com.smart.auth.core.userdetails.RestUserDetails;
+import com.smart.commons.core.dto.auth.AuthRole;
 import lombok.*;
 
 import java.io.Serial;
@@ -27,7 +28,7 @@ public class LoginResult implements Serializable {
 
     private String token;
 
-    private Set<String> roles;
+    private Set<AuthRole> roles;
 
     private Set<String> permissions;
 }

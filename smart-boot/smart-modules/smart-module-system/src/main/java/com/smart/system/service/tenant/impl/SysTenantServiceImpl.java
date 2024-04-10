@@ -4,24 +4,32 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.smart.commons.core.exception.BusinessException;
+import com.smart.commons.core.utils.IdGenerator;
 import com.smart.crud.plus.metadata.SmartTableInfo;
 import com.smart.crud.query.IdParameter;
 import com.smart.crud.service.BaseServiceImpl;
 import com.smart.crud.utils.CrudUtils;
 import com.smart.system.mapper.tenant.SysTenantMapper;
 import com.smart.system.mapper.tenant.SysTenantUserMapper;
+import com.smart.system.model.SysRolePO;
 import com.smart.system.model.SysUserPO;
+import com.smart.system.model.SysUserRolePO;
 import com.smart.system.model.tenant.SysTenantPO;
 import com.smart.system.model.tenant.SysTenantPackagePO;
+import com.smart.system.model.tenant.SysTenantSubscribePO;
 import com.smart.system.model.tenant.SysTenantUserPO;
 import com.smart.system.pojo.dbo.tenant.SysTenantUserListDO;
 import com.smart.system.pojo.dto.tenant.SysTenantBindUserDTO;
 import com.smart.system.pojo.dto.tenant.SysTenantListNoBindUserDTO;
 import com.smart.system.pojo.dto.tenant.SysTenantRemoveBindUserDTO;
 import com.smart.system.pojo.dto.tenant.SysTenantUserListDTO;
+import com.smart.system.service.SysRoleService;
+import com.smart.system.service.SysUserAccountService;
+import com.smart.system.service.SysUserRoleService;
 import com.smart.system.service.SysUserService;
 import com.smart.system.service.tenant.SysTenantPackageService;
 import com.smart.system.service.tenant.SysTenantService;
+import com.smart.system.service.tenant.SysTenantSubscribeService;
 import com.smart.system.service.tenant.SysTenantUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
@@ -45,10 +53,18 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTenantPO> implements SysTenantService {
 
+    private static final String DEFAULT_ROLE_CODE = "ADMIN";
+    private static final String DEFAULT_ROLE_NAME = "管理员";
+    private static final Long ADMIN_USER_ID = 1L;
+
     private final SysTenantUserMapper sysTenantUserMapper;
     private final SysUserService sysUserService;
     private final SysTenantUserService sysTenantUserService;
     private final SysTenantPackageService sysTenantPackageService;
+    private final SysTenantSubscribeService sysTenantSubscribeService;
+    private final SysRoleService sysRoleService;
+    private final SysUserAccountService sysUserAccountService;
+    private final SysUserRoleService sysUserRoleService;
 
     /**
      * 查询租户对应用户
@@ -151,8 +167,18 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
                         .eq(SysTenantPO::getPlatformYn, Boolean.TRUE)
         );
         if (count > 0) {
-            throw new BusinessException("不能删除不可编辑租户");
+            throw new BusinessException("不能删除平台管理租户");
         }
+        // 删除租户用户关联关系表
+        this.sysTenantUserService.remove(
+                new LambdaQueryWrapper<>(SysTenantUserPO.class)
+                        .in(SysTenantUserPO::getTenantId, idList)
+        );
+        // 删除租户订阅
+        this.sysTenantSubscribeService.remove(
+                new LambdaQueryWrapper<>(SysTenantSubscribePO.class)
+                        .in(SysTenantSubscribePO::getTenantId, idList)
+        );
         return super.removeByIds(idList);
     }
 
@@ -178,10 +204,61 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
                             .eq(SysTenantPO::getPlatformYn, Boolean.TRUE)
             );
             if (count > 0) {
-                throw new BusinessException("不能修改不可编辑租户");
+                throw new BusinessException("不能修改平台管理租户");
             }
         }
         return super.saveOrUpdateBatch(entityList);
+    }
+
+    /**
+     * TableId 注解存在更新记录，否插入一条记录
+     *
+     * @param entity 实体对象
+     * @return boolean
+     */
+    @Override
+    public boolean saveOrUpdate(SysTenantPO entity) {
+        boolean isAdd = true;
+        if (entity.getId() != null) {
+            SysTenantPO old = this.getById(entity.getId());
+            if (old != null) {
+                if (Boolean.TRUE.equals(old.getPlatformYn())) {
+                    throw new BusinessException("不能修改平台管理租户");
+                }
+                isAdd = false;
+            }
+        }
+        if (!isAdd) {
+            return this.updateById(entity);
+        }
+        long newId = IdGenerator.nextId();
+        entity.setId(newId);
+        // 创建租户默认的角色
+        long roleId = IdGenerator.nextId();
+        SysRolePO role = SysRolePO.builder()
+                .roleId(roleId)
+                .roleName(DEFAULT_ROLE_NAME)
+                .roleCode(DEFAULT_ROLE_CODE)
+                .superAdminYn(Boolean.TRUE)
+                .seq(10)
+                .tenantId(newId)
+                .build();
+        this.sysRoleService.save(role);
+        // 创建角色人员关联关系
+        SysUserRolePO sysUserRole = new SysUserRolePO();
+        sysUserRole.setUserId(ADMIN_USER_ID);
+        sysUserRole.setRoleId(roleId);
+        sysUserRole.setTenantId(newId);
+        this.sysUserRoleService.save(sysUserRole);
+        // 绑定管理员用户
+        SysTenantUserPO tenantUser = new SysTenantUserPO();
+        tenantUser.setTenantId(newId);
+        tenantUser.setUserId(ADMIN_USER_ID);
+        this.sysTenantUserService.save(tenantUser);
+        // 为管理员创建账户
+        this.sysUserAccountService.createAccount(newId, List.of(ADMIN_USER_ID));
+
+        return this.save(entity);
     }
 
     /**

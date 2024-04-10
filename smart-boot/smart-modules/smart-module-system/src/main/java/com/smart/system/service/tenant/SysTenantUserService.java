@@ -3,6 +3,10 @@ package com.smart.system.service.tenant;
 import com.smart.crud.service.BaseService;
 import com.smart.system.model.tenant.SysTenantUserPO;
 import com.smart.system.pojo.dbo.tenant.SysTenantListByUserDO;
+import com.smart.system.pojo.dto.tenant.SysListTenantFunctionDTO;
+import com.smart.system.pojo.dto.tenant.SysListTenantRoleFunctionDTO;
+
+import java.util.List;
 
 /**
 * sys_tenant_user - 租户用户关联关系表 Service
@@ -17,4 +21,18 @@ public interface SysTenantUserService extends BaseService<SysTenantUserPO> {
      * @return 租户信息
      */
     SysTenantListByUserDO selectOneTenantByUser(Long userId);
+
+    /**
+     * 根据租户角色查询功能ID
+     * @param parameter 参数
+     * @return functionIdList
+     */
+    List<Long> listTenantRoleFunctionIds(SysListTenantRoleFunctionDTO parameter);
+
+    /**
+     * 查询租户所有有效订阅菜单ID
+     * @param parameter 参数
+     * @return 菜单ID
+     */
+    List<Long> listTenantFunctionIds(SysListTenantFunctionDTO parameter);
 }

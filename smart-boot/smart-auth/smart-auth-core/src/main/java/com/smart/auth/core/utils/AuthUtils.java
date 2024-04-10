@@ -1,6 +1,5 @@
 package com.smart.auth.core.utils;
 
-import com.smart.auth.core.constants.RoleEnum;
 import com.smart.auth.core.exception.AuthException;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.commons.core.dto.auth.UserTenantDTO;
@@ -15,6 +14,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -39,8 +39,8 @@ public final class AuthUtils {
     public static boolean isSuperAdmin() {
         return Optional.ofNullable(getCurrentUser())
                 .map(RestUserDetails:: getRoles)
-                .map(item -> item.contains(RoleEnum.ROLE_SUPERADMIN.getRole()))
-                .orElse(false);
+                .orElse(new HashSet<>())
+                .stream().anyMatch(item -> Boolean.TRUE.equals(item.getSuperAdminYn()));
     }
 
     /**

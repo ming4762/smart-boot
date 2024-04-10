@@ -31,6 +31,7 @@ import com.smart.system.service.SysUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -53,22 +54,14 @@ import java.util.stream.Collectors;
 @RequestMapping("sys/user")
 @Tag(name = "用户管理")
 @NonUrlCheck
+@RequiredArgsConstructor
 public class SysUserController extends BaseController<SysUserService, SysUserPO> {
 
     private final SysUserRoleService sysUserRoleService;
-
     private final SysUserAccountService sysUserAccountService;
-
     private final SysUserDeptService sysUserDeptService;
-
     private final SystemAuthUserApi systemAuthUserApi;
 
-    public SysUserController(SysUserRoleService sysUserRoleService, SysUserAccountService sysUserAccountService, SysUserDeptService sysUserDeptService, SystemAuthUserApi systemAuthUserApi) {
-        this.sysUserRoleService = sysUserRoleService;
-        this.sysUserAccountService = sysUserAccountService;
-        this.sysUserDeptService = sysUserDeptService;
-        this.systemAuthUserApi = systemAuthUserApi;
-    }
 
     /**
      * 添加保存方法
