@@ -3,6 +3,7 @@ package com.smart.system.model;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.smart.crud.annotation.TableTenantField;
 import com.smart.crud.model.BaseModelUserTime;
 import lombok.Getter;
 import lombok.Setter;
@@ -85,5 +86,8 @@ public class SysDeptPO extends BaseModelUserTime {
      * 是否有小鸡
      */
     private Boolean hasChild;
+
+    @TableTenantField
+    private Long tenantId;
 
 }
