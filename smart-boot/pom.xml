@@ -30,9 +30,9 @@
         <swagger-annotations.version>2.2.8</swagger-annotations.version>
         <commons-io.version>2.11.0</commons-io.version>
         <jsch.version>0.1.55</jsch.version>
-        <pagehelper.version>1.4.6</pagehelper.version>
+        <pagehelper.version>2.1.0</pagehelper.version>
 
-        <mybatis-plus-boot-starter.version>3.5.5</mybatis-plus-boot-starter.version>
+        <mybatis-plus-boot-starter.version>3.5.6</mybatis-plus-boot-starter.version>
         <jodconverter.version>4.4.2</jodconverter.version>
         <google.zxing.version>3.5.0</google.zxing.version>
         <jxls.version>2.11.0</jxls.version>

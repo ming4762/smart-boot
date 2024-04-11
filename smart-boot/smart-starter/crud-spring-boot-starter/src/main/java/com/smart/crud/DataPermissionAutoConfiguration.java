@@ -1,9 +1,9 @@
 package com.smart.crud;
 
+import com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration;
 import com.smart.crud.datapermission.DataPermissionExecutorInterceptor;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +17,7 @@ import java.util.List;
  * @since 1.0
  */
 @Configuration
-@AutoConfigureAfter(MybatisAutoConfiguration.class)
+@AutoConfigureAfter(MybatisPlusAutoConfiguration.class)
 public class DataPermissionAutoConfiguration implements InitializingBean {
 
     private final List<SqlSessionFactory> sqlSessionFactoryList;

@@ -1,10 +1,10 @@
 package com.smart.crud;
 
+import com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration;
 import com.google.common.collect.ImmutableList;
 import com.smart.crud.mybatis.plugin.CreateUpdateUserTimeMybatisInterceptor;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -20,7 +20,7 @@ import java.util.List;
  * @author zhongming4762
  * 2023/2/4 21:24
  */
-@AutoConfigureAfter({MybatisAutoConfiguration.class, CrudMybatisInterceptorAutoConfiguration.class})
+@AutoConfigureAfter({MybatisPlusAutoConfiguration.class, CrudMybatisInterceptorAutoConfiguration.class})
 @Configuration
 public class MybatisInterceptorAddAutoConfiguration implements InitializingBean, ApplicationContextAware {
 
