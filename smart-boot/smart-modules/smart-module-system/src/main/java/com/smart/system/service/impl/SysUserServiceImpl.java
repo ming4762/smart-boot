@@ -12,6 +12,7 @@ import com.smart.commons.core.exception.SystemException;
 import com.smart.commons.core.i18n.I18nUtils;
 import com.smart.commons.core.tenant.SmartTenantHolder;
 import com.smart.commons.core.utils.DigestUtils;
+import com.smart.commons.core.utils.IdGenerator;
 import com.smart.commons.core.utils.PropertyUtils;
 import com.smart.crud.constants.CrudCommonEnum;
 import com.smart.crud.constants.UserPropertyEnum;
@@ -28,6 +29,7 @@ import com.smart.system.mapper.SysUserMapper;
 import com.smart.system.mapper.tenant.SysTenantMapper;
 import com.smart.system.model.*;
 import com.smart.system.model.tenant.SysTenantPO;
+import com.smart.system.model.tenant.SysTenantUserPO;
 import com.smart.system.pojo.dbo.SysUserWthAccountBO;
 import com.smart.system.pojo.dbo.tenant.SysTenantListByUserDO;
 import com.smart.system.pojo.dto.tenant.SysListTenantFunctionDTO;
@@ -231,6 +233,11 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
             this.sysUserRoleService.remove(
                     new QueryWrapper<SysUserRolePO>().lambda()
                             .in(SysUserRolePO::getUserId, list)
+            );
+            // 删除用户与租户关联关系
+            this.sysTenantUserService.remove(
+                    new QueryWrapper<SysTenantUserPO>().lambda()
+                            .in(SysTenantUserPO::getUserId, list)
             );
             super.removeByIds(list);
         });
@@ -638,6 +645,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         // 更新用户
         var userModel = new SysUserPO();
         BeanUtils.copyProperties(parameter, userModel);
+        boolean isAdd = this.isAdd(userModel);
 
         // 判断是否是系统用户，系统用户没有数据权限
         if (SYSTEM_USER_TYPE.equals(userModel.getUserType())) {
@@ -665,9 +673,20 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
             );
             this.sysUserDeptService.saveOrUpdate(dataScopeModel);
         }
+        // 保存用户与租户关联关系
+        if (isAdd) {
+            long userId = IdGenerator.nextId();
+            userModel.setUserId(userId);
+            SysTenantUserPO tenantUser = new SysTenantUserPO();
+            tenantUser.setUserId(userId);
+            tenantUser.setTenantId(AuthUtils.getNonNullCurrentTenantId());
+            tenantUser.setDefaultYn(Boolean.FALSE);
+            this.sysTenantUserService.save(tenantUser);
 
+            return this.save(userModel);
+        }
         // 执行更新操作
-        return this.saveOrUpdate(userModel);
+        return this.updateById(userModel);
     }
 
     @Override

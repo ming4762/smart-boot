@@ -2,6 +2,7 @@ package com.smart.system.model;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.smart.crud.annotation.TableTenantField;
 import com.smart.crud.model.BaseModelUserTime;
 import com.smart.system.constants.UserDeptIdentEnum;
 import lombok.EqualsAndHashCode;
@@ -31,4 +32,7 @@ public class SysUserDeptPO extends BaseModelUserTime {
     private UserDeptIdentEnum ident;
 
     private String dataScope;
+
+    @TableTenantField
+    private Long tenantId;
 }
