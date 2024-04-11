@@ -3,6 +3,7 @@ package com.smart.auth.security.filter;
 import com.smart.auth.core.authentication.RestUsernamePasswordAuthenticationToken;
 import com.smart.auth.core.handler.AuthSuccessDataHandler;
 import com.smart.auth.core.model.LoginResult;
+import com.smart.auth.core.model.RestUserDetailsImpl;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.auth.core.userdetails.UserDetailsBuilder;
 import com.smart.auth.core.utils.AuthUtils;
@@ -29,6 +30,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 /**
  * Tenant 拦截器
@@ -80,7 +82,12 @@ public class SmartAuthTenantChangeFilter extends OncePerRequestFilter {
                 .fullName(currentUser.getFullName())
                 .password(currentUser.getPassword())
                 .build();
-        RestUserDetails newRestUser = this.userDetailsBuilder.buildUserDetails(authUser);
+        RestUserDetailsImpl newRestUser = (RestUserDetailsImpl) this.userDetailsBuilder.buildUserDetails(authUser);
+        newRestUser.setLoginType(currentUser.getLoginType());
+        newRestUser.setAuthType(currentUser.getAuthType());
+        newRestUser.setBindIp(currentUser.getBindIp());
+        newRestUser.setLoginIp(currentUser.getLoginIp());
+        newRestUser.setLoginTime(LocalDateTime.now());
         // 移除原有token
         this.authApi.offlineByToken(currentUser.getToken());
         // 保存新token
