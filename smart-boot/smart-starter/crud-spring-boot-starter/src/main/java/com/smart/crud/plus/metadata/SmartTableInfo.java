@@ -75,7 +75,7 @@ public class SmartTableInfo extends TableInfo {
     /**
      * 租户字段
      */
-    private TableFieldInfo tenantField;
+    private TableTenantFieldInfo tenantFieldInfo;
 
     /**
      * 是否有逻辑删除key
@@ -92,7 +92,7 @@ public class SmartTableInfo extends TableInfo {
      * @return 是否支持租户
      */
     public boolean supportTenant() {
-        return this.tenantField != null;
+        return this.tenantFieldInfo != null;
     }
 
     /**
@@ -136,7 +136,7 @@ public class SmartTableInfo extends TableInfo {
             // 处理租户字段
             TableTenantField tableTenantField = AnnotationUtils.getAnnotation(field.getField(), TableTenantField.class);
             if (tableTenantField != null) {
-                smartTableInfo.tenantField = field;
+                smartTableInfo.tenantFieldInfo = new TableTenantFieldInfo(field, Arrays.asList(tableTenantField.excludeCommands()));
                 tenantNum.getAndAdd(1);
             }
         });

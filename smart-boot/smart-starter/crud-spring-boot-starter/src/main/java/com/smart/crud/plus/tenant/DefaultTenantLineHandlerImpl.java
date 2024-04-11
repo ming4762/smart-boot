@@ -1,11 +1,13 @@
 package com.smart.crud.plus.tenant;
 
-import com.baomidou.mybatisplus.extension.plugins.handler.TenantLineHandler;
 import com.smart.commons.core.tenant.SmartTenantHolder;
+import com.smart.crud.plus.handlers.SmartTenantLineHandler;
 import com.smart.crud.plus.metadata.SmartTableInfo;
+import com.smart.crud.plus.metadata.TableTenantFieldInfo;
 import com.smart.crud.utils.CrudUtils;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.LongValue;
+import org.apache.ibatis.mapping.SqlCommandType;
 
 /**
  * 租户支持
@@ -13,7 +15,7 @@ import net.sf.jsqlparser.expression.LongValue;
  * 2024/4/9 0:16
  * @since 3.0.0
  */
-public class DefaultTenantLineHandlerImpl implements TenantLineHandler {
+public class DefaultTenantLineHandlerImpl implements SmartTenantLineHandler {
     /**
      * 获取租户 ID 值表达式，只支持单个 ID 值
      * <p>
@@ -31,15 +33,22 @@ public class DefaultTenantLineHandlerImpl implements TenantLineHandler {
 
     /**
      * 获取租户字段名
-     * TODO:目前不支持动态
      * <p>
      * 默认字段名叫: tenant_id
      *
      * @return 租户字段名
      */
     @Override
-    public String getTenantIdColumn() {
-        return TenantLineHandler.super.getTenantIdColumn();
+    public String getTenantIdColumn(String table) {
+        SmartTableInfo tableInfo = CrudUtils.getTableInfo(table);
+        if (tableInfo == null) {
+            return null;
+        }
+        TableTenantFieldInfo tenantFieldInfo = tableInfo.getTenantFieldInfo();
+        if (tenantFieldInfo == null) {
+            return null;
+        }
+        return tenantFieldInfo.getTableFieldInfo().getColumn();
     }
 
     /**
@@ -52,10 +61,25 @@ public class DefaultTenantLineHandlerImpl implements TenantLineHandler {
      */
     @Override
     public boolean ignoreTable(String tableName) {
-        SmartTableInfo tableInfo = CrudUtils.getTableInfo(tableName);
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    /**
+     * 根据表名 sql类别判断是否忽略添加多租户条件
+     *
+     * @param table          表名
+     * @param sqlCommandType SQL操作类型
+     * @return 是否忽略, true:表示忽略，false:需要解析并拼接多租户条件
+     */
+    @Override
+    public boolean ignoreTable(String table, SqlCommandType sqlCommandType) {
+        SmartTableInfo tableInfo = CrudUtils.getTableInfo(table);
         if (tableInfo == null) {
             return true;
         }
-        return !tableInfo.supportTenant();
+        if (!tableInfo.supportTenant()) {
+            return true;
+        }
+        return tableInfo.getTenantFieldInfo().getExcludeCommandTypeList().contains(sqlCommandType);
     }
 }

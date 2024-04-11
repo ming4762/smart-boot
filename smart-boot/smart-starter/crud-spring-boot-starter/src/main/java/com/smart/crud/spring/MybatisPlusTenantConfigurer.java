@@ -1,7 +1,8 @@
 package com.smart.crud.spring;
 
-import com.baomidou.mybatisplus.extension.plugins.handler.TenantLineHandler;
 import com.baomidou.mybatisplus.extension.plugins.inner.TenantLineInnerInterceptor;
+import com.smart.crud.plus.handlers.SmartTenantLineHandler;
+import com.smart.crud.plus.inner.SmartTenantLineInnerInterceptor;
 import com.smart.crud.plus.tenant.DefaultTenantLineHandlerImpl;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -18,13 +19,13 @@ public class MybatisPlusTenantConfigurer {
 
     @Bean
     @ConditionalOnMissingBean
-    public TenantLineHandler tenantLineHandler() {
+    public SmartTenantLineHandler tenantLineHandler() {
         return new DefaultTenantLineHandlerImpl();
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public TenantLineInnerInterceptor tenantLineInnerInterceptor(TenantLineHandler tenantLineHandler) {
-        return new TenantLineInnerInterceptor(tenantLineHandler);
+    public TenantLineInnerInterceptor tenantLineInnerInterceptor(SmartTenantLineHandler smartTenantLineHandler) {
+        return new SmartTenantLineInnerInterceptor(smartTenantLineHandler);
     }
 }
