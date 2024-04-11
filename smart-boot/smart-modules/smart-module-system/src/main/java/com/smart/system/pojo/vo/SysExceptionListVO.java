@@ -2,6 +2,7 @@ package com.smart.system.pojo.vo;
 
 import com.smart.system.model.SysExceptionPO;
 import com.smart.system.model.SysUserPO;
+import com.smart.system.model.tenant.SysTenantPO;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -21,4 +22,9 @@ public class SysExceptionListVO extends SysExceptionPO {
     private static final long serialVersionUID = 7297923753641156750L;
 
     private SysUserPO resolvedUser;
+
+    /**
+     * 租户信息
+     */
+    private SysTenantPO tenant;
 }

@@ -5,14 +5,18 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.smart.auth.core.utils.AuthUtils;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.crud.service.BaseServiceImpl;
+import com.smart.crud.utils.CrudUtils;
 import com.smart.system.mapper.SysExceptionMapper;
 import com.smart.system.model.SysExceptionPO;
 import com.smart.system.model.SysUserPO;
+import com.smart.system.model.tenant.SysTenantPO;
 import com.smart.system.pojo.dto.exception.ExceptionFeedbackDTO;
 import com.smart.system.pojo.dto.exception.SysExceptionMarkResolvedParameter;
 import com.smart.system.pojo.vo.SysExceptionListVO;
 import com.smart.system.service.SysExceptionService;
 import com.smart.system.service.SysUserService;
+import com.smart.system.service.tenant.SysTenantService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -20,10 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -32,16 +33,18 @@ import java.util.stream.Collectors;
 * 2022年6月10日
 */
 @Service
+@RequiredArgsConstructor
 public class SysExceptionServiceImpl extends BaseServiceImpl<SysExceptionMapper, SysExceptionPO> implements SysExceptionService {
 
     private final SysUserService sysUserService;
-
-    public SysExceptionServiceImpl(SysUserService sysUserService) {
-        this.sysUserService = sysUserService;
-    }
+    private final SysTenantService sysTenantService;
 
     @Override
     public List<? extends SysExceptionPO> list(@NonNull QueryWrapper<SysExceptionPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
+        if (!AuthUtils.isPlatformTenant()) {
+            // 非平台租户只能查询当前租户
+            queryWrapper.lambda().eq(SysExceptionPO::getTenantId, AuthUtils.getNonNullCurrentTenantId());
+        }
         queryWrapper.select(SysExceptionPO.class, field -> !"stackTrace".equals(field.getProperty()));
         List<? extends SysExceptionPO> list = super.list(queryWrapper, parameter, paging);
         if (CollectionUtils.isEmpty(list)) {
@@ -53,7 +56,10 @@ public class SysExceptionServiceImpl extends BaseServiceImpl<SysExceptionMapper,
                     BeanUtils.copyProperties(item, vo);
                     return vo;
                 }).toList();
+        // 查询结果
         this.queryResolvedUser(voList);
+        // 查询租户信息
+        this.queryTenant(voList);
         return voList;
     }
 
@@ -68,13 +74,42 @@ public class SysExceptionServiceImpl extends BaseServiceImpl<SysExceptionMapper,
         if (CollectionUtils.isEmpty(userIds)) {
             return;
         }
-        Map<Long, SysUserPO> sysUserMap = this.sysUserService.listByIds(userIds)
+        Map<Long, SysUserPO> sysUserMap = CrudUtils.partitionList(userIds, 900, this.sysUserService::listByIds)
                 .stream()
                 .collect(Collectors.toMap(SysUserPO::getUserId, item -> item));
         if (CollectionUtils.isEmpty(sysUserMap)) {
             return;
         }
         voList.forEach(item -> item.setResolvedUser(sysUserMap.get(item.getResolvedUserId())));
+    }
+
+    /**
+     * 查询租户信息
+     * @param voList vo list
+     */
+    private void queryTenant(List<SysExceptionListVO> voList) {
+        if (CollectionUtils.isEmpty(voList)) {
+            return;
+        }
+        Set<Long> tenantIds = voList.stream()
+                .map(SysExceptionPO::getTenantId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+        if (CollectionUtils.isEmpty(tenantIds)) {
+            return;
+        }
+        Map<Long, SysTenantPO> tenantMap = CrudUtils.partitionList(new ArrayList<>(tenantIds), 900,
+                        list -> this.sysTenantService.lambdaQuery()
+                                .select(SysTenantPO::getId, SysTenantPO::getTenantCode, SysTenantPO::getTenantName, SysTenantPO::getTenantShortName)
+                                .in(SysTenantPO::getId, list)
+                                .list()
+                        )
+                .stream()
+                .collect(Collectors.toMap(SysTenantPO::getId, item -> item));
+        if (CollectionUtils.isEmpty(tenantMap)) {
+            return;
+        }
+        voList.forEach(item -> item.setTenant(tenantMap.get(item.getTenantId())));
     }
 
     @Override

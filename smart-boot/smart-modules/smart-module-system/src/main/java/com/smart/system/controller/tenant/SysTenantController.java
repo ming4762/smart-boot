@@ -52,6 +52,7 @@ public class SysTenantController extends BaseController<SysTenantService, SysTen
     @Override
     @PostMapping("list")
     @Operation(summary = "查询角色列表（支持分页、实体类属性查询）")
+    @PreAuthorize("hasPermission('sys:tenant:manager', 'query')")
     public Result<Object> list(@RequestBody @NonNull PageSortQuery parameter) {
         return super.list(parameter);
     }
@@ -162,5 +163,18 @@ public class SysTenantController extends BaseController<SysTenantService, SysTen
             throw new AccessDeniedException("非平台管理租户无权限创建其他租户账户");
         }
         return Result.success(this.sysUserAccountService.createAccount(parameter.getTenantId(), parameter.getUserIdList()));
+    }
+
+    @Operation(summary = "查询租户权限")
+    @PostMapping("listTenantNoAuth")
+    public Result<List<SysTenantPO>> listTenantNoAuth() {
+        if (!AuthUtils.isPlatformTenant()) {
+            throw new AccessDeniedException("非平台管理租户无权限查看租户列表");
+        }
+        return Result.success(
+                this.service.lambdaQuery()
+                        .orderByAsc(SysTenantPO::getSeq)
+                        .list()
+        );
     }
 }

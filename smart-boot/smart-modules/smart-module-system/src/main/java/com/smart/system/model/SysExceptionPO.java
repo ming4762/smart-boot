@@ -1,8 +1,10 @@
 package com.smart.system.model;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.smart.crud.annotation.TableTenantField;
 import com.smart.crud.model.BaseModel;
 import lombok.*;
+import org.apache.ibatis.mapping.SqlCommandType;
 
 import java.io.Serial;
 import java.time.LocalDateTime;
@@ -101,5 +103,8 @@ public class SysExceptionPO extends BaseModel {
     * resolved_time - 处理时间
     */
     private LocalDateTime resolvedTime;
+
+    @TableTenantField(excludeCommands = SqlCommandType.SELECT)
+    private Long tenantId;
 
 }

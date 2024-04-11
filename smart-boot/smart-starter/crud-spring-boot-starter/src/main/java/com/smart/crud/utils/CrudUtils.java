@@ -28,6 +28,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -158,6 +159,26 @@ public final class CrudUtils {
         return queryWrapper;
     }
 
+    /**
+     * 分割执行函数
+     * @param partData 要分割数据
+     * @param partSize 分割的大小
+     * @param handler 执行函数
+     * @return 分割执行结果
+     * @param <T> 结果类型
+     * @param <P> 参数类型
+     */
+    public static <T, P> List<T> partitionList(Collection<P> partData, int partSize, Function<Collection<P>, List<T>> handler) {
+        if (CollectionUtils.isEmpty(partData)) {
+            return Collections.emptyList();
+        }
+        if (partData.size() <= partSize) {
+            return handler.apply(partData);
+        }
+        return Lists.partition(new ArrayList<>(partData), partSize).stream()
+                .flatMap(list -> handler.apply(list).stream())
+                .toList();
+    }
 
     private static <T extends BaseModel> void createBaseQueryWrapperFromParameters(@NonNull Map<Serializable, Serializable> parameter, @NonNull Class<?> clazz, @NonNull Wrapper<T> queryWrapper) {
         SmartTableInfo tableInfo = getTableInfo(clazz);
