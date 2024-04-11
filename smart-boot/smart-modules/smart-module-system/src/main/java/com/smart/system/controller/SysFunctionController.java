@@ -1,11 +1,13 @@
 package com.smart.system.controller;
 
 import com.smart.auth.core.annotation.NonUrlCheck;
+import com.smart.auth.core.utils.AuthUtils;
 import com.smart.commons.core.log.Log;
 import com.smart.commons.core.log.LogOperationTypeEnum;
 import com.smart.commons.core.message.Result;
 import com.smart.crud.controller.BaseController;
 import com.smart.crud.query.PageSortQuery;
+import com.smart.system.constants.SystemConstantEnum;
 import com.smart.system.model.SysFunctionPO;
 import com.smart.system.pojo.vo.function.SysFunctionVO;
 import com.smart.system.service.SysFunctionService;
@@ -64,7 +66,18 @@ public class SysFunctionController extends BaseController<SysFunctionService, Sy
     @Override
     @PostMapping("list")
     @Operation(summary = "查询功能列表（支持分页、实体类属性查询）")
+    @PreAuthorize("hasPermission('sys:function', 'query')")
     public Result<Object> list(@RequestBody @NonNull PageSortQuery parameter) {
+        return super.list(parameter);
+    }
+
+    @PostMapping("listTenantFunction")
+    @Operation(summary = "查询租户对应的功能（支持分页、实体类属性查询）")
+    public Result<Object> listTenantFunction(@RequestBody @NonNull PageSortQuery parameter) {
+        boolean platformTenant = AuthUtils.isPlatformTenant();
+        if (!platformTenant) {
+            parameter.getParameter().put(SystemConstantEnum.LIST_FILTER_TENANT, Boolean.TRUE);
+        }
         return super.list(parameter);
     }
 }

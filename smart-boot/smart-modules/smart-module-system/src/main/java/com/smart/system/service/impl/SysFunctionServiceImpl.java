@@ -1,6 +1,7 @@
 package com.smart.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.smart.auth.core.utils.AuthUtils;
 import com.smart.crud.constants.CrudCommonEnum;
 import com.smart.crud.model.CreateUpdateUserSetter;
 import com.smart.crud.plus.metadata.SmartTableInfo;
@@ -8,14 +9,18 @@ import com.smart.crud.query.PageSortQuery;
 import com.smart.crud.service.BaseServiceImpl;
 import com.smart.crud.service.UserSetterService;
 import com.smart.crud.utils.CrudUtils;
+import com.smart.system.constants.SystemConstantEnum;
 import com.smart.system.mapper.CommonMapper;
 import com.smart.system.mapper.SysFunctionMapper;
 import com.smart.system.model.SysFunctionPO;
 import com.smart.system.model.SysRoleFunctionPO;
+import com.smart.system.pojo.dto.tenant.SysListTenantFunctionDTO;
 import com.smart.system.pojo.vo.SysFunctionListVO;
 import com.smart.system.pojo.vo.function.SysFunctionVO;
 import com.smart.system.service.SysFunctionService;
 import com.smart.system.service.SysRoleFunctionService;
+import com.smart.system.service.tenant.SysTenantUserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
@@ -32,18 +37,15 @@ import java.util.stream.Collectors;
  * 2020/1/27 12:16 下午
  */
 @Service
+@RequiredArgsConstructor
 public class SysFunctionServiceImpl extends BaseServiceImpl<SysFunctionMapper, SysFunctionPO> implements SysFunctionService {
 
     private UserSetterService userSetterService;
 
     private final CommonMapper commonMapper;
-
     private final SysRoleFunctionService sysRoleFunctionService;
+    private final SysTenantUserService sysTenantUserService;
 
-    public SysFunctionServiceImpl(CommonMapper commonMapper, SysRoleFunctionService sysRoleFunctionService) {
-        this.commonMapper = commonMapper;
-        this.sysRoleFunctionService = sysRoleFunctionService;
-    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -83,6 +85,16 @@ public class SysFunctionServiceImpl extends BaseServiceImpl<SysFunctionMapper, S
 
     @Override
     public List<? extends SysFunctionPO> list(@NonNull QueryWrapper<SysFunctionPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
+        if (Boolean.TRUE.equals(parameter.getParameter().get(SystemConstantEnum.LIST_FILTER_TENANT))) {
+            // 需要根据租户套餐过滤
+            SysListTenantFunctionDTO tenantParameter = new SysListTenantFunctionDTO();
+            tenantParameter.setTenantId(AuthUtils.getNonNullCurrentTenantId());
+            List<Long> functionIds = this.sysTenantUserService.listTenantFunctionIds(tenantParameter);
+            if (CollectionUtils.isEmpty(functionIds)) {
+                return Collections.emptyList();
+            }
+            queryWrapper.lambda().in(SysFunctionPO::getFunctionId, new HashSet<>(functionIds));
+        }
         List<? extends SysFunctionPO> functionList = super.list(queryWrapper, parameter, paging);
         List<SysFunctionListVO> functionVoList = functionList.stream()
                 .map(item -> {
@@ -93,6 +105,7 @@ public class SysFunctionServiceImpl extends BaseServiceImpl<SysFunctionMapper, S
         if (Boolean.TRUE.equals(parameter.getParameter().get(CrudCommonEnum.QUERY_CREATE_UPDATE_USER.name()))) {
             this.queryCreateUpdateUser(functionVoList);
         }
+
         return functionVoList;
     }
 

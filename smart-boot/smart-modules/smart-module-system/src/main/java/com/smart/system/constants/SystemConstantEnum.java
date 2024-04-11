@@ -6,5 +6,10 @@ package com.smart.system.constants;
  * @since 3.0.0
  */
 public enum SystemConstantEnum {
-    TENANT_SUBSCRIBE_LIST_WITH_PACKAGE
+    TENANT_SUBSCRIBE_LIST_WITH_PACKAGE,
+
+    /**
+     * 是否根据租户过滤数据
+     */
+    LIST_FILTER_TENANT,
 }

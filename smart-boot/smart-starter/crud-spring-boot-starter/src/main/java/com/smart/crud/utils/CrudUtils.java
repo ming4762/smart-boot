@@ -152,17 +152,20 @@ public final class CrudUtils {
      * @return 查询参数
      */
     @NonNull
-    public static <T extends BaseModel> QueryWrapper<T> createQueryWrapperFromParameters(@NonNull Map<String, Serializable> parameter, @NonNull Class<?> clazz) {
+    public static <T extends BaseModel> QueryWrapper<T> createQueryWrapperFromParameters(@NonNull Map<Serializable, Serializable> parameter, @NonNull Class<?> clazz) {
         final QueryWrapper<T> queryWrapper = new QueryWrapper<>();
         createBaseQueryWrapperFromParameters(parameter, clazz, queryWrapper);
         return queryWrapper;
     }
 
 
-    private static <T extends BaseModel> void createBaseQueryWrapperFromParameters(@NonNull Map<String, Serializable> parameter, @NonNull Class<?> clazz, @NonNull Wrapper<T> queryWrapper) {
+    private static <T extends BaseModel> void createBaseQueryWrapperFromParameters(@NonNull Map<Serializable, Serializable> parameter, @NonNull Class<?> clazz, @NonNull Wrapper<T> queryWrapper) {
         SmartTableInfo tableInfo = getTableInfo(clazz);
-        for (Map.Entry<String, Serializable> entry : parameter.entrySet()) {
-            String key = entry.getKey();
+        for (Map.Entry<Serializable, Serializable> entry : parameter.entrySet()) {
+            Serializable keySer = entry.getKey();
+            if (!(keySer instanceof String key)) {
+                continue;
+            }
             Serializable value = entry.getValue();
             if (!key.contains(SEARCH_SYMBOL_SPLIT)) {
                 continue;
@@ -177,6 +180,7 @@ public final class CrudUtils {
             TableFieldInfo tableFiled = tableInfo.getTableFiled(keySplit[0]);
             if (tableFiled == null) {
                 log.warn("参数无效，未找到实体类对应属性：{}", keySplit[0]);
+                continue;
             }
             CrudUtils.dealValue(key, value, queryWrapper, symbol, tableFiled.getField(), tableFiled.getColumn());
         }
