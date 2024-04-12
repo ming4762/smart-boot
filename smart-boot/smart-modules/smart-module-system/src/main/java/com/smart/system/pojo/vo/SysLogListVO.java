@@ -3,6 +3,7 @@ package com.smart.system.pojo.vo;
 import com.smart.crud.model.BaseUser;
 import com.smart.crud.model.CreateUserSetter;
 import com.smart.system.model.SysLogPO;
+import com.smart.system.model.tenant.SysTenantPO;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -22,4 +23,9 @@ public class SysLogListVO extends SysLogPO implements CreateUserSetter {
     @Serial
     private static final long serialVersionUID = 8493022723816142778L;
     private BaseUser createUser;
+
+    /**
+     * 租户信息
+     */
+    private SysTenantPO tenant;
 }

@@ -13,14 +13,13 @@ import org.springframework.security.authentication.event.AbstractAuthenticationF
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.authentication.event.LogoutSuccessEvent;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.stereotype.Component;
 
 /**
+ * TODO:这个类好像没用处
  * 登录日志远程保存
  * @author zhongming4762
  * 2023/3/11
  */
-@Component
 public class RemoteAuthEventLogHandler implements AuthEventHandler {
 
     private final SysLogApi sysLogApi;

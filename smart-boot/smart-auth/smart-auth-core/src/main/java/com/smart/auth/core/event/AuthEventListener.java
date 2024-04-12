@@ -58,6 +58,15 @@ public class AuthEventListener implements ApplicationContextAware {
         this.handler(handler -> handler.handleLogoutSuccess(event));
     }
 
+    /**
+     * 租户变更事件
+     * @param event AuthenticationTenantChangeEvent
+     */
+    @EventListener(classes = AuthenticationTenantChangeEvent.class)
+    public void onTenantChange(AuthenticationTenantChangeEvent event) {
+        this.handler(handler -> handler.handleChangeTenant(event));
+    }
+
     private void handler(Consumer<AuthEventHandler> handlerConsumer) {
         for (AuthEventHandler handler : this.handlerList) {
             try {

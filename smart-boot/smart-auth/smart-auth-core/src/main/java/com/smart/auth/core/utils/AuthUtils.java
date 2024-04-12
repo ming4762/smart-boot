@@ -151,4 +151,12 @@ public final class AuthUtils {
         }
         return tenantId;
     }
+
+    /**
+     * 获取Authentication
+     * @return Authentication
+     */
+    public static Authentication getAuthentication() {
+        return SecurityContextHolder.getContext().getAuthentication();
+    }
 }

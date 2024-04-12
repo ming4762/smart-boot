@@ -1,5 +1,6 @@
 package com.smart.auth.security.config;
 
+import com.smart.auth.core.authentication.SmartAuthenticationEventPublisher;
 import com.smart.auth.core.config.SmartSecurityConfigurerAdapter;
 import com.smart.auth.core.handler.AuthSuccessDataHandler;
 import com.smart.auth.core.userdetails.UserDetailsBuilder;
@@ -40,7 +41,8 @@ public class AuthTenantSecurityConfigurer<H extends HttpSecurityBuilder<H>> exte
                 this.getBean(UserDetailsBuilder.class),
                 this.getBean(AuthApi.class),
                 this.getBean(SecurityContextRepository.class),
-                this.getBean(AuthSuccessDataHandler.class)
+                this.getBean(AuthSuccessDataHandler.class),
+                this.getBean(SmartAuthenticationEventPublisher.class)
         );
         builder.addFilterAfter(new SmartAuthTenantInjectFilter(), SecurityContextHolderFilter.class)
                 .addFilterAfter(filter, ExceptionTranslationFilter.class);

@@ -6,10 +6,12 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.smart.commons.core.log.LogOperationTypeEnum;
 import com.smart.commons.core.log.LogSourceEnum;
+import com.smart.crud.annotation.TableTenantField;
 import com.smart.crud.model.BaseModelCreateUserTime;
 import com.smart.module.api.system.constants.LogIdentEnum;
 import com.smart.system.mybatis.type.LogSourceTypeHandler;
 import lombok.*;
+import org.apache.ibatis.mapping.SqlCommandType;
 
 import java.io.Serial;
 
@@ -94,5 +96,8 @@ public class SysLogPO extends BaseModelCreateUserTime {
      */
     @TableField(typeHandler = LogSourceTypeHandler.class)
     private LogSourceEnum logSource;
+
+    @TableTenantField(excludeCommands = SqlCommandType.SELECT)
+    private Long tenantId;
 
 }

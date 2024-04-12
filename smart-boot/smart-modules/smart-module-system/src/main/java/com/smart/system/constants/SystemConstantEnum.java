@@ -12,4 +12,9 @@ public enum SystemConstantEnum {
      * 是否根据租户过滤数据
      */
     LIST_FILTER_TENANT,
+
+    /**
+     * 查询租户信息
+     */
+    LIST_WITH_TENANT,
 }

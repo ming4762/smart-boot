@@ -3,6 +3,7 @@ package com.smart.system.controller;
 import com.smart.commons.core.message.Result;
 import com.smart.crud.controller.BaseController;
 import com.smart.crud.query.PageSortQuery;
+import com.smart.system.constants.SystemConstantEnum;
 import com.smart.system.model.SysLogPO;
 import com.smart.system.service.SysLogService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,6 +30,13 @@ public class SysLogController extends BaseController<SysLogService, SysLogPO> {
     @PostMapping("list")
     @Operation(summary = "查询日志信息", method = "POST")
     public Result<Object> list(@RequestBody @NonNull PageSortQuery parameter) {
+        return super.list(parameter);
+    }
+
+    @PostMapping("listWithTenant")
+    @Operation(summary = "查询日志信息", method = "POST")
+    public Result<Object> listWithTenant(@RequestBody @NonNull PageSortQuery parameter) {
+        parameter.getParameter().put(SystemConstantEnum.LIST_WITH_TENANT, Boolean.TRUE);
         return super.list(parameter);
     }
 

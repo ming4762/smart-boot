@@ -36,4 +36,12 @@ public interface AuthEventHandler extends Ordered {
     default void handleLoginFail(AbstractAuthenticationFailureEvent event) {
         // Do Nothing
     }
+
+    /**
+     * 租户变更事件
+     * @param event 事件
+     */
+    default void handleChangeTenant(AuthenticationTenantChangeEvent event) {
+        // Do Nothing
+    }
 }

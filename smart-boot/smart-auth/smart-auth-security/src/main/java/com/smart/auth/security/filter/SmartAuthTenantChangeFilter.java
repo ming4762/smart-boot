@@ -1,6 +1,7 @@
 package com.smart.auth.security.filter;
 
 import com.smart.auth.core.authentication.RestUsernamePasswordAuthenticationToken;
+import com.smart.auth.core.authentication.SmartAuthenticationEventPublisher;
 import com.smart.auth.core.handler.AuthSuccessDataHandler;
 import com.smart.auth.core.model.LoginResult;
 import com.smart.auth.core.model.RestUserDetailsImpl;
@@ -21,6 +22,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.lang.NonNull;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -49,6 +51,7 @@ public class SmartAuthTenantChangeFilter extends OncePerRequestFilter {
     private final AuthApi authApi;
     private final SecurityContextRepository securityContextRepository;
     private final AuthSuccessDataHandler authSuccessDataHandler;
+    private final SmartAuthenticationEventPublisher smartAuthenticationEventPublisher;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
@@ -67,6 +70,7 @@ public class SmartAuthTenantChangeFilter extends OncePerRequestFilter {
         if (!StringUtils.hasText(tenantStr)) {
             throw new SystemException("切换租户失败，租户ID不存在");
         }
+        Authentication oldAuthentication = AuthUtils.getAuthentication();
         RestUserDetails currentUser = AuthUtils.getCurrentUser();
         if (currentUser == null) {
             throw new SystemException("用户未登录，无法切换租户");
@@ -96,6 +100,8 @@ public class SmartAuthTenantChangeFilter extends OncePerRequestFilter {
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         securityContext.setAuthentication(authentication);
         this.securityContextRepository.saveContext(securityContext, request, response);
+        // 发布事件
+        this.smartAuthenticationEventPublisher.publishTenantChange(oldAuthentication, authentication);
         // 返回新的登录数据
         LoginResult loginResult = this.authSuccessDataHandler.successData(authentication, request, newRestUser.getLoginType());
         RestJsonWriter.writeJson(response, Result.success(loginResult));
@@ -112,7 +118,7 @@ public class SmartAuthTenantChangeFilter extends OncePerRequestFilter {
 
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) {
+    protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
         return !this.isChangeTenant(request);
     }
 }
