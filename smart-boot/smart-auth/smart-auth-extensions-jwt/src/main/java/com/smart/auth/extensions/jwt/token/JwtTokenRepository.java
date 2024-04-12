@@ -76,7 +76,7 @@ public class JwtTokenRepository implements TokenRepository {
             tokenData.setRoles(roles);
             tokenData.setPermissions(permissions);
         }
-        this.authCache.put(this.getTokenKey(user.getUserTenant().getTenantId(), user.getUsername(), token), tokenData, timeout);
+        this.authCache.put(this.getTokenKey(user.getUsername(), user.getUserTenant().getTenantId(), token), tokenData, timeout);
         return token;
     }
 
@@ -89,9 +89,9 @@ public class JwtTokenRepository implements TokenRepository {
      */
     @Override
     public boolean validate(@NonNull String token, @NonNull RestUserDetails user) {
-        String tokenKey = this.getTokenKey(user.getUserTenant().getTenantId(), user.getUsername(), token);
+        String tokenKey = this.getTokenKey(user.getUsername(), user.getUserTenant().getTenantId(), token);
 
-        String attributeKey = this.getAttributeKey(user.getUserTenant().getTenantId(), user.getUsername(), token);
+        String attributeKey = this.getAttributeKey(user.getUsername(), user.getUserTenant().getTenantId(), token);
         // 获取有效期
         TokenData jwtData = (TokenData) this.authCache.get(tokenKey);
         if (jwtData != null) {
@@ -113,8 +113,8 @@ public class JwtTokenRepository implements TokenRepository {
     public boolean invalidateByToken(@NonNull String token) {
         RestUserDetails user = this.jwtResolver.resolver(token);
         Long tenantId = user.getUserTenant().getTenantId();
-        this.authCache.remove(this.getTokenKey(tenantId, user.getUsername(), token));
-        this.authCache.remove(this.getAttributeKey(tenantId, user.getUsername(), token));
+        this.authCache.remove(this.getTokenKey(user.getUsername(), tenantId, token));
+        this.authCache.remove(this.getAttributeKey(user.getUsername(), tenantId, token));
         return true;
     }
 
@@ -127,8 +127,8 @@ public class JwtTokenRepository implements TokenRepository {
     @Override
     public boolean invalidateByUsername(@NonNull Long tenantId, @NonNull String username) {
         // 获取存储的key
-        String matchTokenKey = this.getTokenKey(tenantId, username, null);
-        String matchAttributeKey = this.getAttributeKey(tenantId, username, null);
+        String matchTokenKey = this.getTokenKey(username, tenantId, null);
+        String matchAttributeKey = this.getAttributeKey(username, tenantId, null);
         this.authCache.matchRemove(matchTokenKey);
         this.authCache.matchRemove(matchAttributeKey);
         return true;
@@ -158,7 +158,7 @@ public class JwtTokenRepository implements TokenRepository {
     @NonNull
     @Override
     public Set<String> listToken(@NonNull Long tenantId, @NonNull String username) {
-        Set<String> keys = this.authCache.matchKeys(this.getTokenKey(tenantId, username, null));
+        Set<String> keys = this.authCache.matchKeys(this.getTokenKey(username, tenantId, null));
         if (CollectionUtils.isEmpty(keys)) {
             return new HashSet<>(0);
         }
@@ -190,8 +190,8 @@ public class JwtTokenRepository implements TokenRepository {
      */
     @NonNull
     @Override
-    public List<TokenData> listData(@NonNull Long tenantId, @NonNull String username) {
-        Set<String> keys = this.authCache.matchKeys(this.getTokenKey(tenantId, username, null));
+    public List<TokenData> listData(@NonNull String username, @NonNull Long tenantId) {
+        Set<String> keys = this.authCache.matchKeys(this.getTokenKey(username, tenantId, null));
         if (CollectionUtils.isEmpty(keys)) {
             return new ArrayList<>(0);
         }
@@ -209,7 +209,7 @@ public class JwtTokenRepository implements TokenRepository {
     @Override
     public TokenData getData(String token) {
         RestUserDetails user = this.jwtResolver.resolver(token);
-        TokenData tokenData = (TokenData) this.authCache.get(this.getTokenKey(user.getUserTenant().getTenantId(), user.getUsername(), token));
+        TokenData tokenData = (TokenData) this.authCache.get(this.getTokenKey(user.getUsername(), user.getUserTenant().getTenantId(), token));
         if (tokenData == null) {
             return null;
         }
@@ -224,16 +224,16 @@ public class JwtTokenRepository implements TokenRepository {
      * @return jst
      */
     @NonNull
-    protected String getTokenKey(Long tenantId, String username, String jwt) {
-        List<String> list = Lists.newArrayList(TOKE_KEY_PREFIX, tenantId, username, jwt)
+    protected String getTokenKey(String username, Long tenantId, String jwt) {
+        List<String> list = Lists.newArrayList(TOKE_KEY_PREFIX, username, tenantId, jwt)
                 .stream().filter(Objects::nonNull)
                 .map(Object::toString)
                 .toList();
         return String.join(JWT_SPLIT_KEY, list);
     }
 
-    protected String getAttributeKey(Long tenantId, String username, String jwt) {
-        List<String> list = Lists.newArrayList(DATA_KEY_PREFIX, tenantId, username, jwt)
+    protected String getAttributeKey(String username, Long tenantId, String jwt) {
+        List<String> list = Lists.newArrayList(DATA_KEY_PREFIX, username, tenantId, jwt)
                 .stream().filter(Objects::nonNull)
                 .map(Object::toString)
                 .toList();

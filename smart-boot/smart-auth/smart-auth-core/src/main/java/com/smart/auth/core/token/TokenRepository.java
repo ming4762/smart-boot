@@ -72,7 +72,7 @@ public interface TokenRepository extends Ordered {
      * @return jwt数据
      */
     @NonNull
-    List<TokenData> listData(@NonNull Long tenantId, @NonNull String username);
+    List<TokenData> listData(String username, Long tenantId);
 
     /**
      * 获取token数据

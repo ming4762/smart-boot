@@ -16,11 +16,11 @@ import com.smart.auth.security.pojo.vo.OnlineUserVO;
 import com.smart.commons.core.captcha.dto.CaptchaGenerateDTO;
 import com.smart.commons.core.captcha.dto.CaptchaGenerateParameter;
 import com.smart.commons.core.captcha.dto.CaptchaValidateParameter;
+import com.smart.commons.core.dto.auth.UserTenantDTO;
 import com.smart.commons.core.i18n.I18nUtils;
 import com.smart.commons.core.log.Log;
 import com.smart.commons.core.log.LogOperationTypeEnum;
 import com.smart.commons.core.message.Result;
-import com.smart.commons.core.tenant.SmartTenantHolder;
 import com.smart.commons.core.utils.DigestUtils;
 import com.smart.commons.core.utils.IpUtils;
 import com.smart.commons.core.utils.JsonUtils;
@@ -129,7 +129,22 @@ public class AuthController {
         }
         // 查询所有存储的用户信息
         List<TokenData> userTokenDataList = this.tokenRepositoryList.stream()
-                .flatMap(item -> (parameter.getUsername() == null ? item.listData() : item.listData(SmartTenantHolder.getTenantId(), parameter.getUsername())).stream())
+                .flatMap(item -> {
+                    boolean isPlatformTenant = AuthUtils.isPlatformTenant();
+                    if (isPlatformTenant) {
+                        if (parameter.getUsername() == null) {
+                            // 平台管理租户查询所有
+                            return item.listData().stream();
+                        }
+                        return item.listData(parameter.getUsername(), null).stream();
+                    }
+                    Long tenantId = AuthUtils.getNonNullCurrentTenantId();
+                    if (parameter.getUsername() != null) {
+                        return item.listData(parameter.getUsername(), tenantId).stream();
+                    }
+                    return item.listData().stream()
+                            .filter(userData -> userData.getUser().getUserTenant().getTenantId().equals(tenantId));
+                })
                 .toList();
         Map<Long, List<TokenData>> tokenMap = userTokenDataList.stream()
                 .collect(Collectors.groupingBy(item -> item.getUser().getUserId()));
@@ -143,15 +158,23 @@ public class AuthController {
                     List<OnlineUserVO.UserLoginData> userLoginDataList = tokenMap.get(userId).stream()
                             .map(item -> {
                                 RestUserDetails userDetails = item.getUser();
-                                return new OnlineUserVO.UserLoginData(
-                                        userDetails.getLoginIp(),
-                                        userDetails.getAuthType(),
-                                        userDetails.getLoginType(),
-                                        userDetails.getLoginTime(),
-                                        userDetails.getBindIp(),
-                                        item.getToken(),
-                                        item.getTimeout()
-                                );
+                                OnlineUserVO.UserLoginData.UserLoginDataBuilder builder = OnlineUserVO.UserLoginData.builder()
+                                        .loginIp(userDetails.getLoginIp())
+                                        .authType(userDetails.getAuthType())
+                                        .loginType(userDetails.getLoginType())
+                                        .loginTime(userDetails.getLoginTime())
+                                        .bindIp(userDetails.getBindIp())
+                                        .token(item.getToken())
+                                        .timeout(item.getTimeout());
+
+                                UserTenantDTO userTenant = userDetails.getUserTenant();
+                                if (userTenant != null) {
+                                    builder.tenantCode(userTenant.getTenantCode())
+                                            .tenantName(userTenant.getTenantName())
+                                            .tenantShortName(userTenant.getTenantShortName())
+                                            .platformYn(userTenant.getPlatformYn());
+                                }
+                                return builder.build();
                             }).toList();
                     vo.setUserLoginDataList(userLoginDataList);
                     return vo;

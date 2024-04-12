@@ -20,6 +20,8 @@ import java.util.List;
 @ToString
 public class OnlineUserVO implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = -1402163948123778617L;
 
     private Long userId;
 
@@ -33,9 +35,11 @@ public class OnlineUserVO implements Serializable {
     @Setter
     @AllArgsConstructor
     @NoArgsConstructor
+    @Builder
     public static class UserLoginData implements Serializable {
         @Serial
         private static final long serialVersionUID = 187324682045393739L;
+
         private String loginIp;
 
         /**
@@ -61,5 +65,16 @@ public class OnlineUserVO implements Serializable {
         private String token;
 
         private Duration timeout;
+
+        /**
+         * 租户信息
+         */
+        private String tenantCode;
+
+        private String tenantName;
+
+        private String tenantShortName;
+
+        private Boolean platformYn;
     }
 }

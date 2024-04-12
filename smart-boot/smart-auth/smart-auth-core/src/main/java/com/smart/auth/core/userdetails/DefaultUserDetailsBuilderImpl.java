@@ -153,7 +153,7 @@ public class DefaultUserDetailsBuilderImpl implements UserDetailsBuilder {
             return;
         }
         List<TokenData> tokenDataList = this.tokenRepositoryList.stream()
-                .flatMap(item -> item.listData(userAccountData.getTenant().getTenantId(), user.getUsername()).stream())
+                .flatMap(item -> item.listData(user.getUsername(), userAccountData.getTenant().getTenantId()).stream())
                 .toList();
         if (tokenDataList.size() < connectionNum) {
             // 未达到连接数上限
