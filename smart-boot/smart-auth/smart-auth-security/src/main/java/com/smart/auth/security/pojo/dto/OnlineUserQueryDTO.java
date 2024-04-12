@@ -26,4 +26,7 @@ public class OnlineUserQueryDTO implements Serializable {
     private static final long serialVersionUID = 7731927759841756765L;
     @Schema(title = "用户名")
     private String username;
+
+    @Schema(title = "租户ID")
+    private Long tenantId;
 }

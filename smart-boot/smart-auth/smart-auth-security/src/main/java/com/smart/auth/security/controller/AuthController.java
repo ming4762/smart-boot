@@ -134,9 +134,15 @@ public class AuthController {
                     if (isPlatformTenant) {
                         if (parameter.getUsername() == null) {
                             // 平台管理租户查询所有
-                            return item.listData().stream();
+                            return item.listData().stream()
+                                    .filter(userData -> {
+                                        if (parameter.getTenantId() == null) {
+                                            return true;
+                                        }
+                                        return parameter.getTenantId().equals(userData.getUser().getUserTenant().getTenantId());
+                                    });
                         }
-                        return item.listData(parameter.getUsername(), null).stream();
+                        return item.listData(parameter.getUsername(), parameter.getTenantId()).stream();
                     }
                     Long tenantId = AuthUtils.getNonNullCurrentTenantId();
                     if (parameter.getUsername() != null) {
