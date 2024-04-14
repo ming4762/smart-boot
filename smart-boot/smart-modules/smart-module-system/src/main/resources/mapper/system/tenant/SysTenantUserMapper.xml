@@ -57,7 +57,8 @@
             A.tenant_code,
             A.tenant_name,
             A.tenant_short_name,
-            A.platform_yn
+            A.platform_yn,
+            B.useYn
         from sys_tenant A
         JOIN sys_tenant_user B ON A.id = B.tenant_id
         WHERE user_id = #{userId}

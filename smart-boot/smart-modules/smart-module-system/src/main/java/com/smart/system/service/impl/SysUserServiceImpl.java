@@ -372,6 +372,9 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         if (userTenant == null) {
             return userAccountData;
         }
+        if (Boolean.FALSE.equals(userTenant.getUseYn())) {
+            return userAccountData;
+        }
         SmartTenantHolder.set(userTenant);
         // 查询账户信息
         SysUserAccountPO sysUserAccount = this.sysUserAccountService.getOne(
@@ -485,9 +488,17 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         if (sysTenant == null) {
             return null;
         }
+        SysTenantUserPO sysTenantUser = this.sysTenantUserService.lambdaQuery()
+                .eq(SysTenantUserPO::getUserId, parameter.getUserId())
+                .eq(SysTenantUserPO::getTenantId, parameter.getTenantId())
+                .one();
+        if (sysTenantUser == null) {
+            return null;
+        }
         UserTenantDTO tenantDto = new UserTenantDTO();
         BeanUtils.copyProperties(sysTenant, tenantDto);
         tenantDto.setTenantId(parameter.getTenantId());
+        tenantDto.setUseYn(sysTenantUser.getUseYn());
         return tenantDto;
     }
 

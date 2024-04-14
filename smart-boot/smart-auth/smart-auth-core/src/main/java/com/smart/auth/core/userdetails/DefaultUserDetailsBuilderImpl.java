@@ -124,6 +124,9 @@ public class DefaultUserDetailsBuilderImpl implements UserDetailsBuilder {
      * @return 是否正常成功
      */
     protected boolean validateAccount(AuthUserDTO user, UserAccountData userAccountData) {
+        if (Boolean.FALSE.equals(userAccountData.getTenant().getUseYn())) {
+            throw new DisabledException(I18nUtils.get(AuthI18nMessage.ACCOUNT_DISABLED));
+        }
         UserAccountDTO userAccount = userAccountData.getAccount();
         if (userAccount == null) {
             throw new DisabledException(I18nUtils.get(AuthI18nMessage.ACCOUNT_NOT_CREATED));

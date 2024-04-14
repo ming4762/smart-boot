@@ -32,4 +32,6 @@ public class SysTenantListByUserDO implements Serializable {
      * 是否平台管理租户
      */
     private Boolean platformYn;
+
+    private Boolean useYn;
 }
