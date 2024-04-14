@@ -12,16 +12,12 @@ import com.smart.commons.core.log.LogOperationTypeEnum;
 import com.smart.commons.core.message.Result;
 import com.smart.commons.core.utils.TreeUtils;
 import com.smart.crud.controller.BaseController;
-import com.smart.crud.parameter.SetUseYnParameter;
 import com.smart.crud.query.IdParameter;
 import com.smart.module.api.system.SystemAuthUserApi;
 import com.smart.module.api.system.parameter.UserAccountUnLockParameter;
 import com.smart.system.constants.UserDeptIdentEnum;
 import com.smart.system.model.*;
-import com.smart.system.pojo.dto.user.UserAccountSaveDTO;
-import com.smart.system.pojo.dto.user.UserListDTO;
-import com.smart.system.pojo.dto.user.UserSetRoleDTO;
-import com.smart.system.pojo.dto.user.UserUpdateDTO;
+import com.smart.system.pojo.dto.user.*;
 import com.smart.system.pojo.vo.SysFunctionListVO;
 import com.smart.system.pojo.vo.user.SysUserWithDataScopeDTO;
 import com.smart.system.service.SysUserAccountService;
@@ -34,6 +30,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -234,12 +231,14 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
      * @param parameter 参数
      * @return 是否设置成功
      */
-    @Override
     @PostMapping("setUseYn")
     @Log(value = "设置用户启停状态", type = LogOperationTypeEnum.UPDATE)
     @Operation(summary = "设置用户启停状态")
     @PreAuthorize("hasPermission('sys:user', 'setUseYn')")
-    public Result<Boolean> setUseYn(@RequestBody @Valid SetUseYnParameter parameter) {
+    public Result<Boolean> setUseYn(@RequestBody @Valid SysUserSetUseYnParameter parameter) {
+        if (!AuthUtils.isPlatformTenant() && !CollectionUtils.isEmpty(parameter.getTenantIdList())) {
+            throw new AccessDeniedException("非平台租户无权停用其他租户用户");
+        }
         return super.setUseYn(parameter);
     }
 

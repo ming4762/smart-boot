@@ -2,6 +2,7 @@ package com.smart.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -17,6 +18,7 @@ import com.smart.commons.core.utils.PropertyUtils;
 import com.smart.crud.constants.CrudCommonEnum;
 import com.smart.crud.constants.UserPropertyEnum;
 import com.smart.crud.datapermission.DataPermissionScope;
+import com.smart.crud.parameter.SetUseYnParameter;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.crud.service.BaseServiceImpl;
 import com.smart.crud.service.UserSetterService;
@@ -34,6 +36,7 @@ import com.smart.system.pojo.dbo.SysUserWthAccountBO;
 import com.smart.system.pojo.dbo.tenant.SysTenantListByUserDO;
 import com.smart.system.pojo.dto.tenant.SysListTenantFunctionDTO;
 import com.smart.system.pojo.dto.tenant.SysListTenantRoleFunctionDTO;
+import com.smart.system.pojo.dto.user.SysUserSetUseYnParameter;
 import com.smart.system.pojo.dto.user.UserListDTO;
 import com.smart.system.pojo.dto.user.UserSetRoleDTO;
 import com.smart.system.pojo.vo.SysFunctionListVO;
@@ -54,6 +57,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -98,20 +102,23 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
 
     @Override
     public List<? extends SysUserPO> list(@NonNull QueryWrapper<SysUserPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
-        if (parameter instanceof UserListDTO userListParameter) {
-            List<Long> deptIdList = userListParameter.getDeptIdList();
-            if (!CollectionUtils.isEmpty(deptIdList)) {
-                // 查询部门信息
-                Set<Long> allDeptIds = this.sysDeptService.queryAllChildIds(new HashSet<>(deptIdList));
-                allDeptIds.addAll(deptIdList);
-                // 添加部门查询条件
-                String deptStr = allDeptIds.stream().map(Object::toString).collect(Collectors.joining(","));
-                queryWrapper.apply(String.format("user_id in (select m.user_id from sys_user_dept m where m.dept_id in (%s) and ident = 'USER_DEPT')", deptStr));
-            }
+        UserListDTO userListParameter = (UserListDTO) parameter;
+        List<Long> deptIdList = userListParameter.getDeptIdList();
+        if (!CollectionUtils.isEmpty(deptIdList)) {
+            // 查询部门信息
+            Set<Long> allDeptIds = this.sysDeptService.queryAllChildIds(new HashSet<>(deptIdList));
+            allDeptIds.addAll(deptIdList);
+            // 添加部门查询条件
+            String deptStr = allDeptIds.stream().map(Object::toString).collect(Collectors.joining(","));
+            queryWrapper.apply(String.format("user_id in (select m.user_id from sys_user_dept m where m.dept_id in (%s) and ident = 'USER_DEPT')", deptStr));
         }
         // 添加租户查询条件
         if (!AuthUtils.isPlatformTenant()) {
-            queryWrapper.apply("user_id in (select M.user_id from sys_tenant_user M where M.tenant_id = {0})", AuthUtils.getNonNullCurrentTenantId());
+            if (userListParameter.getUseYn() == null) {
+                queryWrapper.apply("user_id in (select M.user_id from sys_tenant_user M where M.tenant_id = {0})", AuthUtils.getNonNullCurrentTenantId());
+            } else {
+                queryWrapper.apply("user_id in (select M.user_id from sys_tenant_user M where M.tenant_id = {0} and M.use_yn = {1})", AuthUtils.getNonNullCurrentTenantId(), userListParameter.getUseYn());
+            }
         }
         List<? extends SysUserPO> userList = super.list(queryWrapper, parameter, paging);
         if (CollectionUtils.isEmpty(userList)) {
@@ -811,5 +818,31 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
                                 )
                         )
                 );
+    }
+
+    /**
+     * 设置启停状态
+     *
+     * @param parameter 参数
+     * @return 是否设置成功
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean setUseYn(@NonNull SetUseYnParameter parameter) {
+        SysUserSetUseYnParameter userParameter = (SysUserSetUseYnParameter) parameter;
+        List<Long> tenantIdList = userParameter.getTenantIdList();
+        if (CollectionUtils.isEmpty(tenantIdList)) {
+            tenantIdList = List.of(AuthUtils.getNonNullCurrentTenantId());
+        }
+        RestUserDetails currentUser = AuthUtils.getNonNullCurrentUser();
+        return this.sysTenantUserService.update(
+                new LambdaUpdateWrapper<>(SysTenantUserPO.class)
+                        .set(SysTenantUserPO::getUseYn, parameter.getUseYn())
+                        .set(SysTenantUserPO::getUpdateUserId, currentUser.getUserId())
+                        .set(SysTenantUserPO::getUpdateBy, currentUser.getFullName())
+                        .set(SysTenantUserPO::getUpdateTime, LocalDateTime.now())
+                        .in(SysTenantUserPO::getUserId, parameter.getIdList())
+                        .in(SysTenantUserPO::getTenantId, tenantIdList)
+        );
     }
 }

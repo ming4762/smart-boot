@@ -44,6 +44,11 @@ public class SysTenantUserPO extends BaseModel {
     private Boolean defaultYn;
 
     /**
+     * 是否在当前租户启用
+     */
+    private Boolean useYn;
+
+    /**
     * create_time - createTime
     */
     private LocalDateTime createTime;
@@ -57,5 +62,11 @@ public class SysTenantUserPO extends BaseModel {
     * create_by - createBy
     */
     private String createBy;
+
+    private Long updateUserId;
+
+    private LocalDateTime updateTime;
+
+    private String updateBy;
 
 }

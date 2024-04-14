@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serial;
 import java.util.List;
 
 /**
@@ -19,5 +20,10 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class UserListDTO extends PageSortQuery {
 
+    @Serial
+    private static final long serialVersionUID = -3179733381629820554L;
+
     private List<Long> deptIdList;
+
+    private Boolean useYn;
 }
