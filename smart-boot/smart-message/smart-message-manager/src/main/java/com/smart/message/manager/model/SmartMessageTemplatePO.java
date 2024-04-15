@@ -3,9 +3,12 @@ package com.smart.message.manager.model;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.smart.crud.annotation.TableTenantField;
 import com.smart.crud.model.BaseModelUserTime;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.io.Serial;
 
 /**
 * smart_message_template - 消息模板表
@@ -17,6 +20,8 @@ import lombok.Setter;
 @TableName("smart_message_template")
 public class SmartMessageTemplatePO extends BaseModelUserTime {
 
+    @Serial
+    private static final long serialVersionUID = -2664560637110327713L;
     /**
     * id - id
     */
@@ -48,4 +53,6 @@ public class SmartMessageTemplatePO extends BaseModelUserTime {
     */
     private Boolean useYn;
 
+    @TableTenantField
+    private Long tenantId;
 }

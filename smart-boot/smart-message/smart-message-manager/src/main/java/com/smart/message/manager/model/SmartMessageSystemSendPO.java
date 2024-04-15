@@ -1,10 +1,12 @@
 package com.smart.message.manager.model;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.smart.crud.annotation.TableTenantField;
 import com.smart.crud.model.BaseModelUserTime;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
 import java.time.LocalDateTime;
 
 /**
@@ -17,6 +19,8 @@ import java.time.LocalDateTime;
 @TableName("smart_message_system_send")
 public class SmartMessageSystemSendPO extends BaseModelUserTime {
 
+    @Serial
+    private static final long serialVersionUID = 1211913375633237815L;
     /**
     * id - id
     */
@@ -47,4 +51,6 @@ public class SmartMessageSystemSendPO extends BaseModelUserTime {
     */
     private Boolean starYn;
 
+    @TableTenantField
+    private Long tenantId;
 }

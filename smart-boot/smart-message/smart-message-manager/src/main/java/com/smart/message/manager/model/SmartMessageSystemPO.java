@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.smart.crud.annotation.TableTenantField;
 import com.smart.crud.model.BaseModelUserTime;
 import com.smart.crud.mybatis.handler.LongSplitTypeHandler;
 import com.smart.message.manager.constants.MessageSendStatusEnum;
@@ -13,6 +14,7 @@ import com.smart.module.api.message.constants.MessagePriorityEnum;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -26,6 +28,8 @@ import java.util.List;
 @TableName(value = "smart_message_system", autoResultMap = true)
 public class SmartMessageSystemPO extends BaseModelUserTime {
 
+    @Serial
+    private static final long serialVersionUID = 2096055923633927165L;
     /**
     * id - id
     */
@@ -113,4 +117,6 @@ public class SmartMessageSystemPO extends BaseModelUserTime {
     */
     private Boolean useYn;
 
+    @TableTenantField
+    private Long tenantId;
 }
