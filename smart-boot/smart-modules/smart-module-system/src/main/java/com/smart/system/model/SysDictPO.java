@@ -3,9 +3,11 @@ package com.smart.system.model;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.smart.crud.annotation.TableTenantField;
 import com.smart.crud.model.BaseModelUserTime;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.ibatis.mapping.SqlCommandType;
 
 import java.io.Serial;
 
@@ -52,4 +54,6 @@ public class SysDictPO extends BaseModelUserTime {
     */
     private Boolean deleteYn;
 
+    @TableTenantField(excludeCommands = SqlCommandType.SELECT)
+    private Long tenantId;
 }

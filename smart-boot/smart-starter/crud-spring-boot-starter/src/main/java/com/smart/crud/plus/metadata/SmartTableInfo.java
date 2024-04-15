@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.toolkit.Assert;
 import com.baomidou.mybatisplus.core.toolkit.LambdaUtils;
 import com.baomidou.mybatisplus.core.toolkit.support.LambdaMeta;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
-import com.smart.commons.core.proyx.ExtendMethodInterceptor;
+import com.smart.commons.core.proxy.ExtendMethodInterceptor;
 import com.smart.crud.annotation.TableTenantField;
 import com.smart.crud.annotation.TableUseYnField;
 import com.smart.crud.constants.UserPropertyEnum;

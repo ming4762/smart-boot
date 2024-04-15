@@ -2,12 +2,21 @@ package com.smart.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.common.collect.Lists;
+import com.smart.auth.core.utils.AuthUtils;
+import com.smart.crud.query.PageSortQuery;
 import com.smart.crud.service.BaseServiceImpl;
+import com.smart.system.constants.SystemConstantEnum;
 import com.smart.system.mapper.SysDictMapper;
 import com.smart.system.model.SysDictItemPO;
 import com.smart.system.model.SysDictPO;
+import com.smart.system.model.tenant.SysTenantPO;
+import com.smart.system.pojo.vo.SysDictVO;
 import com.smart.system.service.SysDictItemService;
 import com.smart.system.service.SysDictService;
+import com.smart.system.service.tenant.SysTenantService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -21,12 +30,60 @@ import java.util.stream.Collectors;
 * 2022-1-29 10:34:36
 */
 @Service
+@RequiredArgsConstructor
 public class SysDictServiceImpl extends BaseServiceImpl<SysDictMapper, SysDictPO> implements SysDictService {
 
     private final SysDictItemService sysDictItemService;
+    private final SysTenantService sysTenantService;
 
-    public SysDictServiceImpl(SysDictItemService sysDictItemService) {
-        this.sysDictItemService = sysDictItemService;
+    /**
+     * 查询函数
+     *
+     * @param queryWrapper 查询参数
+     * @param parameter    原始参数
+     * @param paging       是否分页
+     * @return 查询结果
+     */
+    @Override
+    public List<? extends SysDictPO> list(@NonNull QueryWrapper<SysDictPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
+        if (Boolean.TRUE.equals(parameter.getParameter().get(SystemConstantEnum.LIST_FILTER_TENANT)) && (!AuthUtils.isPlatformTenant())) {
+            queryWrapper.lambda().in(SysDictPO::getTenantId, List.of(0L, AuthUtils.getNonNullCurrentTenantId()));
+        }
+        List<? extends SysDictPO> dataList = super.list(queryWrapper, parameter, paging);
+        if (CollectionUtils.isEmpty(dataList)) {
+            return dataList;
+        }
+        List<SysDictVO> voList = dataList.stream()
+                .map(item -> {
+                    SysDictVO vo = new SysDictVO();
+                    BeanUtils.copyProperties(item, vo);
+                    return vo;
+                }).toList();
+        if (Boolean.TRUE.equals(parameter.getParameter().get(SystemConstantEnum.LIST_WITH_TENANT))) {
+            this.queryTenant(voList);
+        }
+
+        return voList;
+    }
+
+    /**
+     * 查询租户信息
+     * @param voList voList
+     */
+    private void queryTenant(List<SysDictVO> voList) {
+        Set<Long> tenantIds = voList.stream()
+                .map(SysDictPO::getTenantId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+        if (CollectionUtils.isEmpty(tenantIds)) {
+            return;
+        }
+        Map<Long, SysTenantPO> tenantMap = this.sysTenantService.lambdaQuery()
+                .select(SysTenantPO::getId, SysTenantPO::getTenantName, SysTenantPO::getTenantCode, SysTenantPO::getTenantShortName)
+                .in(SysTenantPO::getId, tenantIds)
+                .list().stream()
+                .collect(Collectors.toMap(SysTenantPO::getId, item -> item));
+        voList.forEach(item -> item.setTenant(tenantMap.get(item.getTenantId())));
     }
 
     /**

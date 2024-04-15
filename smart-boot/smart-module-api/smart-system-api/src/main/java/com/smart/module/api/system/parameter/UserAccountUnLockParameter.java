@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -19,6 +20,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class UserAccountUnLockParameter implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = -1268955707784009659L;
     @NonNull
     private Long userId;
 

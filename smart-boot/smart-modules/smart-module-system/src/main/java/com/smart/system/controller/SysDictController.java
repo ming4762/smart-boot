@@ -7,6 +7,7 @@ import com.smart.crud.controller.BaseController;
 import com.smart.crud.query.IdParameter;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.crud.query.StringParameter;
+import com.smart.system.constants.SystemConstantEnum;
 import com.smart.system.model.SysDictItemPO;
 import com.smart.system.model.SysDictPO;
 import com.smart.system.service.SysDictService;
@@ -39,6 +40,14 @@ public class SysDictController extends BaseController<SysDictService, SysDictPO>
     @PostMapping("list")
     @Operation(summary = "查询角色列表（支持分页、实体类属性查询）")
     public Result<Object> list(@RequestBody @NonNull PageSortQuery parameter) {
+        return super.list(parameter);
+    }
+
+    @PostMapping("listFilterTenant")
+    @Operation(summary = "查询角色列表（支持分页、实体类属性查询）")
+    public Result<Object> listFilterTenant(@RequestBody @NonNull PageSortQuery parameter) {
+        parameter.getParameter().put(SystemConstantEnum.LIST_FILTER_TENANT, Boolean.TRUE);
+        parameter.getParameter().put(SystemConstantEnum.LIST_WITH_TENANT, Boolean.TRUE);
         return super.list(parameter);
     }
 

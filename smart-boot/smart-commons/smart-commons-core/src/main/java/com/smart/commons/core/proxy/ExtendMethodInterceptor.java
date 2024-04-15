@@ -1,4 +1,4 @@
-package com.smart.commons.core.proyx;
+package com.smart.commons.core.proxy;
 
 import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.cglib.proxy.MethodProxy;
