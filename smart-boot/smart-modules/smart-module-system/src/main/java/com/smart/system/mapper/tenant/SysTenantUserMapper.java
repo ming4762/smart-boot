@@ -8,6 +8,7 @@ import com.smart.system.pojo.dbo.tenant.SysTenantListByUserDO;
 import com.smart.system.pojo.dbo.tenant.SysTenantUserListDO;
 import com.smart.system.pojo.dto.tenant.SysListTenantFunctionDTO;
 import com.smart.system.pojo.dto.tenant.SysListTenantRoleFunctionDTO;
+import com.smart.system.pojo.parameter.tenant.ListTenantByUserParameter;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -27,11 +28,11 @@ public interface SysTenantUserMapper extends CrudBaseMapper<SysTenantUserPO> {
     List<SysTenantUserListDO> listTenantUser(@Param(Constants.WRAPPER)Wrapper<SysTenantUserPO> parameter);
 
     /**
-     * 根据用户ID查询满足条件的一个租户
-     * @param userId 用户ID
+     * 根据用户ID查询满足条件的租户
+     * @param parameter 参数
      * @return 租户信息
      */
-    SysTenantListByUserDO selectOneTenantByUser(@Param("userId") Long userId);
+    List<SysTenantListByUserDO> listTenantByUser(ListTenantByUserParameter parameter);
 
     /**
      * 根据租户角色查询功能ID

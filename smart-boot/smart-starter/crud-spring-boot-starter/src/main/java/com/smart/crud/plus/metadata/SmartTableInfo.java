@@ -136,7 +136,11 @@ public class SmartTableInfo extends TableInfo {
             // 处理租户字段
             TableTenantField tableTenantField = AnnotationUtils.getAnnotation(field.getField(), TableTenantField.class);
             if (tableTenantField != null) {
-                smartTableInfo.tenantFieldInfo = new TableTenantFieldInfo(field, Arrays.asList(tableTenantField.excludeCommands()));
+                smartTableInfo.tenantFieldInfo = TableTenantFieldInfo.builder()
+                        .tableFieldInfo(field)
+                        .ignoreCommandList(Arrays.asList(tableTenantField.ignoreCommands()))
+                        .platformTenantIgnoreCommandList(Arrays.asList(tableTenantField.platformTenantIgnoreCommands()))
+                        .build();
                 tenantNum.getAndAdd(1);
             }
         });

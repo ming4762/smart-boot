@@ -97,7 +97,7 @@ public class SysLogPO extends BaseModelCreateUserTime {
     @TableField(typeHandler = LogSourceTypeHandler.class)
     private LogSourceEnum logSource;
 
-    @TableTenantField(excludeCommands = SqlCommandType.SELECT)
+    @TableTenantField(platformTenantIgnoreCommands = SqlCommandType.SELECT)
     private Long tenantId;
 
 }

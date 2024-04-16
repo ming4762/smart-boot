@@ -52,7 +52,7 @@
     </select>
 
     <!--  根据用户ID查询满足条件的一个租户  -->
-    <select id="selectOneTenantByUser" resultType="com.smart.system.pojo.dbo.tenant.SysTenantListByUserDO">
+    <select id="listTenantByUser" resultType="com.smart.system.pojo.dbo.tenant.SysTenantListByUserDO" parameterType="com.smart.system.pojo.parameter.tenant.ListTenantByUserParameter">
         select A.id tenantId,
             A.tenant_code,
             A.tenant_name,
@@ -67,10 +67,9 @@
             AND (
                 (A.expire_time is null AND A.expire_time Is null)
                 OR
-                (A.effect_time &lt;= sysdate() AND A.expire_time &gt;= sysdate())
+                (A.effect_time &lt;= #{now} AND A.expire_time &gt;= #{now})
             )
-        order by IF(B.default_yn, 1, 2), A.seq
-        limit 1
+        order by case when B.default_yn = 1 then 1 else 2 end, A.seq
     </select>
 
     <!--  根据租户角色查询功能ID  -->
@@ -90,7 +89,7 @@
             <foreach collection="roleIdList" item="item" separator=",">
                 #{item}
             </foreach>
-            ) ;
+            )
     </select>
     <!--  查询租户所有有效订阅菜单ID  -->
     <select id="listTenantFunctionIds" resultType="java.lang.Long" parameterType="com.smart.system.pojo.dto.tenant.SysListTenantFunctionDTO">

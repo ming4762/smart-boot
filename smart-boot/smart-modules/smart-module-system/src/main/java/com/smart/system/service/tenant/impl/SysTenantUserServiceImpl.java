@@ -6,8 +6,10 @@ import com.smart.system.model.tenant.SysTenantUserPO;
 import com.smart.system.pojo.dbo.tenant.SysTenantListByUserDO;
 import com.smart.system.pojo.dto.tenant.SysListTenantFunctionDTO;
 import com.smart.system.pojo.dto.tenant.SysListTenantRoleFunctionDTO;
+import com.smart.system.pojo.parameter.tenant.ListTenantByUserParameter;
 import com.smart.system.service.tenant.SysTenantUserService;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -27,7 +29,11 @@ public class SysTenantUserServiceImpl extends BaseServiceImpl<SysTenantUserMappe
      */
     @Override
     public SysTenantListByUserDO selectOneTenantByUser(Long userId) {
-        return this.baseMapper.selectOneTenantByUser(userId);
+        List<SysTenantListByUserDO> tenantList = this.baseMapper.listTenantByUser(new ListTenantByUserParameter(userId));
+        if (CollectionUtils.isEmpty(tenantList)) {
+            return null;
+        }
+        return tenantList.get(0);
     }
 
     /**

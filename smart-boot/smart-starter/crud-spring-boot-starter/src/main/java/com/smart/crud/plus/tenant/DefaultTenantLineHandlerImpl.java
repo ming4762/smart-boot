@@ -1,5 +1,6 @@
 package com.smart.crud.plus.tenant;
 
+import com.smart.commons.core.dto.auth.UserTenantDTO;
 import com.smart.commons.core.tenant.SmartTenantHolder;
 import com.smart.crud.plus.handlers.SmartTenantLineHandler;
 import com.smart.crud.plus.metadata.SmartTableInfo;
@@ -8,6 +9,8 @@ import com.smart.crud.utils.CrudUtils;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.LongValue;
 import org.apache.ibatis.mapping.SqlCommandType;
+
+import java.util.Optional;
 
 /**
  * 租户支持
@@ -80,6 +83,13 @@ public class DefaultTenantLineHandlerImpl implements SmartTenantLineHandler {
         if (!tableInfo.supportTenant()) {
             return true;
         }
-        return tableInfo.getTenantFieldInfo().getExcludeCommandTypeList().contains(sqlCommandType);
+
+        if (tableInfo.getTenantFieldInfo().getIgnoreCommandList().contains(sqlCommandType)) {
+            return true;
+        }
+        boolean platformYn = Optional.ofNullable(SmartTenantHolder.get())
+                .map(UserTenantDTO::getPlatformYn)
+                .orElse(false);
+        return platformYn && tableInfo.getTenantFieldInfo().getPlatformTenantIgnoreCommandList().contains(sqlCommandType);
     }
 }

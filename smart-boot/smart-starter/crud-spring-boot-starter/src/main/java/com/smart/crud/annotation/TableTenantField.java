@@ -16,5 +16,11 @@ public @interface TableTenantField {
      * 排除的 SQL命令类型
      * @return 排除的 SQL命令类型
      */
-    SqlCommandType[] excludeCommands() default {};
+    SqlCommandType[] ignoreCommands() default {};
+
+    /**
+     * 平台管理租户忽略的命令
+     * @return SQL命令类型
+     */
+    SqlCommandType[] platformTenantIgnoreCommands() default {};
 }

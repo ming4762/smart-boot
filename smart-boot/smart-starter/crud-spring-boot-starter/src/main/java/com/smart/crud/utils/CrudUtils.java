@@ -95,7 +95,9 @@ public final class CrudUtils {
      */
     public static SmartTableInfo getTableInfo(String tableName) {
         TableInfo tableInfo = TableInfoHelper.getTableInfo(tableName);
-        Assert.notNull(tableInfo, "error: can not execute. because can not find cache of TableInfo for tableName!");
+        if (tableInfo == null) {
+            return null;
+        }
         return getTableInfo(tableInfo.getEntityType());
     }
 

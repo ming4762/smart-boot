@@ -104,7 +104,7 @@ public class SysExceptionPO extends BaseModel {
     */
     private LocalDateTime resolvedTime;
 
-    @TableTenantField(excludeCommands = SqlCommandType.SELECT)
+    @TableTenantField(platformTenantIgnoreCommands = SqlCommandType.SELECT)
     private Long tenantId;
 
 }

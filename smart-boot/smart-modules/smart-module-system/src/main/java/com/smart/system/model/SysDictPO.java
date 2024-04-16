@@ -54,6 +54,7 @@ public class SysDictPO extends BaseModelUserTime {
     */
     private Boolean deleteYn;
 
-    @TableTenantField(excludeCommands = SqlCommandType.SELECT)
+    @TableTenantField(platformTenantIgnoreCommands = SqlCommandType.SELECT)
     private Long tenantId;
 }
+

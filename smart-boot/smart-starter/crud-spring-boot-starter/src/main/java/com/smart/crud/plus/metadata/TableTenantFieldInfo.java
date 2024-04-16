@@ -19,6 +19,7 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class TableTenantFieldInfo implements Serializable {
     @Serial
     private static final long serialVersionUID = 5941645837247140924L;
@@ -26,7 +27,12 @@ public class TableTenantFieldInfo implements Serializable {
     private TableFieldInfo tableFieldInfo;
 
     /**
-     * 排除的SQL命令
+     * 忽略SQL命令
      */
-    private List<SqlCommandType> excludeCommandTypeList;
+    private List<SqlCommandType> ignoreCommandList;
+
+    /**
+     * 平台管理租户忽略的命令
+     */
+    private List<SqlCommandType> platformTenantIgnoreCommandList;
 }

@@ -41,10 +41,6 @@ public class SysExceptionServiceImpl extends BaseServiceImpl<SysExceptionMapper,
 
     @Override
     public List<? extends SysExceptionPO> list(@NonNull QueryWrapper<SysExceptionPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
-        if (!AuthUtils.isPlatformTenant()) {
-            // 非平台租户只能查询当前租户
-            queryWrapper.lambda().eq(SysExceptionPO::getTenantId, AuthUtils.getNonNullCurrentTenantId());
-        }
         queryWrapper.select(SysExceptionPO.class, field -> !"stackTrace".equals(field.getProperty()));
         List<? extends SysExceptionPO> list = super.list(queryWrapper, parameter, paging);
         if (CollectionUtils.isEmpty(list)) {
