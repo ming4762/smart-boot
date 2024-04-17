@@ -1,5 +1,6 @@
 package com.smart.system.controller;
 
+import com.smart.auth.core.utils.AuthUtils;
 import com.smart.commons.core.log.Log;
 import com.smart.commons.core.log.LogOperationTypeEnum;
 import com.smart.commons.core.message.Result;
@@ -10,11 +11,14 @@ import com.smart.crud.query.StringParameter;
 import com.smart.system.constants.SystemConstantEnum;
 import com.smart.system.model.SysDictItemPO;
 import com.smart.system.model.SysDictPO;
+import com.smart.system.pojo.dto.dict.SysDictSaveUpdateDTO;
 import com.smart.system.service.SysDictService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,13 +55,20 @@ public class SysDictController extends BaseController<SysDictService, SysDictPO>
         return super.list(parameter);
     }
 
-    @Override
-    @Operation(summary = "批量保存/更新")
-    @PostMapping("batchSaveUpdate")
-    @Log(value = "批量保存/更新系统字典表", type = LogOperationTypeEnum.UPDATE)
+    @Operation(summary = "保存/更新系统字典表")
+    @PostMapping("saveUpdate")
+    @Log(value = "保存/更新系统字典表", type = LogOperationTypeEnum.UPDATE)
     @PreAuthorize("hasPermission('sys:dict', 'save') or hasPermission('sys:dict', 'update')")
-    public Result<Boolean> batchSaveUpdate(@RequestBody List<SysDictPO> modelList) {
-        return super.batchSaveUpdate(modelList);
+    public Result<Boolean> saveUpdate(@RequestBody @Valid SysDictSaveUpdateDTO parameter) {
+        if (Boolean.TRUE.equals(parameter.getTenantCommonYn()) && !AuthUtils.isPlatformTenant()) {
+            throw new AccessDeniedException("非平台管理租户无权添加平台通用字典");
+        }
+        SysDictPO model = new SysDictPO();
+        BeanUtils.copyProperties(parameter, model);
+        if (Boolean.FALSE.equals(parameter.getTenantCommonYn()) && AuthUtils.isPlatformTenant()) {
+            model.setTenantId(AuthUtils.getNonNullCurrentTenantId());
+        }
+        return super.saveUpdate(model);
     }
 
     @Override

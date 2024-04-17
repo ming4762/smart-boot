@@ -57,7 +57,7 @@ public class SysDictPO extends BaseModelUserTime {
     /**
      * 查询逻辑单独写
      */
-    @TableTenantField(ignoreCommands = SqlCommandType.SELECT)
+    @TableTenantField(ignoreCommands = SqlCommandType.SELECT, platformTenantIgnoreCommands = SqlCommandType.INSERT)
     private Long tenantId;
 
     /**
