@@ -53,7 +53,7 @@ public class SmartDelete extends AbstractSmartMethod{
                     SqlScriptUtils.convertSet(this.sqlLogicDeleteFieldSet(tableInfo, DELETE_FIELDS_DOT)),
                     sqlWhereEntityWrapper(true, tableInfo),
                     sqlComment());
-            SqlSource sqlSource = languageDriver.createSqlSource(configuration, sql, modelClass);
+            SqlSource sqlSource = super.createSqlSource(configuration, sql, modelClass);
             return addUpdateMappedStatement(mapperClass, modelClass, methodName, sqlSource);
         } else {
             SqlMethod sqlMethod = SqlMethod.DELETE;

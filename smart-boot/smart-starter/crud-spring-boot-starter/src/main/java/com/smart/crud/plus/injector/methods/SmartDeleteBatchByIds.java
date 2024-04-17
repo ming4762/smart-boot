@@ -4,8 +4,6 @@ import com.baomidou.mybatisplus.core.enums.SqlMethod;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.toolkit.sql.SqlScriptUtils;
 import com.smart.crud.plus.enums.SmartSqlMethod;
-import com.smart.crud.plus.metadata.TableLogicDeleteFieldInfo;
-import com.smart.crud.utils.CrudUtils;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlSource;
 
@@ -43,7 +41,7 @@ public class SmartDeleteBatchByIds extends AbstractSmartMethod {
         String sql;
         if (tableInfo.isWithLogicDelete()) {
             sql = this.logicDeleteScriptWithDeleteKey(tableInfo);
-            SqlSource sqlSource = languageDriver.createSqlSource(configuration, sql, Object.class);
+            SqlSource sqlSource = super.createSqlSource(configuration, sql, Object.class);
             return addUpdateMappedStatement(mapperClass, modelClass, methodName, sqlSource);
         } else {
             SqlMethod sqlMethod = SqlMethod.DELETE_BATCH_BY_IDS;
@@ -52,7 +50,7 @@ public class SmartDeleteBatchByIds extends AbstractSmartMethod {
                             SqlScriptUtils.convertChoose("@org.apache.ibatis.type.SimpleTypeRegistry@isSimpleType(item.getClass())",
                                     "#{item}", "#{item." + tableInfo.getKeyProperty() + "}"),
                             COLL, null, "item", COMMA));
-            SqlSource sqlSource = languageDriver.createSqlSource(configuration, sql, Object.class);
+            SqlSource sqlSource = super.createSqlSource(configuration, sql, Object.class);
             return this.addDeleteMappedStatement(mapperClass, methodName, sqlSource);
         }
     }

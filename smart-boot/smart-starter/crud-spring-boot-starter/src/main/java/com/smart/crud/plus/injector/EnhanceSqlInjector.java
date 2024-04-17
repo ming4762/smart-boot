@@ -1,13 +1,16 @@
 package com.smart.crud.plus.injector;
 
+import com.baomidou.mybatisplus.core.config.GlobalConfig;
 import com.baomidou.mybatisplus.core.injector.AbstractMethod;
 import com.baomidou.mybatisplus.core.injector.AbstractSqlInjector;
 import com.baomidou.mybatisplus.core.injector.methods.*;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
+import com.baomidou.mybatisplus.core.toolkit.GlobalConfigUtils;
 import com.smart.crud.plus.injector.methods.SmartDelete;
 import com.smart.crud.plus.injector.methods.SmartDeleteBatchByIds;
 import com.smart.crud.plus.injector.methods.SmartDeleteById;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.session.Configuration;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -30,9 +33,10 @@ public class EnhanceSqlInjector extends AbstractSqlInjector {
      * @since 3.1.2 add  mapperClass
      */
     @Override
-    public List<AbstractMethod> getMethodList(Class<?> mapperClass, TableInfo tableInfo) {
+    public List<AbstractMethod> getMethodList(Configuration configuration, Class<?> mapperClass, TableInfo tableInfo) {
+        GlobalConfig.DbConfig dbConfig = GlobalConfigUtils.getDbConfig(configuration);
         Stream.Builder<AbstractMethod> builder = Stream.<AbstractMethod>builder()
-                .add(new Insert())
+                .add(new Insert(dbConfig.isInsertIgnoreAutoIncrementColumn()))
                 .add(new SmartDelete())
                 .add(new Update())
                 .add(new SelectCount())
