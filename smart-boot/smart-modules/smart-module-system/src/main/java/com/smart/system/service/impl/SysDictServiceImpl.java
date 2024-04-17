@@ -46,8 +46,14 @@ public class SysDictServiceImpl extends BaseServiceImpl<SysDictMapper, SysDictPO
      */
     @Override
     public List<? extends SysDictPO> list(@NonNull QueryWrapper<SysDictPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
-        if (Boolean.TRUE.equals(parameter.getParameter().get(SystemConstantEnum.LIST_FILTER_TENANT)) && (!AuthUtils.isPlatformTenant())) {
-            queryWrapper.lambda().in(SysDictPO::getTenantId, List.of(0L, AuthUtils.getNonNullCurrentTenantId()));
+        if (Boolean.TRUE.equals(parameter.getParameter().get(SystemConstantEnum.LIST_FILTER_TENANT))) {
+            queryWrapper.lambda()
+                    .and(query -> {
+                        query.eq(SysDictPO::getTenantId, AuthUtils.getNonNullCurrentTenantId());
+                        if (AuthUtils.isPlatformTenant()) {
+                            query.or(wrapper -> wrapper.eq(SysDictPO::getTenantCommonYn, Boolean.TRUE));
+                        }
+                    });
         }
         List<? extends SysDictPO> dataList = super.list(queryWrapper, parameter, paging);
         if (CollectionUtils.isEmpty(dataList)) {
