@@ -275,7 +275,7 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
                 .eq(SysTenantPO::getUseYn, Boolean.TRUE)
                 .and(
                         wrapper -> wrapper.and(query -> query.isNull(SysTenantPO::getEffectTime).isNull(SysTenantPO::getExpireTime))
-                                .or(query -> query.le(SysTenantPO::getExpireTime, now).ge(SysTenantPO::getExpireTime, now))
+                                .or(query -> query.le(SysTenantPO::getEffectTime, now).ge(SysTenantPO::getExpireTime, now))
                 ).apply("id in (select M.tenant_id from sys_tenant_user M where M.user_id = {0})", userId);
         return this.list(queryWrapper);
     }
