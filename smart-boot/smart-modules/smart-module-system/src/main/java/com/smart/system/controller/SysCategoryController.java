@@ -1,19 +1,22 @@
 package com.smart.system.controller;
 
+import com.smart.auth.core.utils.AuthUtils;
 import com.smart.commons.core.log.Log;
 import com.smart.commons.core.log.LogOperationTypeEnum;
 import com.smart.commons.core.message.Result;
 import com.smart.crud.controller.BaseController;
 import com.smart.crud.query.PageSortQuery;
+import com.smart.system.constants.SystemConstantEnum;
 import com.smart.system.model.SysCategoryPO;
 import com.smart.system.pojo.dto.category.SysCategorySaveUpdateDTO;
 import com.smart.system.pojo.vo.category.SysCategoryGetVO;
 import com.smart.system.service.SysCategoryService;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.validation.Valid;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,11 +37,11 @@ import java.util.List;
 @Tag(name = "分类字典")
 public class SysCategoryController extends BaseController<SysCategoryService, SysCategoryPO> {
 
-    @Override
-    @PostMapping("list")
+    @PostMapping("listFilterTenant")
     @Operation(summary = "查询角色列表（支持分页、实体类属性查询）")
-    @PreAuthorize("hasPermission('sys:category', 'query')")
-    public Result<Object> list(@RequestBody @NonNull PageSortQuery parameter) {
+    public Result<Object> listFilterTenant(@RequestBody @NonNull PageSortQuery parameter) {
+        parameter.getParameter().put(SystemConstantEnum.LIST_FILTER_TENANT, Boolean.TRUE);
+        parameter.getParameter().put(SystemConstantEnum.LIST_WITH_TENANT, Boolean.TRUE);
         return super.list(parameter);
     }
 
@@ -47,8 +50,14 @@ public class SysCategoryController extends BaseController<SysCategoryService, Sy
     @Log(value = "添加修改分类字段", type = LogOperationTypeEnum.UPDATE)
     @PreAuthorize("hasPermission('sys:category', 'add') or hasPermission('sys:category', 'edit')")
     public Result<Boolean> saveUpdate(@RequestBody @Valid SysCategorySaveUpdateDTO parameter) {
-      	SysCategoryPO model = new SysCategoryPO();
-      	BeanUtils.copyProperties(parameter, model);
+        if (Boolean.TRUE.equals(parameter.getTenantCommonYn()) && !AuthUtils.isPlatformTenant()) {
+            throw new AccessDeniedException("非平台管理租户无权添加平台通用字典");
+        }
+        SysCategoryPO model = new SysCategoryPO();
+        BeanUtils.copyProperties(parameter, model);
+        if (Boolean.FALSE.equals(parameter.getTenantCommonYn()) && AuthUtils.isPlatformTenant()) {
+            model.setTenantId(AuthUtils.getNonNullCurrentTenantId());
+        }
         return super.saveUpdate(model);
     }
 

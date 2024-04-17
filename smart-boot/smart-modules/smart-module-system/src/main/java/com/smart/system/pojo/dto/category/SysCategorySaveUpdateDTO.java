@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -17,6 +18,8 @@ import java.io.Serializable;
 public class SysCategorySaveUpdateDTO implements Serializable {
 
 
+    @Serial
+    private static final long serialVersionUID = 5994028748990028924L;
     /**
     * 
     */
@@ -41,5 +44,10 @@ public class SysCategorySaveUpdateDTO implements Serializable {
     * 
     */
     private String remark;
+
+    /**
+     * 是否平台通用
+     */
+    private Boolean tenantCommonYn;
 
 }

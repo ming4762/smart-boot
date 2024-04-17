@@ -2,12 +2,16 @@ package com.smart.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.smart.auth.core.utils.AuthUtils;
 import com.smart.crud.plus.metadata.SmartTableInfo;
+import com.smart.crud.query.PageSortQuery;
 import com.smart.crud.service.BaseServiceImpl;
+import com.smart.system.constants.SystemConstantEnum;
 import com.smart.system.mapper.CommonMapper;
 import com.smart.system.mapper.SysCategoryMapper;
 import com.smart.system.model.SysCategoryPO;
 import com.smart.system.service.SysCategoryService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,12 +29,32 @@ import java.util.Set;
 * 2023-1-21 21:32:15
 */
 @Service
+@RequiredArgsConstructor
 public class SysCategoryServiceImpl extends BaseServiceImpl<SysCategoryMapper, SysCategoryPO> implements SysCategoryService {
 
     private final CommonMapper commonMapper;
 
-    public SysCategoryServiceImpl(CommonMapper commonMapper) {
-        this.commonMapper = commonMapper;
+    /**
+     * 查询函数
+     *
+     * @param queryWrapper 查询参数
+     * @param parameter    原始参数
+     * @param paging       是否分页
+     * @return 查询结果
+     */
+    @Override
+    public List<? extends SysCategoryPO> list(@NonNull QueryWrapper<SysCategoryPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
+        if (Boolean.TRUE.equals(parameter.getParameter().get(SystemConstantEnum.LIST_FILTER_TENANT))) {
+            queryWrapper.lambda()
+                    .and(query -> {
+                        query.eq(SysCategoryPO::getTenantId, AuthUtils.getNonNullCurrentTenantId());
+                        if (AuthUtils.isPlatformTenant()) {
+                            query.or(wrapper -> wrapper.eq(SysCategoryPO::getTenantCommonYn, Boolean.TRUE));
+                        }
+                    });
+        }
+
+        return super.list(queryWrapper, parameter, paging);
     }
 
     /**

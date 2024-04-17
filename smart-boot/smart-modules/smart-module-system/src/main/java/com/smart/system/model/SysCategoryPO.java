@@ -1,9 +1,13 @@
 package com.smart.system.model;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.smart.crud.annotation.TableTenantField;
 import com.smart.crud.model.BaseModelUserTime;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.ibatis.mapping.SqlCommandType;
+
+import java.io.Serial;
 
 /**
 * sys_category - 分类字段
@@ -14,6 +18,9 @@ import lombok.Setter;
 @Setter
 @TableName("sys_category")
 public class SysCategoryPO extends BaseModelUserTime {
+
+    @Serial
+    private static final long serialVersionUID = -985761604588742451L;
 
     private Long id;
 
@@ -38,4 +45,15 @@ public class SysCategoryPO extends BaseModelUserTime {
 
     private Boolean hasChild;
 
+    /**
+     * 是否平台通用
+     */
+    private Boolean tenantCommonYn;
+
+
+    /**
+     * 查询逻辑单独写
+     */
+    @TableTenantField(ignoreCommands = SqlCommandType.SELECT, platformTenantIgnoreCommands = SqlCommandType.INSERT)
+    private Long tenantId;
 }
