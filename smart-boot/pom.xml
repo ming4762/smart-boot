@@ -16,8 +16,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <spring-boot.version>3.2.2</spring-boot.version>
-        <spring-cloud.version>2023.0.0</spring-cloud.version>
+        <spring-boot.version>3.2.4</spring-boot.version>
+        <spring-cloud.version>2023.0.1</spring-cloud.version>
         <smart-boot.version>3.0.0-SNAPSHOT</smart-boot.version>
         <spring-cloud-alibaba.version>2022.0.0.0</spring-cloud-alibaba.version>
 
@@ -37,7 +37,7 @@
         <google.zxing.version>3.5.0</google.zxing.version>
         <jxls.version>2.11.0</jxls.version>
         <jacob.version>1.20</jacob.version>
-        <kettle.version>9.2.0.0</kettle.version>
+        <kettle.version>9.4.0.0</kettle.version>
         <xxl-job.version>2.4.0</xxl-job.version>
         <druid.version>1.2.20</druid.version>
         <easy-captcha.version>1.6.2</easy-captcha.version>
@@ -60,6 +60,7 @@
         <commons-net.version>3.10.0</commons-net.version>
         <nacos.logback-adapter.version>1.0.0</nacos.logback-adapter.version>
         <nashorn.version>15.4</nashorn.version>
+        <amazon.aws.version>2.5.31</amazon.aws.version>
     </properties>
 
     <packaging>pom</packaging>
@@ -320,6 +321,12 @@
             </dependency>
 
             <dependency>
+                <groupId>org.pentaho</groupId>
+                <artifactId>kettle-ui-swt</artifactId>
+                <version>${kettle.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.scannotation</groupId>
                 <artifactId>scannotation</artifactId>
                 <version>${scannotation.version}</version>
@@ -348,11 +355,6 @@
                 <version>${ojdbc8.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>org.pentaho</groupId>
-                <artifactId>kettle-ui-swt</artifactId>
-                <version>${kettle.version}</version>
-            </dependency>
             <dependency>
                 <groupId>org.eclipse</groupId>
                 <artifactId>org.eclipse.jface</artifactId>
@@ -483,6 +485,14 @@
                 <groupId>org.openjdk.nashorn</groupId>
                 <artifactId>nashorn-core</artifactId>
                 <version>${nashorn.version}</version>
+            </dependency>
+            <!--      amazon SDK      -->
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>bom</artifactId>
+                <version>${amazon.aws.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
