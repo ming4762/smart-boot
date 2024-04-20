@@ -2,7 +2,6 @@ package com.smart.crud;
 
 import com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration;
 import com.google.common.collect.ImmutableList;
-import com.smart.crud.mybatis.plugin.CreateUpdateUserTimeMybatisInterceptor;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.BeansException;
@@ -24,7 +23,7 @@ import java.util.List;
 @Configuration
 public class MybatisInterceptorAddAutoConfiguration implements InitializingBean, ApplicationContextAware {
 
-    private static final List<Class<? extends Interceptor>> INTERCEPTOR_CLASS_LIST = ImmutableList.of(CreateUpdateUserTimeMybatisInterceptor.class);
+    private static final List<Class<? extends Interceptor>> INTERCEPTOR_CLASS_LIST = ImmutableList.of();
 
     private final List<SqlSessionFactory> sqlSessionFactoryList;
 

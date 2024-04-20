@@ -27,6 +27,7 @@ import java.util.Date;
  */
 @Slf4j
 @Intercepts({ @Signature(type = Executor.class, method = "update", args = { MappedStatement.class, Object.class }) })
+@Deprecated
 public class CreateUpdateUserTimeMybatisInterceptor implements Interceptor {
 
     private final UserProvider userProvider;

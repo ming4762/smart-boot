@@ -1,5 +1,7 @@
 package com.smart.crud.model;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,9 +20,13 @@ public abstract class BaseModelCreateUserTime extends BaseModel {
 
     @Serial
     private static final long serialVersionUID = 5157863351256809974L;
+
+    @TableField(fill = FieldFill.INSERT)
     protected Long createUserId;
 
+    @TableField(fill = FieldFill.INSERT)
     protected LocalDateTime createTime;
 
+    @TableField(fill = FieldFill.INSERT)
     protected String createBy;
 }
