@@ -41,6 +41,8 @@ public class SmartTableInfo extends TableInfo {
     @Serial
     private static final long serialVersionUID = -66149012141872877L;
 
+    private TableInfo tableInfo;
+
     /**
      * @param configuration 配置对象
      * @param entityType    实体类型
@@ -60,6 +62,7 @@ public class SmartTableInfo extends TableInfo {
         SmartTableInfo smartTableInfo =  (SmartTableInfo) enhancer.create(new Class[]{Configuration.class, Class.class}, new Object[]{tableInfo.getConfiguration(), tableInfo.getEntityType()});
 
         initField(smartTableInfo, tableInfo);
+        smartTableInfo.tableInfo = tableInfo;
         return smartTableInfo;
     }
 
@@ -103,7 +106,7 @@ public class SmartTableInfo extends TableInfo {
      */
     @Override
     public boolean isWithUpdateFill() {
-        return super.isWithUpdateFill() || (this.logicDeleteInfo != null && !this.logicDeleteInfo.getFillFieldInfoList().isEmpty());
+        return this.tableInfo.isWithUpdateFill() || (this.logicDeleteInfo != null && !this.logicDeleteInfo.getFillFieldInfoList().isEmpty());
     }
 
     /**
