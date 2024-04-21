@@ -42,17 +42,6 @@
 			<artifactId>smart-auth-cache-redis</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
-		<!--	微信登录支持	-->
-		<dependency>
-			<groupId>com.smart</groupId>
-			<artifactId>smart-auth-extensions-wechat</artifactId>
-			<version>${smart-boot.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.smart</groupId>
-			<artifactId>wxjava-spring-boot-starter</artifactId>
-			<version>${smart-boot.version}</version>
-		</dependency>
 
 		<!--	短信登录支持	-->
 		<dependency>
@@ -85,12 +74,23 @@
 			<artifactId>smart-sms-extensions-aliyun</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
+		<!--	web socket支持	-->
+		<dependency>
+			<groupId>com.smart</groupId>
+			<artifactId>smart-message-websocket</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
 
 		<!--	代码生成器	-->
 		<dependency>
 			<groupId>com.smart</groupId>
 			<artifactId>smart-database-generator</artifactId>
 			<version>${project.parent.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.oracle.ojdbc</groupId>
+			<artifactId>ojdbc8</artifactId>
 		</dependency>
 
 		<!--	数据库	-->
@@ -173,6 +173,13 @@
 		<dependency>
 			<groupId>com.smart</groupId>
 			<artifactId>smart-auth-extensions-access-secret</artifactId>
+			<version>${smart-boot.version}</version>
+		</dependency>
+
+		<!--	kettle模块	-->
+		<dependency>
+			<groupId>com.smart</groupId>
+			<artifactId>smart-kettle-manager</artifactId>
 			<version>${smart-boot.version}</version>
 		</dependency>
 	</dependencies>

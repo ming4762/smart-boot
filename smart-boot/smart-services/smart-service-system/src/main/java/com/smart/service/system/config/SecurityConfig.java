@@ -35,14 +35,14 @@ public class SecurityConfig extends AuthWebSecurityConfigurerAdapter {
     public SecurityFilterChain securityFilterChainConfig(HttpSecurity httpSecurity) {
         super.configure(httpSecurity);
         httpSecurity.formLogin(AbstractHttpConfigurer::disable)
-                    .logout(AbstractHttpConfigurer::disable)
-                    .httpBasic(AbstractHttpConfigurer::disable)
-                    .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                    // JWT配置
-                    .with(AuthJwtSecurityConfigurer.jwt(), Customizer.withDefaults())
-                    // 验证码配置
-                    .with(AuthCaptchaSecurityConfigurer.captcha(), configurer -> configurer.addLoginUrl(AuthJwtSecurityConfigurer.LOGIN_URL))
-                    .with(AuthSmsSecurityConfigurer.sms(), Customizer.withDefaults());
+                .logout(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                // JWT配置
+                .with(AuthJwtSecurityConfigurer.jwt(), Customizer.withDefaults())
+                // 验证码配置
+                .with(AuthCaptchaSecurityConfigurer.captcha(), Customizer.withDefaults())
+                .with(AuthSmsSecurityConfigurer.sms(), Customizer.withDefaults());
         return httpSecurity.build();
     }
 

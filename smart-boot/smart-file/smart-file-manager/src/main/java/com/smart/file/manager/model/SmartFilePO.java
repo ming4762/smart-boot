@@ -4,8 +4,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.smart.crud.annotation.TableLogicField;
 import com.smart.crud.model.BaseModelCreateUserTime;
-import com.smart.crud.plus.logic.TableLogicKey;
 import lombok.*;
 
 import java.io.Serial;
@@ -80,6 +80,6 @@ public class SmartFilePO extends BaseModelCreateUserTime {
     @TableLogic
     private Boolean deleteYn;
 
-    @TableLogicKey
+    @TableLogicField(isDeleteKey = true)
     private Long deleteKey;
 }

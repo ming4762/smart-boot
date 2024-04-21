@@ -13,11 +13,11 @@ spring:
         login-password: root
     url: jdbc:mysql://localhost:3306/smart-system?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: root
-    password: password
+    password: ming8858
   data:
     redis:
       host: localhost
-      password: password
+#      password: ming8858
 
 logging:
   level:
@@ -44,7 +44,14 @@ management:
       enabled: false
 
 smart:
+  log:
+    path: D:\zhongming\Documents\01-workspace\06-temp\log
   auth:
+    jwt:
+      permission-cache: true
+    sms:
+      sign-name: 联亚软件
+      template: SMS_279432099
     ignores:
       get:
         - .html
@@ -53,6 +60,15 @@ smart:
         - /v3/api-docs/**
       pattern:
         - /xrebel/**
+        - /websocket/**
+    session:
+      timeout:
+        global: 360m
+    captcha:
+      type: TEXT_ARITHMETIC
+      text:
+        ignoreCase: true
+        length: 2
 
 knife4j:
   enable: true
