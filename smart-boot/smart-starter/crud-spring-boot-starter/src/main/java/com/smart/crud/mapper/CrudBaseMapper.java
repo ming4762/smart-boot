@@ -1,10 +1,6 @@
 package com.smart.crud.mapper;
 
-import com.smart.crud.constants.SmartCrudConstants;
 import com.smart.crud.model.BaseModel;
-import org.apache.ibatis.annotations.Param;
-
-import java.io.Serializable;
 
 /**
  * 基础服务层
@@ -18,6 +14,6 @@ public interface CrudBaseMapper<T extends BaseModel> extends com.baomidou.mybati
      *
      * @param id 主键ID
      */
-    @Override
-    int deleteById(@Param(SmartCrudConstants.DELETE_ID) Serializable id);
+//    @Override
+//    int deleteById(@Param(SmartCrudConstants.DELETE_ID) Serializable id);
 }

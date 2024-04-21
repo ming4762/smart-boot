@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.enums.SqlMethod;
 import com.baomidou.mybatisplus.core.injector.methods.DeleteById;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.toolkit.sql.SqlScriptUtils;
-import com.smart.crud.constants.SmartCrudConstants;
 import com.smart.crud.plus.enums.SmartSqlMethod;
 import com.smart.crud.plus.metadata.SmartTableInfo;
 import com.smart.crud.utils.CrudUtils;
@@ -56,11 +55,11 @@ public class SmartDeleteById extends DeleteById implements AbstractSmartMethod {
         SmartTableInfo smartTableInfo = CrudUtils.getTableInfo(modelClass);
         if (smartTableInfo.isWithLogicDelete()) {
             boolean withUpdateFill = smartTableInfo.isWithUpdateFill();
-            String deleteId = withUpdateFill ? tableInfo.getKeyProperty() : SmartCrudConstants.DELETE_ID;
+//            String deleteId = withUpdateFill ? tableInfo.getKeyProperty() : SmartCrudConstants.DELETE_ID;
             String prefix = withUpdateFill ? EMPTY : DELETE_FIELDS_DOT;
             String sql = String.format(smartSqlMethod.getSql(), tableInfo.getTableName(),
                     SqlScriptUtils.convertSet(this.sqlLogicDeleteFieldSet(tableInfo, prefix, true)),
-                    tableInfo.getKeyColumn(), deleteId,
+                    tableInfo.getKeyColumn(), tableInfo.getKeyProperty(),
                     tableInfo.getLogicDeleteSql(true, true));
             SqlSource sqlSource = super.createSqlSource(configuration, sql, Object.class);
             return addUpdateMappedStatement(mapperClass, modelClass, methodName, sqlSource);
