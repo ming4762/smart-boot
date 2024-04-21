@@ -1,6 +1,7 @@
 package com.smart.crud.plus.injector.methods;
 
 import com.baomidou.mybatisplus.core.enums.SqlMethod;
+import com.baomidou.mybatisplus.core.injector.methods.Delete;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.toolkit.sql.SqlScriptUtils;
 import com.smart.crud.plus.enums.SmartSqlMethod;
@@ -16,7 +17,7 @@ import static com.smart.crud.constants.SmartCrudConstants.DELETE_FIELDS_DOT;
  * 2023/10/31 15:12
  * @since 3.0.0
  */
-public class SmartDelete extends AbstractSmartMethod{
+public class SmartDelete extends Delete implements AbstractSmartMethod{
 
     @Serial
     private static final long serialVersionUID = 8701454358884931568L;
@@ -50,7 +51,7 @@ public class SmartDelete extends AbstractSmartMethod{
         SmartSqlMethod smartSqlMethod = SmartSqlMethod.LOGIC_DELETE;
         if (tableInfo.isWithLogicDelete()) {
             sql = String.format(smartSqlMethod.getSql(), tableInfo.getTableName(),
-                    SqlScriptUtils.convertSet(this.sqlLogicDeleteFieldSet(tableInfo, DELETE_FIELDS_DOT)),
+                    SqlScriptUtils.convertSet(this.sqlLogicDeleteFieldSet(tableInfo, DELETE_FIELDS_DOT, false)),
                     sqlWhereEntityWrapper(true, tableInfo),
                     sqlComment());
             SqlSource sqlSource = super.createSqlSource(configuration, sql, modelClass);

@@ -3,12 +3,11 @@ package com.smart.system.model.tenant;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.smart.crud.model.BaseModel;
+import com.smart.crud.model.BaseModelUserTime;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serial;
-import java.time.LocalDateTime;
 
 /**
 * sys_tenant_user - 租户用户关联关系表
@@ -18,7 +17,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @TableName("sys_tenant_user")
-public class SysTenantUserPO extends BaseModel {
+public class SysTenantUserPO extends BaseModelUserTime {
 
     @Serial
     private static final long serialVersionUID = 7320372452888494859L;
@@ -47,26 +46,4 @@ public class SysTenantUserPO extends BaseModel {
      * 是否在当前租户启用
      */
     private Boolean useYn;
-
-    /**
-    * create_time - createTime
-    */
-    private LocalDateTime createTime;
-
-    /**
-    * create_user_id - createUserId
-    */
-    private Long createUserId;
-
-    /**
-    * create_by - createBy
-    */
-    private String createBy;
-
-    private Long updateUserId;
-
-    private LocalDateTime updateTime;
-
-    private String updateBy;
-
 }

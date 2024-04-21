@@ -8,7 +8,7 @@ import lombok.Getter;
  * 2020/3/30 7:00 下午
  */
 @Getter
-public enum UserPropertyEnum {
+public enum ModelPropertyEnum {
 
     /**
      * 创建人员ID
@@ -31,7 +31,7 @@ public enum UserPropertyEnum {
 
     private final String name;
 
-    UserPropertyEnum(String name) {
+    ModelPropertyEnum(String name) {
         this.name = name;
     }
 }

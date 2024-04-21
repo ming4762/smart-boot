@@ -1,6 +1,6 @@
 package com.smart.crud.mybatis.plugin;
 
-import com.smart.crud.constants.UserPropertyEnum;
+import com.smart.crud.constants.ModelPropertyEnum;
 import com.smart.crud.model.BaseModel;
 import com.smart.crud.service.UserProvider;
 import lombok.SneakyThrows;
@@ -56,17 +56,17 @@ public class CreateUpdateUserTimeMybatisInterceptor implements Interceptor {
             Long userId = this.userProvider.getCurrentUserId();
             String fullName = this.userProvider.getCurrentUserFullName();
             // 创建人
-            PropertyDescriptor createUserIdDescriptor = BeanUtils.getPropertyDescriptor(parameter.getClass(), UserPropertyEnum.CREATE_USER_ID.getName());
+            PropertyDescriptor createUserIdDescriptor = BeanUtils.getPropertyDescriptor(parameter.getClass(), ModelPropertyEnum.CREATE_USER_ID.getName());
             if (createUserIdDescriptor != null && createUserIdDescriptor.getReadMethod().invoke(parameter) == null) {
                 createUserIdDescriptor.getWriteMethod().invoke(parameter, userId);
             }
             // 创建人名字
-            PropertyDescriptor createUserDescriptor =  BeanUtils.getPropertyDescriptor(parameter.getClass(), UserPropertyEnum.CREATE_USER.getName());
+            PropertyDescriptor createUserDescriptor =  BeanUtils.getPropertyDescriptor(parameter.getClass(), ModelPropertyEnum.CREATE_USER.getName());
             if (createUserDescriptor != null && createUserDescriptor.getReadMethod().invoke(parameter) == null) {
                 createUserDescriptor.getWriteMethod().invoke(parameter, fullName);
             }
             // 创建时间
-            PropertyDescriptor createTimeDescriptor =  BeanUtils.getPropertyDescriptor(parameter.getClass(), UserPropertyEnum.CREATE_TIME.getName());
+            PropertyDescriptor createTimeDescriptor =  BeanUtils.getPropertyDescriptor(parameter.getClass(), ModelPropertyEnum.CREATE_TIME.getName());
             this.setTime(createTimeDescriptor, parameter);
         }
         if (sqlCommandType == SqlCommandType.UPDATE) {
@@ -74,17 +74,17 @@ public class CreateUpdateUserTimeMybatisInterceptor implements Interceptor {
             Long userId = this.userProvider.getCurrentUserId();
             String fullName = this.userProvider.getCurrentUserFullName();
             // 更新人
-            PropertyDescriptor updateUserIdDescriptor = BeanUtils.getPropertyDescriptor(parameter.getClass(), UserPropertyEnum.UPDATE_USER_ID.getName());
+            PropertyDescriptor updateUserIdDescriptor = BeanUtils.getPropertyDescriptor(parameter.getClass(), ModelPropertyEnum.UPDATE_USER_ID.getName());
             if (updateUserIdDescriptor != null && updateUserIdDescriptor.getReadMethod().invoke(parameter) == null) {
                 updateUserIdDescriptor.getWriteMethod().invoke(parameter, userId);
             }
             // 创建人名字
-            PropertyDescriptor updateUserDescriptor =  BeanUtils.getPropertyDescriptor(parameter.getClass(), UserPropertyEnum.UPDATE_USER.getName());
+            PropertyDescriptor updateUserDescriptor =  BeanUtils.getPropertyDescriptor(parameter.getClass(), ModelPropertyEnum.UPDATE_USER.getName());
             if (updateUserDescriptor != null && updateUserDescriptor.getReadMethod().invoke(parameter) == null) {
                 updateUserDescriptor.getWriteMethod().invoke(parameter, fullName);
             }
             // 创建时间
-            PropertyDescriptor updateTimeDescriptor =  BeanUtils.getPropertyDescriptor(parameter.getClass(), UserPropertyEnum.UPDATE_TIME.getName());
+            PropertyDescriptor updateTimeDescriptor =  BeanUtils.getPropertyDescriptor(parameter.getClass(), ModelPropertyEnum.UPDATE_TIME.getName());
             this.setTime(updateTimeDescriptor, parameter);
         }
         return invocation.proceed();

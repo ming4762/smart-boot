@@ -1,6 +1,7 @@
 package com.smart.crud.plus.injector.methods;
 
 import com.baomidou.mybatisplus.core.enums.SqlMethod;
+import com.baomidou.mybatisplus.core.injector.methods.DeleteByMap;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.smart.crud.plus.enums.SmartSqlMethod;
 import com.smart.crud.plus.metadata.SmartTableInfo;
@@ -16,7 +17,7 @@ import java.util.Map;
  * 2023/10/31 15:18
  * @since 3.0.0
  */
-public class SmartDeleteByMap extends AbstractSmartMethod {
+public class SmartDeleteByMap extends DeleteByMap implements AbstractSmartMethod {
 
     @Serial
     private static final long serialVersionUID = -7443604353347817047L;
@@ -51,7 +52,7 @@ public class SmartDeleteByMap extends AbstractSmartMethod {
         SqlMethod sqlMethod = SqlMethod.LOGIC_DELETE_BY_MAP;
         if (tableInfo.isWithLogicDelete()) {
             if (smartTableInfo.hasTableLogicKey()) {
-                sql = String.format(SmartSqlMethod.LOGIC_DELETE_BY_MAP.getSql(), tableInfo.getTableName(), sqlLogicSet(tableInfo), this.sqlLogicDeleteFieldSet(tableInfo, ENTITY_DOT), sqlWhereByMap(tableInfo));
+                sql = String.format(SmartSqlMethod.LOGIC_DELETE_BY_MAP.getSql(), tableInfo.getTableName(), sqlLogicSet(tableInfo), this.sqlLogicDeleteFieldSet(tableInfo, ENTITY_DOT, false), sqlWhereByMap(tableInfo));
             } else {
                 sql = String.format(sqlMethod.getSql(), tableInfo.getTableName(), sqlLogicSet(tableInfo), sqlWhereByMap(tableInfo));
             }

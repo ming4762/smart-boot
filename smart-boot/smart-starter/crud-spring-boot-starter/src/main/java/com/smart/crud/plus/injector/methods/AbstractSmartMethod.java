@@ -1,58 +1,46 @@
 package com.smart.crud.plus.injector.methods;
 
-import com.baomidou.mybatisplus.core.injector.AbstractMethod;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.smart.crud.plus.logic.LogicKeyStrategy;
 import com.smart.crud.plus.metadata.SmartTableInfo;
-import com.smart.crud.plus.metadata.TableLogicDeleteFieldInfo;
+import com.smart.crud.plus.metadata.TableLogicDeleteInfo;
 import com.smart.crud.utils.CrudUtils;
 import org.springframework.util.StringUtils;
 
-import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
+import static com.baomidou.mybatisplus.core.toolkit.StringPool.NEWLINE;
 
 /**
  * @author shizhongming
  * 2023/10/31 14:09
  * @since 3.0.0
  */
-public abstract class AbstractSmartMethod extends AbstractMethod {
-    @Serial
-    private static final long serialVersionUID = -9045966947653971679L;
+public interface AbstractSmartMethod {
 
-    private static final String FORMAT_STRING = "%s = %s";
-
-    /**
-     * @param methodName 方法名
-     * @since 3.5.0
-     */
-    protected AbstractSmartMethod(String methodName) {
-        super(methodName);
-    }
+    String FORMAT_STRING = "%s = %s";
 
     /**
      * 获取设置 逻辑删除key SQL
      * @param tableInfo table info
      * @return SQL
      */
-    protected String sqlLogicDeleteFieldSet(TableInfo tableInfo, final String prefix) {
+    default String sqlLogicDeleteFieldSet(TableInfo tableInfo, final String prefix, boolean ignoreIf) {
         SmartTableInfo smartTableInfo = CrudUtils.getTableInfo(tableInfo.getEntityType());
-        TableLogicDeleteFieldInfo logicKeyField = Objects.requireNonNull(smartTableInfo.getDeleteField());
+        TableLogicDeleteInfo logicDeleteInfo = Objects.requireNonNull(smartTableInfo.getLogicDeleteInfo());
         List<String> sqlList = new ArrayList<>(8);
         // 设置逻辑删除
         sqlList.add(tableInfo.getLogicDeleteSql(false, false));
         // 设置逻辑删除的key
-        if (logicKeyField.getTableLogicKey() != null && LogicKeyStrategy.ID.equals(logicKeyField.getTableLogicKey().strategy())) {
-            sqlList.add(String.format(FORMAT_STRING, logicKeyField.getDeleteKeyFieldInfo().getColumn(), tableInfo.getKeyColumn()));
+        if (logicDeleteInfo.getDeleteKeyFieldInfo() != null && LogicKeyStrategy.ID.equals(logicDeleteInfo.getLogicKeyStrategy())) {
+            sqlList.add(String.format(FORMAT_STRING, logicDeleteInfo.getDeleteKeyFieldInfo().getColumn(), tableInfo.getKeyColumn()));
         }
         // 设置逻辑删除的相关字段
-        String collect = Stream.of(logicKeyField.getDeleteTimeFieldInfo(), logicKeyField.getDeleteByFieldInfo(), logicKeyField.getDeleteUserIdFieldInfo())
-                .filter(Objects::nonNull)
-                .map(item -> item.getSqlSet(prefix))
+        String collect = logicDeleteInfo.getFillFieldInfoList().stream()
+                .map(item -> item.getSqlSet(ignoreIf, prefix))
                 .filter(Objects::nonNull)
                 .collect(Collectors.joining(NEWLINE));
         if (StringUtils.hasText(collect)) {

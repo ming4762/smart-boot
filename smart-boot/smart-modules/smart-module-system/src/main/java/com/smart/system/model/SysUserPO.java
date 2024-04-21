@@ -1,11 +1,14 @@
 package com.smart.system.model;
 
-import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.smart.crud.annotation.TableLogicField;
 import com.smart.crud.annotation.TableUseYnField;
 import com.smart.crud.model.BaseModelUserTime;
 import com.smart.crud.model.BaseUser;
-import com.smart.crud.plus.logic.TableLogicKey;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -76,13 +79,16 @@ public class SysUserPO extends BaseModelUserTime implements BaseUser {
     @TableUseYnField
     private Boolean useYn;
 
-    @TableLogicKey
+    @TableLogicField(isDeleteKey = true)
     private Long deleteKey;
 
+    @TableLogicField(isFill = true)
     private Long deleteUserId;
 
+    @TableLogicField(isFill = true)
     private String deleteBy;
 
+    @TableLogicField(isFill = true)
     private LocalDateTime deleteTime;
 
 }

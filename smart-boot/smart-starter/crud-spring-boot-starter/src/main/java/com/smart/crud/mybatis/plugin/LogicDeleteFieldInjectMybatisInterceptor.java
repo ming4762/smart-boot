@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.enums.SqlMethod;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.smart.crud.mybatis.model.LogicDeleteParameter;
+import com.smart.crud.plus.inner.LogicDeleteFieldInjectInnerInterceptor;
 import com.smart.crud.service.UserProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.binding.MapperMethod;
@@ -23,18 +24,19 @@ import static com.smart.crud.constants.SmartCrudConstants.DELETE_FIELDS;
 /**
  * 动态注入逻辑删除参数
  * @author shizhongming
+ * @deprecated {@link LogicDeleteFieldInjectInnerInterceptor}
  * 2023/3/2 17:40
  * @since 3.0.0
  */
 @Slf4j
+@Deprecated(forRemoval = true)
 @Intercepts({ @Signature(type = Executor.class, method = "update", args = { MappedStatement.class, Object.class }) })
 public class LogicDeleteFieldInjectMybatisInterceptor implements Interceptor {
 
     private static final List<String> LOGIC_DELETE_METHODS = List.of(
             SqlMethod.DELETE_BY_ID.getMethod(),
             SqlMethod.DELETE_BATCH_BY_IDS.getMethod(),
-            SqlMethod.DELETE.getMethod(),
-            SqlMethod.DELETE_BY_MAP.getMethod()
+            SqlMethod.DELETE.getMethod()
     );
 
     private final UserProvider userProvider;

@@ -16,7 +16,7 @@ import com.smart.commons.core.utils.DigestUtils;
 import com.smart.commons.core.utils.IdGenerator;
 import com.smart.commons.core.utils.PropertyUtils;
 import com.smart.crud.constants.CrudCommonEnum;
-import com.smart.crud.constants.UserPropertyEnum;
+import com.smart.crud.constants.ModelPropertyEnum;
 import com.smart.crud.datapermission.DataPermissionScope;
 import com.smart.crud.parameter.SetUseYnParameter;
 import com.smart.crud.query.PageSortQuery;
@@ -315,11 +315,11 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         for (T item : resource) {
             if (withCreateUser) {
                 // 获取创建人员ID
-                userIdSet.add((Long) PropertyUtils.getProperty(item, UserPropertyEnum.CREATE_USER_ID.getName()));
+                userIdSet.add((Long) PropertyUtils.getProperty(item, ModelPropertyEnum.CREATE_USER_ID.getName()));
             }
             if (withUpdateUser) {
                 // 获取创建人员ID
-                userIdSet.add((Long) PropertyUtils.getProperty(item, UserPropertyEnum.UPDATE_USER_ID.getName()));
+                userIdSet.add((Long) PropertyUtils.getProperty(item, ModelPropertyEnum.UPDATE_USER_ID.getName()));
             }
         }
         userIdSet = userIdSet.stream().filter(item -> !Objects.isNull(item)).collect(Collectors.toSet());
@@ -331,12 +331,12 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
                 .collect(Collectors.toMap(SysUserPO :: getUserId, item -> item));
         for (T item : resource) {
             if (withCreateUser) {
-                Long createUserId = (Long) PropertyUtils.getProperty(item, UserPropertyEnum.CREATE_USER_ID.getName());
-                PropertyUtils.setProperty(item, UserPropertyEnum.CREATE_USER.getName(), userMap.get(createUserId));
+                Long createUserId = (Long) PropertyUtils.getProperty(item, ModelPropertyEnum.CREATE_USER_ID.getName());
+                PropertyUtils.setProperty(item, ModelPropertyEnum.CREATE_USER.getName(), userMap.get(createUserId));
             }
             if (withUpdateUser) {
-                Long updateUserId = (Long) PropertyUtils.getProperty(item, UserPropertyEnum.UPDATE_USER_ID.getName());
-                PropertyUtils.setProperty(item, UserPropertyEnum.UPDATE_USER.getName(), userMap.get(updateUserId));
+                Long updateUserId = (Long) PropertyUtils.getProperty(item, ModelPropertyEnum.UPDATE_USER_ID.getName());
+                PropertyUtils.setProperty(item, ModelPropertyEnum.UPDATE_USER.getName(), userMap.get(updateUserId));
             }
         }
     }

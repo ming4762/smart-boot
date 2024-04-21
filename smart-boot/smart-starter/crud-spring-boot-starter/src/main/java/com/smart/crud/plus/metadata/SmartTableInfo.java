@@ -7,10 +7,9 @@ import com.baomidou.mybatisplus.core.toolkit.LambdaUtils;
 import com.baomidou.mybatisplus.core.toolkit.support.LambdaMeta;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.smart.commons.core.proxy.ExtendMethodInterceptor;
+import com.smart.crud.annotation.TableLogicField;
 import com.smart.crud.annotation.TableTenantField;
 import com.smart.crud.annotation.TableUseYnField;
-import com.smart.crud.constants.UserPropertyEnum;
-import com.smart.crud.plus.logic.TableLogicKey;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
@@ -23,6 +22,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.io.Serial;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -51,7 +51,8 @@ public class SmartTableInfo extends TableInfo {
     }
 
     public static SmartTableInfo create(TableInfo tableInfo) {
-        List<String> methodNameList = Arrays.stream(tableInfo.getClass().getMethods()).map(Method::getName).toList();
+        List<String> methodNameList = new ArrayList<>(Arrays.stream(tableInfo.getClass().getMethods()).map(Method::getName).toList());
+        methodNameList.removeAll(Arrays.stream(SmartTableInfo.class.getDeclaredMethods()).map(Method::getName).toList());
         ExtendMethodInterceptor<TableInfo> interceptor = new ExtendMethodInterceptor<>(tableInfo, methodNameList);
         Enhancer enhancer = new Enhancer();
         enhancer.setCallback(interceptor);
@@ -70,7 +71,7 @@ public class SmartTableInfo extends TableInfo {
     /**
      * 删除field
      */
-    private TableLogicDeleteFieldInfo deleteField;
+    private TableLogicDeleteInfo logicDeleteInfo;
 
     /**
      * 租户字段
@@ -82,8 +83,8 @@ public class SmartTableInfo extends TableInfo {
      * @return 是否有逻辑删除key
      */
     public boolean hasTableLogicKey() {
-        return Optional.ofNullable(this.deleteField)
-                .map(TableLogicDeleteFieldInfo::getTableLogicKey)
+        return Optional.ofNullable(this.logicDeleteInfo)
+                .map(TableLogicDeleteInfo::getDeleteKeyFieldInfo)
                 .orElse(null) != null;
     }
 
@@ -93,6 +94,16 @@ public class SmartTableInfo extends TableInfo {
      */
     public boolean supportTenant() {
         return this.tenantFieldInfo != null;
+    }
+
+    /**
+     * 表字段是否启用了更新填充
+     *
+     * @since 3.3.0
+     */
+    @Override
+    public boolean isWithUpdateFill() {
+        return super.isWithUpdateFill() || (this.logicDeleteInfo != null && !this.logicDeleteInfo.getFillFieldInfoList().isEmpty());
     }
 
     /**
@@ -147,35 +158,28 @@ public class SmartTableInfo extends TableInfo {
         Assert.isTrue(useYnNum.get() <= 1, "@TableUseYnField not support more than one in Class: \"%s\"", tableInfo.getEntityType().getName());
         Assert.isTrue(tenantNum.get() <= 1, "@TableTenantField not support more than one in Class: \"%s\"", tableInfo.getEntityType().getName());
         if (tableInfo.isWithLogicDelete()) {
-            List<TableFieldInfo> logicDeleteKeyFields = tableInfo.getFieldList().stream().filter(item -> {
-                TableLogicKey tableLogicKey = AnnotationUtils.getAnnotation(item.getField(), TableLogicKey.class);
-                return tableLogicKey != null;
-            }).toList();
-            TableLogicDeleteFieldInfo deleteFieldInfo = getTableLogicDeleteFieldInfo(tableInfo);
-            if (!CollectionUtils.isEmpty(logicDeleteKeyFields)) {
-                Assert.isTrue(logicDeleteKeyFields.size() <= 1, "@TableLogicKey not support more than one in Class: \"%s\"", tableInfo.getEntityType().getName());
-                deleteFieldInfo.setDeleteKeyFieldInfo(logicDeleteKeyFields.get(0));
-                deleteFieldInfo.setTableLogicKey(AnnotationUtils.getAnnotation(logicDeleteKeyFields.get(0).getField(), TableLogicKey.class));
+            AtomicInteger deleteKeyNum = new AtomicInteger();
+            TableLogicDeleteInfo tableLogicDeleteInfo = new TableLogicDeleteInfo();
+            List<TableFieldInfo> deleteFillFieldInfoList = new ArrayList<>();
+            for (TableFieldInfo fieldInfo : tableInfo.getFieldList()) {
+                TableLogicField smartTableLogic = AnnotationUtils.getAnnotation(fieldInfo.getField(), TableLogicField.class);
+                if (smartTableLogic == null) {
+                    continue;
+                }
+                if (smartTableLogic.isDeleteKey()) {
+                    int andAdd = deleteKeyNum.getAndIncrement();
+                    if (andAdd >= 1) {
+                        throw new IllegalArgumentException("isDeleteKey true not support more than one in Class: " + tableInfo.getEntityType().getName());
+                    }
+                    tableLogicDeleteInfo.setDeleteKeyFieldInfo(fieldInfo);
+                    tableLogicDeleteInfo.setLogicKeyStrategy(smartTableLogic.strategy());
+                } else if (smartTableLogic.isFill()) {
+                    deleteFillFieldInfoList.add(fieldInfo);
+                }
             }
-            smartTableInfo.deleteField = deleteFieldInfo;
+            tableLogicDeleteInfo.setFillFieldInfoList(deleteFillFieldInfoList);
+
+            smartTableInfo.logicDeleteInfo = tableLogicDeleteInfo;
         }
     }
-
-
-    private static TableLogicDeleteFieldInfo getTableLogicDeleteFieldInfo(TableInfo tableInfo) {
-        TableLogicDeleteFieldInfo deleteFieldInfo = new TableLogicDeleteFieldInfo();
-        for (TableFieldInfo tableFieldInfo : tableInfo.getFieldList()) {
-            if (UserPropertyEnum.DELETE_TIME.getName().equals(tableFieldInfo.getProperty())) {
-                deleteFieldInfo.setDeleteTimeFieldInfo(tableFieldInfo);
-            }
-            if (UserPropertyEnum.DELETE_BY.getName().equals(tableFieldInfo.getProperty())) {
-                deleteFieldInfo.setDeleteByFieldInfo(tableFieldInfo);
-            }
-            if (UserPropertyEnum.DELETE_USER_ID.getName().equals(tableFieldInfo.getProperty())) {
-                deleteFieldInfo.setDeleteUserIdFieldInfo(tableFieldInfo);
-            }
-        }
-        return deleteFieldInfo;
-    }
-
 }

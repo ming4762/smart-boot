@@ -4,9 +4,9 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.smart.crud.annotation.TableLogicField;
 import com.smart.crud.annotation.TableUseYnField;
 import com.smart.crud.model.BaseModel;
-import com.smart.crud.plus.logic.TableLogicKey;
 import com.smart.system.constants.SysTenantIsolationStrategyEnum;
 import lombok.Getter;
 import lombok.Setter;
@@ -172,7 +172,7 @@ public class SysTenantPO extends BaseModel {
     /**
     * delete_key - deleteKey
     */
-    @TableLogicKey
+    @TableLogicField(isDeleteKey = true)
     private Long deleteKey;
 
     /**
