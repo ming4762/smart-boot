@@ -3,10 +3,11 @@ package com.smart.system.model.auth;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.smart.crud.model.BaseModel;
+import com.smart.crud.model.BaseModelUserTime;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
 import java.time.LocalDateTime;
 
 /**
@@ -17,8 +18,10 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @TableName("sys_auth_access_secret")
-public class SysAuthAccessSecretPO extends BaseModel {
+public class SysAuthAccessSecretPO extends BaseModelUserTime {
 
+    @Serial
+    private static final long serialVersionUID = -8036894937398185505L;
     /**
     * id - id
     */
@@ -64,35 +67,5 @@ public class SysAuthAccessSecretPO extends BaseModel {
     * delete_yn - deleteYn
     */
     private Boolean deleteYn;
-
-    /**
-    * create_user_id - 创建人员ID
-    */
-    private Long createUserId;
-
-    /**
-    * create_by - createBy
-    */
-    private String createBy;
-
-    /**
-    * create_time - 创建时间
-    */
-    private LocalDateTime createTime;
-
-    /**
-    * update_user_id - 更新人员ID
-    */
-    private Long updateUserId;
-
-    /**
-    * update_by - updateBy
-    */
-    private String updateBy;
-
-    /**
-    * update_time - 更新时间
-    */
-    private LocalDateTime updateTime;
 
 }

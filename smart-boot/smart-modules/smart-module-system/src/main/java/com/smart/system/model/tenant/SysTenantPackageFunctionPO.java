@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.smart.crud.model.BaseModel;
+import com.smart.crud.model.BaseModelCreateUserTime;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,7 +19,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @TableName("sys_tenant_package_function")
-public class SysTenantPackageFunctionPO extends BaseModel {
+public class SysTenantPackageFunctionPO extends BaseModelCreateUserTime {
 
     @Serial
     private static final long serialVersionUID = 7661133374867750242L;
@@ -42,20 +43,5 @@ public class SysTenantPackageFunctionPO extends BaseModel {
     * half_yn - 是否半选中
     */
     private Boolean halfYn;
-
-    /**
-    * create_time - createTime
-    */
-    private LocalDateTime createTime;
-
-    /**
-    * crate_by - crateBy
-    */
-    private String createBy;
-
-    /**
-    * create_user_id - createUserId
-    */
-    private Long createUserId;
 
 }
