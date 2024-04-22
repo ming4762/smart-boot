@@ -1,5 +1,6 @@
 package com.smart.system.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -265,6 +266,11 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
     public Result<Boolean> saveAccountSetting(@RequestBody @Valid UserAccountSaveDTO parameter) {
         SysUserAccountPO account = new SysUserAccountPO();
         BeanUtils.copyProperties(parameter, account);
+        this.sysUserAccountService.update(
+                account,
+                new LambdaQueryWrapper<>(SysUserAccountPO.class).eq(SysUserAccountPO::getUserId, account.getUserId())
+                        .eq(SysUserAccountPO::getTenantId, AuthUtils.getNonNullCurrentTenantId())
+        );
         return Result.success(this.sysUserAccountService.updateById(account));
     }
 

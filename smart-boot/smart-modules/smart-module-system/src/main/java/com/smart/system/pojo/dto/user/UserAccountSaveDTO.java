@@ -1,8 +1,6 @@
 package com.smart.system.pojo.dto.user;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.smart.commons.core.dto.auth.MaxConnectionsPolicyEnum;
-import com.smart.system.mybatis.type.MaxConnectionsPolicyTypeHandler;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -23,7 +21,7 @@ public class UserAccountSaveDTO implements Serializable {
     @Serial
     private static final long serialVersionUID = -3760196266685002568L;
 
-    private Long userId;
+    private Long id;
 
     private String ipWhiteList;
 
@@ -36,7 +34,6 @@ public class UserAccountSaveDTO implements Serializable {
     /**
      * 超出最大连接数执行策略
      */
-    @TableField(typeHandler = MaxConnectionsPolicyTypeHandler.class)
     private MaxConnectionsPolicyEnum maxConnectionsPolicy;
 
     /**
