@@ -112,7 +112,8 @@ public class SysUserAccountServiceImpl extends BaseServiceImpl<SysUserAccountMap
         Map<String, String> sysParameter = this.sysParameterService.getParameter(List.of(
                 SysParameterCodeEnum.AUTH_MAX_CONNECTIONS.getCode(),
                 SysParameterCodeEnum.AUTH_MAX_DAYS_SINCE_LOGIN.getCode(),
-                SysParameterCodeEnum.AUTH_PASSWORD_LIFE_DAYS.getCode()
+                SysParameterCodeEnum.AUTH_PASSWORD_LIFE_DAYS.getCode(),
+                SysParameterCodeEnum.AUTH_PASSWORD_ERROR_UNLOCK_SECOND.getCode()
                 ));
 
         List<SysUserAccountPO> userAccountList = userList.stream()
@@ -124,9 +125,17 @@ public class SysUserAccountServiceImpl extends BaseServiceImpl<SysUserAccountMap
                         .maxConnections(Long.valueOf(sysParameter.get(SysParameterCodeEnum.AUTH_MAX_CONNECTIONS.getCode())))
                         .maxDaysSinceLogin(Long.valueOf(sysParameter.get(SysParameterCodeEnum.AUTH_MAX_DAYS_SINCE_LOGIN.getCode())))
                         .passwordLifeDays(Long.valueOf(sysParameter.get(SysParameterCodeEnum.AUTH_PASSWORD_LIFE_DAYS.getCode())))
+                        .passwordErrorUnlockSecond(this.getLongValue(sysParameter.get(SysParameterCodeEnum.AUTH_PASSWORD_ERROR_UNLOCK_SECOND.getCode()), 0L))
                         .build())
                 .toList();
         return this.saveBatch(userAccountList);
+    }
+
+    private Long getLongValue(String value, Long defaultValue) {
+        if (org.springframework.util.StringUtils.hasText(value)) {
+            return Long.valueOf(value);
+        }
+        return defaultValue;
     }
 
 
