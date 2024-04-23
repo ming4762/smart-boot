@@ -78,6 +78,9 @@ public final class CrudUtils {
      * @return TableInfo
      */
     public static SmartTableInfo getTableInfo(Class<?> clazz) {
+        if (clazz == null) {
+            return null;
+        }
         if (SMART_TABLE_INFO_CACHE.containsKey(clazz)) {
             return SMART_TABLE_INFO_CACHE.get(clazz);
         }
