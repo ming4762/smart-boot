@@ -69,7 +69,9 @@ public final class CrudUtils {
     private static final Map<Class<?>, SmartTableInfo> SMART_TABLE_INFO_CACHE = Maps.newConcurrentMap();
 
     public static String getTableName(Class<?> clazz) {
-        return getTableInfo(clazz).getTableName();
+        return Optional.ofNullable(getTableInfo(clazz))
+                .map(TableInfo::getTableName)
+                .orElse(null);
     }
 
     /**
