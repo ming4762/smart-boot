@@ -20,6 +20,7 @@ import com.smart.system.constants.UserDeptIdentEnum;
 import com.smart.system.model.*;
 import com.smart.system.pojo.dto.user.*;
 import com.smart.system.pojo.vo.SysFunctionListVO;
+import com.smart.system.pojo.vo.user.SysUserListVO;
 import com.smart.system.pojo.vo.user.SysUserWithDataScopeDTO;
 import com.smart.system.service.SysUserAccountService;
 import com.smart.system.service.SysUserDeptService;
@@ -312,5 +313,11 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
         return Result.success(
                 this.service.listUserRole(List.of(parameter.getId())).getOrDefault(parameter.getId(), Collections.emptyList())
         );
+    }
+
+    @PostMapping("getDetailById")
+    @Operation(summary = "通过ID查询用户详情")
+    public Result<SysUserListVO> getDetailById(@RequestBody Long id) {
+        return Result.success(this.service.getDetailById(id));
     }
 }

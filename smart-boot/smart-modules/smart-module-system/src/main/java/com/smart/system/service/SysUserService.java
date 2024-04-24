@@ -11,6 +11,7 @@ import com.smart.system.model.SysUserPO;
 import com.smart.system.pojo.dbo.SysUserWthAccountBO;
 import com.smart.system.pojo.dto.user.UserSetRoleDTO;
 import com.smart.system.pojo.vo.SysFunctionListVO;
+import com.smart.system.pojo.vo.user.SysUserListVO;
 import com.smart.system.pojo.vo.user.SysUserWithDataScopeDTO;
 import org.springframework.lang.NonNull;
 
@@ -147,4 +148,11 @@ public interface SysUserService extends BaseService<SysUserPO> {
      * @return 用户角色细腻系
      */
     Map<Long, List<SysRolePO>> listUserRole(List<Long> userIdList);
+
+    /**
+     * 通过ID获取用户详情
+     * @param userId 用户ID
+     * @return 用户详情
+     */
+    SysUserListVO getDetailById(Long userId);
 }

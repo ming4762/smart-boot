@@ -56,7 +56,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -138,9 +137,15 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         return voList;
     }
 
+    /**
+     * 通过ID获取用户详情
+     *
+     * @param userId 用户ID
+     * @return 用户详情
+     */
     @Override
-    public SysUserPO getById(Serializable id) {
-        SysUserPO user = super.getById(id);
+    public SysUserListVO getDetailById(Long userId) {
+        SysUserPO user = super.getById(userId);
         if (user == null) {
             return null;
         }
