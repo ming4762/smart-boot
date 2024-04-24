@@ -44,7 +44,7 @@ public class EnhancedDatabaseMeta extends DatabaseMeta {
     @Override
     public String getURL() throws KettleDatabaseException {
         String url = super.getURL();
-        if (DatabaseTypeEnum.MySql.name().equals(this.getDatabaseInterface().getPluginName())) {
+        if (DatabaseTypeEnum.MYSQL.getValue().equals(this.getDatabaseInterface().getPluginName())) {
             url += MYSQL_TIME_ZONE;
         }
         return url;

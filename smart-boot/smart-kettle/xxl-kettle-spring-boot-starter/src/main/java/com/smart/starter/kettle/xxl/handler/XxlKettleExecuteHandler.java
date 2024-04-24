@@ -1,6 +1,8 @@
 package com.smart.starter.kettle.xxl.handler;
 
 import com.smart.commons.core.utils.JsonUtils;
+import com.smart.kettle.core.parameter.BasicExecuteParameter;
+import com.smart.kettle.core.parameter.TransExecuteParameter;
 import com.smart.kettle.core.service.KettleService;
 import com.smart.starter.kettle.xxl.pojo.dto.KettleJobExecuteDTO;
 import com.smart.starter.kettle.xxl.pojo.dto.KettleTransExecuteDTO;
@@ -32,14 +34,17 @@ public class XxlKettleExecuteHandler {
     public void executeKettleDbTrans() {
         try {
             KettleTransExecuteDTO parameter = JsonUtils.parse(XxlJobHelper.getJobParam(), KettleTransExecuteDTO.class);
+            TransExecuteParameter executeParameter = TransExecuteParameter.builder()
+                    .variable(parameter.getVariable())
+                    .namedParameter(parameter.getNamedParameter())
+                    .params(parameter.getParams())
+                    .logLevel(parameter.getLogLevel())
+                    .build();
             Trans trans = this.kettleService.executeDbTransfer(
                     parameter.getKettleDatabaseRepositoryProperties(),
                     parameter.getTransName(),
                     parameter.getDirectoryName(),
-                    parameter.getParams().toArray(new String[0]),
-                    parameter.getVariableMap(),
-                    parameter.getParameterMap(),
-                    parameter.getLogLevel(),
+                    executeParameter,
                     null
             );
             XxlJobHelper.log(KettleLogStore.getAppender().getBuffer().toString());
@@ -63,13 +68,16 @@ public class XxlKettleExecuteHandler {
     public void executeKettleDbJob() {
         try {
             KettleJobExecuteDTO parameter = JsonUtils.parse(XxlJobHelper.getJobParam(), KettleJobExecuteDTO.class);
+            BasicExecuteParameter executeParameter = BasicExecuteParameter.builder()
+                    .variable(parameter.getVariable())
+                    .namedParameter(parameter.getNamedParameter())
+                    .logLevel(parameter.getLogLevel())
+                    .build();
             Job job =this.kettleService.executeDbJob(
                     parameter.getKettleDatabaseRepositoryProperties(),
                     parameter.getJobName(),
                     parameter.getDirectoryName(),
-                    parameter.getVariableMap(),
-                    parameter.getParameterMap(),
-                    parameter.getLogLevel(),
+                    executeParameter,
                     null
             );
             XxlJobHelper.log(KettleLogStore.getAppender().getBuffer().toString());

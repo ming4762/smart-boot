@@ -3,23 +3,25 @@ package com.smart.kettle.core.constants;
 import com.smart.commons.core.constants.LabelValueEnum;
 import lombok.Getter;
 
+import java.util.Arrays;
+
 /**
- * 数据库类型
- * @author ShiZhongMing
- * 2021/7/15 8:30
- * @since 1.0
+ * KETTLE 数据库连接方式
+ * @author shizhongming
+ * 2024/3/18 21:47
+ * @since 3.0.0
  */
 @Getter
-public enum DatabaseTypeEnum implements LabelValueEnum {
-    /**
-     * mysql数据库
-     */
-    MYSQL("MySql"),
-    ORACLE("Oracle"),
-    SQL_SERVER("MS SQL Server");
+public enum DatabaseAccessEnum implements LabelValueEnum {
+    JDBC("Native(JDBC)"),
+    ODBC("ODBC"),
+    JNDI("JNDI"),
+    OCI("OCI")
+    ;
+
     private final String label;
 
-    DatabaseTypeEnum(String label) {
+    DatabaseAccessEnum(String label) {
         this.label = label;
     }
 

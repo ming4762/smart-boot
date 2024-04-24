@@ -19,8 +19,8 @@ public class KettleDatabaseRepositoryFactory implements KeyedPooledObjectFactory
     public PooledObject<KettleDatabaseRepository> makeObject(KettleDatabaseRepositoryProperties properties) throws Exception {
         KettleDatabaseRepository repository = new KettleDatabaseRepository();
         // 创建连接信息
-        EnhancedDatabaseMeta enhancedDatabaseMeta = new EnhancedDatabaseMeta(properties.getName(), properties.getType(),
-                properties.getAccess(), properties.getHost(), properties.getDb(), properties.getPort(), properties.getDbUser(), properties.getDbPassword());
+        EnhancedDatabaseMeta enhancedDatabaseMeta = new EnhancedDatabaseMeta(properties.getName(), properties.getType().name(),
+                properties.getAccess().getValue(), properties.getHost(), properties.getDb(), properties.getPort(), properties.getDbUser(), properties.getDbPassword());
         KettleDatabaseRepositoryMeta repositoryMeta = new KettleDatabaseRepositoryMeta(properties.getId(), properties.getRepositoryName(), properties.getDescription(), enhancedDatabaseMeta);
         // 初始化资源库
         repository.init(repositoryMeta);

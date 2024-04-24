@@ -1,9 +1,12 @@
 package com.smart.kettle.core.properties;
 
+import com.smart.kettle.core.constants.DatabaseAccessEnum;
+import com.smart.kettle.core.constants.DatabaseTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import org.springframework.lang.NonNull;
 
 /**
@@ -16,22 +19,29 @@ import org.springframework.lang.NonNull;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@SuperBuilder(toBuilder = true)
 public class DatabaseMetaProperties {
 
+    /**
+     * 数据库类型
+     */
     @NonNull
-    private String type = "mysql";
+    private DatabaseTypeEnum type;
+    /**
+     * 连接方式
+     */
     @NonNull
-    private String access = "jdbc";
+    private DatabaseAccessEnum access;
 
     private String name;
     @NonNull
-    private String host = "localhost";
+    private String host;
     @NonNull
     private String db;
     @NonNull
-    private String port = "3306";
+    private String port;
     @NonNull
-    private String dbUser = "root";
+    private String dbUser;
     @NonNull
-    private String dbPassword = "";
+    private String dbPassword;
 }

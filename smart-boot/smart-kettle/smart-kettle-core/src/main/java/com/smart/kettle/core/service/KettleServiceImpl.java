@@ -4,10 +4,11 @@ import com.smart.commons.core.data.Tree;
 import com.smart.kettle.core.KettleActuator;
 import com.smart.kettle.core.log.KettleLogController;
 import com.smart.kettle.core.model.RepositoryDirectoryData;
+import com.smart.kettle.core.parameter.BasicExecuteParameter;
+import com.smart.kettle.core.parameter.TransExecuteParameter;
 import com.smart.kettle.core.properties.KettleDatabaseRepositoryProperties;
 import com.smart.kettle.core.repository.pool.KettleDatabaseRepositoryProvider;
 import lombok.SneakyThrows;
-import org.pentaho.di.core.logging.LogLevel;
 import org.pentaho.di.job.Job;
 import org.pentaho.di.job.JobListener;
 import org.pentaho.di.job.JobMeta;
@@ -27,7 +28,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -66,10 +66,7 @@ public class KettleServiceImpl implements KettleService, ApplicationContextAware
      * @param properties 资源库配置参数
      * @param transName 转换名
      * @param directoryName 转换所在目录
-     * @param params 参数
-     * @param variableMap 变量
-     * @param parameterMap  命名参数
-     * @param logLevel 日志级别
+     * @param parameter 参数
      * @param beforeHandler 执行前事件
      * @return 执行的转换
      */
@@ -78,10 +75,7 @@ public class KettleServiceImpl implements KettleService, ApplicationContextAware
             @NonNull KettleDatabaseRepositoryProperties properties,
             @NonNull String transName,
             String directoryName,
-            @NonNull String[] params,
-            @NonNull Map<String, String> variableMap,
-            @NonNull Map<String, String> parameterMap,
-            @NonNull LogLevel logLevel,
+            @NonNull TransExecuteParameter parameter,
             Consumer<Trans> beforeHandler
     ) {
         // 关闭控制台日志
@@ -93,7 +87,7 @@ public class KettleServiceImpl implements KettleService, ApplicationContextAware
             // 获取元数据
             TransMeta transMeta = KettleActuator.getDbTransMeta(repository, transName, directoryName);
             // 执行
-            trans = this.doExecuteTrans(transMeta, params, variableMap, parameterMap, logLevel, beforeHandler);
+            trans = this.doExecuteTrans(transMeta, parameter, beforeHandler);
         } finally {
             this.repositoryProvider.returnRepository(properties, repository);
         }
@@ -103,24 +97,18 @@ public class KettleServiceImpl implements KettleService, ApplicationContextAware
     @Override
     public Trans executeFileTransfer(
             @NonNull String ktrPath,
-            @NonNull String[] params,
-            @NonNull Map<String, String> variableMap,
-            @NonNull Map<String, String> parameterMap,
-            @NonNull LogLevel logLevel,
+            @NonNull TransExecuteParameter parameter,
             Consumer<Trans> beforeHandler
     ) {
         TransMeta transMeta = KettleActuator.getTransMeta(ktrPath);
-        return this.doExecuteTrans(transMeta, params, variableMap, parameterMap, logLevel, beforeHandler);
+        return this.doExecuteTrans(transMeta, parameter, beforeHandler);
     }
 
     @Override
     @SneakyThrows(IOException.class)
     public Trans executeClasspathFileTransfer(
             @NonNull String ktrPath,
-            @NonNull String[] params,
-            @NonNull Map<String, String> variableMap,
-            @NonNull Map<String, String> parameterMap,
-            @NonNull LogLevel logLevel,
+            @NonNull TransExecuteParameter parameter,
             Consumer<Trans> beforeHandler
     ) {
         ClassLoader classLoader = this.getClass().getClassLoader();
@@ -128,7 +116,7 @@ public class KettleServiceImpl implements KettleService, ApplicationContextAware
         try (InputStream inputStream = classLoader.getResourceAsStream(ktrPath)) {
             Assert.notNull(inputStream, "execute trans fail,can not find trans file");
             TransMeta transMeta = KettleActuator.getTransMeta(inputStream);
-            return this.doExecuteTrans(transMeta, params, variableMap, parameterMap, logLevel, beforeHandler);
+            return this.doExecuteTrans(transMeta, parameter, beforeHandler);
         }
     }
 
@@ -138,9 +126,7 @@ public class KettleServiceImpl implements KettleService, ApplicationContextAware
      * @param properties 资源库配置参数
      * @param jobName 名称
      * @param directoryName 转换所在目录
-     * @param variableMap 变量
-     * @param parameterMap  命名参数
-     * @param logLevel 日志级别
+     * @param parameter 参数
      * @param beforeHandler 执行前事件
      * @return 执行的转换
      */
@@ -149,9 +135,7 @@ public class KettleServiceImpl implements KettleService, ApplicationContextAware
             @NonNull KettleDatabaseRepositoryProperties properties,
             @NonNull String jobName,
             String directoryName,
-            @NonNull Map<String, String> variableMap,
-            @NonNull Map<String, String> parameterMap,
-            @NonNull LogLevel logLevel,
+            @NonNull BasicExecuteParameter parameter,
             Consumer<Job> beforeHandler
     ) {
         // 获取资源库
@@ -160,7 +144,7 @@ public class KettleServiceImpl implements KettleService, ApplicationContextAware
         try {
             // 获取元数据
             JobMeta jobMeta = KettleActuator.getDbJobMate(repository, jobName, directoryName);
-            job = this.doExecuteJob(jobMeta, repository, variableMap, parameterMap, logLevel, beforeHandler);
+            job = this.doExecuteJob(jobMeta, repository, parameter, beforeHandler);
         } finally {
             this.repositoryProvider.returnRepository(properties, repository);
         }
@@ -170,22 +154,18 @@ public class KettleServiceImpl implements KettleService, ApplicationContextAware
     @Override
     public Job executeFileJob(
             @NonNull String jobPath,
-            @NonNull Map<String, String> variableMap,
-            @NonNull Map<String, String> parameterMap,
-            @NonNull LogLevel logLevel,
+            @NonNull BasicExecuteParameter parameter,
             Consumer<Job> beforeHandler
     ) {
         JobMeta jobMeta = KettleActuator.getJobMeta(jobPath);
-        return this.doExecuteJob(jobMeta, null, variableMap, parameterMap, logLevel, beforeHandler);
+        return this.doExecuteJob(jobMeta, null, parameter, beforeHandler);
     }
 
     @Override
     @SneakyThrows(IOException.class)
     public Job executeClasspathJob(
             @NonNull String jobPath,
-            @NonNull Map<String, String> variableMap,
-            @NonNull Map<String, String> parameterMap,
-            @NonNull LogLevel logLevel,
+            @NonNull BasicExecuteParameter parameter,
             Consumer<Job> beforeHandler
     ) {
         ClassLoader classLoader = this.getClass().getClassLoader();
@@ -193,21 +173,19 @@ public class KettleServiceImpl implements KettleService, ApplicationContextAware
         try (InputStream inputStream = classLoader.getResourceAsStream(jobPath)) {
             Assert.notNull(inputStream, "execute job fail,can not find job file");
             JobMeta jobMeta = KettleActuator.getJobMeta(inputStream);
-            return this.doExecuteJob(jobMeta, null, variableMap, parameterMap, logLevel, beforeHandler);
+            return this.doExecuteJob(jobMeta, null, parameter, beforeHandler);
         }
     }
 
     protected Job doExecuteJob(
             @NonNull JobMeta jobMeta,
             KettleDatabaseRepository repository,
-            @NonNull Map<String, String> variableMap,
-            @NonNull Map<String, String> parameterMap,
-            @NonNull LogLevel logLevel,
+            @NonNull BasicExecuteParameter parameter,
             Consumer<Job> beforeHandler
     ) {
         // 初始化日志
         this.kettleLogController.initJobLog(jobMeta);
-        return KettleActuator.executeJob(repository, jobMeta, variableMap, parameterMap, logLevel, job1 -> {
+        return KettleActuator.executeJob(repository, jobMeta, parameter, job1 -> {
             if (beforeHandler != null) {
                 beforeHandler.accept(job1);
             }
@@ -217,16 +195,13 @@ public class KettleServiceImpl implements KettleService, ApplicationContextAware
 
     protected Trans doExecuteTrans(
             @NonNull TransMeta transMeta,
-            @NonNull String[] params,
-            @NonNull Map<String, String> variableMap,
-            @NonNull Map<String, String> parameterMap,
-            @NonNull LogLevel logLevel,
+            @NonNull TransExecuteParameter parameter,
             Consumer<Trans> beforeHandler
     ) {
         // 初始化日志
         this.kettleLogController.initTransLog(transMeta);
         // 执行
-        return KettleActuator.executeTransfer(transMeta, params, variableMap, parameterMap, logLevel, trans1 -> {
+        return KettleActuator.executeTransfer(transMeta, parameter, trans1 -> {
             if (beforeHandler != null) {
                 beforeHandler.accept(trans1);
             }

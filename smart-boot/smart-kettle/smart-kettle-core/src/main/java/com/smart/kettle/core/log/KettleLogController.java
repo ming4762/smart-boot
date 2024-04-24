@@ -107,6 +107,9 @@ public class KettleLogController {
      * @param transMeta 转换元数据
      */
     public void initTransLog(@NonNull TransMeta transMeta) {
+        if (!Boolean.TRUE.equals(this.logDatabaseProperties.getEnabled())) {
+            return;
+        }
         // 创建数据库元数据
         DatabaseMeta databaseMeta = this.createLogDbMeta();
         transMeta.addDatabase(databaseMeta);
@@ -129,6 +132,9 @@ public class KettleLogController {
      * @param jobMeta job元数据
      */
     public void initJobLog(@NonNull JobMeta jobMeta) {
+        if (!Boolean.TRUE.equals(this.logDatabaseProperties.getEnabled())) {
+            return;
+        }
         // 创建数据库元数据
         DatabaseMeta databaseMeta = this.createLogDbMeta();
         jobMeta.addDatabase(databaseMeta);
@@ -175,7 +181,7 @@ public class KettleLogController {
     }
 
     private boolean isEnable() {
-        return Boolean.TRUE.equals(this.logDatabaseProperties.getEnable());
+        return Boolean.TRUE.equals(this.logDatabaseProperties.getEnabled());
     }
 
     /**
@@ -214,7 +220,7 @@ public class KettleLogController {
     private DatabaseMeta createLogDbMeta() {
         DatabaseMeta databaseMeta = new DatabaseMeta();
         databaseMeta.setName(StringUtils.isBlank(this.logDatabaseProperties.getName()) ? LogDatabaseProperties.DEFAULT_DB_NAME : this.logDatabaseProperties.getName());
-        databaseMeta.setDatabaseType(this.logDatabaseProperties.getType());
+        databaseMeta.setDatabaseType(this.logDatabaseProperties.getType().getValue());
         databaseMeta.setHostname(this.logDatabaseProperties.getHost());
         databaseMeta.setDBPort(this.logDatabaseProperties.getPort());
         databaseMeta.setDBName(this.logDatabaseProperties.getDb());

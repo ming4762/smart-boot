@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 public class LogDatabaseProperties extends DatabaseMetaProperties  {
 
-    private Boolean enable = true;
+    private Boolean enabled = true;
 
     public static final String DEFAULT_DB_NAME = "LOG_DB";
 

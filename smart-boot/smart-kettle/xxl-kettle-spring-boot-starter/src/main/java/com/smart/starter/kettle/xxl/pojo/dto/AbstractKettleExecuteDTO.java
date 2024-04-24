@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.pentaho.di.core.logging.LogLevel;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -29,36 +28,15 @@ public abstract class AbstractKettleExecuteDTO {
     /**
      * 变量
      */
-    private Map<String, String> variableMap;
+    private Map<String, String> variable;
 
     /**
      * 命名参数
      */
-    private Map<String, String> parameterMap;
+    private Map<String, String> namedParameter;
 
     /**
      * 日志级别
      */
     private LogLevel logLevel;
-
-    public Map<String, String> getVariableMap() {
-        if (this.variableMap == null) {
-            return new HashMap<>(0);
-        }
-        return variableMap;
-    }
-
-    public Map<String, String> getParameterMap() {
-        if (this.parameterMap == null) {
-            return new HashMap<>(0);
-        }
-        return parameterMap;
-    }
-
-    public LogLevel getLogLevel() {
-        if (this.logLevel == null) {
-            return LogLevel.BASIC;
-        }
-        return logLevel;
-    }
 }

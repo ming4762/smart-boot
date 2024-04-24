@@ -3,6 +3,8 @@ package com.smart.kettle.core;
 import com.smart.commons.core.data.Tree;
 import com.smart.kettle.core.model.RepositoryDirectoryData;
 import com.smart.kettle.core.model.RepositoryElementMetaData;
+import com.smart.kettle.core.parameter.BasicExecuteParameter;
+import com.smart.kettle.core.parameter.TransExecuteParameter;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.pentaho.di.core.KettleEnvironment;
@@ -24,9 +26,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.util.CollectionUtils;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -96,39 +96,40 @@ public class KettleActuator {
     /**
      * 执行转换
      * @param transMeta 转换参数
-     * @param params 参数
-     * @param variableMap 变量
-     * @param parameter 命名参数
-     * @param logLevel 日志级别
+     * @param parameter 参数
      * @param beforeHandler 执行前回调
      */
     @SneakyThrows(KettleException.class)
     public static Trans executeTransfer(
             @NonNull TransMeta transMeta,
-            @NonNull String[] params,
-            @NonNull Map<String, String> variableMap,
-            @NonNull Map<String, String> parameter,
-            @NonNull LogLevel logLevel,
+            @NonNull TransExecuteParameter parameter,
             Consumer<Trans> beforeHandler
             ) {
         Trans trans = new Trans(transMeta);
         // 设置变量
-        variableMap.forEach((key, value) -> {
-            trans.setVariable(key, value);
-            transMeta.setVariable(key, value);
-        });
-        // 设置命名参数
-        for (Map.Entry<String, String> entry : parameter.entrySet()) {
-            transMeta.setParameterValue(entry.getKey(), entry.getValue());
-            trans.setParameterValue(entry.getKey(), entry.getValue());
+        if (!CollectionUtils.isEmpty(parameter.getVariable())) {
+            parameter.getVariable().forEach((key, value) -> {
+                trans.setVariable(key, value);
+                transMeta.setVariable(key, value);
+            });
         }
-
-        trans.setLogLevel(logLevel);
+        // 设置命名参数
+        if (!CollectionUtils.isEmpty(parameter.getNamedParameter())) {
+            for (Map.Entry<String, String> entry : parameter.getNamedParameter().entrySet()) {
+                transMeta.setParameterValue(entry.getKey(), entry.getValue());
+                trans.setParameterValue(entry.getKey(), entry.getValue());
+            }
+        }
+        trans.setLogLevel(Objects.requireNonNullElse(parameter.getLogLevel(), LogLevel.BASIC));
         if (beforeHandler != null) {
             beforeHandler.accept(trans);
         }
         // 执行转换
-        trans.execute(params);
+        trans.execute(
+                Optional.ofNullable(parameter.getParams())
+                        .map(item -> item.toArray(new String[]{}))
+                        .orElse(new String[]{})
+        );
         // 等待转换完成
         trans.waitUntilFinished();
         return trans;
@@ -172,30 +173,32 @@ public class KettleActuator {
      * 执行job
      * @param repository 资源库
      * @param jobMeta job元数据
-     * @param params job参数
-     * @param parameterMap 命名参数
+     * @param parameter job参数
      * @param beforeHandler 执行前回调
      */
     @SneakyThrows(UnknownParamException.class)
     public static Job executeJob(
             KettleDatabaseRepository repository,
             @NonNull JobMeta jobMeta,
-            @NonNull Map<String, String> params,
-            @NonNull Map<String, String> parameterMap,
-            @NonNull LogLevel logLevel,
+            @NonNull BasicExecuteParameter parameter,
             Consumer<Job> beforeHandler
     ) {
         Job job = new Job(repository, jobMeta);
-        params.forEach((key, value) -> {
-            jobMeta.setVariable(key, value);
-            job.setVariable(key, value);
-        });
-        // 设置命名参数
-        for (Map.Entry<String, String> entry : parameterMap.entrySet()) {
-            jobMeta.setParameterValue(entry.getKey(), entry.getValue());
-            job.setParameterValue(entry.getKey(), entry.getValue());
+        // 变量
+        if (!CollectionUtils.isEmpty(parameter.getVariable())) {
+            parameter.getVariable().forEach((key, value) -> {
+                jobMeta.setVariable(key, value);
+                job.setVariable(key, value);
+            });
         }
-        job.setLogLevel(logLevel);
+        if (!CollectionUtils.isEmpty(parameter.getNamedParameter())) {
+            // 设置命名参数
+            for (Map.Entry<String, String> entry : parameter.getNamedParameter().entrySet()) {
+                jobMeta.setParameterValue(entry.getKey(), entry.getValue());
+                job.setParameterValue(entry.getKey(), entry.getValue());
+            }
+        }
+        job.setLogLevel(Objects.requireNonNullElse(parameter.getLogLevel(), LogLevel.BASIC));
         if (beforeHandler != null) {
             beforeHandler.accept(job);
         }
