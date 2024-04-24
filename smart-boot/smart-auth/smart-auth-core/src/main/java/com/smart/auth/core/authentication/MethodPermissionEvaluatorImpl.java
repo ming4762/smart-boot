@@ -32,9 +32,9 @@ public class MethodPermissionEvaluatorImpl implements PermissionEvaluator {
         }
         // 验证角色，超级管理员角色不拦截
         final RestUserDetails user = (RestUserDetails) authentication.getPrincipal();
-        if (user.getRoles().contains(RoleEnum.ROLE_SUPERADMIN.getRole())) {
-            return true;
-        }
+//        if (user.getRoles().contains(RoleEnum.ROLE_SUPERADMIN.getRole())) {
+//            return true;
+//        }
         // 验证权限
         final String permissionStr = String.join(":", targetDomainObject.toString(), permission.toString());
         Set<String> permissions = user.getPermissions().stream()
