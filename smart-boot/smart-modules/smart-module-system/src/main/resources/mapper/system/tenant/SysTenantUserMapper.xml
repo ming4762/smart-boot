@@ -43,10 +43,10 @@
                A.full_name,
                A.email,
                A.mobile,
-               c.id account_id
+               C.id account_id
         from sys_user A
         join sys_tenant_user B on A.user_id = B.user_id
-        left outer join sys_user_account C on a.user_id = c.user_id and B.tenant_id = c.tenant_id
+        left outer join sys_user_account C on A.user_id = C.user_id and B.tenant_id = C.tenant_id
             ${ew.customSqlSegment}
 
     </select>
