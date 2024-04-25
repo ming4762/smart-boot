@@ -109,7 +109,7 @@ public class SysTenantPackageController extends BaseController<SysTenantPackageS
         return Result.success(
                 this.sysTenantPackageFunctionService.listPackageFunction(
                                 new QueryWrapper<SysTenantPackageFunctionPO>()
-                                        .eq("b.has_child", 0).lambda()
+                                        .eq("B.has_child", 0).lambda()
                                         .eq(SysTenantPackageFunctionPO :: getTenantPackageId, parameter.getId())
                                         .eq(SysTenantPackageFunctionPO::getHalfYn, Boolean.FALSE)
                         )

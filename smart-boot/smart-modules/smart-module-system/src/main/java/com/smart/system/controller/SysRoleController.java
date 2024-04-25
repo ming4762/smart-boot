@@ -112,7 +112,7 @@ public class SysRoleController extends BaseController<SysRoleService, SysRolePO>
         return Result.success(
                 this.sysRoleFunctionService.listRoleFunction(
                         new QueryWrapper<SysRoleFunctionPO>()
-                                .eq("b.has_child", 0).lambda()
+                                .eq("B.has_child", 0).lambda()
                                 .eq(SysRoleFunctionPO :: getRoleId, parameter.getId())
                                 .eq(SysRoleFunctionPO::getHalfYn, Boolean.FALSE)
                 )

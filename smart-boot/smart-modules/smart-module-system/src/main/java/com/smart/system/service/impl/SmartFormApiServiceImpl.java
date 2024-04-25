@@ -1,6 +1,7 @@
 package com.smart.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.smart.commons.core.exception.SystemException;
 import com.smart.crud.model.BaseModel;
 import com.smart.crud.model.Sort;
@@ -46,7 +47,16 @@ public class SmartFormApiServiceImpl implements SmartFormApiService {
         String tableName = tableInfo.getTableName();
         // 获取字典名
         String labelName = tableInfo.getTableFiled(parameter.getLabelFieldName()).getColumn();
-        String valueName = tableInfo.getTableFiled(parameter.getValueFieldName()).getColumn();
+        String valueName = null;
+        TableFieldInfo tableFiled = tableInfo.getTableFiled(parameter.getValueFieldName());
+        if (tableFiled != null) {
+            valueName = tableFiled.getColumn();
+        } else if (StringUtils.equals(tableInfo.getKeyProperty(), parameter.getValueFieldName())) {
+            valueName = tableInfo.getKeyColumn();
+        }
+        if (valueName == null) {
+            throw new SystemException("获取表value字段失败");
+        }
         // 创建查询条件
         QueryWrapper<? extends BaseModel> queryWrapper = null;
         PageSortQuery pageSortQuery = parameter.getQueryParameter();
@@ -57,7 +67,7 @@ public class SmartFormApiServiceImpl implements SmartFormApiService {
             );
             if (StringUtils.isNotBlank(pageSortQuery.getSortName())) {
                 // 处理排序
-                List<Sort> sortList = CrudUtils.analysisOrder(pageSortQuery.getSortName(), pageSortQuery.getSortOrder(), (Class<? extends BaseModel>) clazz);
+                List<Sort> sortList = CrudUtils.analysisOrder(pageSortQuery.getSortName(), pageSortQuery.getSortOrder(), clazz);
                 for (Sort sort : sortList) {
                     queryWrapper.orderBy(true, StringUtils.endsWithIgnoreCase(sort.getOrder(), "asc"), sort.getDbName());
                 }
