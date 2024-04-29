@@ -1,7 +1,7 @@
 package com.smart.dingtalk.utils;
 
 import com.smart.commons.core.utils.RestUtils;
-import com.smart.dingtalk.constants.DingtalkApiUrlEnum;
+import com.smart.dingtalk.constants.url.DingtalkApiUrlEnum;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 

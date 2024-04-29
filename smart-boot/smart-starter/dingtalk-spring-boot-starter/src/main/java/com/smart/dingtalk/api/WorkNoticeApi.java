@@ -2,10 +2,14 @@ package com.smart.dingtalk.api;
 
 import com.dingtalk.api.DingTalkClient;
 import com.dingtalk.api.request.OapiMessageCorpconversationAsyncsendV2Request;
+import com.dingtalk.api.request.OapiMessageCorpconversationGetsendresultRequest;
+import com.dingtalk.api.request.OapiMessageCorpconversationRecallRequest;
 import com.dingtalk.api.response.OapiMessageCorpconversationAsyncsendV2Response;
+import com.dingtalk.api.response.OapiMessageCorpconversationGetsendresultResponse;
+import com.dingtalk.api.response.OapiMessageCorpconversationRecallResponse;
 import com.smart.commons.core.utils.JsonUtils;
 import com.smart.commons.validate.utils.ValidatorUtils;
-import com.smart.dingtalk.constants.DingtalkApiUrlEnum;
+import com.smart.dingtalk.constants.url.DingTalkWorkNoticeApiUrlEnum;
 import com.smart.dingtalk.pojo.dto.WorkNoticeAsyncSendResult;
 import com.smart.dingtalk.pojo.parameter.GetAccessTokenParameter;
 import com.smart.dingtalk.pojo.parameter.WorkNoticeAsyncSendParameter;
@@ -13,6 +17,7 @@ import com.smart.dingtalk.pojo.parameter.message.*;
 import com.taobao.api.ApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 
 /**
@@ -22,6 +27,7 @@ import org.springframework.util.CollectionUtils;
  * @since 3.0.0
  */
 @RequiredArgsConstructor
+@Slf4j
 public class WorkNoticeApi extends AbstractDingtalkApi {
 
     private final AccessSecureApi accessSecureApi;
@@ -37,7 +43,7 @@ public class WorkNoticeApi extends AbstractDingtalkApi {
         // 校验参数
         ValidatorUtils.validate(parameter);
         // 获取token
-        DingTalkClient client = this.getOldClient(DingtalkApiUrlEnum.WORK_NOTICE);
+        DingTalkClient client = this.getOldClient(DingTalkWorkNoticeApiUrlEnum.ASYNC_SEND);
         OapiMessageCorpconversationAsyncsendV2Request request = new OapiMessageCorpconversationAsyncsendV2Request();
         request.setAgentId(parameter.getAgentId());
         if (!CollectionUtils.isEmpty(parameter.getDeptIdList())) {
@@ -102,7 +108,45 @@ public class WorkNoticeApi extends AbstractDingtalkApi {
 
         OapiMessageCorpconversationAsyncsendV2Response response = client.execute(request, this.accessSecureApi.getInnerAppAccessToken(accessTokenParameter).getAccessToken());
         this.validateResponse(response);
-
+        log.info("发送钉钉工作通知成功，响应信息：{}", response.getBody());
         return JsonUtils.parse(response.getBody(), WorkNoticeAsyncSendResult.class);
+    }
+
+    /**
+     * 撤回工作通知消息
+     * @param agentId 发送消息时使用的微应用的AgentID
+     * @param taskId 发送消息时钉钉返回的任务ID
+     * @return 是否撤回成功
+     */
+    @SneakyThrows(ApiException.class)
+    public boolean recall(Long agentId, Long taskId, GetAccessTokenParameter accessTokenParameter) {
+        DingTalkClient client = this.getOldClient(DingTalkWorkNoticeApiUrlEnum.RECALL);
+        OapiMessageCorpconversationRecallRequest request = new OapiMessageCorpconversationRecallRequest();
+        request.setAgentId(agentId);
+        request.setMsgTaskId(taskId);
+        OapiMessageCorpconversationRecallResponse response = client.execute(request, this.accessSecureApi.getInnerAppAccessToken(accessTokenParameter).getAccessToken());
+        this.validateResponse(response);
+
+        log.info("撤回钉钉工作通知成功，agentId={}, taskId={}，响应信息：{}", agentId, taskId, response.getBody());
+        return true;
+    }
+
+    /**
+     * 获取工作通知发送结果
+     * @param agentId 发送消息时使用的微应用的AgentID
+     * @param taskId 发送消息时钉钉返回的任务ID
+     * @param accessTokenParameter 获取access token参数
+     * @return 发送结果
+     */
+    @SneakyThrows(ApiException.class)
+    public OapiMessageCorpconversationGetsendresultResponse.AsyncSendResult getSendResult(Long agentId, Long taskId, GetAccessTokenParameter accessTokenParameter) {
+        DingTalkClient client = this.getOldClient(DingTalkWorkNoticeApiUrlEnum.GET_SEND_RESULT);
+        OapiMessageCorpconversationGetsendresultRequest request = new OapiMessageCorpconversationGetsendresultRequest();
+        request.setAgentId(agentId);
+        request.setTaskId(taskId);
+        OapiMessageCorpconversationGetsendresultResponse response = client.execute(request, this.accessSecureApi.getInnerAppAccessToken(accessTokenParameter).getAccessToken());
+        this.validateResponse(response);
+
+        return response.getSendResult();
     }
 }

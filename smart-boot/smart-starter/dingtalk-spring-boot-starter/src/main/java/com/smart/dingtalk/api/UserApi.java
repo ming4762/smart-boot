@@ -2,7 +2,7 @@ package com.smart.dingtalk.api;
 
 import com.dingtalk.api.request.OapiV2UserGetbymobileRequest;
 import com.dingtalk.api.response.OapiV2UserGetbymobileResponse;
-import com.smart.dingtalk.constants.DingtalkApiUrlEnum;
+import com.smart.dingtalk.constants.url.DingTalkUserApiUrlEnum;
 import com.smart.dingtalk.pojo.dto.GetUserByMobileResult;
 import com.smart.dingtalk.pojo.parameter.GetAccessTokenParameter;
 import com.taobao.api.ApiException;
@@ -38,7 +38,7 @@ public class UserApi extends AbstractDingtalkApi {
         Assert.notNull(mobile, "mobile must not be null");
         OapiV2UserGetbymobileRequest request = new OapiV2UserGetbymobileRequest();
         request.setMobile(mobile);
-        OapiV2UserGetbymobileResponse response = this.getOldClient(DingtalkApiUrlEnum.GET_USER_BY_MOBILE).execute(request, this.accessSecureApi.getInnerAppAccessToken(accessTokenParameter).getAccessToken());
+        OapiV2UserGetbymobileResponse response = this.getOldClient(DingTalkUserApiUrlEnum.GET_BY_MOBILE).execute(request, this.accessSecureApi.getInnerAppAccessToken(accessTokenParameter).getAccessToken());
         this.validateResponse(response);
         GetUserByMobileResult result = new GetUserByMobileResult(response.getResult().getUserid());
         result.setRequestId(response.getRequestId());
