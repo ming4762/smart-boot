@@ -1,7 +1,7 @@
 package com.smart.dingtalk.utils;
 
 import com.smart.commons.core.utils.RestUtils;
-import com.smart.dingtalk.constants.url.DingtalkApiUrlEnum;
+import com.smart.dingtalk.constants.url.DingTalkApiUrl;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
@@ -22,7 +22,7 @@ public class DingtalkApiUtils {
         throw new IllegalAccessError("Utility class");
     }
 
-    public <T> T send(DingtalkApiUrlEnum apiUrl, String accessToken, Serializable parameter, Class<T> resultType) {
+    public <T> T send(DingTalkApiUrl apiUrl, String accessToken, Serializable parameter, Class<T> resultType) {
         String url = String.format(URL_FORMATTER, apiUrl.getUrl(), accessToken);
         ResponseEntity<T> response = RestUtils.rest(url, HttpMethod.POST, Map.of(), parameter, resultType);
         return response.getBody();
