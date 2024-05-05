@@ -65,15 +65,6 @@ public class DiskFilePathBO {
     }
 
     /**
-     * 获取文件夹路径
-     * @return 文件夹路径
-     */
-    @Deprecated
-    public String getFolderPath() {
-        return this.basePath + FILE_SEPARATOR + this.folderPath;
-    }
-
-    /**
      * 获取绝对路径
      * @return 绝对路径
      */

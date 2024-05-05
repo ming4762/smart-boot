@@ -7,6 +7,7 @@ import lombok.Getter;
  * @author zhongming4762
  * 2023/2/16
  */
+@Getter
 public enum FileStorageTypeEnum {
     /**
      * 文件存储器类型
@@ -16,13 +17,12 @@ public enum FileStorageTypeEnum {
     FTP("ActualFileFtpService", "com.smart.file.core.properties.SmartFileStorageFtpProperties"),
     MINIO("ActualFileMinioService", "com.smart.file.core.properties.SmartFileStorageMinioProperties"),
     ALIYUN_OSS("ActualFileAliyunOssService", "com.smart.file.core.properties.SmartFileStorageAliyunOssProperties"),
-    QINIU("ActualFileQiniuService", "com.smart.file.core.properties.SmartFileStorageQiniuProperties")
+    QINIU("ActualFileQiniuService", "com.smart.file.core.properties.SmartFileStorageQiniuProperties"),
+    AMAZON_S3("ActualFileAmazonS3Service", "com.smart.file.core.properties.SmartFileStorageAmazonS3Properties"),
     ;
 
-    @Getter
     private final String serviceName;
 
-    @Getter
     private final String propertiesClass;
 
     FileStorageTypeEnum(String serviceName, String propertiesClass) {

@@ -7,16 +7,18 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * 阿里云OSS参数类
- * @author zhongming4762
- * 2023/3/4
+ * Amazon S3 参数
+ * @author shizhongming
+ * 2024/4/24 20:40
+ * @since 3.0.0
  */
 @Getter
 @Setter
-public class SmartFileStorageAliyunOssProperties implements Serializable {
+public class SmartFileStorageAmazonS3Properties implements Serializable {
 
     @Serial
-    private static final long serialVersionUID = -322100020721857988L;
+    private static final long serialVersionUID = 258110006129416892L;
+
 
     private String endpoint;
 
