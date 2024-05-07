@@ -3,6 +3,7 @@ package com.smart.system.controller.auth;
 import com.smart.commons.core.log.Log;
 import com.smart.commons.core.log.LogOperationTypeEnum;
 import com.smart.commons.core.message.Result;
+import com.smart.crud.constants.CrudCommonEnum;
 import com.smart.crud.controller.BaseController;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.system.model.auth.SysAuthAccessSecretPO;
@@ -35,6 +36,13 @@ public class SysAuthAccessSecretController extends BaseController<SysAuthAccessS
     @PostMapping("list")
     @Operation(summary = "查询角色列表（支持分页、实体类属性查询）")
     public Result<Object> list(@RequestBody @NonNull PageSortQuery parameter) {
+        return super.list(parameter);
+    }
+
+    @PostMapping("listWithAll")
+    @Operation(summary = "查询角色列表（支持分页、实体类属性查询）")
+    public Result<Object> listWithAll(@RequestBody @NonNull PageSortQuery parameter) {
+        parameter.getParameter().put(CrudCommonEnum.WITH_ALL, Boolean.TRUE);
         return super.list(parameter);
     }
 

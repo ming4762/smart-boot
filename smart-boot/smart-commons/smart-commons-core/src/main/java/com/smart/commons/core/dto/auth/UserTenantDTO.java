@@ -1,8 +1,6 @@
 package com.smart.commons.core.dto.auth;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -15,6 +13,9 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class UserTenantDTO implements Serializable {
     @Serial
     private static final long serialVersionUID = 3827700705548774217L;

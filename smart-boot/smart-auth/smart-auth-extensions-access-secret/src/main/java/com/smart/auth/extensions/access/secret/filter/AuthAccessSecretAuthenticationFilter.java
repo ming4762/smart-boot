@@ -8,6 +8,7 @@ import com.smart.auth.core.secret.data.AccessSecretData;
 import com.smart.auth.core.service.AuthCache;
 import com.smart.commons.core.i18n.I18nUtils;
 import com.smart.commons.core.message.Result;
+import com.smart.commons.core.tenant.SmartTenantHolder;
 import com.smart.commons.core.utils.Base64Utils;
 import com.smart.commons.core.utils.IpUtils;
 import com.smart.commons.core.utils.RestJsonWriter;
@@ -72,6 +73,9 @@ public class AuthAccessSecretAuthenticationFilter implements Filter {
             chain.doFilter(request, response);
         } catch (AuthException e) {
             RestJsonWriter.writeJson((HttpServletResponse) response, Result.failure(ERROR_CODE, e.getMessage()));
+        } finally {
+            // 清除租户信息
+            SmartTenantHolder.clear();
         }
     }
 
@@ -117,6 +121,8 @@ public class AuthAccessSecretAuthenticationFilter implements Filter {
         if (!sign.equals(encodeSign)) {
             this.throwException(AuthI18nMessage.ACCESS_SECRET_SIGN_ERROR);
         }
+        // 设置租户信息
+        SmartTenantHolder.set(accessSecretData.getUserTenant());
     }
 
     /**

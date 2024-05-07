@@ -2,6 +2,7 @@ package com.smart.system.service.tenant;
 
 import com.smart.crud.query.IdParameter;
 import com.smart.crud.service.BaseService;
+import com.smart.system.inject.SysTenantInject;
 import com.smart.system.model.SysUserPO;
 import com.smart.system.model.tenant.SysTenantPO;
 import com.smart.system.model.tenant.SysTenantPackagePO;
@@ -62,4 +63,10 @@ public interface SysTenantService extends BaseService<SysTenantPO> {
      */
     @NonNull
     List<SysTenantPO> listTenantByUserId(@NonNull Long userId);
+
+    /**
+     * 注入租户信息
+     * @param dataList 数据列表
+     */
+    void injectTenant(List<? extends SysTenantInject> dataList);
 }

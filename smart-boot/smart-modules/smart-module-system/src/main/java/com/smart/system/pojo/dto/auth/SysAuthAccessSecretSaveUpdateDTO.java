@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -17,7 +18,8 @@ import java.time.LocalDateTime;
 @ToString
 public class SysAuthAccessSecretSaveUpdateDTO implements Serializable {
 
-
+    @Serial
+    private static final long serialVersionUID = -8202607119457769084L;
     /**
     * 
     */
@@ -43,5 +45,7 @@ public class SysAuthAccessSecretSaveUpdateDTO implements Serializable {
     * 序号
     */
     private Integer seq;
+
+    private Long tenantId;
 
 }

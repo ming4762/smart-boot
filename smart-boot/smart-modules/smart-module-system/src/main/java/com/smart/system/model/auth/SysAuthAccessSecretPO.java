@@ -68,4 +68,9 @@ public class SysAuthAccessSecretPO extends BaseModelUserTime {
     */
     private Boolean deleteYn;
 
+    /**
+     * 租户ID
+     */
+    private Long tenantId;
+
 }

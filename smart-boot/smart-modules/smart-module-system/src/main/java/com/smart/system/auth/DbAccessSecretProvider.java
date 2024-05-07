@@ -3,8 +3,12 @@ package com.smart.system.auth;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.smart.auth.core.secret.AccessSecretProvider;
 import com.smart.auth.core.secret.data.AccessSecretData;
+import com.smart.commons.core.dto.auth.UserTenantDTO;
 import com.smart.system.model.auth.SysAuthAccessSecretPO;
+import com.smart.system.model.tenant.SysTenantPO;
 import com.smart.system.service.auth.SysAuthAccessSecretService;
+import com.smart.system.service.tenant.SysTenantService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,13 +17,12 @@ import org.springframework.stereotype.Component;
  * @since 3.0.0
  */
 @Component
+@RequiredArgsConstructor
 public class DbAccessSecretProvider implements AccessSecretProvider {
 
     private final SysAuthAccessSecretService sysAuthAccessSecretService;
+    private final SysTenantService sysTenantService;
 
-    public DbAccessSecretProvider(SysAuthAccessSecretService sysAuthAccessSecretService) {
-        this.sysAuthAccessSecretService = sysAuthAccessSecretService;
-    }
 
     /**
      * 通过 accessKey 获取认证信息
@@ -37,6 +40,16 @@ public class DbAccessSecretProvider implements AccessSecretProvider {
         if (sysAuthAccessSecret == null) {
             return null;
         }
-        return new AccessSecretData(sysAuthAccessSecret.getAccessKey(), sysAuthAccessSecret.getSecretKey(), sysAuthAccessSecret.getExpireDate(), sysAuthAccessSecret.getAccessIp());
+        // 查询租户信息
+        SysTenantPO sysTenant = this.sysTenantService.getById(sysAuthAccessSecret.getTenantId());
+        UserTenantDTO userTenant = UserTenantDTO.builder()
+                .tenantId(sysTenant.getId())
+                .tenantCode(sysTenant.getTenantCode())
+                .tenantName(sysTenant.getTenantName())
+                .tenantShortName(sysTenant.getTenantShortName())
+                .platformYn(sysTenant.getPlatformYn())
+                .useYn(sysTenant.getUseYn())
+                .build();
+        return new AccessSecretData(sysAuthAccessSecret.getAccessKey(), sysAuthAccessSecret.getSecretKey(), sysAuthAccessSecret.getExpireDate(), sysAuthAccessSecret.getAccessIp(), userTenant);
     }
 }

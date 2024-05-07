@@ -9,6 +9,7 @@ import com.smart.crud.plus.metadata.SmartTableInfo;
 import com.smart.crud.query.IdParameter;
 import com.smart.crud.service.BaseServiceImpl;
 import com.smart.crud.utils.CrudUtils;
+import com.smart.system.inject.SysTenantInject;
 import com.smart.system.mapper.tenant.SysTenantMapper;
 import com.smart.system.mapper.tenant.SysTenantUserMapper;
 import com.smart.system.model.SysRolePO;
@@ -38,10 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -278,5 +276,39 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
                                 .or(query -> query.le(SysTenantPO::getEffectTime, now).ge(SysTenantPO::getExpireTime, now))
                 ).apply("id in (select M.tenant_id from sys_tenant_user M where M.user_id = {0})", userId);
         return this.list(queryWrapper);
+    }
+
+    /**
+     * 注入租户信息
+     *
+     * @param dataList 数据列表
+     */
+    @Override
+    public void injectTenant(List<? extends SysTenantInject> dataList) {
+        if (CollectionUtils.isEmpty(dataList)) {
+            return;
+        }
+        Set<Long> tenantIds = dataList.stream()
+                .map(SysTenantInject::getTenantId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+        if (CollectionUtils.isEmpty(tenantIds)) {
+            return;
+        }
+        Map<Long, SysTenantPO> tenantMap = this.lambdaQuery()
+                .select(
+                        SysTenantPO::getId,
+                        SysTenantPO::getTenantCode,
+                        SysTenantPO::getTenantName,
+                        SysTenantPO::getTenantShortName,
+                        SysTenantPO::getPlatformYn,
+                        SysTenantPO::getUseYn
+                ).in(SysTenantPO::getId, tenantIds)
+                .list().stream()
+                .collect(Collectors.toMap(SysTenantPO::getId, item -> item));
+        if (CollectionUtils.isEmpty(tenantMap)) {
+            return;
+        }
+        dataList.forEach(item -> item.setTenant(tenantMap.get(item.getTenantId())));
     }
 }
