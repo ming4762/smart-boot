@@ -1,6 +1,6 @@
 package com.smart.monitor.autoconfigure.actuator.druid;
 
-import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
+import com.alibaba.druid.spring.boot3.autoconfigure.DruidDataSourceAutoConfigure;
 import com.smart.monitor.actuator.druid.SmartMonitorActuatorDruid;
 import com.smart.monitor.actuator.druid.points.DruidDataSourceEndPoint;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
