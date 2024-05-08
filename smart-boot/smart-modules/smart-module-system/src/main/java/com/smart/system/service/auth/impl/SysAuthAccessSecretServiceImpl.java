@@ -1,6 +1,8 @@
 package com.smart.system.service.auth.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.smart.auth.core.properties.AuthProperties;
+import com.smart.commons.core.exception.SystemException;
 import com.smart.commons.core.utils.Base64Utils;
 import com.smart.commons.core.utils.IdGenerator;
 import com.smart.commons.core.utils.auth.ShaUtils;
@@ -9,7 +11,8 @@ import com.smart.crud.query.PageSortQuery;
 import com.smart.crud.service.BaseServiceImpl;
 import com.smart.system.mapper.auth.SysAuthAccessSecretMapper;
 import com.smart.system.model.auth.SysAuthAccessSecretPO;
-import com.smart.system.pojo.SysAuthAccessSecretListVO;
+import com.smart.system.pojo.dto.access.SysAccessCreateSignDTO;
+import com.smart.system.pojo.vo.SysAuthAccessSecretListVO;
 import com.smart.system.service.auth.SysAuthAccessSecretService;
 import com.smart.system.service.tenant.SysTenantService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +22,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 /**
@@ -32,7 +39,11 @@ import java.util.UUID;
 public class SysAuthAccessSecretServiceImpl extends BaseServiceImpl<SysAuthAccessSecretMapper, SysAuthAccessSecretPO> implements SysAuthAccessSecretService {
 
 
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("E, d MMM yyyy HH:mm:ss z", Locale.ENGLISH);
+    private static final String SPLIT = ":";
+
     private final SysTenantService sysTenantService;
+    private final AuthProperties authProperties;
 
     /**
      * 插入一条记录（选择字段，策略插入）
@@ -71,5 +82,34 @@ public class SysAuthAccessSecretServiceImpl extends BaseServiceImpl<SysAuthAcces
             this.sysTenantService.injectTenant(voList);
         }
         return voList;
+    }
+
+    /**
+     * 创建签名
+     *
+     * @param parameter 签名参数
+     * @return 签名
+     */
+    @Override
+    public String createSign(SysAccessCreateSignDTO parameter) {
+        SysAuthAccessSecretPO accessSecret = this.getById(parameter.getAccessId());
+        if (accessSecret == null) {
+            throw new SystemException("查询Access secret失败");
+        }
+        ZonedDateTime zonedDateTime = parameter.getDate().atZone(ZoneId.systemDefault())
+                .withZoneSameInstant(ZoneId.of("GMT"));
+
+        String encryptKey = String.join(SPLIT, List.of(
+                parameter.getHttpMethod().name(),
+                parameter.getContentType(),
+                DATE_FORMATTER.format(zonedDateTime),
+                parameter.getNonce()
+        ));
+        String encodeSign = Base64Utils.encode(ShaUtils.hmacSha1Encrypt(accessSecret.getSecretKey(), encryptKey));
+        return String.join(SPLIT, List.of(
+               this.authProperties.getAccessSecret().getTokenPrefix(),
+                accessSecret.getAccessKey(),
+                encodeSign
+        ));
     }
 }

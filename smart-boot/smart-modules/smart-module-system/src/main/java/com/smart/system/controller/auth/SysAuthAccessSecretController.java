@@ -7,7 +7,8 @@ import com.smart.crud.constants.CrudCommonEnum;
 import com.smart.crud.controller.BaseController;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.system.model.auth.SysAuthAccessSecretPO;
-import com.smart.system.pojo.dto.auth.SysAuthAccessSecretSaveUpdateDTO;
+import com.smart.system.pojo.dto.access.SysAccessCreateSignDTO;
+import com.smart.system.pojo.dto.access.SysAuthAccessSecretSaveUpdateDTO;
 import com.smart.system.service.auth.SysAuthAccessSecretService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -78,5 +79,11 @@ public class SysAuthAccessSecretController extends BaseController<SysAuthAccessS
     @PostMapping("getById")
     public Result<SysAuthAccessSecretPO> getById(@RequestBody Serializable id) {
         return super.getById(id);
+    }
+
+    @Operation(summary = "生成签名")
+    @PostMapping("createSign")
+    public Result<String> createSign(@RequestBody @Valid SysAccessCreateSignDTO parameter) {
+        return Result.success(this.service.createSign(parameter));
     }
 }

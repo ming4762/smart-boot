@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -53,12 +54,12 @@ public class CustomObjectMapperConfigurer implements WebMvcConfigurer {
 
         // 设置日期序列化和反序列化
         JavaTimeModule javaTimeModule = new JavaTimeModule();
-        javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DateTimePatternEnum.DATE_TIME.getPattern())));
-        javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern(DateTimePatternEnum.DATE.getPattern())));
-        javaTimeModule.addSerializer(LocalTime.class, new LocalTimeSerializer(DateTimeFormatter.ofPattern(DateTimePatternEnum.TIME.getPattern())));
-        javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(DateTimePatternEnum.DATE_TIME.getPattern())));
-        javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ofPattern(DateTimePatternEnum.DATE.getPattern())));
-        javaTimeModule.addDeserializer(LocalTime.class, new LocalTimeDeserializer(DateTimeFormatter.ofPattern(DateTimePatternEnum.TIME.getPattern())));
+        javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DateTimePatternEnum.DATE_TIME.getPattern()).withZone(ZoneId.systemDefault())));
+        javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern(DateTimePatternEnum.DATE.getPattern()).withZone(ZoneId.systemDefault())));
+        javaTimeModule.addSerializer(LocalTime.class, new LocalTimeSerializer(DateTimeFormatter.ofPattern(DateTimePatternEnum.TIME.getPattern()).withZone(ZoneId.systemDefault())));
+        javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(DateTimePatternEnum.DATE_TIME.getPattern()).withZone(ZoneId.systemDefault())));
+        javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ofPattern(DateTimePatternEnum.DATE.getPattern()).withZone(ZoneId.systemDefault())));
+        javaTimeModule.addDeserializer(LocalTime.class, new LocalTimeDeserializer(DateTimeFormatter.ofPattern(DateTimePatternEnum.TIME.getPattern()).withZone(ZoneId.systemDefault())));
         objectMapper.registerModule(javaTimeModule);
         objectMapper.setDateFormat(new SimpleDateFormat(DateTimePatternEnum.DATE_TIME.getPattern()));
 

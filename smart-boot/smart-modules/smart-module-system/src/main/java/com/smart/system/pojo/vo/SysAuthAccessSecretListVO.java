@@ -1,4 +1,4 @@
-package com.smart.system.pojo;
+package com.smart.system.pojo.vo;
 
 import com.smart.system.inject.SysTenantInject;
 import com.smart.system.model.auth.SysAuthAccessSecretPO;
