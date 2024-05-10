@@ -1,6 +1,7 @@
 package com.smart.commons.core.utils;
 
 import org.apache.commons.io.IOUtils;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.lang.NonNull;
 import org.springframework.util.CollectionUtils;
@@ -58,6 +59,30 @@ public class RestUtils {
         }
         HttpEntity<MultiValueMap<String, ?>> httpEntity = new HttpEntity<>(parameter, httpHeaders);
         return restTemplate.exchange(url, httpMethod, httpEntity, clazz, uriVariables);
+    }
+
+    /**
+     * 发送JSON请求
+     *
+     * @param url                        URL
+     * @param httpMethod                 请求方式
+     * @param headers                    请求头
+     * @param param                      参数
+     * @param parameterizedTypeReference 返回类型
+     * @param uriVariables               URL参数
+     * @param <T>                        泛型
+     * @return 请求结果
+     */
+    public static <T> ResponseEntity<T> restJson(@NonNull String url, @NonNull HttpMethod httpMethod, Map<String, String> headers, String param, @NonNull ParameterizedTypeReference<T> parameterizedTypeReference, Object... uriVariables) {
+        final HttpHeaders httpHeaders = new HttpHeaders();
+        if (!CollectionUtils.isEmpty(headers)) {
+            headers.forEach(httpHeaders::add);
+        }
+        if (httpHeaders.getContentType() == null) {
+            httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        }
+        HttpEntity<String> httpEntity = new HttpEntity<>(param, httpHeaders);
+        return restTemplate.exchange(url, httpMethod, httpEntity, parameterizedTypeReference, uriVariables);
     }
 
     /**
