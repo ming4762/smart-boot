@@ -77,15 +77,15 @@
         select distinct D.function_id
         from sys_tenant_subscribe A
         join sys_tenant_package B on A.package_id = B.id
-        join sys_tenant_package_function C on c.tenant_package_id = B.id
-        join sys_role_function D on D.function_id = c.function_id
-        join sys_role M on D.role_id = m.role_id and m.tenant_id = A.tenant_id
+        join sys_tenant_package_function C on C.tenant_package_id = B.id
+        join sys_role_function D on D.function_id = C.function_id
+        join sys_role M on D.role_id = M.role_id and M.tenant_id = A.tenant_id
         where A.effect_time  &lt;= #{now}
             and A.expire_time &gt;= #{now}
             and B.effect_time  &lt;= #{now}
             and B.expire_time &gt;= #{now}
             and A.tenant_id = #{tenantId}
-            and d.role_id in (
+            and D.role_id in (
             <foreach collection="roleIdList" item="item" separator=",">
                 #{item}
             </foreach>
@@ -96,7 +96,7 @@
         select distinct C.function_id
         from sys_tenant_subscribe A
         join sys_tenant_package B on A.package_id = B.id
-        join sys_tenant_package_function C on c.tenant_package_id = B.id
+        join sys_tenant_package_function C on C.tenant_package_id = B.id
         where A.effect_time  &lt;= #{now}
           and A.expire_time &gt;= #{now}
           and B.effect_time  &lt;= #{now}
