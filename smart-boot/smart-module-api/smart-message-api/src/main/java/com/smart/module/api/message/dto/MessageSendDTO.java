@@ -27,6 +27,8 @@ public class MessageSendDTO implements Serializable {
 
     private SmsSendDTO smsSendResult;
 
+    private DingtalkWorkNoticeSendDTO dingtalkWorkNoticeSendResult;
+
     @Getter
     @Setter
     @AllArgsConstructor
@@ -35,5 +37,15 @@ public class MessageSendDTO implements Serializable {
         @Serial
         private static final long serialVersionUID = -5723191833115453567L;
         private Long messageId;
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @ToString
+    public static class DingtalkWorkNoticeSendDTO implements Serializable {
+        @Serial
+        private static final long serialVersionUID = 5019682880055330140L;
+        private String taskId;
     }
 }

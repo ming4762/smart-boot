@@ -7,9 +7,9 @@
 		<artifactId>smart-message</artifactId>
 		<version>3.0.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>smart-message-dingding</artifactId>
+	<artifactId>smart-message-dingtalk</artifactId>
 	<version>3.0.0-SNAPSHOT</version>
-	<name>smart-message-dingding</name>
+	<name>smart-message-dingtalk</name>
 	<description>钉钉消息模块</description>
 
 	<properties>
@@ -17,8 +17,9 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.aliyun</groupId>
-			<artifactId>dingtalk</artifactId>
+			<groupId>com.smart</groupId>
+			<artifactId>dingtalk-spring-boot-starter</artifactId>
+			<version>${smart-boot.version}</version>
 		</dependency>
 
 		<dependency>

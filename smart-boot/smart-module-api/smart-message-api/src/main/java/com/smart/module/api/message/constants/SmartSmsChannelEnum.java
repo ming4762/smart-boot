@@ -11,7 +11,7 @@ public enum SmartSmsChannelEnum {
      * ALIYUN:阿里云
      * TENCENT:腾讯云
      */
-    ALIYUN,
+    SMS_ALIYUN,
 
-    TENCENT,
+    SMS_TENCENT,
 }

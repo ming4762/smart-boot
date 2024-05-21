@@ -1,4 +1,4 @@
-package com.smart.message.dingding.constants;
+package com.smart.message.dingtalk.constants;
 
 import lombok.Getter;
 

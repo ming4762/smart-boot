@@ -12,7 +12,6 @@ import com.smart.message.manager.pojo.vo.SmartMessageSystemDetailVO;
 import com.smart.message.manager.service.SmartMessageSystemSendService;
 import com.smart.message.manager.service.SmartMessageSystemService;
 import com.smart.module.api.message.SmartMessageApi;
-import com.smart.module.api.message.constants.MessageChannelEnum;
 import com.smart.module.api.message.parameter.RemoteMessageSendParameter;
 import com.smart.module.api.system.SysUserApi;
 import com.smart.module.api.system.dto.SysUserDTO;
@@ -26,7 +25,6 @@ import org.springframework.util.CollectionUtils;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
 * smart_message_system - 系统消息表 Service实现类
@@ -35,6 +33,9 @@ import java.util.Set;
 */
 @Service
 public class SmartMessageSystemServiceImpl extends BaseServiceImpl<SmartMessageSystemMapper, SmartMessageSystemPO> implements SmartMessageSystemService {
+
+    private static final String SYSTEM_MESSAGE_CHANNEL = "SYSTEM_MESSAGE";
+    private static final String WEB_SOCKET_MESSAGE_CHANNEL = "WEB_SOCKET";
 
     private final SysUserApi sysUserApi;
 
@@ -94,7 +95,7 @@ public class SmartMessageSystemServiceImpl extends BaseServiceImpl<SmartMessageS
                         .toUserIds(new HashSet<>(userIds))
                         .content(data.getContent())
                         .priority(data.getPriority())
-                        .messageChannels(Set.of(MessageChannelEnum.SYSTEM, MessageChannelEnum.WEB_SOCKET))
+                        .messageChannelCodeList(List.of(SYSTEM_MESSAGE_CHANNEL, WEB_SOCKET_MESSAGE_CHANNEL))
                         .build()
         );
         return true;

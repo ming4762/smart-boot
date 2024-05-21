@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -21,6 +22,8 @@ import java.util.List;
 @Builder
 public class SmsSendParameter implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = -2491264643577950343L;
     /**
      * 发送的手机号码列表
      */

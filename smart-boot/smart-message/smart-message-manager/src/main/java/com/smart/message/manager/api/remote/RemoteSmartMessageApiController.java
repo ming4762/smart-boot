@@ -2,7 +2,6 @@ package com.smart.message.manager.api.remote;
 
 import com.smart.message.manager.api.local.LocalSmartMessageApi;
 import com.smart.module.api.message.SmartMessageApi;
-import com.smart.module.api.message.constants.MessageChannelEnum;
 import com.smart.module.api.message.constants.SmartMessageApiUrlConstants;
 import com.smart.module.api.message.dto.MessageSendDTO;
 import com.smart.module.api.message.dto.SmsSendDTO;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 消息远程调用接口
@@ -51,7 +49,7 @@ public class RemoteSmartMessageApiController implements SmartMessageApi {
      */
     @Override
     @PostMapping(SmartMessageApiUrlConstants.SEND)
-    public Map<MessageChannelEnum, List<MessageSendDTO>> send(@RequestBody RemoteMessageSendParameter parameter) {
-        return this.localSmartMessageApi.send(parameter);
+    public List<MessageSendDTO> send(RemoteMessageSendParameter parameter) {
+        return List.of();
     }
 }

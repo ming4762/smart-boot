@@ -3,6 +3,8 @@ package com.smart.message.manager.sender;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.message.core.constants.SmartMessageChannelType1Enum;
+import com.message.core.pojo.dto.SmartMessageToUserDTO;
 import com.message.core.service.SmartMessageSender;
 import com.smart.auth.core.utils.AuthUtils;
 import com.smart.commons.core.utils.IdGenerator;
@@ -12,14 +14,14 @@ import com.smart.message.manager.model.SmartMessageSystemPO;
 import com.smart.message.manager.model.SmartMessageSystemSendPO;
 import com.smart.message.manager.service.SmartMessageSystemSendService;
 import com.smart.message.manager.service.SmartMessageSystemService;
-import com.smart.module.api.message.constants.MessageChannelEnum;
 import com.smart.module.api.message.dto.MessageSendDTO;
 import com.smart.module.api.message.parameter.RemoteMessageSendParameter;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,14 +42,16 @@ public class SmartSystemMessageSender implements SmartMessageSender {
     }
 
     /**
-     * 获取支持的通道信息
+     * 获取支持的一级通道信息
      *
      * @return 支持的消息通道
      */
+    @NonNull
     @Override
-    public MessageChannelEnum supportChannel() {
-        return MessageChannelEnum.SYSTEM;
+    public SmartMessageChannelType1Enum supportChannel1() {
+        return SmartMessageChannelType1Enum.SYSTEM;
     }
+
 
     /**
      * 发送消息
@@ -57,7 +61,10 @@ public class SmartSystemMessageSender implements SmartMessageSender {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public MessageSendDTO send(RemoteMessageSendParameter parameter) {
+    public MessageSendDTO send(@Nullable String channelProperties, List<SmartMessageToUserDTO> toUserList, RemoteMessageSendParameter parameter) {
+        List<Long> userIdList = toUserList.stream()
+                .map(SmartMessageToUserDTO::getUserId)
+                .toList();
         SmartMessageSystemPO model = new SmartMessageSystemPO();
         boolean isAdd = true;
         if (parameter.getMessageId() != null) {
@@ -80,7 +87,7 @@ public class SmartSystemMessageSender implements SmartMessageSender {
             model.setPriority(parameter.getPriority());
             model.setSendTime(LocalDateTime.now());
 
-            model.setUserIds(new ArrayList<>(parameter.getToUserIds()));
+            model.setUserIds(userIdList);
             if (parameter.getBusiness() != null) {
                 model.setBusinessIdent(parameter.getBusiness().getBusinessIdent());
                 model.setBusinessId(parameter.getBusiness().getBusinessId());
@@ -93,12 +100,12 @@ public class SmartSystemMessageSender implements SmartMessageSender {
                     .set(SmartMessageSystemPO::getSendUserId, AuthUtils.getNonNullCurrentUserId())
                     .set(SmartMessageSystemPO::getSendTime, LocalDateTime.now())
                     // TODO:待完善 使用公共函数转
-                    .set(SmartMessageSystemPO::getUserIds, String.join(",", parameter.getToUserIds().stream().map(Object::toString).toList()));
+                    .set(SmartMessageSystemPO::getUserIds, String.join(",", userIdList.stream().map(Object::toString).toList()));
             // 更新消息表
             this.smartMessageSystemService.update(updateWrapper);
         }
         // 保存阅读记录表
-        List<SmartMessageSystemSendPO> messageSendList = parameter.getToUserIds().stream()
+        List<SmartMessageSystemSendPO> messageSendList = userIdList.stream()
                 .map(userId -> {
                     SmartMessageSystemSendPO messageSystemSend = new SmartMessageSystemSendPO();
                     messageSystemSend.setMessageId(messageId);

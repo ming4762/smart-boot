@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smart.message.manager.mapper.SmartMessageChannelMapper">
+    <sql id="columnList">
+        <!--   id 主键  索引   -->
+        id,
+        <!--   通道编码      -->
+        channel_code,
+        <!--   通道名称      -->
+        channel_name,
+        <!--   一级通道类型      -->
+        channel_type1,
+        <!--   二级通道类型      -->
+        channel_type2,
+        <!--   通道参数      -->
+        channel_properties,
+        <!--   useYn      -->
+        use_yn,
+        <!--   seq      -->
+        seq,
+        <!--   remark      -->
+        remark,
+        <!--   createTime      -->
+        create_time,
+        <!--   createUserId      -->
+        create_user_id,
+        <!--   createBy      -->
+        create_by,
+        <!--   updateTime      -->
+        update_time,
+        <!--   updateUserId      -->
+        update_user_id,
+        <!--   updateBy      -->
+        update_by,
+    </sql>
+
+    <resultMap id="commonResultMap" type="com.smart.message.manager.model.SmartMessageChannelPO">
+        <!--   id 主键  索引   -->
+        <id column="id" property="id" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   通道编码      -->
+        <result column="channel_code" property="channelCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   通道名称      -->
+        <result column="channel_name" property="channelName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   一级通道类型      -->
+        <result column="channel_type1" property="channelType1" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   二级通道类型      -->
+        <result column="channel_type2" property="channelType2" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   通道参数      -->
+        <result column="channel_properties" property="channelProperties" javaType="java.lang.String" jdbcType="LONGVARCHAR"/>
+        <!--   useYn      -->
+        <result column="use_yn" property="useYn" javaType="java.lang.Boolean" jdbcType="BIT"/>
+        <!--   seq      -->
+        <result column="seq" property="seq" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        <!--   remark      -->
+        <result column="remark" property="remark" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   createTime      -->
+        <result column="create_time" property="createTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+        <!--   createUserId      -->
+        <result column="create_user_id" property="createUserId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   createBy      -->
+        <result column="create_by" property="createBy" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   updateTime      -->
+        <result column="update_time" property="updateTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+        <!--   updateUserId      -->
+        <result column="update_user_id" property="updateUserId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   updateBy      -->
+        <result column="update_by" property="updateBy" javaType="java.lang.String" jdbcType="VARCHAR"/>
+    </resultMap>
+</mapper>

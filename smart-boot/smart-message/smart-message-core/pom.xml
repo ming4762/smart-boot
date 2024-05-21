@@ -30,5 +30,9 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-commons-core</artifactId>
+        </dependency>
+    </dependencies>
 </project>

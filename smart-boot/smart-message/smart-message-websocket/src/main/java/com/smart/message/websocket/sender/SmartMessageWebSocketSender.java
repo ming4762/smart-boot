@@ -1,10 +1,15 @@
 package com.smart.message.websocket.sender;
 
+import com.message.core.constants.SmartMessageChannelType1Enum;
+import com.message.core.pojo.dto.SmartMessageToUserDTO;
 import com.message.core.service.SmartMessageSender;
 import com.smart.message.websocket.server.WebSocket;
-import com.smart.module.api.message.constants.MessageChannelEnum;
 import com.smart.module.api.message.dto.MessageSendDTO;
 import com.smart.module.api.message.parameter.RemoteMessageSendParameter;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
+
+import java.util.List;
 
 /**
  * WebSocket消息发送器
@@ -22,13 +27,14 @@ public class SmartMessageWebSocketSender implements SmartMessageSender {
     }
 
     /**
-     * 获取支持的通道信息
+     * 获取支持的一级通道信息
      *
      * @return 支持的消息通道
      */
+    @NonNull
     @Override
-    public MessageChannelEnum supportChannel() {
-        return MessageChannelEnum.WEB_SOCKET;
+    public SmartMessageChannelType1Enum supportChannel1() {
+        return SmartMessageChannelType1Enum.WEB_SOCKET;
     }
 
     /**
@@ -38,8 +44,8 @@ public class SmartMessageWebSocketSender implements SmartMessageSender {
      * @return 消息发送结果
      */
     @Override
-    public MessageSendDTO send(RemoteMessageSendParameter parameter) {
-        parameter.getToUserIds().forEach(userId -> webSocket.pushMessage(userId, parameter.getContent()));
+    public MessageSendDTO send(@Nullable String channelProperties, List<SmartMessageToUserDTO> toUserList, RemoteMessageSendParameter parameter) {
+        toUserList.forEach(item -> webSocket.pushMessage(item.getUserId(), parameter.getContent()));
         return new MessageSendDTO();
     }
 }

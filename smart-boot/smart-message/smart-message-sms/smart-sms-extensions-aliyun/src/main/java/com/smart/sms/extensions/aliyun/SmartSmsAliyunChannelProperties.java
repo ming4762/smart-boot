@@ -3,6 +3,7 @@ package com.smart.sms.extensions.aliyun;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -13,6 +14,9 @@ import java.io.Serializable;
 @Getter
 @Setter
 public class SmartSmsAliyunChannelProperties implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 5132159022743250552L;
 
     private String accessKey;
 

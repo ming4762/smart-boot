@@ -15,7 +15,7 @@
 
 	<modules>
 		<module>smart-message-core</module>
-		<module>smart-message-dingding</module>
+		<module>smart-message-dingtalk</module>
 		<module>smart-message-manager</module>
 		<module>smart-message-sms</module>
 		<module>smart-message-websocket</module>

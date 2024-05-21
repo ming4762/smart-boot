@@ -1,10 +1,8 @@
 package com.smart.module.api.message.parameter;
 
-import com.smart.module.api.message.constants.MessageChannelEnum;
 import com.smart.module.api.message.constants.MessagePriorityEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
 import java.io.Serial;
@@ -36,6 +34,9 @@ public class RemoteMessageSendParameter implements Serializable {
      */
     private Long messageId;
 
+    @Schema(description = "消息通道列表", requiredMode = Schema.RequiredMode.REQUIRED)
+    private List<String> messageChannelCodeList;
+
     @Schema(description = "接收人ID集合", requiredMode = Schema.RequiredMode.REQUIRED)
     private Set<Long> toUserIds;
 
@@ -51,21 +52,17 @@ public class RemoteMessageSendParameter implements Serializable {
     @Schema(description = "模板数据")
     private LinkedHashMap<String, String> templateData;
 
+    @Schema(description = "是否是markdown消息")
+    private Boolean isMarkdown;
+
     @Schema(description = "优先级")
     private MessagePriorityEnum priority;
-
-    /**
-     * 消息通道
-     */
-    @Schema(description = "消息通道列表")
-    private Set<MessageChannelEnum> messageChannels;
 
     @Schema(description = "业务参数")
     private BusinessParameter business;
 
     @Schema(description = "短息发送参数")
     private SmsSendParameter smsSendParameter;
-
 
     @Getter
     @Setter
@@ -75,12 +72,6 @@ public class RemoteMessageSendParameter implements Serializable {
     public static class SmsSendParameter implements Serializable {
         @Serial
         private static final long serialVersionUID = 6229881767018505658L;
-        /**
-         * 发送的手机号码列表
-         */
-        @Schema(description = "手机号码列表", requiredMode = Schema.RequiredMode.REQUIRED)
-        @NotEmpty(message = "手机号码不能为空")
-        private List<String> phoneNumberList;
 
         /**
          * 短信签名
@@ -95,9 +86,6 @@ public class RemoteMessageSendParameter implements Serializable {
         @Schema(description = "短信模板", requiredMode = Schema.RequiredMode.REQUIRED)
         @NotBlank(message = "短信模板不能为空")
         private String template;
-
-        @Schema(description = "短信通道编码")
-        private String channelCode;
     }
 
     @Getter
