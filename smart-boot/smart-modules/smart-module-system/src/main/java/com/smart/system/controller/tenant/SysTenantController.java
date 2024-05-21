@@ -107,7 +107,7 @@ public class SysTenantController extends BaseController<SysTenantService, SysTen
      */
     @Operation(summary = "查询隔离策略")
     @PostMapping("listIsolationStrategy")
-    public Result<List<LabelValueData>> listIsolationStrategy() {
+    public Result<List<LabelValueData<SysTenantIsolationStrategyEnum>>> listIsolationStrategy() {
         return Result.success(EnumUtils.convertLabelValue(SysTenantIsolationStrategyEnum.class));
     }
 

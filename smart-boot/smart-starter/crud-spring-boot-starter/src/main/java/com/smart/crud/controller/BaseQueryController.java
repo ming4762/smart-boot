@@ -103,12 +103,12 @@ public abstract class BaseQueryController<K extends BaseService<T>, T extends Ba
      * @return label value
      */
     @SneakyThrows(ClassNotFoundException.class)
-    public Result<List<LabelValueData>> listEnumLabelValue(@RequestBody @Valid ClassParameter parameter) {
-        Class<?> aClass = Class.forName(parameter.getClassName());
+    public <M extends LabelValueEnum> Result<List<LabelValueData<M>>> listEnumLabelValue(@RequestBody @Valid ClassParameter parameter) {
+        Class<M> aClass = (Class<M>) Class.forName(parameter.getClassName());
         if (!LabelValueEnum.class.isAssignableFrom(aClass)) {
             throw new IllegalArgumentException("类型错误，只能是com.smart.commons.core.constants.LabelValueEnum的子类，并且是枚举类");
         }
-        return Result.success(EnumUtils.convertLabelValue((Class<? extends LabelValueEnum>) aClass));
+        return Result.success(EnumUtils.convertLabelValue(aClass));
     }
 
     /**

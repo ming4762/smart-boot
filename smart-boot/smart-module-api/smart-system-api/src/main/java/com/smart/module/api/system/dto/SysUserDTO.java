@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -14,6 +15,9 @@ import java.io.Serializable;
 @Setter
 @ToString
 public class SysUserDTO implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 9115600422198027806L;
 
     private Long userId;
 

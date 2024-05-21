@@ -1,7 +1,9 @@
 package com.smart.crud.query;
 
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -13,6 +15,8 @@ import java.io.Serializable;
  * @since 3.0.0
  */
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ClassParameter implements Serializable {
     @Serial
     private static final long serialVersionUID = -6089195011861283130L;
