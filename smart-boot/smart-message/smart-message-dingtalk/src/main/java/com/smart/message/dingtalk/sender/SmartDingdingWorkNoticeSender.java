@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -83,6 +84,10 @@ public class SmartDingdingWorkNoticeSender implements SmartMessageSender {
                 .filter(item -> StringUtils.hasText(item.getMobile()))
                 .map(item -> userApi.getByMobile(item.getMobile(), tokenParameter).getUserId())
                 .toList();
+        if (CollectionUtils.isEmpty(userIdList)) {
+            log.warn("没有需要发送的用户");
+            return null;
+        }
         boolean isMarkdown = Boolean.TRUE.equals(parameter.getIsMarkdown());
         WorkNoticeAsyncSendParameter sendParameter = WorkNoticeAsyncSendParameter.builder()
                 .agentId(properties.getAgentId())

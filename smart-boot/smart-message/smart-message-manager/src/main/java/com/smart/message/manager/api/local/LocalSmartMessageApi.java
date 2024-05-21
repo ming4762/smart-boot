@@ -167,7 +167,7 @@ public class LocalSmartMessageApi implements SmartMessageApi {
             throw new SmartMessageException(String.format("通道编码【%s】不存在", noHasCode));
         }
         String hasNoUseCode = messageChannelCodes.stream()
-                .filter(item -> Boolean.TRUE.equals(channelCodeMap.get(item).getUseYn()))
+                .filter(item -> !Boolean.TRUE.equals(channelCodeMap.get(item).getUseYn()))
                 .collect(Collectors.joining(","));
         if (StringUtils.hasText(hasNoUseCode)) {
             throw new SmartMessageException(String.format("通道编码【%s】已停用", hasNoUseCode));
