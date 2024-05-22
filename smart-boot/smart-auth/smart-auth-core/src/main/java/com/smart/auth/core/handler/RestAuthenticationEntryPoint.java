@@ -7,6 +7,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
@@ -23,6 +24,8 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
         Result<String> result = Result.failure(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
         if (e instanceof AuthException authException) {
             result = Result.failure(authException.getCode(), e.getMessage());
+        } else if (e instanceof CredentialsExpiredException) {
+            result.setSubCode(10);
         }
         RestJsonWriter.writeJson(httpServletResponse, result);
     }

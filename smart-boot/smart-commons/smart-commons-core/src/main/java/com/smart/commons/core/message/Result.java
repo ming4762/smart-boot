@@ -11,6 +11,8 @@ import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.lang.NonNull;
 import org.springframework.validation.BindingResult;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Objects;
@@ -25,11 +27,16 @@ import java.util.Optional;
 @Schema(title = "通用api接口", description = "通用api接口返回")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Result<T> {
+public class Result<T> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 9144229906004159463L;
+
     @Schema(description = "状态码", example = "200", requiredMode = Schema.RequiredMode.REQUIRED)
     private Integer code = ResultCodeEnum.SUCCESS.getCode();
+
+    @Schema(description = "子状态码", example = "200")
+    private Integer subCode;
 
     @Schema(description = "返回信息", example = "成功")
     private String message = null;
@@ -38,7 +45,7 @@ public class Result<T> {
     private boolean success = true;
 
     @Schema(description = "接口返回数据")
-    private T data = null;
+    private transient T data = null;
 
     private static <T> Result<T> newInstance() {
         return new Result<>();
@@ -117,13 +124,26 @@ public class Result<T> {
      * @param <T>  T
      * @return 失败消息
      */
-    public static <T> Result<T> failure(Integer code, String message, T data) {
+    public static <T> Result<T> failure(Integer code, Integer subCode, String message, T data) {
         final Result<T> result = newInstance();
         result.setSuccess(Boolean.FALSE);
         result.setCode(code);
+        result.setSubCode(subCode);
         result.setMessage(message);
         result.setData(data);
         return result;
+    }
+
+    /**
+     * 失败消息
+     * @param code code
+     * @param message message
+     * @param data data
+     * @param <T>  T
+     * @return 失败消息
+     */
+    public static <T> Result<T> failure(Integer code, String message, T data) {
+        return failure(code, null, message, data);
     }
 
     /**

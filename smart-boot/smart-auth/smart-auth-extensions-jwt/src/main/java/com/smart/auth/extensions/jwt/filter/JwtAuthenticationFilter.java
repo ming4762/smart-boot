@@ -18,7 +18,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.AuthenticationServiceException;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -52,7 +51,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (!(principal instanceof RestUserDetails user)) {
-            throw new BadCredentialsException(I18nUtils.get(AuthI18nMessage.ERROR_TOKEN_EXPIRE));
+            throw new CredentialsExpiredException(I18nUtils.get(AuthI18nMessage.ERROR_TOKEN_EXPIRE));
         }
         // 验证JWT
         boolean validate = this.tokenRepositoryList.stream().anyMatch(item -> item.validate(jwt, user));

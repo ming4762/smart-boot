@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
+
 /**
  * @author ShiZhongMing
  * 2022/6/15
@@ -12,6 +14,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ExceptionResult<T> extends Result<T> {
+
+    @Serial
+    private static final long serialVersionUID = 7918216796729805703L;
 
     @Schema(title = "异常编号")
     private Long exceptionNo;
@@ -27,7 +32,7 @@ public class ExceptionResult<T> extends Result<T> {
     }
 
     public ExceptionResult(Result<T> result, Long exceptionNo) {
-        super(result.getCode(), result.getMessage(), result.isSuccess(), result.getData());
+        super(result.getCode(), null, result.getMessage(), result.isSuccess(), result.getData());
         this.exceptionNo = exceptionNo;
     }
 
