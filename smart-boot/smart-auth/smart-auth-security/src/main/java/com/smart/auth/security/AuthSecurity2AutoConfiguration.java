@@ -11,9 +11,11 @@ import com.smart.auth.core.handler.AuthLoginSuccessHandler;
 import com.smart.auth.core.handler.AuthSuccessDataHandler;
 import com.smart.auth.core.handler.DefaultAuthSuccessDataHandler;
 import com.smart.auth.core.properties.AuthProperties;
+import com.smart.auth.core.service.AuthCache;
 import com.smart.auth.security.config.AuthMethodSecurityConfig;
 import com.smart.auth.security.event.AuthEventLockedHandler;
 import com.smart.auth.security.event.AuthEventLogHandler;
+import com.smart.auth.security.remember.AuthCachePersistentTokenRepository;
 import com.smart.module.api.system.SysLogApi;
 import com.smart.module.api.system.SysUserApi;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -28,6 +30,7 @@ import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.authentication.DefaultAuthenticationEventPublisher;
 import org.springframework.security.authorization.method.AuthorizationManagerBeforeMethodInterceptor;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 /**
@@ -130,4 +133,15 @@ public class AuthSecurity2AutoConfiguration {
         return new AuthEventLogHandler(sysLogApi);
     }
 
+    /**
+     * remember me token存储器
+     * @param authCache authCache
+     * @param authProperties authProperties
+     * @return AuthCachePersistentTokenRepository
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    public PersistentTokenRepository persistentTokenRepository(AuthCache<String, Object> authCache, AuthProperties authProperties) {
+        return new AuthCachePersistentTokenRepository(authCache, authProperties);
+    }
 }

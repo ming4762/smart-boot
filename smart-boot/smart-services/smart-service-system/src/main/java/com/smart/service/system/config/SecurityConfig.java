@@ -1,6 +1,7 @@
 package com.smart.service.system.config;
 
 import com.smart.auth.core.properties.AuthProperties;
+import com.smart.auth.core.remember.SmartAuthPersistentTokenRememberMeServices;
 import com.smart.auth.extensions.access.secret.AuthAccessSecretSecurityConfigurer;
 import com.smart.auth.extensions.jwt.AuthJwtSecurityConfigurer;
 import com.smart.auth.extensions.sms.AuthSmsSecurityConfigurer;
@@ -15,7 +16,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+
+import java.util.UUID;
 
 /**
  * @author shizhongming
@@ -29,14 +35,24 @@ public class SecurityConfig extends AuthWebSecurityConfigurerAdapter {
         super(authProperties);
     }
 
+    @Bean
+    public SmartAuthPersistentTokenRememberMeServices smartAuthPersistentTokenRememberMeServices(UserDetailsService userDetailsService, PersistentTokenRepository tokenRepository) {
+        String key = UUID.randomUUID().toString();
+        return new SmartAuthPersistentTokenRememberMeServices(key, userDetailsService, tokenRepository);
+    }
+
     @SneakyThrows(Exception.class)
     @Bean
     @Order(0)
-    public SecurityFilterChain securityFilterChainConfig(HttpSecurity httpSecurity) {
+    public SecurityFilterChain securityFilterChainConfig(HttpSecurity httpSecurity, SmartAuthPersistentTokenRememberMeServices rememberMeServices, AuthenticationSuccessHandler authenticationSuccessHandler) {
         super.configure(httpSecurity);
         httpSecurity.formLogin(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
+                .rememberMe(
+                        config -> config.rememberMeServices(rememberMeServices)
+                                .authenticationSuccessHandler(authenticationSuccessHandler)
+                )
                 .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // JWT配置
                 .with(AuthJwtSecurityConfigurer.jwt(), Customizer.withDefaults())

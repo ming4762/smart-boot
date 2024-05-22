@@ -21,7 +21,7 @@ import org.springframework.security.config.annotation.web.configurers.AuthorizeH
  */
 public class AuthWebSecurityConfigurerAdapter {
 
-    private final AuthProperties authProperties;
+    protected final AuthProperties authProperties;
 
     public AuthWebSecurityConfigurerAdapter(AuthProperties authProperties) {
         this.authProperties = authProperties;

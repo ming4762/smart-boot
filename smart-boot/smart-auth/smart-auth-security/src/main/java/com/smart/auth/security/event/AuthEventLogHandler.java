@@ -16,6 +16,8 @@ import org.springframework.security.authentication.event.AuthenticationSuccessEv
 import org.springframework.security.authentication.event.LogoutSuccessEvent;
 import org.springframework.security.core.AuthenticationException;
 
+import java.util.Optional;
+
 /**
  * 保存登录日志
  * @author zhongming4762
@@ -47,7 +49,7 @@ public class AuthEventLogHandler implements AuthEventHandler {
                 .ident(LogIdentEnum.LOGIN_LOG)
                 .statusCode(HttpStatus.OK.getCode())
                 .logSource(LogSourceEnum.LOGIN)
-                .operation(user.getAuthType().name())
+                .operation(Optional.ofNullable(user.getAuthType()).map(Enum::name).orElse(null))
                 .result(String.format("登录成功,username:[%s],fullName:[%s]", user.getUsername(), user.getFullName()))
                 .createUserId(user.getUserId())
                 .createBy(user.getFullName())

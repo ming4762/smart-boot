@@ -24,6 +24,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.ExceptionTranslationFilter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessEventPublishingLogoutHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
@@ -128,6 +129,9 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
         this.jwtContext = this.createJwtContext();
         AuthenticationManagerBuilder authenticationManagerBuilder = builder.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.parentAuthenticationManager(null);
+
+        AuthenticationSuccessHandler successHandler = this.getBean(AuthenticationSuccessHandler.class, this.serviceProvider.authenticationSuccessHandler);
+        builder.setSharedObject(AuthenticationSuccessHandler.class, successHandler);
     }
 
     /**
@@ -141,7 +145,7 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
         chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher(this.getLoginUrl()), jwtLoginFilter));
 
         // 创建logout过滤器
-        chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher(this.getLogoutUrl()), this.jwtLogoutFilter()));
+        chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher(this.getLogoutUrl()), this.jwtLogoutFilter(builder)));
 
         return new FilterChainProxy(chains);
     }
@@ -155,18 +159,28 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
         jwtLoginFilter.setAuthenticationManager(this.getBuilder().getSharedObject(AuthenticationManager.class));
         jwtLoginFilter.setFilterProcessesUrl(this.getLoginUrl());
 
-        jwtLoginFilter.setAuthenticationSuccessHandler(this.getBean(AuthenticationSuccessHandler.class, this.serviceProvider.authenticationSuccessHandler));
+        jwtLoginFilter.setAuthenticationSuccessHandler(builder.getSharedObject(AuthenticationSuccessHandler.class));
         // 设置登录失败handler
         jwtLoginFilter.setAuthenticationFailureHandler(this.getBean(AuthenticationFailureHandler.class, this.serviceProvider.authenticationFailureHandler));
         jwtLoginFilter.setSecurityContextRepository(builder.getSharedObject(SecurityContextRepository.class));
-        return jwtLoginFilter;
+
+//        if (Boolean.TRUE.equals(this.serviceProvider.rememberMe)) {
+//            String key = UUID.randomUUID().toString();
+//            SmartAuthJwtRememberMeServices rememberMeServices = new SmartAuthJwtRememberMeServices(key, this.getBean(UserDetailsService.class));
+//            jwtLoginFilter.setRememberMeServices(rememberMeServices);
+//        }
+        RememberMeServices rememberMeServices = builder.getSharedObject(RememberMeServices.class);
+        if (rememberMeServices != null) {
+            jwtLoginFilter.setRememberMeServices(rememberMeServices);
+        }
+        return this.postProcess(jwtLoginFilter);
     }
 
     /**
      * 创建登出过滤器
      * @return 登出过滤器
      */
-    private JwtLogoutFilter jwtLogoutFilter() {
+    private JwtLogoutFilter jwtLogoutFilter(H builder) {
         // 创建LogoutHandler
         List<LogoutHandler> logoutHandlerList = this.serviceProvider.logoutHandlerList;
         if (CollectionUtils.isEmpty(logoutHandlerList)) {
@@ -174,6 +188,11 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
         }
         // 添加登出通知类
         logoutHandlerList.add(this.postProcess(new LogoutSuccessEventPublishingLogoutHandler()));
+        // 添加remember me service
+        RememberMeServices rememberMeServices = builder.getSharedObject(RememberMeServices.class);
+        if (rememberMeServices instanceof LogoutHandler logoutHandler) {
+            logoutHandlerList.add(logoutHandler);
+        }
         final JwtLogoutFilter logoutFilter = new JwtLogoutFilter(this.getBean(LogoutSuccessHandler.class, this.serviceProvider.logoutSuccessHandler), logoutHandlerList.toArray(new LogoutHandler[]{}));
         logoutFilter.setFilterProcessesUrl(this.getLogoutUrl());
         return logoutFilter;
@@ -259,6 +278,11 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
         return this;
     }
 
+    public AuthJwtSecurityConfigurer<H> rememberMe(boolean rememberMe) {
+        this.serviceProvider.rememberMe = rememberMe;
+        return this;
+    }
+
     /**
      * 服务配置类
      */
@@ -281,6 +305,8 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
         private List<LogoutHandler> logoutHandlerList;
 
         private LogoutSuccessHandler logoutSuccessHandler;
+
+        private Boolean rememberMe;
 
 
         /**
