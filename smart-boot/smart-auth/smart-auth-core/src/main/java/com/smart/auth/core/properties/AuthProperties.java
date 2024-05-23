@@ -68,12 +68,6 @@ public class AuthProperties implements InitializingBean {
     private Boolean development = Boolean.FALSE;
 
     /**
-     * appsecret 配置
-     */
-    @Deprecated(forRemoval = true)
-    private AppsecretProperties appsecret = new AppsecretProperties();
-
-    /**
      * 短信登录参数
      */
     private SmsProperties sms = new SmsProperties();
@@ -140,34 +134,6 @@ public class AuthProperties implements InitializingBean {
         // 默认7天
         private Duration remember = Duration.ofSeconds(604800L);
     }
-
-    /**
-     * APP SECRET配置
-     */
-    @Getter
-    @Setter
-    public static class AppsecretProperties {
-        /**
-         * access token 过期时间 7200秒
-         */
-        private Duration accessTokenTimeout = Duration.ofSeconds(7200);
-
-        /**
-         * 旧 Access token过期时间
-         */
-        private Duration oldAccessTokenTimeout = Duration.ofSeconds(5L * 60L);
-
-        /**
-         * 随机串的过期时间 默认15分钟，随机串使用后指定时间内不可在用
-         */
-        private Duration noncestrTimeout = Duration.ofSeconds(15L * 60L);
-
-        /**
-         * 时间戳的过期时间 默认5分钟
-         */
-        private Duration timestampTimeout = Duration.ofSeconds(5L * 60L);
-    }
-
 
     /**
      * 忽略的请求设置
