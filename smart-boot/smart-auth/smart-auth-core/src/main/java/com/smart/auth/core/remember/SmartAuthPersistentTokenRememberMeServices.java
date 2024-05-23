@@ -1,13 +1,20 @@
 package com.smart.auth.core.remember;
 
+import com.smart.auth.core.constants.AuthTypeEnum;
+import com.smart.auth.core.constants.LoginTypeEnum;
+import com.smart.auth.core.model.RestUserDetailsImpl;
+import com.smart.commons.core.utils.IpUtils;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import java.time.LocalDateTime;
 
 /**
  * @author shizhongming
@@ -67,5 +74,18 @@ public class SmartAuthPersistentTokenRememberMeServices extends PersistentTokenB
     public void setCookieDomain(String cookieDomain) {
         super.setCookieDomain(cookieDomain);
         this.cookieDomain = cookieDomain;
+    }
+
+
+    @Override
+    protected UserDetails processAutoLoginCookie(String[] cookieTokens, HttpServletRequest request, HttpServletResponse response) {
+        UserDetails userDetails = super.processAutoLoginCookie(cookieTokens, request, response);
+        if (userDetails instanceof RestUserDetailsImpl restUserDetails) {
+            restUserDetails.setLoginIp(IpUtils.getIpAddr(request));
+            restUserDetails.setLoginType(LoginTypeEnum.REMEMBER);
+            restUserDetails.setLoginTime(LocalDateTime.now());
+            restUserDetails.setAuthType(AuthTypeEnum.USERNAME);
+        }
+        return userDetails;
     }
 }

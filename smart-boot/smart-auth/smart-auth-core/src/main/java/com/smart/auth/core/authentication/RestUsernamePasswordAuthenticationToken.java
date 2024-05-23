@@ -6,6 +6,7 @@ import lombok.Getter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
+import java.io.Serial;
 import java.util.Collection;
 
 /**
@@ -15,6 +16,9 @@ import java.util.Collection;
 @Getter
 @EqualsAndHashCode(callSuper = true)
 public class RestUsernamePasswordAuthenticationToken extends UsernamePasswordAuthenticationToken {
+    @Serial
+    private static final long serialVersionUID = 9144478025655110168L;
+
     private final Boolean bindIp;
 
     private final String loginIp;
