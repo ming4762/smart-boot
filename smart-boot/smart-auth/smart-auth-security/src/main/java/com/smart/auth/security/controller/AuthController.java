@@ -41,6 +41,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -154,6 +156,7 @@ public class AuthController {
                 .toList();
         Map<Long, List<TokenData>> tokenMap = userTokenDataList.stream()
                 .collect(Collectors.groupingBy(item -> item.getUser().getUserId()));
+        LocalDateTime now = LocalDateTime.now();
         List<OnlineUserVO> onlineUserList = tokenMap.keySet().stream()
                 .map(userId -> {
                     OnlineUserVO vo = new OnlineUserVO();
@@ -163,6 +166,8 @@ public class AuthController {
                     vo.setFullName(user.getFullName());
                     List<OnlineUserVO.UserLoginData> userLoginDataList = tokenMap.get(userId).stream()
                             .map(item -> {
+                                // 计算有效期
+                                LocalDateTime timeoutTime = item.getRefreshTime().plus(item.getTimeout());
                                 RestUserDetails userDetails = item.getUser();
                                 OnlineUserVO.UserLoginData.UserLoginDataBuilder builder = OnlineUserVO.UserLoginData.builder()
                                         .loginIp(userDetails.getLoginIp())
@@ -171,7 +176,7 @@ public class AuthController {
                                         .loginTime(userDetails.getLoginTime())
                                         .bindIp(userDetails.getBindIp())
                                         .token(item.getToken())
-                                        .timeout(item.getTimeout());
+                                        .timeout(Duration.between(now, timeoutTime));
 
                                 UserTenantDTO userTenant = userDetails.getUserTenant();
                                 if (userTenant != null) {
