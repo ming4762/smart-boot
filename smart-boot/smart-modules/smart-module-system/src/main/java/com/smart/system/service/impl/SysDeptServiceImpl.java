@@ -173,7 +173,7 @@ public class SysDeptServiceImpl extends BaseServiceImpl<SysDeptMapper, SysDeptPO
         this.commonMapper.updateHasChild(
                 tableInfo.getTableName(),
                 tableInfo.getTableFiled(SysDeptPO::getParentId).getColumn(),
-                tableInfo.getTableFiled(SysDeptPO::getDeptId).getColumn(),
+                tableInfo.getKeyColumn(),
                 id
         );
     }
