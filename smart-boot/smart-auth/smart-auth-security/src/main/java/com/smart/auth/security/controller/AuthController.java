@@ -176,6 +176,7 @@ public class AuthController {
                                         .loginTime(userDetails.getLoginTime())
                                         .bindIp(userDetails.getBindIp())
                                         .token(item.getToken())
+                                        .loginDuration(Duration.between(item.getCreateTime(), now))
                                         .timeout(Duration.between(now, timeoutTime));
 
                                 UserTenantDTO userTenant = userDetails.getUserTenant();

@@ -67,6 +67,11 @@ public class OnlineUserVO implements Serializable {
         private Duration timeout;
 
         /**
+         * 已登录时长
+         */
+        private Duration loginDuration;
+
+        /**
          * 租户信息
          */
         private String tenantCode;
