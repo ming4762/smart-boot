@@ -147,8 +147,14 @@ public final class CrudUtils {
         }
         SmartTableInfo tableInfo = getTableInfo(modelClass);
         queryWrapper.select(fieldList.stream()
-                .map(item -> Optional.ofNullable(tableInfo.getTableFiled(item)).map(TableFieldInfo::getColumn).orElse(null))
-                .filter(StringUtils::isNotEmpty)
+                .map(item -> {
+                    if (item.equals(tableInfo.getKeyProperty())) {
+                        return tableInfo.getKeyColumn();
+                    }
+                    return Optional.ofNullable(tableInfo.getTableFiled(item))
+                            .map(TableFieldInfo::getColumn)
+                            .orElse(null);
+                }).filter(StringUtils::isNotEmpty)
                 .toArray(String[]::new));
     }
 
