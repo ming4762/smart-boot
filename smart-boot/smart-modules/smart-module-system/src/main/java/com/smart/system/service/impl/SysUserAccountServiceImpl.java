@@ -183,6 +183,7 @@ public class SysUserAccountServiceImpl extends BaseServiceImpl<SysUserAccountMap
      * @param tenantId 租户ID
      * @return 用户账户信息
      */
+    @Override
     public SysUserAccountPO getByUserId(Long userId, Long tenantId) {
         return this.lambdaQuery()
                 .eq(SysUserAccountPO::getUserId, userId)
