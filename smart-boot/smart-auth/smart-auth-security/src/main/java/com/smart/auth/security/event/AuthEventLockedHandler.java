@@ -8,6 +8,8 @@ import com.smart.commons.core.dto.auth.UserAccountStatusEnum;
 import com.smart.module.api.system.SysUserApi;
 import com.smart.module.api.system.dto.AccountLoginFailTimeUpdateDTO;
 import com.smart.module.api.system.dto.UserAccountLockDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.event.AbstractAuthenticationFailureEvent;
 import org.springframework.security.authentication.event.AuthenticationFailureLockedEvent;
@@ -20,6 +22,7 @@ import org.springframework.security.core.AuthenticationException;
  */
 public class AuthEventLockedHandler implements AuthEventHandler {
 
+    private static final Logger log = LoggerFactory.getLogger(AuthEventLockedHandler.class);
     private final SysUserApi sysUserApi;
 
     public AuthEventLockedHandler(SysUserApi sysUserApi) {
@@ -34,7 +37,7 @@ public class AuthEventLockedHandler implements AuthEventHandler {
     @Override
     public void handleLoginSuccess(AuthenticationSuccessEvent event) {
         RestUserDetails user = (RestUserDetails) event.getAuthentication().getPrincipal();
-        this.sysUserApi.updateLoginFailTime(new AccountLoginFailTimeUpdateDTO(user.getUsername(), 0L));
+        this.sysUserApi.updateLoginFailTime(new AccountLoginFailTimeUpdateDTO(user.getUsername(), 0L, user.getUserTenant().getTenantId()));
     }
 
     /**
@@ -49,7 +52,12 @@ public class AuthEventLockedHandler implements AuthEventHandler {
             return;
         }
         if (event.getException() instanceof BadCredentialsException) {
-            this.sysUserApi.updateLoginFailTime(new AccountLoginFailTimeUpdateDTO((String) event.getAuthentication().getPrincipal(), 1L));
+            Object details = event.getAuthentication().getDetails();
+            if (details instanceof RestUserDetails restUserDetails) {
+                this.sysUserApi.updateLoginFailTime(new AccountLoginFailTimeUpdateDTO(restUserDetails.getUsername(), 1L, restUserDetails.getUserTenant().getTenantId()));
+            } else {
+                log.error("记录登录失败发生错误，无法获取用户信息", event.getException());
+            }
         }
     }
 

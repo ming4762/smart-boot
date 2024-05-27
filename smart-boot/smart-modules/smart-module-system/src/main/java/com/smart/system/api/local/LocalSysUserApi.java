@@ -14,6 +14,7 @@ import com.smart.system.model.SysUserAccountPO;
 import com.smart.system.model.SysUserPO;
 import com.smart.system.service.SysUserAccountService;
 import com.smart.system.service.SysUserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
@@ -31,16 +32,12 @@ import java.util.List;
  */
 @Component
 @Primary
+@RequiredArgsConstructor
 public class LocalSysUserApi implements SysUserApi {
 
     private final SysUserService sysUserService;
-
     private final SysUserAccountService sysUserAccountService;
 
-    public LocalSysUserApi(SysUserService sysUserService, SysUserAccountService sysUserAccountService) {
-        this.sysUserService = sysUserService;
-        this.sysUserAccountService = sysUserAccountService;
-    }
 
     /**
      * 通过用户名查询用户
@@ -120,12 +117,13 @@ public class LocalSysUserApi implements SysUserApi {
             return false;
         }
         Long userId = user.getUserId();
-        SysUserAccountPO userAccount = this.sysUserAccountService.getById(userId);
+        SysUserAccountPO userAccount = this.sysUserAccountService.getByUserId(userId, parameter.getTenantId());
         if (userAccount == null) {
             return false;
         }
         LambdaUpdateWrapper<SysUserAccountPO> updateWrapper = new UpdateWrapper<SysUserAccountPO>().lambda()
-                .eq(SysUserAccountPO::getUserId, userId);
+                .eq(SysUserAccountPO::getUserId, userId)
+                .eq(SysUserAccountPO::getTenantId, parameter.getTenantId());
         // 重置登录失败次数
         if (parameter.getLoginFailTime() == 0L) {
             updateWrapper.set(SysUserAccountPO::getLastLoginTime, LocalDateTime.now());

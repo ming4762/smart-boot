@@ -43,6 +43,7 @@ public class RestAuthenticationProvider extends AbstractUserDetailsAuthenticatio
     protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken authentication) {
         RestUserDetails user = (RestUserDetails) userDetails;
         final String password = authentication.getCredentials().toString();
+        authentication.setDetails(user);
         if (!StringUtils.equals(userDetails.getPassword(), password)) {
             logger.debug("登录失败：密码错误");
             throw new BadCredentialsException(I18nUtils.get(AuthI18nMessage.USERNAME_PASSWORD_ERROR, user.getLoginFailTime() + 1));

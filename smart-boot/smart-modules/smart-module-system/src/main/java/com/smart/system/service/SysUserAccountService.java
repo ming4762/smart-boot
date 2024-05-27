@@ -46,4 +46,12 @@ public interface SysUserAccountService extends BaseService<SysUserAccountPO> {
      * @return 是否解锁成功
      */
     boolean unlock(@NonNull Long userId, UserAccountStatusEnum lockStatus);
+
+    /**
+     * 通过用户ID查询用户账户信息
+     * @param userId 用户ID
+     * @param tenantId 租户ID
+     * @return 用户账户信息
+     */
+    SysUserAccountPO getByUserId(Long userId, Long tenantId);
 }

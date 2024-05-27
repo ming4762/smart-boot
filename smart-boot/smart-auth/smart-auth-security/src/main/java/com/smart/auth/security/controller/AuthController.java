@@ -130,7 +130,30 @@ public class AuthController {
             return Result.success(new ArrayList<>(0));
         }
         // 查询所有存储的用户信息
-        List<TokenData> userTokenDataList = this.tokenRepositoryList.stream()
+        List<TokenData> userTokenDataList = this.listOnlineToken(parameter);
+        Map<Long, List<TokenData>> tokenMap = userTokenDataList.stream()
+                .collect(Collectors.groupingBy(item -> item.getUser().getUserId()));
+        List<OnlineUserVO> onlineUserList = tokenMap.keySet().stream()
+                .map(userId -> {
+                    OnlineUserVO vo = new OnlineUserVO();
+                    RestUserDetails user = tokenMap.get(userId).get(0).getUser();
+                    vo.setUserId(userId);
+                    vo.setUsername(user.getUsername());
+                    vo.setFullName(user.getFullName());
+                    List<OnlineUserVO.UserLoginData> userLoginDataList = this.tokenToUserLoginData(tokenMap.get(userId));
+                    vo.setUserLoginDataList(userLoginDataList);
+                    return vo;
+                }).toList();
+        return Result.success(onlineUserList);
+    }
+
+    /**
+     * 查询在线token
+     * @param parameter 参数
+     * @return token列表
+     */
+    private List<TokenData> listOnlineToken(OnlineUserQueryDTO parameter) {
+        return this.tokenRepositoryList.stream()
                 .flatMap(item -> {
                     boolean isPlatformTenant = AuthUtils.isPlatformTenant();
                     if (isPlatformTenant) {
@@ -154,44 +177,42 @@ public class AuthController {
                             .filter(userData -> userData.getUser().getUserTenant().getTenantId().equals(tenantId));
                 })
                 .toList();
-        Map<Long, List<TokenData>> tokenMap = userTokenDataList.stream()
-                .collect(Collectors.groupingBy(item -> item.getUser().getUserId()));
-        LocalDateTime now = LocalDateTime.now();
-        List<OnlineUserVO> onlineUserList = tokenMap.keySet().stream()
-                .map(userId -> {
-                    OnlineUserVO vo = new OnlineUserVO();
-                    RestUserDetails user = tokenMap.get(userId).get(0).getUser();
-                    vo.setUserId(userId);
-                    vo.setUsername(user.getUsername());
-                    vo.setFullName(user.getFullName());
-                    List<OnlineUserVO.UserLoginData> userLoginDataList = tokenMap.get(userId).stream()
-                            .map(item -> {
-                                // 计算有效期
-                                LocalDateTime timeoutTime = item.getRefreshTime().plus(item.getTimeout());
-                                RestUserDetails userDetails = item.getUser();
-                                OnlineUserVO.UserLoginData.UserLoginDataBuilder builder = OnlineUserVO.UserLoginData.builder()
-                                        .loginIp(userDetails.getLoginIp())
-                                        .authType(userDetails.getAuthType())
-                                        .loginType(userDetails.getLoginType())
-                                        .loginTime(userDetails.getLoginTime())
-                                        .bindIp(userDetails.getBindIp())
-                                        .token(item.getToken())
-                                        .loginDuration(Duration.between(item.getCreateTime(), now))
-                                        .timeout(Duration.between(now, timeoutTime));
+    }
 
-                                UserTenantDTO userTenant = userDetails.getUserTenant();
-                                if (userTenant != null) {
-                                    builder.tenantCode(userTenant.getTenantCode())
-                                            .tenantName(userTenant.getTenantName())
-                                            .tenantShortName(userTenant.getTenantShortName())
-                                            .platformYn(userTenant.getPlatformYn());
-                                }
-                                return builder.build();
-                            }).toList();
-                    vo.setUserLoginDataList(userLoginDataList);
-                    return vo;
+    /**
+     * token转出用户登录信息
+     * @param tokenDataList token 列表
+     * @return 用户登录信息
+     */
+    private List<OnlineUserVO.UserLoginData> tokenToUserLoginData(List<TokenData> tokenDataList) {
+        if (CollectionUtils.isEmpty(tokenDataList)) {
+            return List.of();
+        }
+        LocalDateTime now = LocalDateTime.now();
+        return tokenDataList.stream()
+                .map(item -> {
+                    // 计算有效期
+                    LocalDateTime timeoutTime = item.getRefreshTime().plus(item.getTimeout());
+                    RestUserDetails userDetails = item.getUser();
+                    OnlineUserVO.UserLoginData.UserLoginDataBuilder builder = OnlineUserVO.UserLoginData.builder()
+                            .loginIp(userDetails.getLoginIp())
+                            .authType(userDetails.getAuthType())
+                            .loginType(userDetails.getLoginType())
+                            .loginTime(userDetails.getLoginTime())
+                            .bindIp(userDetails.getBindIp())
+                            .token(item.getToken())
+                            .loginDuration(Duration.between(item.getCreateTime(), now))
+                            .timeout(Duration.between(now, timeoutTime));
+
+                    UserTenantDTO userTenant = userDetails.getUserTenant();
+                    if (userTenant != null) {
+                        builder.tenantCode(userTenant.getTenantCode())
+                                .tenantName(userTenant.getTenantName())
+                                .tenantShortName(userTenant.getTenantShortName())
+                                .platformYn(userTenant.getPlatformYn());
+                    }
+                    return builder.build();
                 }).toList();
-        return Result.success(onlineUserList);
     }
 
     @PostMapping("auth/offline")

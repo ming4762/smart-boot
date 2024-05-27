@@ -176,4 +176,17 @@ public class SysUserAccountServiceImpl extends BaseServiceImpl<SysUserAccountMap
         }
         return this.unlock(userAccount, lockStatus);
     }
+
+    /**
+     * 通过用户ID查询用户账户信息
+     * @param userId 用户ID
+     * @param tenantId 租户ID
+     * @return 用户账户信息
+     */
+    public SysUserAccountPO getByUserId(Long userId, Long tenantId) {
+        return this.lambdaQuery()
+                .eq(SysUserAccountPO::getUserId, userId)
+                .eq(SysUserAccountPO::getTenantId, tenantId)
+                .one();
+    }
 }
