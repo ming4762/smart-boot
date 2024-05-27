@@ -6,6 +6,7 @@ import com.smart.auth.core.properties.AuthProperties;
 import com.smart.auth.core.secret.AccessSecretProvider;
 import com.smart.auth.core.secret.data.AccessSecretData;
 import com.smart.auth.core.service.AuthCache;
+import com.smart.commons.core.exception.SystemException;
 import com.smart.commons.core.i18n.I18nUtils;
 import com.smart.commons.core.message.Result;
 import com.smart.commons.core.tenant.SmartTenantHolder;
@@ -82,7 +83,11 @@ public class AuthAccessSecretAuthenticationFilter implements Filter {
     private void filter(HttpServletRequest servletRequest) {
         String token =  servletRequest.getHeader(HttpHeaders.AUTHORIZATION);
         String httpMethod = servletRequest.getMethod();
-        String contentType = servletRequest.getHeader(HttpHeaders.CONTENT_TYPE).split(";")[0];
+        String contentTypeHeader = servletRequest.getHeader(HttpHeaders.CONTENT_TYPE);
+        if (!StringUtils.hasText(contentTypeHeader)) {
+            throw new SystemException("Content-Type header is required");
+        }
+        String contentType = contentTypeHeader.split(";")[0];
         String date = servletRequest.getHeader(HttpHeaders.DATE);
         String nonce = servletRequest.getHeader(NONCE_KEY);
 
