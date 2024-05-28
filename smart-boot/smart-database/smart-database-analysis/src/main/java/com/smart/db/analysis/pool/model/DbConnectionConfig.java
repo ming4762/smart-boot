@@ -5,6 +5,7 @@ import com.smart.db.analysis.constants.ExceptionConstant;
 import com.smart.db.analysis.exception.SmartDatabaseException;
 import lombok.*;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Driver;
@@ -21,6 +22,7 @@ import java.sql.Driver;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DbConnectionConfig implements Serializable {
+    @Serial
     private static final long serialVersionUID = -4218462921900208047L;
 
     private String databaseName;

@@ -373,13 +373,13 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         UserAccountData userAccountData = new UserAccountData();
         // 查询租户信息
         UserTenantDTO userTenant = this.queryUserTenant(parameter);
-        userAccountData.setTenant(userTenant);
         if (userTenant == null) {
-            return userAccountData;
+            return null;
         }
         if (Boolean.FALSE.equals(userTenant.getUseYn())) {
-            return userAccountData;
+            return null;
         }
+        userAccountData.setTenant(userTenant);
         SmartTenantHolder.set(userTenant);
         // 查询账户信息
         SysUserAccountPO sysUserAccount = this.sysUserAccountService.getOne(

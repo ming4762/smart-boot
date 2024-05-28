@@ -25,7 +25,7 @@ public enum AuthI18nMessage implements I18nMessage {
     // 用户名密码错误
     USERNAME_PASSWORD_ERROR("auth.error.usernamePasswordError", "username or password error"),
     // 用户不存在错误
-    USER_NOT_FOUND_ERROR("auth.error.userNotFoundError", "user is not found"),
+    USER_NOT_FOUND_ERROR("auth.error.userNotFoundError", "The user does not exist or has not created an account"),
     // 用户名密码不能为null
     USERNAME_PASSWORD_NULL("auth.error.usernamePasswordEmpty", "username and password can not empty"),
     // 手机号、验证码不能为null
