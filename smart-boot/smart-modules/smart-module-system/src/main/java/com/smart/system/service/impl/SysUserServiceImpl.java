@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.smart.auth.core.userdetails.RestUserDetails;
@@ -233,7 +234,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         if (CollectionUtils.isEmpty(idList)) {
             return false;
         }
-        Lists.partition(Arrays.asList(idList.toArray()), 400).forEach(list -> {
+        Lists.partition(Arrays.asList(idList.toArray()), 500).forEach(list -> {
             // 删除用户与用户组管理
             this.sysUserGroupUserMapper.delete(
                     new QueryWrapper<SysUserGroupUserPO>().lambda()
@@ -248,6 +249,11 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
             this.sysTenantUserService.remove(
                     new QueryWrapper<SysTenantUserPO>().lambda()
                             .in(SysTenantUserPO::getUserId, list)
+            );
+            // 删除账户信息
+            this.sysUserAccountService.remove(
+                    Wrappers.lambdaQuery(SysUserAccountPO.class)
+                            .in(SysUserAccountPO::getUserId, list)
             );
             super.removeByIds(list);
         });

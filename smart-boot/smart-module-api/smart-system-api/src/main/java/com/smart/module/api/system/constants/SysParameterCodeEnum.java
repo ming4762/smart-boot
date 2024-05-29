@@ -36,7 +36,11 @@ public enum SysParameterCodeEnum {
     /**
      * 密码必须修改的天使，0：不限制
      */
-    AUTH_PASSWORD_LIFE_DAYS("sys.auth.account.passwordLifeDays")
+    AUTH_PASSWORD_LIFE_DAYS("sys.auth.account.passwordLifeDays"),
+    /**
+     * 默认密码参数
+     */
+    AUTH_DEFAULT_PASSWORD("sys.auth.account.defaultPassword"),
     ;
     private final String code;
 
