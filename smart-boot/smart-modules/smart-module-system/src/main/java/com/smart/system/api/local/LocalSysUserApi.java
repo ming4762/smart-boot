@@ -130,7 +130,6 @@ public class LocalSysUserApi implements SysUserApi {
             if (userAccount.getLoginFailTime() > 0L) {
                 updateWrapper.set(SysUserAccountPO::getLoginFailTime, 0L);
             }
-            return this.sysUserAccountService.update(updateWrapper);
         } else {
             Long time = userAccount.getLoginFailTime() + 1;
             updateWrapper.set(SysUserAccountPO::getLoginFailTime, time);
@@ -141,8 +140,8 @@ public class LocalSysUserApi implements SysUserApi {
                         // 设置锁定时间
                         .set(SysUserAccountPO :: getLockTime, LocalDateTime.now());
             }
-            return this.sysUserAccountService.update(updateWrapper);
         }
+        return this.sysUserAccountService.update(updateWrapper);
     }
 
     /**

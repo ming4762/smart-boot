@@ -22,6 +22,8 @@ import com.smart.crud.parameter.SetUseYnParameter;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.crud.service.BaseServiceImpl;
 import com.smart.crud.service.UserSetterService;
+import com.smart.module.api.system.SysParameterApi;
+import com.smart.module.api.system.constants.SysParameterCodeEnum;
 import com.smart.module.api.system.dto.QueryUserAccountDTO;
 import com.smart.system.constants.FunctionTypeEnum;
 import com.smart.system.constants.UserDeptIdentEnum;
@@ -77,11 +79,6 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
      */
     private static final String SALT = "888888$#@";
 
-    /**
-     * 默认密码
-     */
-    private static final String DEFAULT_PASSWORD = "123456";
-
     private static final String I18N_LEFT = "{";
 
     private static final String I18N_RIGHT = "}";
@@ -98,6 +95,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
     private final SysDeptService sysDeptService;
     private final SysTenantUserService sysTenantUserService;
     private final SysTenantMapper sysTenantMapper;
+    private final SysParameterApi sysParameterApi;
 
     @Override
     public List<? extends SysUserPO> list(@NonNull QueryWrapper<SysUserPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
@@ -263,7 +261,9 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
      */
     @Override
     public boolean save(@NonNull SysUserPO entity) {
-        entity.setPassword(this.createPassword(entity.getUsername(), DEFAULT_PASSWORD));
+        // 获取默认密码
+        String defaultPassword = this.sysParameterApi.getParameter(SysParameterCodeEnum.AUTH_DEFAULT_PASSWORD.getCode());
+        entity.setPassword(this.createPassword(entity.getUsername(), defaultPassword));
         return super.save(entity);
     }
 
