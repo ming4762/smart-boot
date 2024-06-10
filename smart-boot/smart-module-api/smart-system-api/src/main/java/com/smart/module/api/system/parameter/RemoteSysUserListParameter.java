@@ -2,6 +2,7 @@ package com.smart.module.api.system.parameter;
 
 import lombok.*;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -17,12 +18,12 @@ import java.io.Serializable;
 @Builder
 public class RemoteSysUserListParameter implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = -936208086924410677L;
+    
     private Boolean useYn;
 
     private String username;
 
     private String fullName;
-
-    private String userType;
-
 }

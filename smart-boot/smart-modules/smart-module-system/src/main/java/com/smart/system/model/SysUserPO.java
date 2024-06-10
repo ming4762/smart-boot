@@ -5,16 +5,14 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.smart.crud.annotation.TableLogicField;
 import com.smart.crud.annotation.TableUseYnField;
-import com.smart.crud.model.BaseModelUserTime;
+import com.smart.crud.model.BaseModelDeleteUserTime;
 import com.smart.crud.model.BaseUser;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.io.Serial;
-import java.time.LocalDateTime;
 
 /**
  * 用户实体类
@@ -25,7 +23,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-public class SysUserPO extends BaseModelUserTime implements BaseUser {
+public class SysUserPO extends BaseModelDeleteUserTime implements BaseUser {
 
     @Serial
     private static final long serialVersionUID = -671533082313767123L;
@@ -64,9 +62,9 @@ public class SysUserPO extends BaseModelUserTime implements BaseUser {
 
 
     /**
-     * 用户类型（10：系统用户，20：业务用户）
+     * 是否系统内置
      */
-    private String userType;
+    private Boolean buildIn;
 
     /**
      * 序号
@@ -78,17 +76,4 @@ public class SysUserPO extends BaseModelUserTime implements BaseUser {
 
     @TableUseYnField
     private Boolean useYn;
-
-    @TableLogicField(isDeleteKey = true)
-    private Long deleteKey;
-
-    @TableLogicField(isFill = true)
-    private Long deleteUserId;
-
-    @TableLogicField(isFill = true)
-    private String deleteBy;
-
-    @TableLogicField(isFill = true)
-    private LocalDateTime deleteTime;
-
 }

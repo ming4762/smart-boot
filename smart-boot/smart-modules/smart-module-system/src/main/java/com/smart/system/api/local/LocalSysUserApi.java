@@ -162,9 +162,6 @@ public class LocalSysUserApi implements SysUserApi {
         if (StringUtils.hasText(parameter.getUsername())) {
             queryWrapper.like(SysUserPO::getUsername, parameter.getUsername());
         }
-        if (StringUtils.hasText(parameter.getUserType())) {
-            queryWrapper.eq(SysUserPO::getUserType, parameter.getUserType());
-        }
         return this.sysUserService.list(queryWrapper).stream()
                 .map(item -> {
                     SysUserDTO dto = new SysUserDTO();

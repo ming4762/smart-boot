@@ -10,6 +10,7 @@ import com.google.common.collect.Sets;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.auth.core.utils.AuthUtils;
 import com.smart.commons.core.dto.auth.*;
+import com.smart.commons.core.exception.BusinessException;
 import com.smart.commons.core.exception.SystemException;
 import com.smart.commons.core.i18n.I18nUtils;
 import com.smart.commons.core.tenant.SmartTenantHolder;
@@ -233,6 +234,14 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
     public boolean removeByIds(Collection<?> idList) {
         if (CollectionUtils.isEmpty(idList)) {
             return false;
+        }
+        // 系统内置用户不能删除
+        Long buildInCount = this.lambdaQuery()
+                .in(SysUserPO::getUserId, idList)
+                .eq(SysUserPO::getBuildIn, Boolean.TRUE)
+                .count();
+        if (buildInCount > 0) {
+            throw new BusinessException("系统内置用户不能删除");
         }
         Lists.partition(Arrays.asList(idList.toArray()), 500).forEach(list -> {
             // 删除用户与用户组管理
@@ -676,10 +685,6 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         BeanUtils.copyProperties(parameter, userModel);
         boolean isAdd = this.isAdd(userModel);
 
-        // 判断是否是系统用户，系统用户没有数据权限
-        if (SYSTEM_USER_TYPE.equals(userModel.getUserType())) {
-            return this.saveOrUpdate(userModel);
-        }
         if (parameter.getDeptId() != null) {
             SysUserDeptPO dataScopeModel = new SysUserDeptPO();
             dataScopeModel.setUserId(userModel.getUserId());
