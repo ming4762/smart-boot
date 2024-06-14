@@ -684,10 +684,10 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         var userModel = new SysUserPO();
         BeanUtils.copyProperties(parameter, userModel);
         boolean isAdd = this.isAdd(userModel);
-
+        Long userId = userModel.getUserId() == null ? IdGenerator.nextId() : userModel.getUserId();
         if (parameter.getDeptId() != null) {
             SysUserDeptPO dataScopeModel = new SysUserDeptPO();
-            dataScopeModel.setUserId(userModel.getUserId());
+            dataScopeModel.setUserId(userId);
             dataScopeModel.setDeptId(parameter.getDeptId());
             // 设置标识位
             dataScopeModel.setIdent(UserDeptIdentEnum.USER_DEPT);
@@ -705,11 +705,10 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
                             .eq(SysUserDeptPO::getUserId, userModel.getUserId())
                             .eq(SysUserDeptPO::getIdent, UserDeptIdentEnum.USER_DEPT)
             );
-            this.sysUserDeptService.saveOrUpdate(dataScopeModel);
+            this.sysUserDeptService.save(dataScopeModel);
         }
         // 保存用户与租户关联关系
         if (isAdd) {
-            long userId = IdGenerator.nextId();
             userModel.setUserId(userId);
             SysTenantUserPO tenantUser = new SysTenantUserPO();
             tenantUser.setUserId(userId);
