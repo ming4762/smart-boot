@@ -181,12 +181,12 @@ public final class CrudUtils {
      * @param <T> 结果类型
      * @param <P> 参数类型
      */
-    public static <T, P> List<T> partitionList(Collection<P> partData, int partSize, Function<Collection<P>, List<T>> handler) {
+    public static <T, P> List<T> partitionList(Collection<P> partData, int partSize, Function<Collection<P>, Collection<T>> handler) {
         if (CollectionUtils.isEmpty(partData)) {
             return Collections.emptyList();
         }
         if (partData.size() <= partSize) {
-            return handler.apply(partData);
+            return new ArrayList<>(handler.apply(partData));
         }
         return Lists.partition(new ArrayList<>(partData), partSize).stream()
                 .flatMap(list -> handler.apply(list).stream())

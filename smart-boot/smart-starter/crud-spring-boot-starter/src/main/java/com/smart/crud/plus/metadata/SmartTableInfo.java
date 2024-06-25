@@ -1,11 +1,14 @@
 package com.smart.crud.plus.metadata;
 
+import com.baomidou.mybatisplus.core.config.GlobalConfig;
 import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.toolkit.Assert;
+import com.baomidou.mybatisplus.core.toolkit.GlobalConfigUtils;
 import com.baomidou.mybatisplus.core.toolkit.LambdaUtils;
 import com.baomidou.mybatisplus.core.toolkit.support.LambdaMeta;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
+import com.smart.commons.core.exception.SystemException;
 import com.smart.commons.core.proxy.ExtendMethodInterceptor;
 import com.smart.crud.annotation.TableLogicField;
 import com.smart.crud.annotation.TableTenantField;
@@ -19,13 +22,12 @@ import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ReflectionUtils;
 
 import java.io.Serial;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -42,6 +44,8 @@ public class SmartTableInfo extends TableInfo {
     private static final long serialVersionUID = -66149012141872877L;
 
     private TableInfo tableInfo;
+
+    private List<TableFieldInfo> smartTableFieldInfoList;
 
     /**
      * @param configuration 配置对象
@@ -108,6 +112,11 @@ public class SmartTableInfo extends TableInfo {
     public boolean isWithUpdateFill() {
         return this.tableInfo.isWithUpdateFill() || (this.logicDeleteInfo != null && !this.logicDeleteInfo.getFillFieldInfoList().isEmpty());
     }
+    
+    @Override
+    public List<TableFieldInfo> getFieldList() {
+        return Collections.unmodifiableList(smartTableFieldInfoList);
+    }
 
     /**
      * 通过fieldName 获取 TableFieldInfo
@@ -136,7 +145,6 @@ public class SmartTableInfo extends TableInfo {
     }
 
 
-
     private static void initField(SmartTableInfo smartTableInfo, TableInfo tableInfo) {
         AtomicInteger useYnNum = new AtomicInteger();
         AtomicInteger tenantNum = new AtomicInteger();
@@ -160,29 +168,68 @@ public class SmartTableInfo extends TableInfo {
         });
         Assert.isTrue(useYnNum.get() <= 1, "@TableUseYnField not support more than one in Class: \"%s\"", tableInfo.getEntityType().getName());
         Assert.isTrue(tenantNum.get() <= 1, "@TableTenantField not support more than one in Class: \"%s\"", tableInfo.getEntityType().getName());
-        if (tableInfo.isWithLogicDelete()) {
-            AtomicInteger deleteKeyNum = new AtomicInteger();
-            TableLogicDeleteInfo tableLogicDeleteInfo = new TableLogicDeleteInfo();
-            List<TableFieldInfo> deleteFillFieldInfoList = new ArrayList<>();
-            for (TableFieldInfo fieldInfo : tableInfo.getFieldList()) {
-                TableLogicField smartTableLogic = AnnotationUtils.getAnnotation(fieldInfo.getField(), TableLogicField.class);
-                if (smartTableLogic == null) {
-                    continue;
-                }
-                if (smartTableLogic.isDeleteKey()) {
-                    int andAdd = deleteKeyNum.getAndIncrement();
-                    if (andAdd >= 1) {
-                        throw new IllegalArgumentException("isDeleteKey true not support more than one in Class: " + tableInfo.getEntityType().getName());
-                    }
-                    tableLogicDeleteInfo.setDeleteKeyFieldInfo(fieldInfo);
-                    tableLogicDeleteInfo.setLogicKeyStrategy(smartTableLogic.strategy());
-                } else if (smartTableLogic.isFill()) {
-                    deleteFillFieldInfoList.add(fieldInfo);
-                }
-            }
-            tableLogicDeleteInfo.setFillFieldInfoList(deleteFillFieldInfoList);
 
-            smartTableInfo.logicDeleteInfo = tableLogicDeleteInfo;
+        // 初始化逻辑删除功能
+        initLogicDelete(smartTableInfo, tableInfo);
+        // 设置主键信息，
+        initPkTableFieldInfo(smartTableInfo, tableInfo);
+    }
+
+    /**
+     * 初始化逻辑删除
+     * @param smartTableInfo smartTableInfo
+     * @param tableInfo 原始table info
+     */
+    protected static void initLogicDelete(SmartTableInfo smartTableInfo, TableInfo tableInfo) {
+        if (!tableInfo.isWithLogicDelete()) {
+            return;
         }
+        AtomicInteger deleteKeyNum = new AtomicInteger();
+        TableLogicDeleteInfo tableLogicDeleteInfo = new TableLogicDeleteInfo();
+        List<TableFieldInfo> deleteFillFieldInfoList = new ArrayList<>();
+        for (TableFieldInfo fieldInfo : tableInfo.getFieldList()) {
+            TableLogicField smartTableLogic = AnnotationUtils.getAnnotation(fieldInfo.getField(), TableLogicField.class);
+            if (smartTableLogic == null) {
+                continue;
+            }
+            if (smartTableLogic.isDeleteKey()) {
+                int andAdd = deleteKeyNum.getAndIncrement();
+                if (andAdd >= 1) {
+                    throw new IllegalArgumentException("isDeleteKey true not support more than one in Class: " + tableInfo.getEntityType().getName());
+                }
+                tableLogicDeleteInfo.setDeleteKeyFieldInfo(fieldInfo);
+                tableLogicDeleteInfo.setLogicKeyStrategy(smartTableLogic.strategy());
+            } else if (smartTableLogic.isFill()) {
+                deleteFillFieldInfoList.add(fieldInfo);
+            }
+        }
+        tableLogicDeleteInfo.setFillFieldInfoList(deleteFillFieldInfoList);
+
+        smartTableInfo.logicDeleteInfo = tableLogicDeleteInfo;
+    }
+
+    /**
+     * 初始化主键 field info
+     * @param smartTableInfo smartTableInfo
+     * @param tableInfo tableInfo
+     */
+    protected static void initPkTableFieldInfo(SmartTableInfo smartTableInfo, TableInfo tableInfo) {
+        if (StringUtils.isBlank(tableInfo.getKeyColumn())) {
+            // 表没有主键不做处理
+            smartTableInfo.smartTableFieldInfoList = new ArrayList<>(tableInfo.getFieldList());
+            return;
+        }
+        Field keyField = ReflectionUtils.findField(tableInfo.getEntityType(), tableInfo.getKeyProperty());
+        if (keyField == null) {
+            throw new SystemException("系统发生错误，获取主键字段失败，实体类：" + tableInfo.getEntityType().getName());
+        }
+        Configuration configuration = tableInfo.getConfiguration();
+        GlobalConfig globalConfig = GlobalConfigUtils.getGlobalConfig(configuration);
+        TableFieldInfo keyTableFieldInfo = new TableFieldInfo(globalConfig, tableInfo, keyField, tableInfo.getReflector(), tableInfo.isWithLogicDelete(), false);
+        globalConfig.getPostInitTableInfoHandler().postFieldInfo(keyTableFieldInfo, configuration);
+
+        smartTableInfo.smartTableFieldInfoList = new ArrayList<>(tableInfo.getFieldList().size() + 1);
+        smartTableInfo.smartTableFieldInfoList.add(keyTableFieldInfo);
+        smartTableInfo.smartTableFieldInfoList.addAll(tableInfo.getFieldList());
     }
 }
