@@ -1,4 +1,4 @@
-package com.smart.auth.security.tenant;
+package com.smart.auth.security.filter;
 
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.auth.core.utils.AuthUtils;

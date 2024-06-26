@@ -6,6 +6,7 @@ import com.smart.auth.extensions.access.secret.AuthAccessSecretSecurityConfigure
 import com.smart.auth.extensions.jwt.AuthJwtSecurityConfigurer;
 import com.smart.auth.extensions.sms.AuthSmsSecurityConfigurer;
 import com.smart.auth.security.config.AuthCaptchaSecurityConfigurer;
+import com.smart.auth.security.config.AuthTenantSecurityConfigurer;
 import com.smart.auth.security.config.AuthWebSecurityConfigurerAdapter;
 import lombok.SneakyThrows;
 import org.springframework.context.annotation.Bean;
@@ -58,6 +59,8 @@ public class SecurityConfig extends AuthWebSecurityConfigurerAdapter {
                 .with(AuthJwtSecurityConfigurer.jwt(), Customizer.withDefaults())
                 // 验证码配置
                 .with(AuthCaptchaSecurityConfigurer.captcha(), Customizer.withDefaults())
+                // 租户支持
+                .with(AuthTenantSecurityConfigurer.tenant(), Customizer.withDefaults())
                 .with(AuthSmsSecurityConfigurer.sms(), Customizer.withDefaults());
         return httpSecurity.build();
     }

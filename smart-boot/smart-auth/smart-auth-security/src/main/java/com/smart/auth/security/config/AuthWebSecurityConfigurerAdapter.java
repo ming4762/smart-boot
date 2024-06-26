@@ -33,9 +33,7 @@ public class AuthWebSecurityConfigurerAdapter {
                         .cors(Customizer.withDefaults())
                         .exceptionHandling(
                                 configurer -> configurer.authenticationEntryPoint(new RestAuthenticationEntryPoint())
-                                                        .accessDeniedHandler(new AuthAccessDeniedHandler())
-                                // 添加tenant注入拦截器
-                        ).with(AuthTenantSecurityConfigurer.tenant(), Customizer.withDefaults());
+                                                        .accessDeniedHandler(new AuthAccessDeniedHandler()));
 //        this.ignore(httpSecurity);
 //        // 开发模式不拦截
 //        if (BooleanUtils.isTrue(this.authProperties.getDevelopment())) {
