@@ -76,6 +76,7 @@ public class AuthEventLockedHandler implements AuthEventHandler {
             parameter.setUsername(((PasswordNoLifeLockedException) exception).getUser().getUsername());
             parameter.setAccountStatus(UserAccountStatusEnum.LONG_TIME_PASSWORD_MODIFY_LOCKED);
         }
+        parameter.setTenantId(parameter.getTenantId());
         this.sysUserApi.lockAccount(parameter);
     }
 

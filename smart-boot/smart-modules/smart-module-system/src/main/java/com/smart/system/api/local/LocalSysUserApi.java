@@ -15,6 +15,7 @@ import com.smart.system.model.SysUserPO;
 import com.smart.system.service.SysUserAccountService;
 import com.smart.system.service.SysUserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
@@ -33,6 +34,7 @@ import java.util.List;
 @Component
 @Primary
 @RequiredArgsConstructor
+@Slf4j
 public class LocalSysUserApi implements SysUserApi {
 
     private final SysUserService sysUserService;
@@ -96,6 +98,7 @@ public class LocalSysUserApi implements SysUserApi {
         LambdaUpdateWrapper<SysUserAccountPO> updateWrapper = new UpdateWrapper<SysUserAccountPO>().lambda()
                 .set(SysUserAccountPO::getLockTime, LocalDateTime.now())
                 .set(SysUserAccountPO::getAccountStatus, parameter.getAccountStatus().getValue())
+                .eq(SysUserAccountPO::getTenantId, parameter.getTenantId())
                 .eq(SysUserAccountPO::getUserId, userId);
         return this.sysUserAccountService.update(updateWrapper);
     }
