@@ -5,6 +5,7 @@ import com.smart.auth.core.exception.LongTimeNoLoginLockedException;
 import com.smart.auth.core.exception.PasswordNoLifeLockedException;
 import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.commons.core.dto.auth.UserAccountStatusEnum;
+import com.smart.commons.core.tenant.SmartTenantHolder;
 import com.smart.module.api.system.SysUserApi;
 import com.smart.module.api.system.dto.AccountLoginFailTimeUpdateDTO;
 import com.smart.module.api.system.dto.UserAccountLockDTO;
@@ -15,6 +16,8 @@ import org.springframework.security.authentication.event.AbstractAuthenticationF
 import org.springframework.security.authentication.event.AuthenticationFailureLockedEvent;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.core.AuthenticationException;
+
+import java.util.Objects;
 
 /**
  * @author zhongming4762
@@ -76,7 +79,7 @@ public class AuthEventLockedHandler implements AuthEventHandler {
             parameter.setUsername(((PasswordNoLifeLockedException) exception).getUser().getUsername());
             parameter.setAccountStatus(UserAccountStatusEnum.LONG_TIME_PASSWORD_MODIFY_LOCKED);
         }
-        parameter.setTenantId(parameter.getTenantId());
+        parameter.setTenantId(Objects.requireNonNull(SmartTenantHolder.getTenantId()));
         this.sysUserApi.lockAccount(parameter);
     }
 
