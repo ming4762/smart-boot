@@ -1,5 +1,6 @@
 package com.smart.crud.query;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,6 +19,7 @@ import java.util.Map;
  */
 @Getter
 @Setter
+@EqualsAndHashCode
 public class CommonQuery implements Serializable {
     @Serial
     private static final long serialVersionUID = 25607615568253403L;

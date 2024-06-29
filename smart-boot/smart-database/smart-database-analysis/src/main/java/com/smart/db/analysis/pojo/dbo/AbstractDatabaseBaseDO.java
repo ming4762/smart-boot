@@ -1,5 +1,8 @@
 package com.smart.db.analysis.pojo.dbo;
 
+import lombok.EqualsAndHashCode;
+
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -8,6 +11,8 @@ import java.io.Serializable;
  * 2020/7/25 16:30
  * @since 1.0
  */
+@EqualsAndHashCode
 public abstract class AbstractDatabaseBaseDO implements Serializable {
+    @Serial
     private static final long serialVersionUID = -1029967642599823336L;
 }

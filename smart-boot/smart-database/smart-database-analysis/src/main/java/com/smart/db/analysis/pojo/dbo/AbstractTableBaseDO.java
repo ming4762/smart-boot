@@ -1,9 +1,12 @@
 package com.smart.db.analysis.pojo.dbo;
 
 import com.smart.db.analysis.annotation.DatabaseField;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.io.Serial;
 
 /**
  * 表格信息基础类
@@ -14,7 +17,9 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode(callSuper = true)
 public class AbstractTableBaseDO extends AbstractDatabaseBaseDO {
+    @Serial
     private static final long serialVersionUID = -3056893832662371382L;
 
     @DatabaseField("TABLE_CAT")

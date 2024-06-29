@@ -1,6 +1,7 @@
 package com.smart.dingtalk.pojo.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,6 +15,7 @@ import java.io.Serializable;
  */
 @Getter
 @Setter
+@EqualsAndHashCode
 public abstract class AbstractDingtalkResult implements Serializable {
     @Serial
     private static final long serialVersionUID = 5072531684182100232L;

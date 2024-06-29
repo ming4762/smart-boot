@@ -1,5 +1,6 @@
 package com.smart.dingtalk.pojo.parameter.message;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,6 +14,7 @@ import java.io.Serializable;
  */
 @Getter
 @Setter
+@EqualsAndHashCode
 public class AbstractMessageParameter implements Serializable {
     @Serial
     private static final long serialVersionUID = -125734887444204193L;

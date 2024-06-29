@@ -1,10 +1,12 @@
 package com.smart.db.analysis.pojo.dbo;
 
 import com.smart.db.analysis.annotation.DatabaseField;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serial;
 import java.util.Objects;
 
 /**
@@ -16,7 +18,9 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode(callSuper = true)
 public class ColumnDO extends AbstractTableBaseDO {
+    @Serial
     private static final long serialVersionUID = -617702057646747452L;
 
     @DatabaseField("COLUMN_NAME")

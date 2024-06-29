@@ -1,5 +1,6 @@
 package org.pentaho.di.core.logging;
 
+import lombok.EqualsAndHashCode;
 import org.pentaho.di.core.Const;
 import org.pentaho.di.core.RowMetaAndData;
 import org.pentaho.di.core.database.DatabaseMeta;
@@ -19,6 +20,7 @@ import java.util.List;
  * @author pentaho
  * @author shizhongming
  */
+@EqualsAndHashCode(callSuper = true)
 public class ChannelLogTable extends BaseLogTable implements Cloneable, LogTableInterface {
     private static final Class<?> PKG = ChannelLogTable.class;
     public static final String XML_TAG = "channel-log-table";
