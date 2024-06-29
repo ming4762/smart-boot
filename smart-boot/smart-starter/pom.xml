@@ -23,6 +23,7 @@
 		<module>log-spring-boot-starter</module>
 		<module>redis-spring-boot-starter</module>
 		<module>wxjava-spring-boot-starter</module>
+		<module>xxl-executor-spring-boot-starter</module>
 	</modules>
 
 	<properties>
