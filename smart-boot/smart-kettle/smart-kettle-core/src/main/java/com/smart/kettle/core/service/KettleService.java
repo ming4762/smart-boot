@@ -29,7 +29,7 @@ public interface KettleService {
      * @return 执行的转换
      */
     Trans executeDbTransfer(
-            @NonNull KettleDatabaseRepositoryProperties properties,
+            KettleDatabaseRepositoryProperties properties,
             @NonNull String transName,
             String directoryName,
             @NonNull TransExecuteParameter parameter,
@@ -72,7 +72,7 @@ public interface KettleService {
      * @return 执行的转换
      */
     Job executeDbJob(
-            @NonNull KettleDatabaseRepositoryProperties properties,
+            KettleDatabaseRepositoryProperties properties,
             @NonNull String jobName,
             String directoryName,
             @NonNull BasicExecuteParameter parameter,

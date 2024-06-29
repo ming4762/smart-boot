@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.io.Serial;
+
 /**
  * kettle 数据库资源库配置参数
  * @author ShiZhongMing
@@ -17,7 +19,10 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)
-public class KettleDatabaseRepositoryProperties extends DatabaseMetaProperties{
+public class KettleDatabaseRepositoryProperties extends DatabaseMetaProperties {
+
+    @Serial
+    private static final long serialVersionUID = -6533489911003676893L;
 
     private String resUser;
 

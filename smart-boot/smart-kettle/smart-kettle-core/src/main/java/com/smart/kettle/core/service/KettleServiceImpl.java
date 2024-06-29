@@ -2,12 +2,14 @@ package com.smart.kettle.core.service;
 
 import com.smart.commons.core.data.Tree;
 import com.smart.kettle.core.KettleActuator;
+import com.smart.kettle.core.KettleProperties;
 import com.smart.kettle.core.log.KettleLogController;
 import com.smart.kettle.core.model.RepositoryDirectoryData;
 import com.smart.kettle.core.parameter.BasicExecuteParameter;
 import com.smart.kettle.core.parameter.TransExecuteParameter;
 import com.smart.kettle.core.properties.KettleDatabaseRepositoryProperties;
 import com.smart.kettle.core.repository.pool.KettleDatabaseRepositoryProvider;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.pentaho.di.job.Job;
 import org.pentaho.di.job.JobListener;
@@ -28,6 +30,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -35,11 +38,12 @@ import java.util.function.Consumer;
  * 2021/7/15 10:44
  * @since 1.0
  */
+@RequiredArgsConstructor
 public class KettleServiceImpl implements KettleService, ApplicationContextAware {
 
     private final KettleDatabaseRepositoryProvider repositoryProvider;
-
     private final KettleLogController kettleLogController;
+    private final KettleProperties kettleProperties;
 
     /**
      * trans事件列表
@@ -56,11 +60,6 @@ public class KettleServiceImpl implements KettleService, ApplicationContextAware
      */
     private List<JobListener> jobListenerList = new ArrayList<>(0);
 
-    public KettleServiceImpl(KettleDatabaseRepositoryProvider repositoryProvider, KettleLogController kettleLogController) {
-        this.repositoryProvider = repositoryProvider;
-        this.kettleLogController = kettleLogController;
-    }
-
     /**
      * 执行资源库转换
      * @param properties 资源库配置参数
@@ -72,16 +71,17 @@ public class KettleServiceImpl implements KettleService, ApplicationContextAware
      */
     @Override
     public Trans executeDbTransfer(
-            @NonNull KettleDatabaseRepositoryProperties properties,
+            KettleDatabaseRepositoryProperties properties,
             @NonNull String transName,
             String directoryName,
             @NonNull TransExecuteParameter parameter,
             Consumer<Trans> beforeHandler
     ) {
+        KettleDatabaseRepositoryProperties repositoryProperties = Objects.requireNonNullElse(properties, this.getDefaultDbRepositoryProperties());
         // 关闭控制台日志
         KettleActuator.closeConsoleLogging();
         // 获取资源库
-        KettleDatabaseRepository repository = this.repositoryProvider.getRepository(properties);
+        KettleDatabaseRepository repository = this.repositoryProvider.getRepository(repositoryProperties);
         Trans trans;
         try {
             // 获取元数据
@@ -89,7 +89,7 @@ public class KettleServiceImpl implements KettleService, ApplicationContextAware
             // 执行
             trans = this.doExecuteTrans(transMeta, parameter, beforeHandler);
         } finally {
-            this.repositoryProvider.returnRepository(properties, repository);
+            this.repositoryProvider.returnRepository(repositoryProperties, repository);
         }
         return trans;
     }
@@ -138,15 +138,16 @@ public class KettleServiceImpl implements KettleService, ApplicationContextAware
             @NonNull BasicExecuteParameter parameter,
             Consumer<Job> beforeHandler
     ) {
+        KettleDatabaseRepositoryProperties repositoryProperties = Objects.requireNonNullElse(properties, this.getDefaultDbRepositoryProperties());
         // 获取资源库
-        KettleDatabaseRepository repository = this.repositoryProvider.getRepository(properties);
+        KettleDatabaseRepository repository = this.repositoryProvider.getRepository(repositoryProperties);
         Job job;
         try {
             // 获取元数据
             JobMeta jobMeta = KettleActuator.getDbJobMate(repository, jobName, directoryName);
             job = this.doExecuteJob(jobMeta, repository, parameter, beforeHandler);
         } finally {
-            this.repositoryProvider.returnRepository(properties, repository);
+            this.repositoryProvider.returnRepository(repositoryProperties, repository);
         }
         return job;
     }
@@ -213,10 +214,35 @@ public class KettleServiceImpl implements KettleService, ApplicationContextAware
 
     @Override
     public Tree<RepositoryDirectoryData> loadRepositoryDataTree(@NonNull KettleDatabaseRepositoryProperties properties, boolean hasDeleted) {
-        KettleDatabaseRepository repository = this.repositoryProvider.getRepository(properties);
+        KettleDatabaseRepositoryProperties repositoryProperties = Objects.requireNonNullElse(properties, this.getDefaultDbRepositoryProperties());
+        KettleDatabaseRepository repository = this.repositoryProvider.getRepository(repositoryProperties);
         Tree<RepositoryDirectoryData> data = KettleActuator.loadRepositoryData(repository, hasDeleted);
-        this.repositoryProvider.returnRepository(properties, repository);
+        this.repositoryProvider.returnRepository(repositoryProperties, repository);
         return data;
+    }
+
+    protected KettleDatabaseRepositoryProperties getDefaultDbRepositoryProperties() {
+        KettleProperties.DbRepository dbRepository = this.kettleProperties.getDbRepository();
+        if (!Boolean.TRUE.equals(dbRepository.getEnabled())) {
+            return null;
+        }
+        KettleDatabaseRepositoryProperties.KettleDatabaseRepositoryPropertiesBuilder<?, ?> builder = KettleDatabaseRepositoryProperties.builder()
+                .resUser(dbRepository.getResUser())
+                .resPassword(dbRepository.getResPassword())
+                .repositoryName(dbRepository.getRepositoryName())
+                .description(dbRepository.getDescription())
+
+                .type(dbRepository.getType())
+                .access(dbRepository.getAccess())
+                .name(dbRepository.getName())
+                .db(dbRepository.getDb())
+                .host(dbRepository.getHost())
+                .port(dbRepository.getPort())
+                .dbUser(dbRepository.getDbUser())
+                .dbPassword(dbRepository.getDbPassword())
+                .forceIdentifiersToLowercase(dbRepository.getForceIdentifiersToLowercase())
+                .forceIdentifiersToUppercase(dbRepository.getForceIdentifiersToUppercase());
+        return builder.build();
     }
 
     @Override

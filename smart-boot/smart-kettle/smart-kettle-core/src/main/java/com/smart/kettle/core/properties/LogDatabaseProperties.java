@@ -3,6 +3,9 @@ package com.smart.kettle.core.properties;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 /**
  * 日志数据库配置信息
  * @author ShiZhongMing
@@ -11,9 +14,12 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class LogDatabaseProperties extends DatabaseMetaProperties  {
+public class LogDatabaseProperties extends DatabaseMetaProperties implements Serializable {
 
-    private Boolean enabled = true;
+    @Serial
+    private static final long serialVersionUID = 4502129711738312072L;
+
+    private Boolean enabled = false;
 
     public static final String DEFAULT_DB_NAME = "LOG_DB";
 

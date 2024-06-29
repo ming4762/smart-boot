@@ -21,6 +21,13 @@ public class KettleDatabaseRepositoryFactory implements KeyedPooledObjectFactory
         // 创建连接信息
         EnhancedDatabaseMeta enhancedDatabaseMeta = new EnhancedDatabaseMeta(properties.getName(), properties.getType().name(),
                 properties.getAccess().getValue(), properties.getHost(), properties.getDb(), properties.getPort(), properties.getDbUser(), properties.getDbPassword());
+
+        if (Boolean.TRUE.equals(properties.getForceIdentifiersToLowercase())) {
+            enhancedDatabaseMeta.setForcingIdentifiersToLowerCase(true);
+        } else if (Boolean.TRUE.equals(properties.getForceIdentifiersToUppercase())) {
+            enhancedDatabaseMeta.setForcingIdentifiersToUpperCase(true);
+        }
+
         KettleDatabaseRepositoryMeta repositoryMeta = new KettleDatabaseRepositoryMeta(properties.getId(), properties.getRepositoryName(), properties.getDescription(), enhancedDatabaseMeta);
         // 初始化资源库
         repository.init(repositoryMeta);

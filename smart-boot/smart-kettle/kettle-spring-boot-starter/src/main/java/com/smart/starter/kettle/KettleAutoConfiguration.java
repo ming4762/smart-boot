@@ -22,7 +22,7 @@ import org.springframework.context.annotation.Configuration;
 @ConditionalOnClass(KettleDatabaseRepositoryProperties.class)
 public class KettleAutoConfiguration {
 
-    @ConfigurationProperties("smart.kettle")
+
     @Bean
     public KettleProperties kettleProperties() {
         return new KettleProperties();
@@ -57,7 +57,7 @@ public class KettleAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public KettleService kettleService(KettleDatabaseRepositoryProvider provider, KettleLogController kettleLogController) {
-        return new KettleServiceImpl(provider, kettleLogController);
+    public KettleService kettleService(KettleDatabaseRepositoryProvider provider, KettleLogController kettleLogController, KettleProperties kettleProperties) {
+        return new KettleServiceImpl(provider, kettleLogController, kettleProperties);
     }
 }

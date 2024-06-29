@@ -2,12 +2,12 @@ package com.smart.kettle.core.properties;
 
 import com.smart.kettle.core.constants.DatabaseAccessEnum;
 import com.smart.kettle.core.constants.DatabaseTypeEnum;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.lang.NonNull;
+
+import java.io.Serial;
+import java.io.Serializable;
 
 /**
  * 数据库meta配置
@@ -20,8 +20,11 @@ import org.springframework.lang.NonNull;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
-public class DatabaseMetaProperties {
+@EqualsAndHashCode
+public class DatabaseMetaProperties implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = -5741131847736470395L;
     /**
      * 数据库类型
      */
@@ -44,4 +47,14 @@ public class DatabaseMetaProperties {
     private String dbUser;
     @NonNull
     private String dbPassword;
+
+    /**
+     * 数据库是否强制使用小写
+     */
+    private Boolean forceIdentifiersToLowercase;
+
+    /**
+     * 数据库是否强制使用大写
+     */
+    private Boolean forceIdentifiersToUppercase;
 }
