@@ -24,6 +24,7 @@ import com.smart.crud.parameter.SetUseYnParameter;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.crud.service.BaseServiceImpl;
 import com.smart.crud.service.UserSetterService;
+import com.smart.crud.utils.CrudUtils;
 import com.smart.module.api.system.SysParameterApi;
 import com.smart.module.api.system.constants.SysParameterCodeEnum;
 import com.smart.module.api.system.dto.QueryUserAccountDTO;
@@ -73,8 +74,6 @@ import java.util.stream.Stream;
 @Slf4j
 @RequiredArgsConstructor
 public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO> implements SysUserService {
-
-    private static final String SYSTEM_USER_TYPE = "SYSTEM_USER";
 
     /**
      * 密码加密盐值
@@ -420,35 +419,35 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
                         .collect(Collectors.toSet())
         );
         Set<Long> functionIds = this.listPermissionFunctionIds(userTenant, sysRoleList);
-        //3、查询function列表
-        var queryWrapper = new QueryWrapper<SysFunctionPO>().lambda()
-                .select(SysFunctionPO::getUrl, SysFunctionPO::getPermission, SysFunctionPO::getHttpMethod)
-                .eq(SysFunctionPO::getFunctionType, FunctionTypeEnum.FUNCTION.getValue());
-        if (functionIds != null && functionIds.isEmpty()) {
-            // 没有权限信息
+        if (CollectionUtils.isEmpty(functionIds)) {
             return userAccountData;
         }
-        if (!CollectionUtils.isEmpty(functionIds)) {
-            queryWrapper.in(SysFunctionPO::getFunctionId, functionIds);
-        }
-        var permissions = this.sysFunctionService.list(queryWrapper).stream()
-                .flatMap(item -> {
-                    var url = item.getUrl();
-                    if (StringUtils.isNotBlank(url)) {
-                        return Arrays.stream(url.split(";"))
-                                .map(uriItem -> Permission.builder()
-                                        .method(item.getHttpMethod())
-                                        .url(uriItem)
-                                        .authority(item.getPermission())
-                                        .build());
-                    }
-                    return Stream.of(Permission.builder()
-                            .method(item.getHttpMethod())
-                            .url(item.getUrl())
-                            .authority(item.getPermission())
-                            .build());
-                }).collect(Collectors.toSet());
-        userAccountData.setPermissions(permissions);
+
+        List<Permission> permissions = CrudUtils.partitionList(functionIds, 900, list -> {
+            //3、查询function列表
+            var queryWrapper = new QueryWrapper<SysFunctionPO>().lambda()
+                    .select(SysFunctionPO::getUrl, SysFunctionPO::getPermission, SysFunctionPO::getHttpMethod)
+                    .eq(SysFunctionPO::getFunctionType, FunctionTypeEnum.FUNCTION.getValue())
+                    .in(SysFunctionPO::getFunctionId, list);
+            return this.sysFunctionService.list(queryWrapper).stream()
+                    .flatMap(item -> {
+                        var url = item.getUrl();
+                        if (StringUtils.isNotBlank(url)) {
+                            return Arrays.stream(url.split(";"))
+                                    .map(uriItem -> Permission.builder()
+                                            .method(item.getHttpMethod())
+                                            .url(uriItem)
+                                            .authority(item.getPermission())
+                                            .build());
+                        }
+                        return Stream.of(Permission.builder()
+                                .method(item.getHttpMethod())
+                                .url(item.getUrl())
+                                .authority(item.getPermission())
+                                .build());
+                    }).collect(Collectors.toSet());
+        });
+        userAccountData.setPermissions(new HashSet<>(permissions));
         return userAccountData;
     }
 

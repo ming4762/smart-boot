@@ -112,7 +112,7 @@ public class SmartTableInfo extends TableInfo {
     public boolean isWithUpdateFill() {
         return this.tableInfo.isWithUpdateFill() || (this.logicDeleteInfo != null && !this.logicDeleteInfo.getFillFieldInfoList().isEmpty());
     }
-    
+
     @Override
     public List<TableFieldInfo> getFieldList() {
         return Collections.unmodifiableList(smartTableFieldInfoList);
