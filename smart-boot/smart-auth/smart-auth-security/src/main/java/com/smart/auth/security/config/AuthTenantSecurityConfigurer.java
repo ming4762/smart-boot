@@ -1,8 +1,8 @@
 package com.smart.auth.security.config;
 
 import com.smart.auth.core.config.SmartSecurityConfigurerAdapter;
+import com.smart.auth.core.tenant.filter.SmartAuthTenantInjectFilter;
 import com.smart.auth.security.filter.SmartAuthTenantChangeFilter;
-import com.smart.auth.security.filter.SmartAuthTenantInjectFilter;
 import com.smart.module.api.auth.AuthApi;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;

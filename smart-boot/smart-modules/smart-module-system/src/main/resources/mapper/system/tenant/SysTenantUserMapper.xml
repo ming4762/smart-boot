@@ -102,6 +102,5 @@
           and B.effect_time  &lt;= #{now}
           and B.expire_time &gt;= #{now}
           and A.tenant_id = #{tenantId}
-        and A.tenant_id = #{tenantId}
     </select>
 </mapper>

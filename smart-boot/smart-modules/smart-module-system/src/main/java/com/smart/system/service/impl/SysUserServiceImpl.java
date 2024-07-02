@@ -56,13 +56,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -196,23 +196,23 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         ).stream().map(SysUserRolePO :: getRoleId).collect(Collectors.toSet());
         roleIdSet.addAll(userRoleIdSet);
         // 2、查询用户组的角色
-        // 查询用户组
-        final Set<Long> userGroupIdSet = this.sysUserGroupUserMapper.selectList(
-                new QueryWrapper<SysUserGroupUserPO>().lambda()
-                        .select(SysUserGroupUserPO::getUserGroupId)
-                        .eq(SysUserGroupUserPO :: getUserId, userId)
-                        .eq(SysUserGroupUserPO :: getUseYn, Boolean.TRUE)
-        ).stream().map(SysUserGroupUserPO :: getUserGroupId).collect(Collectors.toSet());
-        // 通过用户组查询角色ID
-        if (!userGroupIdSet.isEmpty()) {
-            final Set<Long> groupRoleIdSet = this.sysUserGroupRoleMapper.selectList(
-                    new QueryWrapper<SysUserGroupRolePO>().lambda()
-                            .select(SysUserGroupRolePO :: getRoleId)
-                            .in(SysUserGroupRolePO :: getGroupId, userGroupIdSet)
-                            .eq(SysUserGroupRolePO :: getUseYn, Boolean.TRUE)
-            ).stream().map(SysUserGroupRolePO :: getRoleId).collect(Collectors.toSet());
-            roleIdSet.addAll(groupRoleIdSet);
-        }
+        // 查询用户组 TODO:该功能暂不启用
+//        final Set<Long> userGroupIdSet = this.sysUserGroupUserMapper.selectList(
+//                new QueryWrapper<SysUserGroupUserPO>().lambda()
+//                        .select(SysUserGroupUserPO::getUserGroupId)
+//                        .eq(SysUserGroupUserPO :: getUserId, userId)
+//                        .eq(SysUserGroupUserPO :: getUseYn, Boolean.TRUE)
+//        ).stream().map(SysUserGroupUserPO :: getUserGroupId).collect(Collectors.toSet());
+//        // 通过用户组查询角色ID
+//        if (!userGroupIdSet.isEmpty()) {
+//            final Set<Long> groupRoleIdSet = this.sysUserGroupRoleMapper.selectList(
+//                    new QueryWrapper<SysUserGroupRolePO>().lambda()
+//                            .select(SysUserGroupRolePO :: getRoleId)
+//                            .in(SysUserGroupRolePO :: getGroupId, userGroupIdSet)
+//                            .eq(SysUserGroupRolePO :: getUseYn, Boolean.TRUE)
+//            ).stream().map(SysUserGroupRolePO :: getRoleId).collect(Collectors.toSet());
+//            roleIdSet.addAll(groupRoleIdSet);
+//        }
         if (roleIdSet.isEmpty()) {
             return Lists.newArrayList();
         }
@@ -418,73 +418,91 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
                         .map(item -> new AuthRole(item.getRoleCode(), item.getRoleName(), item.getSuperAdminYn()))
                         .collect(Collectors.toSet())
         );
-        Set<Long> functionIds = this.listPermissionFunctionIds(userTenant, sysRoleList);
-        if (CollectionUtils.isEmpty(functionIds)) {
+        List<SysFunctionPO> functionList = this.listPermissionFunctionIds(
+                userTenant.getTenantId(),
+                () -> sysRoleList.stream().map(SysRolePO::getRoleId).toList(),
+                Boolean.TRUE.equals(userTenant.getPlatformYn()),
+                sysRoleList.stream()
+                        .anyMatch(item -> Boolean.TRUE.equals(item.getSuperAdminYn())),
+                List.of(FunctionTypeEnum.FUNCTION)
+        );
+
+        if (CollectionUtils.isEmpty(functionList)) {
             return userAccountData;
         }
-
-        List<Permission> permissions = CrudUtils.partitionList(functionIds, 900, list -> {
-            //3、查询function列表
-            var queryWrapper = new QueryWrapper<SysFunctionPO>().lambda()
-                    .select(SysFunctionPO::getUrl, SysFunctionPO::getPermission, SysFunctionPO::getHttpMethod)
-                    .eq(SysFunctionPO::getFunctionType, FunctionTypeEnum.FUNCTION.getValue())
-                    .in(SysFunctionPO::getFunctionId, list);
-            return this.sysFunctionService.list(queryWrapper).stream()
-                    .flatMap(item -> {
-                        var url = item.getUrl();
-                        if (StringUtils.isNotBlank(url)) {
-                            return Arrays.stream(url.split(";"))
-                                    .map(uriItem -> Permission.builder()
-                                            .method(item.getHttpMethod())
-                                            .url(uriItem)
-                                            .authority(item.getPermission())
-                                            .build());
-                        }
-                        return Stream.of(Permission.builder()
-                                .method(item.getHttpMethod())
-                                .url(item.getUrl())
-                                .authority(item.getPermission())
-                                .build());
-                    }).collect(Collectors.toSet());
-        });
-        userAccountData.setPermissions(new HashSet<>(permissions));
+        Set<Permission> permissions = functionList.stream()
+                .flatMap(item -> {
+                    var url = item.getUrl();
+                    if (StringUtils.isNotBlank(url)) {
+                        return Arrays.stream(url.split(";"))
+                                .map(uriItem -> Permission.builder()
+                                        .method(item.getHttpMethod())
+                                        .url(uriItem)
+                                        .authority(item.getPermission())
+                                        .build());
+                    }
+                    return Stream.of(Permission.builder()
+                            .method(item.getHttpMethod())
+                            .url(item.getUrl())
+                            .authority(item.getPermission())
+                            .build());
+                }).collect(Collectors.toSet());
+        userAccountData.setPermissions(permissions);
         return userAccountData;
     }
 
     /**
-     * 查询权限功能ID
-     * @param userTenant 租户信息
-     * @param sysRoleList 角色列表
+     * 查询用户的菜单
+     * @param tenantId 用户租户
+     * @param roleIdProvider 用户角色
+     * @param isPlatformTenant 是否平台租户
+     * @param isSuperAdmin 是否超级管理员
+     * @param functionTypeList 功能类型
      * @return 功能列表
      */
-    private Set<Long> listPermissionFunctionIds(UserTenantDTO userTenant, List<SysRolePO> sysRoleList) {
-        // 是否是平台管理租户
-        boolean isPlatformTenant = Boolean.TRUE.equals(userTenant.getPlatformYn());
-        // 判断是否是超级管理员
-        boolean isSuperAdmin = sysRoleList.stream()
-                .anyMatch(item -> Boolean.TRUE.equals(item.getSuperAdminYn()));
-        if (isSuperAdmin && isPlatformTenant) {
-            return null;
+    private List<SysFunctionPO> listPermissionFunctionIds(Long tenantId, Supplier<List<Long>> roleIdProvider, boolean isPlatformTenant, boolean isSuperAdmin, List<FunctionTypeEnum> functionTypeList) {
+        if (CollectionUtils.isEmpty(functionTypeList)) {
+            return List.of();
         }
+        if (isPlatformTenant && isSuperAdmin) {
+            // 平台租户管理员，直接返回所有菜单
+            return this.sysFunctionService.lambdaQuery()
+                    .in(SysFunctionPO :: getFunctionType, functionTypeList.stream().map(FunctionTypeEnum::getValue).toList())
+                    .orderByAsc(SysFunctionPO :: getSeq)
+                    .list();
+        }
+        Set<Long> functionIds = null;
         if (isSuperAdmin) {
-            // 超级管理员，但不是平台租户，查询租户所有订阅菜单
             SysListTenantFunctionDTO parameter = new SysListTenantFunctionDTO();
-            parameter.setTenantId(userTenant.getTenantId());
-            return new HashSet<>(this.sysTenantUserService.listTenantFunctionIds(parameter));
-        }
-        var roleIds = sysRoleList.stream().map(SysRolePO::getRoleId).collect(Collectors.toSet());
-        if (isPlatformTenant) {
+            parameter.setTenantId(tenantId);
+            functionIds = new HashSet<>(this.sysTenantUserService.listTenantFunctionIds(parameter));
+        } else if (isPlatformTenant) {
+            // 平台租户但不是管理员
             // 2、查询角色对应的功能ID
-            return this.sysRoleFunctionService.list(
-                    new QueryWrapper<SysRoleFunctionPO>().lambda()
-                            .select(SysRoleFunctionPO :: getFunctionId)
-                            .in(SysRoleFunctionPO :: getRoleId, roleIds)
-            ).stream().map(SysRoleFunctionPO :: getFunctionId).collect(Collectors.toSet());
+            List<Long> roleIdList = roleIdProvider.get();
+            if (!CollectionUtils.isEmpty(roleIdList)) {
+                functionIds = this.sysRoleFunctionService.list(
+                        new QueryWrapper<SysRoleFunctionPO>().lambda()
+                                .select(SysRoleFunctionPO::getFunctionId)
+                                .in(SysRoleFunctionPO::getRoleId, roleIdProvider.get())
+                ).stream().map(SysRoleFunctionPO::getFunctionId).collect(Collectors.toSet());
+            }
+        } else {
+            // 非平台租户的普通角色
+            SysListTenantRoleFunctionDTO parameter = new SysListTenantRoleFunctionDTO();
+            parameter.setTenantId(tenantId);
+            parameter.setRoleIdList(roleIdProvider.get());
+            functionIds = new HashSet<>(this.sysTenantUserService.listTenantRoleFunctionIds(parameter));
         }
-        SysListTenantRoleFunctionDTO parameter = new SysListTenantRoleFunctionDTO();
-        parameter.setTenantId(userTenant.getTenantId());
-        parameter.setRoleIdList(new ArrayList<>(roleIds));
-        return new HashSet<>(this.sysTenantUserService.listTenantRoleFunctionIds(parameter));
+
+        if (CollectionUtils.isEmpty(functionIds)) {
+            return List.of();
+        }
+        return CrudUtils.partitionList(new ArrayList<>(functionIds), 900, ids -> this.sysFunctionService.lambdaQuery()
+                .in(SysFunctionPO::getFunctionId, ids)
+                .in(SysFunctionPO::getFunctionType, functionTypeList.stream().map(FunctionTypeEnum::getValue).toList())
+                .orderByAsc(SysFunctionPO :: getSeq)
+                .list());
     }
 
     /**
@@ -529,71 +547,16 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
     @Override
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     public List<SysFunctionPO> listUserFunction(@NonNull List<FunctionTypeEnum> types) {
-        Set<Long> functionIds = this.listCurrentUserFunctionIds();
-        if (functionIds == null) {
-            // 平台租户管理员，直接返回所有菜单
-            final LambdaQueryWrapper<SysFunctionPO> queryWrapper = new QueryWrapper<SysFunctionPO>().lambda()
-                    .orderByAsc(SysFunctionPO :: getSeq);
-            if (!CollectionUtils.isEmpty(types)) {
-                queryWrapper.in(SysFunctionPO :: getFunctionType, types.stream().map(FunctionTypeEnum::getValue).toList());
-            }
-            return this.sysFunctionService.list(queryWrapper);
-        }
-        if (functionIds.isEmpty()) {
-            return Lists.newArrayList();
-        }
-        // 查询功能信息
-        return Lists.partition(new ArrayList<>(functionIds), 900).stream()
-                .flatMap(idList -> {
-                    final LambdaQueryWrapper<SysFunctionPO> queryWrapper = new QueryWrapper<SysFunctionPO>().lambda()
-                            .in(SysFunctionPO :: getFunctionId, idList)
-                            .orderByAsc(SysFunctionPO :: getSeq);
-                    if (!CollectionUtils.isEmpty(types)) {
-                        queryWrapper.in(SysFunctionPO :: getFunctionType, types.stream().map(FunctionTypeEnum::getValue).toList());
-                    }
-                    return this.sysFunctionService.list(queryWrapper).stream();
-                }).toList();
-    }
-
-    /**
-     * 查询当前用户的菜单ID
-     * @return 菜单ID
-     */
-    @Nullable
-    private Set<Long> listCurrentUserFunctionIds() {
-        // 判断是否是超级管理员
-        boolean isSuperAdmin = AuthUtils.isSuperAdmin();
-        boolean isPlatformTenant = AuthUtils.isPlatformTenant();
-        if (isPlatformTenant && isSuperAdmin) {
-            return null;
-        }
-        Long tenantId = AuthUtils.getNonNullCurrentTenantId();
-        if (isSuperAdmin) {
-            // 超级管理员，但不是平台租户，查询租户所有订阅菜单
-            SysListTenantFunctionDTO parameter = new SysListTenantFunctionDTO();
-            parameter.setTenantId(tenantId);
-            return new HashSet<>(this.sysTenantUserService.listTenantFunctionIds(parameter));
-        }
-        // 查询角色信息
         Long userId = AuthUtils.getNonNullCurrentUserId();
-        final Set<Long> roleIds = this.listRole(userId)
-                .stream().map(SysRolePO::getRoleId)
-                .collect(Collectors.toSet());
-        if (roleIds.isEmpty()) {
-            return Set.of();
-        }
-        if (isPlatformTenant) {
-            // 平台管理租户直接根据角色查询
-            return this.sysRoleFunctionService.list(
-                    new QueryWrapper<SysRoleFunctionPO>().lambda()
-                            .select(SysRoleFunctionPO :: getFunctionId)
-                            .in(SysRoleFunctionPO :: getRoleId, roleIds)
-            ).stream().map(SysRoleFunctionPO :: getFunctionId).collect(Collectors.toSet());
-        }
-        SysListTenantRoleFunctionDTO parameter = new SysListTenantRoleFunctionDTO();
-        parameter.setTenantId(AuthUtils.getNonNullCurrentTenantId());
-        parameter.setRoleIdList(new ArrayList<>(roleIds));
-        return new HashSet<>(this.sysTenantUserService.listTenantRoleFunctionIds(parameter));
+        return this.listPermissionFunctionIds(
+                AuthUtils.getNonNullCurrentTenantId(),
+                () -> this.listRole(userId)
+                        .stream().map(SysRolePO::getRoleId)
+                        .toList(),
+                AuthUtils.isPlatformTenant(),
+                AuthUtils.isSuperAdmin(),
+                types
+        );
     }
 
     @Override
@@ -643,7 +606,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
                             .roleId(roleId)
                             .enable(Boolean.TRUE)
                             .userId(parameter.getUserId())
-                            .build()).collect(Collectors.toList())
+                            .build()).toList()
             );
         }
         return true;
