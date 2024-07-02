@@ -54,8 +54,21 @@ public class KettleDatabaseRepositoryFactory implements KeyedPooledObjectFactory
     @Override
     public void activateObject(KettleDatabaseRepositoryProperties kettleDatabaseRepositoryProperties, PooledObject<KettleDatabaseRepository> pooledObject) throws Exception {
         KettleDatabaseRepository repository = pooledObject.getObject();
-        if (repository != null && !repository.isConnected()) {
-            repository.connect(kettleDatabaseRepositoryProperties.getResUser(), kettleDatabaseRepositoryProperties.getResPassword(), true);
+        if (repository != null) {
+            boolean connect = repository.isConnected();
+            if (connect) {
+                try {
+                    // 判断连接是否正常连接
+                    repository.getDatabase().execStatement("select 1");
+                } catch (Exception e) {
+                    connect = false;
+                    repository.setConnected(false);
+                    repository.disconnect();
+                }
+            }
+            if (!connect) {
+                repository.connect(kettleDatabaseRepositoryProperties.getResUser(), kettleDatabaseRepositoryProperties.getResPassword(), true);
+            }
         }
     }
 
