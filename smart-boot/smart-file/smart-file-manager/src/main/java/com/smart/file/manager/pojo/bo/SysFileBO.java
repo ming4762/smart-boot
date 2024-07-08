@@ -1,6 +1,6 @@
 package com.smart.file.manager.pojo.bo;
 
-import com.smart.commons.core.utils.IdGenerator;
+import com.smart.commons.core.utils.SmartIdGenerator;
 import com.smart.file.manager.model.SmartFilePO;
 import com.smart.module.api.file.dto.FileSaveParameter;
 import lombok.Getter;
@@ -34,7 +34,7 @@ public class SysFileBO {
     public SysFileBO(@NonNull InputStream inputStream, FileSaveParameter parameter, String contentType) {
         // 设置过期时间
         this.file = SmartFilePO.builder()
-                .fileId(IdGenerator.nextId())
+                .fileId(SmartIdGenerator.nextId())
                 .filename(parameter.getFilename())
                 .type(parameter.getType() == null ? DEFAULT_FILE_TYPE : parameter.getType())
                 .contentType(contentType)

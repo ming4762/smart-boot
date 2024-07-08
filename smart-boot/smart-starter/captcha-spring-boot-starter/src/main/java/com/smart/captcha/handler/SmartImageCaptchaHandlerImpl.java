@@ -11,7 +11,7 @@ import com.smart.commons.core.captcha.dto.CaptchaGenerateDTO;
 import com.smart.commons.core.captcha.dto.CaptchaGenerateParameter;
 import com.smart.commons.core.captcha.dto.CaptchaValidateParameter;
 import com.smart.commons.core.utils.DateUtils;
-import com.smart.commons.core.utils.IdGenerator;
+import com.smart.commons.core.utils.SmartIdGenerator;
 import org.springframework.beans.BeanUtils;
 
 import java.util.List;
@@ -53,7 +53,7 @@ public class SmartImageCaptchaHandlerImpl implements SmartCaptchaHandler {
         BeanUtils.copyProperties(imageCaptchaInfo, imageDto);
         // 保存校验数据
         Map<String, Object> validData = this.imageCaptchaValidator.generateImageCaptchaValidData(imageCaptchaInfo);
-        String key = IdGenerator.nextId() + "";
+        String key = SmartIdGenerator.nextId() + "";
         this.cacheService.put(this.getCacheKey(key), validData, Objects.requireNonNullElse(parameter.getExpireIn(), DEFAULT_EXPIRE_IN));
 
         return CaptchaGenerateDTO.builder()

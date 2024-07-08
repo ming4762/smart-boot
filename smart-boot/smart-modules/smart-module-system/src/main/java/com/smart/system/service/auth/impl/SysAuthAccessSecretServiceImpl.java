@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.smart.auth.core.properties.AuthProperties;
 import com.smart.commons.core.exception.SystemException;
 import com.smart.commons.core.utils.Base64Utils;
-import com.smart.commons.core.utils.IdGenerator;
+import com.smart.commons.core.utils.SmartIdGenerator;
 import com.smart.commons.core.utils.auth.ShaUtils;
 import com.smart.crud.constants.CrudCommonEnum;
 import com.smart.crud.query.PageSortQuery;
@@ -53,8 +53,8 @@ public class SysAuthAccessSecretServiceImpl extends BaseServiceImpl<SysAuthAcces
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean save(SysAuthAccessSecretPO entity) {
-        entity.setAccessKey(Base64Utils.encode(ShaUtils.hmacSha1Encrypt(UUID.randomUUID().toString(), IdGenerator.nextId() + "")));
-        entity.setSecretKey(Base64Utils.encode(ShaUtils.hmacSha1Encrypt(UUID.randomUUID().toString(), IdGenerator.nextId() + "")));
+        entity.setAccessKey(Base64Utils.encode(ShaUtils.hmacSha1Encrypt(UUID.randomUUID().toString(), SmartIdGenerator.nextId() + "")));
+        entity.setSecretKey(Base64Utils.encode(ShaUtils.hmacSha1Encrypt(UUID.randomUUID().toString(), SmartIdGenerator.nextId() + "")));
         return super.save(entity);
     }
 

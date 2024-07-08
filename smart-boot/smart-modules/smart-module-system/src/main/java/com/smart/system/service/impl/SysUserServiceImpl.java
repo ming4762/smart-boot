@@ -15,8 +15,8 @@ import com.smart.commons.core.exception.SystemException;
 import com.smart.commons.core.i18n.I18nUtils;
 import com.smart.commons.core.tenant.SmartTenantHolder;
 import com.smart.commons.core.utils.DigestUtils;
-import com.smart.commons.core.utils.IdGenerator;
 import com.smart.commons.core.utils.PropertyUtils;
+import com.smart.commons.core.utils.SmartIdGenerator;
 import com.smart.crud.constants.CrudCommonEnum;
 import com.smart.crud.constants.ModelPropertyEnum;
 import com.smart.crud.datapermission.DataPermissionScope;
@@ -646,7 +646,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         var userModel = new SysUserPO();
         BeanUtils.copyProperties(parameter, userModel);
         boolean isAdd = this.isAdd(userModel);
-        Long userId = userModel.getUserId() == null ? IdGenerator.nextId() : userModel.getUserId();
+        Long userId = userModel.getUserId() == null ? SmartIdGenerator.nextId() : userModel.getUserId();
         if (parameter.getDeptId() != null) {
             SysUserDeptPO dataScopeModel = new SysUserDeptPO();
             dataScopeModel.setUserId(userId);

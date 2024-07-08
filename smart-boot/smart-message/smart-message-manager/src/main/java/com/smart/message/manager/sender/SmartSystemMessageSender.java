@@ -7,7 +7,7 @@ import com.message.core.constants.SmartMessageChannelType1Enum;
 import com.message.core.pojo.dto.SmartMessageToUserDTO;
 import com.message.core.service.SmartMessageSender;
 import com.smart.auth.core.utils.AuthUtils;
-import com.smart.commons.core.utils.IdGenerator;
+import com.smart.commons.core.utils.SmartIdGenerator;
 import com.smart.message.manager.constants.MessageSendStatusEnum;
 import com.smart.message.manager.constants.MessageTypeEnum;
 import com.smart.message.manager.model.SmartMessageSystemPO;
@@ -77,7 +77,7 @@ public class SmartSystemMessageSender implements SmartMessageSender {
                 isAdd = false;
             }
         }
-        Long messageId = isAdd ? IdGenerator.nextId() : parameter.getMessageId();
+        Long messageId = isAdd ? SmartIdGenerator.nextId() : parameter.getMessageId();
         if (isAdd) {
             model.setId(messageId);
             model.setTitle(parameter.getTitle());

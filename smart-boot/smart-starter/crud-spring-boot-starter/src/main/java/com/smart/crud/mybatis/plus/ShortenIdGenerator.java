@@ -1,7 +1,7 @@
 package com.smart.crud.mybatis.plus;
 
 import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
-import com.smart.commons.core.utils.IdGenerator;
+import com.smart.commons.core.utils.SmartIdGenerator;
 
 /**
  * mybatis plus ID生成器，缩短2位，防止js number超长
@@ -17,6 +17,6 @@ public class ShortenIdGenerator implements IdentifierGenerator {
      */
     @Override
     public Number nextId(Object entity) {
-        return IdGenerator.nextId();
+        return SmartIdGenerator.nextId();
     }
 }

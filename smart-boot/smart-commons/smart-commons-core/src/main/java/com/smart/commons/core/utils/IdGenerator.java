@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
  * @author jackson
  * 2020/3/14 10:15 下午
  */
+@Deprecated
 public class IdGenerator {
 
     private IdGenerator() {

@@ -9,7 +9,7 @@ import com.smart.auth.core.properties.AuthCaptchaProperties;
 import com.smart.auth.core.service.AuthCache;
 import com.smart.commons.core.captcha.constants.CaptchaTypeEnum;
 import com.smart.commons.core.utils.DateUtils;
-import com.smart.commons.core.utils.IdGenerator;
+import com.smart.commons.core.utils.SmartIdGenerator;
 import com.smart.module.api.auth.dto.AuthCaptchaDTO;
 import com.smart.module.api.auth.parameter.AuthCaptchaCreateParameter;
 import com.smart.module.api.auth.parameter.AuthCaptchaValidateParameter;
@@ -115,7 +115,7 @@ public class DefaultSmartAuthCaptchaServiceImpl implements SmartAuthCaptchaServi
 
         Map<String, Object> validData = this.imageCaptchaValidator.generateImageCaptchaValidData(imageCaptchaInfo);
 
-        String key = IdGenerator.nextId() + "";
+        String key = SmartIdGenerator.nextId() + "";
         this.authCache.put(this.getCacheKey(key), validData, this.properties.getExpireIn());
 
         dto.setKey(key);

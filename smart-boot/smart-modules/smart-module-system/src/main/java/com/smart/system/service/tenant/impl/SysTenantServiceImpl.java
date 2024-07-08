@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.smart.commons.core.exception.BusinessException;
-import com.smart.commons.core.utils.IdGenerator;
+import com.smart.commons.core.utils.SmartIdGenerator;
 import com.smart.crud.plus.metadata.SmartTableInfo;
 import com.smart.crud.query.IdParameter;
 import com.smart.crud.service.BaseServiceImpl;
@@ -229,10 +229,10 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
         if (!isAdd) {
             return this.updateById(entity);
         }
-        long newId = IdGenerator.nextId();
+        long newId = SmartIdGenerator.nextId();
         entity.setId(newId);
         // 创建租户默认的角色
-        long roleId = IdGenerator.nextId();
+        long roleId = SmartIdGenerator.nextId();
         SysRolePO role = SysRolePO.builder()
                 .roleId(roleId)
                 .roleName(DEFAULT_ROLE_NAME)

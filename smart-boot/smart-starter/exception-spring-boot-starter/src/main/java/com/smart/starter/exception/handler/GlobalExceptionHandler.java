@@ -1,7 +1,7 @@
 package com.smart.starter.exception.handler;
 
 import com.smart.auth.core.utils.AuthUtils;
-import com.smart.commons.core.utils.IdGenerator;
+import com.smart.commons.core.utils.SmartIdGenerator;
 import com.smart.starter.exception.notice.AsyncNoticeHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = Exception.class)
     public Object handlerException(Exception e, HttpServletRequest request) {
         // 异常信息生成一个no
-        long exceptionNo = IdGenerator.nextId();
+        long exceptionNo = SmartIdGenerator.nextId();
         // 处理异常通知
         this.asyncNoticeHandler.noticeException(e, exceptionNo, AuthUtils.getCurrentUser(), request);
         // 返回异常处理信息

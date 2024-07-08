@@ -7,7 +7,7 @@ import com.google.common.collect.Maps;
 import com.smart.auth.core.utils.AuthUtils;
 import com.smart.commons.core.exception.BaseException;
 import com.smart.commons.core.exception.BusinessException;
-import com.smart.commons.core.utils.IdGenerator;
+import com.smart.commons.core.utils.SmartIdGenerator;
 import com.smart.crud.query.PageSortQuery;
 import com.smart.crud.service.BaseServiceImpl;
 import com.smart.db.generator.constants.*;
@@ -108,7 +108,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
                         .in(DbConnectionPO :: getId, connectionIds)
                         .select(DbConnectionPO :: getConnectionName, DbConnectionPO :: getId)
         ).stream().collect(Collectors.toMap(DbConnectionPO :: getId, DbConnectionPO :: getConnectionName));
-        voList.forEach(item -> ((DbCodeMainListVO)item).setConnectionName(connectionMap.get(item.getConnectionId())));
+        voList.forEach(item -> (item).setConnectionName(connectionMap.get(item.getConnectionId())));
     }
 
     @Override
@@ -125,7 +125,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
                 isAdd = false;
             }
         }
-        long mainId = oldMain == null ? IdGenerator.nextId() : oldMain.getId();
+        long mainId = oldMain == null ? SmartIdGenerator.nextId() : oldMain.getId();
         dbCodeMain.setId(mainId);
         // 如果是修改执行删除操作
         if (!isAdd) {
@@ -147,7 +147,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
                     item.setId(null);
                     // 设置序号
                     item.setSeq(pageConfigIndex.getAndIncrement());
-                }).collect(Collectors.toList())
+                }).toList()
         );
         // 保存附表配置
         if (StringUtils.equals(model.getType(), TableTypeEnum.MAIN.getType())) {
@@ -191,7 +191,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
         this.dbCodeSearchConfigService.saveBatch(
                 model.getCodeSearchConfigList().stream().peek(item -> {
                     item.setMainId(model.getId());
-                    item.setId(IdGenerator.nextId());
+                    item.setId(SmartIdGenerator.nextId());
                     item.setSeq(searchConfigIndex.getAndIncrement());
                 }).collect(Collectors.toList())
         );
@@ -225,7 +225,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
         this.dbCodeFormConfigService.saveBatch(
                 model.getCodeFormConfigList().stream().peek(item -> {
                     item.setMainId(model.getId());
-                    item.setId(IdGenerator.nextId());
+                    item.setId(SmartIdGenerator.nextId());
                     item.setSeq(formConfigIndex.getAndIncrement());
                 }).collect(Collectors.toList())
         );

@@ -2,7 +2,7 @@ package com.smart.system.service.change.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.smart.commons.core.utils.IdGenerator;
+import com.smart.commons.core.utils.SmartIdGenerator;
 import com.smart.commons.validate.utils.ValidatorUtils;
 import com.smart.crud.service.BaseServiceImpl;
 import com.smart.module.api.system.dto.SmartChangeLogListDTO;
@@ -48,7 +48,7 @@ public class SmartChangeLogServiceImpl extends BaseServiceImpl<SmartChangeLogMap
         // 校验参数
         ValidatorUtils.validate(parameter);
 
-        long logId = IdGenerator.nextId();
+        long logId = SmartIdGenerator.nextId();
         SmartChangeLogPO changeLog = new SmartChangeLogPO();
         changeLog.setId(logId);
         changeLog.setIdent(parameter.getIdent());
