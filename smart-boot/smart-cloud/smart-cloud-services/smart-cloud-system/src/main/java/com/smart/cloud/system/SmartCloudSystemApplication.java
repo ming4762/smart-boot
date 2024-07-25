@@ -2,6 +2,7 @@ package com.smart.cloud.system;
 
 import com.smart.commons.core.spring.EnabledCustomObjectMapper;
 import com.smart.commons.core.validate.EnableGlobalValidator;
+import com.smart.crud.spring.EnableMybatisPlusTenant;
 import com.smart.i18n.config.EnableValidatorI18nSource;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableValidatorI18nSource
 @EnableGlobalValidator
 @EnabledCustomObjectMapper
+@EnableMybatisPlusTenant
 @EnableFeignClients(basePackages = {"com.smart.cloud.api.auth.feign", "com.smart.cloud.api.file.feign"})
 public class SmartCloudSystemApplication {
 

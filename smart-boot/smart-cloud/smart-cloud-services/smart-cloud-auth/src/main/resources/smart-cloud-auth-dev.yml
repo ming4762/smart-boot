@@ -21,9 +21,18 @@ management:
   health:
     mail:
       enabled: false
+
 spring:
   data:
     redis:
       host: one.smart-ming.online
       password: ming8858
 
+smart:
+  auth:
+    ignores:
+      post:
+        - /auth/login
+        - /auth/logout
+      get:
+        - /auth/createCaptcha

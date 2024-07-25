@@ -6,10 +6,9 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    system:
-      url: jdbc:mysql://one.smart-ming.online:3306/smart-system?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
-      username: root
-      password: ming8858
+    url: jdbc:mysql://one.smart-ming.online:3306/smart-system?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: ming8858
 
 logging:
   level:

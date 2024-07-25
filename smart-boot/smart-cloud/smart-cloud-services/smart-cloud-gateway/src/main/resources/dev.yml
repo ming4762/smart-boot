@@ -25,3 +25,15 @@ spring:
             - Path=/smart-system/**
           filters:
             - StripPrefix=1
+        - id: smart-cloud-code
+          uri: lb://smart-cloud-code
+          predicates:
+            - Path=/smart-code/**
+          filters:
+            - StripPrefix=1
+        - id: smart-cloud-file
+          uri: lb://smart-cloud-file
+          predicates:
+            - Path=/smart-file/**
+          filters:
+            - StripPrefix=1
