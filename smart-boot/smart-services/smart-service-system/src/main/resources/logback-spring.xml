@@ -34,7 +34,7 @@
             <charset>UTF-8</charset>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${LOGO.PATH}/${APP.NAME}/all/all-%d{yyyy-MM-dd_HH-mm}.%i.log</fileNamePattern>
+            <fileNamePattern>${LOGO.PATH}/${APP.NAME}/all/all-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <!--单个日志文件最大100M，到了这个值，就会再创建一个日志文件，日志文件的名字最后+1-->
             <maxFileSize>${LOG.MAX_FILE_SIZE}</maxFileSize>
             <!--日志文件保留天数-->
@@ -53,7 +53,7 @@
             <charset>UTF-8</charset>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${LOGO.PATH}/${APP.NAME}/warn/warn-%d{yyyy-MM-dd_HH-mm}.%i.log</fileNamePattern>
+            <fileNamePattern>${LOGO.PATH}/${APP.NAME}/warn/warn-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <!--单个日志文件最大100M，到了这个值，就会再创建一个日志文件，日志文件的名字最后+1-->
             <maxFileSize>${LOG.MAX_FILE_SIZE}</maxFileSize>
             <!--日志文件保留天数-->
@@ -78,7 +78,7 @@
             <charset>UTF-8</charset>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${LOGO.PATH}/${APP.NAME}/error/error-%d{yyyy-MM-dd_HH-mm}.%i.log</fileNamePattern>
+            <fileNamePattern>${LOGO.PATH}/${APP.NAME}/error/error-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <!--单个日志文件最大100M，到了这个值，就会再创建一个日志文件，日志文件的名字最后+1-->
             <maxFileSize>${LOG.MAX_FILE_SIZE}</maxFileSize>
             <!--日志文件保留天数-->

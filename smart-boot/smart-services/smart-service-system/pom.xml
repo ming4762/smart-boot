@@ -22,6 +22,12 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.smart</groupId>
+			<artifactId>dingtalk-spring-boot-starter</artifactId>
+			<version>${smart-boot.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.smart</groupId>
 			<artifactId>smart-module-system</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
@@ -176,13 +182,49 @@
 			<version>${smart-boot.version}</version>
 		</dependency>
 
-		<!--	kettle模块	-->
 		<dependency>
-			<groupId>com.smart</groupId>
-			<artifactId>smart-kettle-manager</artifactId>
-			<version>${smart-boot.version}</version>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct-processor</artifactId>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>${spring-boot.version}</version>
+				<configuration>
+					<mainClass>com.smart.service.system.SmartServiceSystemApplication</mainClass>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<configuration>
+					<encoding>UTF-8</encoding>
+					<!-- 过滤后缀文件 -->
+					<nonFilteredFileExtensions>
+						<nonFilteredFileExtension>xlsx</nonFilteredFileExtension>
+						<nonFilteredFileExtension>xls</nonFilteredFileExtension>
+					</nonFilteredFileExtensions>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
 </project>

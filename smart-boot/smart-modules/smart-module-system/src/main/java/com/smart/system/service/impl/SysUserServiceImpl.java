@@ -30,7 +30,6 @@ import com.smart.module.api.system.constants.SysParameterCodeEnum;
 import com.smart.module.api.system.dto.QueryUserAccountDTO;
 import com.smart.system.constants.FunctionTypeEnum;
 import com.smart.system.constants.UserDeptIdentEnum;
-import com.smart.system.mapper.SysUserGroupRoleMapper;
 import com.smart.system.mapper.SysUserGroupUserMapper;
 import com.smart.system.mapper.SysUserMapper;
 import com.smart.system.mapper.tenant.SysTenantMapper;
@@ -87,7 +86,6 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
     private final SysUserRoleService sysUserRoleService;
     private final SysUserDeptService sysUserDeptService;
     private final SysUserGroupUserMapper sysUserGroupUserMapper;
-    private final SysUserGroupRoleMapper sysUserGroupRoleMapper;
     private final SysRoleService sysRoleService;
     private final SysRoleFunctionService sysRoleFunctionService;
     private final SysFunctionService sysFunctionService;
