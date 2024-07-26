@@ -9,7 +9,7 @@
     <name>smart-boot</name>
     <description>Smart boot 通用开发框架</description>
     <properties>
-        <java.version>17</java.version>
+        <java.version>21</java.version>
         <resource.delimiter>@</resource.delimiter>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
