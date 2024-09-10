@@ -42,7 +42,7 @@ public class RedisInfoEndPoint {
         if (CollectionUtils.isEmpty(parameterList)) {
             return Result.failure(String.format("redis info 参数错误，只能是以下值[%s]", Arrays.stream(RedisInfoParameterEnum.values()).map(RedisInfoParameterEnum::getParameter).collect(Collectors.joining(","))));
         }
-        return this.convertRedisInfo(this.redisService.info(parameterList.get(0)));
+        return this.convertRedisInfo(this.redisService.info(parameterList.getFirst()));
     }
 
     @ReadOperation

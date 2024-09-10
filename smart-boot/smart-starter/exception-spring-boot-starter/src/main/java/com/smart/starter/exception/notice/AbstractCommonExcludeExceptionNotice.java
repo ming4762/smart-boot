@@ -1,6 +1,5 @@
 package com.smart.starter.exception.notice;
 
-import com.google.common.collect.Lists;
 import com.smart.commons.core.exception.BusinessException;
 import com.smart.commons.core.i18n.I18nException;
 import jakarta.validation.ConstraintViolationException;
@@ -24,7 +23,7 @@ public abstract class AbstractCommonExcludeExceptionNotice extends AbstractExcep
     @Override
     @NonNull
     public List<Class<? extends Exception>> exclude() {
-        return Lists.newArrayList(
+        return List.of(
                 // 参数校验类异常不通知
                 BindException.class,
                 MethodArgumentNotValidException.class,

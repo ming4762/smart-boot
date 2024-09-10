@@ -1,6 +1,5 @@
 package com.cloud.common.exception.notice;
 
-import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.commons.core.utils.ExceptionUtils;
 import com.smart.commons.core.utils.IpUtils;
 import com.smart.module.api.system.SysExceptionApi;
@@ -31,11 +30,10 @@ public class RemoteExceptionNotice extends AbstractCommonExcludeExceptionNotice 
      *
      * @param e           异常信息
      * @param exceptionNo 异常编号
-     * @param user        用户
      * @param request     请求信息
      */
     @Override
-    protected void doNotice(@NonNull Exception e, long exceptionNo, RestUserDetails user, @NonNull HttpServletRequest request) {
+    protected void doNotice(@NonNull Exception e, long exceptionNo, @NonNull HttpServletRequest request) {
         try {
             SysExceptionSaveDTO dto = SysExceptionSaveDTO.builder()
                     .id(exceptionNo)
@@ -44,8 +42,9 @@ public class RemoteExceptionNotice extends AbstractCommonExcludeExceptionNotice 
                     .requestIp(IpUtils.getIpAddr(request))
                     .serverIp(InetAddress.getLocalHost().getHostAddress())
                     .requestPath(request.getServletPath())
-                    .operateUserId(user == null ? null : user.getUserId())
-                    .operationBy(user == null ? null : user.getFullName())
+                    // TODO:待完善注释部分
+//                    .operateUserId(user == null ? null : user.getUserId())
+//                    .operationBy(user == null ? null : user.getFullName())
                     .build();
             this.sysExceptionApi.saveException(dto);
         } catch (UnknownHostException ex) {

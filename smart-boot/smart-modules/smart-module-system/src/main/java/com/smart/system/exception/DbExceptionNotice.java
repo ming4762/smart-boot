@@ -1,6 +1,7 @@
 package com.smart.system.exception;
 
 import com.smart.auth.core.userdetails.RestUserDetails;
+import com.smart.auth.core.utils.AuthUtils;
 import com.smart.commons.core.utils.ExceptionUtils;
 import com.smart.commons.core.utils.IpUtils;
 import com.smart.starter.exception.notice.AbstractCommonExcludeExceptionNotice;
@@ -32,8 +33,9 @@ public class DbExceptionNotice extends AbstractCommonExcludeExceptionNotice {
     }
 
     @Override
-    protected void doNotice(@NonNull Exception e, long exceptionNo, RestUserDetails user, @NonNull HttpServletRequest request) {
+    protected void doNotice(@NonNull Exception e, long exceptionNo, @NonNull HttpServletRequest request) {
         // 异常信息保存到数据库
+        RestUserDetails user = AuthUtils.getCurrentUser();
         try {
             SysExceptionPO sysException = SysExceptionPO.builder()
                     .id(exceptionNo)

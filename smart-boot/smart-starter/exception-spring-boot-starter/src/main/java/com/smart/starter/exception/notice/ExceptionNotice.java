@@ -1,6 +1,5 @@
 package com.smart.starter.exception.notice;
 
-import com.smart.auth.core.userdetails.RestUserDetails;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -19,10 +18,9 @@ public interface ExceptionNotice {
      * 异常通知
      * @param e 异常信息
      * @param exceptionNo 异常编号
-     * @param user 用户信息
      * @param request 请求信息
      */
-    void notice(@NonNull Exception e, long exceptionNo, RestUserDetails user, @NonNull HttpServletRequest request);
+    void notice(@NonNull Exception e, long exceptionNo, @NonNull HttpServletRequest request);
 
     /**
      * 包含的异常进行通知

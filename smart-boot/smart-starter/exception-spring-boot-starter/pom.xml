@@ -27,12 +27,6 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-core</artifactId>
 		</dependency>
-
-		<dependency>
-			<groupId>com.smart</groupId>
-			<artifactId>smart-auth-core</artifactId>
-			<version>${project.parent.version}</version>
-		</dependency>
 		<dependency>
 			<groupId>jakarta.validation</groupId>
 			<artifactId>jakarta.validation-api</artifactId>
