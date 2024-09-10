@@ -46,7 +46,7 @@ public class AuthEventLogHandler implements AuthEventHandler {
         RestUserDetails user = (RestUserDetails) event.getAuthentication().getPrincipal();
         SysLogSaveDTO log = SysLogSaveDTO.builder()
                 .ip(user.getLoginIp())
-                .ident(LogIdentEnum.LOGIN_LOG)
+                .ident(LogIdentEnum.LOGIN_LOG.getValue())
                 .statusCode(HttpStatus.OK.getCode())
                 .logSource(LogSourceEnum.LOGIN)
                 .operation(Optional.ofNullable(user.getAuthType()).map(Enum::name).orElse(null))
@@ -67,7 +67,7 @@ public class AuthEventLogHandler implements AuthEventHandler {
         RestUserDetails user = (RestUserDetails) event.getAuthentication().getPrincipal();
         SysLogSaveDTO sysLog = SysLogSaveDTO.builder()
                 .ip(user.getLoginIp())
-                .ident(LogIdentEnum.LOGIN_LOG)
+                .ident(LogIdentEnum.LOGIN_LOG.getValue())
                 .statusCode(org.springframework.http.HttpStatus.OK.value())
                 .logSource(LogSourceEnum.LOGOUT)
                 .operation(LogSourceEnum.LOGOUT.name())
@@ -98,7 +98,7 @@ public class AuthEventLogHandler implements AuthEventHandler {
         }
         SysLogSaveDTO sysLog = SysLogSaveDTO.builder()
                 .ip(loginIp)
-                .ident(LogIdentEnum.LOGIN_LOG)
+                .ident(LogIdentEnum.LOGIN_LOG.getValue())
                 .statusCode(org.springframework.http.HttpStatus.UNAUTHORIZED.value())
                 .logSource(LogSourceEnum.LOGIN_FAIL)
                 .operation(authType == null ? null : authType.name())

@@ -41,4 +41,17 @@ public class SmartTenantHolder {
     public static void clear() {
         THREAD_LOCAL.remove();
     }
+
+    /**
+     * 设置平台管理租户
+     */
+    public static void setPlatformTenant() {
+        set(
+                UserTenantDTO.builder()
+                        .tenantId(1L)
+                        .platformYn(true)
+                        .useYn(true)
+                        .build()
+        );
+    }
 }

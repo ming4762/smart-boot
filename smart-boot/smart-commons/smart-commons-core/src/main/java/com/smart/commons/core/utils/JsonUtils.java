@@ -1,6 +1,7 @@
 package com.smart.commons.core.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -103,6 +104,19 @@ public final class JsonUtils {
     public static <T> List<T> parseCollection(String json, Class<T> clazz) {
         final JavaType javaType = OBJECT_MAPPER.getTypeFactory().constructCollectionType(List.class, clazz);
         return OBJECT_MAPPER.readValue(json, javaType);
+    }
+
+    /**
+     * json转想要的对象；应对各种复杂格式的对象很万能。
+     *
+     * @param json          json字符串
+     * @param typeReference 泛型对象
+     * @param <T> 类型
+     * @return 实体
+     */
+    @SneakyThrows(JsonProcessingException.class)
+    public static <T> T parse(String json, TypeReference<T> typeReference) {
+        return OBJECT_MAPPER.readValue(json, typeReference);
     }
 
 }
