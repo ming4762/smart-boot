@@ -1,4 +1,0 @@
-/**
- * 监控循环分组
- */
-export const MONITOR_DETAIL_LOOP_GROUP = 'MONITOR_DETAIL_LOOP_GROUP'
