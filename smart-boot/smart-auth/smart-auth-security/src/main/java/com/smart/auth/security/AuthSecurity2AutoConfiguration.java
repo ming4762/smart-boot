@@ -1,27 +1,33 @@
 package com.smart.auth.security;
 
 import com.smart.auth.core.authentication.AuthenticationFailureEventInitializer;
+import com.smart.auth.core.authentication.DefaultSmartAuthenticationEventPublisher;
 import com.smart.auth.core.authentication.MethodPermissionEvaluatorImpl;
+import com.smart.auth.core.authentication.SmartAuthenticationEventPublisher;
 import com.smart.auth.core.authentication.url.DefaultUrlAuthenticationProviderImpl;
 import com.smart.auth.core.authentication.url.UrlAuthenticationProvider;
 import com.smart.auth.core.beans.DefaultUrlMappingProvider;
 import com.smart.auth.core.beans.UrlMappingProvider;
-import com.smart.auth.core.handler.AuthLoginFailureHandler;
-import com.smart.auth.core.handler.AuthLoginSuccessHandler;
-import com.smart.auth.core.handler.AuthSuccessDataHandler;
-import com.smart.auth.core.handler.DefaultAuthSuccessDataHandler;
+import com.smart.auth.core.event.AuthEventListener;
+import com.smart.auth.core.handler.*;
 import com.smart.auth.core.properties.AuthProperties;
 import com.smart.auth.core.service.AuthCache;
+import com.smart.auth.core.token.TokenRepository;
+import com.smart.auth.core.userdetails.DefaultUserDetailsBuilderImpl;
+import com.smart.auth.core.userdetails.UserDetailsBuilder;
 import com.smart.auth.security.config.AuthMethodSecurityConfig;
 import com.smart.auth.security.event.AuthEventLockedHandler;
 import com.smart.auth.security.event.AuthEventLogHandler;
 import com.smart.auth.security.remember.AuthCachePersistentTokenRepository;
+import com.smart.auth.security.userdetails.RestUserDetailsServiceImpl;
 import com.smart.module.api.system.SysLogApi;
 import com.smart.module.api.system.SysUserApi;
+import com.smart.module.api.system.SystemAuthUserApi;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -29,9 +35,13 @@ import org.springframework.context.annotation.Import;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.authentication.DefaultAuthenticationEventPublisher;
 import org.springframework.security.authorization.method.AuthorizationManagerBeforeMethodInterceptor;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+
+import java.util.List;
 
 /**
  * AUTH 自动配置类
@@ -143,5 +153,43 @@ public class AuthSecurity2AutoConfiguration {
     @ConditionalOnMissingBean
     public PersistentTokenRepository persistentTokenRepository(AuthCache<String, Object> authCache, AuthProperties authProperties) {
         return new AuthCachePersistentTokenRepository(authCache, authProperties);
+    }
+
+    /**
+     * 创建 LogoutSuccessHandler
+     * @return LogoutSuccessHandler
+     */
+    @Bean
+    @ConditionalOnMissingBean(LogoutSuccessHandler.class)
+    public LogoutSuccessHandler logoutSuccessHandler() {
+        return new AuthLogoutSuccessHandler();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(UserDetailsService.class)
+    public UserDetailsService userDetailsService(UserDetailsBuilder userDetailsBuilder, SystemAuthUserApi systemAuthUserApi) {
+        return new RestUserDetailsServiceImpl(systemAuthUserApi, userDetailsBuilder);
+    }
+
+    /**
+     * 创建认证事件监听器
+     * @return 认证事件监听器
+     */
+    @Bean
+    @ConditionalOnMissingBean(AuthEventListener.class)
+    public AuthEventListener authEventListener() {
+        return new AuthEventListener();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public UserDetailsBuilder userDetailsBuilder(SystemAuthUserApi systemAuthUserApi, List<TokenRepository> tokenRepositoryList) {
+        return new DefaultUserDetailsBuilderImpl(systemAuthUserApi, tokenRepositoryList);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public SmartAuthenticationEventPublisher smartAuthenticationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        return new DefaultSmartAuthenticationEventPublisher(applicationEventPublisher);
     }
 }

@@ -1,4 +1,4 @@
-package com.smart.auth.autoconfigure.jwt;
+package com.smart.auth.extensions.jwt;
 
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
@@ -6,33 +6,25 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-import com.smart.auth.core.handler.AuthLogoutSuccessHandler;
 import com.smart.auth.core.handler.SecurityLogoutHandler;
 import com.smart.auth.core.properties.AuthProperties;
 import com.smart.auth.core.service.AuthCache;
-import com.smart.auth.core.userdetails.UserDetailsBuilder;
-import com.smart.auth.extensions.jwt.AuthJwtConfigure;
 import com.smart.auth.extensions.jwt.context.JwtSecurityContextRepository;
 import com.smart.auth.extensions.jwt.handler.JwtLogoutHandler;
 import com.smart.auth.extensions.jwt.resolver.JwtResolver;
 import com.smart.auth.extensions.jwt.service.JwtService;
 import com.smart.auth.extensions.jwt.token.JwtTokenRepository;
-import com.smart.auth.extensions.jwt.userdetails.RestUserDetailsServiceImpl;
 import com.smart.commons.core.utils.auth.RsaUtils;
 import com.smart.commons.jwt.JwtDecoder;
 import com.smart.commons.jwt.JwtEncoder;
 import com.smart.commons.jwt.NimbusJwtDecoder;
 import com.smart.commons.jwt.NimbusJwtEncoder;
-import com.smart.module.api.system.SystemAuthUserApi;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.context.SecurityContextRepository;
 
 import java.io.FileInputStream;
@@ -41,12 +33,12 @@ import java.io.InputStream;
 import java.security.interfaces.RSAPublicKey;
 
 /**
- * @author ShiZhongMing
- * @since 1.0
+ * @author shizhongming
+ * 2024/9/10 17:16
+ * @since 3.0.0
  */
 @Configuration(proxyBeanMethods = false)
-@ConditionalOnClass(AuthJwtConfigure.class)
-public class AuthJwtAutoConfiguration {
+public class SmartAuthJwtAutoConfiguration {
 
     private static final String CLASSPATH_BEGIN = "classpath:";
 
@@ -106,16 +98,6 @@ public class AuthJwtAutoConfiguration {
     }
 
     /**
-     * 创建 LogoutSuccessHandler
-     * @return LogoutSuccessHandler
-     */
-    @Bean
-    @ConditionalOnMissingBean(LogoutSuccessHandler.class)
-    public LogoutSuccessHandler logoutSuccessHandler() {
-        return new AuthLogoutSuccessHandler();
-    }
-
-    /**
      * 创建登出执行器
      * @param tokenRepository tokenRepository
      * @return SecurityLogoutHandler
@@ -139,12 +121,6 @@ public class AuthJwtAutoConfiguration {
         return new JwtTokenRepository(authProperties, authCache, jwtResolver);
     }
 
-
-    @Bean
-    @ConditionalOnMissingBean(UserDetailsService.class)
-    public UserDetailsService userDetailsService(UserDetailsBuilder userDetailsBuilder, SystemAuthUserApi systemAuthUserApi) {
-        return new RestUserDetailsServiceImpl(systemAuthUserApi, userDetailsBuilder);
-    }
 
     @Bean
     @ConditionalOnMissingBean

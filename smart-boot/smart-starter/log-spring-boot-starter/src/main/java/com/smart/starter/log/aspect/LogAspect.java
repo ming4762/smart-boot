@@ -211,7 +211,7 @@ public final class LogAspect {
                 .operationType(logAnnotation.type())
                 // 自动日志
                 .logSource(LogSourceEnum.AUTO_POINTCUT)
-                .ident(LogIdentEnum.INTERFACE_LOG)
+                .ident(LogIdentEnum.INTERFACE_LOG.getValue())
                 // todo：待处理
                 .platform(null)
                 .build();

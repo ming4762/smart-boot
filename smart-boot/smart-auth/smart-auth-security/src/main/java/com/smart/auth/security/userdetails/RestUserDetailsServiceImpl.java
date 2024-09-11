@@ -1,4 +1,4 @@
-package com.smart.auth.extensions.jwt.userdetails;
+package com.smart.auth.security.userdetails;
 
 import com.smart.auth.core.userdetails.UserDetailsBuilder;
 import com.smart.module.api.system.SystemAuthUserApi;
