@@ -659,12 +659,14 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
                                 .collect(Collectors.joining(","))
                 );
             }
-            // 删除之前的部门数据权限
-            this.sysUserDeptService.remove(
-                    new QueryWrapper<SysUserDeptPO>().lambda()
-                            .eq(SysUserDeptPO::getUserId, userModel.getUserId())
-                            .eq(SysUserDeptPO::getIdent, UserDeptIdentEnum.USER_DEPT)
-            );
+            if (userModel.getUserId() != null) {
+                // 删除之前的部门数据权限
+                this.sysUserDeptService.remove(
+                        new QueryWrapper<SysUserDeptPO>().lambda()
+                                .eq(SysUserDeptPO::getUserId, userModel.getUserId())
+                                .eq(SysUserDeptPO::getIdent, UserDeptIdentEnum.USER_DEPT)
+                );
+            }
             this.sysUserDeptService.save(dataScopeModel);
         }
         // 保存用户与租户关联关系
