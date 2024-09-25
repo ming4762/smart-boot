@@ -10,10 +10,9 @@ import com.smart.commons.core.exception.SystemException;
 import com.smart.commons.core.i18n.I18nUtils;
 import com.smart.commons.core.message.Result;
 import com.smart.commons.core.tenant.SmartTenantHolder;
-import com.smart.commons.core.utils.Base64Utils;
 import com.smart.commons.core.utils.IpUtils;
 import com.smart.commons.core.utils.RestJsonWriter;
-import com.smart.commons.core.utils.auth.ShaUtils;
+import com.smart.commons.core.utils.auth.SecretUtils;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -107,7 +106,6 @@ public class AuthAccessSecretAuthenticationFilter implements Filter {
             this.throwException(AuthI18nMessage.ACCESS_SECRET_FORMAT_ERROR);
         }
         String accessKey = tokeList.get(1);
-        String sign = tokeList.get(2);
 
         AccessSecretData accessSecretData = this.getValidateAccessSecretData(accessKey);
         // 验证Access 状态
@@ -121,9 +119,8 @@ public class AuthAccessSecretAuthenticationFilter implements Filter {
             }
         }
         // 计算sign
-        String encryptKey = String.join(SPLIT, List.of(httpMethod, contentType, date, nonce));
-        String encodeSign = Base64Utils.encode(ShaUtils.hmacSha1Encrypt(accessSecretData.getSecretKey(), encryptKey));
-        if (!sign.equals(encodeSign)) {
+        String encodeSign = SecretUtils.createSign(httpMethod, contentType, date, nonce, this.authProperties.getAccessSecret().getTokenPrefix(), accessSecretData.getAccessKey(), accessSecretData.getSecretKey());
+        if (!token.equals(encodeSign)) {
             this.throwException(AuthI18nMessage.ACCESS_SECRET_SIGN_ERROR);
         }
         // 设置租户信息

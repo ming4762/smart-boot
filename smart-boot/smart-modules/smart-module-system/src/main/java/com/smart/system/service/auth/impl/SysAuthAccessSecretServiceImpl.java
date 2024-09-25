@@ -5,6 +5,7 @@ import com.smart.auth.core.properties.AuthProperties;
 import com.smart.commons.core.exception.SystemException;
 import com.smart.commons.core.utils.Base64Utils;
 import com.smart.commons.core.utils.SmartIdGenerator;
+import com.smart.commons.core.utils.auth.SecretUtils;
 import com.smart.commons.core.utils.auth.ShaUtils;
 import com.smart.crud.constants.CrudCommonEnum;
 import com.smart.crud.query.PageSortQuery;
@@ -22,11 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Locale;
 import java.util.UUID;
 
 /**
@@ -37,10 +34,6 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class SysAuthAccessSecretServiceImpl extends BaseServiceImpl<SysAuthAccessSecretMapper, SysAuthAccessSecretPO> implements SysAuthAccessSecretService {
-
-
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("E, d MMM yyyy HH:mm:ss z", Locale.ENGLISH);
-    private static final String SPLIT = ":";
 
     private final SysTenantService sysTenantService;
     private final AuthProperties authProperties;
@@ -96,20 +89,13 @@ public class SysAuthAccessSecretServiceImpl extends BaseServiceImpl<SysAuthAcces
         if (accessSecret == null) {
             throw new SystemException("查询Access secret失败");
         }
-        ZonedDateTime zonedDateTime = parameter.getDate().atZone(ZoneId.systemDefault())
-                .withZoneSameInstant(ZoneId.of("GMT"));
-
-        String encryptKey = String.join(SPLIT, List.of(
+        return SecretUtils.createSign(
                 parameter.getHttpMethod().name(),
                 parameter.getContentType(),
-                DATE_FORMATTER.format(zonedDateTime),
-                parameter.getNonce()
-        ));
-        String encodeSign = Base64Utils.encode(ShaUtils.hmacSha1Encrypt(accessSecret.getSecretKey(), encryptKey));
-        return String.join(SPLIT, List.of(
-               this.authProperties.getAccessSecret().getTokenPrefix(),
+                parameter.getDate(),
+                parameter.getNonce(),
+                this.authProperties.getAccessSecret().getTokenPrefix(),
                 accessSecret.getAccessKey(),
-                encodeSign
-        ));
+                accessSecret.getSecretKey());
     }
 }
