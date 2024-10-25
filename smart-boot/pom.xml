@@ -16,8 +16,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <spring-boot.version>3.3.1</spring-boot.version>
-        <spring-cloud.version>2023.0.1</spring-cloud.version>
+        <spring-boot.version>3.3.4</spring-boot.version>
+        <spring-cloud.version>2023.0.3</spring-cloud.version>
         <smart-boot.version>3.0.0-SNAPSHOT</smart-boot.version>
         <spring-cloud-alibaba.version>2023.0.1.0</spring-cloud-alibaba.version>
 
@@ -27,11 +27,11 @@
         <commons-beanutils.version>1.9.4</commons-beanutils.version>
         <spring-security-saml2.version>1.0.10.RELEASE</spring-security-saml2.version>
         <swagger-annotations.version>2.2.8</swagger-annotations.version>
-        <commons-io.version>2.11.0</commons-io.version>
+        <commons-io.version>2.17.0</commons-io.version>
         <jsch.version>0.1.55</jsch.version>
         <pagehelper.version>2.1.0</pagehelper.version>
 
-        <mybatis-plus-boot-starter.version>3.5.6</mybatis-plus-boot-starter.version>
+        <mybatis-plus-boot-starter.version>3.5.8</mybatis-plus-boot-starter.version>
         <jodconverter.version>4.4.2</jodconverter.version>
         <google.zxing.version>3.5.0</google.zxing.version>
         <jxls.version>2.11.0</jxls.version>
@@ -44,7 +44,7 @@
         <commons-lang.version>2.6</commons-lang.version>
         <commons-vfs2.version>2.9.0</commons-vfs2.version>
         <scannotation.version>1.0.3</scannotation.version>
-        <nimbus-jose-jwt.version>9.23</nimbus-jose-jwt.version>
+        <nimbus-jose-jwt.version>9.41.2</nimbus-jose-jwt.version>
         <truelicense.version>1.33</truelicense.version>
         <minio.version>8.4.6</minio.version>
         <hutool.version>5.8.25</hutool.version>
@@ -59,7 +59,7 @@
         <nacos.logback-adapter.version>1.0.0</nacos.logback-adapter.version>
         <nashorn.version>15.4</nashorn.version>
         <amazon.aws.version>2.5.31</amazon.aws.version>
-        <dingtalk.server.new.version>2.1.15</dingtalk.server.new.version>
+        <dingtalk.server.new.version>2.1.59</dingtalk.server.new.version>
         <dingtalk.server.old.version>2.0.0</dingtalk.server.old.version>
     </properties>
 

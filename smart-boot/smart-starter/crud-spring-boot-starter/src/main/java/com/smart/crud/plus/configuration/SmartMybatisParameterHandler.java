@@ -36,11 +36,10 @@ public class SmartMybatisParameterHandler extends MybatisParameterHandler {
      * plus 直接在构造函数中处理参数，此时mappedStatement是null，导致重写的insertFill、updateFill无法获取mappedStatement
      * 重写此函数，然后设置完mappedStatement，在执行super.processParameter
      * @param parameter 原始参数
-     * @return 原始参数
      */
     @Override
-    public Object processParameter(Object parameter) {
-        return parameter;
+    public void processParameter(Object parameter) {
+        // do nothing
     }
 
 

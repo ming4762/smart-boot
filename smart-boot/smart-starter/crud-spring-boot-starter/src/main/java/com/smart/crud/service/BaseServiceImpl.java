@@ -143,7 +143,7 @@ public abstract class BaseServiceImpl<K extends CrudBaseMapper<T>, T extends Bas
      * @return TableInfo
      */
     protected SmartTableInfo getTableInfo() {
-        return CrudUtils.getTableInfo(this.entityClass);
+        return CrudUtils.getTableInfo(this.getEntityClass());
     }
 
 
@@ -154,7 +154,7 @@ public abstract class BaseServiceImpl<K extends CrudBaseMapper<T>, T extends Bas
      * @param sortOrder 排序方向
      */
     public void analysisOrder(@NonNull QueryWrapper<T> queryWrapper, String sortName, String sortOrder) {
-        final Class<? extends BaseModel> clazz = this.currentModelClass();
+        final Class<? extends BaseModel> clazz = this.getEntityClass();
         final List<Sort> sortList = CrudUtils.analysisOrder(sortName, sortOrder, clazz);
         if (!sortList.isEmpty()) {
             sortList.forEach(sort -> {

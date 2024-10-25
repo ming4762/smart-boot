@@ -1,7 +1,6 @@
 package com.smart.crud.plus.injector.methods;
 
-import com.baomidou.mybatisplus.core.enums.SqlMethod;
-import com.baomidou.mybatisplus.core.injector.methods.DeleteBatchByIds;
+import com.baomidou.mybatisplus.core.injector.methods.DeleteByIds;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.toolkit.sql.SqlScriptUtils;
 import com.smart.crud.plus.enums.SmartSqlMethod;
@@ -19,15 +18,11 @@ import static com.smart.crud.constants.SmartCrudConstants.DELETE_FIELDS_DOT;
  * 2023/10/31 13:47
  * @since 3.0.0
  */
-public class SmartDeleteBatchByIds extends DeleteBatchByIds implements AbstractSmartMethod {
+public class SmartDeleteBatchByIds extends DeleteByIds implements AbstractSmartMethod {
 
 
     @Serial
     private static final long serialVersionUID = -1282922352525893633L;
-
-    public SmartDeleteBatchByIds() {
-        super(SqlMethod.DELETE_BATCH_BY_IDS.getMethod());
-    }
 
     /**
      * 注入自定义 MappedStatement
