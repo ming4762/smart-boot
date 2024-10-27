@@ -9,9 +9,6 @@ import com.smart.crud.plus.handlers.SmartTenantLineHandler;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import net.sf.jsqlparser.expression.Expression;
-import net.sf.jsqlparser.expression.Parenthesis;
-import net.sf.jsqlparser.expression.RowConstructor;
-import net.sf.jsqlparser.expression.StringValue;
 import net.sf.jsqlparser.expression.operators.relational.EqualsTo;
 import net.sf.jsqlparser.expression.operators.relational.ExpressionList;
 import net.sf.jsqlparser.expression.operators.relational.ParenthesedExpressionList;
@@ -54,13 +51,12 @@ public class SmartTenantLineInnerInterceptor extends TenantLineInnerInterceptor 
             // 针对已给出租户列的insert 不处理
             return;
         }
+
         columns.add(new Column(tenantIdColumn));
         Expression tenantId = smartTenantLineHandler.getTenantId();
+        // fixed gitee pulls/141 duplicate update
         List<UpdateSet> duplicateUpdateColumns = insert.getDuplicateUpdateSets();
         if (CollectionUtils.isNotEmpty(duplicateUpdateColumns)) {
-            EqualsTo equalsTo = new EqualsTo();
-            equalsTo.setLeftExpression(new StringValue(tenantIdColumn));
-            equalsTo.setRightExpression(tenantId);
             duplicateUpdateColumns.add(new UpdateSet(new Column(tenantIdColumn), tenantId));
         }
 
@@ -78,12 +74,8 @@ public class SmartTenantLineInnerInterceptor extends TenantLineInnerInterceptor 
                     int len = expressions.size();
                     for (int i = 0; i < len; i++) {
                         Expression expression = expressions.get(i);
-                        if (expression instanceof Parenthesis parenthesis) {
-                            ExpressionList<?> rowConstructor = new RowConstructor<>()
-                                    .withExpressions(new ExpressionList<>(parenthesis.getExpression(), tenantId));
-                            expressions.set(i, rowConstructor);
-                        } else if (expression instanceof ParenthesedExpressionList parenthesedExpressionList) {
-                            parenthesedExpressionList.addExpression(tenantId);
+                        if (expression instanceof ParenthesedExpressionList) {
+                            ((ParenthesedExpressionList<Expression>) expression).addExpression(tenantId);
                         } else {
                             expressions.add(tenantId);
                         }

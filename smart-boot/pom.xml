@@ -31,7 +31,7 @@
         <jsch.version>0.1.55</jsch.version>
         <pagehelper.version>2.1.0</pagehelper.version>
 
-        <mybatis-plus-boot-starter.version>3.5.8</mybatis-plus-boot-starter.version>
+        <mybatis-plus.version>3.5.9</mybatis-plus.version>
         <jodconverter.version>4.4.2</jodconverter.version>
         <google.zxing.version>3.5.0</google.zxing.version>
         <jxls.version>2.11.0</jxls.version>
@@ -235,20 +235,25 @@
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
-                <version>${mybatis-plus-boot-starter.version}</version>
+                <version>${mybatis-plus.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
-                <version>${mybatis-plus-boot-starter.version}</version>
+                <version>${mybatis-plus.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-jsqlparser</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-annotation</artifactId>
-                <version>${mybatis-plus-boot-starter.version}</version>
+                <version>${mybatis-plus.version}</version>
             </dependency>
 
             <dependency>
