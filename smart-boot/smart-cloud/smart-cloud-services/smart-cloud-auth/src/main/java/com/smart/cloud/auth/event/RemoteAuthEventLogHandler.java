@@ -38,7 +38,7 @@ public class RemoteAuthEventLogHandler implements AuthEventHandler {
         RestUserDetails user = (RestUserDetails) event.getAuthentication().getPrincipal();
         SysLogSaveDTO dto = SysLogSaveDTO.builder()
                 .ip(user.getLoginIp())
-                .ident(LogIdentEnum.LOGIN_LOG)
+                .ident(LogIdentEnum.LOGIN_LOG.name())
                 .statusCode(HttpStatus.OK.value())
                 .logSource(LogSourceEnum.LOGIN)
                 .operation(LogSourceEnum.LOGIN.name())
@@ -59,7 +59,7 @@ public class RemoteAuthEventLogHandler implements AuthEventHandler {
         RestUserDetails user = (RestUserDetails) event.getAuthentication().getPrincipal();
         SysLogSaveDTO dto = SysLogSaveDTO.builder()
                 .ip(user.getLoginIp())
-                .ident(LogIdentEnum.LOGIN_LOG)
+                .ident(LogIdentEnum.LOGIN_LOG.name())
                 .statusCode(HttpStatus.OK.value())
                 .logSource(LogSourceEnum.LOGOUT)
                 .operation(LogSourceEnum.LOGOUT.name())
@@ -79,7 +79,7 @@ public class RemoteAuthEventLogHandler implements AuthEventHandler {
         RestUsernamePasswordAuthenticationToken token = (RestUsernamePasswordAuthenticationToken) event.getAuthentication();
         SysLogSaveDTO dto = SysLogSaveDTO.builder()
                 .ip(token.getLoginIp())
-                .ident(LogIdentEnum.LOGIN_LOG)
+                .ident(LogIdentEnum.LOGIN_LOG.name())
                 .statusCode(HttpStatus.UNAUTHORIZED.value())
                 .logSource(LogSourceEnum.LOGIN_FAIL)
                 .operation(LogSourceEnum.LOGIN_FAIL.name())
