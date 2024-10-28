@@ -41,7 +41,7 @@ public class AccessSecureApi {
      */
     @SneakyThrows(Exception.class)
     public GetAccessTokenResult getInnerAppAccessToken(GetAccessTokenParameter parameter) {
-        GetAccessTokenResult accessTokenResult = this.cacheService.get(this.getCacheKey(parameter.getAppKey()), GetAccessTokenResult.class);
+        GetAccessTokenResult accessTokenResult = this.cacheService.get(this.getCacheKey(parameter.getAppKey()));
         if (accessTokenResult != null) {
             return accessTokenResult;
         }

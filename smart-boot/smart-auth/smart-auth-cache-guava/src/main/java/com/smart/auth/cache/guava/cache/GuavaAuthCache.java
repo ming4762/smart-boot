@@ -48,7 +48,7 @@ public class GuavaAuthCache extends AbstractAuthCache<String, Object> {
     @Override
     public Set<String> keys() {
         return this.cacheService.keys().stream()
-                .map(item -> this.getRealKey(item.toString()))
+                .map(this::getRealKey)
                 .collect(Collectors.toSet());
     }
 
@@ -63,7 +63,7 @@ public class GuavaAuthCache extends AbstractAuthCache<String, Object> {
     public Set<Object> batchGet(@NonNull Collection<String> keys) {
         var prefixKeys = keys.stream().map(this::getKey).collect(Collectors.toSet());
         List<Object> cacheList = this.cacheService.batchGet(new ArrayList<>(prefixKeys));
-        return cacheList == null ? new HashSet<>(0) : new HashSet<>(cacheList);
+        return cacheList == null ? Collections. emptySet() : new HashSet<>(cacheList);
     }
 
     @Override
@@ -73,13 +73,13 @@ public class GuavaAuthCache extends AbstractAuthCache<String, Object> {
 
     @Override
     public Set<Object> matchGet(@NonNull String matchKey) {
-        List<Object> keys = this.cacheService.matchKeys(this.getKey(matchKey));
+        List<String> keys = this.cacheService.matchKeys(this.getKey(matchKey));
         if (CollectionUtils.isEmpty(keys)) {
-            return new HashSet<>(0);
+            return Collections. emptySet();
         }
         List<Object> dataList = this.cacheService.batchGet(keys);
         if (CollectionUtils.isEmpty(dataList)) {
-            return new HashSet<>(0);
+            return Collections. emptySet();
         }
         return new HashSet<>(dataList);
     }
@@ -88,7 +88,7 @@ public class GuavaAuthCache extends AbstractAuthCache<String, Object> {
     public Set<String> matchKeys(@NonNull String matchKey) {
         return this.cacheService.matchKeys(this.getKey(matchKey))
                 .stream()
-                .map(item -> this.getRealKey(item.toString()))
+                .map(this::getRealKey)
                 .collect(Collectors.toSet());
     }
 

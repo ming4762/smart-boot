@@ -19,5 +19,5 @@ public interface GuavaCacheService extends CacheService {
      * 获取所有缓存的key
      * @return 缓存key集合
      */
-    Set<Object> keys();
+    Set<String> keys();
 }

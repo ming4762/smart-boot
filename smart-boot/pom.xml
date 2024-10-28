@@ -61,6 +61,7 @@
         <amazon.aws.version>2.5.31</amazon.aws.version>
         <dingtalk.server.new.version>2.1.59</dingtalk.server.new.version>
         <dingtalk.server.old.version>2.0.0</dingtalk.server.old.version>
+        <redisson.version>3.37.0</redisson.version>
     </properties>
 
     <packaging>pom</packaging>
@@ -500,6 +501,12 @@
                         <artifactId>commons-logging</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson-spring-boot-starter</artifactId>
+                <version>${redisson.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

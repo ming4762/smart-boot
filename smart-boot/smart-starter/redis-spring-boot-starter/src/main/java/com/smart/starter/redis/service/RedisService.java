@@ -3,13 +3,12 @@ package com.smart.starter.redis.service;
 import com.smart.commons.core.cache.CacheService;
 import com.smart.starter.redis.constants.RedisInfoParameterEnum;
 import com.smart.starter.redis.model.RedisKeySpace;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.redisson.api.RedissonClient;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 
 /**
@@ -23,7 +22,7 @@ public interface RedisService extends CacheService {
      * @param parameter 参数
      * @return redis info信息
      */
-    Properties info(@Nullable RedisInfoParameterEnum parameter);
+    Map<String, String> info(@Nullable RedisInfoParameterEnum parameter);
 
     /**
      * 查询redis key space数据
@@ -33,25 +32,18 @@ public interface RedisService extends CacheService {
     Map<String, RedisKeySpace> queryKeySpace();
 
     /**
-     * 获取redisTemplate
-     * @return RedisTemplate
-     */
-    RedisTemplate<Object, Object> getRedisTemplate();
-
-    /**
      * 获取List长度
      * @param key key
      * @return 长度
      */
-    Long listSize(Object key);
+    long listSize(String key);
 
     /**
      * 将数组插入到列表的头部，从左侧插入
      * @param key key
      * @param dataList 需要插入的数据
-     * @return 插入数据后的list长度
      */
-    Long listLeftPush(Object key, List<Object> dataList);
+    void listLeftPush(String key, List<Object> dataList);
 
     /**
      * 将数组插入到列表的头部，从右侧插入
@@ -59,7 +51,7 @@ public interface RedisService extends CacheService {
      * @param dataList 需要插入的数据
      * @return 插入数据后的list长度
      */
-    Long listRightPush(Object key, List<Object> dataList);
+    void listRightPush(String key, List<Object> dataList);
 
     /**
      * 在列表中index的位置设置value值
@@ -67,7 +59,7 @@ public interface RedisService extends CacheService {
      * @param index 位置
      * @param value value值
      */
-    void listSet(Object key, long index, Object value);
+    void listSet(String key, int index, Object value);
 
     /**
      * 从存储在键中的列表中删除等于值的元素的第一个计数事件
@@ -78,7 +70,7 @@ public interface RedisService extends CacheService {
      * @param value 需要删除的值
      * @return 删除的数量
      */
-    Long listRemove(Object key, long count, Object value);
+    boolean listRemove(String key, int count, Object value);
 
     /**
      * 获取list指定位置的值
@@ -86,7 +78,7 @@ public interface RedisService extends CacheService {
      * @param index 位置
      * @return 值
      */
-    Object listIndex(Object key, long index);
+    Object listIndex(String key, int index);
 
     /**
      * 获取List指定范围的值
@@ -95,7 +87,7 @@ public interface RedisService extends CacheService {
      * @param end 结束位置，-1获取所有
      * @return 列表值
      */
-    List<Object> listRange(Object key, long start, long end);
+    <T> List<T> listRange(String key, int start, int end);
 
     /**
      * 删除给定的哈希hashKeys
@@ -103,7 +95,7 @@ public interface RedisService extends CacheService {
      * @param hashKeys hash key
      * @return 删除的数量
      */
-    Long hashDelete(Object key, List<Object> hashKeys);
+    long hashDelete(String key, List<Object> hashKeys);
 
     /**
      * 确定哈希hashKey是否存在
@@ -111,7 +103,7 @@ public interface RedisService extends CacheService {
      * @param hashKey hashKey
      * @return 是否存在
      */
-    Boolean hashHasKey(Object key, Object hashKey);
+    boolean hashHasKey(String key, Object hashKey);
 
     /**
      * 从哈希获取给定hashKey的值
@@ -119,28 +111,28 @@ public interface RedisService extends CacheService {
      * @param hashKey hashKey
      * @return value
      */
-    Object hashGet(Object key, Object hashKey);
+    <T> T hashGet(String key, Object hashKey);
 
     /**
      * 获取key所对应的散列表的key
      * @param key key
      * @return hash keys
      */
-    Set<Object> hashKeys(Object key);
+    Set<Object> hashKeys(String key);
 
     /**
      * 获取key所对应的散列表的大小个数
      * @param key key
      * @return 长度
      */
-    Long hashSize(Object key);
+    long hashSize(String key);
 
     /**
      * 添加多个hash
      * @param key key
      * @param dataMap map
      */
-    void hashPutAll(Object key, Map<?, ?> dataMap);
+    <K, V>void hashPutAll(String key, Map<? extends K, ? extends V> dataMap);
 
     /**
      * key
@@ -148,12 +140,14 @@ public interface RedisService extends CacheService {
      * @param hashKey hashKey
      * @param value value
      */
-    void hashPut(Object key, Object hashKey, Object value);
+    void hashPut(String key, Object hashKey, Object value);
 
     /**
      * 获取hash所有值
      * @param key key
      * @return hash
      */
-    Map<Object, Object> hashEntries(Object key);
+    Map<Object, Object> hashEntries(String key);
+
+    RedissonClient getRedissonClient();
 }

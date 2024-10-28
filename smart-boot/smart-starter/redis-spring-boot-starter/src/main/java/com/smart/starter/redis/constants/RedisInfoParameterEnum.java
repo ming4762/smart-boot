@@ -24,7 +24,7 @@ public enum RedisInfoParameterEnum {
     COMMANDSTATS("commandstats", "Redis命令统计"),
     CLUSTER("cluster", " Redis群集部分"),
     ALL("all", "返回所有部分"),
-    DEFAULT_PARAMETER("default", "仅返回默认的部分集"),
+    DEFAULT("default", "仅返回默认的部分集"),
     ;
 
     private final String parameter;

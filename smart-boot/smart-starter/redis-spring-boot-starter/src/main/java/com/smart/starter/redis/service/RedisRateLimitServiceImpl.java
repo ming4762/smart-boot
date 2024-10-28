@@ -1,13 +1,11 @@
 package com.smart.starter.redis.service;
 
 import com.smart.commons.core.lock.limit.RateLimitService;
-import org.springframework.data.redis.connection.ReturnType;
-import org.springframework.data.redis.core.RedisCallback;
+import org.redisson.api.RRateLimiter;
+import org.redisson.api.RateType;
 import org.springframework.lang.NonNull;
-import org.springframework.util.CollectionUtils;
 
-import java.nio.charset.StandardCharsets;
-import java.util.List;
+import java.time.Duration;
 
 /**
  * @author ShiZhongMing
@@ -15,8 +13,6 @@ import java.util.List;
  * @since 1.0 connection.eval(LUA_SCRIPT.getBytes(StandardCharsets.UTF_8), ReturnType.MULTI, )
  */
 public class RedisRateLimitServiceImpl implements RateLimitService {
-
-    private static final String LUA_SCRIPT = "return redis.call('cl.throttle',KEYS[1], ARGV[1], ARGV[2], ARGV[3])";
 
     private final RedisService redisService;
 
@@ -26,13 +22,8 @@ public class RedisRateLimitServiceImpl implements RateLimitService {
 
     @Override
     public boolean acquire(@NonNull String key, long limit) {
-        String limitStr = Long.toString(limit);
-        List<Long> result = this.redisService.getRedisTemplate()
-                .execute((RedisCallback<List<Long>>) connection -> connection.scriptingCommands().eval(LUA_SCRIPT.getBytes(StandardCharsets.UTF_8), ReturnType.MULTI, 1,
-                        key.getBytes(StandardCharsets.UTF_8), limitStr.getBytes(StandardCharsets.UTF_8), limitStr.getBytes(StandardCharsets.UTF_8), "1".getBytes(StandardCharsets.UTF_8)));
-        if (CollectionUtils.isEmpty(result)) {
-            return false;
-        }
-        return result.get(0).intValue() == 0;
+        RRateLimiter rateLimiter = this.redisService.getRedissonClient().getRateLimiter(key);
+        rateLimiter.trySetRate(RateType.OVERALL, limit, Duration.ofSeconds(1));
+        return rateLimiter.tryAcquire();
     }
 }

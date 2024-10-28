@@ -93,7 +93,7 @@ public class RedisAuthCache extends AbstractAuthCache<String, Object> {
 
     @Override
     public Set<Object> matchGet(@NonNull String matchKey) {
-        List<Object> keys = this.cacheService.matchKeys(this.getKey(matchKey));
+        List<String> keys = this.cacheService.matchKeys(this.getKey(matchKey));
         if (CollectionUtils.isEmpty(keys)) {
             return new HashSet<>(0);
         }
