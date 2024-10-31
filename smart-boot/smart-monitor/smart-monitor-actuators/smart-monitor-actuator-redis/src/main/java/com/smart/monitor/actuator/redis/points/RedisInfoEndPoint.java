@@ -51,17 +51,17 @@ public class RedisInfoEndPoint {
     }
 
 
-    private List<RedisInfo> convertRedisInfo(Properties properties) {
-        return properties.entrySet().stream()
+    private List<RedisInfo> convertRedisInfo(Map<String, String> redisInfo) {
+        return redisInfo.entrySet().stream()
                 .map(item -> {
-                    RedisInfoResultEnum redisInfoResultEnum = REDIS_INFO_RESULT_MAP.get(item.getKey().toString());
-                    if (item.getKey().toString().startsWith(DB_PREFIX)) {
-                        return new RedisInfo(RedisInfoParameterEnum.KEYSPACE.getParameter(), item.getKey().toString(), item.getValue().toString(), RedisInfoParameterEnum.KEYSPACE.getDescription());
+                    RedisInfoResultEnum redisInfoResultEnum = REDIS_INFO_RESULT_MAP.get(item.getKey());
+                    if (item.getKey().startsWith(DB_PREFIX)) {
+                        return new RedisInfo(RedisInfoParameterEnum.KEYSPACE.getParameter(), item.getKey(), item.getValue(), RedisInfoParameterEnum.KEYSPACE.getDescription());
                     }
                     if (redisInfoResultEnum == null) {
                         return null;
                     }
-                    return new RedisInfo(redisInfoResultEnum.getParameter().getParameter(), item.getKey().toString(), item.getValue().toString(), redisInfoResultEnum.getDescription());
+                    return new RedisInfo(redisInfoResultEnum.getParameter().getParameter(), item.getKey(), item.getValue(), redisInfoResultEnum.getDescription());
                 }).filter(Objects::nonNull)
                 .sorted(Comparator.comparing(RedisInfo::group).thenComparing(RedisInfo::key))
                 .toList();
