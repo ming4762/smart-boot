@@ -3,6 +3,7 @@ package com.smart.module.api.message.parameter;
 import com.smart.module.api.message.constants.MessagePriorityEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.io.Serial;
@@ -64,6 +65,9 @@ public class RemoteMessageSendParameter implements Serializable {
     @Schema(description = "短息发送参数")
     private SmsSendParameter smsSendParameter;
 
+    @Schema(description = "邮件发送参数")
+    private EmailSendParameter emailSendParameter;
+
     @Getter
     @Setter
     @AllArgsConstructor
@@ -91,6 +95,8 @@ public class RemoteMessageSendParameter implements Serializable {
     @Getter
     @Setter
     @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
     public static class BusinessParameter implements Serializable {
         @Serial
         private static final long serialVersionUID = 1992225195508397364L;
@@ -108,5 +114,20 @@ public class RemoteMessageSendParameter implements Serializable {
          * business_data - 业务数据
          */
         private String businessData;
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    public static class EmailSendParameter implements Serializable {
+
+        @Serial
+        private static final long serialVersionUID = 318050930526481815L;
+
+        /**
+         * 发件人
+         */
+        @NotNull
+        private String from;
     }
 }

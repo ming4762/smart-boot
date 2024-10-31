@@ -142,7 +142,7 @@ public class LocalSmartMessageApi implements SmartMessageApi {
         if (CollectionUtils.isEmpty(templateList)) {
             throw new SystemException("获取模版失败，模版编码：" + templateCode);
         }
-        SmartMessageTemplatePO messageTemplate = templateList.get(0);
+        SmartMessageTemplatePO messageTemplate = templateList.getFirst();
         Template template = new Template(messageTemplate.getTemplateCode(), messageTemplate.getTemplateContent(), this.freemarkerConfiguration);
         StringWriter stringWriter = new StringWriter();
         template.process(templateData, stringWriter);

@@ -28,4 +28,6 @@ public class SmartMessageToUserDTO implements Serializable {
     private String fullName;
 
     private String mobile;
+
+    private String email;
 }
