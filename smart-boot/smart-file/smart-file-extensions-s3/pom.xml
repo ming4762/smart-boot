@@ -5,10 +5,10 @@
 	<parent>
 		<groupId>com.smart</groupId>
 		<artifactId>smart-file</artifactId>
-		<version>3.0.0-SNAPSHOT</version>
+		<version>5.0.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>smart-file-extensions-s3</artifactId>
-	<version>3.0.0-SNAPSHOT</version>
+	<version>5.0.0-SNAPSHOT</version>
 	<name>smart-file-extensions-s3</name>
 	<description>amazon S3 对象存储扩展</description>
 

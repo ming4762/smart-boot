@@ -5,10 +5,10 @@
 	<parent>
 		<groupId>com.smart</groupId>
 		<artifactId>smart-message</artifactId>
-		<version>3.0.0-SNAPSHOT</version>
+		<version>5.0.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>smart-message-core</artifactId>
-	<version>3.0.0-SNAPSHOT</version>
+	<version>5.0.0-SNAPSHOT</version>
 	<name>smart-message-core</name>
 	<description>消息核心模块</description>
 

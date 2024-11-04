@@ -5,10 +5,10 @@
     <parent>
         <artifactId>smart-commons</artifactId>
         <groupId>com.smart</groupId>
-        <version>3.0.0-SNAPSHOT</version>
+        <version>5.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>smart-commons-core</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>5.0.0-SNAPSHOT</version>
     <name>smart-commons-core</name>
     <description>commons工具包</description>
 

@@ -5,10 +5,10 @@
     <parent>
         <groupId>com.smart</groupId>
         <artifactId>smart-module-api</artifactId>
-        <version>3.0.0-SNAPSHOT</version>
+        <version>5.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>smart-file-api</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>5.0.0-SNAPSHOT</version>
     <name>smart-file-api</name>
     <description>文件接口API</description>
 

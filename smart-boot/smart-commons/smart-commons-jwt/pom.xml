@@ -5,10 +5,10 @@
     <parent>
         <artifactId>smart-commons</artifactId>
         <groupId>com.smart</groupId>
-        <version>3.0.0-SNAPSHOT</version>
+        <version>5.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>smart-commons-jwt</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>5.0.0-SNAPSHOT</version>
     <name>smart-commons-jwt</name>
     <description>JWT工具包</description>
 

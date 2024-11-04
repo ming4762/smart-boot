@@ -5,10 +5,10 @@
     <parent>
         <groupId>com.smart</groupId>
         <artifactId>smart-database</artifactId>
-        <version>3.0.0-SNAPSHOT</version>
+        <version>5.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>smart-database-analysis</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>5.0.0-SNAPSHOT</version>
     <name>smart-database-analysis</name>
     <description>解析数据库结构模块</description>
 

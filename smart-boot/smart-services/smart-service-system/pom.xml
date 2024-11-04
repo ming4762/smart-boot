@@ -5,10 +5,10 @@
 	<parent>
 		<groupId>com.smart</groupId>
 		<artifactId>smart-services</artifactId>
-		<version>3.0.0-SNAPSHOT</version>
+		<version>5.0.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>smart-service-system</artifactId>
-	<version>3.0.0-SNAPSHOT</version>
+	<version>5.0.0-SNAPSHOT</version>
 	<name>smart-service-system</name>
 	<description>服务-系统管理</description>
 

@@ -5,10 +5,10 @@
 	<parent>
 		<groupId>com.smart</groupId>
 		<artifactId>smart-starter</artifactId>
-		<version>3.0.0-SNAPSHOT</version>
+		<version>5.0.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>wxjava-spring-boot-starter</artifactId>
-	<version>3.0.0-SNAPSHOT</version>
+	<version>5.0.0-SNAPSHOT</version>
 	<name>wxjava-spring-boot-starter</name>
 	<description>wxjava自动配置启动器</description>
 	<properties>

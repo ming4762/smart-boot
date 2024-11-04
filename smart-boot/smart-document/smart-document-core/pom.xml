@@ -5,10 +5,10 @@
 	<parent>
 		<groupId>com.smart</groupId>
 		<artifactId>smart-document</artifactId>
-		<version>3.0.0-SNAPSHOT</version>
+		<version>5.0.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>smart-document-core</artifactId>
-	<version>3.0.0-SNAPSHOT</version>
+	<version>5.0.0-SNAPSHOT</version>
 	<name>smart-document-core</name>
 	<description>文档核心模块</description>
 

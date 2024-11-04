@@ -5,10 +5,10 @@
     <parent>
         <groupId>com.smart</groupId>
         <artifactId>smart-cloud</artifactId>
-        <version>3.0.0-SNAPSHOT</version>
+        <version>5.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>smart-cloud-module-api</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>5.0.0-SNAPSHOT</version>
     <name>smart-cloud-module-api</name>
     <description>微服务间调用API模块</description>
     <packaging>pom</packaging>
