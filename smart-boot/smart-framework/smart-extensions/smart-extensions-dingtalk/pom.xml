@@ -23,7 +23,7 @@
 
         <dependency>
             <groupId>com.aliyun</groupId>
-            <artifactId>alibaba-dingtalk-com.smart.framework.tool.code.service-sdk</artifactId>
+            <artifactId>alibaba-dingtalk-service-sdk</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>log4j</groupId>

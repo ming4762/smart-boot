@@ -7,17 +7,17 @@
         <artifactId>smart-boot-starters</artifactId>
         <version>5.0.0-SNAPSHOT</version>
     </parent>
-    <artifactId>smart-boot-starter-com.smart.framework.tool.code.document</artifactId>
+    <artifactId>smart-boot-starter-document</artifactId>
     <version>5.0.0-SNAPSHOT</version>
-    <name>smart-boot-starter-com.smart.framework.tool.code.document</name>
+    <name>smart-boot-starter-document</name>
     <description>document证启动器</description>
     <packaging>pom</packaging>
 
     <modules>
-        <module>smart-boot-starter-com.smart.framework.tool.code.document-code-zxing</module>
-        <module>smart-boot-starter-com.smart.framework.tool.code.document-converter-jod</module>
-        <module>smart-boot-starter-com.smart.framework.tool.code.document-converter-office</module>
-        <module>smart-boot-starter-com.smart.framework.tool.code.document-excel-jxls</module>
+        <module>smart-boot-starter-document-code-zxing</module>
+        <module>smart-boot-starter-document-converter-jod</module>
+        <module>smart-boot-starter-document-converter-office</module>
+        <module>smart-boot-starter-document-excel-jxls</module>
     </modules>
 
     <properties>

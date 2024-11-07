@@ -19,7 +19,7 @@
         <module>smart-boot-starter-captcha</module>
         <module>smart-boot-starter-crud</module>
         <module>smart-boot-starter-dingtalk</module>
-        <module>smart-boot-starter-com.smart.framework.tool.code.document</module>
+        <module>smart-boot-starter-document</module>
         <module>smart-boot-starter-exception</module>
         <module>smart-boot-starter-file</module>
         <module>smart-boot-starter-guava</module>

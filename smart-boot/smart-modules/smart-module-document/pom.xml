@@ -7,9 +7,9 @@
 		<artifactId>smart-modules</artifactId>
 		<version>5.0.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>smart-module-com.smart.framework.tool.code.document</artifactId>
+	<artifactId>smart-module-document</artifactId>
 	<version>5.0.0-SNAPSHOT</version>
-	<name>smart-module-com.smart.framework.tool.code.document</name>
+	<name>smart-module-document</name>
 	<description>文档处理模块</description>
 
 	<properties>
@@ -37,7 +37,7 @@
 
 		<dependency>
 			<groupId>com.smart</groupId>
-			<artifactId>smart-com.smart.framework.tool.code.document-core</artifactId>
+			<artifactId>smart-document-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 

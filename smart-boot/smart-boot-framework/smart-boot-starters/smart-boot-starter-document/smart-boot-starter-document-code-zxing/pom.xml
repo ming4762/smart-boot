@@ -4,12 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.smart</groupId>
-        <artifactId>smart-boot-starter-com.smart.framework.tool.code.document</artifactId>
+        <artifactId>smart-boot-starter-document</artifactId>
         <version>5.0.0-SNAPSHOT</version>
     </parent>
-    <artifactId>smart-boot-starter-com.smart.framework.tool.code.document-code-zxing</artifactId>
+    <artifactId>smart-boot-starter-document-code-zxing</artifactId>
     <version>5.0.0-SNAPSHOT</version>
-    <name>smart-boot-starter-com.smart.framework.tool.code.document-code-zxing</name>
+    <name>smart-boot-starter-document-code-zxing</name>
     <description>jod starter</description>
 
     <properties>
@@ -18,7 +18,7 @@
     <dependencies>
         <dependency>
             <groupId>com.smart</groupId>
-            <artifactId>smart-com.smart.framework.tool.code.document-code-zxing</artifactId>
+            <artifactId>smart-document-code-zxing</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

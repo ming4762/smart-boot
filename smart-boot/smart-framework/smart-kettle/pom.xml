@@ -46,7 +46,7 @@
 		<!--引入kettle支持-->
 		<dependency>
 			<groupId>org.pentaho</groupId>
-			<artifactId>kettle-com.smart.framework.tool.code.engine</artifactId>
+			<artifactId>kettle-engine</artifactId>
 		</dependency>
 
 		<dependency>

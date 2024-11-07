@@ -14,7 +14,7 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>smart-com.smart.framework.tool.code.service-system</module>
+		<module>smart-service-system</module>
 	</modules>
 
 	<properties>

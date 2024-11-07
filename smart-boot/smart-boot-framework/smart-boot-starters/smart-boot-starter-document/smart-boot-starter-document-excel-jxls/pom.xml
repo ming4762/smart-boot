@@ -4,12 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.smart</groupId>
-        <artifactId>smart-boot-starter-com.smart.framework.tool.code.document</artifactId>
+        <artifactId>smart-boot-starter-document</artifactId>
         <version>5.0.0-SNAPSHOT</version>
     </parent>
-    <artifactId>smart-boot-starter-com.smart.framework.tool.code.document-excel-jxls</artifactId>
+    <artifactId>smart-boot-starter-document-excel-jxls</artifactId>
     <version>5.0.0-SNAPSHOT</version>
-    <name>smart-boot-starter-com.smart.framework.tool.code.document-excel-jxls</name>
+    <name>smart-boot-starter-document-excel-jxls</name>
     <description>jod starter</description>
 
     <properties>
@@ -18,7 +18,7 @@
     <dependencies>
         <dependency>
             <groupId>com.smart</groupId>
-            <artifactId>smart-com.smart.framework.tool.code.document-excel-jxls</artifactId>
+            <artifactId>smart-document-excel-jxls</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

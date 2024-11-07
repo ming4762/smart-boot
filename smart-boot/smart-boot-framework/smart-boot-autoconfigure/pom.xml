@@ -260,25 +260,25 @@
         <!--    文档工具    -->
         <dependency>
             <groupId>com.smart</groupId>
-            <artifactId>smart-com.smart.framework.tool.code.document-code-zxing</artifactId>
+            <artifactId>smart-document-code-zxing</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>com.smart</groupId>
-            <artifactId>smart-com.smart.framework.tool.code.document-converter-jod</artifactId>
+            <artifactId>smart-document-converter-jod</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>com.smart</groupId>
-            <artifactId>smart-com.smart.framework.tool.code.document-converter-office</artifactId>
+            <artifactId>smart-document-converter-office</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>com.smart</groupId>
-            <artifactId>smart-com.smart.framework.tool.code.document-excel-jxls</artifactId>
+            <artifactId>smart-document-excel-jxls</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
