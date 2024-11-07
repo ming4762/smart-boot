@@ -1,8 +1,8 @@
 package com.smart.module.document.controller;
 
-import com.smart.document.model.code.BarcodeGeneratorData;
-import com.smart.document.model.code.QrcodeGeneratorData;
-import com.smart.document.service.CodeService;
+import com.smart.framework.document.model.code.BarcodeGeneratorData;
+import com.smart.framework.document.model.code.QrcodeGeneratorData;
+import com.smart.framework.document.service.CodeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;

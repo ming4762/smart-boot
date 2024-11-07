@@ -1,0 +1,38 @@
+package com.smart.framework.auth.core.model;
+
+import com.smart.framework.auth.core.constants.LoginTypeEnum;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.*;
+import org.springframework.lang.NonNull;
+
+/**
+ * 登录参数
+ * @author shizhongming
+ * 2021/1/1 4:15 上午
+ */
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class LoginParameter {
+
+    private String username;
+
+    private String password;
+
+    LoginTypeEnum loginType;
+
+    public static LoginParameter create(@NonNull HttpServletRequest request) {
+        String type = request.getParameter("type");
+        LoginTypeEnum loginType = LoginTypeEnum.WEB;
+        if(org.springframework.util.StringUtils.hasText(type)) {
+            loginType = LoginTypeEnum.valueOf(type);
+        }
+        return LoginParameter.builder()
+                .username(request.getParameter("username"))
+                .password(request.getParameter("password"))
+                .loginType(loginType)
+                .build();
+    }
+}

@@ -1,12 +1,10 @@
 package com.smart.service.system;
 
-import com.smart.auth.core.temptoken.EnableAuthTempToken;
-import com.smart.commons.core.cors.EnableCors;
-import com.smart.commons.core.spring.EnableRateLimit;
-import com.smart.commons.core.spring.EnabledCustomObjectMapper;
-import com.smart.commons.core.validate.EnableGlobalValidator;
-import com.smart.crud.spring.EnableMybatisPlusTenant;
-import com.smart.i18n.config.EnableValidatorI18nSource;
+import com.smart.framework.auth.core.temptoken.EnableAuthTempToken;
+import com.smart.framework.commons.core.cors.EnableCors;
+import com.smart.framework.commons.core.spring.EnableRateLimit;
+import com.smart.framework.commons.core.spring.EnabledCustomObjectMapper;
+import com.smart.framework.commons.core.validate.EnableGlobalValidator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;

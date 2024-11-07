@@ -1,0 +1,19 @@
+package com.smart.module.system.pojo.vo.auth;
+
+import com.smart.module.api.file.dto.SmartFileStorageListDTO;
+import com.smart.module.system.model.auth.SmartAuthSecretKeyPO;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+/**
+ * @author zhongming4762
+ * 2023/2/19
+ */
+@Getter
+@Setter
+@ToString
+public class SmartAuthSecretKeyListVO extends SmartAuthSecretKeyPO {
+
+    private SmartFileStorageListDTO fileStorage;
+}

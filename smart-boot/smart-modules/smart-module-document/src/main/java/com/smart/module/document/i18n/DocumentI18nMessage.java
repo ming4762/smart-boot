@@ -1,6 +1,6 @@
 package com.smart.module.document.i18n;
 
-import com.smart.commons.core.i18n.I18nMessage;
+import com.smart.framework.commons.core.i18n.I18nMessage;
 
 /**
  * @author ShiZhongMing

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE com.smart.framework.tool.code.mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-com.smart.framework.tool.code.mapper.dtd">
+<com.smart.framework.tool.code.mapper namespace="com.smart.module.message.com.smart.framework.tool.code.mapper.SmartMessageSystemSendMapper">
+    <sql id="columnList">
+        <!--   id      -->
+        id,
+        <!--   messageId      -->
+        message_id,
+        <!--   userId      -->
+        user_id,
+        <!--   是否已读      -->
+        read_yn,
+        <!--   阅读时间      -->
+        read_time,
+        <!--   是否标星      -->
+        star_yn,
+        <!--   createTime      -->
+        create_time,
+        <!--   createUserId      -->
+        create_user_id,
+        <!--   createBy      -->
+        create_by,
+        <!--   updateTime      -->
+        update_time,
+        <!--   updateUserId      -->
+        update_user_id,
+        <!--   updateBy      -->
+        update_by
+    </sql>
+
+    <!--  查询发送的消息  -->
+    <select id="listSendMessage" resultType="com.smart.module.message.com.smart.framework.tool.code.pojo.dbo.SmartMessageSendMessageDO">
+        select A.id,
+               A.message_id,
+               A.user_id receive_user_id,
+               A.read_yn,
+               A.read_time,
+               A.star_yn,
+               A.create_time send_time,
+               A.create_user_id send_user_id,
+               A.create_by send_user_name,
+               B.title,
+               B.abstract_content,
+               B.message_type,
+               B.priority,
+               B.business_ident,
+               B.business_id
+        from smart_message_system_send A
+                 join smart_message_system B on A.message_id = B.id
+            ${ew.customSqlSegment}
+    </select>
+
+    <resultMap id="commonResultMap" com.smart.framework.tool.code.type="com.smart.module.message.com.smart.framework.tool.code.model.SmartMessageSystemSendPO">
+        <!--   id      -->
+        <result column="id" property="id" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   messageId      -->
+        <result column="message_id" property="messageId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   userId      -->
+        <result column="user_id" property="userId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   是否已读      -->
+        <result column="read_yn" property="readYn" javaType="java.lang.Boolean" jdbcType="BIT"/>
+        <!--   阅读时间      -->
+        <result column="read_time" property="readTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+        <!--   是否标星      -->
+        <result column="star_yn" property="starYn" javaType="java.lang.Boolean" jdbcType="BIT"/>
+        <!--   createTime      -->
+        <result column="create_time" property="createTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+        <!--   createUserId      -->
+        <result column="create_user_id" property="createUserId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   createBy      -->
+        <result column="create_by" property="createBy" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   updateTime      -->
+        <result column="update_time" property="updateTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+        <!--   updateUserId      -->
+        <result column="update_user_id" property="updateUserId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   updateBy      -->
+        <result column="update_by" property="updateBy" javaType="java.lang.String" jdbcType="VARCHAR"/>
+    </resultMap>
+</com.smart.framework.tool.code.mapper>

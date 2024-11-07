@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.smart</groupId>
+		<artifactId>smart-framework</artifactId>
+		<version>5.0.0-SNAPSHOT</version>
+	</parent>
+	<artifactId>smart-kettle</artifactId>
+	<version>5.0.0-SNAPSHOT</version>
+	<name>smart-kettle</name>
+	<description>kettle 模块</description>
+
+	<modules>
+	</modules>
+
+	<properties>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-vfs2</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.pentaho</groupId>
+			<artifactId>commons-xul-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.pentaho</groupId>
+			<artifactId>kettle-core</artifactId>
+		</dependency>
+		<!--引入kettle支持-->
+		<dependency>
+			<groupId>org.pentaho</groupId>
+			<artifactId>kettle-com.smart.framework.tool.code.engine</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.scannotation</groupId>
+			<artifactId>scannotation</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.pentaho</groupId>
+			<artifactId>pentaho-encryption-support</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.pentaho</groupId>
+			<artifactId>metastore</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.smart</groupId>
+			<artifactId>smart-commons-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.mysql</groupId>
+			<artifactId>mysql-connector-j</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-pool2</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.xuxueli</groupId>
+			<artifactId>xxl-job-core</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+	</dependencies>
+
+
+</project>

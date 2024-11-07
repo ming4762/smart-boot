@@ -18,44 +18,44 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.smart</groupId>
-			<artifactId>crud-spring-boot-starter</artifactId>
+			<artifactId>smart-crud</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.smart</groupId>
+			<artifactId>smart-boot-starter-license-server</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.smart</groupId>
+			<artifactId>smart-exception</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.smart</groupId>
-			<artifactId>smart-license-server-starter</artifactId>
-			<version>${smart-boot.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.smart</groupId>
-			<artifactId>exception-spring-boot-starter</artifactId>
-			<version>${project.parent.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.smart</groupId>
-			<artifactId>i18n-spring-boot-starter</artifactId>
-			<version>${project.parent.version}</version>
+			<artifactId>smart-i18n</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.smart</groupId>
 			<artifactId>smart-auth-core</artifactId>
-			<version>${project.parent.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.smart</groupId>
 			<artifactId>smart-commons-validate</artifactId>
-			<version>${project.parent.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.smart</groupId>
-			<artifactId>log-spring-boot-starter</artifactId>
-			<version>${project.parent.version}</version>
+			<artifactId>smart-log</artifactId>
+			<version>${project.version}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.hibernate.validator</groupId>
 			<artifactId>hibernate-validator</artifactId>
@@ -74,19 +74,19 @@
 		<dependency>
 			<groupId>com.smart</groupId>
 			<artifactId>smart-system-api</artifactId>
-			<version>${smart-boot.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.smart</groupId>
 			<artifactId>smart-auth-api</artifactId>
-			<version>${smart-boot.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.smart</groupId>
 			<artifactId>smart-file-api</artifactId>
-			<version>${smart-boot.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 

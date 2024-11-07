@@ -3,7 +3,7 @@ package com.smart.module.document.model;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.smart.crud.model.BaseModelUserTime;
+import com.smart.framework.crud.model.BaseModelUserTime;
 import com.smart.module.document.constants.TemplateIdentEnum;
 import lombok.Getter;
 import lombok.Setter;

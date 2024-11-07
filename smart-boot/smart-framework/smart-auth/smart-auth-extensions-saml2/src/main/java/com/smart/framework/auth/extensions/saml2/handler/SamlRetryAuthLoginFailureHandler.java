@@ -1,0 +1,50 @@
+package com.smart.framework.auth.extensions.saml2.handler;
+
+import com.smart.framework.auth.core.handler.AuthLoginFailureHandler;
+import com.smart.framework.auth.core.properties.AuthSaml2Properties;
+import com.smart.framework.auth.extensions.saml2.constants.SamlUrlConstants;
+import com.smart.framework.auth.extensions.saml2.utils.SamlRetryTimerHolder;
+import com.smart.framework.commons.core.utils.IpUtils;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
+import org.opensaml.common.SAMLException;
+import org.springframework.security.core.AuthenticationException;
+
+import java.io.IOException;
+
+/**
+ * @author ShiZhongMing
+ * 2021/3/1 9:28
+ * @since 1.0
+ */
+@Slf4j
+public class SamlRetryAuthLoginFailureHandler extends AuthLoginFailureHandler {
+
+    private final AuthSaml2Properties properties;
+
+    public SamlRetryAuthLoginFailureHandler(AuthSaml2Properties properties) {
+        this.properties = properties;
+    }
+
+    @Override
+    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
+        if (exception.getCause() instanceof SAMLException) {
+            log.warn("SAML登录失败，进行重试", exception);
+            final String key = IpUtils.getIpAddr(request);
+            int timer = SamlRetryTimerHolder.get(key);
+            if (timer > this.properties.getRetry()) {
+                // 重置次数
+                SamlRetryTimerHolder.reset(key);
+                super.onAuthenticationFailure(request, response, exception);
+            } else {
+                SamlRetryTimerHolder.add(key);
+                // 如果是SAML异常进行重试
+                response.sendRedirect(request.getContextPath() + SamlUrlConstants.LOGIN.getUrl());
+            }
+        } else {
+            super.onAuthenticationFailure(request, response, exception);
+        }
+    }
+}

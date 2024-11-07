@@ -1,0 +1,63 @@
+package com.smart.module.system.model;
+
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.smart.framework.crud.model.BaseModelUserTime;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.io.Serial;
+
+/**
+* sys_dict_item - 字典序表
+* @author GCCodeGenerator
+* 2022-2-7 10:48:32
+*/
+@Getter
+@Setter
+@TableName("sys_dict_item")
+public class SysDictItemPO extends BaseModelUserTime {
+
+    @Serial
+    private static final long serialVersionUID = 4637452253459448214L;
+
+    @TableId(type = IdType.ASSIGN_ID)
+    private Long id;
+
+    /**
+    * dict_code - 字典编码
+    */
+    private Long dictId;
+
+    /**
+    * dict_item_code - 字典项编码
+    */
+    private String dictItemCode;
+
+    /**
+    * dict_item_name - 字典项名称
+    */
+    private String dictItemName;
+
+    /**
+    * seq - 序号
+    */
+    private Integer seq;
+
+    /**
+    * remark - 描述
+    */
+    private String remark;
+
+    /**
+    * use_yn - 启用状态
+    */
+    private Boolean useYn;
+
+    /**
+    * delete_yn - deleteYn
+    */
+    private Boolean deleteYn;
+
+}

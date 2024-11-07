@@ -7,9 +7,9 @@
 		<artifactId>smart-services</artifactId>
 		<version>5.0.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>smart-service-system</artifactId>
+	<artifactId>smart-com.smart.framework.tool.code.service-system</artifactId>
 	<version>5.0.0-SNAPSHOT</version>
-	<name>smart-service-system</name>
+	<name>smart-com.smart.framework.tool.code.service-system</name>
 	<description>服务-系统管理</description>
 
 	<modules>
@@ -22,12 +22,6 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.smart</groupId>
-			<artifactId>dingtalk-spring-boot-starter</artifactId>
-			<version>${smart-boot.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.smart</groupId>
 			<artifactId>smart-module-system</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
@@ -35,68 +29,69 @@
 		<!--	引入认证支持 	-->
 		<dependency>
 			<groupId>com.smart</groupId>
-			<artifactId>smart-auth-security</artifactId>
-			<version>${project.parent.version}</version>
+			<artifactId>smart-module-auth</artifactId>
+			<version>${project.version}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>com.smart</groupId>
-			<artifactId>smart-auth-extensions-jwt</artifactId>
-			<version>${project.parent.version}</version>
+			<artifactId>smart-boot-starter-auth-jwt</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.smart</groupId>
 			<artifactId>smart-auth-cache-redis</artifactId>
-			<version>${project.parent.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<!--	短信登录支持	-->
 		<dependency>
 			<groupId>com.smart</groupId>
-			<artifactId>smart-auth-extensions-sms</artifactId>
-			<version>${smart-boot.version}</version>
+			<artifactId>smart-boot-starter-auth-sms</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 
 		<!--	基础支持：国际化、异常处理	-->
 		<dependency>
 			<groupId>com.smart</groupId>
-			<artifactId>i18n-spring-boot-starter</artifactId>
-			<version>${project.parent.version}</version>
+			<artifactId>smart-boot-starter-i18n</artifactId>
+			<version>${project.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>com.smart</groupId>
-			<artifactId>exception-spring-boot-starter</artifactId>
-			<version>${project.parent.version}</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>com.smart</groupId>-->
+<!--			<artifactId>i18n-spring-boot-starter</artifactId>-->
+<!--			<version>${project.parent.version}</version>-->
+<!--		</dependency>-->
+<!--		<dependency>-->
+<!--			<groupId>com.smart</groupId>-->
+<!--			<artifactId>exception-spring-boot-starter</artifactId>-->
+<!--			<version>${project.parent.version}</version>-->
+<!--		</dependency>-->
 
 		<!--	消息支持	-->
-		<dependency>
-			<groupId>com.smart</groupId>
-			<artifactId>smart-message-manager</artifactId>
-			<version>${smart-boot.version}</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>com.smart</groupId>-->
+<!--			<artifactId>smart-message-manager</artifactId>-->
+<!--			<version>${project.version}</version>-->
+<!--		</dependency>-->
 		<!--	阿里云短信支持	-->
-		<dependency>
-			<groupId>com.smart</groupId>
-			<artifactId>smart-sms-extensions-aliyun</artifactId>
-			<version>${project.parent.version}</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>com.smart</groupId>-->
+<!--			<artifactId>smart-sms-extensions-aliyun</artifactId>-->
+<!--			<version>${project.version}</version>-->
+<!--		</dependency>-->
 		<!--	web socket支持	-->
-		<dependency>
-			<groupId>com.smart</groupId>
-			<artifactId>smart-message-websocket</artifactId>
-			<version>${project.parent.version}</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>com.smart</groupId>-->
+<!--			<artifactId>smart-message-websocket</artifactId>-->
+<!--			<version>${project.version}</version>-->
+<!--		</dependency>-->
 
 		<!--	代码生成器	-->
 		<dependency>
 			<groupId>com.smart</groupId>
-			<artifactId>smart-database-generator</artifactId>
-			<version>${project.parent.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.oracle.ojdbc</groupId>
-			<artifactId>ojdbc8</artifactId>
+			<artifactId>smart-module-code</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 
 		<!--	数据库	-->
@@ -104,11 +99,6 @@
 			<groupId>com.mysql</groupId>
 			<artifactId>mysql-connector-j</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>druid-spring-boot-3-starter</artifactId>
-		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
@@ -136,50 +126,38 @@
 <!--		<dependency>-->
 <!--			<groupId>com.smart</groupId>-->
 <!--			<artifactId>smart-license-client-starter</artifactId>-->
-<!--			<version>${smart-boot.version}</version>-->
+<!--			<version>${project.version}</version>-->
 <!--		</dependency>-->
 
-		<!--	文件支持	-->
 		<dependency>
 			<groupId>com.smart</groupId>
-			<artifactId>smart-file-extensions-disk</artifactId>
-			<version>${smart-boot.version}</version>
+			<artifactId>smart-boot-starter-file-disk</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.smart</groupId>
-			<artifactId>smart-file-extensions-minio</artifactId>
-			<version>${smart-boot.version}</version>
+			<artifactId>smart-boot-starter-file-aliyun</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.smart</groupId>
-			<artifactId>smart-file-extensions-aliyun-oss</artifactId>
-			<version>${smart-boot.version}</version>
+			<artifactId>smart-boot-starter-file-minio</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.smart</groupId>
-			<artifactId>smart-file-extensions-qiniu</artifactId>
-			<version>${smart-boot.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.smart</groupId>
-			<artifactId>smart-file-manager</artifactId>
-			<version>${smart-boot.version}</version>
+			<artifactId>smart-module-file</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.github.xiaoymin</groupId>
 			<artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
 		</dependency>
-
-		<dependency>
-			<groupId>cloud.tianai.captcha</groupId>
-			<artifactId>tianai-captcha</artifactId>
-		</dependency>
-
 		<dependency>
 			<groupId>com.smart</groupId>
-			<artifactId>smart-auth-extensions-access-secret</artifactId>
-			<version>${smart-boot.version}</version>
+			<artifactId>smart-boot-starter-auth-access-secret</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 
@@ -190,7 +168,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<version>${spring-boot.version}</version>
 				<configuration>
-					<mainClass>com.smart.service.system.SmartServiceSystemApplication</mainClass>
+					<mainClass>com.smart.com.smart.framework.tool.code.service.system.SmartServiceSystemApplication</mainClass>
 				</configuration>
 				<executions>
 					<execution>

@@ -1,6 +1,6 @@
 package com.smart.module.api.system.dto;
 
-import com.smart.commons.core.dto.auth.UserAccountStatusEnum;
+import com.smart.framework.commons.core.dto.auth.UserAccountStatusEnum;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

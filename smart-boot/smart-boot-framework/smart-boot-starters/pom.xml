@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.smart</groupId>
+        <artifactId>smart-boot-framework</artifactId>
+        <version>5.0.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>smart-boot-starters</artifactId>
+    <version>5.0.0-SNAPSHOT</version>
+    <name>smart-boot-starters</name>
+    <description>starters</description>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>smart-boot-starter-actuator</module>
+        <module>smart-boot-starter-auth</module>
+        <module>smart-boot-starter-captcha</module>
+        <module>smart-boot-starter-crud</module>
+        <module>smart-boot-starter-dingtalk</module>
+        <module>smart-boot-starter-com.smart.framework.tool.code.document</module>
+        <module>smart-boot-starter-exception</module>
+        <module>smart-boot-starter-file</module>
+        <module>smart-boot-starter-guava</module>
+        <module>smart-boot-starter-i18n</module>
+        <module>smart-boot-starter-kettle</module>
+        <module>smart-boot-starter-license-client</module>
+        <module>smart-boot-starter-license-server</module>
+        <module>smart-boot-starter-log</module>
+        <module>smart-boot-starter-message</module>
+        <module>smart-boot-starter-monitor-server</module>
+        <module>smart-boot-starter-monitor-client</module>
+        <module>smart-boot-starter-redis</module>
+        <module>smart-boot-starter-tool-database</module>
+        <module>smart-boot-starter-wechat</module>
+        <module>smart-boot-starter-xxl</module>
+    </modules>
+
+    <properties>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-boot-autoconfigure</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
+
+</project>

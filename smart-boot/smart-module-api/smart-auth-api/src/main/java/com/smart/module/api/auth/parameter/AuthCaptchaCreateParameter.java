@@ -1,6 +1,6 @@
 package com.smart.module.api.auth.parameter;
 
-import com.smart.commons.core.captcha.constants.CaptchaTypeEnum;
+import com.smart.framework.commons.core.captcha.constants.CaptchaTypeEnum;
 import lombok.*;
 import org.springframework.lang.NonNull;
 

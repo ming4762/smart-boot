@@ -1,0 +1,30 @@
+package com.smart.module.code.pojo.vo;
+
+import com.smart.module.code.model.DbCodePageConfigPO;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+import java.io.Serial;
+
+/**
+ * @author ShiZhongMing
+ * 2021/5/8 13:06
+ * @since 1.0
+ */
+@Getter
+@Setter
+@ToString
+public class DbCodePageConfigTemplateVO extends DbCodePageConfigPO {
+    @Serial
+    private static final long serialVersionUID = 2977613076184347745L;
+
+    public DbCodePageConfigTemplateVO() {
+        this.idAnnotation = Boolean.FALSE;
+    }
+
+    /**
+     * 是否使用ID注解（mybatis）
+     */
+    private Boolean idAnnotation;
+}

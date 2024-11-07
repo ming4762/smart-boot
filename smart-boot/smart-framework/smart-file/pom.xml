@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.smart</groupId>
+		<artifactId>smart-framework</artifactId>
+		<version>5.0.0-SNAPSHOT</version>
+	</parent>
+	<packaging>pom</packaging>
+	<artifactId>smart-file</artifactId>
+	<version>5.0.0-SNAPSHOT</version>
+	<name>smart-file</name>
+	<description>文件管理模块</description>
+
+	<modules>
+		<module>smart-file-core</module>
+		<module>smart-file-extensions-aliyun-oss</module>
+		<module>smart-file-extensions-disk</module>
+		<module>smart-file-extensions-ftp</module>
+		<module>smart-file-extensions-minio</module>
+		<module>smart-file-extensions-qiniu</module>
+		<module>smart-file-extensions-s3</module>
+		<module>smart-file-extensions-sftp</module>
+	</modules>
+
+	<properties>
+	</properties>
+
+	<dependencies>
+
+	</dependencies>
+
+</project>

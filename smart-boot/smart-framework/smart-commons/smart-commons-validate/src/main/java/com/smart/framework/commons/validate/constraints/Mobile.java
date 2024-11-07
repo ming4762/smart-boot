@@ -1,0 +1,25 @@
+package com.smart.framework.commons.validate.constraints;
+
+import com.smart.framework.commons.validate.constraintvalidators.MobileValidator;
+import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
+
+import java.lang.annotation.*;
+
+/**
+ * 自定义手机校验
+ * @author shizhongming
+ * 2020/6/2 1:50 下午
+ */
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.PARAMETER,ElementType.FIELD})
+@Constraint(validatedBy = MobileValidator.class)
+public @interface Mobile {
+
+    String message() default "手机号码格式不正确";
+
+    Class<?>[] groups() default {};
+
+    Class<? extends Payload>[] payload() default {};
+}

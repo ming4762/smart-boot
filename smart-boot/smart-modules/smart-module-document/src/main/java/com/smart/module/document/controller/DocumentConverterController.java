@@ -1,9 +1,9 @@
 package com.smart.module.document.controller;
 
-import com.smart.commons.core.i18n.I18nException;
-import com.smart.document.constants.DocumentFormatEnum;
-import com.smart.document.service.DocumentConverterService;
-import com.smart.document.service.ExcelService;
+import com.smart.framework.commons.core.i18n.I18nException;
+import com.smart.framework.document.constants.DocumentFormatEnum;
+import com.smart.framework.document.service.DocumentConverterService;
+import com.smart.framework.document.service.ExcelService;
 import com.smart.module.document.i18n.DocumentI18nMessage;
 import com.smart.module.document.model.DocumentTemplatePO;
 import com.smart.module.document.pojo.dto.converter.DocumentConvertDTO;

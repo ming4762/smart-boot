@@ -2,8 +2,8 @@ package com.smart.module.api.system;
 
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.lang.func.LambdaUtil;
-import com.smart.commons.core.exception.SystemException;
-import com.smart.commons.core.utils.ReflectUtils;
+import com.smart.framework.commons.core.exception.SystemException;
+import com.smart.framework.commons.core.utils.ReflectUtils;
 import com.smart.module.api.system.constants.SmartChangeLogEnum;
 import com.smart.module.api.system.dto.SerialCodeCreateDTO;
 import com.smart.module.api.system.dto.SmartChangeLogListDTO;

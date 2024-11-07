@@ -1,0 +1,28 @@
+package com.smart.boot.actuate.redis.constants;
+
+import lombok.Getter;
+
+/**
+ * Redis 指标
+ * @author ShiZhongMing
+ * 2022/2/25
+ * @since 2.0.0
+ */
+@Getter
+public enum RedisMetricsConstants {
+
+    /**
+     * redis key
+     */
+    KEYS("redis.keys", "Redis key数量")
+    ;
+
+    private final String meterName;
+
+    private final String description;
+
+    RedisMetricsConstants(String meterName, String description) {
+        this.meterName = meterName;
+        this.description = description;
+    }
+}

@@ -1,0 +1,31 @@
+package com.smart.module.monitor.server.pojo.dto;
+
+import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+import java.io.Serial;
+import java.io.Serializable;
+import java.util.List;
+
+/**
+ * 设置应用所在用户组DTO
+ * @author ShiZhongMing
+ * 2022/2/9
+ * @since 1.0
+ */
+@Getter
+@Setter
+@ToString
+public class MonitorApplicationSetUserGroupDTO implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = -7350636025389366842L;
+
+    @NotNull(message = "应用ID不能为空")
+    private Long applicationId;
+
+    @NotNull(message = "用户组ID不能为空")
+    private List<Long> groupIdList;
+}

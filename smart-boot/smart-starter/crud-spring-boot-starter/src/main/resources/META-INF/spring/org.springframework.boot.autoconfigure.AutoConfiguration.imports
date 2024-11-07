@@ -1,5 +1,0 @@
-com.smart.crud.DataPermissionAutoConfiguration
-com.smart.crud.CrudMybatisInterceptorAutoConfiguration
-com.smart.crud.SmartCrudAutoConfiguration
-com.smart.crud.MybatisInterceptorAddAutoConfiguration
-com.smart.crud.MybatisPlusEnhanceAutoConfiguration

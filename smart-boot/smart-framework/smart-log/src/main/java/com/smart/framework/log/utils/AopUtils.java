@@ -1,0 +1,44 @@
+package com.smart.framework.log.utils;
+
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.Signature;
+import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.lang.NonNull;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * 切面工具类
+ * @author shizhongming
+ * 2020/6/8 5:02 下午
+ */
+public class AopUtils {
+
+    private AopUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    /**
+     * 获取目标方法的参数
+     * @param point 切面
+     * @return 参数
+     */
+    @NonNull
+    public static Map<String, Object> getParameterMap(ProceedingJoinPoint point) {
+        final Signature signature = point.getSignature();
+        Map<String, Object> parameterMap = HashMap.newHashMap(10);
+        if (signature instanceof MethodSignature methodSignature) {
+            // 获取参数
+            Object[] objects = point.getArgs();
+            // 获取参数名
+            String[] names = methodSignature.getParameterNames();
+            for (int i = 0; i < names.length; i++) {
+                parameterMap.put(names[i], objects[i]);
+            }
+        }
+
+        return parameterMap;
+    }
+
+}

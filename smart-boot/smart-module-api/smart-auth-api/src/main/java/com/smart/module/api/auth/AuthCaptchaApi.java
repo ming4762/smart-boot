@@ -1,8 +1,8 @@
 package com.smart.module.api.auth;
 
-import com.smart.commons.core.captcha.dto.CaptchaGenerateDTO;
-import com.smart.commons.core.captcha.dto.CaptchaGenerateParameter;
-import com.smart.commons.core.captcha.dto.CaptchaValidateParameter;
+import com.smart.framework.commons.core.captcha.dto.CaptchaGenerateDTO;
+import com.smart.framework.commons.core.captcha.dto.CaptchaGenerateParameter;
+import com.smart.framework.commons.core.captcha.dto.CaptchaValidateParameter;
 
 /**
  * 验证码API

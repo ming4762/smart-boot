@@ -1,6 +1,6 @@
 package com.smart.module.api.auth;
 
-import com.smart.commons.core.message.Result;
+import com.smart.framework.commons.core.message.Result;
 import com.smart.module.api.auth.dto.AuthCacheDTO;
 import com.smart.module.api.auth.dto.AuthUserDetailsDTO;
 import com.smart.module.api.auth.dto.AuthenticationDTO;

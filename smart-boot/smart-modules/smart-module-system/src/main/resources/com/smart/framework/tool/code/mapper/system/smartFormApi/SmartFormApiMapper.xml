@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE com.smart.framework.tool.code.mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-com.smart.framework.tool.code.mapper.dtd">
+<com.smart.framework.tool.code.mapper namespace="com.smart.module.system.com.smart.framework.tool.code.mapper.SmartFormApiMapper">
+
+    <select id="listTableSelect" resultMap="listTableSelectResultMap">
+        select ${valueName} value, ${labelName} label
+        from ${tableName}
+        ${ew.customSqlSegment}
+    </select>
+
+    <resultMap id="listTableSelectResultMap" com.smart.framework.tool.code.type="com.smart.module.system.com.smart.framework.tool.code.controller.api.form.vo.SmartFormTableSelectApiVO">
+        <result column="label" property="label" />
+        <result column="value" property="value" />
+    </resultMap>
+</com.smart.framework.tool.code.mapper>

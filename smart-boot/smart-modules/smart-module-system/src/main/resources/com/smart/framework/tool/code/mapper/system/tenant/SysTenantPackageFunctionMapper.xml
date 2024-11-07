@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE com.smart.framework.tool.code.mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-com.smart.framework.tool.code.mapper.dtd">
+<com.smart.framework.tool.code.mapper namespace="com.smart.module.system.com.smart.framework.tool.code.mapper.tenant.SysTenantPackageFunctionMapper">
+    <sql id="columnList">
+        <!--   id 主键  索引   -->
+        id,
+        <!--   tenantPackageId   索引   -->
+        tenant_package_id,
+        <!--   functionId   索引   -->
+        function_id,
+        <!--   是否半选中      -->
+        half_yn,
+        <!--   createTime      -->
+        create_time,
+        <!--   crateBy      -->
+        crate_by,
+        <!--   createUserId      -->
+        create_user_id
+    </sql>
+
+    <resultMap id="commonResultMap" com.smart.framework.tool.code.type="com.smart.module.system.com.smart.framework.tool.code.model.tenant.SysTenantPackageFunctionPO">
+        <!--   id 主键  索引   -->
+        <id column="id" property="id" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   tenantPackageId   索引   -->
+        <result column="tenant_package_id" property="tenantPackageId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   functionId   索引   -->
+        <result column="function_id" property="functionId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   是否半选中      -->
+        <result column="half_yn" property="halfYn" javaType="java.lang.Boolean" jdbcType="BIT"/>
+        <!--   createTime      -->
+        <result column="create_time" property="createTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+        <!--   crateBy      -->
+        <result column="crate_by" property="crateBy" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   createUserId      -->
+        <result column="create_user_id" property="createUserId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+    </resultMap>
+
+
+    <!--  查询租户套餐包对应功能  -->
+    <select id="listPackageFunction" resultType="com.smart.module.system.com.smart.framework.tool.code.model.tenant.SysTenantPackageFunctionPO">
+        SELECT A.* FROM sys_tenant_package_function A
+        join sys_function B on A.function_id = B.function_id
+            ${ew.customSqlSegment}
+    </select>
+</com.smart.framework.tool.code.mapper>

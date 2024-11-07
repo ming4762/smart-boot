@@ -1,6 +1,6 @@
 package com.smart.module.document.mapper;
 
-import com.smart.crud.mapper.CrudBaseMapper;
+import com.smart.framework.crud.mapper.CrudBaseMapper;
 import com.smart.module.document.model.DocumentTemplatePO;
 
 /**

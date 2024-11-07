@@ -1,6 +1,6 @@
 package com.smart.module.document.pojo.dto.converter;
 
-import com.smart.document.constants.DocumentFormatEnum;
+import com.smart.framework.document.constants.DocumentFormatEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;

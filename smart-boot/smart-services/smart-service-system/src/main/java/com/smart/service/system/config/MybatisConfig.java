@@ -1,7 +1,7 @@
 package com.smart.service.system.config;
 
 import com.alibaba.druid.spring.boot3.autoconfigure.DruidDataSourceBuilder;
-import com.smart.commons.core.constants.MapperPackageConstants;
+import com.smart.framework.commons.core.constants.MapperPackageConstants;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;

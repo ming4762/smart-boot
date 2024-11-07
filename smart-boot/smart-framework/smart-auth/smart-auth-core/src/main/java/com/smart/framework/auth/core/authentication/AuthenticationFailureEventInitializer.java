@@ -1,0 +1,43 @@
+package com.smart.framework.auth.core.authentication;
+
+import com.smart.framework.auth.core.event.AuthenticationFailureIpBindEvent;
+import com.smart.framework.auth.core.exception.IpBindAuthenticationException;
+import com.smart.framework.auth.core.exception.LongTimeNoLoginLockedException;
+import com.smart.framework.auth.core.exception.MaxConnectionAuthenticationException;
+import com.smart.framework.auth.core.exception.PasswordNoLifeLockedException;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.security.authentication.DefaultAuthenticationEventPublisher;
+import org.springframework.security.authentication.event.AuthenticationFailureDisabledEvent;
+import org.springframework.security.authentication.event.AuthenticationFailureLockedEvent;
+
+import java.util.Map;
+
+/**
+ * @author ShiZhongMing
+ * 2021/12/29 15:24
+ * @since 1.0.7
+ */
+public class AuthenticationFailureEventInitializer implements ApplicationRunner {
+
+
+    private final DefaultAuthenticationEventPublisher eventPublisher;
+
+    public AuthenticationFailureEventInitializer(DefaultAuthenticationEventPublisher eventPublisher) {
+        this.eventPublisher = eventPublisher;
+    }
+
+    @Override
+    public void run(ApplicationArguments args) {
+        eventPublisher.setAdditionalExceptionMappings(
+                Map.of(
+                        // ip绑定认证异常
+                        IpBindAuthenticationException.class, AuthenticationFailureIpBindEvent.class,
+                        LongTimeNoLoginLockedException.class, AuthenticationFailureLockedEvent.class,
+                        PasswordNoLifeLockedException.class, AuthenticationFailureLockedEvent.class,
+                        // 超过最大登录数不允许登录
+                        MaxConnectionAuthenticationException.class, AuthenticationFailureDisabledEvent.class
+                )
+        );
+    }
+}

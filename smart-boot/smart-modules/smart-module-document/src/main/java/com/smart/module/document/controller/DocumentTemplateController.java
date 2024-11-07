@@ -1,8 +1,8 @@
 package com.smart.module.document.controller;
 
-import com.smart.commons.core.message.Result;
-import com.smart.crud.controller.BaseController;
-import com.smart.crud.query.PageSortQuery;
+import com.smart.framework.commons.core.message.Result;
+import com.smart.framework.crud.controller.BaseController;
+import com.smart.framework.crud.query.PageSortQuery;
 import com.smart.module.document.model.DocumentTemplatePO;
 import com.smart.module.document.pojo.dto.template.DocumentTemplateSaveUpdateDTO;
 import com.smart.module.document.service.DocumentTemplateService;

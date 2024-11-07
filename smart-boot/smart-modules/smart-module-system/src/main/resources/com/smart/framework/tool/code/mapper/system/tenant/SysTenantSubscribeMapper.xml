@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE com.smart.framework.tool.code.mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-com.smart.framework.tool.code.mapper.dtd">
+<com.smart.framework.tool.code.mapper namespace="com.smart.module.system.com.smart.framework.tool.code.mapper.tenant.SysTenantSubscribeMapper">
+    <sql id="columnList">
+        <!--   id 主键  索引   -->
+        id,
+        <!--   租户ID      -->
+        tenant_id,
+        <!--   套餐包ID      -->
+        package_id,
+        <!--   生效日期      -->
+        effect_time,
+        <!--   失效日期      -->
+        expire_time,
+        <!--   备注      -->
+        remark,
+        <!--   用户数      -->
+        user_number,
+        <!--   useYn      -->
+        use_yn,
+        <!--   createTime      -->
+        create_time,
+        <!--   createUserId      -->
+        create_user_id,
+        <!--   createBy      -->
+        create_by,
+        <!--   updateTime      -->
+        update_time,
+        <!--   updateUserId      -->
+        update_user_id,
+        <!--   updateBy      -->
+        update_by,
+        <!--   deleteYn      -->
+        delete_yn,
+        <!--   deleteKey      -->
+        delete_key,
+        <!--   deleteTime      -->
+        delete_time,
+        <!--   deleteBy      -->
+        delete_by,
+        <!--   deleteUserId      -->
+        delete_user_id,
+    </sql>
+
+    <resultMap id="commonResultMap" com.smart.framework.tool.code.type="com.smart.module.system.com.smart.framework.tool.code.model.tenant.SysTenantSubscribePO">
+        <!--   id 主键  索引   -->
+        <id column="id" property="id" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   租户ID      -->
+        <result column="tenant_id" property="tenantId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   套餐包ID      -->
+        <result column="package_id" property="packageId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   生效日期      -->
+        <result column="effect_time" property="effectTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+        <!--   失效日期      -->
+        <result column="expire_time" property="expireTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+        <!--   备注      -->
+        <result column="remark" property="remark" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   用户数      -->
+        <result column="user_number" property="userNumber" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   useYn      -->
+        <result column="use_yn" property="useYn" javaType="java.lang.Boolean" jdbcType="BIT"/>
+        <!--   createTime      -->
+        <result column="create_time" property="createTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+        <!--   createUserId      -->
+        <result column="create_user_id" property="createUserId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   createBy      -->
+        <result column="create_by" property="createBy" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   updateTime      -->
+        <result column="update_time" property="updateTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+        <!--   updateUserId      -->
+        <result column="update_user_id" property="updateUserId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   updateBy      -->
+        <result column="update_by" property="updateBy" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   deleteYn      -->
+        <result column="delete_yn" property="deleteYn" javaType="java.lang.Boolean" jdbcType="BIT"/>
+        <!--   deleteKey      -->
+        <result column="delete_key" property="deleteKey" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   deleteTime      -->
+        <result column="delete_time" property="deleteTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+        <!--   deleteBy      -->
+        <result column="delete_by" property="deleteBy" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   deleteUserId      -->
+        <result column="delete_user_id" property="deleteUserId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+    </resultMap>
+</com.smart.framework.tool.code.mapper>

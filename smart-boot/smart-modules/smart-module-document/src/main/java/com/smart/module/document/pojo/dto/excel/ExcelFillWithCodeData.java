@@ -1,7 +1,7 @@
 package com.smart.module.document.pojo.dto.excel;
 
-import com.smart.document.model.code.BarcodeGeneratorData;
-import com.smart.document.model.code.QrcodeGeneratorData;
+import com.smart.framework.document.model.code.BarcodeGeneratorData;
+import com.smart.framework.document.model.code.QrcodeGeneratorData;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;

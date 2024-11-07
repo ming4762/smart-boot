@@ -1,0 +1,69 @@
+package com.smart.boot.actuate.redis.points;
+
+import com.smart.boot.actuate.redis.constants.RedisEndPointIdConstant;
+import com.smart.framework.commons.core.message.Result;
+import com.smart.framework.redis.constants.RedisInfoParameterEnum;
+import com.smart.framework.redis.constants.RedisInfoResultEnum;
+import com.smart.framework.redis.model.RedisInfo;
+import com.smart.framework.redis.service.RedisService;
+import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
+import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
+import org.springframework.boot.actuate.endpoint.annotation.Selector;
+import org.springframework.util.CollectionUtils;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+/**
+ * Redis INFO端点
+ * @author ShiZhongMing
+ * 2022/2/24
+ * @since 2.0.0
+ */
+@Endpoint(id = RedisEndPointIdConstant.INFO)
+public class RedisInfoEndPoint {
+
+    private static final String DB_PREFIX = "db";
+
+    private static final Map<String, RedisInfoResultEnum> REDIS_INFO_RESULT_MAP = Arrays.stream(RedisInfoResultEnum.values())
+            .collect(Collectors.toMap(RedisInfoResultEnum::getValue, item -> item));
+
+    private final RedisService redisService;
+
+    public RedisInfoEndPoint(RedisService redisService) {
+        this.redisService = redisService;
+    }
+
+    @ReadOperation
+    public Object info(@Selector String parameter) {
+        List<RedisInfoParameterEnum> parameterList = Arrays.stream(RedisInfoParameterEnum.values())
+                .filter(item -> item.getParameter().equals(parameter))
+                .toList();
+        if (CollectionUtils.isEmpty(parameterList)) {
+            return Result.failure(String.format("redis info 参数错误，只能是以下值[%s]", Arrays.stream(RedisInfoParameterEnum.values()).map(RedisInfoParameterEnum::getParameter).collect(Collectors.joining(","))));
+        }
+        return this.convertRedisInfo(this.redisService.info(parameterList.getFirst()));
+    }
+
+    @ReadOperation
+    public Object defaultInfo() {
+        return this.convertRedisInfo(this.redisService.info(null));
+    }
+
+
+    private List<RedisInfo> convertRedisInfo(Map<String, String> redisInfo) {
+        return redisInfo.entrySet().stream()
+                .map(item -> {
+                    RedisInfoResultEnum redisInfoResultEnum = REDIS_INFO_RESULT_MAP.get(item.getKey());
+                    if (item.getKey().startsWith(DB_PREFIX)) {
+                        return new RedisInfo(RedisInfoParameterEnum.KEYSPACE.getParameter(), item.getKey(), item.getValue(), RedisInfoParameterEnum.KEYSPACE.getDescription());
+                    }
+                    if (redisInfoResultEnum == null) {
+                        return null;
+                    }
+                    return new RedisInfo(redisInfoResultEnum.getParameter().getParameter(), item.getKey(), item.getValue(), redisInfoResultEnum.getDescription());
+                }).filter(Objects::nonNull)
+                .sorted(Comparator.comparing(RedisInfo::group).thenComparing(RedisInfo::key))
+                .toList();
+    }
+}

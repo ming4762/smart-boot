@@ -1,6 +1,6 @@
 package com.smart.module.api.system;
 
-import com.smart.commons.core.dto.auth.UserAccountData;
+import com.smart.framework.commons.core.dto.auth.UserAccountData;
 import com.smart.module.api.system.dto.AuthUserDTO;
 import com.smart.module.api.system.dto.QueryUserAccountDTO;
 import com.smart.module.api.system.parameter.UserAccountUnLockParameter;

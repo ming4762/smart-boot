@@ -1,0 +1,106 @@
+package com.smart.module.system.controller;
+
+import com.smart.framework.auth.core.utils.AuthUtils;
+import com.smart.framework.commons.core.log.Log;
+import com.smart.framework.commons.core.log.LogOperationTypeEnum;
+import com.smart.framework.commons.core.message.Result;
+import com.smart.framework.crud.controller.BaseController;
+import com.smart.framework.crud.query.IdParameter;
+import com.smart.framework.crud.query.PageSortQuery;
+import com.smart.framework.crud.query.StringParameter;
+import com.smart.module.system.constants.SystemConstantEnum;
+import com.smart.module.system.model.SysDictItemPO;
+import com.smart.module.system.model.SysDictPO;
+import com.smart.module.system.pojo.dto.dict.SysDictSaveUpdateDTO;
+import com.smart.module.system.service.SysDictService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.springframework.beans.BeanUtils;
+import org.springframework.lang.NonNull;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
+
+/**
+* sys_dict - 系统字典表 Controller
+* @author GCCodeGenerator
+* 2022-1-29 10:34:36
+*/
+@RestController
+@RequestMapping("sys/dict")
+@Tag(name = "数据字典-字典分组管理")
+public class SysDictController extends BaseController<SysDictService, SysDictPO> {
+
+    @Override
+    @PostMapping("list")
+    @Operation(summary = "查询角色列表（支持分页、实体类属性查询）")
+    public Result<Object> list(@RequestBody @NonNull PageSortQuery parameter) {
+        return super.list(parameter);
+    }
+
+    @PostMapping("listFilterTenant")
+    @Operation(summary = "查询角色列表（支持分页、实体类属性查询）")
+    public Result<Object> listFilterTenant(@RequestBody @NonNull PageSortQuery parameter) {
+        parameter.getParameter().put(SystemConstantEnum.LIST_FILTER_TENANT, Boolean.TRUE);
+        parameter.getParameter().put(SystemConstantEnum.LIST_WITH_TENANT, Boolean.TRUE);
+        return super.list(parameter);
+    }
+
+    @Operation(summary = "保存/更新系统字典表")
+    @PostMapping("saveUpdate")
+    @Log(value = "保存/更新系统字典表", type = LogOperationTypeEnum.UPDATE)
+    @PreAuthorize("hasPermission('sys:dict', 'save') or hasPermission('sys:dict', 'update')")
+    public Result<Boolean> saveUpdate(@RequestBody @Valid SysDictSaveUpdateDTO parameter) {
+        if (Boolean.TRUE.equals(parameter.getTenantCommonYn()) && !AuthUtils.isPlatformTenant()) {
+            throw new AccessDeniedException("非平台管理租户无权添加平台通用字典");
+        }
+        SysDictPO model = new SysDictPO();
+        BeanUtils.copyProperties(parameter, model);
+        if (Boolean.FALSE.equals(parameter.getTenantCommonYn()) && AuthUtils.isPlatformTenant()) {
+            model.setTenantId(AuthUtils.getNonNullCurrentTenantId());
+        }
+        return super.saveUpdate(model);
+    }
+
+    @Override
+    @Operation(summary = "通过ID批量删除系统字典表")
+    @PostMapping("batchDeleteById")
+    @Log(value = "通过ID批量删除系统字典表", type = LogOperationTypeEnum.DELETE)
+    @PreAuthorize("hasPermission('sys:dict', 'delete')")
+    public Result<Boolean> batchDeleteById(@RequestBody List<Serializable> idList) {
+        if (CollectionUtils.isEmpty(idList)) {
+            return Result.success(false);
+        }
+        return super.batchDeleteById(idList);
+    }
+
+    @Operation(summary = "通过ID查询")
+    @PostMapping("getById")
+    public Result<SysDictPO> getById(@RequestBody @Valid IdParameter parameter) {
+        return super.getById(parameter.getId());
+    }
+
+    @Operation(summary = "通过code查询item")
+    @PostMapping("listItemByCode")
+    public Result<List<SysDictItemPO>> listItemByCode(@RequestBody StringParameter parameter) {
+        return Result.success(this.service.listItemByCode(parameter.getValue()));
+    }
+
+    @Operation(summary = "批量通过code查询item")
+    @PostMapping("batchListItemByCode")
+    public Result<Map<String, List<SysDictItemPO>>> batchListItemByCode(@RequestBody List<String> dictCodeList) {
+        if (CollectionUtils.isEmpty(dictCodeList)) {
+            return Result.success();
+        }
+        return Result.success(this.service.listItemByCode(dictCodeList));
+    }
+}

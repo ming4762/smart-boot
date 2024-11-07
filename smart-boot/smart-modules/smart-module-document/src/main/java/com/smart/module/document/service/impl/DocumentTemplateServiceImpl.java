@@ -2,8 +2,8 @@ package com.smart.module.document.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.common.collect.Lists;
-import com.smart.crud.query.PageSortQuery;
-import com.smart.crud.service.BaseServiceImpl;
+import com.smart.framework.crud.query.PageSortQuery;
+import com.smart.framework.crud.service.BaseServiceImpl;
 import com.smart.module.document.mapper.DocumentTemplateMapper;
 import com.smart.module.document.model.DocumentTemplatePO;
 import com.smart.module.document.service.DocumentTemplateService;

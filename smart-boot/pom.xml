@@ -18,7 +18,6 @@
 
         <spring-boot.version>3.3.5</spring-boot.version>
         <spring-cloud.version>2023.0.3</spring-cloud.version>
-        <smart-boot.version>5.0.0-SNAPSHOT</smart-boot.version>
         <spring-cloud-alibaba.version>2023.0.1.0</spring-cloud-alibaba.version>
 
         <guava.version>33.0.0-jre</guava.version>
@@ -67,20 +66,12 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>smart-auth</module>
-        <module>smart-autoconfigure</module>
-        <module>smart-cloud</module>
-        <module>smart-commons</module>
-        <module>smart-database</module>
-        <module>smart-document</module>
-        <module>smart-file</module>
-        <module>smart-kettle</module>
-        <module>smart-license</module>
-        <module>smart-message</module>
+        <module>smart-boot-framework</module>
+        <module>smart-framework</module>
+
+        <module>smart-cloud-framework</module>
         <module>smart-module-api</module>
         <module>smart-modules</module>
-        <module>smart-monitor</module>
-        <module>smart-starter</module>
         <module>smart-services</module>
     </modules>
 
@@ -133,7 +124,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
                 <version>${spring-boot.version}</version>
-                <type>pom</type>
+                <com.smart.framework.tool.code.type>pom</com.smart.framework.tool.code.type>
                 <scope>import</scope>
             </dependency>
             <!--      spring cloud      -->
@@ -141,7 +132,7 @@
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
                 <version>${spring-cloud.version}</version>
-                <type>pom</type>
+                <com.smart.framework.tool.code.type>pom</com.smart.framework.tool.code.type>
                 <scope>import</scope>
             </dependency>
             <!--      spring-cloud-alibaba      -->
@@ -149,32 +140,20 @@
                 <groupId>com.alibaba.cloud</groupId>
                 <artifactId>spring-cloud-alibaba-dependencies</artifactId>
                 <version>${spring-cloud-alibaba.version}</version>
-                <type>pom</type>
+                <com.smart.framework.tool.code.type>pom</com.smart.framework.tool.code.type>
                 <scope>import</scope>
             </dependency>
 
             <dependency>
                 <groupId>com.smart</groupId>
-                <artifactId>crud-spring-boot-starter</artifactId>
-                <version>${smart-boot.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.smart</groupId>
                 <artifactId>smart-commons-core</artifactId>
-                <version>${smart-boot.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.smart</groupId>
-                <artifactId>smart-autoconfigure</artifactId>
-                <version>${smart-boot.version}</version>
+                <version>${project.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.smart</groupId>
                 <artifactId>smart-message-core</artifactId>
-                <version>${smart-boot.version}</version>
+                <version>${project.version}</version>
             </dependency>
 
             <dependency>
@@ -238,22 +217,29 @@
                 <artifactId>mybatis-plus-boot-starter</artifactId>
                 <version>${mybatis-plus.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
                 <version>${mybatis-plus.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-jsqlparser</artifactId>
                 <version>${mybatis-plus.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-annotation</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-extension</artifactId>
                 <version>${mybatis-plus.version}</version>
             </dependency>
 
@@ -306,7 +292,7 @@
             <!--引入kettle支持-->
             <dependency>
                 <groupId>org.pentaho</groupId>
-                <artifactId>kettle-engine</artifactId>
+                <artifactId>kettle-com.smart.framework.tool.code.engine</artifactId>
                 <version>${kettle.version}</version>
             </dependency>
             <dependency>
@@ -352,6 +338,11 @@
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid</artifactId>
                 <version>${druid.version}</version>
             </dependency>
 
@@ -482,7 +473,7 @@
                 <groupId>software.amazon.awssdk</groupId>
                 <artifactId>bom</artifactId>
                 <version>${amazon.aws.version}</version>
-                <type>pom</type>
+                <com.smart.framework.tool.code.type>pom</com.smart.framework.tool.code.type>
                 <scope>import</scope>
             </dependency>
             <dependency>
@@ -493,7 +484,7 @@
 
             <dependency>
                 <groupId>com.aliyun</groupId>
-                <artifactId>alibaba-dingtalk-service-sdk</artifactId>
+                <artifactId>alibaba-dingtalk-com.smart.framework.tool.code.service-sdk</artifactId>
                 <version>${dingtalk.server.old.version}</version>
                 <exclusions>
                     <exclusion>
@@ -506,6 +497,11 @@
             <dependency>
                 <groupId>org.redisson</groupId>
                 <artifactId>redisson-spring-boot-starter</artifactId>
+                <version>${redisson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson</artifactId>
                 <version>${redisson.version}</version>
             </dependency>
         </dependencies>
@@ -559,14 +555,14 @@
     <repositories>
         <repository>
             <id>smart-boot</id>
-            <url>http://maven.gc-it.cn/repository/maven-public/</url>
+            <url>https://maven.gc-it.cn/repository/maven-public/</url>
         </repository>
     </repositories>
 
     <pluginRepositories>
         <pluginRepository>
             <id>smart-boot</id>
-            <url>http://maven.gc-it.cn/repository/maven-public/</url>
+            <url>https://maven.gc-it.cn/repository/maven-public/</url>
         </pluginRepository>
     </pluginRepositories>
 

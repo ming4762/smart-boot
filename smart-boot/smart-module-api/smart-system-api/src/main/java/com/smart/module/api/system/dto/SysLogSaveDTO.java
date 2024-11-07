@@ -1,7 +1,7 @@
 package com.smart.module.api.system.dto;
 
-import com.smart.commons.core.log.LogOperationTypeEnum;
-import com.smart.commons.core.log.LogSourceEnum;
+import com.smart.framework.commons.core.log.LogOperationTypeEnum;
+import com.smart.framework.commons.core.log.LogSourceEnum;
 import lombok.*;
 
 import java.io.Serializable;

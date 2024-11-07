@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE com.smart.framework.tool.code.mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-com.smart.framework.tool.code.mapper.dtd">
+<com.smart.framework.tool.code.mapper namespace="com.smart.module.system.com.smart.framework.tool.code.mapper.CommonMapper">
+    <update id="updateHasChild">
+        update ${tableName}
+        set has_child = (select case when A.count_num > 0 then 1 else 0 end
+            from (select count(*) count_num from ${tableName} where ${parentField} = #{id}) A)
+        where ${idField} = #{id}
+    </update>
+</com.smart.framework.tool.code.mapper>

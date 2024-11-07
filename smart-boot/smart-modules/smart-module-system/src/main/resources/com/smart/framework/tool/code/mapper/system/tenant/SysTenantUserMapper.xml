@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE com.smart.framework.tool.code.mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-com.smart.framework.tool.code.mapper.dtd">
+<com.smart.framework.tool.code.mapper namespace="com.smart.module.system.com.smart.framework.tool.code.mapper.tenant.SysTenantUserMapper">
+    <sql id="columnList">
+        <!--   id 主键  索引   -->
+        id,
+        <!--   tenantId      -->
+        tenant_id,
+        <!--   userId      -->
+        user_id,
+        <!--   createTime      -->
+        create_time,
+        <!--   createUserId      -->
+        create_user_id,
+        <!--   createBy      -->
+        create_by
+    </sql>
+
+    <resultMap id="commonResultMap" com.smart.framework.tool.code.type="com.smart.module.system.com.smart.framework.tool.code.model.tenant.SysTenantUserPO">
+        <!--   id 主键  索引   -->
+        <id column="id" property="id" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   tenantId      -->
+        <result column="tenant_id" property="tenantId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   userId      -->
+        <result column="user_id" property="userId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   createTime      -->
+        <result column="create_time" property="createTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+        <!--   createUserId      -->
+        <result column="create_user_id" property="createUserId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   createBy      -->
+        <result column="create_by" property="createBy" javaType="java.lang.String" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--  查询租户对应用户  -->
+    <select id="listTenantUser" resultType="com.smart.module.system.com.smart.framework.tool.code.pojo.dbo.tenant.SysTenantUserListDO">
+        select B.id,
+               B.tenant_id,
+               B.create_by,
+               B.create_time,
+               B.create_user_id,
+               B.user_id,
+               A.username,
+               A.full_name,
+               A.email,
+               A.mobile,
+               C.id account_id
+        from sys_user A
+        join sys_tenant_user B on A.user_id = B.user_id
+        left outer join sys_user_account C on A.user_id = C.user_id and B.tenant_id = C.tenant_id
+            ${ew.customSqlSegment}
+
+    </select>
+
+    <!--  根据用户ID查询满足条件的一个租户  -->
+    <select id="listTenantByUser" resultType="com.smart.module.system.com.smart.framework.tool.code.pojo.dbo.tenant.SysTenantListByUserDO" parameterType="com.smart.module.system.com.smart.framework.tool.code.pojo.parameter.tenant.ListTenantByUserParameter">
+        select A.id tenantId,
+            A.tenant_code,
+            A.tenant_name,
+            A.tenant_short_name,
+            A.platform_yn,
+            B.use_yn
+        from sys_tenant A
+        JOIN sys_tenant_user B ON A.id = B.tenant_id
+        WHERE user_id = #{userId}
+            AND A.delete_yn = 0
+            AND A.use_yn = 1
+            AND (
+                (A.expire_time is null AND A.expire_time Is null)
+                OR
+                (A.effect_time &lt;= #{now} AND A.expire_time &gt;= #{now})
+            )
+        order by case when B.default_yn = 1 then 1 else 2 end, A.seq
+    </select>
+
+    <!--  根据租户角色查询功能ID  -->
+    <select id="listTenantRoleFunctionIds" resultType="java.lang.Long" parameterType="com.smart.module.system.com.smart.framework.tool.code.pojo.dto.tenant.SysListTenantRoleFunctionDTO">
+        select distinct D.function_id
+        from sys_tenant_subscribe A
+        join sys_tenant_package B on A.package_id = B.id
+        join sys_tenant_package_function C on C.tenant_package_id = B.id
+        join sys_role_function D on D.function_id = C.function_id
+        join sys_role M on D.role_id = M.role_id and M.tenant_id = A.tenant_id
+        where A.effect_time  &lt;= #{now}
+            and A.expire_time &gt;= #{now}
+            and B.effect_time  &lt;= #{now}
+            and B.expire_time &gt;= #{now}
+            and A.tenant_id = #{tenantId}
+            and D.role_id in (
+            <foreach collection="roleIdList" item="item" separator=",">
+                #{item}
+            </foreach>
+            )
+    </select>
+    <!--  查询租户所有有效订阅菜单ID  -->
+    <select id="listTenantFunctionIds" resultType="java.lang.Long" parameterType="com.smart.module.system.com.smart.framework.tool.code.pojo.dto.tenant.SysListTenantFunctionDTO">
+        select distinct C.function_id
+        from sys_tenant_subscribe A
+        join sys_tenant_package B on A.package_id = B.id
+        join sys_tenant_package_function C on C.tenant_package_id = B.id
+        where A.effect_time  &lt;= #{now}
+          and A.expire_time &gt;= #{now}
+          and B.effect_time  &lt;= #{now}
+          and B.expire_time &gt;= #{now}
+          and A.tenant_id = #{tenantId}
+    </select>
+</com.smart.framework.tool.code.mapper>

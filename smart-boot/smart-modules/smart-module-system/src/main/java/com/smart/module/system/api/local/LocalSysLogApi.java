@@ -1,0 +1,38 @@
+package com.smart.module.system.api.local;
+
+import com.smart.module.api.system.SysLogApi;
+import com.smart.module.api.system.dto.SysLogSaveDTO;
+import com.smart.module.system.model.SysLogPO;
+import com.smart.module.system.service.SysLogService;
+import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Component;
+
+/**
+ * local 系统日志API
+ * @author zhongming4762
+ * 2023/3/11
+ */
+@Component
+@Primary
+public class LocalSysLogApi implements SysLogApi {
+
+    private final SysLogService sysLogService;
+
+    public LocalSysLogApi(SysLogService sysLogService) {
+        this.sysLogService = sysLogService;
+    }
+
+    /**
+     * 保存日志
+     *
+     * @param parameter 参数
+     * @return 是否保存成功
+     */
+    @Override
+    public Boolean saveLog(SysLogSaveDTO parameter) {
+        SysLogPO po = new SysLogPO();
+        BeanUtils.copyProperties(parameter, po);
+        return this.sysLogService.save(po);
+    }
+}

@@ -1,0 +1,2 @@
+com.smart.module.auth.AuthMethodSecurityAutoConfiguration
+com.smart.module.auth.AuthSecurity2AutoConfiguration
