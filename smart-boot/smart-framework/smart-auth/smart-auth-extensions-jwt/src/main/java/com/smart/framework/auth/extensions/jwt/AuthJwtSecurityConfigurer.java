@@ -92,7 +92,7 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
     }
 
     private String getLoginUrl() {
-        return this.serviceProvider.loginUrl;
+        return Optional.ofNullable(this.serviceProvider.logoutUrl).orElse(JwtLogoutFilter.LOGOUT_URL);
     }
 
     @Override

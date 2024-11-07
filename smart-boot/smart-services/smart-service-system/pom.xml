@@ -45,11 +45,11 @@
 		</dependency>
 
 		<!--	短信登录支持	-->
-		<dependency>
-			<groupId>com.smart</groupId>
-			<artifactId>smart-boot-starter-auth-sms</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>com.smart</groupId>-->
+<!--			<artifactId>smart-boot-starter-auth-sms</artifactId>-->
+<!--			<version>${project.version}</version>-->
+<!--		</dependency>-->
 
 		<!--	基础支持：国际化、异常处理	-->
 		<dependency>

@@ -21,7 +21,7 @@ public interface MapperPackageConstants {
     /**
      * 代码生成器模块
      */
-    String DATABASE_GENERATOR = "com.smart.module.db.generator.mapper";
+    String DATABASE_GENERATOR = "com.smart.module.code.mapper";
 
     /**
      * 监控服务端mapper扫描
@@ -41,7 +41,7 @@ public interface MapperPackageConstants {
     /**
      * 消息模块
      */
-    String MODULE_MESSAGE = "com.smart.module.message.manager.mapper";
+    String MODULE_MESSAGE = "com.smart.module.message.mapper";
 
     /**
      * kettle模块扫描
