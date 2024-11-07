@@ -1,6 +1,7 @@
 package com.smart.boot.autoconfigure.monitor;
 
 import com.smart.boot.autoconfigure.redis.SmartRedisAutoConfiguration;
+import com.smart.framework.monitor.server.SmartMonitorServer;
 import com.smart.framework.monitor.server.client.repository.ClientRepository;
 import com.smart.framework.monitor.server.client.repository.RedisClientRepositoryImpl;
 import com.smart.framework.monitor.server.common.MonitorServerProperties;
@@ -8,6 +9,7 @@ import com.smart.framework.redis.service.RedisService;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +23,7 @@ import org.springframework.context.annotation.Configuration;
 @AutoConfigureAfter(SmartRedisAutoConfiguration.class)
 @AutoConfigureBefore(MonitorServerAutoConfiguration.class)
 @ConditionalOnBean(RedisService.class)
+@ConditionalOnClass(SmartMonitorServer.class)
 public class MonitorServerRedisClientRepositoryAutoConfiguration {
 
     @Bean

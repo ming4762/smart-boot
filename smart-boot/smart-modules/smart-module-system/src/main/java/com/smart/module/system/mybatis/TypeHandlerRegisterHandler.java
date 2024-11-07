@@ -4,7 +4,6 @@ import com.smart.module.system.mybatis.type.FunctionTypeTypeHandler;
 import com.smart.module.system.mybatis.type.LogSourceTypeHandler;
 import com.smart.module.system.mybatis.type.MaxConnectionsPolicyTypeHandler;
 import com.smart.module.system.mybatis.type.UserAccountStatusTypeHandler;
-import com.smart.system.mybatis.type.*;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;

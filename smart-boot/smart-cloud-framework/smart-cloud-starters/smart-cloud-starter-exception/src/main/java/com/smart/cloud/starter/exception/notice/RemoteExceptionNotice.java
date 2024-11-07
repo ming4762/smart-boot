@@ -2,6 +2,7 @@ package com.smart.cloud.starter.exception.notice;
 
 import com.smart.framework.commons.core.utils.ExceptionUtils;
 import com.smart.framework.commons.core.utils.IpUtils;
+import com.smart.framework.exception.notice.AbstractCommonExcludeExceptionNotice;
 import com.smart.module.api.system.SysExceptionApi;
 import com.smart.module.api.system.dto.SysExceptionSaveDTO;
 import jakarta.servlet.http.HttpServletRequest;

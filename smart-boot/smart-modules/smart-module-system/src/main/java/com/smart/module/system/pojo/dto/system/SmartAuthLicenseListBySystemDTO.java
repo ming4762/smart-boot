@@ -1,6 +1,6 @@
 package com.smart.module.system.pojo.dto.system;
 
-import com.smart.crud.query.PageSortQuery;
+import com.smart.framework.crud.query.PageSortQuery;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;

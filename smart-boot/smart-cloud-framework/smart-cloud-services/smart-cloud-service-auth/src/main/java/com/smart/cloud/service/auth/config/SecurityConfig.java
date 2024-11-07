@@ -1,9 +1,9 @@
 package com.smart.cloud.service.auth.config;
 
-import com.smart.auth.core.properties.AuthProperties;
+import com.smart.framework.auth.core.properties.AuthProperties;
 import com.smart.framework.auth.extensions.jwt.AuthJwtSecurityConfigurer;
-import com.smart.auth.security.config.AuthCaptchaSecurityConfigurer;
-import com.smart.auth.security.config.AuthWebSecurityConfigurerAdapter;
+import com.smart.module.auth.config.AuthCaptchaSecurityConfigurer;
+import com.smart.module.auth.config.AuthWebSecurityConfigurerAdapter;
 import lombok.SneakyThrows;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;

@@ -1,13 +1,13 @@
 package com.smart.service.system.config;
 
-import com.smart.auth.core.properties.AuthProperties;
-import com.smart.auth.core.remember.SmartAuthPersistentTokenRememberMeServices;
 import com.smart.auth.extensions.access.secret.AuthAccessSecretSecurityConfigurer;
+import com.smart.framework.auth.core.properties.AuthProperties;
+import com.smart.framework.auth.core.remember.SmartAuthPersistentTokenRememberMeServices;
 import com.smart.framework.auth.extensions.jwt.AuthJwtSecurityConfigurer;
 import com.smart.framework.auth.extensions.sms.AuthSmsSecurityConfigurer;
-import com.smart.auth.security.config.AuthCaptchaSecurityConfigurer;
-import com.smart.auth.security.config.AuthTenantSecurityConfigurer;
-import com.smart.auth.security.config.AuthWebSecurityConfigurerAdapter;
+import com.smart.module.auth.config.AuthCaptchaSecurityConfigurer;
+import com.smart.module.auth.config.AuthTenantSecurityConfigurer;
+import com.smart.module.auth.config.AuthWebSecurityConfigurerAdapter;
 import lombok.SneakyThrows;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

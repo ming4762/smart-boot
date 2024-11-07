@@ -1,9 +1,9 @@
 package com.smart.module.system.service.crud;
 
-import com.smart.auth.core.userdetails.RestUserDetails;
-import com.smart.auth.core.utils.AuthUtils;
-import com.smart.crud.service.UserProvider;
+import com.smart.framework.auth.core.utils.AuthUtils;
+import com.smart.framework.crud.service.UserProvider;
 import org.springframework.stereotype.Component;
+import com.smart.framework.auth.core.userdetails.RestUserDetails;
 
 import java.util.Optional;
 

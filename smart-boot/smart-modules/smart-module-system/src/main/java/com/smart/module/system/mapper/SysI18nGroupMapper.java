@@ -1,6 +1,6 @@
 package com.smart.module.system.mapper;
 
-import com.smart.crud.mapper.CrudBaseMapper;
+import com.smart.framework.crud.mapper.CrudBaseMapper;
 import com.smart.module.system.model.SysI18nGroupPO;
 
 /**

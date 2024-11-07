@@ -73,7 +73,7 @@ public class SmartImageCaptchaHandlerImpl implements SmartCaptchaHandler {
     public boolean validate(CaptchaValidateParameter parameter) {
         CaptchaValidateParameter.ImageParameter imageParameter = parameter.getImage();
         String cacheKey = this.getCacheKey(parameter.getKey());
-        Map<String, Object> validateData = (Map<String, Object>)this.cacheService.getAndRemove(cacheKey);
+        Map<String, Object> validateData = this.cacheService.getAndRemove(cacheKey);
         if (validateData == null) {
             return false;
         }

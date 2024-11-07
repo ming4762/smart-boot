@@ -1,9 +1,9 @@
 package com.smart.cloud.service.auth.event;
 
-import com.smart.auth.core.authentication.RestUsernamePasswordAuthenticationToken;
-import com.smart.auth.core.event.AuthEventHandler;
-import com.smart.auth.core.userdetails.RestUserDetails;
 import com.smart.cloud.api.system.feign.RemoteSysLogApi;
+import com.smart.framework.auth.core.authentication.RestUsernamePasswordAuthenticationToken;
+import com.smart.framework.auth.core.event.AuthEventHandler;
+import com.smart.framework.auth.core.userdetails.RestUserDetails;
 import com.smart.framework.commons.core.log.LogSourceEnum;
 import com.smart.module.api.system.SysLogApi;
 import com.smart.module.api.system.constants.LogIdentEnum;

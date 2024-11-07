@@ -37,10 +37,10 @@ com.smart.boot.autoconfigure.message.SmartMessageWebSocketAutoConfiguration
 com.smart.boot.autoconfigure.message.SmartSmsAliyunAutoConfiguration
 com.smart.boot.autoconfigure.message.SmartSmsTencentAutoConfiguration
 
-com.smart.boot.autoconfigure.com.smart.framework.tool.code.document.DocumentCodeZxingAutoConfiguration
-com.smart.boot.autoconfigure.com.smart.framework.tool.code.document.DocumentConvertJodAutoConfiguration
-com.smart.boot.autoconfigure.com.smart.framework.tool.code.document.DocumentConvertOfficeAutoConfiguration
-com.smart.boot.autoconfigure.com.smart.framework.tool.code.document.DocumentExcelJxlsAutoConfiguration
+com.smart.boot.autoconfigure.document.DocumentCodeZxingAutoConfiguration
+com.smart.boot.autoconfigure.document.DocumentConvertJodAutoConfiguration
+com.smart.boot.autoconfigure.document.DocumentConvertOfficeAutoConfiguration
+com.smart.boot.autoconfigure.document.DocumentExcelJxlsAutoConfiguration
 
 com.smart.boot.autoconfigure.kettle.SmartKettleAutoConfiguration
 com.smart.boot.autoconfigure.kettle.SmartKettleXxlAutoConfiguration

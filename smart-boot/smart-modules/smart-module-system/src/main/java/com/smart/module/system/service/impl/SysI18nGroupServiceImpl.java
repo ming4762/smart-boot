@@ -1,7 +1,7 @@
 package com.smart.module.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.smart.crud.service.BaseServiceImpl;
+import com.smart.framework.crud.service.BaseServiceImpl;
 import com.smart.module.system.mapper.SysI18nGroupMapper;
 import com.smart.module.system.model.SysI18nGroupPO;
 import com.smart.module.system.model.SysI18nPO;

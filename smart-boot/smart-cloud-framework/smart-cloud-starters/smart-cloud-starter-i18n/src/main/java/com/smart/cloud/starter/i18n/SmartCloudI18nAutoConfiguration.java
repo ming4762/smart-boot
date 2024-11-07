@@ -1,7 +1,7 @@
 package com.smart.cloud.starter.i18n;
 
+import com.smart.boot.autoconfigure.i18n.SmartI18nAutoConfiguration;
 import com.smart.cloud.starter.i18n.reader.RemoteResourceReader;
-import com.smart.i18n.SmartI18nAutoConfiguration;
 import com.smart.module.api.system.SysI18nApi;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.context.annotation.Bean;

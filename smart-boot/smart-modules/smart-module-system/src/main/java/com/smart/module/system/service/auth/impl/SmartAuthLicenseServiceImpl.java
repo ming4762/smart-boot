@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.smart.framework.commons.core.exception.BusinessException;
 import com.smart.framework.commons.core.exception.SystemException;
 import com.smart.framework.crud.service.BaseServiceImpl;
+import com.smart.framework.license.server.LicenseGenerator;
+import com.smart.framework.license.server.LicenseGeneratorParameter;
 import com.smart.module.api.file.SmartFileApi;
 import com.smart.module.api.file.bo.FileDownloadResult;
 import com.smart.module.api.file.bo.FileHandlerResult;

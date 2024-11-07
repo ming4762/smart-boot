@@ -74,17 +74,16 @@
             <artifactId>logback-adapter</artifactId>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>com.smart</groupId>-->
-<!--            <artifactId>smart-message-manager</artifactId>-->
-<!--            <version>${project.version}</version>-->
-<!--        </dependency>-->
-
-<!--        <dependency>-->
-<!--            <groupId>com.smart</groupId>-->
-<!--            <artifactId>i18n-spring-boot-starter</artifactId>-->
-<!--            <version>${project.version}</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-module-message</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-cloud-starter-i18n</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>com.mysql</groupId>

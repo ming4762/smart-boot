@@ -1,7 +1,7 @@
 package com.smart.module.system.service;
 
 
-import com.smart.crud.service.BaseService;
+import com.smart.framework.crud.service.BaseService;
 import com.smart.module.system.model.SysI18nGroupPO;
 
 /**

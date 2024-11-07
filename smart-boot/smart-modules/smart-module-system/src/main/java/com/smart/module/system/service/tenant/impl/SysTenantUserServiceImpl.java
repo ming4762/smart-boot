@@ -1,6 +1,6 @@
 package com.smart.module.system.service.tenant.impl;
 
-import com.smart.crud.service.BaseServiceImpl;
+import com.smart.framework.crud.service.BaseServiceImpl;
 import com.smart.module.system.mapper.tenant.SysTenantUserMapper;
 import com.smart.module.system.model.tenant.SysTenantUserPO;
 import com.smart.module.system.pojo.dbo.tenant.SysTenantListByUserDO;
@@ -33,7 +33,7 @@ public class SysTenantUserServiceImpl extends BaseServiceImpl<SysTenantUserMappe
         if (CollectionUtils.isEmpty(tenantList)) {
             return null;
         }
-        return tenantList.get(0);
+        return tenantList.getFirst();
     }
 
     /**

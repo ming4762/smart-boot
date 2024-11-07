@@ -18,7 +18,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.smart</groupId>
-			<artifactId>smart-crud</artifactId>
+			<artifactId>smart-boot-starter-crud</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

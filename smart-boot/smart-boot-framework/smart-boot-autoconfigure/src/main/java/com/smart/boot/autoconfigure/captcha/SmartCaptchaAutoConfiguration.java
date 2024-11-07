@@ -16,6 +16,7 @@ import com.smart.framework.extension.captcha.handler.SmartImageCaptchaHandlerImp
 import com.smart.framework.extension.captcha.handler.SmartTextCaptchaHandlerImpl;
 import com.smart.framework.extension.captcha.service.DefaultSmartCaptchaServiceImpl;
 import com.smart.framework.extension.captcha.service.SmartCaptchaService;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,6 +30,7 @@ import java.util.List;
  * @since 3.0.0
  */
 @Configuration(proxyBeanMethods = false)
+@ConditionalOnClass(SmartCaptchaService.class)
 public class SmartCaptchaAutoConfiguration {
 
     /**

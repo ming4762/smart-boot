@@ -1,6 +1,6 @@
 package com.smart.module.file.controller;
 
-import com.smart.auth.core.utils.AuthUtils;
+import com.smart.framework.auth.core.utils.AuthUtils;
 import com.smart.framework.commons.core.message.Result;
 import com.smart.framework.crud.constants.CrudCommonEnum;
 import com.smart.framework.crud.controller.BaseController;

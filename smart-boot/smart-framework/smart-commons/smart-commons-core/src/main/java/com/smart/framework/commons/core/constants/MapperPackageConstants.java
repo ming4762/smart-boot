@@ -11,27 +11,27 @@ public interface MapperPackageConstants {
     /**
      * 文档模块 mapper扫描路径
      */
-    String MODULE_DOCUMENT = "com.smart.module.com.smart.framework.tool.code.document.com.smart.framework.tool.code.mapper";
+    String MODULE_DOCUMENT = "com.smart.module.document.mapper";
 
     /**
      * 系统模块 mapper扫描路径
      */
-    String MODULE_SYSTEM = "com.smart.system.com.smart.framework.tool.code.mapper";
+    String MODULE_SYSTEM = "com.smart.module.system.mapper";
 
     /**
      * 代码生成器模块
      */
-    String DATABASE_GENERATOR = "com.smart.db.generator.com.smart.framework.tool.code.mapper";
+    String DATABASE_GENERATOR = "com.smart.module.db.generator.mapper";
 
     /**
      * 监控服务端mapper扫描
      */
-    String MONITOR_SERVER = "com.smart.monitor.server.manager.com.smart.framework.tool.code.mapper";
+    String MONITOR_SERVER = "com.smart.module.monitor.server.manager.mapper";
 
     /**
      * 文件管理模块 mapper扫描
      */
-    String MODULE_FILE = "com.smart.file.manager.com.smart.framework.tool.code.mapper";
+    String MODULE_FILE = "com.smart.module.file.mapper";
 
     /**
      * license模块
@@ -41,10 +41,10 @@ public interface MapperPackageConstants {
     /**
      * 消息模块
      */
-    String MODULE_MESSAGE = "com.smart.message.manager.com.smart.framework.tool.code.mapper";
+    String MODULE_MESSAGE = "com.smart.module.message.manager.mapper";
 
     /**
      * kettle模块扫描
      */
-    String MODULE_KETTLE = "com.smart.kettle.manager.com.smart.framework.tool.code.mapper";
+    String MODULE_KETTLE = "com.smart.module.kettle.manager.mapper";
 }

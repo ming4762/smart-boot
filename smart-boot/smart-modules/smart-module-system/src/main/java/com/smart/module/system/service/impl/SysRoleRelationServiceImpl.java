@@ -1,6 +1,6 @@
 package com.smart.module.system.service.impl;
 
-import com.smart.crud.service.BaseServiceImpl;
+import com.smart.framework.crud.service.BaseServiceImpl;
 import com.smart.module.system.mapper.SysRoleRelationMapper;
 import com.smart.module.system.model.SysRoleRelationPO;
 import com.smart.module.system.service.SysRoleRelationService;

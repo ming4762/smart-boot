@@ -1,11 +1,11 @@
 package com.smart.module.system.service.license;
 
 import com.google.common.collect.Lists;
-import com.smart.license.core.constants.ConstantsEnum;
-import com.smart.license.core.model.LicenseCheckProjectInfo;
-import com.smart.license.core.model.LicenseCheckServerInfo;
-import com.smart.license.server.LicenseDataProvider;
-import com.smart.license.server.LicenseGeneratorParameter;
+import com.smart.framework.license.core.constants.ConstantsEnum;
+import com.smart.framework.license.core.model.LicenseCheckProjectInfo;
+import com.smart.framework.license.core.model.LicenseCheckServerInfo;
+import com.smart.framework.license.server.LicenseDataProvider;
+import com.smart.framework.license.server.LicenseGeneratorParameter;
 import com.smart.module.system.model.SysSystemPO;
 import com.smart.module.system.pojo.vo.license.SmartAuthLicenseQueryVO;
 import com.smart.module.system.service.auth.SmartAuthLicenseService;

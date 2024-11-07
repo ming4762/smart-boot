@@ -27,11 +27,11 @@
         </dependency>
 
         <!--    文件存储支持    -->
-<!--        <dependency>-->
-<!--            <groupId>com.smart</groupId>-->
-<!--            <artifactId>smart-file-manager</artifactId>-->
-<!--            <version>${project.version}</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-module-file</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.smart</groupId>
             <artifactId>smart-file-extensions-aliyun-oss</artifactId>

@@ -31,7 +31,7 @@ public class RateLimitRegistrar implements ImportBeanDefinitionRegistrar {
         var attributes = AnnotationAttributes.fromMap(importingClassMetadata.getAnnotationAttributes(EnableRateLimit.class.getName()));
         if (attributes != null) {
             // 获取 rateLimitService name
-            var serviceName = attributes.getString("com.smart.framework.tool.code.service");
+            var serviceName = attributes.getString("service");
             if (!StringUtils.hasText(serviceName)) {
                 // 如果没有指定serviceName，则自动获取serviceName
                 serviceName = this.getDefaultServiceName(registry);
@@ -55,11 +55,11 @@ public class RateLimitRegistrar implements ImportBeanDefinitionRegistrar {
      */
     @Nullable
     private String getDefaultServiceName(BeanDefinitionRegistry registry) {
-        var hasRedisClass = ClassUtils.isPresent("com.smart.starter.redis.com.smart.framework.tool.code.service.RedisRateLimitServiceImpl", null);
+        var hasRedisClass = ClassUtils.isPresent("com.smart.framework.redis.service.RedisRateLimitServiceImpl", null);
         if (hasRedisClass) {
             return REDIS_SERVICE_NAME;
         }
-        var hasGuavaClass = ClassUtils.isPresent("com.smart.starter.cache.guava.limit.GuavaRateLimitServiceImpl", null);
+        var hasGuavaClass = ClassUtils.isPresent("com.smart.framework.cache.guava.limit.GuavaRateLimitServiceImpl", null);
         if (hasGuavaClass) {
             return GUAVA_SERVICE_NAME;
         }

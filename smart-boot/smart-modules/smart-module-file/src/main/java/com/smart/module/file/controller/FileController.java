@@ -1,6 +1,6 @@
 package com.smart.module.file.controller;
 
-import com.smart.auth.core.annotation.TempToken;
+import com.smart.framework.auth.core.annotation.TempToken;
 import com.smart.framework.commons.core.message.Result;
 import com.smart.framework.crud.query.IdParameter;
 import com.smart.framework.file.core.service.FileService;

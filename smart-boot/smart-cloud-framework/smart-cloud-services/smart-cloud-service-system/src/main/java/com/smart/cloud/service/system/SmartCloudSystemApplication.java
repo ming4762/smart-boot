@@ -2,8 +2,8 @@ package com.smart.cloud.service.system;
 
 import com.smart.framework.commons.core.spring.EnabledCustomObjectMapper;
 import com.smart.framework.commons.core.validate.EnableGlobalValidator;
-import com.smart.crud.spring.EnableMybatisPlusTenant;
-import com.smart.i18n.config.EnableValidatorI18nSource;
+import com.smart.framework.crud.spring.EnableMybatisPlusTenant;
+import com.smart.framework.i18n.config.EnableValidatorI18nSource;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;

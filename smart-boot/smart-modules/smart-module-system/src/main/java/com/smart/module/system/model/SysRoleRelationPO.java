@@ -3,7 +3,7 @@ package com.smart.module.system.model;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.smart.crud.model.BaseModelCreateUserTime;
+import com.smart.framework.crud.model.BaseModelCreateUserTime;
 import com.smart.module.system.constants.RoleRelationTypeEnum;
 import lombok.Getter;
 import lombok.Setter;

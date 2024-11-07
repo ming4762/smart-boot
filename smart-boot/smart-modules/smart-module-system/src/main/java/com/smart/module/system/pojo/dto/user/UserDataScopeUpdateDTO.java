@@ -1,6 +1,6 @@
 package com.smart.module.system.pojo.dto.user;
 
-import com.smart.crud.datapermission.DataPermissionScope;
+import com.smart.framework.crud.datapermission.DataPermissionScope;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

@@ -7,9 +7,9 @@
 		<artifactId>smart-services</artifactId>
 		<version>5.0.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>smart-com.smart.framework.tool.code.service-system</artifactId>
+	<artifactId>smart-com-system</artifactId>
 	<version>5.0.0-SNAPSHOT</version>
-	<name>smart-com.smart.framework.tool.code.service-system</name>
+	<name>smart-service-system</name>
 	<description>服务-系统管理</description>
 
 	<modules>
@@ -40,7 +40,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.smart</groupId>
-			<artifactId>smart-auth-cache-redis</artifactId>
+			<artifactId>smart-boot-starter-auth-cache-redis</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
@@ -57,6 +57,12 @@
 			<artifactId>smart-boot-starter-i18n</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid-spring-boot-3-starter</artifactId>
+		</dependency>
+
 <!--		<dependency>-->
 <!--			<groupId>com.smart</groupId>-->
 <!--			<artifactId>i18n-spring-boot-starter</artifactId>-->
@@ -168,7 +174,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<version>${spring-boot.version}</version>
 				<configuration>
-					<mainClass>com.smart.com.smart.framework.tool.code.service.system.SmartServiceSystemApplication</mainClass>
+					<mainClass>com.smart.service.system.SmartServiceSystemApplication</mainClass>
 				</configuration>
 				<executions>
 					<execution>

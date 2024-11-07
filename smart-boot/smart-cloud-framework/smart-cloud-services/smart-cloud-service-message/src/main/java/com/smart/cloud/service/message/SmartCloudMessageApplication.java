@@ -2,7 +2,7 @@ package com.smart.cloud.service.message;
 
 import com.smart.framework.commons.core.spring.EnabledCustomObjectMapper;
 import com.smart.framework.commons.core.validate.EnableGlobalValidator;
-import com.smart.i18n.config.EnableValidatorI18nSource;
+import com.smart.framework.i18n.config.EnableValidatorI18nSource;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;

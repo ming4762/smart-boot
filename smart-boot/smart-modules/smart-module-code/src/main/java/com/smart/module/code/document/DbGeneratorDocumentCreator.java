@@ -1,10 +1,10 @@
 package com.smart.module.code.document;
 
 import com.google.common.collect.Lists;
-import com.smart.db.generator.constants.FromControlTypeEnum;
-import com.smart.db.generator.constants.RuleTriggerEnum;
-import com.smart.db.generator.constants.RuleTypeEnum;
 import com.smart.framework.commons.core.document.DocumentVO;
+import com.smart.module.code.constants.FromControlTypeEnum;
+import com.smart.module.code.constants.RuleTriggerEnum;
+import com.smart.module.code.constants.RuleTypeEnum;
 
 import java.util.Arrays;
 import java.util.List;

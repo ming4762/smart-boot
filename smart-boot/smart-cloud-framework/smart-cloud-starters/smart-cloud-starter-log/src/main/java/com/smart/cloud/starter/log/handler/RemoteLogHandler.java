@@ -2,6 +2,8 @@ package com.smart.cloud.starter.log.handler;
 
 import com.smart.cloud.api.system.feign.RemoteSysLogApi;
 import com.smart.framework.commons.core.log.Log;
+import com.smart.framework.log.handler.LogHandler;
+import com.smart.framework.log.model.SysLog;
 import com.smart.module.api.system.dto.SysLogSaveDTO;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.beans.BeanUtils;

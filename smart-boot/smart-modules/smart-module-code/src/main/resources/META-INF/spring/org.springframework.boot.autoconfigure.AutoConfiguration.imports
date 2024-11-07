@@ -1,2 +1,2 @@
-com.smart.db.generator.com.smart.framework.tool.code.DatabaseGeneratorAutoConfiguration
-com.smart.db.generator.com.smart.framework.tool.code.SmartFreemarkerAutoConfiguration
+com.smart.module.code.DatabaseGeneratorAutoConfiguration
+com.smart.module.code.SmartFreemarkerAutoConfiguration
