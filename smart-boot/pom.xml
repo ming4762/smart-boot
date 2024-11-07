@@ -124,7 +124,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
                 <version>${spring-boot.version}</version>
-                <com.smart.framework.tool.code.type>pom</com.smart.framework.tool.code.type>
+                <type>pom</type>
                 <scope>import</scope>
             </dependency>
             <!--      spring cloud      -->
@@ -132,7 +132,7 @@
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
                 <version>${spring-cloud.version}</version>
-                <com.smart.framework.tool.code.type>pom</com.smart.framework.tool.code.type>
+                <type>pom</type>
                 <scope>import</scope>
             </dependency>
             <!--      spring-cloud-alibaba      -->
@@ -140,7 +140,7 @@
                 <groupId>com.alibaba.cloud</groupId>
                 <artifactId>spring-cloud-alibaba-dependencies</artifactId>
                 <version>${spring-cloud-alibaba.version}</version>
-                <com.smart.framework.tool.code.type>pom</com.smart.framework.tool.code.type>
+                <type>pom</type>
                 <scope>import</scope>
             </dependency>
 
@@ -292,7 +292,7 @@
             <!--引入kettle支持-->
             <dependency>
                 <groupId>org.pentaho</groupId>
-                <artifactId>kettle-com.smart.framework.tool.code.engine</artifactId>
+                <artifactId>kettle-engine</artifactId>
                 <version>${kettle.version}</version>
             </dependency>
             <dependency>
@@ -473,7 +473,7 @@
                 <groupId>software.amazon.awssdk</groupId>
                 <artifactId>bom</artifactId>
                 <version>${amazon.aws.version}</version>
-                <com.smart.framework.tool.code.type>pom</com.smart.framework.tool.code.type>
+                <type>pom</type>
                 <scope>import</scope>
             </dependency>
             <dependency>
@@ -484,7 +484,7 @@
 
             <dependency>
                 <groupId>com.aliyun</groupId>
-                <artifactId>alibaba-dingtalk-com.smart.framework.tool.code.service-sdk</artifactId>
+                <artifactId>alibaba-dingtalk-service-sdk</artifactId>
                 <version>${dingtalk.server.old.version}</version>
                 <exclusions>
                     <exclusion>

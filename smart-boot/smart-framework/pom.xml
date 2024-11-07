@@ -18,7 +18,7 @@
         <module>smart-cache-guava</module>
         <module>smart-commons</module>
         <module>smart-crud</module>
-        <module>smart-com.smart.framework.tool.code.document</module>
+        <module>smart-document</module>
         <module>smart-exception</module>
         <module>smart-extensions</module>
         <module>smart-file</module>

@@ -4,12 +4,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.smart</groupId>
-		<artifactId>smart-com.smart.framework.tool.code.document</artifactId>
+		<artifactId>smart-document</artifactId>
 		<version>5.0.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>smart-com.smart.framework.tool.code.document-core</artifactId>
+	<artifactId>smart-document-core</artifactId>
 	<version>5.0.0-SNAPSHOT</version>
-	<name>smart-com.smart.framework.tool.code.document-core</name>
+	<name>smart-document-core</name>
 	<description>文档核心模块</description>
 
 	<dependencies>

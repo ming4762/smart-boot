@@ -7,18 +7,18 @@
         <artifactId>smart-framework</artifactId>
         <version>5.0.0-SNAPSHOT</version>
     </parent>
-    <artifactId>smart-com.smart.framework.tool.code.document</artifactId>
+    <artifactId>smart-document</artifactId>
     <version>5.0.0-SNAPSHOT</version>
-    <name>smart-com.smart.framework.tool.code.document</name>
+    <name>smart-document</name>
     <description>document工具包</description>
     <packaging>pom</packaging>
 
     <modules>
-        <module>smart-com.smart.framework.tool.code.document-code-zxing</module>
-        <module>smart-com.smart.framework.tool.code.document-converter-jod</module>
-        <module>smart-com.smart.framework.tool.code.document-converter-office</module>
-        <module>smart-com.smart.framework.tool.code.document-core</module>
-        <module>smart-com.smart.framework.tool.code.document-excel-jxls</module>
+        <module>smart-document-code-zxing</module>
+        <module>smart-document-converter-jod</module>
+        <module>smart-document-converter-office</module>
+        <module>smart-document-core</module>
+        <module>smart-document-excel-jxls</module>
     </modules>
 
     <properties>
