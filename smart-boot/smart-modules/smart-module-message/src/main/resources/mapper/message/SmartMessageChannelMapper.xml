@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE com.smart.framework.tool.code.mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-com.smart.framework.tool.code.mapper.dtd">
-<com.smart.framework.tool.code.mapper namespace="com.smart.module.message.com.smart.framework.tool.code.mapper.SmartMessageChannelMapper">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smart.module.message.mapper.SmartMessageChannelMapper">
     <sql id="columnList">
         <!--   id 主键  索引   -->
         id,
@@ -34,7 +34,7 @@
         update_by,
     </sql>
 
-    <resultMap id="commonResultMap" com.smart.framework.tool.code.type="com.smart.module.message.com.smart.framework.tool.code.model.SmartMessageChannelPO">
+    <resultMap id="commonResultMap" type="com.smart.module.message.model.SmartMessageChannelPO">
         <!--   id 主键  索引   -->
         <id column="id" property="id" javaType="java.lang.Long" jdbcType="BIGINT"/>
         <!--   通道编码      -->
@@ -66,4 +66,4 @@
         <!--   updateBy      -->
         <result column="update_by" property="updateBy" javaType="java.lang.String" jdbcType="VARCHAR"/>
     </resultMap>
-</com.smart.framework.tool.code.mapper>
+</mapper>

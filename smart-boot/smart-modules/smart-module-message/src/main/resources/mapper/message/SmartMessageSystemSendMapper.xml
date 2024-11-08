@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE com.smart.framework.tool.code.mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-com.smart.framework.tool.code.mapper.dtd">
-<com.smart.framework.tool.code.mapper namespace="com.smart.module.message.com.smart.framework.tool.code.mapper.SmartMessageSystemSendMapper">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smart.module.message.mapper.SmartMessageSystemSendMapper">
     <sql id="columnList">
         <!--   id      -->
         id,
@@ -29,7 +29,7 @@
     </sql>
 
     <!--  查询发送的消息  -->
-    <select id="listSendMessage" resultType="com.smart.module.message.com.smart.framework.tool.code.pojo.dbo.SmartMessageSendMessageDO">
+    <select id="listSendMessage" resultType="com.smart.module.message.pojo.dbo.SmartMessageSendMessageDO">
         select A.id,
                A.message_id,
                A.user_id receive_user_id,
@@ -50,7 +50,7 @@
             ${ew.customSqlSegment}
     </select>
 
-    <resultMap id="commonResultMap" com.smart.framework.tool.code.type="com.smart.module.message.com.smart.framework.tool.code.model.SmartMessageSystemSendPO">
+    <resultMap id="commonResultMap" type="com.smart.module.message.model.SmartMessageSystemSendPO">
         <!--   id      -->
         <result column="id" property="id" javaType="java.lang.Long" jdbcType="BIGINT"/>
         <!--   messageId      -->
@@ -76,4 +76,4 @@
         <!--   updateBy      -->
         <result column="update_by" property="updateBy" javaType="java.lang.String" jdbcType="VARCHAR"/>
     </resultMap>
-</com.smart.framework.tool.code.mapper>
+</mapper>

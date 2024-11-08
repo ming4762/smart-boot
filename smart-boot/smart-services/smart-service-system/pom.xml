@@ -63,33 +63,23 @@
 			<artifactId>druid-spring-boot-3-starter</artifactId>
 		</dependency>
 
-<!--		<dependency>-->
-<!--			<groupId>com.smart</groupId>-->
-<!--			<artifactId>i18n-spring-boot-starter</artifactId>-->
-<!--			<version>${project.parent.version}</version>-->
-<!--		</dependency>-->
-<!--		<dependency>-->
-<!--			<groupId>com.smart</groupId>-->
-<!--			<artifactId>exception-spring-boot-starter</artifactId>-->
-<!--			<version>${project.parent.version}</version>-->
-<!--		</dependency>-->
-
 		<!--	消息支持	-->
-<!--		<dependency>-->
-<!--			<groupId>com.smart</groupId>-->
-<!--			<artifactId>smart-message-manager</artifactId>-->
-<!--			<version>${project.version}</version>-->
-<!--		</dependency>-->
+		<dependency>
+			<groupId>com.smart</groupId>
+			<artifactId>smart-module-message</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<!--	web socket支持	-->
+		<dependency>
+			<groupId>com.smart</groupId>
+			<artifactId>smart-boot-starter-message-websocket</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
 		<!--	阿里云短信支持	-->
 <!--		<dependency>-->
 <!--			<groupId>com.smart</groupId>-->
 <!--			<artifactId>smart-sms-extensions-aliyun</artifactId>-->
-<!--			<version>${project.version}</version>-->
-<!--		</dependency>-->
-		<!--	web socket支持	-->
-<!--		<dependency>-->
-<!--			<groupId>com.smart</groupId>-->
-<!--			<artifactId>smart-message-websocket</artifactId>-->
 <!--			<version>${project.version}</version>-->
 <!--		</dependency>-->
 
