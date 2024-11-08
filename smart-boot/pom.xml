@@ -68,8 +68,8 @@
     <modules>
         <module>smart-boot-framework</module>
         <module>smart-framework</module>
-
         <module>smart-cloud-framework</module>
+        <module>smart-cloud-services</module>
         <module>smart-module-api</module>
         <module>smart-modules</module>
         <module>smart-services</module>

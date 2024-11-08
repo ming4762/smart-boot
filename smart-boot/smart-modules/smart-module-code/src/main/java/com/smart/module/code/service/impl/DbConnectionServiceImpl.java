@@ -100,7 +100,7 @@ public class DbConnectionServiceImpl extends BaseServiceImpl<DbConnectionMapper,
         if (tableViewList.isEmpty()) {
             throw new BusinessException("未找到数据库表信息，请检查数据库表是否正确");
         }
-        return tableViewList.get(0);
+        return tableViewList.getFirst();
     }
 
     @Override

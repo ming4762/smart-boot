@@ -16,7 +16,6 @@
     <modules>
         <module>smart-cloud-common-core</module>
         <module>smart-cloud-module-api</module>
-        <module>smart-cloud-services</module>
         <module>smart-cloud-starters</module>
     </modules>
 
