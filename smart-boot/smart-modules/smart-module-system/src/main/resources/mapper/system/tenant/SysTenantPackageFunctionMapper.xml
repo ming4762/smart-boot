@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE com.smart.framework.tool.code.mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-com.smart.framework.tool.code.mapper.dtd">
-<com.smart.framework.tool.code.mapper namespace="com.smart.module.system.com.smart.framework.tool.code.mapper.tenant.SysTenantPackageFunctionMapper">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smart.module.system.mapper.tenant.SysTenantPackageFunctionMapper">
     <sql id="columnList">
         <!--   id 主键  索引   -->
         id,
@@ -18,7 +18,7 @@
         create_user_id
     </sql>
 
-    <resultMap id="commonResultMap" com.smart.framework.tool.code.type="com.smart.module.system.com.smart.framework.tool.code.model.tenant.SysTenantPackageFunctionPO">
+    <resultMap id="commonResultMap" type="com.smart.module.system.model.tenant.SysTenantPackageFunctionPO">
         <!--   id 主键  索引   -->
         <id column="id" property="id" javaType="java.lang.Long" jdbcType="BIGINT"/>
         <!--   tenantPackageId   索引   -->
@@ -37,9 +37,9 @@
 
 
     <!--  查询租户套餐包对应功能  -->
-    <select id="listPackageFunction" resultType="com.smart.module.system.com.smart.framework.tool.code.model.tenant.SysTenantPackageFunctionPO">
+    <select id="listPackageFunction" resultType="com.smart.module.system.model.tenant.SysTenantPackageFunctionPO">
         SELECT A.* FROM sys_tenant_package_function A
         join sys_function B on A.function_id = B.function_id
             ${ew.customSqlSegment}
     </select>
-</com.smart.framework.tool.code.mapper>
+</mapper>

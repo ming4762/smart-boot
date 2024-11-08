@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE com.smart.framework.tool.code.mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-com.smart.framework.tool.code.mapper.dtd">
-<com.smart.framework.tool.code.mapper namespace="com.smart.module.system.com.smart.framework.tool.code.mapper.tenant.SysTenantUserMapper">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smart.module.system.mapper.tenant.SysTenantUserMapper">
     <sql id="columnList">
         <!--   id 主键  索引   -->
         id,
@@ -16,7 +16,7 @@
         create_by
     </sql>
 
-    <resultMap id="commonResultMap" com.smart.framework.tool.code.type="com.smart.module.system.com.smart.framework.tool.code.model.tenant.SysTenantUserPO">
+    <resultMap id="commonResultMap" type="com.smart.module.system.model.tenant.SysTenantUserPO">
         <!--   id 主键  索引   -->
         <id column="id" property="id" javaType="java.lang.Long" jdbcType="BIGINT"/>
         <!--   tenantId      -->
@@ -32,7 +32,7 @@
     </resultMap>
 
     <!--  查询租户对应用户  -->
-    <select id="listTenantUser" resultType="com.smart.module.system.com.smart.framework.tool.code.pojo.dbo.tenant.SysTenantUserListDO">
+    <select id="listTenantUser" resultType="com.smart.module.system.pojo.dbo.tenant.SysTenantUserListDO">
         select B.id,
                B.tenant_id,
                B.create_by,
@@ -52,7 +52,7 @@
     </select>
 
     <!--  根据用户ID查询满足条件的一个租户  -->
-    <select id="listTenantByUser" resultType="com.smart.module.system.com.smart.framework.tool.code.pojo.dbo.tenant.SysTenantListByUserDO" parameterType="com.smart.module.system.com.smart.framework.tool.code.pojo.parameter.tenant.ListTenantByUserParameter">
+    <select id="listTenantByUser" resultType="com.smart.module.system.pojo.dbo.tenant.SysTenantListByUserDO" parameterType="com.smart.module.system.pojo.parameter.tenant.ListTenantByUserParameter">
         select A.id tenantId,
             A.tenant_code,
             A.tenant_name,
@@ -73,7 +73,7 @@
     </select>
 
     <!--  根据租户角色查询功能ID  -->
-    <select id="listTenantRoleFunctionIds" resultType="java.lang.Long" parameterType="com.smart.module.system.com.smart.framework.tool.code.pojo.dto.tenant.SysListTenantRoleFunctionDTO">
+    <select id="listTenantRoleFunctionIds" resultType="java.lang.Long" parameterType="com.smart.module.system.pojo.dto.tenant.SysListTenantRoleFunctionDTO">
         select distinct D.function_id
         from sys_tenant_subscribe A
         join sys_tenant_package B on A.package_id = B.id
@@ -92,7 +92,7 @@
             )
     </select>
     <!--  查询租户所有有效订阅菜单ID  -->
-    <select id="listTenantFunctionIds" resultType="java.lang.Long" parameterType="com.smart.module.system.com.smart.framework.tool.code.pojo.dto.tenant.SysListTenantFunctionDTO">
+    <select id="listTenantFunctionIds" resultType="java.lang.Long" parameterType="com.smart.module.system.pojo.dto.tenant.SysListTenantFunctionDTO">
         select distinct C.function_id
         from sys_tenant_subscribe A
         join sys_tenant_package B on A.package_id = B.id
@@ -103,4 +103,4 @@
           and B.expire_time &gt;= #{now}
           and A.tenant_id = #{tenantId}
     </select>
-</com.smart.framework.tool.code.mapper>
+</mapper>

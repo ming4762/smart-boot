@@ -34,7 +34,7 @@ public class JwtSecurityContextRepository implements SecurityContextRepository {
     public SecurityContext loadContext(HttpRequestResponseHolder requestResponseHolder) {
         HttpServletRequest request = requestResponseHolder.getRequest();
         String jwt = TokenUtils.getToken(request);
-        if (org.springframework.util.StringUtils.hasText(jwt)) {
+        if (!org.springframework.util.StringUtils.hasText(jwt)) {
             return generateNewContext();
         }
         // 解析jwt
