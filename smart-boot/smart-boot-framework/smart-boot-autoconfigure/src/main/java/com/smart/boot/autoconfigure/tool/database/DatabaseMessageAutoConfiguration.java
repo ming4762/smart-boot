@@ -1,11 +1,9 @@
 package com.smart.boot.autoconfigure.tool.database;
 
 import com.smart.framework.tool.database.converter.*;
-import com.smart.framework.tool.database.executor.DbExecutorProvider;
-import com.smart.framework.tool.database.executor.MysqlDatabaseExecutor;
-import com.smart.framework.tool.database.executor.OracleDatabaseExecutor;
-import com.smart.framework.tool.database.executor.SqlServerDatabaseExecutor;
+import com.smart.framework.tool.database.executor.*;
 import com.smart.framework.tool.database.pool.DbConnectionProvider;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
  * 2020/7/29 8:45 下午
  */
 @Configuration
+@ConditionalOnClass(DatabaseExecutor.class)
 public class DatabaseMessageAutoConfiguration {
 
     /**

@@ -28,13 +28,12 @@
 
         <dependency>
             <groupId>com.smart</groupId>
-            <artifactId>smart-auth-extensions-jwt</artifactId>
+            <artifactId>smart-boot-starter-auth-jwt</artifactId>
             <version>${project.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.smart</groupId>
-            <artifactId>smart-auth-cache-redis</artifactId>
+            <artifactId>smart-boot-starter-auth-cache-redis</artifactId>
             <version>${project.version}</version>
         </dependency>
 
