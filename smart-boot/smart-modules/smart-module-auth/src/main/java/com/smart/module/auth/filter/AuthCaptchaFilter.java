@@ -35,10 +35,11 @@ import java.io.IOException;
 public class AuthCaptchaFilter extends OncePerRequestFilter {
 
     private final AuthProperties authProperties;
-
     private final AuthCaptchaApi authCaptchaApi;
+    private final String loginUrl;
 
-    public AuthCaptchaFilter(AuthProperties authProperties, AuthCaptchaApi authCaptchaApi) {
+    public AuthCaptchaFilter(String loginUrl, AuthProperties authProperties, AuthCaptchaApi authCaptchaApi) {
+        this.loginUrl = loginUrl;
         this.authCaptchaApi = authCaptchaApi;
         this.authProperties = authProperties;
     }
@@ -97,7 +98,7 @@ public class AuthCaptchaFilter extends OncePerRequestFilter {
     }
 
     private boolean isValidate(@NonNull HttpServletRequest request) {
-        return new AntPathRequestMatcher(this.authProperties.getLoginUrl()).matches(request);
+        return new AntPathRequestMatcher(this.loginUrl).matches(request);
     }
 
     @Override

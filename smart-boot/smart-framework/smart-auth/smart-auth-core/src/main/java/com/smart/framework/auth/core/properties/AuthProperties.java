@@ -33,11 +33,6 @@ public class AuthProperties implements InitializingBean {
     private String prefix = "smart-session";
 
     /**
-     * 登录URL
-     */
-    private String loginUrl = "/auth/login";
-
-    /**
      * JWT配置
      */
     private JwtProperties jwt = new JwtProperties();

@@ -6,6 +6,7 @@ import com.smart.framework.auth.core.config.SmartSecurityConfigurerAdapter;
 import com.smart.framework.auth.core.handler.SecurityLogoutHandler;
 import com.smart.framework.auth.core.properties.AuthProperties;
 import com.smart.framework.auth.core.service.AuthCache;
+import com.smart.framework.auth.core.share.ShareLoginProperties;
 import com.smart.framework.auth.extensions.jwt.context.JwtContext;
 import com.smart.framework.auth.extensions.jwt.filter.JwtAuthenticationFilter;
 import com.smart.framework.auth.extensions.jwt.filter.JwtLoginFilter;
@@ -47,6 +48,10 @@ import java.util.Optional;
  */
 @Slf4j
 public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends SmartSecurityConfigurerAdapter<H> {
+
+
+    private static final String DEFAULT_LOGIN_URL = "/auth/login";
+    private static final String DEFAULT_LOGOUT_URL = "/auth/logout";
 
     private final ServiceProvider serviceProvider = new ServiceProvider();
 
@@ -91,10 +96,6 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
         return this.getBean(AuthCache.class, this.serviceProvider.authCache);
     }
 
-    private String getLoginUrl() {
-        return Optional.ofNullable(this.serviceProvider.logoutUrl).orElse(JwtLogoutFilter.LOGOUT_URL);
-    }
-
     @Override
     public void configure(H builder) {
         AuthProperties authProperties = this.getAuthProperties();
@@ -120,6 +121,12 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
      */
     @Override
     public void init(H builder) {
+        builder.setSharedObject(
+                ShareLoginProperties.class,
+                ShareLoginProperties.builder()
+                        .loginUrl(this.getLoginUrl())
+                        .build()
+        );
         builder.setSharedObject(SecurityContextRepository.class, this.getBean(SecurityContextRepository.class));
         // 初始化bean
         this.initBean();
@@ -186,7 +193,7 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
         }
         // 添加登出通知类
         logoutHandlerList.add(this.postProcess(new LogoutSuccessEventPublishingLogoutHandler()));
-        // 添加remember me com.smart.framework.tool.code.service
+        // 添加remember me
         RememberMeServices rememberMeServices = builder.getSharedObject(RememberMeServices.class);
         if (rememberMeServices instanceof LogoutHandler logoutHandler) {
             logoutHandlerList.add(logoutHandler);
@@ -201,8 +208,14 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
      * @return 登出地址
      */
     protected String getLogoutUrl() {
-        return Optional.ofNullable(this.serviceProvider.logoutUrl).orElse(JwtLogoutFilter.LOGOUT_URL);
+        return Optional.ofNullable(this.serviceProvider.logoutUrl).orElse(DEFAULT_LOGOUT_URL);
     }
+
+
+    private String getLoginUrl() {
+        return Optional.ofNullable(this.serviceProvider.loginUrl).orElse(DEFAULT_LOGIN_URL);
+    }
+
 
     /**
      * 创建JWT 上下文
