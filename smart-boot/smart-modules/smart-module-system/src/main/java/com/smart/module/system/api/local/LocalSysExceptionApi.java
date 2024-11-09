@@ -8,6 +8,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 /**
  * @author zhongming4762
  * 2023/3/12
@@ -32,6 +34,7 @@ public class LocalSysExceptionApi implements SysExceptionApi {
     public Boolean saveException(SysExceptionSaveDTO parameter) {
         SysExceptionPO po = new SysExceptionPO();
         BeanUtils.copyProperties(parameter, po);
+        po.setCreateTime(LocalDateTime.now());
         return this.sysExceptionService.save(po);
     }
 }
