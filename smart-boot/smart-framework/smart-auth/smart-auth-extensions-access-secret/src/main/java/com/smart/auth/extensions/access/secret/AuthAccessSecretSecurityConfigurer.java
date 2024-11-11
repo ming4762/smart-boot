@@ -36,8 +36,7 @@ public class AuthAccessSecretSecurityConfigurer extends SmartSecurityConfigurerA
 
     @Override
     public void configure(HttpSecurity builder) {
-        builder.securityMatcher(this.getSecurityMatcher().toArray(new String[]{}))
-                .addFilterAfter(
+        builder.addFilterAfter(
                         new AuthAccessSecretAuthenticationFilter(
                                 this.getAuthProperties(),
 
@@ -53,39 +52,12 @@ public class AuthAccessSecretSecurityConfigurer extends SmartSecurityConfigurerA
         authenticationManagerBuilder.parentAuthenticationManager(null);
     }
 
-    private List<String> getSecurityMatcher() {
-        if (!CollectionUtils.isEmpty(this.serviceProvider.urlMatcher)) {
-            return this.serviceProvider.urlMatcher;
-        }
-        List<String> urlMatcher = this.getAuthProperties().getAccessSecret().getUrlMatcher();
-        if (CollectionUtils.isEmpty(urlMatcher)) {
-            throw new IllegalArgumentException("参数错误，accessSecret必须设置 url matcher");
-        }
-        return urlMatcher;
-    }
-
     private AuthProperties getAuthProperties() {
         return Objects.requireNonNull(this.getBean(AuthProperties.class, null));
-    }
-
-    /**
-     * 添加匹配的URL
-     * 使用此函数添加的URL优先级高于配置文件中的
-     * @param urlMatcher 匹配的路径
-     * @return this
-     */
-    public AuthAccessSecretSecurityConfigurer addUrlMatcher(String ...urlMatcher) {
-        this.serviceProvider.urlMatcher.addAll(List.of(urlMatcher));
-        return this;
     }
 
     @Setter
     private static class ServiceProvider {
 
-        private List<String> urlMatcher;
-
-        ServiceProvider() {
-            this.urlMatcher = new ArrayList<>(16);
-        }
     }
 }

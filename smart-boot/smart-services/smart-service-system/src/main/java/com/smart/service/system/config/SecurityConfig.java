@@ -74,7 +74,8 @@ public class SecurityConfig extends AuthWebSecurityConfigurerAdapter {
                 .logout(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .with(AuthAccessSecretSecurityConfigurer.build(), http -> http.addUrlMatcher("/access/api/**"));
+                .securityMatcher("/access/api/**")
+                .with(AuthAccessSecretSecurityConfigurer.build(), Customizer.withDefaults());
         return httpSecurity.build();
     }
 
