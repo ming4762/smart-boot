@@ -22,6 +22,7 @@
         <module>smart-exception</module>
         <module>smart-extensions</module>
         <module>smart-file</module>
+        <module>smart-freemarker</module>
         <module>smart-i18n</module>
         <module>smart-kettle</module>
         <module>smart-license</module>

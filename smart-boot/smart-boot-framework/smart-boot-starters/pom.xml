@@ -22,6 +22,7 @@
         <module>smart-boot-starter-document</module>
         <module>smart-boot-starter-exception</module>
         <module>smart-boot-starter-file</module>
+        <module>smart-boot-starter-freemarker</module>
         <module>smart-boot-starter-guava</module>
         <module>smart-boot-starter-i18n</module>
         <module>smart-boot-starter-kettle</module>

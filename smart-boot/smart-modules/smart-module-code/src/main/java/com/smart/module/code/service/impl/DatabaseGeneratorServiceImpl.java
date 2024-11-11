@@ -1,11 +1,13 @@
 package com.smart.module.code.service.impl;
 
+import com.smart.framework.freemarker.engine.TemplateEngine;
+import com.smart.framework.freemarker.template.SmartClassPathTemplateElement;
+import com.smart.framework.freemarker.template.SmartTemplateElement;
+import com.smart.framework.freemarker.template.SmartValueTemplateElement;
 import com.smart.framework.tool.database.executor.DatabaseExecutor;
 import com.smart.framework.tool.database.executor.DbExecutorProvider;
 import com.smart.framework.tool.database.pojo.bo.TableViewBO;
 import com.smart.framework.tool.database.pool.model.DbConnectionConfig;
-import com.smart.module.code.engine.TemplateEngine;
-import com.smart.module.code.engine.data.TemplateElement;
 import com.smart.module.code.pojo.dto.DatabaseTemplateModel;
 import com.smart.module.code.service.DbDictGeneratorService;
 import lombok.extern.slf4j.Slf4j;
@@ -46,8 +48,8 @@ public class DatabaseGeneratorServiceImpl implements DbDictGeneratorService {
     @Override
     public void createDatabaseDic(@NonNull DbConnectionConfig databaseConnection, @NonNull OutputStream outputStream) {
         // 获取默认的模板信息
-        final TemplateElement defaultTemplateElement = new TemplateElement(DEFAULT_DIC_TEMPLATE, null);
-        this.createDatabaseDic(databaseConnection, outputStream, defaultTemplateElement);
+        SmartClassPathTemplateElement templateElement = new SmartClassPathTemplateElement(DEFAULT_DIC_TEMPLATE);
+        this.createDatabaseDic(databaseConnection, outputStream, templateElement);
     }
 
     /**
@@ -57,9 +59,9 @@ public class DatabaseGeneratorServiceImpl implements DbDictGeneratorService {
      * @param templateElement 模板信息
      */
     @Override
-    public void createDatabaseDic(@NonNull DbConnectionConfig databaseConnection, @NonNull OutputStream outputStream, @NonNull TemplateElement templateElement) {
+    public void createDatabaseDic(@NonNull DbConnectionConfig databaseConnection, @NonNull OutputStream outputStream, @NonNull SmartTemplateElement templateElement) {
 
-        this.templateEngine.processToOutputStream(this.getDatabaseDicModel(databaseConnection), outputStream, templateElement);
+        this.templateEngine.processToOutputStream(templateElement, this.getDatabaseDicModel(databaseConnection), outputStream);
     }
 
     /**
@@ -71,7 +73,11 @@ public class DatabaseGeneratorServiceImpl implements DbDictGeneratorService {
      */
     @Override
     public void createDatabaseDic(@NonNull DbConnectionConfig config, @NonNull OutputStream outputStream, @NonNull String templateName, @NonNull String templateValue) {
-        this.templateEngine.processTemplate(this.getDatabaseDicModel(config), templateName, templateValue, new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
+        this.templateEngine.processToWriter(
+                new SmartValueTemplateElement(templateName, templateValue),
+                this.getDatabaseDicModel(config),
+                new OutputStreamWriter(outputStream, StandardCharsets.UTF_8)
+        );
     }
 
     private DatabaseTemplateModel getDatabaseDicModel(@NonNull DbConnectionConfig config) {

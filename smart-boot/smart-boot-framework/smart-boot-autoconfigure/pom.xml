@@ -309,6 +309,13 @@
             <artifactId>spring-boot-actuator-autoconfigure</artifactId>
         </dependency>
 
+        <!--    freemarker    -->
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-freemarker</artifactId>
+            <version>${project.version}</version>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
 </project>

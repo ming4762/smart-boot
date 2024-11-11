@@ -1,7 +1,7 @@
 package com.smart.module.code.service;
 
+import com.smart.framework.freemarker.template.SmartTemplateElement;
 import com.smart.framework.tool.database.pool.model.DbConnectionConfig;
-import com.smart.module.code.engine.data.TemplateElement;
 import org.springframework.lang.NonNull;
 
 import java.io.OutputStream;
@@ -26,7 +26,7 @@ public interface DbDictGeneratorService {
      * @param outputStream 输出流
      * @param templateElement 模板信息
      */
-    void createDatabaseDic(@NonNull DbConnectionConfig config, @NonNull OutputStream outputStream, @NonNull TemplateElement templateElement);
+    void createDatabaseDic(@NonNull DbConnectionConfig config, @NonNull OutputStream outputStream, @NonNull SmartTemplateElement templateElement);
 
     /**
      * 创建数据库字段

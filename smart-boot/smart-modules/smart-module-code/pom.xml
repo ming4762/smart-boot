@@ -22,10 +22,10 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<artifactId>freemarker</artifactId>
-			<groupId>org.freemarker</groupId>
+			<groupId>com.smart</groupId>
+			<artifactId>smart-boot-starter-freemarker</artifactId>
+			<version>${project.version}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>com.smart</groupId>
 			<artifactId>smart-auth-core</artifactId>

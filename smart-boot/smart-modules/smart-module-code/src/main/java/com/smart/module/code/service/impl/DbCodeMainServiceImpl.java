@@ -10,8 +10,9 @@ import com.smart.framework.commons.core.exception.BusinessException;
 import com.smart.framework.commons.core.utils.SmartIdGenerator;
 import com.smart.framework.crud.query.PageSortQuery;
 import com.smart.framework.crud.service.BaseServiceImpl;
+import com.smart.framework.freemarker.engine.TemplateEngine;
+import com.smart.framework.freemarker.template.SmartValueTemplateElement;
 import com.smart.module.code.constants.*;
-import com.smart.module.code.engine.TemplateEngine;
 import com.smart.module.code.mapper.DbCodeMainMapper;
 import com.smart.module.code.model.*;
 import com.smart.module.code.pojo.dto.*;
@@ -344,7 +345,11 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
         return dbCodeTemplateList.stream().map(template -> {
             String code;
             try (final StringWriter stringWriter = new StringWriter()) {
-                this.templateEngine.processTemplate(dbCodeTemplateData, template.getName(), template.getTemplate(), stringWriter);
+                this.templateEngine.processToWriter(
+                        new SmartValueTemplateElement(template.getName(), template.getTemplate()),
+                        dbCodeTemplateData,
+                        stringWriter
+                );
                 code = stringWriter.toString();
             } catch (Exception e) {
                 log.error(e.getMessage(), e);

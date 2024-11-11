@@ -50,3 +50,5 @@ com.smart.boot.autoconfigure.monitor.MonitorServerAutoConfiguration
 com.smart.boot.autoconfigure.monitor.MonitorServerMailNotifyAutoConfiguration
 com.smart.boot.autoconfigure.monitor.MonitorServerRedisClientRepositoryAutoConfiguration
 com.smart.boot.autoconfigure.monitor.SmartMonitorClientAutoConfiguration
+
+com.smart.boot.autoconfigure.freemarker.SmartFreemarkerAutoConfiguration
