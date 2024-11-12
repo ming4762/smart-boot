@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.lang.reflect.UndeclaredThrowableException;
+
 /**
  * 全局异常管理
  * @author shizhongming
@@ -31,6 +33,12 @@ public class GlobalExceptionHandler {
     @ResponseBody
     @ExceptionHandler(value = Exception.class)
     public Object handlerException(Exception e, HttpServletRequest request) {
+        if (e instanceof UndeclaredThrowableException undeclaredThrowableException) {
+            Throwable throwable = undeclaredThrowableException.getUndeclaredThrowable();
+            if (throwable instanceof Exception exception) {
+                e = exception;
+            }
+        }
         // 异常信息生成一个no
         long exceptionNo = SmartIdGenerator.nextId();
         // 处理异常通知
