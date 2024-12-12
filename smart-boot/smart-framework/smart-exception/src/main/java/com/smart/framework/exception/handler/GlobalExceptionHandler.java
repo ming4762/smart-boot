@@ -33,11 +33,8 @@ public class GlobalExceptionHandler {
     @ResponseBody
     @ExceptionHandler(value = Exception.class)
     public Object handlerException(Exception e, HttpServletRequest request) {
-        if (e instanceof UndeclaredThrowableException undeclaredThrowableException) {
-            Throwable throwable = undeclaredThrowableException.getUndeclaredThrowable();
-            if (throwable instanceof Exception exception) {
-                e = exception;
-            }
+        if (e instanceof UndeclaredThrowableException undeclaredThrowableException && undeclaredThrowableException.getUndeclaredThrowable() instanceof Exception exception) {
+            e = exception;
         }
         // 异常信息生成一个no
         long exceptionNo = SmartIdGenerator.nextId();
