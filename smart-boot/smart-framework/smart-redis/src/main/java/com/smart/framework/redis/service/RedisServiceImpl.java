@@ -27,6 +27,8 @@ import java.util.stream.StreamSupport;
 @RequiredArgsConstructor
 public class RedisServiceImpl implements RedisService {
 
+    private static final String MATCH_STR = "*";
+
     private final RedissonClient redissonClient;
 
     @Override
@@ -175,7 +177,7 @@ public class RedisServiceImpl implements RedisService {
     @Override
     public List<String> matchKeys(@NonNull String patternKey) {
         RKeys keys = this.redissonClient.getKeys();
-        Iterable<String> stringIterable = keys.getKeys(KeysScanOptions.defaults().pattern(patternKey));
+        Iterable<String> stringIterable = keys.getKeys(KeysScanOptions.defaults().pattern(patternKey + MATCH_STR));
 
         return StreamSupport.stream(stringIterable.spliterator(), false)
                 .toList();
