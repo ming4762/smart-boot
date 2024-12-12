@@ -1,7 +1,6 @@
 package com.smart.framework.auth.core.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.collect.Sets;
 import com.smart.framework.auth.core.constants.AuthTypeEnum;
 import com.smart.framework.auth.core.constants.LoginTypeEnum;
 import com.smart.framework.auth.core.userdetails.RestUserDetails;
@@ -101,7 +100,7 @@ public class RestUserDetailsImpl implements RestUserDetails, Serializable {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public Set<AuthRole> getRoles() {
         if (Objects.isNull(this.authorities)) {
-            return Sets.newHashSet();
+            return Set.of();
         }
         return this.authorities.stream()
                 .filter(SmartGrantedAuthority::isRole)
@@ -118,7 +117,7 @@ public class RestUserDetailsImpl implements RestUserDetails, Serializable {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public Set<Permission> getPermissions() {
         if (Objects.isNull(this.authorities)) {
-            return Sets.newHashSet();
+            return Set.of();
         }
         return this.authorities.stream()
                 .filter(SmartGrantedAuthority :: isPermission)

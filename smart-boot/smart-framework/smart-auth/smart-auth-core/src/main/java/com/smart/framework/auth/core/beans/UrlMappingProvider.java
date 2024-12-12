@@ -1,6 +1,5 @@
 package com.smart.framework.auth.core.beans;
 
-import com.google.common.collect.Multimap;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,6 +7,9 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.method.HandlerMethod;
+
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -29,7 +31,7 @@ public interface UrlMappingProvider {
      * 获取所有的映射关系
      * @return 所有的映射关系
      */
-    Multimap<String, UrlMapping> getAllMapping();
+    Map<String, List<UrlMapping>> getAllMapping();
 
     /**
      * URL映射

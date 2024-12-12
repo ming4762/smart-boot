@@ -1,6 +1,5 @@
 package com.smart.framework.auth.core.userdetails;
 
-import com.google.common.collect.Sets;
 import com.smart.framework.auth.core.exception.LongTimeNoLoginLockedException;
 import com.smart.framework.auth.core.exception.MaxConnectionAuthenticationException;
 import com.smart.framework.auth.core.exception.PasswordNoLifeLockedException;
@@ -86,7 +85,7 @@ public class DefaultUserDetailsBuilderImpl implements UserDetailsBuilder {
             restUserDetails.setAccountNonLocked(this.unLockPasswordErrorLock(user, userAccountData));
         }
         // 设置权限信息
-        Set<SmartGrantedAuthority> grantedAuthoritySet = Sets.newHashSet();
+        Set<SmartGrantedAuthority> grantedAuthoritySet = new HashSet<>(20);
         // 添加角色
         grantedAuthoritySet.addAll(
                 userAccountData.getRoleCodes().stream()

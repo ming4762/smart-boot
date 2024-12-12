@@ -1,11 +1,11 @@
 package com.smart.framework.auth.core.properties;
 
-import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,7 +24,7 @@ public class AuthIgnoreProperties implements Serializable {
     /**
      * 需要忽略的 URL 格式，不考虑请求方法
      */
-    private List<String> pattern = Lists.newArrayList("/public/**");
+    private List<String> pattern = new ArrayList<>(0);
 
     public List<String> getPattern() {
         String publicStr = "/public/**";
@@ -37,40 +37,40 @@ public class AuthIgnoreProperties implements Serializable {
     /**
      * 需要忽略的 GET 请求
      */
-    private List<String> get = Lists.newArrayList();
+    private List<String> get = new ArrayList<>(0);
 
     /**
      * 需要忽略的 POST 请求
      */
-    private List<String> post = Lists.newArrayList();
+    private List<String> post = new ArrayList<>(0);
 
     /**
      * 需要忽略的 DELETE 请求
      */
-    private List<String> delete = Lists.newArrayList();
+    private List<String> delete = new ArrayList<>(0);
 
     /**
      * 需要忽略的 PUT 请求
      */
-    private List<String> put = Lists.newArrayList();
+    private List<String> put = new ArrayList<>(0);
 
     /**
      * 需要忽略的 HEAD 请求
      */
-    private List<String> head = Lists.newArrayList();
+    private List<String> head = new ArrayList<>(0);
 
     /**
      * 需要忽略的 PATCH 请求
      */
-    private List<String> patch = Lists.newArrayList();
+    private List<String> patch = new ArrayList<>(0);
 
     /**
      * 需要忽略的 OPTIONS 请求
      */
-    private List<String> options = Lists.newArrayList();
+    private List<String> options = new ArrayList<>(0);
 
     /**
      * 需要忽略的 TRACE 请求
      */
-    private List<String> trace = Lists.newArrayList();
+    private List<String> trace = new ArrayList<>(0);
 }

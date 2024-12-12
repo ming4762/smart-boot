@@ -1,7 +1,5 @@
 package com.smart.framework.auth.core.beans;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 import com.smart.framework.commons.core.beans.AbstractBeanNameProvider;
 import com.smart.framework.commons.core.http.HttpStatus;
 import com.smart.framework.commons.core.i18n.I18nUtils;
@@ -17,10 +15,7 @@ import org.springframework.web.servlet.mvc.condition.RequestMethodsRequestCondit
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 默认的映射提供器
@@ -30,7 +25,7 @@ import java.util.Set;
  */
 public class DefaultUrlMappingProvider extends AbstractBeanNameProvider implements InitializingBean, UrlMappingProvider {
 
-    private final Multimap<String, UrlMapping> urlMappings = ArrayListMultimap.create();
+    private final Map<String, List<UrlMapping>> urlMappings = new HashMap<>();
 
     private final RequestMappingHandlerMapping mapping;
 
@@ -74,7 +69,7 @@ public class DefaultUrlMappingProvider extends AbstractBeanNameProvider implemen
     }
 
     @Override
-    public Multimap<String, UrlMapping> getAllMapping() {
+    public Map<String, List<UrlMapping>> getAllMapping() {
         return this.urlMappings;
     }
 
@@ -102,7 +97,7 @@ public class DefaultUrlMappingProvider extends AbstractBeanNameProvider implemen
                         UrlMapping urlMapping = new UrlMapping();
                         urlMapping.setRequestMethod(null);
                         urlMapping.setHandlerMethod(handlerMethod);
-                        urlMappings.put(s, urlMapping);
+                        this.addMapping(s, urlMapping);
                     } else {
                         List<UrlMapping> urlMappingList = method.getMethods().stream()
                                 .map(requestMethod -> {
@@ -111,11 +106,19 @@ public class DefaultUrlMappingProvider extends AbstractBeanNameProvider implemen
                                     urlMapping.setHandlerMethod(handlerMethod);
                                     return urlMapping;
                                 }).toList();
-                        urlMappings.putAll(s, urlMappingList);
+                        this.addMapping(s, urlMappingList);
                     }
                 });
             }
         });
+    }
+
+    protected void addMapping(String url, UrlMapping urlMapping) {
+        this.urlMappings.computeIfAbsent(url, key -> new ArrayList<>()).add(urlMapping);
+    }
+
+    protected void addMapping(String url, List<UrlMapping> urlMappingList) {
+        this.urlMappings.computeIfAbsent(url, key -> new ArrayList<>()).addAll(urlMappingList);
     }
 
 }

@@ -1,12 +1,12 @@
 package com.smart.framework.auth.core.utils;
 
-import com.google.common.collect.Sets;
 import com.smart.framework.auth.core.matcher.ExtensionPathMatcher;
 import com.smart.framework.auth.core.properties.AuthIgnoreProperties;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpMethod;
 import org.springframework.lang.NonNull;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import static org.springframework.http.HttpMethod.*;
@@ -30,7 +30,7 @@ public class AuthCheckUtils {
         String method = request.getMethod();
         HttpMethod httpMethod = HttpMethod.valueOf(method);
 
-        Set<String> ignores = Sets.newHashSet();
+        Set<String> ignores = HashSet.newHashSet(16);
         if (GET.equals(httpMethod)) {
             ignores.addAll(authIgnoreProperties
                     .getGet());

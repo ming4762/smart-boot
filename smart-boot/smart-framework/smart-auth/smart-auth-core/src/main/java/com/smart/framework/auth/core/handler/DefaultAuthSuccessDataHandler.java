@@ -1,6 +1,5 @@
 package com.smart.framework.auth.core.handler;
 
-import com.google.common.collect.Sets;
 import com.smart.framework.auth.core.constants.LoginTypeEnum;
 import com.smart.framework.auth.core.model.LoginResult;
 import com.smart.framework.auth.core.model.RestUserDetailsImpl;
@@ -9,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -30,7 +30,7 @@ public class DefaultAuthSuccessDataHandler implements AuthSuccessDataHandler {
                 .permissions(
                         Optional.of(userDetails.getPermissions())
                                 .map(item -> item.stream().map(Permission::getAuthority).collect(Collectors.toSet()))
-                                .orElse(Sets.newHashSet())
+                                .orElse(Set.of())
                 ).build();
     }
 }
