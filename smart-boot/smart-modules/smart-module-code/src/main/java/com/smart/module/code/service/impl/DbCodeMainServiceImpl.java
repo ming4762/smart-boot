@@ -142,14 +142,16 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
         final AtomicInteger pageConfigIndex = new AtomicInteger(1);
         model.setId(mainId);
         // 保存表格配置
-        this.dbCodePageConfigService.saveBatch(
-                model.getCodePageConfigList().stream().peek(item -> {
-                    item.setMainId(mainId);
-                    item.setId(null);
-                    // 设置序号
-                    item.setSeq(pageConfigIndex.getAndIncrement());
-                }).toList()
-        );
+        if (!CollectionUtils.isEmpty(model.getCodePageConfigList())) {
+            this.dbCodePageConfigService.saveBatch(
+                    model.getCodePageConfigList().stream().peek(item -> {
+                        item.setMainId(mainId);
+                        item.setId(null);
+                        // 设置序号
+                        item.setSeq(pageConfigIndex.getAndIncrement());
+                    }).toList()
+            );
+        }
         // 保存附表配置
         if (StringUtils.equals(model.getType(), TableTypeEnum.MAIN.getType())) {
             this.saveRelatedTable(model);
@@ -187,6 +189,9 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
      * @param model com.smart.framework.tool.code.model
      */
     private void saveSearchConfig(@NonNull DbCodeMainSaveParameter model) {
+        if (CollectionUtils.isEmpty(model.getCodeSearchConfigList())) {
+            return;
+        }
         // 设置form 配置信息
         final AtomicInteger searchConfigIndex = new AtomicInteger(1);
         this.dbCodeSearchConfigService.saveBatch(
@@ -221,6 +226,9 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
      * @param model com.smart.framework.tool.code.model
      */
     private void saveFormConfig(@NonNull DbCodeMainSaveParameter model) {
+        if (CollectionUtils.isEmpty(model.getCodeFormConfigList())) {
+            return;
+        }
         // 设置form 配置信息
         final AtomicInteger formConfigIndex = new AtomicInteger(1);
         this.dbCodeFormConfigService.saveBatch(

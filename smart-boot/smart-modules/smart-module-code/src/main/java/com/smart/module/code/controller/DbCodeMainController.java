@@ -99,13 +99,17 @@ public class DbCodeMainController extends BaseController<DbCodeMainService, DbCo
             message.add("请指定主表对应的附表");
         }
         // 2、验证表格查询 参数是否满足
-        parameter.getCodeFormConfigList().forEach(item -> {
-            this.validateTableSearch(item, message);
-            this.validateRule(item.getRuleList(), message);
-        });
-        parameter.getCodeSearchConfigList().forEach(item -> this.validateTableSearch(item, message));
-        if (!message.isEmpty()) {
-            throw new BusinessException(String.join(",", message));
+        if (!CollectionUtils.isEmpty(parameter.getCodeFormConfigList())) {
+            parameter.getCodeFormConfigList().forEach(item -> {
+                this.validateTableSearch(item, message);
+                this.validateRule(item.getRuleList(), message);
+            });
+        }
+        if (!CollectionUtils.isEmpty(parameter.getCodeSearchConfigList())) {
+            parameter.getCodeSearchConfigList().forEach(item -> this.validateTableSearch(item, message));
+            if (!message.isEmpty()) {
+                throw new BusinessException(String.join(",", message));
+            }
         }
         return Result.success(this.service.saveUpdate(parameter));
     }
