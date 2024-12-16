@@ -15,6 +15,7 @@ import com.smart.framework.commons.core.exception.SystemException;
 import com.smart.framework.commons.core.i18n.I18nUtils;
 import com.smart.framework.commons.core.tenant.SmartTenantHolder;
 import com.smart.framework.commons.core.utils.DigestUtils;
+import com.smart.framework.commons.core.utils.PasswordUtils;
 import com.smart.framework.commons.core.utils.PropertyUtils;
 import com.smart.framework.commons.core.utils.SmartIdGenerator;
 import com.smart.framework.crud.constants.CrudCommonEnum;
@@ -154,7 +155,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         this.userSetterService.setCreateUpdateUser(voList);
         // 查询账户信息
         this.queryUserAccount(voList);
-        return voList.get(0);
+        return voList.getFirst();
     }
 
     /**
@@ -702,7 +703,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         if (CollectionUtils.isEmpty(deptList)) {
             return vo;
         }
-        var dept = deptList.get(0);
+        var dept = deptList.getFirst();
         vo.setDeptId(dept.getDeptId());
         vo.setDataScopeList(
                 Arrays.stream(dept.getDataScope().split(","))
@@ -756,7 +757,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         if (sysUser == null) {
             throw new SystemException("通过ID查询用户失败，ID：" + userId);
         }
-        String password = RandomStringUtils.randomAlphabetic(15);
+        String password = PasswordUtils.generateRandomPassword(15, 18);
         String secretPassword = this.createPassword(sysUser.getUsername(), password);
         this.update(
                 new UpdateWrapper<SysUserPO>().lambda()
