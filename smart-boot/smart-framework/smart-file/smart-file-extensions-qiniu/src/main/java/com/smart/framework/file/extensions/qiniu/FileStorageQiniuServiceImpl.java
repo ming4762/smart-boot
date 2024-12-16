@@ -9,6 +9,7 @@ import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
 import com.smart.framework.commons.core.utils.JsonUtils;
+import com.smart.framework.commons.core.utils.RestUtils;
 import com.smart.framework.file.core.common.FileStorageServiceRegisterName;
 import com.smart.framework.file.core.parameter.FileStorageDeleteParameter;
 import com.smart.framework.file.core.parameter.FileStorageGetParameter;
@@ -20,11 +21,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.ResponseBody;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpMethod;
 import org.springframework.lang.NonNull;
 import org.springframework.util.CollectionUtils;
 
@@ -210,22 +208,8 @@ public class FileStorageQiniuServiceImpl implements QiniuService {
      * @param outputStream 输出流
      */
     @Override
-    @SneakyThrows(IOException.class)
     public void download(@NonNull FileStorageGetParameter parameter, OutputStream outputStream) {
         String objectUrl = this.getObjectUrl(parameter, Duration.ofDays(1));
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder().url(objectUrl).build();
-        try (okhttp3.Response response = client.newCall(request).execute()) {
-            if (response.isSuccessful()) {
-                ResponseBody body = response.body();
-                if (body != null) {
-                    IOUtils.copy(body.byteStream(), outputStream);
-                } else {
-                    log.warn("下载文件失败，body为空，文件ID： {}", parameter.getFileStorageKey());
-                }
-            } else {
-                log.warn("下载文件失败，文件id: {}，错误信息：{}", parameter.getFileStorageKey(), response.message());
-            }
-        }
+        RestUtils.download(objectUrl, HttpMethod.GET, null, null, outputStream);
     }
 }

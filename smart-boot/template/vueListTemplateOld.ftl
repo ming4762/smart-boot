@@ -5,7 +5,7 @@
       v-bind="tableProps"
       :size="tableSizeConfig"
       border
-      :toolbar-config="toolbarConfig"
+      :toolbar-com.smart.framework.tool.code.config="toolbarConfig"
       :columns="columns"
       height="auto"
       stripe
@@ -25,7 +25,7 @@
             <#list mainTable.rightButtonList as item>
             <a-button
               :size="buttonSizeConfig"
-              type="primary"
+              com.smart.framework.tool.code.type="primary"
               <#if item="ADD">
               @click="() => handleAddEdit(true, null)"
               <#elseif item="EDIT">
@@ -55,15 +55,15 @@
           <#list mainTable.codeSearchConfigList as item>
           <a-form-item label="${item.title}">
             <#if (item.controlType='INPUT')>
-            <a-input v-model:value="searchModel.${item.javaProperty}" :size="formSizeConfig" placeholder="请输入${item.title}" />
+            <a-input v-com.smart.framework.tool.code.model:value="searchModel.${item.javaProperty}" :size="formSizeConfig" placeholder="请输入${item.title}" />
             <#elseif (item.controlType='NUMBER')>
-            <a-input-number v-model:value="searchModel.${item.javaProperty}" style="width: 100%" :size="formSizeConfig" placeholder="请输入${item.title}" />
+            <a-input-number v-com.smart.framework.tool.code.model:value="searchModel.${item.javaProperty}" style="width: 100%" :size="formSizeConfig" placeholder="请输入${item.title}" />
             <#elseif (item.controlType='TEXTAREA')>
-            <a-textarea v-model:value="searchModel.${item.javaProperty}" :size="formSizeConfig" placeholder="请输入${item.title}" />
+            <a-textarea v-com.smart.framework.tool.code.model:value="searchModel.${item.javaProperty}" :size="formSizeConfig" placeholder="请输入${item.title}" />
             <#elseif (item.controlType='PASSWORD')>
-            <a-input-password v-model:value="searchModel.${item.javaProperty}" :size="formSizeConfig" placeholder="请输入${item.title}" />
+            <a-input-password v-com.smart.framework.tool.code.model:value="searchModel.${item.javaProperty}" :size="formSizeConfig" placeholder="请输入${item.title}" />
             <#elseif (item.controlType='RADIO')>
-            <a-radio-group v-model:value="searchModel.${item.javaProperty}" name="radioGroup-${item.javaProperty}">
+            <a-radio-group v-com.smart.framework.tool.code.model:value="searchModel.${item.javaProperty}" name="radioGroup-${item.javaProperty}">
               // TODO: 待开发
             </a-radio-group>
             </#if>
@@ -75,7 +75,7 @@
             <a-button
               :size="buttonSizeConfig"
               <#if item="SEARCH">
-              type="primary"
+              com.smart.framework.tool.code.type="primary"
               @click="loadData"
               <#elseif item="RESET">
               @click="handleReset"
@@ -96,7 +96,7 @@
       <template #table-operation="{ row }">
         <#if (mainTable.rowButtonType="MORE")>
         <a-dropdown>
-          <a-button :size="tableButtonSizeConfig" type="primary">
+          <a-button :size="tableButtonSizeConfig" com.smart.framework.tool.code.type="primary">
             Actions
             <DownOutlined />
           </a-button>
@@ -135,20 +135,20 @@
           <a-row>
             <#list mainTable.codeFormConfigList as item>
             <#if item.hidden>
-            <a-input v-model:value="formProps.model.${item.javaProperty}"/>
+            <a-input v-com.smart.framework.tool.code.model:value="formProps.com.smart.framework.tool.code.model.${item.javaProperty}"/>
              <#else>
             <a-col :span="${24/mainTable.formColNum}">
               <a-form-item label="${item.title}" name="${item.javaProperty}">
                 <#if (item.controlType='INPUT')>
-                <a-input v-model:value="formProps.model.${item.javaProperty}" :size="formSizeConfig" placeholder="请输入${item.title}" />
+                <a-input v-com.smart.framework.tool.code.model:value="formProps.com.smart.framework.tool.code.model.${item.javaProperty}" :size="formSizeConfig" placeholder="请输入${item.title}" />
                 <#elseif (item.controlType='NUMBER')>
-                <a-input-number v-model:value="formProps.model.${item.javaProperty}" style="width: 100%" :size="formSizeConfig" placeholder="请输入${item.title}" />
+                <a-input-number v-com.smart.framework.tool.code.model:value="formProps.com.smart.framework.tool.code.model.${item.javaProperty}" style="width: 100%" :size="formSizeConfig" placeholder="请输入${item.title}" />
                 <#elseif (item.controlType='TEXTAREA')>
-                <a-textarea v-model:value="formProps.model.${item.javaProperty}" :size="formSizeConfig" placeholder="请输入${item.title}" />
+                <a-textarea v-com.smart.framework.tool.code.model:value="formProps.com.smart.framework.tool.code.model.${item.javaProperty}" :size="formSizeConfig" placeholder="请输入${item.title}" />
                 <#elseif (item.controlType='PASSWORD')>
-                <a-input-password v-model:value="formProps.model.${item.javaProperty}" :size="formSizeConfig" placeholder="请输入${item.title}" />
+                <a-input-password v-com.smart.framework.tool.code.model:value="formProps.com.smart.framework.tool.code.model.${item.javaProperty}" :size="formSizeConfig" placeholder="请输入${item.title}" />
                 <#elseif (item.controlType='RADIO')>
-                <a-radio-group v-model:value="formProps.model.${item.javaProperty}" name="radioGroup-${item.javaProperty}"></a-radio-group>
+                <a-radio-group v-com.smart.framework.tool.code.model:value="formProps.com.smart.framework.tool.code.model.${item.javaProperty}" name="radioGroup-${item.javaProperty}"></a-radio-group>
                 </#if>
               </a-form-item>
             </a-col>
@@ -169,7 +169,7 @@ import { useI18n } from 'vue-i18n'
 import { <#if (mainTable.rowButtonType="MORE")>DownOutlined</#if> } from '@ant-design/icons-vue'
 
 import { useVxeTable<#if (mainTable.codeFormConfigList?size>0)>, useAddEdit</#if>, useVxeDelete } from '@/components/hooks'
-import SizeConfigHooks from '@/components/config/SizeConfigHooks'
+import SizeConfigHooks from '@/components/com.smart.framework.tool.code.config/SizeConfigHooks'
 
 import { handleLoadData<#if (mainTable.codeFormConfigList?size>0)>, handleGetById, handleSaveUpdate</#if>, handleDelete } from './${className}Hook'
 
@@ -270,7 +270,7 @@ export default defineComponent({
               </#list>
             ],
             <#if rule.ruleType='NUMBER'>
-            type: 'number',
+            com.smart.framework.tool.code.type: 'number',
             </#if>
             message: '${rule.message}'
           },
@@ -283,7 +283,7 @@ export default defineComponent({
       columns: [
        <#if mainTable.showCheckbox>
         {
-          type: 'checkbox',
+          com.smart.framework.tool.code.type: 'checkbox',
           width: 60,
           align: 'center',
           fixed: 'left'
