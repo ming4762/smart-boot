@@ -1,8 +1,7 @@
 package com.smart.module.auth.pojo.dto;
 
 import com.smart.framework.commons.core.captcha.constants.CaptchaTypeEnum;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -18,15 +17,27 @@ public class AuthPropertiesDTO implements Serializable {
     @Serial
     private static final long serialVersionUID = -7159379144515537898L;
 
-    /**
-     * 是否启用验证码
-     */
-    private Boolean captchaEnabled;
+    private CaptchaProperties captcha;
 
     /**
-     * 验证码类型
+     * 验证码参数
      */
-    private CaptchaTypeEnum captchaType;
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class CaptchaProperties implements Serializable {
+        /**
+         * 是否启用验证码
+         */
+        private Boolean captchaEnabled;
 
-    private String captchaIdent;
+        /**
+         * 验证码类型
+         */
+        private CaptchaTypeEnum captchaType;
+
+        private String captchaIdent;
+    }
 }

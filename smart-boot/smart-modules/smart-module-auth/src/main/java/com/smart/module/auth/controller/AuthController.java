@@ -247,9 +247,13 @@ public class AuthController {
     @Operation(summary = "获取认证参数")
     public Result<AuthPropertiesDTO> getAuthProperties() {
         AuthPropertiesDTO dto = new AuthPropertiesDTO();
-        dto.setCaptchaEnabled(this.authProperties.getCaptcha().getEnabled());
-        dto.setCaptchaType(this.authProperties.getCaptcha().getType());
-        dto.setCaptchaIdent(this.authProperties.getCaptcha().getType().getIdent());
+        dto.setCaptcha(
+                AuthPropertiesDTO.CaptchaProperties.builder()
+                        .captchaEnabled(this.authProperties.getCaptcha().getEnabled())
+                        .captchaType(this.authProperties.getCaptcha().getType())
+                        .captchaIdent(this.authProperties.getCaptcha().getType().getIdent())
+                        .build()
+        );
         return Result.success(dto);
     }
 }
