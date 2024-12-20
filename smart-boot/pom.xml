@@ -16,11 +16,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <spring-boot.version>3.3.5</spring-boot.version>
-        <spring-cloud.version>2023.0.3</spring-cloud.version>
-        <spring-cloud-alibaba.version>2023.0.1.0</spring-cloud-alibaba.version>
+        <spring-boot.version>3.4.0</spring-boot.version>
+        <spring-cloud.version>2024.0.0</spring-cloud.version>
+        <spring-cloud-alibaba.version>2023.0.3.2</spring-cloud-alibaba.version>
 
-        <guava.version>33.0.0-jre</guava.version>
+        <guava.version>33.3.1-jre</guava.version>
         <opensaml.version>2.6.4</opensaml.version>
         <commons-collections4.version>4.4</commons-collections4.version>
         <commons-beanutils.version>1.9.4</commons-beanutils.version>
@@ -49,7 +49,7 @@
         <hutool.version>5.8.25</hutool.version>
         <aliyun.oss.version>3.18.1</aliyun.oss.version>
         <knife4j-openapi3.version>4.1.0</knife4j-openapi3.version>
-        <qiniu.version>7.12.1</qiniu.version>
+        <qiniu.version>7.17.0</qiniu.version>
         <wx-java.version>4.4.0</wx-java.version>
         <aliyun.dysmsapi.version>2.0.23</aliyun.dysmsapi.version>
         <tencentcloud.sdk.version>3.1.759</tencentcloud.sdk.version>
