@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.util.Assert;
 
 import java.io.Serial;
@@ -45,11 +46,13 @@ public class AuthProperties implements InitializingBean {
     /**
      * SAML2配置
      */
+    @NestedConfigurationProperty
     private AuthSaml2Properties saml2 = new AuthSaml2Properties();
 
     /**
      * 忽略权限验证配置
      */
+    @NestedConfigurationProperty
     private AuthIgnoreProperties ignores = new AuthIgnoreProperties();
 
     /**
@@ -70,6 +73,7 @@ public class AuthProperties implements InitializingBean {
     /**
      * 验证码参数
      */
+    @NestedConfigurationProperty
     private AuthCaptchaProperties captcha = new AuthCaptchaProperties();
 
     /**
