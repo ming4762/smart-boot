@@ -173,6 +173,7 @@ public class SysTenantController extends BaseController<SysTenantService, SysTen
         }
         return Result.success(
                 this.service.lambdaQuery()
+                        .eq(SysTenantPO::getUseYn, Boolean.TRUE)
                         .orderByAsc(SysTenantPO::getSeq)
                         .list()
         );
