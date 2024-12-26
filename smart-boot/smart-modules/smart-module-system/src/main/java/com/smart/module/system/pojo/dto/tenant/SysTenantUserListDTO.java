@@ -4,6 +4,7 @@ import com.smart.framework.crud.query.PageSortQuery;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serial;
 
@@ -16,6 +17,7 @@ import java.io.Serial;
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
+@ToString
 public class SysTenantUserListDTO extends PageSortQuery {
     @Serial
     private static final long serialVersionUID = -3477956748273299223L;

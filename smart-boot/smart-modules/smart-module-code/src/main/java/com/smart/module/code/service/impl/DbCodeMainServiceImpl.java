@@ -784,7 +784,6 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
      * @param idList ID列表
      * @return 是否删除成功
      */
-    @SuppressWarnings("unchecked")
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean removeByIds(Collection<?> idList) {
@@ -792,7 +791,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
             return false;
         }
         // 删除主表
-        this.baseMapper.deleteBatchIds(idList);
+        this.baseMapper.deleteByIds(idList);
         // 删除附表关联
         this.dbCodeRelatedTableService.remove(
                 new QueryWrapper<DbCodeRelatedTablePO>().lambda()

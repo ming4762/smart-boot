@@ -11,7 +11,7 @@ import java.io.InputStream;
  * @since 5.0.0
  */
 @Getter
-public class SmartInputStreamTemplateElement extends SmartTemplateElement {
+public class SmartInputStreamTemplateElement extends AbstractSmartTemplateElement {
 
     private final InputStream inputStream;
 

@@ -2,8 +2,6 @@ package com.smart.framework.freemarker.template;
 
 import lombok.Getter;
 
-import java.io.InputStream;
-
 /**
  * 从classpath中获取模板
  * @author shizhongming
@@ -11,7 +9,7 @@ import java.io.InputStream;
  * @since 5.0.0
  */
 @Getter
-public class SmartClassPathTemplateElement extends SmartTemplateElement {
+public class SmartClassPathTemplateElement extends AbstractSmartTemplateElement {
 
     public SmartClassPathTemplateElement(String classPath) {
         super(classPath);

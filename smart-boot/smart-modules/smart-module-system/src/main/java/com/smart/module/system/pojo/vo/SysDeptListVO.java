@@ -5,6 +5,7 @@ import com.smart.framework.crud.model.CreateUpdateUserSetter;
 import com.smart.module.system.model.SysDeptPO;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serial;
 
@@ -15,6 +16,7 @@ import java.io.Serial;
  */
 @Getter
 @Setter
+@ToString
 public class SysDeptListVO extends SysDeptPO implements CreateUpdateUserSetter {
 
     @Serial

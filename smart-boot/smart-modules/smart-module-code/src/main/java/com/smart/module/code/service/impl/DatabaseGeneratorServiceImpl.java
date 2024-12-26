@@ -2,7 +2,7 @@ package com.smart.module.code.service.impl;
 
 import com.smart.framework.freemarker.engine.TemplateEngine;
 import com.smart.framework.freemarker.template.SmartClassPathTemplateElement;
-import com.smart.framework.freemarker.template.SmartTemplateElement;
+import com.smart.framework.freemarker.template.AbstractSmartTemplateElement;
 import com.smart.framework.freemarker.template.SmartValueTemplateElement;
 import com.smart.framework.tool.database.executor.DatabaseExecutor;
 import com.smart.framework.tool.database.executor.DbExecutorProvider;
@@ -59,7 +59,7 @@ public class DatabaseGeneratorServiceImpl implements DbDictGeneratorService {
      * @param templateElement 模板信息
      */
     @Override
-    public void createDatabaseDic(@NonNull DbConnectionConfig databaseConnection, @NonNull OutputStream outputStream, @NonNull SmartTemplateElement templateElement) {
+    public void createDatabaseDic(@NonNull DbConnectionConfig databaseConnection, @NonNull OutputStream outputStream, @NonNull AbstractSmartTemplateElement templateElement) {
 
         this.templateEngine.processToOutputStream(templateElement, this.getDatabaseDicModel(databaseConnection), outputStream);
     }

@@ -17,7 +17,6 @@ public interface CrudConstants {
      */
     List<String> LOGIC_DELETE_METHODS = List.of(
             SqlMethod.DELETE_BY_ID.getMethod(),
-            SqlMethod.DELETE_BATCH_BY_IDS.getMethod(),
             SqlMethod.DELETE.getMethod()
     );
 }

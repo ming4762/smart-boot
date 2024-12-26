@@ -9,7 +9,7 @@ import lombok.Getter;
  * @since 5.0.0
  */
 @Getter
-public class SmartValueTemplateElement extends SmartTemplateElement {
+public class SmartValueTemplateElement extends AbstractSmartTemplateElement {
 
     private final String templateValue;
 

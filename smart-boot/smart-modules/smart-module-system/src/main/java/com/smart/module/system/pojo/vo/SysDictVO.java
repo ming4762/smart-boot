@@ -4,6 +4,7 @@ import com.smart.module.system.model.SysDictPO;
 import com.smart.module.system.model.tenant.SysTenantPO;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serial;
 
@@ -14,6 +15,7 @@ import java.io.Serial;
  */
 @Getter
 @Setter
+@ToString
 public class SysDictVO extends SysDictPO {
     @Serial
     private static final long serialVersionUID = -4015144224686062542L;

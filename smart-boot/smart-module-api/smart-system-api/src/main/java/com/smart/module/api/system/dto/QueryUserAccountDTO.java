@@ -1,9 +1,6 @@
 package com.smart.module.api.system.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.lang.NonNull;
 
 import java.io.Serial;
@@ -18,6 +15,7 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class QueryUserAccountDTO implements Serializable {
 
     @Serial

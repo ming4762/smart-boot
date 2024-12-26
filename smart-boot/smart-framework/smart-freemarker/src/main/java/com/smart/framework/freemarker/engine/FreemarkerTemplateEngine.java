@@ -2,7 +2,7 @@ package com.smart.framework.freemarker.engine;
 
 import com.smart.framework.freemarker.template.SmartClassPathTemplateElement;
 import com.smart.framework.freemarker.template.SmartInputStreamTemplateElement;
-import com.smart.framework.freemarker.template.SmartTemplateElement;
+import com.smart.framework.freemarker.template.AbstractSmartTemplateElement;
 import com.smart.framework.freemarker.template.SmartValueTemplateElement;
 import freemarker.cache.ByteArrayTemplateLoader;
 import freemarker.template.Configuration;
@@ -40,7 +40,7 @@ public class FreemarkerTemplateEngine implements TemplateEngine {
      */
     @SneakyThrows(IOException.class)
     @Override
-    public void processToOutputStream(@NonNull SmartTemplateElement templateElement, @NonNull Object model, @NonNull OutputStream outputStream) {
+    public void processToOutputStream(@NonNull AbstractSmartTemplateElement templateElement, @NonNull Object model, @NonNull OutputStream outputStream) {
         // 创建输出流并写入模板
         try (final Writer out = new BufferedWriter(new OutputStreamWriter(outputStream, configuration.getDefaultEncoding()))) {
             this.processToWriter(templateElement, model, out);
@@ -56,7 +56,7 @@ public class FreemarkerTemplateEngine implements TemplateEngine {
      */
     @Override
     @SneakyThrows({IOException.class, TemplateException.class})
-    public void processToWriter(@NonNull SmartTemplateElement templateElement, @NonNull Object model, @NonNull Writer out) {
+    public void processToWriter(@NonNull AbstractSmartTemplateElement templateElement, @NonNull Object model, @NonNull Writer out) {
         Template template = this.getTemplate(templateElement);
         template.process(model, out);
     }
@@ -68,7 +68,7 @@ public class FreemarkerTemplateEngine implements TemplateEngine {
      * @return 模板
      */
     @SneakyThrows(IOException.class)
-    protected Template getTemplate(@NonNull SmartTemplateElement templateElement) {
+    protected Template getTemplate(@NonNull AbstractSmartTemplateElement templateElement) {
         switch (templateElement) {
             case SmartValueTemplateElement smartValueTemplateElement -> {
                 return new Template(smartValueTemplateElement.getName(), smartValueTemplateElement.getTemplateValue(), configuration);

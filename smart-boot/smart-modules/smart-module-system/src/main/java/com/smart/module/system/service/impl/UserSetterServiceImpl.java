@@ -94,7 +94,7 @@ public class UserSetterServiceImpl implements UserSetterService {
             return;
         }
         // 查询用户信息
-        List<SysUserPO> sysUserList = this.sysUserMapper.selectBatchIds(nonNullIdList);
+        List<SysUserPO> sysUserList = this.sysUserMapper.selectByIds(nonNullIdList);
         if (sysUserList.isEmpty()) {
             return;
         }

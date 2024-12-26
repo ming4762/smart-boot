@@ -43,7 +43,7 @@ public class WindowsServerInfo extends AbstractServerInfo {
     @SneakyThrows(IOException.class)
     @Override
     public String exec(String[] command) {
-        Process process = Runtime.getRuntime().exec(command[0]);
+        Process process = Runtime.getRuntime().exec(command);
         process.getOutputStream().close();
 
         try (Scanner scanner = new Scanner(process.getInputStream())) {

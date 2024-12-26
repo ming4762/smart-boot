@@ -13,6 +13,7 @@ import java.io.Serializable;
  */
 @Getter
 @Setter
+@ToString
 public class AuthPropertiesDTO implements Serializable {
     @Serial
     private static final long serialVersionUID = -7159379144515537898L;

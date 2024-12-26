@@ -9,11 +9,11 @@ import lombok.Getter;
  * @since 5.0.0
  */
 @Getter
-public abstract class SmartTemplateElement {
+public abstract class AbstractSmartTemplateElement {
 
     private final String name;
 
-    public SmartTemplateElement(String name) {
+    protected AbstractSmartTemplateElement(String name) {
         this.name = name;
     }
 }

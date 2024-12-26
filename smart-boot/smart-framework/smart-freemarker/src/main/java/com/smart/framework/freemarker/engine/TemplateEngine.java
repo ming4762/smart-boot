@@ -1,6 +1,6 @@
 package com.smart.framework.freemarker.engine;
 
-import com.smart.framework.freemarker.template.SmartTemplateElement;
+import com.smart.framework.freemarker.template.AbstractSmartTemplateElement;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 
@@ -24,7 +24,7 @@ public interface TemplateEngine {
      * @param model 模板数据
      * @param outputStream 输出流
      */
-    void processToOutputStream(@NonNull SmartTemplateElement templateElement, @NonNull Object model, @NonNull OutputStream outputStream);
+    void processToOutputStream(@NonNull AbstractSmartTemplateElement templateElement, @NonNull Object model, @NonNull OutputStream outputStream);
 
     /**
      * 执行引擎并将结果写入到writer中
@@ -32,7 +32,7 @@ public interface TemplateEngine {
      * @param model 模板数据
      * @param out 输出流
      */
-    void processToWriter(@NonNull SmartTemplateElement templateElement, @NonNull Object model, @NonNull Writer out);
+    void processToWriter(@NonNull AbstractSmartTemplateElement templateElement, @NonNull Object model, @NonNull Writer out);
 
     /**
      * 执行引擎并返回结果
@@ -41,7 +41,7 @@ public interface TemplateEngine {
      * @return 模板结果
      */
     @SneakyThrows(IOException.class)
-    default String processToString(@NonNull SmartTemplateElement templateElement, @NonNull Object model) {
+    default String processToString(@NonNull AbstractSmartTemplateElement templateElement, @NonNull Object model) {
         try (StringWriter stringWriter = new StringWriter()) {
             this.processToWriter(templateElement, model, stringWriter);
             return stringWriter.toString();

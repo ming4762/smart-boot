@@ -47,7 +47,7 @@ public class DefaultSmsCreateValidateProviderImpl implements SmsCreateValidatePr
     public String create(@NonNull String phone) {
         AuthProperties.SmsProperties smsProperties = this.authProperties.getSms();
         // 生成6为验证码
-        String code = RandomStringUtils.randomNumeric(6);
+        String code = RandomStringUtils.secure().nextNumeric(6);
         // 发送短信
         LinkedHashMap<String, String> templateParameter = LinkedHashMap.newLinkedHashMap(1);
         templateParameter.put("code", code);

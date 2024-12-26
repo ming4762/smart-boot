@@ -70,7 +70,7 @@ public class SysUserAccountServiceImpl extends BaseServiceImpl<SysUserAccountMap
     @Transactional(rollbackFor = Exception.class)
     public boolean createAccount(@NonNull Long tenantId, @NonNull List<Long> userIdList) {
         // 查询用户信息
-        List<SysUserPO> userList = this.sysUserMapper.selectBatchIds(userIdList);
+        List<SysUserPO> userList = this.sysUserMapper.selectByIds(userIdList);
         if (CollectionUtils.isEmpty(userList)) {
             return false;
         }

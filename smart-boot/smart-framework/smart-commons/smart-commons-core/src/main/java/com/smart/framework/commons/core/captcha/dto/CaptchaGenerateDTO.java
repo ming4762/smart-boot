@@ -18,6 +18,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 public class CaptchaGenerateDTO implements Serializable {
     @Serial
     private static final long serialVersionUID = 6239126727727017687L;
@@ -45,6 +46,7 @@ public class CaptchaGenerateDTO implements Serializable {
 
     @Getter
     @Setter
+    @ToString
     public static class ImageDTO implements Serializable {
 
         @Serial
@@ -83,6 +85,7 @@ public class CaptchaGenerateDTO implements Serializable {
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
+    @ToString
     public static class TextDTO implements Serializable {
         @Serial
         private static final long serialVersionUID = 6723530089522443084L;
