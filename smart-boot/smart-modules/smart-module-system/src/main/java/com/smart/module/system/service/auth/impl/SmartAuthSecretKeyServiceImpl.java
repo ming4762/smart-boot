@@ -4,6 +4,7 @@ import cn.hutool.core.util.ZipUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.smart.framework.commons.core.exception.BaseException;
 import com.smart.framework.commons.core.exception.BusinessException;
+import com.smart.framework.commons.core.exception.SystemException;
 import com.smart.framework.crud.constants.CrudCommonEnum;
 import com.smart.framework.crud.query.PageSortQuery;
 import com.smart.framework.crud.service.BaseServiceImpl;
@@ -22,6 +23,7 @@ import com.smart.module.system.service.SysParameterService;
 import com.smart.module.system.service.auth.SmartAuthSecretKeyService;
 import jakarta.servlet.ServletOutputStream;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,16 +47,32 @@ import java.util.stream.Stream;
 @Service
 public class SmartAuthSecretKeyServiceImpl extends BaseServiceImpl<SmartAuthSecretKeyMapper, SmartAuthSecretKeyPO> implements SmartAuthSecretKeyService {
 
-    private final SmartFileApi smartFileApi;
+    private final ObjectProvider<SmartFileApi> smartFileApiProvider;
 
-    private final SmartFileStorageApi smartFileStorageApi;
+    private final ObjectProvider<SmartFileStorageApi> smartFileStorageApiProvider;
 
     private final SysParameterService sysParameterService;
 
-    public SmartAuthSecretKeyServiceImpl(SmartFileApi smartFileApi, SysParameterService sysParameterService, SmartFileStorageApi smartFileStorageApi) {
-        this.smartFileApi = smartFileApi;
+    public SmartAuthSecretKeyServiceImpl(ObjectProvider<SmartFileApi> smartFileApiProvider, SysParameterService sysParameterService, ObjectProvider<SmartFileStorageApi> smartFileStorageApiProvider) {
+        this.smartFileApiProvider = smartFileApiProvider;
         this.sysParameterService = sysParameterService;
-        this.smartFileStorageApi = smartFileStorageApi;
+        this.smartFileStorageApiProvider = smartFileStorageApiProvider;
+    }
+
+    private SmartFileApi getNonnullSmartFileApi() {
+        SmartFileApi smartFileApi = smartFileApiProvider.getIfAvailable();
+        if (smartFileApi == null) {
+            throw new SystemException("操作失败，文件API未引入，请引入文件模块");
+        }
+        return smartFileApi;
+    }
+
+    private SmartFileStorageApi getNonnullSmartFileStorageApi() {
+        SmartFileStorageApi smartFileStorageApi = smartFileStorageApiProvider.getIfAvailable();
+        if (smartFileStorageApi == null) {
+            throw new SystemException("操作失败，文件存储API未引入，请引入文件模块");
+        }
+        return smartFileStorageApi;
     }
 
     @Override
@@ -66,7 +84,7 @@ public class SmartAuthSecretKeyServiceImpl extends BaseServiceImpl<SmartAuthSecr
         if (Boolean.TRUE.equals(parameter.getParameter().get(CrudCommonEnum.WITH_ALL.name()))) {
             Set<Long> fileStorageIds = list.stream().map(SmartAuthSecretKeyPO::getFileStorageId).collect(Collectors.toSet());
             if (!CollectionUtils.isEmpty(fileStorageIds)) {
-                Map<Long, SmartFileStorageListDTO> fileStorageMap = this.smartFileStorageApi.listByIds(fileStorageIds).stream()
+                Map<Long, SmartFileStorageListDTO> fileStorageMap = this.getNonnullSmartFileStorageApi().listByIds(fileStorageIds).stream()
                         .collect(Collectors.toMap(SmartFileStorageListDTO::getId, item -> item));
                 return list.stream()
                         .map(item -> {
@@ -94,7 +112,7 @@ public class SmartAuthSecretKeyServiceImpl extends BaseServiceImpl<SmartAuthSecr
         boolean result = super.removeBatchByIds(list);
         // 删除对应的文件信息
         if (!CollectionUtils.isEmpty(fileIdList)) {
-            this.smartFileApi.batchDelete(fileIdList);
+            this.getNonnullSmartFileApi().batchDelete(fileIdList);
         }
         return result;
     }
@@ -111,14 +129,14 @@ public class SmartAuthSecretKeyServiceImpl extends BaseServiceImpl<SmartAuthSecr
         FileHandlerResult publicKeySaveResult = null;
         FileHandlerResult privateKeySaveResult = null;
         try {
-            publicKeySaveResult = this.smartFileApi.save(
+            publicKeySaveResult = this.getNonnullSmartFileApi().save(
                         RemoteFileSaveParameter.builder()
                             .multipartFile(parameter.getPublicKeyFile())
                             .fileStorageId(parameter.getFileStorageId())
                             .type(secretFileType)
                             .build()
             );
-            privateKeySaveResult = this.smartFileApi.save(
+            privateKeySaveResult = this.getNonnullSmartFileApi().save(
                     RemoteFileSaveParameter.builder()
                             .multipartFile(parameter.getPrivateKeyFile())
                             .fileStorageId(parameter.getFileStorageId())
@@ -132,15 +150,15 @@ public class SmartAuthSecretKeyServiceImpl extends BaseServiceImpl<SmartAuthSecr
             boolean saveResult = this.save(model);
             // 删除之前的文件，放到最后是因为防止保存失败，数据回蓝，而文件已经删除
             if (secretKey != null) {
-                this.smartFileApi.batchDelete(List.of(secretKey.getPrivateKeyFileId(), secretKey.getPublicKeyFileId()));
+                this.getNonnullSmartFileApi().batchDelete(List.of(secretKey.getPrivateKeyFileId(), secretKey.getPublicKeyFileId()));
             }
             return saveResult;
         } catch (Exception e) {
             if (publicKeySaveResult != null) {
-                this.smartFileApi.delete(publicKeySaveResult.getFileId());
+                this.getNonnullSmartFileApi().delete(publicKeySaveResult.getFileId());
             }
             if (privateKeySaveResult != null) {
-                this.smartFileApi.delete(privateKeySaveResult.getFileId());
+                this.getNonnullSmartFileApi().delete(privateKeySaveResult.getFileId());
             }
             throw new BaseException(e);
         }
@@ -159,8 +177,8 @@ public class SmartAuthSecretKeyServiceImpl extends BaseServiceImpl<SmartAuthSecr
             throw new BusinessException("获取秘钥信息失败，请检查ID是否正确");
         }
         // 获取文件
-        FileDownloadResult publicKey = this.smartFileApi.download(secretKey.getPublicKeyFileId());
-        FileDownloadResult privateKey = this.smartFileApi.download(secretKey.getPrivateKeyFileId());
+        FileDownloadResult publicKey = this.getNonnullSmartFileApi().download(secretKey.getPublicKeyFileId());
+        FileDownloadResult privateKey = this.getNonnullSmartFileApi().download(secretKey.getPrivateKeyFileId());
 
         ZipUtil.zip(
                 outputStream,

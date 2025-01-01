@@ -24,6 +24,7 @@ import com.smart.module.system.service.SysSystemService;
 import com.smart.module.system.service.auth.SmartAuthLicenseService;
 import com.smart.module.system.service.auth.SmartAuthSecretKeyService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,16 +52,24 @@ public class SmartAuthLicenseServiceImpl extends BaseServiceImpl<SmartAuthLicens
 
     private final SmartAuthSecretKeyService smartAuthSecretKeyService;
 
-    private final SmartFileApi smartFileApi;
+    private final ObjectProvider<SmartFileApi> smartFileApiProvider;
 
     private final SysParameterService sysParameterService;
 
-    public SmartAuthLicenseServiceImpl(@Lazy LicenseGenerator licenseGenerator, SysSystemService systemService, SmartAuthSecretKeyService smartAuthSecretKeyService, SmartFileApi smartFileApi, SysParameterService sysParameterService) {
+    public SmartAuthLicenseServiceImpl(@Lazy LicenseGenerator licenseGenerator, SysSystemService systemService, SmartAuthSecretKeyService smartAuthSecretKeyService, ObjectProvider<SmartFileApi> smartFileApiProvider, SysParameterService sysParameterService) {
         this.licenseGenerator = licenseGenerator;
         this.systemService = systemService;
         this.smartAuthSecretKeyService = smartAuthSecretKeyService;
-        this.smartFileApi = smartFileApi;
+        this.smartFileApiProvider = smartFileApiProvider;
         this.sysParameterService = sysParameterService;
+    }
+
+    private SmartFileApi getNonnullSmartFileApi() {
+        SmartFileApi smartFileApi = smartFileApiProvider.getIfAvailable();
+        if (smartFileApi == null) {
+            throw new SystemException("操作失败，文件API未引入，请引入文件模块");
+        }
+        return smartFileApi;
     }
 
     /**
@@ -95,7 +104,7 @@ public class SmartAuthLicenseServiceImpl extends BaseServiceImpl<SmartAuthLicens
         }
         // 查询秘钥信息
         SmartAuthSecretKeyPO smartAuthSecretKey = this.getSecretKey(data.getSecretKeyId());
-        FileDownloadResult privateKeyData = this.smartFileApi.download(smartAuthSecretKey.getPrivateKeyFileId());
+        FileDownloadResult privateKeyData = this.getNonnullSmartFileApi().download(smartAuthSecretKey.getPrivateKeyFileId());
         if (privateKeyData == null) {
             throw new SystemException("获取秘钥文件失败");
         }
@@ -117,7 +126,7 @@ public class SmartAuthLicenseServiceImpl extends BaseServiceImpl<SmartAuthLicens
         InputStream inputStream = this.licenseGenerator.generate(parameter);
         String filename = data.getLicenseName() + ".lic";
         // 保存license文件
-        FileHandlerResult licenseFile = this.smartFileApi.save(
+        FileHandlerResult licenseFile = this.getNonnullSmartFileApi().save(
                 RemoteFileSaveParameter.builder()
                         .multipartFile(new InputStreamMultipartFile(inputStream, filename))
                         .type(secrecyFileType)
@@ -158,8 +167,8 @@ public class SmartAuthLicenseServiceImpl extends BaseServiceImpl<SmartAuthLicens
             throw new BusinessException("获取秘钥信息失败");
         }
         // 获取公钥
-        FileDownloadResult publicKeyFile = this.smartFileApi.download(authSecretKey.getPublicKeyFileId());
-        FileDownloadResult licenseFile = this.smartFileApi.download(authLicense.getLicenseFileId());
+        FileDownloadResult publicKeyFile = this.getNonnullSmartFileApi().download(authSecretKey.getPublicKeyFileId());
+        FileDownloadResult licenseFile = this.getNonnullSmartFileApi().download(authLicense.getLicenseFileId());
         if (publicKeyFile == null || licenseFile == null) {
             throw new BusinessException("获取文件失败，请检查文件是否已删除");
         }
@@ -191,7 +200,7 @@ public class SmartAuthLicenseServiceImpl extends BaseServiceImpl<SmartAuthLicens
                             .in(SmartAuthLicensePO::getId, deleteFileIds)
             ).stream().map(SmartAuthLicensePO::getLicenseFileId).collect(Collectors.toSet());
             if (!CollectionUtils.isEmpty(fileIds)) {
-                this.smartFileApi.batchDelete(fileIds);
+                this.getNonnullSmartFileApi().batchDelete(fileIds);
             }
             this.update(
                     new UpdateWrapper<SmartAuthLicensePO>().lambda()
@@ -223,7 +232,7 @@ public class SmartAuthLicenseServiceImpl extends BaseServiceImpl<SmartAuthLicens
 
         boolean result = super.removeBatchByIds(list);
         if (!CollectionUtils.isEmpty(fileIds)) {
-            this.smartFileApi.batchDelete(fileIds);
+            this.getNonnullSmartFileApi().batchDelete(fileIds);
         }
         return result;
     }
@@ -244,7 +253,7 @@ public class SmartAuthLicenseServiceImpl extends BaseServiceImpl<SmartAuthLicens
         entity.setStatus(LicenseStatusEnum.UPDATE);
         boolean result = super.save(entity);
         if (fileId != null) {
-            this.smartFileApi.delete(entity.getLicenseFileId());
+            this.getNonnullSmartFileApi().delete(entity.getLicenseFileId());
         }
         return result;
     }

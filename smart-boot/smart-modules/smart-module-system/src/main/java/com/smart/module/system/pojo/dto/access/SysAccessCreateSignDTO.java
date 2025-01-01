@@ -39,4 +39,6 @@ public class SysAccessCreateSignDTO implements Serializable {
 
     @NotNull(message = "Content-Type不能为空")
     private String contentType;
+
+    private String tokenPrefix;
 }

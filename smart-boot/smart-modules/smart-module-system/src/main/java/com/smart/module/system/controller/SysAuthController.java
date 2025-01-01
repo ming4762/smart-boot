@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,12 +44,20 @@ public class SysAuthController {
 
     private final SysUserAccountService sysUserAccountService;
 
-    private final AuthApi authApi;
+    private final ObjectProvider<AuthApi> authApiProvider;
 
-    public SysAuthController(SysUserService sysUserService, SysUserAccountService sysAuthUserService, AuthApi authApi) {
+    public SysAuthController(SysUserService sysUserService, SysUserAccountService sysAuthUserService, ObjectProvider<AuthApi> authApiProvider) {
         this.sysUserService = sysUserService;
         this.sysUserAccountService = sysAuthUserService;
-        this.authApi = authApi;
+        this.authApiProvider = authApiProvider;
+    }
+
+    private AuthApi getNonnullAuthApi() {
+        AuthApi authApi = authApiProvider.getIfAvailable();
+        if (authApi == null) {
+            throw new SystemException("操作失败，文件API未引入，请引入文件模块");
+        }
+        return authApi;
     }
 
     /**
@@ -78,7 +87,7 @@ public class SysAuthController {
         }
         this.sysUserAccountService.changePassword(AuthUtils.getNonNullCurrentUserId(), parameter.getNewPassword());
         // 删除用户登录状态
-        this.authApi.offlineByUsername(AuthUtils.getNonNullCurrentUser().getUsername());
+        this.getNonnullAuthApi().offlineByUsername(AuthUtils.getNonNullCurrentUser().getUsername());
         return Result.success(true);
     }
 
@@ -94,10 +103,9 @@ public class SysAuthController {
                         .eq("A.user_id", AuthUtils.getNonNullCurrentUserId())
         );
         if (userList.isEmpty()) {
-            // todo:国际化
             throw new SystemException("系统发生未知错误，未找到人员信息");
         }
-        Boolean initPassword = userList.get(0).getInitialPasswordYn();
+        Boolean initPassword = userList.getFirst().getInitialPasswordYn();
         return Result.success(initPassword == null || Boolean.TRUE.equals(initPassword));
     }
 

@@ -47,9 +47,9 @@ public class LocalSysDictApi implements SysDictApi {
     public Map<String, List<SysDictItemDTO>> listByDictCode(List<String> dictCode) {
         Map<String, List<SysDictItemPO>> listMap = this.sysDictService.listItemByCode(dictCode);
         if (CollectionUtils.isEmpty(listMap)) {
-            return new HashMap<>(0);
+            return HashMap.newHashMap(0);
         }
-        Map<String, List<SysDictItemDTO>> result = new HashMap<>(listMap.size());
+        Map<String, List<SysDictItemDTO>> result = HashMap.newHashMap(listMap.size());
         listMap.forEach((key, value) -> {
             List<SysDictItemDTO> dtoList = value.stream()
                     .map(item -> {

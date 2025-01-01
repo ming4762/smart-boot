@@ -1,7 +1,6 @@
 package com.smart.module.system.service.auth.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.smart.framework.auth.core.properties.AuthProperties;
 import com.smart.framework.commons.core.exception.SystemException;
 import com.smart.framework.commons.core.utils.Base64Utils;
 import com.smart.framework.commons.core.utils.SmartIdGenerator;
@@ -36,7 +35,6 @@ import java.util.UUID;
 public class SysAuthAccessSecretServiceImpl extends BaseServiceImpl<SysAuthAccessSecretMapper, SysAuthAccessSecretPO> implements SysAuthAccessSecretService {
 
     private final SysTenantService sysTenantService;
-    private final AuthProperties authProperties;
 
     /**
      * 插入一条记录（选择字段，策略插入）
@@ -94,7 +92,7 @@ public class SysAuthAccessSecretServiceImpl extends BaseServiceImpl<SysAuthAcces
                 parameter.getContentType(),
                 parameter.getDate(),
                 parameter.getNonce(),
-                this.authProperties.getAccessSecret().getTokenPrefix(),
+                parameter.getTokenPrefix(),
                 accessSecret.getAccessKey(),
                 accessSecret.getSecretKey());
     }
