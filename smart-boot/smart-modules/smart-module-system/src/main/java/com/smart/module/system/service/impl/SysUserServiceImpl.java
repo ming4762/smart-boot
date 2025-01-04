@@ -51,7 +51,6 @@ import com.smart.module.system.service.*;
 import com.smart.module.system.service.tenant.SysTenantUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.NoSuchMessageException;
@@ -79,10 +78,6 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
      * 密码加密盐值
      */
     private static final String SALT = "888888$#@";
-
-    private static final String I18N_LEFT = "{";
-
-    private static final String I18N_RIGHT = "}";
 
     private final SysUserRoleService sysUserRoleService;
     private final SysUserDeptService sysUserDeptService;
@@ -569,10 +564,10 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
             SysFunctionListVO vo = new SysFunctionListVO();
             BeanUtils.copyProperties(item, vo);
             // 获取国际化信息
-            if (!CollectionUtils.isEmpty(localeList) && StringUtils.isNotBlank(item.getI18nCode()) && item.getI18nCode().startsWith(I18N_LEFT) && item.getI18nCode().endsWith(I18N_RIGHT)) {
-                String i18nCode = item.getI18nCode().replace(I18N_LEFT, "").replace(I18N_RIGHT, "");
+            if (!CollectionUtils.isEmpty(localeList) && StringUtils.isNotBlank(item.getI18nCode())) {
+                String i18nCode = item.getI18nCode();
                 vo.setLocales(
-                        localeList.stream().collect(Collectors.toMap(Locale::toString, locale -> {
+                        localeList.stream().collect(Collectors.toMap(Locale::toLanguageTag, locale -> {
                             try {
                                 return I18nUtils.get(i18nCode, locale);
                             } catch (NoSuchMessageException e) {

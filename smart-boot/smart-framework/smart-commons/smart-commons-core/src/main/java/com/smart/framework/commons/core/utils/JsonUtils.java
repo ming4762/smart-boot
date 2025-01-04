@@ -3,7 +3,9 @@ package com.smart.framework.commons.core.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -13,12 +15,16 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * json 工具类
@@ -119,4 +125,81 @@ public final class JsonUtils {
         return OBJECT_MAPPER.readValue(json, typeReference);
     }
 
+    /**
+     * 将json压扁转为map
+     * @param json json
+     * @return map
+     */
+    @SneakyThrows({JsonProcessingException.class})
+    public static Map<String, Object> flattenJson(String json) {
+        if (!StringUtils.hasText(json)) {
+            return Map.of();
+        }
+        JsonNode jsonNode = OBJECT_MAPPER.readTree(json);
+        return flattenJson(jsonNode, "");
+    }
+
+    /**
+     * 将json压扁转为map
+     * @param jsonNode jsonNode
+     * @param parentKey 父级key
+     * @return map
+     */
+    public static Map<String, Object> flattenJson(JsonNode jsonNode, String parentKey) {
+        Map<String, Object> flattenedMap = HashMap.newHashMap(8);
+
+        if (!jsonNode.isObject()) {
+            flattenedMap.put(parentKey, jsonNode.asText());
+            return flattenedMap;
+        }
+        Iterator<Map.Entry<String, JsonNode>> fields = jsonNode.fields();
+        while (fields.hasNext()) {
+            Map.Entry<String, JsonNode> field = fields.next();
+            String key = field.getKey();
+            JsonNode value = field.getValue();
+            String newKey = parentKey.isEmpty() ? key : parentKey + "." + key;
+            if (value.isObject()) {
+                flattenedMap.putAll(flattenJson(value, newKey));
+            } else if (value.isArray()) {
+                for (int i = 0; i < value.size(); i++) {
+                    flattenedMap.put(newKey + "[" + i + "]", value.get(i));
+                }
+            } else {
+                flattenedMap.put(newKey, value.asText());
+            }
+        }
+        return flattenedMap;
+    }
+
+    @SneakyThrows({JsonProcessingException.class})
+    public static JsonNode deepMerge(String ...jsons) {
+        if (jsons.length == 0) {
+            return OBJECT_MAPPER.createObjectNode();
+        }
+        if (jsons.length == 1) {
+            return OBJECT_MAPPER.readTree(jsons[0]);
+        } else {
+            JsonNode result = OBJECT_MAPPER.readTree(jsons[0]);
+            for (int i = 1; i < jsons.length; i++) {
+                deepMerge(result, OBJECT_MAPPER.readTree(jsons[i]));
+            }
+            return result;
+        }
+    }
+
+    private static void deepMerge(JsonNode target, JsonNode source) {
+        for (Iterator<Map.Entry<String, JsonNode>> it = source.fields(); it.hasNext(); ) {
+            Map.Entry<String, JsonNode> field = it.next();
+            String fieldName = field.getKey();
+            JsonNode jsonNode = field.getValue();
+
+            if (jsonNode.isObject() && target.has(fieldName) && target.get(fieldName).isObject()) {
+                // 如果是对象并且目标也有这个字段，则递归合并
+                deepMerge(target.get(fieldName), jsonNode);
+            } else {
+                // 否则，覆盖或者添加新的字段
+                ((ObjectNode) target).set(fieldName, jsonNode.deepCopy());
+            }
+        }
+    }
 }

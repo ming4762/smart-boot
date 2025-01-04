@@ -80,7 +80,7 @@ public enum AuthI18nMessage implements I18nMessage {
 
     // --------- access secret 认证
     ACCESS_SECRET_TOKEN_EMPTY("auth.access.secret.token.empty", "Authentication information does not exist"),
-    ACCESS_SECRET_FORMAT_ERROR("auth.access.secret.token.format.error" ,"Authentication format error, expected {PREFIX}:{ACCESS_KEY}:{SIGN}"),
+    ACCESS_SECRET_FORMAT_ERROR("auth.access.secret.token.format_error" ,"Authentication format error, expected {PREFIX}:{ACCESS_KEY}:{SIGN}"),
     ACCESS_SECRET_ACCESS_KEY_ERROR("auth.access.secret.accessKey.error", "Access key error"),
     ACCESS_SECRET_ACCESS_KEY_EXPIRE("auth.access.secret.accessKey", "Access key has expired"),
     ACCESS_SECRET_IP_UNAUTHORIZED("auth.access.secret.ip.unauthorized", "IP Unauthorized"),
@@ -110,6 +110,4 @@ public enum AuthI18nMessage implements I18nMessage {
     public String defaultMessage() {
         return this.defaultValue;
     }
-
-
 }

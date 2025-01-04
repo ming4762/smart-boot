@@ -1,7 +1,8 @@
 package com.smart.module.system.api.local;
 
 import com.smart.module.api.system.SysI18nApi;
-import com.smart.module.system.service.SysI18nService;
+import com.smart.module.system.service.SysI18nJsonService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
@@ -14,14 +15,10 @@ import java.util.Map;
  */
 @Component
 @Primary
+@RequiredArgsConstructor
 public class LocalSysI18nApi implements SysI18nApi {
 
-    private final SysI18nService sysI18nService;
-
-    public LocalSysI18nApi(SysI18nService sysI18nService) {
-        this.sysI18nService = sysI18nService;
-    }
-
+    private final SysI18nJsonService sysI18nJsonService;
     /**
      * 通过Locale 读取I18N信息
      *
@@ -30,6 +27,6 @@ public class LocalSysI18nApi implements SysI18nApi {
      */
     @Override
     public Map<String, String> readI18nByLocale(Locale locale) {
-        return this.sysI18nService.readByLocale(locale);
+        return this.sysI18nJsonService.readBackendByLocale(locale);
     }
 }
