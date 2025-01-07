@@ -21,6 +21,7 @@
 			<artifactId>smart-message-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<!--	TODO:版本大升级，未验证	-->
 		<dependency>
 			<groupId>com.aliyun</groupId>
 			<artifactId>dysmsapi20170525</artifactId>

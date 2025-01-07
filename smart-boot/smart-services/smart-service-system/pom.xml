@@ -7,7 +7,7 @@
 		<artifactId>smart-services</artifactId>
 		<version>5.0.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>smart-com-system</artifactId>
+	<artifactId>smart-service-system</artifactId>
 	<version>5.0.0-SNAPSHOT</version>
 	<name>smart-service-system</name>
 	<description>服务-系统管理</description>
@@ -23,25 +23,21 @@
 		<dependency>
 			<groupId>com.smart</groupId>
 			<artifactId>smart-module-system</artifactId>
-			<version>${project.parent.version}</version>
 		</dependency>
 
 		<!--	引入认证支持 	-->
 		<dependency>
 			<groupId>com.smart</groupId>
 			<artifactId>smart-module-auth</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.smart</groupId>
 			<artifactId>smart-boot-starter-auth-jwt</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.smart</groupId>
 			<artifactId>smart-boot-starter-auth-cache-redis</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<!--	短信登录支持	-->
@@ -55,7 +51,6 @@
 		<dependency>
 			<groupId>com.smart</groupId>
 			<artifactId>smart-boot-starter-i18n</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
@@ -67,13 +62,11 @@
 		<dependency>
 			<groupId>com.smart</groupId>
 			<artifactId>smart-module-message</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<!--	web socket支持	-->
 		<dependency>
 			<groupId>com.smart</groupId>
 			<artifactId>smart-boot-starter-message-websocket</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<!--	阿里云短信支持	-->
@@ -128,22 +121,18 @@
 		<dependency>
 			<groupId>com.smart</groupId>
 			<artifactId>smart-boot-starter-file-disk</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.smart</groupId>
 			<artifactId>smart-boot-starter-file-aliyun</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.smart</groupId>
 			<artifactId>smart-boot-starter-file-minio</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.smart</groupId>
 			<artifactId>smart-module-file</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
@@ -153,9 +142,20 @@
 		<dependency>
 			<groupId>com.smart</groupId>
 			<artifactId>smart-boot-starter-auth-access-secret</artifactId>
-			<version>${project.version}</version>
 		</dependency>
+
 	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>spring-milestones</id>
+			<name>Spring Milestones</name>
+			<url>https://repo.spring.io/milestone</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 
 	<build>
 		<plugins>
