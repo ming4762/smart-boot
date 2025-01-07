@@ -25,4 +25,5 @@ public enum ButtonListEnum {
     ZOOM,
     REFRESH,
     SHOW_SEARCH,
+    SIZE_SETTING,
 }
