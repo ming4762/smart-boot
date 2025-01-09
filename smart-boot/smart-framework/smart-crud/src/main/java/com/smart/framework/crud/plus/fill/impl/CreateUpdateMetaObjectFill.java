@@ -1,5 +1,6 @@
 package com.smart.framework.crud.plus.fill.impl;
 
+import com.smart.framework.crud.constants.CrudConstants;
 import com.smart.framework.crud.constants.ModelPropertyEnum;
 import com.smart.framework.crud.plus.fill.SmartMetaObjectFill;
 import com.smart.framework.crud.service.UserProvider;
@@ -42,6 +43,11 @@ public class CreateUpdateMetaObjectFill implements SmartMetaObjectFill {
     @Override
     public void updateFill(MetaObject metaObject, MappedStatement mappedStatement) {
         if (!this.findTableInfo(metaObject).isWithUpdateFill()) {
+            return;
+        }
+        // 判断是否是逻辑删除，逻辑删除不更新更新时间和更新人
+        boolean isLogicDelete = CrudConstants.LOGIC_DELETE_METHODS.stream().anyMatch(item -> mappedStatement.getId().endsWith(item));
+        if (isLogicDelete) {
             return;
         }
         this.strictUpdateFill(metaObject, ModelPropertyEnum.UPDATE_USER_ID.getName(), this.userProvider::getCurrentUserId, Long.class);

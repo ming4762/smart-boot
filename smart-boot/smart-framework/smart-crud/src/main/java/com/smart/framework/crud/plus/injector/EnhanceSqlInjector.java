@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.core.toolkit.GlobalConfigUtils;
 import com.smart.framework.crud.plus.injector.methods.SmartDelete;
 import com.smart.framework.crud.plus.injector.methods.SmartDeleteBatchByIds;
 import com.smart.framework.crud.plus.injector.methods.SmartDeleteById;
+import com.smart.framework.crud.plus.injector.methods.SmartDeleteByIds;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.Configuration;
 
@@ -46,6 +47,7 @@ public class EnhanceSqlInjector extends AbstractSqlInjector {
         if (tableInfo.havePK()) {
             builder.add(new SmartDeleteById())
                     .add(new SmartDeleteBatchByIds())
+                    .add(new SmartDeleteByIds())
                     .add(new UpdateById())
                     .add(new SelectById())
                     .add(new SelectByIds());

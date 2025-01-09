@@ -16,7 +16,9 @@ public interface CrudConstants {
      * 支持逻辑删除的函数
      */
     List<String> LOGIC_DELETE_METHODS = List.of(
-            SqlMethod.DELETE_BY_ID.getMethod(),
-            SqlMethod.DELETE.getMethod()
+            SqlMethod.LOGIC_DELETE_BY_ID.getMethod(),
+            SqlMethod.LOGIC_DELETE_BY_MAP.getMethod(),
+            SqlMethod.LOGIC_DELETE.getMethod(),
+            SqlMethod.LOGIC_DELETE_BY_IDS.getMethod()
     );
 }

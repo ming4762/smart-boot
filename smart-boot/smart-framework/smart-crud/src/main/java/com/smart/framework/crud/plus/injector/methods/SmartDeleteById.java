@@ -51,13 +51,13 @@ public class SmartDeleteById extends DeleteById implements AbstractSmartMethod {
      */
     @Override
     public MappedStatement injectMappedStatement(Class<?> mapperClass, Class<?> modelClass, TableInfo tableInfo) {
-        SmartSqlMethod smartSqlMethod = SmartSqlMethod.LOGIC_DELETE_BY_ID;
+        SqlMethod sqlMethod = SqlMethod.LOGIC_DELETE_BY_ID;
         SmartTableInfo smartTableInfo = CrudUtils.getTableInfo(modelClass);
         if (smartTableInfo.isWithLogicDelete()) {
             boolean withUpdateFill = smartTableInfo.isWithUpdateFill();
 //            String deleteId = withUpdateFill ? tableInfo.getKeyProperty() : SmartCrudConstants.DELETE_ID;
             String prefix = withUpdateFill ? EMPTY : DELETE_FIELDS_DOT;
-            String sql = String.format(smartSqlMethod.getSql(), tableInfo.getTableName(),
+            String sql = String.format(sqlMethod.getSql(), tableInfo.getTableName(),
                     SqlScriptUtils.convertSet(this.sqlLogicDeleteFieldSet(tableInfo, prefix, true)),
                     tableInfo.getKeyColumn(), tableInfo.getKeyProperty(),
                     tableInfo.getLogicDeleteSql(true, true));

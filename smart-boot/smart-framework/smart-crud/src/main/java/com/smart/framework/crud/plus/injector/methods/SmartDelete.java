@@ -48,16 +48,16 @@ public class SmartDelete extends Delete implements AbstractSmartMethod {
     @Override
     public MappedStatement injectMappedStatement(Class<?> mapperClass, Class<?> modelClass, TableInfo tableInfo) {
         String sql;
-        SmartSqlMethod smartSqlMethod = SmartSqlMethod.LOGIC_DELETE;
+        SqlMethod sqlMethod = SqlMethod.LOGIC_DELETE;
         if (tableInfo.isWithLogicDelete()) {
-            sql = String.format(smartSqlMethod.getSql(), tableInfo.getTableName(),
+            sql = String.format(sqlMethod.getSql(), tableInfo.getTableName(),
                     SqlScriptUtils.convertSet(this.sqlLogicDeleteFieldSet(tableInfo, DELETE_FIELDS_DOT, false)),
                     sqlWhereEntityWrapper(true, tableInfo),
                     sqlComment());
             SqlSource sqlSource = super.createSqlSource(configuration, sql, modelClass);
             return addUpdateMappedStatement(mapperClass, modelClass, methodName, sqlSource);
         } else {
-            SqlMethod sqlMethod = SqlMethod.DELETE;
+            sqlMethod = SqlMethod.DELETE;
             sql = String.format(sqlMethod.getSql(), tableInfo.getTableName(),
                     sqlWhereEntityWrapper(true, tableInfo),
                     sqlComment());

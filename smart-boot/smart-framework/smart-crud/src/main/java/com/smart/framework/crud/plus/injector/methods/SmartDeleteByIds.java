@@ -1,35 +1,21 @@
 package com.smart.framework.crud.plus.injector.methods;
 
 import com.baomidou.mybatisplus.core.enums.SqlMethod;
-import com.baomidou.mybatisplus.core.injector.methods.DeleteBatchByIds;
 import com.baomidou.mybatisplus.core.injector.methods.DeleteByIds;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
+import com.baomidou.mybatisplus.core.toolkit.Constants;
+import com.baomidou.mybatisplus.core.toolkit.StringPool;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.sql.SqlScriptUtils;
-import com.smart.framework.crud.plus.enums.SmartSqlMethod;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlSource;
 
-import java.io.Serial;
-
-import static com.smart.framework.crud.constants.SmartCrudConstants.DELETE_FIELDS_DOT;
-
 /**
- * 根据集合删除
- * 在plus的基础上，加强逻辑删除支持，解决唯一索引冲突问题
  * @author shizhongming
- * 2023/10/31 13:47
- * @since 3.0.0
+ * 2025/1/8 15:33
+ * @since 5.0.0
  */
-@Deprecated
-public class SmartDeleteBatchByIds extends DeleteByIds implements AbstractSmartMethod {
-
-
-    @Serial
-    private static final long serialVersionUID = -1282922352525893633L;
-
-    public SmartDeleteBatchByIds() {
-        super(SqlMethod.DELETE_BATCH_BY_IDS.getMethod());
-    }
+public class SmartDeleteByIds extends DeleteByIds implements AbstractSmartMethod {
 
     /**
      * 注入自定义 MappedStatement
@@ -42,7 +28,7 @@ public class SmartDeleteBatchByIds extends DeleteByIds implements AbstractSmartM
     @Override
     public MappedStatement injectMappedStatement(Class<?> mapperClass, Class<?> modelClass, TableInfo tableInfo) {
         // 如果启用了逻辑删除并且没有启用更新注入，则使用自定义逻辑，通过修改SQL注入
-        if (tableInfo.isWithLogicDelete() && !tableInfo.isWithUpdateFill()) {
+        if (tableInfo.isWithLogicDelete()) {
             String sql = this.logicDeleteScriptWithDeleteKey(tableInfo);
             SqlSource sqlSource = super.createSqlSource(configuration, sql, Object.class);
             return addUpdateMappedStatement(mapperClass, modelClass, methodName, sqlSource);
@@ -52,14 +38,24 @@ public class SmartDeleteBatchByIds extends DeleteByIds implements AbstractSmartM
     }
 
     protected String logicDeleteScriptWithDeleteKey(TableInfo tableInfo) {
-        return String.format(SqlMethod.LOGIC_DELETE_BATCH_BY_IDS.getSql(),
+        // 查询固定的字段
+        String commonField = this.sqlLogicDeleteFieldCommonSet(tableInfo, Constants.MP_FILL_ET + Constants.DOT, false, true, false);
+        String fillField = this.sqlLogicDeleteFieldCommonSet(tableInfo, Constants.MP_FILL_ET + Constants.DOT, true, false, true);
+
+        if (StringUtils.isNotBlank(fillField)) {
+            fillField = SqlScriptUtils.convertIf(fillField, String.format("%s != null", Constants.MP_FILL_ET), true);
+        }
+        String sqlSet = "SET " + String.join(StringPool.EMPTY, fillField, commonField);
+        return String.format(
+                SqlMethod.LOGIC_DELETE_BY_IDS.getSql(),
                 tableInfo.getTableName(),
-                SqlScriptUtils.convertSet(this.sqlLogicDeleteFieldSet(tableInfo, DELETE_FIELDS_DOT, false)),
+                sqlSet,
                 tableInfo.getKeyColumn(),
                 SqlScriptUtils.convertForeach(
-                        SqlScriptUtils.convertChoose("@org.apache.ibatis.com.smart.framework.tool.code.type.SimpleTypeRegistry@isSimpleType(item.getClass())",
+                        SqlScriptUtils.convertChoose("@org.apache.ibatis.type.SimpleTypeRegistry@isSimpleType(item.getClass())",
                                 "#{item}", "#{item." + tableInfo.getKeyProperty() + "}"),
                         COLL, null, "item", COMMA),
-                tableInfo.getLogicDeleteSql(true, true));
+                tableInfo.getLogicDeleteSql(true, true)
+        );
     }
 }

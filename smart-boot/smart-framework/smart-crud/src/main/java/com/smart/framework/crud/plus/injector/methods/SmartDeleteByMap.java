@@ -17,6 +17,7 @@ import java.util.Map;
  * 2023/10/31 15:18
  * @since 3.0.0
  */
+@Deprecated
 public class SmartDeleteByMap extends DeleteByMap implements AbstractSmartMethod {
 
     @Serial
