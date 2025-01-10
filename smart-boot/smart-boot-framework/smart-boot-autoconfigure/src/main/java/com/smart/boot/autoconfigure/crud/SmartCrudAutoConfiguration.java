@@ -23,7 +23,13 @@ import java.util.List;
  */
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnClass(BaseService.class)
-@Import({CrudMybatisInterceptorConfiguration.class, DataPermissionConfiguration.class, MybatisInterceptorAddConfiguration.class, MybatisPlusEnhanceConfiguration.class})
+@Import({
+        CrudMybatisInterceptorConfiguration.class,
+        DataPermissionConfiguration.class,
+        MybatisInterceptorAddConfiguration.class,
+        MybatisPlusEnhanceConfiguration.class,
+        SmartDesensitizeAutoConfiguration.class
+})
 public class SmartCrudAutoConfiguration {
 
     @Bean

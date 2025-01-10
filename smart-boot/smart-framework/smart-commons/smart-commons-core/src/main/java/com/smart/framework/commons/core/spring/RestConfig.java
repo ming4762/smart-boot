@@ -20,8 +20,8 @@ public class RestConfig {
     @Bean
     @ConditionalOnMissingBean(RestTemplate.class)
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
-        RestTemplate restTemplate = builder.setConnectTimeout(Duration.ofMillis(5000L))
-                .setReadTimeout(Duration.ofMillis(50000L))
+        RestTemplate restTemplate = builder.connectTimeout(Duration.ofMillis(5000L))
+                .readTimeout(Duration.ofMillis(50000L))
                 .build();
         RestUtils.setRestTemplate(restTemplate);
         return restTemplate;

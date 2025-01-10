@@ -61,6 +61,7 @@
         <dingtalk.server.new.version>2.1.61</dingtalk.server.new.version>
         <dingtalk.server.old.version>2.0.0</dingtalk.server.old.version>
         <redisson.version>3.37.0</redisson.version>
+        <libphonenumber.version>8.13.52</libphonenumber.version>
     </properties>
 
     <packaging>pom</packaging>
@@ -503,6 +504,11 @@
                 <groupId>org.redisson</groupId>
                 <artifactId>redisson</artifactId>
                 <version>${redisson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.googlecode.libphonenumber</groupId>
+                <artifactId>libphonenumber</artifactId>
+                <version>${libphonenumber.version}</version>
             </dependency>
 
             <!--      smart-boot      -->
