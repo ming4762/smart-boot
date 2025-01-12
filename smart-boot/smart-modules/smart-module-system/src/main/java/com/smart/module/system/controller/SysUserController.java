@@ -288,7 +288,7 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
         if (CollectionUtils.isEmpty(dataList)) {
             return Result.success();
         }
-        return Result.success(dataList.get(0));
+        return Result.success(dataList.getFirst());
     }
 
     @PostMapping("unlockUserAccount")

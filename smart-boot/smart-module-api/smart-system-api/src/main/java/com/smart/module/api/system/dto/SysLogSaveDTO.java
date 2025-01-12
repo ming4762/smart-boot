@@ -81,4 +81,6 @@ public class SysLogSaveDTO implements Serializable {
     private Long createUserId;
 
     private String createBy;
+
+    private Long tenantId;
 }
