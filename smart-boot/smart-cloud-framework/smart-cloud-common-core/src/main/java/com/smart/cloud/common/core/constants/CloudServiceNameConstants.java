@@ -10,18 +10,18 @@ public interface CloudServiceNameConstants {
     /**
      * 系统模块
      */
-    String SYSTEM_SERVICE = "smart-cloud-system";
+    String SYSTEM_SERVICE = "smart-cloud-service-system";
 
     /**
      * 认证模块
      */
-    String AUTH_SERVICE = "smart-cloud-auth";
+    String AUTH_SERVICE = "smart-cloud-service-auth";
 
     /**
      * 文件服务
      */
-    String FILE_SERVICE = "smart-cloud-file";
+    String FILE_SERVICE = "smart-cloud-service-file";
 
-    String MESSAGE_SERVICE = "smart-cloud-message";
+    String MESSAGE_SERVICE = "smart-cloud-service-message";
 
 }

@@ -9,6 +9,7 @@ spring:
       server-addr: @nacos.server-addr@
       discovery:
         namespace: @nacos.namespace@
+        ip: @nacos.ip@
       config:
         namespace: @nacos.namespace@
       username: @nacos.username@

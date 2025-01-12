@@ -9,7 +9,7 @@
     </parent>
     <artifactId>smart-cloud-service-system</artifactId>
     <version>5.0.0-SNAPSHOT</version>
-    <name>smart-cloud-system</name>
+    <name>smart-cloud-service-system</name>
     <description>系统管理模块</description>
 
     <properties>

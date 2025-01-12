@@ -9,7 +9,7 @@
     </parent>
     <artifactId>smart-cloud-service-gateway</artifactId>
     <version>5.0.0-SNAPSHOT</version>
-    <name>smart-cloud-gateway</name>
+    <name>smart-cloud-service-gateway</name>
     <description>路由模块</description>
 
     <properties>
