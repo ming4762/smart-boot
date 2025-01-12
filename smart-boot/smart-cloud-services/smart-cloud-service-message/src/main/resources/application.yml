@@ -16,5 +16,7 @@ spring:
       password: @nacos.password@
   config:
     import:
-      - optional:nacos:application-@profiles.active@.yml
-      - optional:nacos:${spring.application.name}-@profiles.active@.yml
+      - optional:nacos:application.yml
+      - optional:nacos:${spring.application.name}.yml
+  freemarker:
+    check-template-location: false
