@@ -2,6 +2,7 @@ package com.smart.cloud.starter.auth;
 
 import com.smart.cloud.starter.auth.config.SecurityConfig;
 import com.smart.cloud.starter.auth.repository.RemoteSecurityContextRepository;
+import com.smart.cloud.starter.auth.userdetails.UnSupportUserDetailsServiceImpl;
 import com.smart.framework.auth.core.authentication.MethodPermissionEvaluatorImpl;
 import com.smart.framework.auth.core.properties.AuthProperties;
 import com.smart.framework.auth.core.temptoken.EnableAuthTempToken;
@@ -18,6 +19,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
@@ -65,5 +67,11 @@ public class SmartCloudCommonAuthAutoConfiguration {
         DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
         expressionHandler.setPermissionEvaluator(permissionEvaluator);
         return expressionHandler;
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(UserDetailsService.class)
+    public UnSupportUserDetailsServiceImpl unSupportUserDetailsService() {
+        return new UnSupportUserDetailsServiceImpl();
     }
 }
