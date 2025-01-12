@@ -2,23 +2,23 @@ package com.smart.cloud.starter.auth.repository;
 
 import com.google.common.collect.Sets;
 import com.smart.framework.auth.core.authentication.RestUsernamePasswordAuthenticationToken;
+import com.smart.framework.auth.core.model.PermissionGrantedAuthority;
 import com.smart.framework.auth.core.model.RestUserDetailsImpl;
+import com.smart.framework.auth.core.model.RoleGrantedAuthority;
 import com.smart.framework.auth.core.model.SmartGrantedAuthority;
 import com.smart.framework.auth.core.userdetails.RestUserDetails;
+import com.smart.framework.auth.core.utils.TokenUtils;
 import com.smart.module.api.auth.AuthApi;
 import com.smart.module.api.auth.dto.AuthUserDetailsDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.security.web.context.HttpRequestResponseHolder;
 import org.springframework.security.web.context.SecurityContextRepository;
-import com.smart.framework.auth.core.model.RoleGrantedAuthority;
-import com.smart.framework.auth.core.model.PermissionGrantedAuthority;
 import org.springframework.util.StringUtils;
 
 import java.util.Optional;
@@ -113,7 +113,7 @@ public class RemoteSecurityContextRepository implements SecurityContextRepositor
     }
 
     protected String getToken(HttpServletRequest request) {
-        return request.getHeader(HttpHeaders.AUTHORIZATION);
+        return TokenUtils.getToken(request);
     }
 
     protected SecurityContext generateNewContext() {
