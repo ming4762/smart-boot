@@ -32,7 +32,7 @@ public class MonitorAuthInterceptor implements HandlerInterceptor {
             log.debug("application not set token");
             return true;
         }
-        var serverToken = request.getHeader(CommonHeadersEnum.Monitor_Authorization.name());
+        var serverToken = request.getHeader(CommonHeadersEnum.MONITOR_AUTHORIZATION.name());
         if (!this.token.equals(serverToken)) {
             log.warn("token not match, application token: {}, server token: {}", this.token, serverToken);
             response.setContentType("application/json;charset=utf-8");

@@ -169,11 +169,6 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
         jwtLoginFilter.setAuthenticationFailureHandler(this.getBean(AuthenticationFailureHandler.class, this.serviceProvider.authenticationFailureHandler));
         jwtLoginFilter.setSecurityContextRepository(builder.getSharedObject(SecurityContextRepository.class));
 
-//        if (Boolean.TRUE.equals(this.serviceProvider.rememberMe)) {
-//            String key = UUID.randomUUID().toString();
-//            SmartAuthJwtRememberMeServices rememberMeServices = new SmartAuthJwtRememberMeServices(key, this.getBean(UserDetailsService.class));
-//            jwtLoginFilter.setRememberMeServices(rememberMeServices);
-//        }
         RememberMeServices rememberMeServices = builder.getSharedObject(RememberMeServices.class);
         if (rememberMeServices != null) {
             jwtLoginFilter.setRememberMeServices(rememberMeServices);

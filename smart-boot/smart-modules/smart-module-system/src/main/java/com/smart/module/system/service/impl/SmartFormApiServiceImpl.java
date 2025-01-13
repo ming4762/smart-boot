@@ -62,7 +62,7 @@ public class SmartFormApiServiceImpl implements SmartFormApiService {
         PageSortQuery pageSortQuery = parameter.getQueryParameter();
         if (pageSortQuery != null) {
             queryWrapper = CrudUtils.createQueryWrapperFromParameters(
-                    pageSortQuery.getParameter() == null ? new HashMap<>(0) : pageSortQuery.getParameter(),
+                    pageSortQuery.getParameter() == null ? HashMap.newHashMap(0) : pageSortQuery.getParameter(),
                     clazz
             );
             if (StringUtils.isNotBlank(pageSortQuery.getSortName())) {

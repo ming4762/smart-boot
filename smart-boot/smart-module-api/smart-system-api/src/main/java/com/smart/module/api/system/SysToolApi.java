@@ -130,7 +130,7 @@ public interface SysToolApi {
         BeanUtils.copyProperties(parameter, remoteChangeLogSaveParameter);
         // 删除和新增操作不保存详细修改记录
         if (SmartChangeLogEnum.UPDATE.equals(parameter.getOperateType()) || this.isSaveCreateDetail(parameter)) {
-            Set<Field> fields = new HashSet<>(16);
+            Set<Field> fields = HashSet.newHashSet(16);
             ReflectUtils.getAllFields(aClass, fields);
             Set<String> finalExcludeList = excludeList;
             List<RemoteChangeLogSaveParameter.Detail> detailList = fields.stream()

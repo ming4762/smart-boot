@@ -25,9 +25,11 @@ public class DefaultExceptionMessageHandler implements ExceptionMessageHandler, 
 
     private ApplicationContext applicationContext;
 
-    private final Map<Type, ExceptionMessageProcessor<? extends Exception>> messageProcessorMap = new ConcurrentHashMap<>();
+    @SuppressWarnings("rawtypes")
+    private final Map<Type, ExceptionMessageProcessor> messageProcessorMap = new ConcurrentHashMap<>();
 
     @Override
+    @SuppressWarnings("rawtypes")
     public Object message(Exception e, long exceptionNo, HttpServletRequest request) {
         ExceptionMessageProcessor processor = this.getExceptionMessageProcessor(e.getClass());
         Object result;
@@ -59,6 +61,7 @@ public class DefaultExceptionMessageHandler implements ExceptionMessageHandler, 
     }
 
 
+    @SuppressWarnings("rawtypes")
     @Override
     public void afterPropertiesSet() {
         // 获取所有的ExceptionMessageProcessor对象

@@ -13,7 +13,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -25,11 +24,11 @@ public final class DateUtils {
 
     private static final String CST_DATE_STR = "CST";
 
-    private static final Pattern YYYY_MM_DD = Pattern.compile("^[0-9]{4}-[0-9]{2}-[0-9]{2}.*");
+    private static final Pattern YYYY_MM_DD = Pattern.compile("^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$");
 
-    private static final Pattern YYYY_M_D = Pattern.compile("^[0-9]{4}-[0-9]{1}-[0-9]+.*||^[0-9]{4}-[0-9]+-[0-9]{1}.*");
+    private static final Pattern YYYY_M_D = Pattern.compile("^[0-9]{4}-(0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01]).*$");
 
-    private static final Pattern YY_MM_DD = Pattern.compile("^[0-9]{2}-[0-9]{2}-[0-9]{2}.*");
+    private static final Pattern YY_MM_DD = Pattern.compile("^([0-9]{2})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])(.*)?$");
 
     private static final Pattern YY_M_D = Pattern.compile("^[0-9]{2}-[0-9]{1}-[0-9]+.*||^[0-9]{2}-[0-9]+-[0-9]{1}.*");
 
@@ -41,12 +40,16 @@ public final class DateUtils {
 
     private static final Pattern HH_MM_SS_SSS = Pattern.compile(".*[ ][0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{0,3}");
 
-    private static final Pattern YYYY_MM_DD_HH_MM_SS_SSS_Z = Pattern.compile("[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{0,3}Z");
+    private static final Pattern YYYY_MM_DD_HH_MM_SS_SSS_Z = Pattern.compile("^(?:19|20)\\d{2}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])T([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)(\\.\\d{1,3})?Z$");
 
     private static final DateTimeFormatter ISO_INSTANT_DATE_TIME_FORMATTER = DateTimeFormatter.ISO_INSTANT;
 
     private DateUtils() {
         throw new IllegalStateException("Utility class");
+    }
+
+    public static void main(String[] args) {
+        System.out.println(YYYY_MM_DD.matcher("1991-01-18").matches());
     }
 
     /**
@@ -73,7 +76,7 @@ public final class DateUtils {
     public static String format(@NonNull Date date, @NonNull String pattern) {
         List<Date> dateList = new ArrayList<>(1);
         dateList.add(date);
-        return DateUtils.batchFormat(dateList, pattern).get(0);
+        return DateUtils.batchFormat(dateList, pattern).getFirst();
     }
 
     /**
@@ -100,7 +103,7 @@ public final class DateUtils {
                     final Instant instant = date.toInstant();
                     final LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
                     return localDateTime.format(formatter);
-                }).collect(Collectors.toList());
+                }).toList();
     }
 
     /**
@@ -168,7 +171,7 @@ public final class DateUtils {
     public static List<LocalDate> getBetweenDay(LocalDate startDate, LocalDate endDate) {
         return getBetweenTime(startDate.atStartOfDay(), endDate.atStartOfDay(), ChronoUnit.DAYS, f -> f.plusDays(1))
                 .stream().map(LocalDateTime::toLocalDate)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
@@ -180,7 +183,7 @@ public final class DateUtils {
     public static List<LocalDate> getBetweenWeek(LocalDate startDate, LocalDate endDate) {
         return getBetweenTime(startDate.atStartOfDay(), endDate.atStartOfDay(), ChronoUnit.WEEKS, f -> f.plusWeeks(1))
                 .stream().map(LocalDateTime::toLocalDate)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
@@ -192,7 +195,7 @@ public final class DateUtils {
     public static List<LocalDate> getBetweenMonth(LocalDate startDate, LocalDate endDate) {
         return getBetweenTime(startDate.atStartOfDay(), endDate.atStartOfDay(), ChronoUnit.MONTHS, f -> f.plusMonths(1))
                 .stream().map(LocalDateTime::toLocalDate)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public static List<LocalDateTime> getBetweenTime(@NonNull LocalDateTime startTime, @NonNull LocalDateTime endTime, @NonNull Duration duration) {

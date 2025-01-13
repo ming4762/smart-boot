@@ -1,5 +1,6 @@
 package com.smart.framework.kettle.core.properties;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,6 +15,7 @@ import java.io.Serializable;
  */
 @Getter
 @Setter
+@EqualsAndHashCode(callSuper = true)
 public class LogDatabaseProperties extends DatabaseMetaProperties implements Serializable {
 
     @Serial

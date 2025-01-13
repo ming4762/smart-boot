@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public class LogModifierHandler implements ApplicationContextAware {
 
 
-    private Map<Class<? extends BaseLogTable>, List<LogRecordModifier>> logRecordModifierMap = new HashMap<>(0);
+    private Map<Class<? extends BaseLogTable>, List<LogRecordModifier>> logRecordModifierMap = HashMap.newHashMap(0);
 
     public RowMetaAndData modifyLogRecord(Class<? extends BaseLogTable> supportClass, RowMetaAndData rowMetaAndData, LogStatus status, Object subject, Object parent) {
         if (logRecordModifierMap.get(supportClass) != null) {

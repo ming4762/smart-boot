@@ -73,7 +73,7 @@ public final class ClientData implements Serializable {
 
     public ClientData(Application application, ClientId clientId, ClientManagerData clientManager) {
         this.id = clientId;
-        this.serializeEventCodes = clientManager.getSerializeEventCodes() == null ? new HashSet<>(0) : clientManager.getSerializeEventCodes();
+        this.serializeEventCodes = clientManager.getSerializeEventCodes() == null ? HashSet.newHashSet(0) : clientManager.getSerializeEventCodes();
         this.refresh(application, clientManager);
     }
 
@@ -89,8 +89,8 @@ public final class ClientData implements Serializable {
         this.offlineInterval = clientManager.getOfflineInterval();
         this.token = clientManager.getToken();
         this.refreshTime = Instant.now();
-        this.notifyEventCodes = clientManager.getNotifyEventCodes() == null ? new HashSet<>(0) : clientManager.getNotifyEventCodes();
-        this.notifyMails = clientManager.getNotifyMails() == null ? new HashSet<>(0) : clientManager.getNotifyMails();
+        this.notifyEventCodes = clientManager.getNotifyEventCodes() == null ? HashSet.newHashSet(0) : clientManager.getNotifyEventCodes();
+        this.notifyMails = clientManager.getNotifyMails() == null ? HashSet.newHashSet(0) : clientManager.getNotifyMails();
         return this;
     }
 

@@ -94,7 +94,7 @@ public class DefaultLicenseGenerator implements LicenseGenerator {
         }
         content.setInfo(parameter.getDescription());
         // 设置额外需要校验的信息
-        Map<String, Object> extraMap = new HashMap<>(8);
+        Map<String, Object> extraMap = HashMap.newHashMap(8);
         this.dataProviderList.forEach(item -> {
             Map<String, Object> map = item.dataMap(parameter);
             if (map != null) {

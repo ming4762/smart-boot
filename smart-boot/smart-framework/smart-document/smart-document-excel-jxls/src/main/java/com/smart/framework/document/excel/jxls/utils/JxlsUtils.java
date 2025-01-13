@@ -57,7 +57,7 @@ public class JxlsUtils {
         JexlExpressionEvaluator evaluator = (JexlExpressionEvaluator) transformer.getTransformationConfig()
                 .getExpressionEvaluator();
         JexlBuilder jexlBuilder = new JexlBuilder();
-        Map<String, Object> allFunctionMap = new HashMap<>(2);
+        Map<String, Object> allFunctionMap = HashMap.newHashMap(2);
         allFunctionMap.put(FORMAT_FUNCTION_NAME, new JxlsFormatFunction());
         allFunctionMap.put(BOOLEAN_FUNCTION_NAME, new JxlsBooleanFunction());
         // 设置自定义函数

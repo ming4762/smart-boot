@@ -60,7 +60,7 @@ public class DefaultDocumentExcelServiceImpl implements DocumentExcelService {
         templateData.put("data", data.getData());
         // 处理条形码
         if (!CollectionUtils.isEmpty(data.getBarcodeMap())) {
-            Map<String, byte[]> barcodeMap = new HashMap<>(data.getBarcodeMap().size());
+            Map<String, byte[]> barcodeMap = HashMap.newHashMap(data.getBarcodeMap().size());
             data.getBarcodeMap().forEach((key, value) -> {
                 try (ByteArrayOutputStream barcodeStream = new ByteArrayOutputStream()) {
                     this.codeService.generateBarcode(value, barcodeStream);
@@ -73,7 +73,7 @@ public class DefaultDocumentExcelServiceImpl implements DocumentExcelService {
         }
         // 处理二维码
         if (!CollectionUtils.isEmpty(data.getQrcodeMap())) {
-            Map<String, byte[]> qrcodeMap = new HashMap<>(data.getQrcodeMap().size());
+            Map<String, byte[]> qrcodeMap = HashMap.newHashMap(data.getQrcodeMap().size());
             data.getQrcodeMap().forEach((key, value) -> {
                 try (ByteArrayOutputStream qrcodeStream = new ByteArrayOutputStream()) {
                     this.codeService.generateQrcode(value, qrcodeStream);

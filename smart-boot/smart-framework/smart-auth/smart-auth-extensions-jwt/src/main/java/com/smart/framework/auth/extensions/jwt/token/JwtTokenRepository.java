@@ -264,7 +264,7 @@ public class JwtTokenRepository implements TokenRepository {
         }
         RestUserDetails user = tokenData.getUser();
         if (Boolean.TRUE.equals(this.permissionCache)) {
-            Set<SmartGrantedAuthority> authorities = new HashSet<>(tokenData.getPermissions().size() + tokenData.getRoles().size());
+            Set<SmartGrantedAuthority> authorities = HashSet.newHashSet(tokenData.getPermissions().size() + tokenData.getRoles().size());
             // 添加权限信息
             tokenData.getPermissions().forEach(permission -> authorities.add(new PermissionGrantedAuthority(permission)));
             // 添加角色信息

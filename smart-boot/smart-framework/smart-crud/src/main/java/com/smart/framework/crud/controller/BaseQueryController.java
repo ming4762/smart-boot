@@ -40,17 +40,16 @@ import java.util.stream.Collectors;
 @Slf4j
 public abstract class BaseQueryController<K extends BaseService<T>, T extends BaseModel> {
 
-    protected final Class<?>[] typeArguments = GenericTypeUtils.resolveTypeArguments(getClass(), BaseQueryController.class);
+    protected final Class<T>[] typeArguments = (Class<T>[]) GenericTypeUtils.resolveTypeArguments(getClass(), BaseQueryController.class);
 
     @Getter
     protected final Class<T> entityClass = currentModelClass();
 
-    @Autowired
     protected K service;
 
 
     protected Class<T> currentModelClass() {
-        return (Class<T>) this.typeArguments[1];
+        return this.typeArguments[1];
     }
 
     /**
@@ -186,5 +185,10 @@ public abstract class BaseQueryController<K extends BaseService<T>, T extends Ba
                 wrapper -> tableInfo.getFieldList()
                         .forEach(item -> wrapper.or().like(item.getColumn(), keyword))
         );
+    }
+
+    @Autowired
+    public void setService(K service) {
+        this.service = service;
     }
 }

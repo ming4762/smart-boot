@@ -6,45 +6,45 @@ package com.smart.framework.commons.core.constants;
  * 2022/5/18
  * @since 2.0.0
  */
-public interface MapperPackageConstants {
+public final class MapperPackageConstants {
 
     /**
      * 文档模块 mapper扫描路径
      */
-    String MODULE_DOCUMENT = "com.smart.module.document.mapper";
+    public static final String MODULE_DOCUMENT = "com.smart.module.document.mapper";
 
     /**
      * 系统模块 mapper扫描路径
      */
-    String MODULE_SYSTEM = "com.smart.module.system.mapper";
+    public static final String MODULE_SYSTEM = "com.smart.module.system.mapper";
 
     /**
      * 代码生成器模块
      */
-    String DATABASE_GENERATOR = "com.smart.module.code.mapper";
+    public static final String DATABASE_GENERATOR = "com.smart.module.code.mapper";
 
     /**
      * 监控服务端mapper扫描
      */
-    String MONITOR_SERVER = "com.smart.module.monitor.server.manager.mapper";
+    public static final String MONITOR_SERVER = "com.smart.module.monitor.server.manager.mapper";
 
     /**
      * 文件管理模块 mapper扫描
      */
-    String MODULE_FILE = "com.smart.module.file.mapper";
+    public static final String MODULE_FILE = "com.smart.module.file.mapper";
 
     /**
      * license模块
      */
-    String MODULE_LICENSE = "";
+    public static final String MODULE_LICENSE = "";
 
     /**
      * 消息模块
      */
-    String MODULE_MESSAGE = "com.smart.module.message.mapper";
+    public static final String MODULE_MESSAGE = "com.smart.module.message.mapper";
 
     /**
      * kettle模块扫描
      */
-    String MODULE_KETTLE = "com.smart.module.kettle.manager.mapper";
+    public static final String MODULE_KETTLE = "com.smart.module.kettle.manager.mapper";
 }

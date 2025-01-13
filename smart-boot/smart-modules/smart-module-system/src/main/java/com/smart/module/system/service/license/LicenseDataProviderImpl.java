@@ -48,7 +48,7 @@ public class LicenseDataProviderImpl implements LicenseDataProvider {
         if (smartAuthLicense == null) {
             return Collections.emptyMap();
         }
-        Map<String, Object> data = new HashMap<>(2);
+        Map<String, Object> data = HashMap.newHashMap(2);
         // 获取服务器信息
         LicenseCheckServerInfo licenseCheckInfo = LicenseCheckServerInfo.builder()
                 .macAddressList(this.getStringList(smartAuthLicense.getMacAddress()))

@@ -29,7 +29,7 @@ public class RepositoryElementMetaData implements Serializable {
     private RepositoryObjectType objectType;
     private String description;
     private boolean deleted;
-    private ObjectId objectId;
+    private transient ObjectId objectId;
     private String name;
 
     private RepositoryElementMetaData() {}

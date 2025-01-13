@@ -10,5 +10,5 @@ public enum CommonHeadersEnum {
     /**
      * 监控请求头
      */
-    Monitor_Authorization
+    MONITOR_AUTHORIZATION
 }

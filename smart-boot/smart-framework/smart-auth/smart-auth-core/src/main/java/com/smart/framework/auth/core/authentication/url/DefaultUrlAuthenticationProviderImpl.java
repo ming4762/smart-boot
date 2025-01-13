@@ -39,9 +39,6 @@ public class DefaultUrlAuthenticationProviderImpl extends AbstractBeanNameProvid
         boolean hasPermission = false;
         Object userInfo = authentication.getPrincipal();
         RestUserDetails restUserDetails = (RestUserDetails) userInfo;
-//        if (restUserDetails.getRoles().contains(RoleEnum.ROLE_SUPERADMIN.getRole())) {
-//            return true;
-//        }
         Set<Permission> permissionList = restUserDetails.getPermissions();
         if (!CollectionUtils.isEmpty(permissionList)) {
             for (Permission permission : permissionList) {

@@ -64,7 +64,7 @@ public class JwtService implements JwtResolver {
         if (!this.permissionCache) {
             List<AuthRole> roleStrList = JsonUtils.parseCollection((String) claims.get(ROLE_KEY), AuthRole.class);
             List<Permission> permissionList = JsonUtils.parseCollection((String) claims.get(PERMISSION_KEY), Permission.class);
-            Set<SmartGrantedAuthority> authorities = new HashSet<>(permissionList.size() + roleStrList.size());
+            Set<SmartGrantedAuthority> authorities = HashSet.newHashSet(permissionList.size() + roleStrList.size());
             // 添加权限信息
             permissionList.forEach(permission -> authorities.add(new PermissionGrantedAuthority(permission)));
             // 添加角色信息

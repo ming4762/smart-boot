@@ -43,29 +43,29 @@ public class DefaultUrlMappingProvider extends AbstractBeanNameProvider implemen
     @Override
     public UrlMapping matchMapping(@NonNull HttpServletRequest request) {
         String currentMethod = request.getMethod();
-        UrlMapping urlMapping = null;
 
-        for (String uri : this.urlMappings.keySet()) {
+        for (Map.Entry<String, List<UrlMapping>> entry : this.urlMappings.entrySet()) {
+            String uri = entry.getKey();
+            List<UrlMapping> urlMappingList = entry.getValue();
             AntPathRequestMatcher antPathMatcher = new AntPathRequestMatcher(uri);
-            if (antPathMatcher.matches(request)) {
-                Collection<UrlMapping> urlMappingList = this.urlMappings.get(uri);
-                // 获取对应的请求
-                List<UrlMapping> filterUrlMapping = urlMappingList.stream()
-                        .filter(item -> {
-                            if (item.getRequestMethod() == null) {
-                                return true;
-                            }
-                            return currentMethod.equals(item.getRequestMethod().name());
-                        }).toList();
-                if (filterUrlMapping.isEmpty()) {
-                    throw new AccessDeniedException(I18nUtils.get(HttpStatus.METHOD_NOT_ALLOWED));
-                }
-                // 判断方法是否需要校验
-                urlMapping = filterUrlMapping.get(0);
-                break;
+            if (!antPathMatcher.matches(request)) {
+                continue;
             }
+            // 获取对应的请求
+            List<UrlMapping> filterUrlMapping = urlMappingList.stream()
+                    .filter(item -> {
+                        if (item.getRequestMethod() == null) {
+                            return true;
+                        }
+                        return currentMethod.equals(item.getRequestMethod().name());
+                    }).toList();
+            if (filterUrlMapping.isEmpty()) {
+                throw new AccessDeniedException(I18nUtils.get(HttpStatus.METHOD_NOT_ALLOWED));
+            }
+            // 判断方法是否需要校验
+            return filterUrlMapping.getFirst();
         }
-        return urlMapping;
+        return null;
     }
 
     @Override

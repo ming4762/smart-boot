@@ -47,7 +47,7 @@ public class RestRegistrarClientImpl implements RegistrarClient {
      * @return 请求头信息
      */
     private Map<String, String> getHeaders() {
-        final Map<String, String> headers = new HashMap<>(0);
+        final Map<String, String> headers = HashMap.newHashMap(1);
         headers.put(HttpHeaders.CONTENT_TYPE, "application/json");
         return headers;
     }

@@ -4,15 +4,15 @@ package com.smart.framework.monitor.core.constants;
  * @author shizhongming
  * 2021/3/18 9:18 下午
  */
-public interface CommonUrlConstants {
+public final class CommonUrlConstants {
 
     /**
      * 客户端注册地址
      */
-    String REGISTER_URL = "/public/client/register";
+    public static final String REGISTER_URL = "/public/client/register";
 
     /**
      * 客户端注销地址
      */
-    String DEREGISTER_URL = "/public/client/deregister";
+    public static final String DEREGISTER_URL = "/public/client/deregister";
 }

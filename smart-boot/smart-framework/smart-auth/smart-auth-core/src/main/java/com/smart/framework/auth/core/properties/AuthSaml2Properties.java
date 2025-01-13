@@ -40,7 +40,7 @@ public class AuthSaml2Properties implements Serializable {
      */
     @Getter
     @Setter
-    public static class KeyStore {
+    public static class KeyStore implements Serializable {
         private String name;
 
         private String password;
@@ -50,7 +50,7 @@ public class AuthSaml2Properties implements Serializable {
 
     @Getter
     @Setter
-    public static class Identity {
+    public static class Identity implements Serializable {
         private Boolean discoveryEnabled = Boolean.TRUE;
 
         private String metadataFilePath;

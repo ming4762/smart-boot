@@ -27,7 +27,7 @@ public class CommonQuery implements Serializable {
     /**
      * 查询参数
      */
-    private Map<Serializable, Serializable> parameter = new HashMap<>(0);
+    private Map<Serializable, Serializable> parameter = HashMap.newHashMap(0);
 
     /**
      * 外层 or 内层 and查询参数，例如：or (name = '李白' and status <> '活着')

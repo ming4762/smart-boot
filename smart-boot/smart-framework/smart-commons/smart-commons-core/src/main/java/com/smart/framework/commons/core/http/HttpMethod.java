@@ -23,7 +23,7 @@ public enum HttpMethod {
     OPTIONS,
     TRACE;
 
-    private static final Map<String, HttpMethod> MAPPINGS = new HashMap<>(16);
+    private static final Map<String, HttpMethod> MAPPINGS = HashMap.newHashMap(16);
 
     static {
         for (HttpMethod httpMethod : values()) {

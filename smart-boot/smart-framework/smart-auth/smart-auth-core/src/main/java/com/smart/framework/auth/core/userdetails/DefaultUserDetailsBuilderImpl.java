@@ -85,7 +85,7 @@ public class DefaultUserDetailsBuilderImpl implements UserDetailsBuilder {
             restUserDetails.setAccountNonLocked(this.unLockPasswordErrorLock(user, userAccountData));
         }
         // 设置权限信息
-        Set<SmartGrantedAuthority> grantedAuthoritySet = new HashSet<>(20);
+        Set<SmartGrantedAuthority> grantedAuthoritySet = HashSet.newHashSet(20);
         // 添加角色
         grantedAuthoritySet.addAll(
                 userAccountData.getRoleCodes().stream()

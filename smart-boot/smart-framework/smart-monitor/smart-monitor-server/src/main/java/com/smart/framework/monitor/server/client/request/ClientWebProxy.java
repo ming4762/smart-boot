@@ -215,7 +215,7 @@ public class ClientWebProxy {
         // 设置认证请求头
         final String token = clientData.getToken();
         if (StringUtils.hasLength(token)) {
-            request.getHttpHeaders().put(CommonHeadersEnum.Monitor_Authorization.name(), token);
+            request.getHttpHeaders().put(CommonHeadersEnum.MONITOR_AUTHORIZATION.name(), token);
         }
         return request;
     }

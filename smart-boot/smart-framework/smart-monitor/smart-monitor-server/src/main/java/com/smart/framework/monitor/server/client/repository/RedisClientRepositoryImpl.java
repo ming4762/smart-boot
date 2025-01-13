@@ -48,7 +48,7 @@ public class RedisClientRepositoryImpl extends AbstractClientRepositoryImpl {
 
         var ids = (Set<String>) this.redisService.hashGet(this.storeKey, idHashKey);
         if (ids == null) {
-            ids = new HashSet<>(1);
+            ids = HashSet.newHashSet(1);
         }
         ids.add(data.getId().getValue());
         this.redisService.hashPut(this.storeKey, idHashKey, ids);

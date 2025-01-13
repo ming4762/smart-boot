@@ -21,9 +21,9 @@ public class RepositoryDirectoryData implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 7694434350598412064L;
-    private ObjectId id;
+    private transient ObjectId id;
 
-    private ObjectId parentId;
+    private transient ObjectId parentId;
 
     private String name;
 

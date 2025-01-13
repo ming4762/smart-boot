@@ -61,8 +61,6 @@ public class PasswordUtils {
      * @return 是否通过
      */
     public static boolean validatePassword(String password, String regex) {
-        // 必须包含大小写字母、数字、特殊符号 %$#@&
-//        String regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[%$#@&]).{10,18}$";
         if (!Pattern.matches(regex, password)) {
             return false;
         }

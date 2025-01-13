@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.enums.SqlMethod;
 import com.baomidou.mybatisplus.core.injector.methods.DeleteById;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.toolkit.sql.SqlScriptUtils;
-import com.smart.framework.crud.plus.enums.SmartSqlMethod;
 import com.smart.framework.crud.plus.metadata.SmartTableInfo;
 import com.smart.framework.crud.utils.CrudUtils;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -55,7 +54,6 @@ public class SmartDeleteById extends DeleteById implements AbstractSmartMethod {
         SmartTableInfo smartTableInfo = CrudUtils.getTableInfo(modelClass);
         if (smartTableInfo.isWithLogicDelete()) {
             boolean withUpdateFill = smartTableInfo.isWithUpdateFill();
-//            String deleteId = withUpdateFill ? tableInfo.getKeyProperty() : SmartCrudConstants.DELETE_ID;
             String prefix = withUpdateFill ? EMPTY : DELETE_FIELDS_DOT;
             String sql = String.format(sqlMethod.getSql(), tableInfo.getTableName(),
                     SqlScriptUtils.convertSet(this.sqlLogicDeleteFieldSet(tableInfo, prefix, true)),

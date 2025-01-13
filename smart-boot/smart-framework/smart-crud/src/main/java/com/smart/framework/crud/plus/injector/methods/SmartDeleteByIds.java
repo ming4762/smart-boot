@@ -39,8 +39,8 @@ public class SmartDeleteByIds extends DeleteByIds implements AbstractSmartMethod
 
     protected String logicDeleteScriptWithDeleteKey(TableInfo tableInfo) {
         // 查询固定的字段
-        String commonField = this.sqlLogicDeleteFieldCommonSet(tableInfo, Constants.MP_FILL_ET + Constants.DOT, false, true, false);
-        String fillField = this.sqlLogicDeleteFieldCommonSet(tableInfo, Constants.MP_FILL_ET + Constants.DOT, true, false, true);
+        String commonField = this.sqlLogicDeleteFieldCommonSet(tableInfo, Constants.MP_FILL_ET + StringPool.DOT, false, true, false);
+        String fillField = this.sqlLogicDeleteFieldCommonSet(tableInfo, Constants.MP_FILL_ET + StringPool.DOT, true, false, true);
 
         if (StringUtils.isNotBlank(fillField)) {
             fillField = SqlScriptUtils.convertIf(fillField, String.format("%s != null", Constants.MP_FILL_ET), true);

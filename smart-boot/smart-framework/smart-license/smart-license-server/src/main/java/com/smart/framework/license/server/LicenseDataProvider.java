@@ -31,7 +31,7 @@ public interface LicenseDataProvider {
      * @return 数据
      */
     default Map<String, Object> dataMap(LicenseGeneratorParameter parameter) {
-        Map<String, Object> dataMap = new HashMap<>(1);
+        Map<String, Object> dataMap = HashMap.newHashMap(1);
         dataMap.put(this.key(), this.data(parameter));
         return dataMap;
     }
