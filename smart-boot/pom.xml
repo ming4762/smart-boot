@@ -30,7 +30,7 @@
         <jsch.version>0.1.55</jsch.version>
         <pagehelper.version>2.1.0</pagehelper.version>
 
-        <mybatis-plus.version>3.5.9</mybatis-plus.version>
+        <mybatis-plus.version>3.5.10</mybatis-plus.version>
         <jodconverter.version>4.4.2</jodconverter.version>
         <google.zxing.version>3.5.0</google.zxing.version>
         <jxls.version>2.14.0</jxls.version>
@@ -48,7 +48,7 @@
         <minio.version>8.5.13</minio.version>
         <hutool.version>5.8.25</hutool.version>
         <aliyun.oss.version>3.18.1</aliyun.oss.version>
-        <knife4j-openapi3.version>4.1.0</knife4j-openapi3.version>
+        <knife4j-openapi3.version>4.5.0</knife4j-openapi3.version>
         <qiniu.version>7.17.0</qiniu.version>
         <wx-java.version>4.6.9.B</wx-java.version>
         <aliyun.dysmsapi.version>3.1.0</aliyun.dysmsapi.version>
@@ -90,6 +90,7 @@
             <properties>
                 <profiles.active>dev</profiles.active>
                 <nacos.server-addr>127.0.0.1:8848</nacos.server-addr>
+                <nacos.ip>127.0.0.1</nacos.ip>
                 <nacos.namespace>dev</nacos.namespace>
                 <nacos.username>nacos</nacos.username>
                 <nacos.password>nacos</nacos.password>
