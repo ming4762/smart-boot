@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 
@@ -26,7 +27,7 @@ import javax.sql.DataSource;
         MapperPackageConstants.MODULE_MESSAGE,
         MapperPackageConstants.MODULE_KETTLE
 })
-
+@EnableTransactionManagement
 public class MybatisConfig {
 
     @Bean

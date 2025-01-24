@@ -28,7 +28,8 @@
         <swagger-annotations.version>2.2.8</swagger-annotations.version>
         <commons-io.version>2.17.0</commons-io.version>
         <jsch.version>0.1.55</jsch.version>
-        <pagehelper.version>2.1.0</pagehelper.version>
+        <pagehelper.version>6.1.0</pagehelper.version>
+        <pagehelper-starter.version>2.1.0</pagehelper-starter.version>
 
         <mybatis-plus.version>3.5.10</mybatis-plus.version>
         <jodconverter.version>4.4.2</jodconverter.version>
@@ -210,6 +211,11 @@
             <dependency>
                 <groupId>com.github.pagehelper</groupId>
                 <artifactId>pagehelper-spring-boot-starter</artifactId>
+                <version>${pagehelper-starter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper</artifactId>
                 <version>${pagehelper.version}</version>
             </dependency>
 

@@ -10,14 +10,12 @@ import com.smart.framework.i18n.config.EnableValidatorI18nSource;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * @author zhongming4762
  * 2023/3/28
  */
 @SpringBootApplication
-@EnableTransactionManagement
 @EnableValidatorI18nSource
 @EnableCors
 @EnableGlobalValidator
@@ -26,6 +24,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableCaching
 @EnabledCustomObjectMapper
 @EnableMybatisPlusTenant
+//@EnableApplicationContext
 public class SmartServiceSystemApplication {
 
     public static void main(String[] args) {
