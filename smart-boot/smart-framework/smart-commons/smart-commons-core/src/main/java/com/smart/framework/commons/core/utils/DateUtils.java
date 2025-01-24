@@ -48,10 +48,6 @@ public final class DateUtils {
         throw new IllegalStateException("Utility class");
     }
 
-    public static void main(String[] args) {
-        System.out.println(YYYY_MM_DD.matcher("1991-01-18").matches());
-    }
-
     /**
      * 解析字符串日期为Date
      *

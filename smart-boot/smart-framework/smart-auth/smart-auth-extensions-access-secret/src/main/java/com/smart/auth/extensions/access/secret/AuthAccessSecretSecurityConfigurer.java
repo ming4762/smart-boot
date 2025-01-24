@@ -5,15 +5,11 @@ import com.smart.framework.auth.core.config.SmartSecurityConfigurerAdapter;
 import com.smart.framework.auth.core.properties.AuthProperties;
 import com.smart.framework.auth.core.secret.AccessSecretProvider;
 import com.smart.framework.auth.core.service.AuthCache;
-import lombok.Setter;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.access.ExceptionTranslationFilter;
-import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -22,8 +18,6 @@ import java.util.Objects;
  * @since 3.0.0
  */
 public class AuthAccessSecretSecurityConfigurer extends SmartSecurityConfigurerAdapter<HttpSecurity> {
-
-    private final ServiceProvider serviceProvider = new ServiceProvider();
 
     public static AuthAccessSecretSecurityConfigurer build() {
         return new AuthAccessSecretSecurityConfigurer();
@@ -54,10 +48,5 @@ public class AuthAccessSecretSecurityConfigurer extends SmartSecurityConfigurerA
 
     private AuthProperties getAuthProperties() {
         return Objects.requireNonNull(this.getBean(AuthProperties.class, null));
-    }
-
-    @Setter
-    private static class ServiceProvider {
-
     }
 }

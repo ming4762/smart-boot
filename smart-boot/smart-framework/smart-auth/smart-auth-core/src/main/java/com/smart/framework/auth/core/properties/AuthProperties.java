@@ -1,6 +1,5 @@
 package com.smart.framework.auth.core.properties;
 
-import com.smart.framework.commons.core.dto.common.SmartFont;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.InitializingBean;
@@ -8,8 +7,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.util.Assert;
 
-import java.io.Serial;
-import java.io.Serializable;
 import java.time.Duration;
 import java.util.List;
 
@@ -160,6 +157,7 @@ public class AuthProperties implements InitializingBean {
     public static class AuthAccessSecretProperties {
         /**
          * 匹配的URL
+         * TODO: 暂不支持
          */
         private List<String> urlMatcher;
 
@@ -169,62 +167,5 @@ public class AuthProperties implements InitializingBean {
          * 过期时间默认10分钟
          */
         private Duration expire = Duration.ofMinutes(10);
-    }
-
-    /**
-     * 图片验证码参数
-     */
-    @Getter
-    @Setter
-    public static class ImageCaptchaProperties implements Serializable {
-
-        @Serial
-        private static final long serialVersionUID = -2278503531404987655L;
-    }
-
-    /**
-     * 文本验证码参数
-     */
-    @Getter
-    @Setter
-    public static class TextCaptchaProperties implements Serializable {
-        @Serial
-        private static final long serialVersionUID = -6876970459792547301L;
-        /**
-         * 字符长度
-         */
-        private Integer length = 4;
-
-        /**
-         * 宽度
-         */
-        private Integer width = 130;
-
-        /**
-         * 高度
-         */
-        private Integer height = 48;
-
-        /**
-         * 字体
-         */
-        private SmartFont font;
-
-        /**
-         * 文本类型
-         * 1 字母数字混合
-         * 2 纯数字
-         * 3 纯字母
-         * 4 纯大写字母
-         * 5 纯小写字母
-         * 6 数字大写字母
-         */
-        private Integer charType;
-
-        /**
-         * 是否忽略大小写，默认忽略
-         */
-        private Boolean ignoreCase = Boolean.TRUE;
-
     }
 }

@@ -20,6 +20,9 @@ import java.util.Properties;
  */
 @Slf4j
 public class DbConnectionFactory implements KeyedPooledObjectFactory<DbConnectionConfig, Connection> {
+
+    private static final int VALIDATE_TIME = 1;
+
     @Override
     public PooledObject<Connection> makeObject(DbConnectionConfig connectionConfig) throws Exception {
         final Connection connection = this.createConnection(connectionConfig);
@@ -64,7 +67,7 @@ public class DbConnectionFactory implements KeyedPooledObjectFactory<DbConnectio
     public boolean validateObject(DbConnectionConfig config, PooledObject<Connection> pooledObject) {
         final Connection connection = pooledObject.getObject();
         try {
-            return connection != null && !connection.isClosed();
+            return connection != null && !connection.isClosed() && connection.isValid(VALIDATE_TIME);
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
             return false;
