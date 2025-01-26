@@ -7,7 +7,7 @@ import lombok.*;
 import org.apache.ibatis.mapping.SqlCommandType;
 
 import java.io.Serial;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
 * sys_exception - 系统异常信息
@@ -67,7 +67,7 @@ public class SysExceptionPO extends BaseModel {
     /**
     * create_time - 创建时间
     */
-    private LocalDateTime createTime;
+    private ZonedDateTime createTime;
 
     /**
     * user_feedback - 用户是否反馈
@@ -82,7 +82,7 @@ public class SysExceptionPO extends BaseModel {
     /**
     * feedback_time - 反馈时间
     */
-    private LocalDateTime feedbackTime;
+    private ZonedDateTime feedbackTime;
 
     /**
     * resolved - 是否已处理
@@ -102,7 +102,7 @@ public class SysExceptionPO extends BaseModel {
     /**
     * resolved_time - 处理时间
     */
-    private LocalDateTime resolvedTime;
+    private ZonedDateTime resolvedTime;
 
     @TableTenantField(platformTenantIgnoreCommands = SqlCommandType.SELECT)
     private Long tenantId;

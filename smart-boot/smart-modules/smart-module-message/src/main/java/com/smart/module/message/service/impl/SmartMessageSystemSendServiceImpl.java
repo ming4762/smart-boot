@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -63,7 +63,7 @@ public class SmartMessageSystemSendServiceImpl extends BaseServiceImpl<SmartMess
             this.update(
                     new UpdateWrapper<SmartMessageSystemSendPO>().lambda()
                             .set(SmartMessageSystemSendPO::getReadYn, Boolean.TRUE)
-                            .set(SmartMessageSystemSendPO::getReadTime, LocalDateTime.now())
+                            .set(SmartMessageSystemSendPO::getReadTime, ZonedDateTime.now())
                             .eq(SmartMessageSystemSendPO::getReadYn, Boolean.FALSE)
                             .eq(SmartMessageSystemSendPO::getUserId, AuthUtils.getNonNullCurrentUserId())
             );
@@ -75,7 +75,7 @@ public class SmartMessageSystemSendServiceImpl extends BaseServiceImpl<SmartMess
         Lists.partition(parameter.getMessageIdList(), 900).forEach(list -> this.update(
                 new UpdateWrapper<SmartMessageSystemSendPO>().lambda()
                         .set(SmartMessageSystemSendPO::getReadYn, Boolean.TRUE)
-                        .set(SmartMessageSystemSendPO::getReadTime, LocalDateTime.now())
+                        .set(SmartMessageSystemSendPO::getReadTime, ZonedDateTime.now())
                         .eq(SmartMessageSystemSendPO::getReadYn, Boolean.FALSE)
                         .eq(SmartMessageSystemSendPO::getUserId, AuthUtils.getNonNullCurrentUserId())
                         .in(SmartMessageSystemSendPO::getId, list)

@@ -7,7 +7,7 @@ import lombok.ToString;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
 * sys_tenant_subscribe - 租户套餐订阅表
@@ -41,13 +41,13 @@ public class SysTenantSubscribeSaveUpdateDTO implements Serializable {
     * 生效日期
     */
     @NotNull(message = "生效日期不能为空")
-    private LocalDateTime effectTime;
+    private ZonedDateTime effectTime;
 
     /**
     * 失效日期
     */
     @NotNull(message = "失效日期不能为空")
-    private LocalDateTime expireTime;
+    private ZonedDateTime expireTime;
     /**
     * 用户数
     */

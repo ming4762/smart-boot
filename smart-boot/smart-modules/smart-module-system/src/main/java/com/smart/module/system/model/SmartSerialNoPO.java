@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serial;
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 
 /**
 * smart_serial_no - 业务编码表
@@ -80,7 +80,7 @@ public class SmartSerialNoPO extends BaseModelUserTime {
     /**
      * 当前日期，标记重置当前值
      */
-    private LocalDate lastCurrentDate;
+    private ZonedDateTime lastCurrentDate;
 
     /**
     * current_value - 当前值

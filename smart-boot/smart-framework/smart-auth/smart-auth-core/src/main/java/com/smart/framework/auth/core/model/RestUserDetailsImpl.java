@@ -14,7 +14,7 @@ import lombok.Setter;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -49,7 +49,7 @@ public class RestUserDetailsImpl implements RestUserDetails, Serializable {
     private Set<SmartGrantedAuthority> authorities;
 
     @Getter
-    private LocalDateTime loginTime;
+    private ZonedDateTime loginTime;
 
     /**
      * 标识登录类型

@@ -11,7 +11,7 @@ import lombok.Setter;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Set;
 
 /**
@@ -31,15 +31,15 @@ public class TokenData implements Serializable {
 
     private String token;
 
-    private LocalDateTime createTime;
+    private ZonedDateTime createTime;
 
-    private LocalDateTime refreshTime;
+    private ZonedDateTime refreshTime;
 
     private Duration timeout;
 
     private RestUserDetails user;
 
-    public TokenData(String token, LocalDateTime createTime, LocalDateTime refreshTime, Duration timeout, RestUserDetails user) {
+    public TokenData(String token, ZonedDateTime createTime, ZonedDateTime refreshTime, Duration timeout, RestUserDetails user) {
         this.token = token;
         this.createTime = createTime;
         this.refreshTime = refreshTime;

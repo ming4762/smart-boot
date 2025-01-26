@@ -17,7 +17,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -45,7 +45,7 @@ public class SmartFileServiceImpl extends BaseServiceImpl<SmartFileMapper, Smart
         String expireTimeColumn = tableInfo.getTableFiled(SmartFilePO::getExpireTime).getColumn();
         queryWrapper.and(
                 query -> query.isNull(expireTimeColumn)
-                        .or(wrapper -> wrapper.ge(expireTimeColumn, LocalDateTime.now()))
+                        .or(wrapper -> wrapper.ge(expireTimeColumn, ZonedDateTime.now()))
         );
         List<? extends SmartFilePO> dataList = super.list(queryWrapper, parameter, paging);
         if (Boolean.TRUE.equals(parameter.getParameter().get(CrudCommonEnum.WITH_ALL.name()))) {

@@ -21,7 +21,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -85,7 +85,7 @@ public class SmartSystemMessageSender implements SmartMessageSender {
             model.setMessageType(MessageTypeEnum.SYSTEM_MESSAGE);
             model.setSendStatus(MessageSendStatusEnum.SEND);
             model.setPriority(parameter.getPriority());
-            model.setSendTime(LocalDateTime.now());
+            model.setSendTime(ZonedDateTime.now());
 
             model.setUserIds(userIdList);
             if (parameter.getBusiness() != null) {
@@ -98,7 +98,7 @@ public class SmartSystemMessageSender implements SmartMessageSender {
             LambdaUpdateWrapper<SmartMessageSystemPO> updateWrapper = new UpdateWrapper<SmartMessageSystemPO>().lambda()
                     .set(SmartMessageSystemPO::getSendStatus, MessageSendStatusEnum.SEND.getValue())
                     .set(SmartMessageSystemPO::getSendUserId, AuthUtils.getNonNullCurrentUserId())
-                    .set(SmartMessageSystemPO::getSendTime, LocalDateTime.now())
+                    .set(SmartMessageSystemPO::getSendTime, ZonedDateTime.now())
                     // TODO:待完善 使用公共函数转
                     .set(SmartMessageSystemPO::getUserIds, String.join(",", userIdList.stream().map(Object::toString).toList()));
             // 更新消息表

@@ -8,7 +8,7 @@ import lombok.ToString;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * sys_tenant - 租户表
@@ -90,11 +90,11 @@ public class SysTenantSaveUpdateDTO implements Serializable {
     /**
      * 生效时间
      */
-    private LocalDateTime effectTime;
+    private ZonedDateTime effectTime;
     /**
      * 过期时间
      */
-    private LocalDateTime expireTime;
+    private ZonedDateTime expireTime;
     /**
      * 备注
      */

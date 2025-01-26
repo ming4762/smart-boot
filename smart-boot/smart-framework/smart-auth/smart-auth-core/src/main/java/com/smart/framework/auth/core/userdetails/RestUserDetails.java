@@ -9,7 +9,7 @@ import lombok.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -75,7 +75,7 @@ public interface RestUserDetails extends UserDetails {
      * 获取登录时间
      * @return 登录时间
      */
-    LocalDateTime getLoginTime();
+    ZonedDateTime getLoginTime();
 
     /**
      * 获取认证类型

@@ -28,7 +28,7 @@
         <!--   是否半选中      -->
         <result column="half_yn" property="halfYn" javaType="java.lang.Boolean" jdbcType="BIT"/>
         <!--   createTime      -->
-        <result column="create_time" property="createTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+        <result column="create_time" property="createTime" javaType="java.time.ZonedDateTime" jdbcType="DATE"/>
         <!--   crateBy      -->
         <result column="crate_by" property="crateBy" javaType="java.lang.String" jdbcType="VARCHAR"/>
         <!--   createUserId      -->

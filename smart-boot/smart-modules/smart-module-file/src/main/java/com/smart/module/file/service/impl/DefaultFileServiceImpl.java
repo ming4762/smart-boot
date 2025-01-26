@@ -30,7 +30,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -179,7 +179,7 @@ public class DefaultFileServiceImpl implements FileService, ApplicationContextAw
             return null;
         }
         // 判断文件是否过期
-        if (sysFileData.getExpireTime() != null && LocalDateTime.now().isAfter(sysFileData.getExpireTime())) {
+        if (sysFileData.getExpireTime() != null && ZonedDateTime.now().isAfter(sysFileData.getExpireTime())) {
             // 文件已经过期，但是还未被删除
             return null;
         }

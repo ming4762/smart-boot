@@ -54,13 +54,13 @@
         <!--   remark      -->
         <result column="remark" property="remark" javaType="java.lang.String" jdbcType="VARCHAR"/>
         <!--   createTime      -->
-        <result column="create_time" property="createTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+        <result column="create_time" property="createTime" javaType="java.time.ZonedDateTime" jdbcType="DATE"/>
         <!--   createUserId      -->
         <result column="create_user_id" property="createUserId" javaType="java.lang.Long" jdbcType="BIGINT"/>
         <!--   createBy      -->
         <result column="create_by" property="createBy" javaType="java.lang.String" jdbcType="VARCHAR"/>
         <!--   updateTime      -->
-        <result column="update_time" property="updateTime" javaType="java.time.LocalDateTime" jdbcType="DATE"/>
+        <result column="update_time" property="updateTime" javaType="java.time.ZonedDateTime" jdbcType="DATE"/>
         <!--   updateUserId      -->
         <result column="update_user_id" property="updateUserId" javaType="java.lang.Long" jdbcType="BIGINT"/>
         <!--   updateBy      -->

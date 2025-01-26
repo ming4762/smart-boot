@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -54,7 +54,7 @@ public class SysUserAccountServiceImpl extends BaseServiceImpl<SysUserAccountMap
     public boolean changePassword(@NonNull Long userId, @NonNull String password) {
         // 获取账户信息
         LambdaUpdateWrapper<SysUserAccountPO> updateWrapper = new UpdateWrapper<SysUserAccountPO>().lambda()
-                .set(SysUserAccountPO :: getPasswordModifyTime, LocalDateTime.now())
+                .set(SysUserAccountPO :: getPasswordModifyTime, ZonedDateTime.now())
                 .set(SysUserAccountPO :: getInitialPasswordYn, Boolean.FALSE)
                 .eq(SysUserAccountPO :: getUserId, userId);
         this.update(updateWrapper);
@@ -107,7 +107,7 @@ public class SysUserAccountServiceImpl extends BaseServiceImpl<SysUserAccountMap
                         .collect(Collectors.joining(","))
             );
         }
-        LocalDateTime currentTime = LocalDateTime.now();
+        ZonedDateTime currentTime = ZonedDateTime.now();
         // 获取参数值
         Map<String, String> sysParameter = this.sysParameterService.getParameter(List.of(
                 SysParameterCodeEnum.AUTH_MAX_CONNECTIONS.getCode(),
@@ -155,11 +155,11 @@ public class SysUserAccountServiceImpl extends BaseServiceImpl<SysUserAccountMap
         switch (userAccount.getAccountStatus()) {
             case LONG_TIME_LOCKED ->
                     // 长时间未登录锁定解锁
-                    updateWrapper.set(SysUserAccountPO::getLastLoginTime, LocalDateTime.now());
+                    updateWrapper.set(SysUserAccountPO::getLastLoginTime, ZonedDateTime.now());
             case LONG_TIME_PASSWORD_MODIFY_LOCKED ->
                     // 长时间密码未修改锁定解锁
-                    updateWrapper.set(SysUserAccountPO::getPasswordModifyTime, LocalDateTime.now())
-                            .set(SysUserAccountPO::getLastLoginTime, LocalDateTime.now());
+                    updateWrapper.set(SysUserAccountPO::getPasswordModifyTime, ZonedDateTime.now())
+                            .set(SysUserAccountPO::getLastLoginTime, ZonedDateTime.now());
             default -> {
                 // do noting
             }

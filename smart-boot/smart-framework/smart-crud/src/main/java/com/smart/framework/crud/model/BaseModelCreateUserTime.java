@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serial;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * @author jackson
@@ -25,7 +25,7 @@ public abstract class BaseModelCreateUserTime extends BaseModel {
     protected Long createUserId;
 
     @TableField(fill = FieldFill.INSERT)
-    protected LocalDateTime createTime;
+    protected ZonedDateTime createTime;
 
     @TableField(fill = FieldFill.INSERT)
     protected String createBy;

@@ -15,7 +15,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serial;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -79,12 +79,12 @@ public class SmartMessageSystemPO extends BaseModelUserTime {
     /**
     * send_time - 发布时间
     */
-    private LocalDateTime sendTime;
+    private ZonedDateTime sendTime;
 
     /**
     * cancel_time - 撤销时间
     */
-    private LocalDateTime cancelTime;
+    private ZonedDateTime cancelTime;
 
     /**
     * user_ids - 指定用户ID，已逗号分隔

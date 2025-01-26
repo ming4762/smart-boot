@@ -4,7 +4,7 @@ import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * @author shizhongming
@@ -22,6 +22,6 @@ public class GetAccessTokenResult implements Serializable {
 
     private String accessToken;
 
-    private LocalDateTime expireAt;
+    private ZonedDateTime expireAt;
 
 }

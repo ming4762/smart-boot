@@ -8,7 +8,7 @@ import lombok.*;
 import org.springframework.boot.logging.LogLevel;
 
 import java.io.Serial;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
 * monitor_client_log - 客户端日志
@@ -44,7 +44,7 @@ public class MonitorClientLogPO extends BaseModel {
     /**
     * create_time - createTime
     */
-    private LocalDateTime createTime;
+    private ZonedDateTime createTime;
 
     /**
     * thread_name - 线程名

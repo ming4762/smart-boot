@@ -5,7 +5,7 @@ import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -30,7 +30,7 @@ public class AuthUserDetailsDTO implements Serializable {
 
     private String locale;
 
-    private LocalDateTime loginTime;
+    private ZonedDateTime loginTime;
 
     private UserAccountData userAccountData;
 

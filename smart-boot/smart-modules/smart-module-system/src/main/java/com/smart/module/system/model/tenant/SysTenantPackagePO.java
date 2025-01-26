@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serial;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
 * sys_tenant_package - 租户产品套餐
@@ -43,12 +43,12 @@ public class SysTenantPackagePO extends BaseModelDeleteUserTime {
     /**
     * effect_time - 生效时间
     */
-    private LocalDateTime effectTime;
+    private ZonedDateTime effectTime;
 
     /**
     * expire_time - 过期时间
     */
-    private LocalDateTime expireTime;
+    private ZonedDateTime expireTime;
 
     /**
     * remark - 备注

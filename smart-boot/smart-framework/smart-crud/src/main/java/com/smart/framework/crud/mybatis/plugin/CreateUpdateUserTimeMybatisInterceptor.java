@@ -17,7 +17,7 @@ import org.springframework.beans.BeanUtils;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 /**
@@ -93,8 +93,8 @@ public class CreateUpdateUserTimeMybatisInterceptor implements Interceptor {
     @SneakyThrows({IllegalAccessException.class, InvocationTargetException.class})
     private void setTime(PropertyDescriptor propertyDescriptor, Object data) {
         if (propertyDescriptor != null && propertyDescriptor.getReadMethod().invoke(data) == null) {
-            if (propertyDescriptor.getPropertyType().equals(LocalDateTime.class)) {
-                propertyDescriptor.getWriteMethod().invoke(data, LocalDateTime.now());
+            if (propertyDescriptor.getPropertyType().equals(ZonedDateTime.class)) {
+                propertyDescriptor.getWriteMethod().invoke(data, ZonedDateTime.now());
             } else if (propertyDescriptor.getPropertyType().equals(Date.class)) {
                 propertyDescriptor.getWriteMethod().invoke(data, new Date());
             } else {

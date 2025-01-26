@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.List;
 
@@ -139,7 +139,7 @@ public class SmartMessageSystemServiceImpl extends BaseServiceImpl<SmartMessageS
         return this.update(
                 new UpdateWrapper<SmartMessageSystemPO>().lambda()
                         .set(SmartMessageSystemPO::getSendStatus, MessageSendStatusEnum.CANCEL)
-                        .set(SmartMessageSystemPO::getCancelTime, LocalDateTime.now())
+                        .set(SmartMessageSystemPO::getCancelTime, ZonedDateTime.now())
         ) &&
                 this.smartMessageSystemSendService.remove(
                         new QueryWrapper<SmartMessageSystemSendPO>().lambda()

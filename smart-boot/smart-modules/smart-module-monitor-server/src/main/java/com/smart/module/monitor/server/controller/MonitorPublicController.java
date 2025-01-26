@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -59,7 +59,7 @@ public class MonitorPublicController {
             query.le(MonitorClientLogPO :: getTimestamp, parameter.getEndTime());
         }
         List<MonitorClientLogPO> logList = this.monitorClientLogService.list(query);
-        String fileName = DATE_TIME_FORMATTER.format(LocalDateTime.now()) + ".log";
+        String fileName = DATE_TIME_FORMATTER.format(ZonedDateTime.now()) + ".log";
         response.setHeader("Content-Disposition", "attachment;filename=" + new String (fileName.getBytes (StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1));
         response.setCharacterEncoding (StandardCharsets.UTF_8.name());
         for (MonitorClientLogPO log : logList) {

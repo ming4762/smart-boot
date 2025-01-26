@@ -7,7 +7,7 @@ import com.smart.framework.crud.model.BaseModel;
 import lombok.*;
 
 import java.io.Serial;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
 * monitor_event - 事件信息
@@ -58,6 +58,6 @@ public class MonitorEventPO extends BaseModel {
     /**
     * create_time - 创建事件
     */
-    private LocalDateTime createTime;
+    private ZonedDateTime createTime;
 
 }

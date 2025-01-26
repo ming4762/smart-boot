@@ -6,7 +6,7 @@ import org.springframework.lang.NonNull;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -49,9 +49,9 @@ public class AuthCaptchaValidateParameter implements Serializable {
     /** 滑块图片高度. */
     private Integer sliderImageHeight;
     /** 滑动开始时间. */
-    private LocalDateTime startSlidingTime;
+    private ZonedDateTime startSlidingTime;
     /** 滑动结束时间. */
-    private LocalDateTime endSlidingTime;
+    private ZonedDateTime endSlidingTime;
     /** 滑动的轨迹. */
     private List<Track> trackList;
 

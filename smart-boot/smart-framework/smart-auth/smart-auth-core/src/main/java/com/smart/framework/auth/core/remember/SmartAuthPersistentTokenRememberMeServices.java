@@ -14,7 +14,7 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * @author shizhongming
@@ -83,7 +83,7 @@ public class SmartAuthPersistentTokenRememberMeServices extends PersistentTokenB
         if (userDetails instanceof RestUserDetailsImpl restUserDetails) {
             restUserDetails.setLoginIp(IpUtils.getIpAddr(request));
             restUserDetails.setLoginType(LoginTypeEnum.REMEMBER);
-            restUserDetails.setLoginTime(LocalDateTime.now());
+            restUserDetails.setLoginTime(ZonedDateTime.now());
             restUserDetails.setAuthType(AuthTypeEnum.USERNAME);
         }
         return userDetails;

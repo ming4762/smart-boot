@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -96,7 +96,7 @@ public class LocalSysUserApi implements SysUserApi {
         }
         Long userId = user.getUserId();
         LambdaUpdateWrapper<SysUserAccountPO> updateWrapper = new UpdateWrapper<SysUserAccountPO>().lambda()
-                .set(SysUserAccountPO::getLockTime, LocalDateTime.now())
+                .set(SysUserAccountPO::getLockTime, ZonedDateTime.now())
                 .set(SysUserAccountPO::getAccountStatus, parameter.getAccountStatus().getValue())
                 .eq(SysUserAccountPO::getTenantId, parameter.getTenantId())
                 .eq(SysUserAccountPO::getUserId, userId);
@@ -129,7 +129,7 @@ public class LocalSysUserApi implements SysUserApi {
                 .eq(SysUserAccountPO::getTenantId, parameter.getTenantId());
         // 重置登录失败次数
         if (parameter.getLoginFailTime() == 0L) {
-            updateWrapper.set(SysUserAccountPO::getLastLoginTime, LocalDateTime.now());
+            updateWrapper.set(SysUserAccountPO::getLastLoginTime, ZonedDateTime.now());
             if (userAccount.getLoginFailTime() > 0L) {
                 updateWrapper.set(SysUserAccountPO::getLoginFailTime, 0L);
             }
@@ -141,7 +141,7 @@ public class LocalSysUserApi implements SysUserApi {
                 // 锁定用户
                 updateWrapper.set(SysUserAccountPO :: getAccountStatus, UserAccountStatusEnum.LOGIN_FAIL_LOCKED.getValue())
                         // 设置锁定时间
-                        .set(SysUserAccountPO :: getLockTime, LocalDateTime.now());
+                        .set(SysUserAccountPO :: getLockTime, ZonedDateTime.now());
             }
         }
         return this.sysUserAccountService.update(updateWrapper);

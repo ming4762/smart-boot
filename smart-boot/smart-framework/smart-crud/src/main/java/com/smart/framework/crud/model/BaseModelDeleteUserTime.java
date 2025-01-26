@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serial;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * @author shizhongming
@@ -28,7 +28,7 @@ public class BaseModelDeleteUserTime extends BaseModelUserTime {
      * delete_time - deleteTime
      */
     @TableLogicField(isFill = true)
-    private LocalDateTime deleteTime;
+    private ZonedDateTime deleteTime;
 
     /**
      * delete_user_id - deleteUserId

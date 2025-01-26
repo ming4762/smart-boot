@@ -20,7 +20,8 @@ spring:
         login-password: root
         deny:
       filter-class-names: stat,wall
-    url: jdbc:mysql://localhost:3308/smart-system?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://localhost:3308/smart-system?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+#    url: jdbc:mysql://localhost:3308/smart-system?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: root
     password: ming8858*
   data:

@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serial;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
 * smart_message_system_send - 系统消息发送阅读记录
@@ -44,7 +44,7 @@ public class SmartMessageSystemSendPO extends BaseModelUserTime {
     /**
     * read_time - 阅读时间
     */
-    private LocalDateTime readTime;
+    private ZonedDateTime readTime;
 
     /**
     * star_yn - 是否标星

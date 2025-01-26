@@ -42,7 +42,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -188,11 +189,11 @@ public class AuthController {
         if (CollectionUtils.isEmpty(tokenDataList)) {
             return List.of();
         }
-        LocalDateTime now = LocalDateTime.now();
+        ZonedDateTime now = ZonedDateTime.now();
         return tokenDataList.stream()
                 .map(item -> {
                     // 计算有效期
-                    LocalDateTime timeoutTime = item.getRefreshTime().plus(item.getTimeout());
+                    ZonedDateTime timeoutTime = item.getRefreshTime().plus(item.getTimeout());
                     RestUserDetails userDetails = item.getUser();
                     OnlineUserVO.UserLoginData.UserLoginDataBuilder builder = OnlineUserVO.UserLoginData.builder()
                             .loginIp(userDetails.getLoginIp())

@@ -7,7 +7,7 @@ import com.smart.framework.crud.model.BaseModel;
 import lombok.*;
 
 import java.io.Serial;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
 * monitor_client_http_trace - 客户端HttpTrace
@@ -63,7 +63,7 @@ public class MonitorClientHttpTracePO extends BaseModel {
     */
     private Long timestamp;
 
-    private LocalDateTime createTime;
+    private ZonedDateTime createTime;
 
     private String data;
 

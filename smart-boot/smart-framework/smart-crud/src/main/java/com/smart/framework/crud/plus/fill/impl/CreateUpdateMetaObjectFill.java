@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.reflection.MetaObject;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * @author shizhongming
@@ -31,7 +31,7 @@ public class CreateUpdateMetaObjectFill implements SmartMetaObjectFill {
             return;
         }
         this.strictInsertFill(metaObject, ModelPropertyEnum.CREATE_USER_ID.getName(), this.userProvider::getCurrentUserId, Long.class);
-        this.strictInsertFill(metaObject, ModelPropertyEnum.CREATE_TIME.getName(), LocalDateTime::now, LocalDateTime.class);
+        this.strictInsertFill(metaObject, ModelPropertyEnum.CREATE_TIME.getName(), ZonedDateTime::now, ZonedDateTime.class);
         this.strictInsertFill(metaObject, ModelPropertyEnum.CREATE_USER.getName(), this.userProvider::getCurrentUserFullName, String.class);
     }
 
@@ -51,7 +51,7 @@ public class CreateUpdateMetaObjectFill implements SmartMetaObjectFill {
             return;
         }
         this.strictUpdateFill(metaObject, ModelPropertyEnum.UPDATE_USER_ID.getName(), this.userProvider::getCurrentUserId, Long.class);
-        this.strictUpdateFill(metaObject, ModelPropertyEnum.UPDATE_TIME.getName(), LocalDateTime::now, LocalDateTime.class);
+        this.strictUpdateFill(metaObject, ModelPropertyEnum.UPDATE_TIME.getName(), ZonedDateTime::now, ZonedDateTime.class);
         this.strictUpdateFill(metaObject, ModelPropertyEnum.UPDATE_USER.getName(), this.userProvider::getCurrentUserFullName, String.class);
     }
 }

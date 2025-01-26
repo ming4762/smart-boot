@@ -59,7 +59,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -824,7 +824,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
                         .set(SysTenantUserPO::getUseYn, parameter.getUseYn())
                         .set(SysTenantUserPO::getUpdateUserId, currentUser.getUserId())
                         .set(SysTenantUserPO::getUpdateBy, currentUser.getFullName())
-                        .set(SysTenantUserPO::getUpdateTime, LocalDateTime.now())
+                        .set(SysTenantUserPO::getUpdateTime, ZonedDateTime.now())
                         .in(SysTenantUserPO::getUserId, parameter.getIdList())
                         .in(SysTenantUserPO::getTenantId, tenantIdList)
         );

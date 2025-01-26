@@ -6,7 +6,7 @@ import lombok.ToString;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * @author shizhongming
@@ -20,7 +20,7 @@ public class SysListTenantFunctionDTO implements Serializable {
     @Serial
     private static final long serialVersionUID = -7739408761596992755L;
 
-    private LocalDateTime now = LocalDateTime.now();
+    private ZonedDateTime now = ZonedDateTime.now();
 
     private Long tenantId;
 }

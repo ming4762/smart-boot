@@ -94,8 +94,8 @@ public class SmartImageCaptchaHandlerImpl implements SmartCaptchaHandler {
         imageCaptchaTrack.setBgImageWidth(imageParameter.getBgImageWidth());
         imageCaptchaTrack.setSliderImageWidth(imageParameter.getSliderImageWidth());
         imageCaptchaTrack.setSliderImageHeight(imageParameter.getSliderImageHeight());
-        imageCaptchaTrack.setStartSlidingTime(DateUtils.localDateTimeToDate(imageParameter.getStartSlidingTime()));
-        imageCaptchaTrack.setEndSlidingTime(DateUtils.localDateTimeToDate(imageParameter.getEndSlidingTime()));
+        imageCaptchaTrack.setStartSlidingTime(DateUtils.ZonedDateTimeToDate(imageParameter.getStartSlidingTime()));
+        imageCaptchaTrack.setEndSlidingTime(DateUtils.ZonedDateTimeToDate(imageParameter.getEndSlidingTime()));
         imageCaptchaTrack.setTrackList(trackList);
         return imageCaptchaTrack;
     }

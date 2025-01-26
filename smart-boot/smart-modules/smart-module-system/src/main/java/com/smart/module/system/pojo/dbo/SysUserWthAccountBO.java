@@ -7,7 +7,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.io.Serial;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * @author ShiZhongMing
@@ -31,7 +32,7 @@ public class SysUserWthAccountBO extends SysUserPO {
     /**
      * 上次登录时间
      */
-    private LocalDateTime lastLoginTime;
+    private ZonedDateTime lastLoginTime;
 
     private Boolean initialPasswordYn;
 }

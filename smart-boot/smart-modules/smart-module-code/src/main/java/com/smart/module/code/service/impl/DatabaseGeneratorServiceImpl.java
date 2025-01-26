@@ -1,8 +1,8 @@
 package com.smart.module.code.service.impl;
 
 import com.smart.framework.freemarker.engine.TemplateEngine;
-import com.smart.framework.freemarker.template.SmartClassPathTemplateElement;
 import com.smart.framework.freemarker.template.AbstractSmartTemplateElement;
+import com.smart.framework.freemarker.template.SmartClassPathTemplateElement;
 import com.smart.framework.freemarker.template.SmartValueTemplateElement;
 import com.smart.framework.tool.database.executor.DatabaseExecutor;
 import com.smart.framework.tool.database.executor.DbExecutorProvider;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -89,7 +89,7 @@ public class DatabaseGeneratorServiceImpl implements DbDictGeneratorService {
         return DatabaseTemplateModel.builder()
                 .tableList(tableList)
                 .columnSize(columnSize)
-                .currentDate(LocalDate.now().format(DateTimeFormatter.ISO_DATE))
+                .currentDate(ZonedDateTime.now().format(DateTimeFormatter.ISO_DATE))
                 .build();
     }
 }

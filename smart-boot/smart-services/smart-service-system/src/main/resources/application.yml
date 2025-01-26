@@ -5,3 +5,5 @@ server:
 spring:
   profiles:
     active: dev
+  freemarker:
+    check-template-location: false

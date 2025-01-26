@@ -7,7 +7,7 @@ import lombok.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -55,7 +55,7 @@ public class OnlineUserVO implements Serializable {
         /**
          * 登录时间
          */
-        private LocalDateTime loginTime;
+        private ZonedDateTime loginTime;
 
         /**
          * 是否绑定IP

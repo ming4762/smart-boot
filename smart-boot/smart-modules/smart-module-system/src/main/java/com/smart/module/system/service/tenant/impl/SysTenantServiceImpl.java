@@ -38,7 +38,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -268,7 +268,7 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
     @NonNull
     @Override
     public List<SysTenantPO> listTenantByUserId(@NonNull Long userId) {
-        LocalDateTime now = LocalDateTime.now();
+        ZonedDateTime now = ZonedDateTime.now();
         LambdaQueryWrapper<SysTenantPO> queryWrapper = new LambdaQueryWrapper<>(SysTenantPO.class)
                 .eq(SysTenantPO::getUseYn, Boolean.TRUE)
                 .and(

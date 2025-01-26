@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.reflection.MetaObject;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * @author shizhongming
@@ -39,7 +39,7 @@ public class LogicDeleteMetaObjectFill implements SmartMetaObjectFill {
         }
         this.fillStrategy(metaObject, ModelPropertyEnum.DELETE_BY.getName(), this.userProvider.getCurrentUserFullName());
         this.fillStrategy(metaObject, ModelPropertyEnum.DELETE_USER_ID.getName(), this.userProvider.getCurrentUserId());
-        this.fillStrategy(metaObject, ModelPropertyEnum.DELETE_TIME.getName(), LocalDateTime.now());
+        this.fillStrategy(metaObject, ModelPropertyEnum.DELETE_TIME.getName(), ZonedDateTime.now());
     }
 
 }

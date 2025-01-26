@@ -16,7 +16,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,7 +74,7 @@ public class MonitorApplicationServiceImpl extends BaseServiceImpl<MonitorApplic
 
     @Override
     public boolean save(@NonNull MonitorApplicationPO entity) {
-        entity.setCreateTime(LocalDateTime.now());
+        entity.setCreateTime(ZonedDateTime.now());
         entity.setCreateUserId(AuthUtils.getCurrentUserId());
         entity.setUseYn(true);
         entity.setDeleteYn(false);
@@ -83,7 +83,7 @@ public class MonitorApplicationServiceImpl extends BaseServiceImpl<MonitorApplic
 
     @Override
     public boolean updateById(MonitorApplicationPO entity) {
-        entity.setUpdateTime(LocalDateTime.now());
+        entity.setUpdateTime(ZonedDateTime.now());
         entity.setUpdateUserId(AuthUtils.getCurrentUserId());
         entity.setCreateUserId(null);
         entity.setCreateTime(null);

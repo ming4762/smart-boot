@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serial;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
 * sys_auth_access_secret - 
@@ -46,7 +46,7 @@ public class SysAuthAccessSecretPO extends BaseModelUserTime {
     /**
     * expire_date - 过期时间
     */
-    private LocalDateTime expireDate;
+    private ZonedDateTime expireDate;
 
     /**
     * access_ip - 授权IP或域名

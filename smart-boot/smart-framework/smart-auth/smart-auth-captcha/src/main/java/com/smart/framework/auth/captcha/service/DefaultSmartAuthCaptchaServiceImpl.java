@@ -103,8 +103,8 @@ public class DefaultSmartAuthCaptchaServiceImpl implements SmartAuthCaptchaServi
         imageCaptchaTrack.setBgImageWidth(parameter.getBgImageWidth());
         imageCaptchaTrack.setSliderImageWidth(parameter.getSliderImageWidth());
         imageCaptchaTrack.setSliderImageHeight(parameter.getSliderImageHeight());
-        imageCaptchaTrack.setStartSlidingTime(DateUtils.localDateTimeToDate(parameter.getStartSlidingTime()));
-        imageCaptchaTrack.setEndSlidingTime(DateUtils.localDateTimeToDate(parameter.getEndSlidingTime()));
+        imageCaptchaTrack.setStartSlidingTime(DateUtils.ZonedDateTimeToDate(parameter.getStartSlidingTime()));
+        imageCaptchaTrack.setEndSlidingTime(DateUtils.ZonedDateTimeToDate(parameter.getEndSlidingTime()));
         imageCaptchaTrack.setTrackList(trackList);
         return imageCaptchaTrack;
     }

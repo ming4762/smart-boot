@@ -2,7 +2,6 @@ package com.smart.framework.commons.core.utils.auth;
 
 import com.smart.framework.commons.core.utils.Base64Utils;
 
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -60,9 +59,8 @@ public class SecretUtils {
      * @param secretKey secretKey
      * @return 认证签名
      */
-    public static String createSign(String httpMethod, String contentType, LocalDateTime date, String notice, String prefix, String accessKey, String secretKey) {
-        ZonedDateTime zonedDateTime = date.atZone(ZoneId.systemDefault())
-                .withZoneSameInstant(ZoneId.of("GMT"));
+    public static String createSign(String httpMethod, String contentType, ZonedDateTime date, String notice, String prefix, String accessKey, String secretKey) {
+        ZonedDateTime zonedDateTime = date.withZoneSameInstant(ZoneId.of("GMT"));
 
         return createSign(httpMethod, contentType, DATE_FORMATTER.format(zonedDateTime), notice, prefix, accessKey, secretKey);
     }

@@ -135,7 +135,7 @@ public class RedisServiceImpl implements RedisService {
 
         // 为每个 key 添加批量读取操作
         for (String key : keys) {
-            RBucketAsync<T> bucket = batch.<T>getBucket(key);
+            RBucketAsync<T> bucket = batch.getBucket(key);
             RFuture<T> async = bucket.getAsync();
             asyncList.add(async);
         }

@@ -10,7 +10,6 @@ import javax.security.auth.x500.X500Principal;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -84,9 +83,9 @@ public class DefaultLicenseGenerator implements LicenseGenerator {
         content.setIssuer(DEFAULT_HOLDER_AND_ISSUER);
 
         content.setSubject(parameter.getSubject());
-        content.setIssued(Date.from(parameter.getIssuedTime().atZone(ZoneId.systemDefault()).toInstant()));
-        content.setNotBefore(Date.from(parameter.getIssuedTime().atZone(ZoneId.systemDefault()).toInstant()));
-        content.setNotAfter(Date.from(parameter.getExpiryTime().atZone(ZoneId.systemDefault()).toInstant()));
+        content.setIssued(Date.from(parameter.getIssuedTime().toInstant()));
+        content.setNotBefore(Date.from(parameter.getIssuedTime().toInstant()));
+        content.setNotAfter(Date.from(parameter.getExpiryTime().toInstant()));
 
         // 设置用户数
         if (parameter.getConsumerAmount() != null && parameter.getConsumerAmount() > 0) {

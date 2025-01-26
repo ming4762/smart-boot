@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serial;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * 带有创建/修改用户信息的基础类
@@ -23,7 +23,7 @@ public abstract class BaseModelUserTime extends BaseModelCreateUserTime {
     protected Long updateUserId;
 
     @TableField(fill = FieldFill.UPDATE)
-    protected LocalDateTime updateTime;
+    protected ZonedDateTime updateTime;
 
     @TableField(fill = FieldFill.UPDATE)
     protected String updateBy;

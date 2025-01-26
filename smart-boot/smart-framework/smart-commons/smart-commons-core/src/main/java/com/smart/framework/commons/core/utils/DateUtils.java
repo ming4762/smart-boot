@@ -57,8 +57,8 @@ public final class DateUtils {
      */
     @NonNull
     public static Date parse(@NonNull String dateStr, @NonNull String pattern) {
-        final LocalDateTime localDateTime = LocalDateTime.parse(dateStr, DateTimeFormatter.ofPattern(pattern));
-        final Instant instant = localDateTime.atZone(ZoneId.systemDefault()).toInstant();
+        final ZonedDateTime zonedDateTime = java.time.ZonedDateTime.parse(dateStr, DateTimeFormatter.ofPattern(pattern));
+        Instant instant = zonedDateTime.toInstant();
         return Date.from(instant);
     }
 
@@ -77,12 +77,12 @@ public final class DateUtils {
 
     /**
      * 格式化时间
-     * @param localDateTime 时间
+     * @param zonedDateTime 时间
      * @param pattern 格式
      * @return 时间字符串
      */
-    public static String format(@NonNull LocalDateTime localDateTime, @NonNull String pattern) {
-        return DateTimeFormatter.ofPattern(pattern).format(localDateTime);
+    public static String format(@NonNull ZonedDateTime zonedDateTime, @NonNull String pattern) {
+        return DateTimeFormatter.ofPattern(pattern).format(zonedDateTime);
     }
 
     /**
@@ -97,8 +97,8 @@ public final class DateUtils {
                 .stream()
                 .map(date -> {
                     final Instant instant = date.toInstant();
-                    final LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
-                    return localDateTime.format(formatter);
+                    final ZonedDateTime zonedDateTime = java.time.ZonedDateTime.ofInstant(instant, ZoneId.systemDefault());
+                    return zonedDateTime.format(formatter);
                 }).toList();
     }
 
@@ -108,13 +108,13 @@ public final class DateUtils {
      * @return 时间
      */
     @Nullable
-    public static LocalDateTime convertDate(String dateStr) {
+    public static ZonedDateTime convertDate(String dateStr) {
         boolean isTime = false;
         if (!org.springframework.util.StringUtils.hasText(dateStr)) {
             return null;
         }
         if (dateStr.contains(CST_DATE_STR)) {
-            return LocalDateTime.parse(dateStr);
+            return ZonedDateTime.parse(dateStr);
         }
         String dateDealStr = dateStr.replace("年", "-").replace("月", "-").replace("日", "")
                 .replace("/", "-").replace("\\.", "-").trim();
@@ -149,9 +149,9 @@ public final class DateUtils {
         if (StringUtils.hasText(dateFormatStr)) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateFormatStr);
             if (isTime) {
-                return LocalDateTime.parse(dateDealStr, formatter);
+                return ZonedDateTime.parse(dateDealStr, formatter);
             } else {
-                return LocalDate.parse(dateDealStr, formatter).atStartOfDay();
+                return LocalDate.parse(dateDealStr, formatter).atStartOfDay().atZone(ZoneId.systemDefault());
             }
 
         }
@@ -164,9 +164,9 @@ public final class DateUtils {
      * @param endDate 结束时间
      * @return 时间段
      */
-    public static List<LocalDate> getBetweenDay(LocalDate startDate, LocalDate endDate) {
-        return getBetweenTime(startDate.atStartOfDay(), endDate.atStartOfDay(), ChronoUnit.DAYS, f -> f.plusDays(1))
-                .stream().map(LocalDateTime::toLocalDate)
+    public static List<LocalDate> getBetweenDay(ZonedDateTime startDate, ZonedDateTime endDate) {
+        return getBetweenTime(startDate, endDate, ChronoUnit.DAYS, f -> f.plusDays(1))
+                .stream().map(ZonedDateTime::toLocalDate)
                 .toList();
     }
 
@@ -176,9 +176,9 @@ public final class DateUtils {
      * @param endDate 结束时间
      * @return 时间段
      */
-    public static List<LocalDate> getBetweenWeek(LocalDate startDate, LocalDate endDate) {
-        return getBetweenTime(startDate.atStartOfDay(), endDate.atStartOfDay(), ChronoUnit.WEEKS, f -> f.plusWeeks(1))
-                .stream().map(LocalDateTime::toLocalDate)
+    public static List<LocalDate> getBetweenWeek(ZonedDateTime startDate, ZonedDateTime endDate) {
+        return getBetweenTime(startDate, endDate, ChronoUnit.WEEKS, f -> f.plusWeeks(1))
+                .stream().map(ZonedDateTime::toLocalDate)
                 .toList();
     }
 
@@ -188,17 +188,17 @@ public final class DateUtils {
      * @param endDate 结束时间
      * @return 时间段
      */
-    public static List<LocalDate> getBetweenMonth(LocalDate startDate, LocalDate endDate) {
-        return getBetweenTime(startDate.atStartOfDay(), endDate.atStartOfDay(), ChronoUnit.MONTHS, f -> f.plusMonths(1))
-                .stream().map(LocalDateTime::toLocalDate)
+    public static List<LocalDate> getBetweenMonth(ZonedDateTime startDate, ZonedDateTime endDate) {
+        return getBetweenTime(startDate, endDate, ChronoUnit.MONTHS, f -> f.plusMonths(1))
+                .stream().map(ZonedDateTime::toLocalDate)
                 .toList();
     }
 
-    public static List<LocalDateTime> getBetweenTime(@NonNull LocalDateTime startTime, @NonNull LocalDateTime endTime, @NonNull Duration duration) {
+    public static List<ZonedDateTime> getBetweenTime(@NonNull ZonedDateTime startTime, @NonNull ZonedDateTime endTime, @NonNull Duration duration) {
         if (startTime.isAfter(endTime)) {
             return new ArrayList<>(0);
         }
-        List<LocalDateTime> result = new LinkedList<>();
+        List<ZonedDateTime> result = new LinkedList<>();
         while (startTime.isBefore(endTime)) {
             result.add(startTime);
             startTime = startTime.plus(duration);
@@ -215,9 +215,9 @@ public final class DateUtils {
      * @param unaryOperator 操作
      * @return 时间段
      */
-    public static List<LocalDateTime> getBetweenTime(@NonNull LocalDateTime startDate, @NonNull LocalDateTime endDate, @NonNull ChronoUnit chronoUnit, @NonNull UnaryOperator<LocalDateTime> unaryOperator) {
+    public static List<ZonedDateTime> getBetweenTime(@NonNull ZonedDateTime startDate, @NonNull ZonedDateTime endDate, @NonNull ChronoUnit chronoUnit, @NonNull UnaryOperator<ZonedDateTime> unaryOperator) {
         long distance = chronoUnit.between(startDate, endDate);
-        List<LocalDateTime> result = new LinkedList<>();
+        List<ZonedDateTime> result = new LinkedList<>();
         if (distance < 1) {
             return result;
         }
@@ -237,12 +237,11 @@ public final class DateUtils {
     }
 
     /**
-     * LocalDateTime转Date
-     * @param localDateTime LocalDateTime
+     * ZonedDateTime转Date
+     * @param zonedDateTime zonedDateTime
      * @return Date
      */
-    public static Date localDateTimeToDate(LocalDateTime localDateTime) {
-        ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
+    public static Date ZonedDateTimeToDate(ZonedDateTime zonedDateTime) {
         return Date.from(zonedDateTime.toInstant());
     }
 

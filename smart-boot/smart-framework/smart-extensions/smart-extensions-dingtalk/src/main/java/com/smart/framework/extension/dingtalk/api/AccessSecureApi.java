@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * 认证服务类
@@ -60,7 +60,7 @@ public class AccessSecureApi {
 
         // 计算有效期
         Duration duration = Duration.ofSeconds(body.getExpireIn()).minus(ACCESS_TOKEN_EXPIRES_DURATION);
-        LocalDateTime expireAt = LocalDateTime.now().plus(duration);
+        ZonedDateTime expireAt = ZonedDateTime.now().plus(duration);
 
         GetAccessTokenResult result = new GetAccessTokenResult(body.accessToken, expireAt);
         // 设置缓存

@@ -6,7 +6,7 @@ import lombok.ToString;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * @author shizhongming
@@ -23,10 +23,10 @@ public class ListTenantByUserParameter implements Serializable {
 
     public ListTenantByUserParameter(Long userId) {
         this.userId = userId;
-        this.now = LocalDateTime.now();
+        this.now = ZonedDateTime.now();
     }
 
     private Long userId;
 
-    private LocalDateTime now;
+    private ZonedDateTime now;
 }

@@ -14,7 +14,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -41,7 +41,7 @@ public class MonitorEventServiceImpl extends BaseServiceImpl<MonitorEventMapper,
                 .eventCode(event.getCode().getCode())
                 .timestamp(event.getTimestamp())
                 .eventMessage(eventMessage)
-                .createTime(LocalDateTime.now())
+                .createTime(ZonedDateTime.now())
                 .build();
         this.save(monitorEvent);
     }

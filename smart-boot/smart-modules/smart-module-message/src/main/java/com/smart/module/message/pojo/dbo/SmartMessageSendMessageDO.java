@@ -8,7 +8,7 @@ import lombok.ToString;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * @author shizhongming
@@ -42,14 +42,14 @@ public class SmartMessageSendMessageDO implements Serializable {
     /**
      * read_time - 阅读时间
      */
-    private LocalDateTime readTime;
+    private ZonedDateTime readTime;
 
     /**
      * star_yn - 是否标星
      */
     private Boolean starYn;
 
-    private LocalDateTime sendTime;
+    private ZonedDateTime sendTime;
 
     private Long sendUserId;
 

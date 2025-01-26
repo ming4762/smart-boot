@@ -6,7 +6,7 @@ import lombok.ToString;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
 * sys_auth_access_secret - 
@@ -28,7 +28,7 @@ public class SysAuthAccessSecretSaveUpdateDTO implements Serializable {
     /**
     * 过期时间
     */
-    private LocalDateTime expireDate;
+    private ZonedDateTime expireDate;
     /**
     * 授权IP或域名
     */

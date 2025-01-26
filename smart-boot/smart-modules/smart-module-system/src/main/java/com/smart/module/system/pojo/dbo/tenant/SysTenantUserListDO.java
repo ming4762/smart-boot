@@ -6,7 +6,7 @@ import lombok.ToString;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * 查询租户对用用户
@@ -40,7 +40,7 @@ public class SysTenantUserListDO implements Serializable {
     /**
      * create_time - createTime
      */
-    private LocalDateTime createTime;
+    private ZonedDateTime createTime;
 
     /**
      * create_user_id - createUserId

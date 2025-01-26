@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * 将异常信息保存到数据库
@@ -46,7 +46,7 @@ public class DbExceptionNotice extends AbstractCommonExcludeExceptionNotice {
                     .requestPath(request.getServletPath())
                     .operateUserId(user == null ? null : user.getUserId())
                     .operationBy(user == null ? null : user.getFullName())
-                    .createTime(LocalDateTime.now())
+                    .createTime(ZonedDateTime.now())
                     .build();
             this.sysExceptionService.save(sysException);
         } catch (UnknownHostException ex) {

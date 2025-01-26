@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -82,7 +82,7 @@ public class SysConfigStorageController extends BaseController<SysConfigStorageS
                             .eq(SysConfigStoragePO::getConfigKey, parameter.getConfigKey())
                             .set(SysConfigStoragePO::getConfigValue, parameter.getConfigValue())
                             .set(SysConfigStoragePO::getUpdateBy, AuthUtils.getCurrentUsername())
-                            .set(SysConfigStoragePO::getUpdateTime, LocalDateTime.now())
+                            .set(SysConfigStoragePO::getUpdateTime, ZonedDateTime.now())
                             .set(SysConfigStoragePO::getUpdateUserId, AuthUtils.getNonNullCurrentUserId())
                     .update());
         }

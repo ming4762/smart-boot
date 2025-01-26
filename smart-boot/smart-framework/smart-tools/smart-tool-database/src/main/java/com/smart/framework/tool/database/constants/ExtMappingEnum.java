@@ -3,7 +3,7 @@ package com.smart.framework.tool.database.constants;
 import lombok.Getter;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.LocalTime;
 
 /**
@@ -25,7 +25,7 @@ public enum ExtMappingEnum {
     BIG_DECIMAL("number", java.math.BigDecimal.class),
     LOCAL_DATE("date", LocalDate.class),
     LOCAL_TIME("date", LocalTime.class),
-    LOCAL_DATE_TIME("date", LocalDateTime.class),
+    LOCAL_DATE_TIME("date", ZonedDateTime.class),
     STRING("string", String.class);
 
     private final String extClass;

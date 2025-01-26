@@ -15,8 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -81,12 +80,12 @@ public class SmartSerialNoServiceImpl extends BaseServiceImpl<SmartSerialNoMappe
         SerialCodeCreateDTO dto = new SerialCodeCreateDTO();
         BeanUtils.copyProperties(serialConfig, dto);
         // 格式化日期
-        String dateFormat = DateTimeFormatter.ofPattern(serialConfig.getDateFormat()).format(LocalDateTime.now());
+        String dateFormat = DateTimeFormatter.ofPattern(serialConfig.getDateFormat()).format(ZonedDateTime.now());
 
         List<Long> numberList = new ArrayList<>(parameter.getNumber());
         Long currentValue = serialConfig.getCurrentValue();
         // 判断是否重置当前值，日期变化重置当前值
-        if (serialConfig.getLastCurrentDate() == null || LocalDate.now().isAfter(serialConfig.getLastCurrentDate())) {
+        if (serialConfig.getLastCurrentDate() == null || ZonedDateTime.now().isAfter(serialConfig.getLastCurrentDate())) {
             currentValue = 1L;
         }
         for (int i = 0; i < parameter.getNumber(); i++) {
@@ -117,7 +116,7 @@ public class SmartSerialNoServiceImpl extends BaseServiceImpl<SmartSerialNoMappe
         this.update(
                 new UpdateWrapper<SmartSerialNoPO>().lambda()
                         .set(SmartSerialNoPO::getCurrentValue, currentValue)
-                        .set(SmartSerialNoPO::getLastCurrentDate, LocalDate.now())
+                        .set(SmartSerialNoPO::getLastCurrentDate, ZonedDateTime.now())
                         .eq(SmartSerialNoPO::getId, serialConfig.getId())
         );
 

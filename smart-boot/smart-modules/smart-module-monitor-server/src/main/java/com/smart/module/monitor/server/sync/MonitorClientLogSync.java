@@ -15,7 +15,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -57,7 +57,7 @@ public class MonitorClientLogSync implements MonitorDataSync {
     }
 
     private int saveLog(String data, @NonNull ClientData clientData) {
-        final LocalDateTime currentTime = LocalDateTime.now();
+        final ZonedDateTime currentTime = ZonedDateTime.now();
         final List<LoggingEventData> eventDataList = JsonUtils.parseCollection(data, LoggingEventData.class);
         final List<MonitorClientLogPO> logList = eventDataList.stream().map(item -> MonitorClientLogPO.builder()
                 .applicationCode(clientData.getApplication().getApplicationName())

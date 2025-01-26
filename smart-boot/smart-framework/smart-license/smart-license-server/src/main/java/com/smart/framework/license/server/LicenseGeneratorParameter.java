@@ -3,7 +3,7 @@ package com.smart.framework.license.server;
 import lombok.*;
 
 import java.io.InputStream;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * License生成参数
@@ -22,12 +22,12 @@ public class LicenseGeneratorParameter {
     /**
      * 证书生效日期
      */
-    private LocalDateTime issuedTime;
+    private ZonedDateTime issuedTime;
 
     /**
      * 证书过期日期
      */
-    private LocalDateTime expiryTime;
+    private ZonedDateTime expiryTime;
 
     /**
      * 允许访问的用户数

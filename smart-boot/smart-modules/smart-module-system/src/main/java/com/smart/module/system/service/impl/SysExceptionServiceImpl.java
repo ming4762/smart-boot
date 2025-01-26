@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -118,7 +118,7 @@ public class SysExceptionServiceImpl extends BaseServiceImpl<SysExceptionMapper,
                 new UpdateWrapper<SysExceptionPO>().lambda()
                         .set(SysExceptionPO::getFeedbackMessage, parameter.getFeedbackMessage())
                         .set(SysExceptionPO::getUserFeedback, true)
-                        .set(SysExceptionPO::getFeedbackTime, LocalDateTime.now())
+                        .set(SysExceptionPO::getFeedbackTime, ZonedDateTime.now())
                         .in(SysExceptionPO::getId, parameter.getIdList())
         );
     }
@@ -138,7 +138,7 @@ public class SysExceptionServiceImpl extends BaseServiceImpl<SysExceptionMapper,
         return this.update(
                 new UpdateWrapper<SysExceptionPO>().lambda()
                         .set(SysExceptionPO::getResolved, Boolean.TRUE)
-                        .set(SysExceptionPO::getResolvedTime, LocalDateTime.now())
+                        .set(SysExceptionPO::getResolvedTime, ZonedDateTime.now())
                         .set(SysExceptionPO::getResolvedMessage, parameter.getResolvedMessage())
                         .set(SysExceptionPO::getResolvedUserId, AuthUtils.getNonNullCurrentUserId())
                         .in(SysExceptionPO::getId, parameter.getExceptionIdList())

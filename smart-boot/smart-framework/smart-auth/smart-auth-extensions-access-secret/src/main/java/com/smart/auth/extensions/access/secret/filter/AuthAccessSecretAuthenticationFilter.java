@@ -22,7 +22,7 @@ import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -109,7 +109,7 @@ public class AuthAccessSecretAuthenticationFilter implements Filter {
 
         AccessSecretData accessSecretData = this.getValidateAccessSecretData(accessKey);
         // 验证Access 状态
-        if (accessSecretData.getExpireDate() != null && LocalDateTime.now().isAfter(accessSecretData.getExpireDate())) {
+        if (accessSecretData.getExpireDate() != null && ZonedDateTime.now().isAfter(accessSecretData.getExpireDate())) {
             this.throwException(AuthI18nMessage.ACCESS_SECRET_ACCESS_KEY_EXPIRE);
         }
         if (StringUtils.hasText(accessSecretData.getAccessIp())) {
@@ -137,18 +137,18 @@ public class AuthAccessSecretAuthenticationFilter implements Filter {
         if(!StringUtils.hasText(date)) {
             this.throwException(AuthI18nMessage.ACCESS_SECRET_DATE_ERROR);
         }
-        LocalDateTime localDateTime;
+        ZonedDateTime zonedDateTime;
         try {
-            localDateTime = LocalDateTime.parse(date, DATE_FORMATTER);
+            zonedDateTime = ZonedDateTime.parse(date, DATE_FORMATTER);
         } catch (Exception e) {
             throw new AuthException(I18nUtils.get(AuthI18nMessage.ACCESS_SECRET_DATE_ERROR));
         }
         // 验证时间是否超出
         Duration expire = this.authProperties.getAccessSecret().getExpire();
-        LocalDateTime now = LocalDateTime.now(ZoneId.of("GMT"));
+        ZonedDateTime now = ZonedDateTime.now(ZoneId.of("GMT"));
         if (
-                localDateTime.isAfter(now.plus(expire)) ||
-                        localDateTime.isBefore(now.minus(expire))
+                zonedDateTime.isAfter(now.plus(expire)) ||
+                        zonedDateTime.isBefore(now.minus(expire))
         ) {
             this.throwException(AuthI18nMessage.ACCESS_SECRET_DATE_EXPIRE);
         }

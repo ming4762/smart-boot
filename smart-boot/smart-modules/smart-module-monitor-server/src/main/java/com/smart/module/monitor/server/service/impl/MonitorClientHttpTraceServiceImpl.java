@@ -25,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -71,7 +71,7 @@ public class MonitorClientHttpTraceServiceImpl extends BaseServiceImpl<MonitorCl
 
     @SuppressWarnings("unchecked")
     private int saveHttpTrace(List<Map<String, Object>> data, @NonNull ClientData clientData) {
-        final LocalDateTime currentTime = LocalDateTime.now();
+        final ZonedDateTime currentTime = ZonedDateTime.now();
         final List<MonitorClientHttpTracePO> httpTraceList = data.stream().map(item -> {
             final Map<String, Object> request = (Map<String, Object>) item.get("request");
             final Map<String, Object> response = (Map<String, Object>) item.get("response");

@@ -6,13 +6,13 @@ import com.smart.framework.file.core.service.FileService;
 import com.smart.module.file.model.SmartFilePO;
 import com.smart.module.file.service.SmartFileService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.InitializingBean;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Component
 @Slf4j
-public class ClearExpireFileTask implements InitializingBean {
+public class ClearExpireFileTask implements CommandLineRunner {
 
     private final FileService fileService;
 
@@ -35,8 +35,13 @@ public class ClearExpireFileTask implements InitializingBean {
         this.smartFileService = smartFileService;
     }
 
+    /**
+     * Callback used to run the bean.
+     *
+     * @param args incoming main method arguments
+     */
     @Override
-    public void afterPropertiesSet() {
+    public void run(String... args) {
         ThreadPoolTaskScheduler threadPoolTaskScheduler = this.createThreadPoolTaskScheduler();
         threadPoolTaskScheduler.initialize();
 
@@ -58,7 +63,7 @@ public class ClearExpireFileTask implements InitializingBean {
         List<SmartFilePO> fileList = this.smartFileService.list(
                 new QueryWrapper<SmartFilePO>().lambda()
                         .select(SmartFilePO::getFileId)
-                        .lt(SmartFilePO::getExpireTime, LocalDateTime.now())
+                        .lt(SmartFilePO::getExpireTime, ZonedDateTime.now())
         );
         if (CollectionUtils.isEmpty(fileList)) {
             return;

@@ -16,7 +16,7 @@ import org.apache.ibatis.plugin.Intercepts;
 import org.apache.ibatis.plugin.Invocation;
 import org.apache.ibatis.plugin.Signature;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static com.smart.framework.crud.constants.SmartCrudConstants.DELETE_FIELDS;
@@ -71,7 +71,7 @@ public class LogicDeleteFieldInjectMybatisInterceptor implements Interceptor {
         LogicDeleteParameter logicDeleteParameter = new LogicDeleteParameter();
         logicDeleteParameter.setDeleteBy(userProvider.getCurrentUserFullName());
         logicDeleteParameter.setDeleteUserId(userProvider.getCurrentUserId());
-        logicDeleteParameter.setDeleteTime(LocalDateTime.now());
+        logicDeleteParameter.setDeleteTime(ZonedDateTime.now());
         ((MapperMethod.ParamMap) parameter).put(DELETE_FIELDS, logicDeleteParameter);
         return invocation.proceed();
     }

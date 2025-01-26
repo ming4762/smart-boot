@@ -9,7 +9,7 @@ import org.springframework.http.HttpMethod;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * 生成签名参数
@@ -29,7 +29,7 @@ public class SysAccessCreateSignDTO implements Serializable {
     private Long accessId;
 
     @NotNull(message = "Date不能为空")
-    private LocalDateTime date;
+    private ZonedDateTime date;
 
     @NotNull(message = "nonce不能为空")
     private String nonce;

@@ -5,7 +5,7 @@ import lombok.Setter;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * 逻辑删除参数
@@ -32,5 +32,5 @@ public class LogicDeleteParameter implements Serializable {
     /**
      * 删除时间
      */
-    private LocalDateTime deleteTime;
+    private ZonedDateTime deleteTime;
 }

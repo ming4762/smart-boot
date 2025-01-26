@@ -8,7 +8,7 @@ import org.pentaho.di.repository.RepositoryObjectType;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.ZoneId;
 
 /**
@@ -24,7 +24,7 @@ public class RepositoryElementMetaData implements Serializable {
 
     private String modifiedUser;
 
-    private LocalDateTime modifiedDate;
+    private ZonedDateTime modifiedDate;
 
     private RepositoryObjectType objectType;
     private String description;
@@ -37,7 +37,7 @@ public class RepositoryElementMetaData implements Serializable {
     public static RepositoryElementMetaData createByRepositoryElementMeta(RepositoryElementMetaInterface repositoryElementMeta) {
         RepositoryElementMetaData data = new RepositoryElementMetaData();
         data.setModifiedUser(repositoryElementMeta.getModifiedUser());
-        data.setModifiedDate(repositoryElementMeta.getModifiedDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+        data.setModifiedDate(repositoryElementMeta.getModifiedDate().toInstant().atZone(ZoneId.systemDefault()).toZonedDateTime());
         data.setObjectId(repositoryElementMeta.getObjectId());
         data.setObjectType(repositoryElementMeta.getObjectType());
         data.setDescription(repositoryElementMeta.getDescription());

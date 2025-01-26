@@ -11,7 +11,7 @@ import org.springframework.lang.NonNull;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * @author jackson
@@ -50,9 +50,9 @@ public class SysFileBO {
      * @param parameter 参数
      * @return 过期时间
      */
-    private static LocalDateTime getExpireTime(FileSaveParameter parameter) {
+    private static ZonedDateTime getExpireTime(FileSaveParameter parameter) {
         if (parameter.getExpireIn() != null) {
-            return LocalDateTime.now().plus(parameter.getExpireIn());
+            return ZonedDateTime.now().plus(parameter.getExpireIn());
         }
         return parameter.getExpireAt();
     }

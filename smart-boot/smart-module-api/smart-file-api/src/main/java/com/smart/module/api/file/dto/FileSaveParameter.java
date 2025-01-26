@@ -6,7 +6,7 @@ import org.springframework.lang.Nullable;
 
 import java.io.Serial;
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * 文件服务调用文件存储参数
@@ -47,5 +47,5 @@ public class FileSaveParameter extends FileSaveCommonParameter {
     /**
      * 过期时间，优先级比expireIn低
      */
-    private LocalDateTime expireAt;
+    private ZonedDateTime expireAt;
 }

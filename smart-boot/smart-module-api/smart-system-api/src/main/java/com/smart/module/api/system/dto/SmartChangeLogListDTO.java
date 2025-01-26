@@ -6,7 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -31,7 +31,7 @@ public class SmartChangeLogListDTO implements Serializable {
 
     protected Long createUserId;
 
-    protected LocalDateTime createTime;
+    protected ZonedDateTime createTime;
 
     protected String createBy;
 

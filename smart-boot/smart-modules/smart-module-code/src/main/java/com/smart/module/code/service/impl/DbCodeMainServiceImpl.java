@@ -28,7 +28,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
 import java.io.StringWriter;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -135,7 +135,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
             dbCodeMain.setCreateTime(oldMain.getCreateTime());
             dbCodeMain.setCreateBy(oldMain.getCreateBy());
             dbCodeMain.setUpdateBy(AuthUtils.getCurrentUsername());
-            dbCodeMain.setUpdateTime(LocalDateTime.now());
+            dbCodeMain.setUpdateTime(ZonedDateTime.now());
             dbCodeMain.setUpdateUserId(AuthUtils.getCurrentUserId());
         }
         this.save(dbCodeMain);

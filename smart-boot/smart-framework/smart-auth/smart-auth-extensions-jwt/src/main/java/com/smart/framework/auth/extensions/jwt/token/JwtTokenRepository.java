@@ -19,7 +19,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.util.CollectionUtils;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -66,7 +66,7 @@ public class JwtTokenRepository implements TokenRepository {
             timeout = authProperties.getSession().getTimeout().getRemember();
         }
         // 保存jwt到cache中
-        LocalDateTime currentTime = LocalDateTime.now();
+        ZonedDateTime currentTime = ZonedDateTime.now();
         String token = this.jwtResolver.create(user);
 
         TokenData tokenData = new TokenData(token, currentTime, currentTime, timeout, user);
@@ -95,7 +95,7 @@ public class JwtTokenRepository implements TokenRepository {
         // 获取有效期
         TokenData jwtData = (TokenData) this.authCache.get(tokenKey);
         if (jwtData != null) {
-            jwtData.setRefreshTime(LocalDateTime.now());
+            jwtData.setRefreshTime(ZonedDateTime.now());
             this.authCache.put(tokenKey, jwtData, jwtData.getTimeout());
             this.authCache.expire(attributeKey, jwtData.getTimeout());
             return true;

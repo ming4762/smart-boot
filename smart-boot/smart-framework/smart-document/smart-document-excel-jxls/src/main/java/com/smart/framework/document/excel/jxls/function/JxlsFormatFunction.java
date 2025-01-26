@@ -2,7 +2,7 @@ package com.smart.framework.document.excel.jxls.function;
 
 import com.smart.framework.commons.core.utils.DateUtils;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 /**
@@ -28,14 +28,14 @@ public class JxlsFormatFunction {
 
     /**
      * 格式化时间
-     * @param localDateTime 时间
+     * @param ZonedDateTime 时间
      * @param formatter 格式化参数
      * @return 格式化后的时间
      */
-    public String formatLocalDateTime(LocalDateTime localDateTime, String formatter) {
-        if (localDateTime == null) {
+    public String formatZonedDateTime(ZonedDateTime ZonedDateTime, String formatter) {
+        if (ZonedDateTime == null) {
             return "";
         }
-        return DateUtils.format(localDateTime, formatter);
+        return DateUtils.format(ZonedDateTime, formatter);
     }
 }

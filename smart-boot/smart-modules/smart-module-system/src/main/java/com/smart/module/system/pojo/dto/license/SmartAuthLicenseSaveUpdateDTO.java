@@ -7,7 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * smart_auth_license - 许可证管理
@@ -65,12 +65,12 @@ public class SmartAuthLicenseSaveUpdateDTO implements Serializable {
     * 生效时间
     */
     @NotNull(message = "生效时间不能为空")
-    private LocalDateTime effectiveTime;
+    private ZonedDateTime effectiveTime;
     /**
     * 过期时间
     */
     @NotNull(message = "过期时间不能为空")
-    private LocalDateTime expirationTime;
+    private ZonedDateTime expirationTime;
 
 
     private String subject;

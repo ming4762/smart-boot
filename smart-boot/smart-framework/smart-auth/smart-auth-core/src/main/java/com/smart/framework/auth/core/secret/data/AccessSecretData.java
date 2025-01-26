@@ -6,7 +6,7 @@ import lombok.Getter;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * @author shizhongming
@@ -24,7 +24,7 @@ public class AccessSecretData implements Serializable {
 
     private final String secretKey;
 
-    private final LocalDateTime expireDate;
+    private final ZonedDateTime expireDate;
 
     private final String accessIp;
 

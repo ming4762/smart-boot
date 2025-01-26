@@ -8,7 +8,7 @@ import lombok.Setter;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * JWT数据
@@ -27,9 +27,9 @@ public class JwtData implements Serializable {
 
     private String jwt;
 
-    private LocalDateTime createTime;
+    private ZonedDateTime createTime;
 
-    private LocalDateTime refreshTime;
+    private ZonedDateTime refreshTime;
 
     private Duration timeout;
 }

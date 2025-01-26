@@ -9,7 +9,7 @@ import com.smart.framework.crud.model.BaseModelCreateUserTime;
 import lombok.*;
 
 import java.io.Serial;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * @author jackson
@@ -75,7 +75,7 @@ public class SmartFilePO extends BaseModelCreateUserTime {
     /**
      * 过期时间
      */
-    private LocalDateTime expireTime;
+    private ZonedDateTime expireTime;
 
     @TableLogic
     private Boolean deleteYn;

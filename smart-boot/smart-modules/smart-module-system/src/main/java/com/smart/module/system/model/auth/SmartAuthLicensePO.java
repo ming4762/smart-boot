@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serial;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
 * smart_auth_license - 许可证管理
@@ -70,12 +70,12 @@ public class SmartAuthLicensePO extends BaseModelUserTime {
     /**
     * effective_date - 生效时间
     */
-    private LocalDateTime effectiveTime;
+    private ZonedDateTime effectiveTime;
 
     /**
     * expiration_time - 过期时间
     */
-    private LocalDateTime expirationTime;
+    private ZonedDateTime expirationTime;
 
     /**
      * 可登录用户数 -1不限制

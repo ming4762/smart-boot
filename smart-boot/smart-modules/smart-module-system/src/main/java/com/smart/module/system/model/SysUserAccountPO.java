@@ -12,7 +12,7 @@ import com.smart.module.system.mybatis.type.UserAccountStatusTypeHandler;
 import lombok.*;
 
 import java.io.Serial;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * 用户认证信息
@@ -49,7 +49,7 @@ public class SysUserAccountPO extends BaseModelCreateUserTime {
     /**
      * 上次登录时间
      */
-    private LocalDateTime lastLoginTime;
+    private ZonedDateTime lastLoginTime;
 
     private String ipWhiteList;
 
@@ -73,14 +73,14 @@ public class SysUserAccountPO extends BaseModelCreateUserTime {
     /**
      * 密码修改时间
      */
-    private LocalDateTime passwordModifyTime;
+    private ZonedDateTime passwordModifyTime;
 
     private Long passwordErrorUnlockSecond;
 
     /**
      * 账户锁定时间
      */
-    private LocalDateTime lockTime;
+    private ZonedDateTime lockTime;
 
     private Long tenantId;
 

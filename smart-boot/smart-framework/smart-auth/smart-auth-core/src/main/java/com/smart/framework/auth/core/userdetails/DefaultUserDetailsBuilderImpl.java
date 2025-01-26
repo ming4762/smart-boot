@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.DisabledException;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -109,8 +109,8 @@ public class DefaultUserDetailsBuilderImpl implements UserDetailsBuilder {
             // 未设置自动解锁时间
             return false;
         }
-        LocalDateTime lockTime = userAccount.getLockTime();
-        if (LocalDateTime.now().isAfter(lockTime.plusSeconds(unlockSecond))) {
+        ZonedDateTime lockTime = userAccount.getLockTime();
+        if (ZonedDateTime.now().isAfter(lockTime.plusSeconds(unlockSecond))) {
             return this.systemAuthUserApi.unlockAccount(new UserAccountUnLockParameter(user.getUserId(), UserAccountStatusEnum.LOGIN_FAIL_LOCKED));
         }
         return false;
@@ -130,11 +130,11 @@ public class DefaultUserDetailsBuilderImpl implements UserDetailsBuilder {
             throw new DisabledException(I18nUtils.get(AuthI18nMessage.ACCOUNT_NOT_CREATED));
         }
         // 验证是否长时间未登录
-        if (userAccount.getMaxDaysSinceLogin() > 0 && userAccount.getLastLoginTime().plusDays(userAccount.getMaxDaysSinceLogin()).isBefore(LocalDateTime.now())) {
+        if (userAccount.getMaxDaysSinceLogin() > 0 && userAccount.getLastLoginTime().plusDays(userAccount.getMaxDaysSinceLogin()).isBefore(ZonedDateTime.now())) {
             throw new LongTimeNoLoginLockedException(I18nUtils.get(AuthI18nMessage.ACCOUNT_NOT_LOGIN_LOCKED), new LongTimeNoLoginLockedException.User(user.getUserId(), user.getUsername(), user.getFullName()));
         }
         // 验证是否长时间未修改密码
-        if (userAccount.getPasswordLifeDays() > 0 && userAccount.getPasswordModifyTime().plusDays(userAccount.getPasswordLifeDays()).isBefore(LocalDateTime.now())) {
+        if (userAccount.getPasswordLifeDays() > 0 && userAccount.getPasswordModifyTime().plusDays(userAccount.getPasswordLifeDays()).isBefore(ZonedDateTime.now())) {
             throw new PasswordNoLifeLockedException(I18nUtils.get(AuthI18nMessage.ACCOUNT_PASSWORD_NO_MODIFY_LOCKED), new PasswordNoLifeLockedException.User(user.getUserId(), user.getUsername(), user.getFullName()));
         }
         // 验证用户登录数

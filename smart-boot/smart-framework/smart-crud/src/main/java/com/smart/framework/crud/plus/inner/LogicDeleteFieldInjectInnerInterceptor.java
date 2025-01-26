@@ -12,7 +12,7 @@ import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
 
 import java.sql.SQLException;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import static com.smart.framework.crud.constants.CrudConstants.LOGIC_DELETE_METHODS;
 import static com.smart.framework.crud.constants.SmartCrudConstants.DELETE_FIELDS;
@@ -50,7 +50,7 @@ public class LogicDeleteFieldInjectInnerInterceptor implements InnerInterceptor 
         LogicDeleteParameter logicDeleteParameter = new LogicDeleteParameter();
         logicDeleteParameter.setDeleteBy(userProvider.getCurrentUserFullName());
         logicDeleteParameter.setDeleteUserId(userProvider.getCurrentUserId());
-        logicDeleteParameter.setDeleteTime(LocalDateTime.now());
+        logicDeleteParameter.setDeleteTime(ZonedDateTime.now());
         ((MapperMethod.ParamMap) parameter).put(DELETE_FIELDS, logicDeleteParameter);
     }
 }

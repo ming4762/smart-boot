@@ -6,7 +6,7 @@ import lombok.ToString;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * 用户账户信息
@@ -27,7 +27,7 @@ public class UserAccountDTO implements Serializable {
     /**
      * 上次登录时间
      */
-    private LocalDateTime lastLoginTime;
+    private ZonedDateTime lastLoginTime;
     private Long maxConnections;
 
     private Long maxDaysSinceLogin;
@@ -47,12 +47,12 @@ public class UserAccountDTO implements Serializable {
     /**
      * 密码修改时间
      */
-    private LocalDateTime passwordModifyTime;
+    private ZonedDateTime passwordModifyTime;
 
     private Long passwordErrorUnlockSecond;
 
     /**
      * 账户锁定时间
      */
-    private LocalDateTime lockTime;
+    private ZonedDateTime lockTime;
 }

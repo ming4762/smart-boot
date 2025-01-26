@@ -4,7 +4,7 @@ import lombok.Getter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.LocalTime;
 import java.util.Date;
 
@@ -35,7 +35,7 @@ public enum TypeMappingEnum {
 
     NUMERIC(2,BigDecimal.class),
 
-    DECIMAL(3, Double.class),
+    DECIMAL(3, BigDecimal.class),
 
     CHAR(1, String.class),
 
@@ -47,7 +47,7 @@ public enum TypeMappingEnum {
 
     TIME(92, LocalTime.class),
 
-    TIMESTAMP(93, LocalDateTime.class),
+    TIMESTAMP(93, ZonedDateTime.class),
 
     BINARY(-2, byte[].class),
 
