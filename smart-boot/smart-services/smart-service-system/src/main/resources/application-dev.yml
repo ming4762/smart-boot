@@ -57,6 +57,7 @@ smart:
   log:
     path: D:\zhongming\Documents\01-workspace\06-temp\log
   auth:
+    prefix: ${spring.application.name}-${spring.profiles.active}
     jwt:
       permission-cache: true
     sms:

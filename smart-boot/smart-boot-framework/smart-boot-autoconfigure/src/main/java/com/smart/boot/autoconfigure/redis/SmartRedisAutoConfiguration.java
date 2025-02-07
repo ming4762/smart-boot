@@ -1,5 +1,7 @@
 package com.smart.boot.autoconfigure.redis;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.smart.boot.autoconfigure.redis.customizer.JacksonRedissonAutoConfigurationCustomizer;
 import com.smart.framework.commons.core.lock.limit.RateLimitService;
 import com.smart.framework.redis.service.RedisRateLimitServiceImpl;
 import com.smart.framework.redis.service.RedisService;
@@ -33,5 +35,14 @@ public class SmartRedisAutoConfiguration {
     @ConditionalOnMissingBean(RateLimitService.class)
     public RateLimitService redisRateLimitService(RedisService redisService) {
         return new RedisRateLimitServiceImpl(redisService);
+    }
+
+    /**
+     * radisson 使用jackson作为序列化工具
+     * @return JacksonRedissonAutoConfigurationCustomizer
+     */
+    @Bean
+    public JacksonRedissonAutoConfigurationCustomizer jacksonRedissonAutoConfigurationCustomizer(@Autowired(required = false) ObjectMapper objectMapper) {
+        return new JacksonRedissonAutoConfigurationCustomizer(objectMapper);
     }
 }

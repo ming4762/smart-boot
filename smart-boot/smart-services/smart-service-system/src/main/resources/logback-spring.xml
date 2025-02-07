@@ -97,7 +97,6 @@
     <springProfile name="dev">
         <root level="INFO">
             <appender-ref ref="STDOUT" />
-            <appender-ref ref="ALL_LOG" />
         </root>
     </springProfile>
     <springProfile name="uat">
