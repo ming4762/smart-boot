@@ -1,5 +1,6 @@
 package com.smart.boot.actuate.autoconfigure.druid;
 
+import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.spring.boot3.autoconfigure.DruidDataSourceAutoConfigure;
 import com.smart.boot.actuate.druid.SmartMonitorActuatorDruid;
 import com.smart.boot.actuate.druid.meter.DruidDatasourceMetrics;
@@ -19,7 +20,7 @@ import org.springframework.context.annotation.Configuration;
 @AutoConfigureAfter({
         DruidDataSourceAutoConfigure.class
 })
-@ConditionalOnClass(SmartMonitorActuatorDruid.class)
+@ConditionalOnClass({SmartMonitorActuatorDruid.class, DruidDataSource.class})
 public class DruidMetricsAutoConfiguration {
 
     /**

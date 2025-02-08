@@ -1,5 +1,6 @@
 package com.smart.boot.actuate.autoconfigure.druid;
 
+import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.spring.boot3.autoconfigure.DruidDataSourceAutoConfigure;
 import com.smart.boot.actuate.druid.SmartMonitorActuatorDruid;
 import com.smart.boot.actuate.druid.filter.EnhancedStatFilter;
@@ -22,7 +23,10 @@ import org.springframework.context.annotation.Configuration;
         DruidActuatorBeanAutoConfiguration.class,
         DruidDataSourceAutoConfigure.class
 })
-@ConditionalOnClass(SmartMonitorActuatorDruid.class)
+@ConditionalOnClass({
+        DruidDataSource.class,
+        SmartMonitorActuatorDruid.class
+})
 @ConditionalOnAvailableEndpoint(endpoint = DruidSlowSqlEndPoint.class)
 public class DruidSlowSqlEndPointAutoConfiguration {
 

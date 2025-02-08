@@ -2,6 +2,7 @@ package com.smart.boot.autoconfigure.i18n;
 
 import com.smart.framework.i18n.cache.MemoryResourceCache;
 import com.smart.framework.i18n.cache.ResourceCache;
+import com.smart.framework.i18n.config.EnableValidatorI18nSource;
 import com.smart.framework.i18n.format.DefaultMessageFormat;
 import com.smart.framework.i18n.format.MessageFormat;
 import com.smart.framework.i18n.reader.ResourceBundleResourceReader;
@@ -10,6 +11,7 @@ import com.smart.framework.i18n.resolver.AcceptHeaderSmartLocalResolver;
 import com.smart.framework.i18n.resolver.DelegateLocaleResolver;
 import com.smart.framework.i18n.source.AutoReloadMessageSource;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -27,6 +29,7 @@ import org.springframework.web.servlet.LocaleResolver;
  */
 @Configuration
 @AutoConfigureBefore(WebMvcAutoConfiguration.class)
+@ConditionalOnClass(EnableValidatorI18nSource.class)
 public class SmartI18nAutoConfiguration {
 
 
