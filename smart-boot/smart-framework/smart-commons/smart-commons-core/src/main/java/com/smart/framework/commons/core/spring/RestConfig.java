@@ -1,11 +1,13 @@
 package com.smart.framework.commons.core.spring;
 
 import com.smart.framework.commons.core.utils.RestUtils;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.Duration;
 
@@ -26,4 +28,20 @@ public class RestConfig {
         RestUtils.setRestTemplate(restTemplate);
         return restTemplate;
     }
+
+    /**
+     * 构建 WebClient
+     * @param builder WebClient.Builder
+     * @return WebClient
+     */
+    @Bean
+    @ConditionalOnMissingBean(WebClient.class)
+    @ConditionalOnBean(WebClient.Builder.class)
+    public WebClient webClient(WebClient.Builder builder) {
+        WebClient webClient = builder.build();
+
+        RestUtils.setWebClient(webClient);
+        return webClient;
+    }
+
 }

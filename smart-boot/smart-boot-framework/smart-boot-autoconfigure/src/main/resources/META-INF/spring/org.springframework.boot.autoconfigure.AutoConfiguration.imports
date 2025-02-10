@@ -52,3 +52,5 @@ com.smart.boot.autoconfigure.monitor.MonitorServerRedisClientRepositoryAutoConfi
 com.smart.boot.autoconfigure.monitor.SmartMonitorClientAutoConfiguration
 
 com.smart.boot.autoconfigure.freemarker.SmartFreemarkerAutoConfiguration
+
+com.smart.boot.autoconfigure.ai.SmartAiDifyAutoConfiguration

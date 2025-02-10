@@ -8,6 +8,8 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
@@ -26,8 +28,20 @@ public class RestUtils {
     }
 
     private static RestTemplate restTemplate;
+    private static WebClient webClient;
 
 
+    /**
+     * 发送请求
+     * @param url URL
+     * @param httpMethod 请求方式
+     * @param headers 请求头
+     * @param parameter 参数
+     * @param clazz 返回类型
+     * @param uriVariables URL参数
+     * @return 请求结果
+     * @param <T> 泛型
+     */
     public static <T> ResponseEntity<T> rest(@NonNull String url, @NonNull HttpMethod httpMethod, Map<String, String> headers, Object parameter, @NonNull Class<T> clazz, Object ...uriVariables) {
         final HttpHeaders httpHeaders = new HttpHeaders();
         if (!CollectionUtils.isEmpty(headers)) {
@@ -36,6 +50,28 @@ public class RestUtils {
         final HttpEntity<?> httpEntity = new HttpEntity<>(parameter, httpHeaders);
 
         return restTemplate.exchange(url, httpMethod, httpEntity, clazz, uriVariables);
+    }
+
+    /**
+     * 发送流式请求
+     * @param url URL
+     * @param httpMethod 请求方式
+     * @param headers 请求头
+     * @param parameter 参数
+     * @param clazz 返回类型
+     * @return 请求结果
+     * @param <T> 泛型
+     */
+    public static <T> Flux<T> restStream(@NonNull String url, @NonNull HttpMethod httpMethod, Map<String, String> headers, Object parameter, @NonNull Class<T> clazz) {
+        return webClient.method(httpMethod)
+                .uri(url)
+                .headers(httpHeaders -> {
+                    if (!CollectionUtils.isEmpty(headers)) {
+                        headers.forEach(httpHeaders::add);
+                    }
+                }).bodyValue(parameter)
+                .retrieve()
+                .bodyToFlux(clazz);
     }
 
     /**
@@ -120,6 +156,14 @@ public class RestUtils {
      */
     public static void setRestTemplate(RestTemplate restTemplate) {
         RestUtils.restTemplate = restTemplate;
+    }
+
+    /**
+     * 设置 WebClient
+     * @param webClient WebClient
+     */
+    public static void setWebClient(WebClient webClient) {
+        RestUtils.webClient = webClient;
     }
 
 }
