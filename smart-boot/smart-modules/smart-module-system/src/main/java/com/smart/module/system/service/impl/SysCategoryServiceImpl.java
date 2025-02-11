@@ -1,7 +1,6 @@
 package com.smart.module.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.smart.framework.auth.core.utils.AuthUtils;
 import com.smart.framework.crud.plus.metadata.SmartTableInfo;
 import com.smart.framework.crud.query.PageSortQuery;
@@ -58,25 +57,28 @@ public class SysCategoryServiceImpl extends BaseServiceImpl<SysCategoryMapper, S
     }
 
     /**
-     * 重写save方法，修改ID的生成策略
+     * TableId 注解存在更新记录，否插入一条记录
      *
-     * @param entity 实体类
-     * @return 是否保存成功
-     * @author jackson
+     * @param entity 实体对象
+     * @return boolean
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean save(@NonNull SysCategoryPO entity) {
-        boolean result = super.save(entity);
-        if (result) {
-            // 设置上级hasChild
-            this.update(
-                    new UpdateWrapper<SysCategoryPO>().lambda()
-                            .set(SysCategoryPO::getHasChild, true)
-                            .eq(SysCategoryPO::getId, entity.getParentId())
-            );
+    public boolean saveOrUpdate(SysCategoryPO entity) {
+        boolean isAdd = this.isAdd(entity);
+        if (!isAdd) {
+            return this.updateById(entity);
         }
-        return result;
+        this.save(entity);
+        // 更新上级hasChild
+        SmartTableInfo tableInfo = this.getTableInfo();
+        this.commonMapper.updateHasChild(
+                this.getTableName(),
+                tableInfo.getTableFiled(SysCategoryPO::getParentId).getColumn(),
+                tableInfo.getTableFiled(SysCategoryPO::getId).getColumn(),
+                entity.getParentId()
+        );
+        return true;
     }
 
     /**
