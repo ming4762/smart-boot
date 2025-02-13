@@ -4,7 +4,6 @@ import com.smart.framework.commons.core.exception.SystemException;
 import com.smart.framework.crud.plus.metadata.SmartTableInfo;
 import com.smart.framework.crud.plus.metadata.TableTenantFieldInfo;
 import com.smart.framework.crud.utils.CrudUtils;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.ibatis.mapping.SqlCommandType;
@@ -41,7 +40,7 @@ public final class SmartTenantControl {
      * @param platformTenantIgnoreCommandList 平台管理租户忽略的命令
      */
     public static void changeIgnore(String tableName, List<SqlCommandType> ignoreCommandList, List<SqlCommandType> platformTenantIgnoreCommandList) {
-        THREAD_IGNORE_LOCAL.get().put(tableName, new SmartTenantIgnoreData(ignoreCommandList, tableName, platformTenantIgnoreCommandList));
+        THREAD_IGNORE_LOCAL.get().put(tableName, new SmartTenantIgnoreData(tableName, ignoreCommandList, platformTenantIgnoreCommandList));
     }
 
     /**
@@ -108,10 +107,15 @@ public final class SmartTenantControl {
      */
     @Getter
     @Setter
-    @AllArgsConstructor
     public static class SmartTenantIgnoreData {
         private List<SqlCommandType> ignoreCommandList;
         private String tableName;
         private List<SqlCommandType> platformTenantIgnoreCommandList;
+
+        private SmartTenantIgnoreData(String tableName, List<SqlCommandType> ignoreCommandList, List<SqlCommandType> platformTenantIgnoreCommandList) {
+            this.tableName = tableName;
+            this.ignoreCommandList = ignoreCommandList == null ? List.of() : ignoreCommandList;
+            this.platformTenantIgnoreCommandList = platformTenantIgnoreCommandList == null? List.of() : platformTenantIgnoreCommandList;
+        }
     }
 }
