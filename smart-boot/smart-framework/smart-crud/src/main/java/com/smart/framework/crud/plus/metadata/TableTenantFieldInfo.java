@@ -35,4 +35,10 @@ public class TableTenantFieldInfo implements Serializable {
      * 平台管理租户忽略的命令
      */
     private List<SqlCommandType> platformTenantIgnoreCommandList;
+
+    /**
+     * 是否租户默认字段
+     * 如果存在多个租户字段，必须存在默认租户字段
+     */
+    private boolean defaultField;
 }

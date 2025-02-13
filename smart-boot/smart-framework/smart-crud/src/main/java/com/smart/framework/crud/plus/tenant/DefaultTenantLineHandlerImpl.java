@@ -10,6 +10,7 @@ import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.LongValue;
 import org.apache.ibatis.mapping.SqlCommandType;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -47,6 +48,15 @@ public class DefaultTenantLineHandlerImpl implements SmartTenantLineHandler {
         if (tableInfo == null) {
             return null;
         }
+        // 从指定设置中获取
+        String tenantFieldName = SmartTenantControl.getTableTenantField(table);
+        if (tenantFieldName != null) {
+            TableTenantFieldInfo setTenantField = tableInfo.getTenantFieldInfo(tenantFieldName);
+            if (setTenantField != null) {
+                return setTenantField.getTableFieldInfo().getColumn();
+            }
+        }
+        // 获取的默认租户字段
         TableTenantFieldInfo tenantFieldInfo = tableInfo.getTenantFieldInfo();
         if (tenantFieldInfo == null) {
             return null;
@@ -84,12 +94,29 @@ public class DefaultTenantLineHandlerImpl implements SmartTenantLineHandler {
             return true;
         }
 
-        if (tableInfo.getTenantFieldInfo().getIgnoreCommandList().contains(sqlCommandType)) {
+        // 从指定设置中获取
+        SmartTenantControl.SmartTenantIgnoreData ignoreData = SmartTenantControl.getIgnore(table);
+        if (ignoreData != null) {
+            return this.ignoreTable(
+                    sqlCommandType,
+                    ignoreData.getIgnoreCommandList(),
+                    ignoreData.getPlatformTenantIgnoreCommandList()
+            );
+        }
+        return this.ignoreTable(
+                sqlCommandType,
+                tableInfo.getTenantFieldInfo().getIgnoreCommandList(),
+                tableInfo.getTenantFieldInfo().getPlatformTenantIgnoreCommandList()
+        );
+    }
+
+    private boolean ignoreTable(SqlCommandType sqlCommandType, List<SqlCommandType> ignoreCommandList, List<SqlCommandType> platformTenantIgnoreCommandList) {
+        if (ignoreCommandList.contains(sqlCommandType)) {
             return true;
         }
         boolean platformYn = Optional.ofNullable(SmartTenantHolder.get())
                 .map(UserTenantDTO::getPlatformYn)
                 .orElse(false);
-        return platformYn && tableInfo.getTenantFieldInfo().getPlatformTenantIgnoreCommandList().contains(sqlCommandType);
+        return platformYn && platformTenantIgnoreCommandList.contains(sqlCommandType);
     }
 }

@@ -37,14 +37,15 @@ import java.util.concurrent.atomic.AtomicInteger;
  * 2024/3/11 16:22
  * @since 3.0.0
  */
-@Getter
 @EqualsAndHashCode(callSuper = true)
 public class SmartTableInfo extends TableInfo {
     @Serial
     private static final long serialVersionUID = -66149012141872877L;
 
+    @Getter
     private TableInfo tableInfo;
 
+    @Getter
     private List<TableFieldInfo> smartTableFieldInfoList;
 
     /**
@@ -73,17 +74,50 @@ public class SmartTableInfo extends TableInfo {
     /**
      * 启用停用field
      */
+    @Getter
     private TableFieldInfo useYnField;
 
     /**
      * 删除field
      */
+    @Getter
     private TableLogicDeleteInfo logicDeleteInfo;
+
+    /**
+     * 默认租户字段
+     */
+    private TableTenantFieldInfo defaultTenantFieldInfo;
 
     /**
      * 租户字段
      */
-    private TableTenantFieldInfo tenantFieldInfo;
+    private final Map<String, TableTenantFieldInfo> tenantFieldInfoMap = new HashMap<>();
+
+    /**
+     * 获取默认的租户字段信息
+     * @return 默认的租户字段信息
+     */
+    public TableTenantFieldInfo getTenantFieldInfo() {
+        return this.defaultTenantFieldInfo;
+    }
+
+    /**
+     * 获取租户字段信息
+     * @param fieldName java属性名
+     * @return 租户字段信息
+     */
+    public TableTenantFieldInfo getTenantFieldInfo(String fieldName) {
+        return tenantFieldInfoMap.get(fieldName);
+    }
+
+    /**
+     * 获取租户字段信息
+     * @param column 实体类字段
+     * @return 租户字段信息
+     */
+    public <T> TableTenantFieldInfo getTenantFieldInfo(@NonNull SFunction<T, ?> column) {
+        return getTenantFieldInfo(this.getJavaProperty(column));
+    }
 
     /**
      * 是否有逻辑删除key
@@ -100,7 +134,7 @@ public class SmartTableInfo extends TableInfo {
      * @return 是否支持租户
      */
     public boolean supportTenant() {
-        return this.tenantFieldInfo != null;
+        return this.defaultTenantFieldInfo != null;
     }
 
     /**
@@ -130,7 +164,7 @@ public class SmartTableInfo extends TableInfo {
         if (CollectionUtils.isEmpty(tableFieldInfoList)) {
             return null;
         }
-        return tableFieldInfoList.get(0);
+        return tableFieldInfoList.getFirst();
     }
 
     /**
@@ -139,15 +173,13 @@ public class SmartTableInfo extends TableInfo {
      * @return TableFieldInfo
      */
     public<T> TableFieldInfo getTableFiled(@NonNull SFunction<T, ?> column) {
-        LambdaMeta meta = LambdaUtils.extract(column);
-        String property = PropertyNamer.methodToProperty(meta.getImplMethodName());
-        return this.getTableFiled(property);
+        return this.getTableFiled(this.getJavaProperty(column));
     }
 
 
     private static void initField(SmartTableInfo smartTableInfo, TableInfo tableInfo) {
         AtomicInteger useYnNum = new AtomicInteger();
-        AtomicInteger tenantNum = new AtomicInteger();
+        AtomicInteger defaultTenantNum = new AtomicInteger();
         tableInfo.getFieldList().forEach(field -> {
             // 处理启用停用字段
             TableUseYnField tableUseYnField = AnnotationUtils.getAnnotation(field.getField(), TableUseYnField.class);
@@ -158,16 +190,21 @@ public class SmartTableInfo extends TableInfo {
             // 处理租户字段
             TableTenantField tableTenantField = AnnotationUtils.getAnnotation(field.getField(), TableTenantField.class);
             if (tableTenantField != null) {
-                smartTableInfo.tenantFieldInfo = TableTenantFieldInfo.builder()
+                TableTenantFieldInfo tenantFieldInfo = TableTenantFieldInfo.builder()
                         .tableFieldInfo(field)
                         .ignoreCommandList(Arrays.asList(tableTenantField.ignoreCommands()))
                         .platformTenantIgnoreCommandList(Arrays.asList(tableTenantField.platformTenantIgnoreCommands()))
+                        .defaultField(tableTenantField.isDefault())
                         .build();
-                tenantNum.getAndAdd(1);
+                if (tenantFieldInfo.isDefaultField()) {
+                    smartTableInfo.defaultTenantFieldInfo = tenantFieldInfo;
+                    defaultTenantNum.getAndAdd(1);
+                }
+                smartTableInfo.tenantFieldInfoMap.put(field.getProperty(), tenantFieldInfo);
             }
         });
         Assert.isTrue(useYnNum.get() <= 1, "@TableUseYnField not support more than one in Class: \"%s\"", tableInfo.getEntityType().getName());
-        Assert.isTrue(tenantNum.get() <= 1, "@TableTenantField not support more than one in Class: \"%s\"", tableInfo.getEntityType().getName());
+        Assert.isTrue(defaultTenantNum.get() <= 1, "@TableTenantField can only be one default in Class: \"%s\"", tableInfo.getEntityType().getName());
 
         // 初始化逻辑删除功能
         initLogicDelete(smartTableInfo, tableInfo);
@@ -231,5 +268,16 @@ public class SmartTableInfo extends TableInfo {
         smartTableInfo.smartTableFieldInfoList = new ArrayList<>(tableInfo.getFieldList().size() + 1);
         smartTableInfo.smartTableFieldInfoList.add(keyTableFieldInfo);
         smartTableInfo.smartTableFieldInfoList.addAll(tableInfo.getFieldList());
+    }
+
+    /**
+     * 获取java属性名
+     * @param column java字段
+     * @return java属性名
+     * @since 5.0.0
+     */
+    private <T> String getJavaProperty(@NonNull SFunction<T, ?> column) {
+        LambdaMeta meta = LambdaUtils.extract(column);
+        return PropertyNamer.methodToProperty(meta.getImplMethodName());
     }
 }

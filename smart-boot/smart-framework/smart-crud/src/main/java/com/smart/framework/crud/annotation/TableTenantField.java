@@ -24,4 +24,11 @@ public @interface TableTenantField {
      * @return SQL命令类型
      */
     SqlCommandType[] platformTenantIgnoreCommands() default {};
+
+    /**
+     *  是否默认字段
+     *  如果存在多个租户字段，必须存在默认租户字段
+     * @return 是否默认租户字段
+     */
+    boolean isDefault() default true;
 }
