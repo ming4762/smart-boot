@@ -1,5 +1,7 @@
 package com.smart.framework.ai.dify.constants;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.smart.framework.ai.dify.json.EnumValueJson;
 import lombok.Getter;
 
 /**
@@ -9,6 +11,7 @@ import lombok.Getter;
  * @since 5.0.0
  */
 @Getter
+@JsonDeserialize(using = EnumValueJson.FileTransferMethodEnumEnumValueDeserializer.class)
 public enum FileTransferMethodEnum implements EnumValue {
 
     /**
@@ -24,5 +27,14 @@ public enum FileTransferMethodEnum implements EnumValue {
     private final String value;
     FileTransferMethodEnum(String value) {
         this.value = value;
+    }
+
+    public static FileTransferMethodEnum getByValue(String value) {
+        for (FileTransferMethodEnum fileTransferMethodEnum : FileTransferMethodEnum.values()) {
+            if (fileTransferMethodEnum.getValue().equals(value)) {
+                return fileTransferMethodEnum;
+            }
+        }
+        return null;
     }
 }

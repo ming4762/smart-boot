@@ -1,0 +1,17 @@
+smart:
+  ai:
+    dify:
+      apiUrl: http://localhost/v1
+      apiKey: app-LWzPNVjYtzPoBIYLGwXZaOMN
+
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs

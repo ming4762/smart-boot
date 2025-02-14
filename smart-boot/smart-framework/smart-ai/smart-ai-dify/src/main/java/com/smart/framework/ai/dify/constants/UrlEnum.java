@@ -27,6 +27,7 @@ public enum UrlEnum {
     AUDIO_TO_TEXT("/audio-to-text", HttpMethod.POST,"音频转文本"),
     TEXT_TO_AUDIO("/text-to-audio", HttpMethod.POST,"文本转音频"),
     INFO("/info", HttpMethod.GET,"获取应用基本信息"),
+    PARAMETERS("/parameters", HttpMethod.GET,"获取应用参数"),
     META("/meta", HttpMethod.GET,"获取应用元数据"),
     ;
 

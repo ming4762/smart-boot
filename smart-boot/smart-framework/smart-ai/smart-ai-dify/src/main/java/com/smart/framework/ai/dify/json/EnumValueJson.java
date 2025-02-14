@@ -6,7 +6,9 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import com.smart.framework.ai.dify.constants.ChatResponseEventTypeEnum;
 import com.smart.framework.ai.dify.constants.EnumValue;
+import com.smart.framework.ai.dify.constants.FileTransferMethodEnum;
 
 import java.io.IOException;
 
@@ -32,12 +34,23 @@ public class EnumValueJson {
         }
     }
 
-    public static class EnumValueDeserializer extends JsonDeserializer<EnumValue> {
+    public static class FileTransferMethodEnumEnumValueDeserializer extends JsonDeserializer<FileTransferMethodEnum> {
         @Override
-        public EnumValue deserialize(JsonParser p, DeserializationContext context) throws IOException {
-            String value = p.getValueAsString();
-            if (value != null) {
-                return null;
+        public FileTransferMethodEnum deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+            String valueAsString = p.getValueAsString();
+            if (valueAsString != null) {
+                return FileTransferMethodEnum.getByValue(valueAsString);
+            }
+            return null;
+        }
+    }
+
+    public static class ChatResponseEventTypeEnumDeserializer extends JsonDeserializer<ChatResponseEventTypeEnum> {
+        @Override
+        public ChatResponseEventTypeEnum deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+            String valueAsString = p.getValueAsString();
+            if (valueAsString != null) {
+                return ChatResponseEventTypeEnum.getByValue(valueAsString);
             }
             return null;
         }

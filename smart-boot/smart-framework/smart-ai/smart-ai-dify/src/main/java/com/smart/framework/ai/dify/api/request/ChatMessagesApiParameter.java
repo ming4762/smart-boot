@@ -26,9 +26,4 @@ public class ChatMessagesApiParameter extends ChatMessagesRequest {
     @JsonSerialize(using = EnumValueJson.EnumValueSerializer.class)
     private ResponseModeEnum responseMode;
 
-
-    /**
-     * （选填）会话 ID，需要基于之前的聊天记录继续对话，必须传之前消息的 conversation_id
-     */
-    private String conversationId;
 }

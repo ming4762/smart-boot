@@ -1,0 +1,9 @@
+server:
+  port: 8072
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: smart-ai-dify
+

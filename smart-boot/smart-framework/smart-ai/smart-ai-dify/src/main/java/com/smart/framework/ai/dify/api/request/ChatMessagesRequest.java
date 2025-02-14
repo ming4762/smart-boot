@@ -32,7 +32,6 @@ public class ChatMessagesRequest {
     /**
      * 允许传入 App 定义的各变量值。 inputs 参数包含了多组键值对（Key/Value pairs），每组的键对应一个特定变量，每组的值则是该变量的具体值。 默认 {}
      */
-    @NonNull
     private Map<String, Object> inputs;
 
     /**
@@ -40,6 +39,12 @@ public class ChatMessagesRequest {
      */
     @NonNull
     private String user;
+
+    /**
+     * （选填）会话 ID，需要基于之前的聊天记录继续对话，必须传之前消息的 conversation_id
+     */
+    @JsonProperty("conversation_id")
+    private String conversationId;
 
     /**
      * 上传的文件。
@@ -58,6 +63,9 @@ public class ChatMessagesRequest {
      */
     @Getter
     @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
     public static class ChatMessagesFile {
 
         /**

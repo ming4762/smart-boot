@@ -19,7 +19,7 @@ import lombok.Setter;
 public abstract class AbstractChatCompletionResponse {
 
     @JsonSerialize(using = EnumValueJson.EnumValueSerializer.class)
-    @JsonDeserialize(using = EnumValueJson.EnumValueDeserializer.class)
+    @JsonDeserialize(using = EnumValueJson.ChatResponseEventTypeEnumDeserializer.class)
     private ChatResponseEventTypeEnum event;
 
     /**
