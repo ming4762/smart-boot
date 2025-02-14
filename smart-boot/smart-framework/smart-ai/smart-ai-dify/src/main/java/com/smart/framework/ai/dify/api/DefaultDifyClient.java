@@ -216,6 +216,26 @@ public class DefaultDifyClient implements DifyClient {
     }
 
     /**
+     * 重命名会话
+     *
+     * @param request 请求参数
+     * @return 重命名结果
+     */
+    @Override
+    public DifyConversationRenameResponse renameConversation(DifyConversationRenameRequest request) {
+        String url = String.format(this.getApiUrl(UrlEnum.RENAME_CONVERSATIONS), request.getConversationId());
+
+        return this.doRequest(
+                url,
+                UrlEnum.RENAME_CONVERSATIONS.getHttpMethod(),
+                MediaType.APPLICATION_JSON_VALUE,
+                request,
+                new ParameterizedTypeReference<>() {
+                }
+        );
+    }
+
+    /**
      * 获取应用基本信息
      *
      * @return 应用基本信息
