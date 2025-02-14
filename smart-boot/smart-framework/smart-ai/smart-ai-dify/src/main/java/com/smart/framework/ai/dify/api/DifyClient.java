@@ -7,6 +7,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.lang.NonNull;
 import reactor.core.publisher.Flux;
 
+import java.io.OutputStream;
 import java.util.List;
 
 /**
@@ -91,6 +92,13 @@ public interface DifyClient {
      * @return 文字内容
      */
     String audioToText(@NonNull Resource resource, @NonNull String user);
+
+    /**
+     * 文字转语音
+     * @param outputStream 输出流
+     * @param request 请求参数
+     */
+    void textToAudio(OutputStream outputStream, DifyTextToAudioRequest request);
 
     /**
      * 获取应用基本信息

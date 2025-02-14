@@ -12,6 +12,7 @@ import com.smart.framework.commons.core.utils.JsonUtils;
 import com.smart.framework.commons.core.utils.RestUtils;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
+import lombok.SneakyThrows;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.Resource;
@@ -23,8 +24,10 @@ import org.springframework.lang.NonNull;
 import org.springframework.util.CollectionUtils;
 import reactor.core.publisher.Flux;
 
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 import java.util.stream.Collectors;
 
 /**
@@ -255,7 +258,7 @@ public class DefaultDifyClient implements DifyClient {
 
         Map<String, String> result = RestUtils.restForm(
                 this.getApiUrl(UrlEnum.AUDIO_TO_TEXT),
-                HttpMethod.POST,
+                UrlEnum.AUDIO_TO_TEXT.getHttpMethod(),
                 this.createHeaders(MediaType.MULTIPART_FORM_DATA_VALUE),
                 builder.build(),
                 new ParameterizedTypeReference<>() {
@@ -266,6 +269,26 @@ public class DefaultDifyClient implements DifyClient {
             return null;
         }
         return result.values().stream().findFirst().orElse(null);
+    }
+
+    /**
+     * 文字转语音
+     *
+     * @param outputStream 输出流
+     * @param request      请求参数
+     */
+    @SneakyThrows(InterruptedException.class)
+    @Override
+    public void textToAudio(OutputStream outputStream, DifyTextToAudioRequest request) {
+        CountDownLatch download = RestUtils.download(
+                this.getApiUrl(UrlEnum.TEXT_TO_AUDIO),
+                UrlEnum.TEXT_TO_AUDIO.getHttpMethod(),
+                this.createHeaders(MediaType.APPLICATION_JSON_VALUE),
+                request,
+                outputStream,
+                null
+        );
+        download.await();
     }
 
     /**
