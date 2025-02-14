@@ -15,6 +15,7 @@ import com.smart.framework.monitor.server.event.domain.*;
 import com.smart.framework.monitor.server.monitor.StatusMonitor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 
 import java.time.Duration;
@@ -57,10 +58,11 @@ public class HealthStatusMonitor implements StatusMonitor {
         var errorMessage = "";
         try {
             this.clientWebProxy.forward(repositoryData.getId(), data -> ClientWebProxy.ForwardRequest.builder()
-                    .uri(ClientUrlEnum.HEALTH.getUrl())
-                    .httpMethod(HttpMethod.GET)
-                    .build(),
-                    result -> healthData[0] = result, false, String.class
+                            .uri(ClientUrlEnum.HEALTH.getUrl())
+                            .httpMethod(HttpMethod.GET)
+                            .build(),
+                    result -> healthData[0] = result, false, new ParameterizedTypeReference<String>() {
+                    }
             );
         } catch (Exception e) {
             isError = true;

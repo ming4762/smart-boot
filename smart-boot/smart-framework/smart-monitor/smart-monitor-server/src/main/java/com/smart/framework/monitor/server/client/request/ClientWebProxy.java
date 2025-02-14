@@ -18,6 +18,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.lang.NonNull;
 import org.springframework.util.AntPathMatcher;
@@ -87,7 +88,7 @@ public class ClientWebProxy {
      * @param resultHandler 结果回调
      * @param needUp 客户端是否必须在线，true则客户端不在线抛出异常
      */
-    public <T extends Serializable> void forward(@NonNull ClientId clientId, Function<ClientData, ForwardRequest> requestHandler, Consumer<T> resultHandler, boolean needUp, Class<T> resultClass) {
+    public <T extends Serializable> void forward(@NonNull ClientId clientId, Function<ClientData, ForwardRequest> requestHandler, Consumer<T> resultHandler, boolean needUp, ParameterizedTypeReference<T> resultClass) {
         // 获取客户端信息
         final ClientData repositoryData = this.clientRepository.findById(clientId, false);
         if (repositoryData == null) {
@@ -104,7 +105,7 @@ public class ClientWebProxy {
      * @param needUp 客户端是否必须在线，true则客户端不在线抛出异常
      */
     public void forward(@NonNull ClientId clientId, Function<ClientData, ForwardRequest> requestHandler, Consumer<Serializable> resultHandler, boolean needUp) {
-        this.forward(clientId, requestHandler, resultHandler, needUp, Serializable.class);
+        this.forward(clientId, requestHandler, resultHandler, needUp, new ParameterizedTypeReference<>() {});
     }
 
 
@@ -115,7 +116,7 @@ public class ClientWebProxy {
      * @param resultHandler 结果回调
      * @param needUp 客户端是否必须在线，true则客户端不在线抛出异常
      */
-    public <T extends Serializable> void forward(@NonNull ClientData clientData, Function<ClientData, ForwardRequest> requestHandler, Consumer<T> resultHandler, boolean needUp, Class<T> resultClass) {
+    public <T extends Serializable> void forward(@NonNull ClientData clientData, Function<ClientData, ForwardRequest> requestHandler, Consumer<T> resultHandler, boolean needUp, ParameterizedTypeReference<T> resultClass) {
         // 获取客户端信息
         if (needUp && clientData.getStatus().equals(ClientStatusEnum.DOWN)) {
             throw new ClientDownException(clientData.getId());
@@ -130,7 +131,7 @@ public class ClientWebProxy {
                 request.getHttpHeaders(),
                 request.getBody(),
                 resultClass
-        ).getBody();
+        );
         resultHandler.accept(result);
     }
 

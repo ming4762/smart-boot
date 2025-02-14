@@ -37,7 +37,7 @@ public class SmartMonitorClientAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public ApplicationFactory applicationFactory(ClientProperties clientProperties, ServerProperties serverProperties, WebEndpointProperties properties) {
-        return new DefaultApplicationFactoryImpl(clientProperties, serverProperties, properties.getBasePath());
+        return new DefaultApplicationFactoryImpl(clientProperties, properties.getBasePath());
     }
 
     /**

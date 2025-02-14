@@ -10,6 +10,7 @@ import com.smart.framework.monitor.server.common.sync.MonitorDataSync;
 import com.smart.module.monitor.server.model.MonitorClientLogPO;
 import com.smart.module.monitor.server.service.MonitorClientLogService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -47,10 +48,11 @@ public class MonitorClientLogSync implements MonitorDataSync {
         headers.put(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         AtomicInteger logNum = new AtomicInteger();
         this.clientWebProxy.forward(clientData.getId(), data -> ClientWebProxy.ForwardRequest.builder()
-                .uri(clientData.getApplication().getEndPointUrl(END_POINT))
-                .httpMethod(HttpMethod.POST)
-                .httpHeaders(headers)
-                .build(), result -> logNum.set(this.saveLog(result, clientData)), true, String.class
+                        .uri(clientData.getApplication().getEndPointUrl(END_POINT))
+                        .httpMethod(HttpMethod.POST)
+                        .httpHeaders(headers)
+                        .build(), result -> logNum.set(this.saveLog(result, clientData)), true, new ParameterizedTypeReference<String>() {
+                }
         );
         log.info("client log sync success, application name: {}, client id: {}, log num: {}", clientData.getApplication().getApplicationName(), clientData.getId().getValue(), logNum.get());
         return logNum.get();

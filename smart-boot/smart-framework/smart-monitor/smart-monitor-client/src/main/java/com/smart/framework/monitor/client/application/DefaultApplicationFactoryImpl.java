@@ -2,20 +2,16 @@ package com.smart.framework.monitor.client.application;
 
 import com.smart.framework.monitor.client.properties.ClientProperties;
 import com.smart.framework.monitor.core.model.Application;
-import lombok.SneakyThrows;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.endpoint.ExposableEndpoint;
 import org.springframework.boot.actuate.endpoint.web.WebEndpointsSupplier;
 import org.springframework.boot.actuate.endpoint.web.annotation.ControllerEndpointsSupplier;
 import org.springframework.boot.actuate.endpoint.web.annotation.ServletEndpointsSupplier;
-import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.lang.NonNull;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -29,7 +25,7 @@ public class DefaultApplicationFactoryImpl implements ApplicationFactory, Applic
 
     private final ClientProperties clientProperties;
 
-    private final ServerProperties serverProperties;
+//    private final ServerProperties serverProperties;
 
     private WebEndpointsSupplier webEndpointsSupplier;
 
@@ -41,9 +37,9 @@ public class DefaultApplicationFactoryImpl implements ApplicationFactory, Applic
     private String basePath;
 
 
-    public DefaultApplicationFactoryImpl(ClientProperties clientProperties, ServerProperties serverProperties, String basePath) {
+    public DefaultApplicationFactoryImpl(ClientProperties clientProperties, String basePath) {
         this.clientProperties = clientProperties;
-        this.serverProperties = serverProperties;
+//        this.serverProperties = serverProperties;
         this.basePath = basePath;
     }
 
@@ -65,10 +61,11 @@ public class DefaultApplicationFactoryImpl implements ApplicationFactory, Applic
      * 获取客户端地址
      * @return 客户端地址
      */
-    @SneakyThrows(UnknownHostException.class)
+//    @SneakyThrows(UnknownHostException.class)
     private String getClientUrl() {
-        String contextPath = this.serverProperties.getServlet().getContextPath() == null ? "/" : this.serverProperties.getServlet().getContextPath();
-        return String.format("http://%s:%s%s", InetAddress.getLocalHost().getHostAddress(), this.serverProperties.getPort(), contextPath);
+//        String contextPath = this.serverProperties.getServlet().getContextPath() == null ? "/" : this.serverProperties.getServlet().getContextPath();
+//        return String.format("http://%s:%s%s", InetAddress.getLocalHost().getHostAddress(), this.serverProperties.getPort(), contextPath);
+        return null;
     }
 
     @Override

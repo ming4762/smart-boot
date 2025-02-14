@@ -2,8 +2,8 @@ package com.smart.framework.extension.dingtalk.utils;
 
 import com.smart.framework.commons.core.utils.RestUtils;
 import com.smart.framework.extension.dingtalk.constants.url.DingTalkApiUrl;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -22,9 +22,9 @@ public class DingtalkApiUtils {
         throw new IllegalAccessError("Utility class");
     }
 
-    public <T> T send(DingTalkApiUrl apiUrl, String accessToken, Serializable parameter, Class<T> resultType) {
+    public <T> T send(DingTalkApiUrl apiUrl, String accessToken, Serializable parameter) {
         String url = String.format(URL_FORMATTER, apiUrl.getUrl(), accessToken);
-        ResponseEntity<T> response = RestUtils.rest(url, HttpMethod.POST, Map.of(), parameter, resultType);
-        return response.getBody();
+        return RestUtils.rest(url, HttpMethod.POST, Map.of(), parameter, new ParameterizedTypeReference<>() {
+        });
     }
 }

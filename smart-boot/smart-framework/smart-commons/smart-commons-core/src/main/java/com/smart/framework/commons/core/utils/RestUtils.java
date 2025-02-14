@@ -1,21 +1,21 @@
 package com.smart.framework.commons.core.utils;
 
-import org.apache.commons.io.IOUtils;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.*;
+import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.core.io.buffer.DataBufferUtils;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RequestCallback;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.util.Arrays;
 import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * @author shizhongming
@@ -27,9 +27,7 @@ public class RestUtils {
         throw new IllegalStateException("Utility class");
     }
 
-    private static RestTemplate restTemplate;
     private static WebClient webClient;
-
 
     /**
      * 发送请求
@@ -37,41 +35,44 @@ public class RestUtils {
      * @param httpMethod 请求方式
      * @param headers 请求头
      * @param parameter 参数
-     * @param clazz 返回类型
+     * @param typeReference 返回类型
      * @param uriVariables URL参数
      * @return 请求结果
      * @param <T> 泛型
      */
-    public static <T> ResponseEntity<T> rest(@NonNull String url, @NonNull HttpMethod httpMethod, Map<String, String> headers, Object parameter, @NonNull Class<T> clazz, Object ...uriVariables) {
-        final HttpHeaders httpHeaders = new HttpHeaders();
-        if (!CollectionUtils.isEmpty(headers)) {
-            headers.forEach(httpHeaders :: add);
-        }
-        final HttpEntity<?> httpEntity = new HttpEntity<>(parameter, httpHeaders);
-
-        return restTemplate.exchange(url, httpMethod, httpEntity, clazz, uriVariables);
-    }
-
-    /**
-     * 发送流式请求
-     * @param url URL
-     * @param httpMethod 请求方式
-     * @param headers 请求头
-     * @param parameter 参数
-     * @param clazz 返回类型
-     * @return 请求结果
-     * @param <T> 泛型
-     */
-    public static <T> Flux<T> restStream(@NonNull String url, @NonNull HttpMethod httpMethod, Map<String, String> headers, Object parameter, @NonNull Class<T> clazz) {
+    public static <T> T rest(@NonNull String url, @NonNull HttpMethod httpMethod, Map<String, String> headers, Object parameter, @NonNull ParameterizedTypeReference<T> typeReference, Object ...uriVariables) {
         return webClient.method(httpMethod)
-                .uri(url)
+                .uri(url, uriVariables)
+                .bodyValue(Objects.requireNonNullElse(parameter, ""))
                 .headers(httpHeaders -> {
                     if (!CollectionUtils.isEmpty(headers)) {
                         headers.forEach(httpHeaders::add);
                     }
-                }).bodyValue(parameter)
+                }).retrieve()
+                .bodyToMono(typeReference)
+                .block();
+    }
+
+    /**
+     * 发送响应性请求
+     * @param url URL
+     * @param httpMethod 请求方式
+     * @param headers 请求头
+     * @param parameter 参数
+     * @param typeReference 返回类型
+     * @return 请求结果
+     * @param <T> 泛型
+     */
+    public static <T> Flux<T> restReactive(@NonNull String url, @NonNull HttpMethod httpMethod, Map<String, String> headers, Object parameter, @NonNull ParameterizedTypeReference<T> typeReference, Object ...uriVariables) {
+        return webClient.method(httpMethod)
+                .uri(url, uriVariables)
+                .headers(httpHeaders -> {
+                    if (!CollectionUtils.isEmpty(headers)) {
+                        headers.forEach(httpHeaders::add);
+                    }
+                }).bodyValue(Objects.requireNonNullElse(parameter, ""))
                 .retrieve()
-                .bodyToFlux(clazz);
+                .bodyToFlux(typeReference);
     }
 
     /**
@@ -80,46 +81,28 @@ public class RestUtils {
      * @param httpMethod 请求方式
      * @param headers 请求头
      * @param parameter 参数
-     * @param clazz 返回类型
+     * @param typeReference 返回类型
      * @param uriVariables URL参数
      * @return 请求结果
      * @param <T> 泛型
      */
-    public static <T> ResponseEntity<T> restForm(@NonNull String url, @NonNull HttpMethod httpMethod, Map<String, String> headers, MultiValueMap<String, ?> parameter, @NonNull Class<T> clazz, Object ...uriVariables) {
-        final HttpHeaders httpHeaders = new HttpHeaders();
-        if (!CollectionUtils.isEmpty(headers)) {
-            headers.forEach(httpHeaders :: add);
-        }
-        if (httpHeaders.getContentType() == null) {
-            httpHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
-        }
-        HttpEntity<MultiValueMap<String, ?>> httpEntity = new HttpEntity<>(parameter, httpHeaders);
-        return restTemplate.exchange(url, httpMethod, httpEntity, clazz, uriVariables);
+    public static <T> T restForm(@NonNull String url, @NonNull HttpMethod httpMethod, Map<String, String> headers, MultiValueMap<String, String> parameter, @NonNull ParameterizedTypeReference<T> typeReference, Object ...uriVariables) {
+        MultiValueMap<String, String> nonNullParameter = Objects.requireNonNullElseGet(parameter, () -> MultiValueMap.fromSingleValue(Map.of()));
+        return webClient.method(httpMethod)
+                .uri(url, uriVariables)
+                .headers(httpHeaders -> {
+                    if (!CollectionUtils.isEmpty(headers)) {
+                        headers.forEach(httpHeaders::add);
+                    }
+                    if (httpHeaders.getContentType() == null) {
+                        httpHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
+                    }
+                }).body(BodyInserters.fromFormData(nonNullParameter))
+                .retrieve()
+                .bodyToMono(typeReference)
+                .block();
     }
 
-    /**
-     * 发送JSON请求
-     *
-     * @param url                        URL
-     * @param httpMethod                 请求方式
-     * @param headers                    请求头
-     * @param param                      参数
-     * @param parameterizedTypeReference 返回类型
-     * @param uriVariables               URL参数
-     * @param <T>                        泛型
-     * @return 请求结果
-     */
-    public static <T> ResponseEntity<T> restJson(@NonNull String url, @NonNull HttpMethod httpMethod, Map<String, String> headers, String param, @NonNull ParameterizedTypeReference<T> parameterizedTypeReference, Object... uriVariables) {
-        final HttpHeaders httpHeaders = new HttpHeaders();
-        if (!CollectionUtils.isEmpty(headers)) {
-            headers.forEach(httpHeaders::add);
-        }
-        if (httpHeaders.getContentType() == null) {
-            httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        }
-        HttpEntity<String> httpEntity = new HttpEntity<>(param, httpHeaders);
-        return restTemplate.exchange(url, httpMethod, httpEntity, parameterizedTypeReference, uriVariables);
-    }
 
     /**
      * 下载文件
@@ -129,33 +112,26 @@ public class RestUtils {
      * @param outputStream 输出流
      * @param uriVariables 参数
      */
-    public static void download(@NonNull String url, @NonNull HttpMethod httpMethod, Map<String, String> headers, Object parameter, OutputStream outputStream, Object ...uriVariables) {
-        RequestCallback requestCallback = request -> {
-            request.getHeaders().setAccept(Arrays.asList(MediaType.APPLICATION_OCTET_STREAM, MediaType.ALL));
-            if (!CollectionUtils.isEmpty(headers)) {
-                headers.forEach((key, value) -> request.getHeaders().add(key, value));
-            }
-            if (parameter != null) {
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
-                objectOutputStream.writeObject(parameter);
-                objectOutputStream.flush();
-                request.getBody().write(byteArrayOutputStream.toByteArray());
-                objectOutputStream.close();
-            }
-        };
-        restTemplate.execute(url, httpMethod, requestCallback, response -> {
-            IOUtils.copy(response.getBody(), outputStream);
-            return null;
-        }, uriVariables);
-    }
+    public static CountDownLatch download(@NonNull String url, @NonNull HttpMethod httpMethod, Map<String, String> headers, Object parameter, OutputStream outputStream, Object ...uriVariables) {
+        CountDownLatch latch = new CountDownLatch(1);
 
-    /**
-     * 设置 RestTemplate
-     * @param restTemplate RestTemplate
-     */
-    public static void setRestTemplate(RestTemplate restTemplate) {
-        RestUtils.restTemplate = restTemplate;
+        Flux<DataBuffer> dataBufferFlux = webClient.method(httpMethod)
+                .uri(url, uriVariables)
+                .headers(httpHeaders -> {
+                    if (!CollectionUtils.isEmpty(headers)) {
+                        headers.forEach(httpHeaders::add);
+                    }
+                })
+                .bodyValue(Objects.requireNonNullElse(parameter, ""))
+                .retrieve()
+                .bodyToFlux(DataBuffer.class);
+
+        DataBufferUtils.write(dataBufferFlux, outputStream)
+                .doOnNext(DataBufferUtils::release)
+                .doOnTerminate(latch::countDown)
+                .subscribe();
+
+        return latch;
     }
 
     /**
@@ -164,6 +140,14 @@ public class RestUtils {
      */
     public static void setWebClient(WebClient webClient) {
         RestUtils.webClient = webClient;
+    }
+
+    /**
+     * 获取 WebClient
+     * @return WebClient
+     */
+    public static WebClient getWebClient() {
+        return webClient;
     }
 
 }

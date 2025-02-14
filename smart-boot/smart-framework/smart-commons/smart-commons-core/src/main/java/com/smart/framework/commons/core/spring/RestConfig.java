@@ -1,15 +1,11 @@
 package com.smart.framework.commons.core.spring;
 
 import com.smart.framework.commons.core.utils.RestUtils;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
-
-import java.time.Duration;
 
 /**
  * @author ShiZhongMing
@@ -19,29 +15,17 @@ import java.time.Duration;
 @Configuration(proxyBeanMethods = false)
 public class RestConfig {
 
-    @Bean
-    @ConditionalOnMissingBean(RestTemplate.class)
-    public RestTemplate restTemplate(RestTemplateBuilder builder) {
-        RestTemplate restTemplate = builder.connectTimeout(Duration.ofMillis(5000L))
-                .readTimeout(Duration.ofMillis(50000L))
-                .build();
-        RestUtils.setRestTemplate(restTemplate);
-        return restTemplate;
-    }
-
     /**
      * 构建 WebClient
-     * @param builder WebClient.Builder
+     * @param builderProvider WebClient.Builder
      * @return WebClient
      */
     @Bean
     @ConditionalOnMissingBean(WebClient.class)
-    @ConditionalOnBean(WebClient.Builder.class)
-    public WebClient webClient(WebClient.Builder builder) {
+    public WebClient webClient(ObjectProvider<WebClient.Builder> builderProvider) {
+        WebClient.Builder builder = builderProvider.getIfAvailable(WebClient::builder);
         WebClient webClient = builder.build();
-
         RestUtils.setWebClient(webClient);
         return webClient;
     }
-
 }

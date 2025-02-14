@@ -5,6 +5,7 @@ import com.smart.framework.commons.core.utils.RestUtils;
 import com.smart.framework.monitor.client.exception.RegistrarException;
 import com.smart.framework.monitor.core.constants.CommonUrlConstants;
 import com.smart.framework.monitor.core.model.Application;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.lang.NonNull;
@@ -22,13 +23,14 @@ public class RestRegistrarClientImpl implements RegistrarClient {
     @Override
     public String register(String serverUrl, Application application) {
         final String url = serverUrl + CommonUrlConstants.REGISTER_URL;
-        final Result<?> result = RestUtils.rest(url, HttpMethod.POST, this.getHeaders(), application, Result.class).getBody();
+        final Result<String> result = RestUtils.rest(url, HttpMethod.POST, this.getHeaders(), application, new ParameterizedTypeReference<Result<String>>() {
+        });
 
         Assert.notNull(result, "register failed， result is null");
         if (!result.isSuccess()) {
             throw new RegistrarException(result);
         }
-        return (String) result.getData();
+        return result.getData();
     }
 
     @Override
@@ -38,7 +40,8 @@ public class RestRegistrarClientImpl implements RegistrarClient {
                 HttpMethod.POST,
                 this.getHeaders(),
                 applicationId,
-                Object.class
+                new ParameterizedTypeReference<>() {
+                }
         );
     }
 
