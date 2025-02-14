@@ -1,10 +1,10 @@
 package com.smart.module.message.service.impl;
 
-import cn.hutool.core.lang.func.LambdaUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.google.common.collect.Lists;
 import com.smart.framework.auth.core.utils.AuthUtils;
+import com.smart.framework.crud.plus.metadata.SmartTableInfo;
 import com.smart.framework.crud.service.BaseServiceImpl;
 import com.smart.framework.crud.utils.CrudUtils;
 import com.smart.module.message.mapper.SmartMessageSystemSendMapper;
@@ -38,12 +38,13 @@ public class SmartMessageSystemSendServiceImpl extends BaseServiceImpl<SmartMess
     @Override
     public List<SmartMessageSendMessageDO> listCurrentSendMessage(SmartMessageSendParameter parameter) {
         QueryWrapper<SmartMessageSystemSendPO> queryWrapper = CrudUtils.createQueryWrapperFromParameters(parameter.getParameter(), SmartMessageSystemSendPO.class);
+        SmartTableInfo smartTableInfo = CrudUtils.getTableInfo(SmartMessageSystemSendPO.class);
         if (StringUtils.hasText(parameter.getTitle())) {
             // 标题查询条件
-            queryWrapper.like(LambdaUtil.getFieldName(SmartMessageSendParameter::getTitle), parameter.getTitle());
+            queryWrapper.like(smartTableInfo.getTableFiled(CrudUtils.getJavaProperty(SmartMessageSendParameter::getTitle)).getColumn(), parameter.getTitle());
         }
         if (parameter.getMessageType() != null) {
-            queryWrapper.eq(LambdaUtil.getFieldName(SmartMessageSendParameter::getMessageType), parameter.getMessageType().getValue());
+            queryWrapper.eq(smartTableInfo.getTableFiled(CrudUtils.getJavaProperty(SmartMessageSendParameter::getMessageType)).getColumn(), parameter.getMessageType().getValue());
         }
         queryWrapper.lambda()
                 .eq(SmartMessageSystemSendPO::getUserId, AuthUtils.getCurrentUserId());

@@ -1,10 +1,10 @@
 package com.smart.module.system.service.auth.impl;
 
-import cn.hutool.core.util.ZipUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.smart.framework.commons.core.exception.BaseException;
 import com.smart.framework.commons.core.exception.BusinessException;
 import com.smart.framework.commons.core.exception.SystemException;
+import com.smart.framework.commons.core.utils.ZipUtils;
 import com.smart.framework.crud.constants.CrudCommonEnum;
 import com.smart.framework.crud.query.PageSortQuery;
 import com.smart.framework.crud.service.BaseServiceImpl;
@@ -29,7 +29,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
@@ -180,10 +179,10 @@ public class SmartAuthSecretKeyServiceImpl extends BaseServiceImpl<SmartAuthSecr
         FileDownloadResult publicKey = this.getNonnullSmartFileApi().download(secretKey.getPublicKeyFileId());
         FileDownloadResult privateKey = this.getNonnullSmartFileApi().download(secretKey.getPrivateKeyFileId());
 
-        ZipUtil.zip(
+        ZipUtils.zip(
                 outputStream,
-                new String[]{publicKey.getFilename(), privateKey.getFilename()},
-                new InputStream[]{publicKey.getInputStream(), privateKey.getInputStream()}
+                List.of(publicKey.getFilename(), privateKey.getFilename()),
+                List.of(publicKey.getInputStream(), privateKey.getInputStream())
         );
     }
 }

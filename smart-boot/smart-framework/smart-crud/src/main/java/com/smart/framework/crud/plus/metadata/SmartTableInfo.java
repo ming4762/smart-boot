@@ -5,18 +5,16 @@ import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.toolkit.Assert;
 import com.baomidou.mybatisplus.core.toolkit.GlobalConfigUtils;
-import com.baomidou.mybatisplus.core.toolkit.LambdaUtils;
-import com.baomidou.mybatisplus.core.toolkit.support.LambdaMeta;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.smart.framework.commons.core.exception.SystemException;
 import com.smart.framework.commons.core.proxy.ExtendMethodInterceptor;
 import com.smart.framework.crud.annotation.TableLogicField;
 import com.smart.framework.crud.annotation.TableTenantField;
 import com.smart.framework.crud.annotation.TableUseYnField;
+import com.smart.framework.crud.utils.CrudUtils;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.reflection.property.PropertyNamer;
 import org.apache.ibatis.session.Configuration;
 import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -116,7 +114,7 @@ public class SmartTableInfo extends TableInfo {
      * @return 租户字段信息
      */
     public <T> TableTenantFieldInfo getTenantFieldInfo(@NonNull SFunction<T, ?> column) {
-        return getTenantFieldInfo(this.getJavaProperty(column));
+        return getTenantFieldInfo(CrudUtils.getJavaProperty(column));
     }
 
     /**
@@ -173,7 +171,7 @@ public class SmartTableInfo extends TableInfo {
      * @return TableFieldInfo
      */
     public<T> TableFieldInfo getTableFiled(@NonNull SFunction<T, ?> column) {
-        return this.getTableFiled(this.getJavaProperty(column));
+        return this.getTableFiled(CrudUtils.getJavaProperty(column));
     }
 
 
@@ -268,16 +266,5 @@ public class SmartTableInfo extends TableInfo {
         smartTableInfo.smartTableFieldInfoList = new ArrayList<>(tableInfo.getFieldList().size() + 1);
         smartTableInfo.smartTableFieldInfoList.add(keyTableFieldInfo);
         smartTableInfo.smartTableFieldInfoList.addAll(tableInfo.getFieldList());
-    }
-
-    /**
-     * 获取java属性名
-     * @param column java字段
-     * @return java属性名
-     * @since 5.0.0
-     */
-    private <T> String getJavaProperty(@NonNull SFunction<T, ?> column) {
-        LambdaMeta meta = LambdaUtils.extract(column);
-        return PropertyNamer.methodToProperty(meta.getImplMethodName());
     }
 }

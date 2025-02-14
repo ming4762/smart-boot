@@ -67,11 +67,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>cn.hutool</groupId>
-			<artifactId>hutool-all</artifactId>
-		</dependency>
-
-		<dependency>
 			<groupId>com.smart</groupId>
 			<artifactId>smart-system-api</artifactId>
 			<version>${project.version}</version>

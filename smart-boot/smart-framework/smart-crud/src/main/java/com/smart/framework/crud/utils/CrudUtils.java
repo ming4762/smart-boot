@@ -7,6 +7,9 @@ import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.baomidou.mybatisplus.core.toolkit.Assert;
+import com.baomidou.mybatisplus.core.toolkit.LambdaUtils;
+import com.baomidou.mybatisplus.core.toolkit.support.LambdaMeta;
+import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.google.common.collect.Lists;
 import com.smart.framework.crud.model.BaseModel;
 import com.smart.framework.crud.model.Sort;
@@ -17,6 +20,7 @@ import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.reflection.property.PropertyNamer;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.util.CollectionUtils;
@@ -103,6 +107,17 @@ public final class CrudUtils {
             return null;
         }
         return getTableInfo(tableInfo.getEntityType());
+    }
+
+    /**
+     * 获取java属性名
+     * @param column java字段
+     * @return java属性名
+     * @since 5.0.0
+     */
+    public static <T> String getJavaProperty(@NonNull SFunction<T, ?> column) {
+        LambdaMeta meta = LambdaUtils.extract(column);
+        return PropertyNamer.methodToProperty(meta.getImplMethodName());
     }
 
 

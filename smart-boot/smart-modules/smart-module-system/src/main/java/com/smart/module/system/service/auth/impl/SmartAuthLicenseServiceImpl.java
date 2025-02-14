@@ -1,10 +1,10 @@
 package com.smart.module.system.service.auth.impl;
 
-import cn.hutool.core.util.ZipUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.smart.framework.commons.core.exception.BusinessException;
 import com.smart.framework.commons.core.exception.SystemException;
+import com.smart.framework.commons.core.utils.ZipUtils;
 import com.smart.framework.crud.service.BaseServiceImpl;
 import com.smart.framework.license.server.LicenseGenerator;
 import com.smart.framework.license.server.LicenseGeneratorParameter;
@@ -35,6 +35,7 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -172,7 +173,11 @@ public class SmartAuthLicenseServiceImpl extends BaseServiceImpl<SmartAuthLicens
         if (publicKeyFile == null || licenseFile == null) {
             throw new BusinessException("获取文件失败，请检查文件是否已删除");
         }
-        ZipUtil.zip(outputStream, new String[]{publicKeyFile.getFilename(), licenseFile.getFilename()}, new InputStream[]{publicKeyFile.getInputStream(), licenseFile.getInputStream()});
+        ZipUtils.zip(
+                outputStream,
+                List.of(publicKeyFile.getFilename(), licenseFile.getFilename()),
+                List.of(publicKeyFile.getInputStream(), licenseFile.getInputStream())
+        );
     }
 
     /**

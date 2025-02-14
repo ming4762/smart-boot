@@ -1,7 +1,5 @@
 package com.smart.module.api.system;
 
-import cn.hutool.core.lang.func.Func1;
-import cn.hutool.core.lang.func.LambdaUtil;
 import com.smart.framework.commons.core.exception.SystemException;
 import com.smart.framework.commons.core.utils.ReflectUtils;
 import com.smart.module.api.system.constants.SmartChangeLogEnum;
@@ -20,7 +18,6 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 系统工具API
@@ -54,6 +51,7 @@ public interface SysToolApi {
 
     /**
      * 保存修改记录
+     * TODO: TODO_结合mybatis plus数据变动记录插件
      * @param parameter 参数
      * @return 是否保存成功
      */
@@ -69,32 +67,6 @@ public interface SysToolApi {
      */
     default <T> boolean saveChangeLog(CommonChangeLogSaveParameter parameter, @Nullable T beforeData, @Nullable T afterData) {
         return this.saveChangeLog(parameter, beforeData, afterData ,null, DEFAULT_EXCLUDE_LIST);
-    }
-
-    /**
-     * 保存修改记录
-     * @param parameter 参数
-     * @param beforeData 原数据
-     * @param afterData 修改后的数据
-     * @param fieldList 保存的字段列表，null则保存所有
-     * @param excludeList 排除的字段列表
-     * @return 是否修改成功
-     * @param <T> 泛型
-     */
-    default <T> boolean saveChangeLog(CommonChangeLogSaveParameter parameter, @Nullable T beforeData, @Nullable T afterData, List<Func1<T, ?>> fieldList, List<Func1<T, ?>> excludeList) {
-        Set<String> fields = null;
-        if (!CollectionUtils.isEmpty(fieldList)) {
-            fields = fieldList.stream()
-                    .map(LambdaUtil::getFieldName)
-                    .collect(Collectors.toSet());
-        }
-        Set<String> excludes = null;
-        if (!CollectionUtils.isEmpty(excludeList)) {
-            excludes = excludeList.stream()
-                    .map(LambdaUtil::getFieldName)
-                    .collect(Collectors.toSet());
-        }
-        return this.saveChangeLog(parameter, beforeData, afterData, fields, excludes);
     }
 
     /**
