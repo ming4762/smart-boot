@@ -2,7 +2,7 @@ package com.smart.framework.ai.dify.api.request;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.core.io.Resource;
 
 /**
  * 文件上传请求
@@ -22,5 +22,5 @@ public class DifyFileUploadRequest {
     /**
      * 文件
      */
-    private MultipartFile file;
+    private Resource resource;
 }

@@ -14,10 +14,13 @@ import lombok.AllArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.MultipartBodyBuilder;
+import org.springframework.lang.NonNull;
+import org.springframework.util.CollectionUtils;
 import reactor.core.publisher.Flux;
 
 import java.util.List;
@@ -35,6 +38,8 @@ import java.util.stream.Collectors;
 public class DefaultDifyClient implements DifyClient {
 
     private static final String TOKEN_PREFIX = "Bearer ";
+    private static final String FILE_KEY = "file";
+    private static final String USER_KEY = "user";
 
     private final ClientConfig clientConfig;
 
@@ -102,8 +107,8 @@ public class DefaultDifyClient implements DifyClient {
     public DifyFileUploadResponse uploadFile(DifyFileUploadRequest request) {
 
         MultipartBodyBuilder builder = new MultipartBodyBuilder();
-        builder.part("file", request.getFile().getResource());
-        builder.part("user", request.getUser());
+        builder.part(FILE_KEY, request.getResource());
+        builder.part(USER_KEY, request.getUser());
 
         return RestUtils.restForm(
                 this.getApiUrl(UrlEnum.FILES_UPLOAD),
@@ -236,6 +241,34 @@ public class DefaultDifyClient implements DifyClient {
     }
 
     /**
+     * 语音转文字
+     *
+     * @param resource 语音资源
+     * @param user     用户标识
+     * @return 文字内容
+     */
+    @Override
+    public String audioToText(@NonNull Resource resource, @NonNull String user) {
+        MultipartBodyBuilder builder = new MultipartBodyBuilder();
+        builder.part(FILE_KEY, resource);
+        builder.part(USER_KEY, user);
+
+        Map<String, String> result = RestUtils.restForm(
+                this.getApiUrl(UrlEnum.AUDIO_TO_TEXT),
+                HttpMethod.POST,
+                this.createHeaders(MediaType.MULTIPART_FORM_DATA_VALUE),
+                builder.build(),
+                new ParameterizedTypeReference<>() {
+                },
+                null
+        );
+        if (CollectionUtils.isEmpty(result)) {
+            return null;
+        }
+        return result.values().stream().findFirst().orElse(null);
+    }
+
+    /**
      * 获取应用基本信息
      *
      * @return 应用基本信息
@@ -321,7 +354,7 @@ public class DefaultDifyClient implements DifyClient {
      * @return 用户参数
      */
     private Map<String, String> createUserParameter(String user) {
-        return Map.of("user", user);
+        return Map.of(USER_KEY, user);
     }
 
     private String createParameterUrl(UrlEnum url, Object parameter) {

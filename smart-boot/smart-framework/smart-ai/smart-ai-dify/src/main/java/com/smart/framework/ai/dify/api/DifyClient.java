@@ -3,6 +3,8 @@ package com.smart.framework.ai.dify.api;
 import com.smart.framework.ai.dify.api.model.AbstractChatCompletionResponse;
 import com.smart.framework.ai.dify.api.request.*;
 import com.smart.framework.ai.dify.api.response.*;
+import org.springframework.core.io.Resource;
+import org.springframework.lang.NonNull;
 import reactor.core.publisher.Flux;
 
 import java.util.List;
@@ -81,6 +83,14 @@ public interface DifyClient {
      * @return 重命名结果
      */
     DifyConversationRenameResponse renameConversation(DifyConversationRenameRequest request);
+
+    /**
+     * 语音转文字
+     * @param resource 语音资源
+     * @param user 用户标识
+     * @return 文字内容
+     */
+    String audioToText(@NonNull Resource resource, @NonNull String user);
 
     /**
      * 获取应用基本信息

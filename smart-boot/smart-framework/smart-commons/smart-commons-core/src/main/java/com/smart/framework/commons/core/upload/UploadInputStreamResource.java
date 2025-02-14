@@ -1,7 +1,7 @@
 package com.smart.framework.commons.core.upload;
 
-import lombok.SneakyThrows;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,11 +21,14 @@ public class UploadInputStreamResource extends InputStreamResource {
      *
      * @param inputStream the InputStream to use
      */
-    @SneakyThrows(IOException.class)
-    public UploadInputStreamResource(InputStream inputStream, String filename) {
+    public UploadInputStreamResource(InputStream inputStream, String filename) throws IOException {
         super(inputStream);
         this.filename = filename;
         this.contentLength = inputStream.available();
+    }
+
+    public UploadInputStreamResource(MultipartFile multipartFile) throws IOException {
+        this(multipartFile.getInputStream(), multipartFile.getOriginalFilename());
     }
 
     /**
