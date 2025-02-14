@@ -24,7 +24,7 @@ public class RestRegistrarClientImpl implements RegistrarClient {
     public String register(String serverUrl, Application application) {
         final String url = serverUrl + CommonUrlConstants.REGISTER_URL;
         final Result<String> result = RestUtils.rest(url, HttpMethod.POST, this.getHeaders(), application, new ParameterizedTypeReference<Result<String>>() {
-        });
+        }, null);
 
         Assert.notNull(result, "register failed， result is null");
         if (!result.isSuccess()) {
@@ -41,7 +41,8 @@ public class RestRegistrarClientImpl implements RegistrarClient {
                 this.getHeaders(),
                 applicationId,
                 new ParameterizedTypeReference<>() {
-                }
+                },
+                null
         );
     }
 

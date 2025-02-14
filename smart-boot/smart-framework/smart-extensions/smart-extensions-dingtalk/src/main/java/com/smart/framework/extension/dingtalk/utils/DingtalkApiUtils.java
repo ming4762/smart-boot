@@ -25,6 +25,6 @@ public class DingtalkApiUtils {
     public <T> T send(DingTalkApiUrl apiUrl, String accessToken, Serializable parameter) {
         String url = String.format(URL_FORMATTER, apiUrl.getUrl(), accessToken);
         return RestUtils.rest(url, HttpMethod.POST, Map.of(), parameter, new ParameterizedTypeReference<>() {
-        });
+        }, null);
     }
 }

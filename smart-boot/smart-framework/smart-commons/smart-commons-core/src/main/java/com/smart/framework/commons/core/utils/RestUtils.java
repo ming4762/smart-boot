@@ -40,7 +40,10 @@ public class RestUtils {
      * @return 请求结果
      * @param <T> 泛型
      */
-    public static <T> T rest(@NonNull String url, @NonNull HttpMethod httpMethod, Map<String, String> headers, Object parameter, @NonNull ParameterizedTypeReference<T> typeReference, Object ...uriVariables) {
+    public static <T> T rest(@NonNull String url, @NonNull HttpMethod httpMethod, Map<String, String> headers, Object parameter, @NonNull ParameterizedTypeReference<T> typeReference, Map<String, ?> uriVariables) {
+        if (uriVariables == null) {
+            uriVariables = Map.of();
+        }
         return webClient.method(httpMethod)
                 .uri(url, uriVariables)
                 .bodyValue(Objects.requireNonNullElse(parameter, ""))
@@ -63,7 +66,10 @@ public class RestUtils {
      * @return 请求结果
      * @param <T> 泛型
      */
-    public static <T> Flux<T> restReactive(@NonNull String url, @NonNull HttpMethod httpMethod, Map<String, String> headers, Object parameter, @NonNull ParameterizedTypeReference<T> typeReference, Object ...uriVariables) {
+    public static <T> Flux<T> restReactive(@NonNull String url, @NonNull HttpMethod httpMethod, Map<String, String> headers, Object parameter, @NonNull ParameterizedTypeReference<T> typeReference, Map<String, ?> uriVariables) {
+        if (uriVariables == null) {
+            uriVariables = Map.of();
+        }
         return webClient.method(httpMethod)
                 .uri(url, uriVariables)
                 .headers(httpHeaders -> {
@@ -86,8 +92,11 @@ public class RestUtils {
      * @return 请求结果
      * @param <T> 泛型
      */
-    public static <T> T restForm(@NonNull String url, @NonNull HttpMethod httpMethod, Map<String, String> headers, MultiValueMap<String, String> parameter, @NonNull ParameterizedTypeReference<T> typeReference, Object ...uriVariables) {
-        MultiValueMap<String, String> nonNullParameter = Objects.requireNonNullElseGet(parameter, () -> MultiValueMap.fromSingleValue(Map.of()));
+    public static <T> T restForm(@NonNull String url, @NonNull HttpMethod httpMethod, Map<String, String> headers, MultiValueMap<String, ?> parameter, @NonNull ParameterizedTypeReference<T> typeReference, Map<String, ?> uriVariables) {
+        if (uriVariables == null) {
+            uriVariables = Map.of();
+        }
+        MultiValueMap<String, ?> nonNullParameter = Objects.requireNonNullElseGet(parameter, () -> MultiValueMap.fromSingleValue(Map.of()));
         return webClient.method(httpMethod)
                 .uri(url, uriVariables)
                 .headers(httpHeaders -> {
@@ -97,7 +106,7 @@ public class RestUtils {
                     if (httpHeaders.getContentType() == null) {
                         httpHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
                     }
-                }).body(BodyInserters.fromFormData(nonNullParameter))
+                }).body(BodyInserters.fromMultipartData(nonNullParameter))
                 .retrieve()
                 .bodyToMono(typeReference)
                 .block();
@@ -112,9 +121,11 @@ public class RestUtils {
      * @param outputStream 输出流
      * @param uriVariables 参数
      */
-    public static CountDownLatch download(@NonNull String url, @NonNull HttpMethod httpMethod, Map<String, String> headers, Object parameter, OutputStream outputStream, Object ...uriVariables) {
+    public static CountDownLatch download(@NonNull String url, @NonNull HttpMethod httpMethod, Map<String, String> headers, Object parameter, OutputStream outputStream, Map<String, ?> uriVariables) {
         CountDownLatch latch = new CountDownLatch(1);
-
+        if (uriVariables == null) {
+            uriVariables = Map.of();
+        }
         Flux<DataBuffer> dataBufferFlux = webClient.method(httpMethod)
                 .uri(url, uriVariables)
                 .headers(httpHeaders -> {

@@ -130,7 +130,8 @@ public class ClientWebProxy {
                 request.getHttpMethod(),
                 request.getHttpHeaders(),
                 request.getBody(),
-                resultClass
+                resultClass,
+                null
         );
         resultHandler.accept(result);
     }
@@ -155,7 +156,8 @@ public class ClientWebProxy {
                 request.getHttpMethod(),
                 request.getHttpHeaders(),
                 null,
-                outputStream
+                outputStream,
+                null
         );
     }
 

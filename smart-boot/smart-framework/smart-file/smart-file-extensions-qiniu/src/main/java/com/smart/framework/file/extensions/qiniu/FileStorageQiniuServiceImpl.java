@@ -210,6 +210,6 @@ public class FileStorageQiniuServiceImpl implements QiniuService {
     @Override
     public void download(@NonNull FileStorageGetParameter parameter, OutputStream outputStream) {
         String objectUrl = this.getObjectUrl(parameter, Duration.ofDays(1));
-        RestUtils.download(objectUrl, HttpMethod.GET, null, null, outputStream);
+        RestUtils.download(objectUrl, HttpMethod.GET, null, null, outputStream, null);
     }
 }
