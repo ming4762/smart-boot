@@ -139,6 +139,26 @@ public class DefaultDifyClient implements DifyClient {
     }
 
     /**
+     * 消息反馈（点赞）
+     *
+     * @param request 消息反馈请求
+     * @return 是否反馈成功
+     */
+    @Override
+    public boolean feedbackMessage(DifyFeedbackRequest request) {
+        String url = String.format(this.getApiUrl(UrlEnum.FEEDBACKS_MESSAGES), request.getMessageId());
+        DifyCommonResponse result = this.doRequest(
+                url,
+                UrlEnum.FEEDBACKS_MESSAGES.getHttpMethod(),
+                MediaType.APPLICATION_JSON_VALUE,
+                request,
+                new ParameterizedTypeReference<>() {
+                }
+        );
+        return result != null && result.isSuccess();
+    }
+
+    /**
      * 获取会话历史消息
      *
      * @param request 请求参数

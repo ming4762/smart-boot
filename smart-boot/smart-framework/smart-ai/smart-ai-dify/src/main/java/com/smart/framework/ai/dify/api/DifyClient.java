@@ -1,10 +1,7 @@
 package com.smart.framework.ai.dify.api;
 
 import com.smart.framework.ai.dify.api.model.AbstractChatCompletionResponse;
-import com.smart.framework.ai.dify.api.request.ChatMessagesRequest;
-import com.smart.framework.ai.dify.api.request.DifyConversationListRequest;
-import com.smart.framework.ai.dify.api.request.DifyFileUploadRequest;
-import com.smart.framework.ai.dify.api.request.DifyMessageHistoryRequest;
+import com.smart.framework.ai.dify.api.request.*;
 import com.smart.framework.ai.dify.api.response.*;
 import reactor.core.publisher.Flux;
 
@@ -47,6 +44,13 @@ public interface DifyClient {
      * @return 是否停止成功
      */
     boolean stopChatMessage(String taskId, String user);
+
+    /**
+     * 消息反馈（点赞）
+     * @param request 消息反馈请求
+     * @return 是否反馈成功
+     */
+    boolean feedbackMessage(DifyFeedbackRequest request);
 
     /**
      * 获取会话历史消息
