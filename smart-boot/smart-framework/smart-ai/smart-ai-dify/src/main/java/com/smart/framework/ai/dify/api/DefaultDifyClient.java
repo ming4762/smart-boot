@@ -10,13 +10,10 @@ import com.smart.framework.ai.dify.constants.ResponseModeEnum;
 import com.smart.framework.ai.dify.constants.UrlEnum;
 import com.smart.framework.commons.core.utils.JsonUtils;
 import com.smart.framework.commons.core.utils.RestUtils;
-import lombok.AllArgsConstructor;
-import lombok.Setter;
 import lombok.SneakyThrows;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.MultipartBodyBuilder;
@@ -28,7 +25,6 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
-import java.util.stream.Collectors;
 
 /**
  * dify客户端
@@ -36,15 +32,14 @@ import java.util.stream.Collectors;
  * 2025/2/8 20:16
  * @since 5.0.0
  */
-@Setter
-@AllArgsConstructor
-public class DefaultDifyClient implements DifyClient {
+public class DefaultDifyClient extends CommonApi implements DifyClient {
 
-    private static final String TOKEN_PREFIX = "Bearer ";
     private static final String FILE_KEY = "file";
     private static final String USER_KEY = "user";
 
-    private final ClientConfig clientConfig;
+    public DefaultDifyClient(ClientConfig clientConfig) {
+        super(clientConfig);
+    }
 
     /**
      * 发送对话消息, 阻塞模式
@@ -341,52 +336,5 @@ public class DefaultDifyClient implements DifyClient {
                 new ParameterizedTypeReference<>() {
                 }
         );
-    }
-
-    private <T> T doRequest(String url, HttpMethod httpMethod, String contentType, Object parameters, ParameterizedTypeReference<T> typeReference) {
-        return RestUtils.rest(url, httpMethod, createHeaders(contentType), parameters, typeReference, null);
-    }
-
-    private <T> Flux<T> doStreamRequest(String url, String contentType, HttpMethod httpMethod, Object parameters, ParameterizedTypeReference<T> typeReference) {
-        return RestUtils.restReactive(url, httpMethod, createHeaders(contentType), parameters, typeReference, null);
-    }
-
-    /**
-     * 获取api地址
-     * @param url url
-     * @return api地址
-     */
-    private String getApiUrl(UrlEnum url) {
-        return clientConfig.getApiUrl() + url.getUrl();
-    }
-
-    /**
-     * 创建请求头
-     * @return 请求头
-     */
-    private Map<String, String> createHeaders(String contentType) {
-        return Map.of(
-                HttpHeaders.AUTHORIZATION, TOKEN_PREFIX + clientConfig.getApiKey(),
-                HttpHeaders.CONTENT_TYPE, contentType
-        );
-    }
-
-    /***
-     * 创建用户参数
-     * @param user 用户
-     * @return 用户参数
-     */
-    private Map<String, String> createUserParameter(String user) {
-        return Map.of(USER_KEY, user);
-    }
-
-    private String createParameterUrl(UrlEnum url, Object parameter) {
-        String pathParameter = JsonUtils.parse(JsonUtils.toJsonString(parameter), new TypeReference<Map<String, Object>>() {
-                }).entrySet().stream()
-                .filter(item -> item.getValue() != null)
-                .map(item -> String.format("%s=%s", item.getKey(), item.getValue()))
-                .collect(Collectors.joining("&"));
-
-        return this.getApiUrl(url) + "?" + pathParameter;
     }
 }
