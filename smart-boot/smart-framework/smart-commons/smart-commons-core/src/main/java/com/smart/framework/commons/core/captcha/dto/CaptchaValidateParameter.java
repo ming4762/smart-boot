@@ -74,11 +74,11 @@ public class CaptchaValidateParameter implements Serializable {
         @Serial
         private static final long serialVersionUID = -2301151802413240271L;
         /** x. */
-        private Integer x;
+        private Float x;
         /** y. */
-        private Integer y;
+        private Float y;
         /** 时间. */
-        private Integer t;
+        private Float t;
         /** 类型. */
         private CaptchaTrackTypeEnum type = CaptchaTrackTypeEnum.MOVE;
     }

@@ -1,22 +1,20 @@
 package com.smart.framework.extension.captcha.handler;
 
+import cloud.tianai.captcha.application.ImageCaptchaApplication;
+import cloud.tianai.captcha.application.vo.CaptchaResponse;
+import cloud.tianai.captcha.application.vo.ImageCaptchaVO;
 import cloud.tianai.captcha.common.response.ApiResponse;
-import cloud.tianai.captcha.generator.ImageCaptchaGenerator;
-import cloud.tianai.captcha.generator.common.model.dto.ImageCaptchaInfo;
-import cloud.tianai.captcha.validator.ImageCaptchaValidator;
+import cloud.tianai.captcha.generator.common.model.dto.GenerateParam;
 import cloud.tianai.captcha.validator.common.model.dto.ImageCaptchaTrack;
-import com.smart.framework.commons.core.cache.CacheService;
 import com.smart.framework.commons.core.captcha.constants.CaptchaTypeEnum;
 import com.smart.framework.commons.core.captcha.dto.CaptchaGenerateDTO;
 import com.smart.framework.commons.core.captcha.dto.CaptchaGenerateParameter;
 import com.smart.framework.commons.core.captcha.dto.CaptchaValidateParameter;
 import com.smart.framework.commons.core.utils.DateUtils;
-import com.smart.framework.commons.core.utils.SmartIdGenerator;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 /**
  * 图片验证码服务类，基于tianai-captcha实现
@@ -24,18 +22,20 @@ import java.util.Objects;
  * 2024/3/6 17:33
  * @since 3.0.0
  */
+@RequiredArgsConstructor
 public class SmartImageCaptchaHandlerImpl implements SmartCaptchaHandler {
 
-    private final ImageCaptchaGenerator imageCaptchaGenerator;
+    private final ImageCaptchaApplication imageCaptchaApplication;
 
-    private final ImageCaptchaValidator imageCaptchaValidator;
-
-    private final CacheService cacheService;
-
-    public SmartImageCaptchaHandlerImpl(ImageCaptchaGenerator imageCaptchaGenerator, ImageCaptchaValidator imageCaptchaValidator, CacheService cacheService) {
-        this.imageCaptchaGenerator = imageCaptchaGenerator;
-        this.cacheService = cacheService;
-        this.imageCaptchaValidator = imageCaptchaValidator;
+    /**
+     * 支持的验证码类型
+     *
+     * @param type 验证码类型
+     * @return 是否支持
+     */
+    @Override
+    public boolean support(CaptchaTypeEnum type) {
+        return CaptchaTypeEnum.IMAGE_IDENT.endsWith(type.getIdent());
     }
 
     /**
@@ -46,18 +46,16 @@ public class SmartImageCaptchaHandlerImpl implements SmartCaptchaHandler {
      */
     @Override
     public CaptchaGenerateDTO generate(CaptchaGenerateParameter parameter) {
+        GenerateParam generateParam = GenerateParam.builder()
+                .type(parameter.getType().name())
+                .build();
+        // TODO: 2024/3/6 待完善：失效时间未设置
+        CaptchaResponse<ImageCaptchaVO> captchaResponse = this.imageCaptchaApplication.generateCaptcha(generateParam);
+        ImageCaptchaVO captcha = captchaResponse.getCaptcha();
 
-        ImageCaptchaInfo imageCaptchaInfo = this.imageCaptchaGenerator.generateCaptchaImage(parameter.getType().name());
         CaptchaGenerateDTO.ImageDTO imageDto = new CaptchaGenerateDTO.ImageDTO();
-
-        BeanUtils.copyProperties(imageCaptchaInfo, imageDto);
-        // 保存校验数据
-        Map<String, Object> validData = this.imageCaptchaValidator.generateImageCaptchaValidData(imageCaptchaInfo);
-        String key = SmartIdGenerator.nextId() + "";
-        this.cacheService.put(this.getCacheKey(key), validData, Objects.requireNonNullElse(parameter.getExpireIn(), DEFAULT_EXPIRE_IN));
-
+        BeanUtils.copyProperties(captcha, imageDto);
         return CaptchaGenerateDTO.builder()
-                .key(key)
                 .type(parameter.getType())
                 .image(imageDto)
                 .build();
@@ -71,14 +69,11 @@ public class SmartImageCaptchaHandlerImpl implements SmartCaptchaHandler {
      */
     @Override
     public boolean validate(CaptchaValidateParameter parameter) {
-        CaptchaValidateParameter.ImageParameter imageParameter = parameter.getImage();
-        String cacheKey = this.getCacheKey(parameter.getKey());
-        Map<String, Object> validateData = this.cacheService.getAndRemove(cacheKey);
-        if (validateData == null) {
-            return false;
-        }
-        ApiResponse<?> response = this.imageCaptchaValidator.valid(this.buildImageCaptchaTrack(imageParameter), validateData);
-        return response.isSuccess();
+        ApiResponse<?> matching = this.imageCaptchaApplication.matching(
+                parameter.getKey(),
+                this.buildImageCaptchaTrack(parameter.getImage())
+        );
+        return matching.isSuccess();
     }
 
     protected ImageCaptchaTrack buildImageCaptchaTrack(CaptchaValidateParameter.ImageParameter imageParameter) {
@@ -92,22 +87,11 @@ public class SmartImageCaptchaHandlerImpl implements SmartCaptchaHandler {
         ImageCaptchaTrack imageCaptchaTrack = new ImageCaptchaTrack();
         imageCaptchaTrack.setBgImageHeight(imageParameter.getBgImageHeight());
         imageCaptchaTrack.setBgImageWidth(imageParameter.getBgImageWidth());
-        imageCaptchaTrack.setSliderImageWidth(imageParameter.getSliderImageWidth());
-        imageCaptchaTrack.setSliderImageHeight(imageParameter.getSliderImageHeight());
-        imageCaptchaTrack.setStartSlidingTime(DateUtils.ZonedDateTimeToDate(imageParameter.getStartSlidingTime()));
-        imageCaptchaTrack.setEndSlidingTime(DateUtils.ZonedDateTimeToDate(imageParameter.getEndSlidingTime()));
+        imageCaptchaTrack.setTemplateImageWidth(imageParameter.getSliderImageWidth());
+        imageCaptchaTrack.setTemplateImageHeight(imageParameter.getSliderImageHeight());
+        imageCaptchaTrack.setStartTime(DateUtils.zonedDateTimeToDate(imageParameter.getStartSlidingTime()));
+        imageCaptchaTrack.setStartTime(DateUtils.zonedDateTimeToDate(imageParameter.getEndSlidingTime()));
         imageCaptchaTrack.setTrackList(trackList);
         return imageCaptchaTrack;
-    }
-
-    /**
-     * 支持的验证码类型
-     *
-     * @param type 验证码类型
-     * @return 是否支持
-     */
-    @Override
-    public boolean support(CaptchaTypeEnum type) {
-        return CaptchaTypeEnum.IMAGE_IDENT.endsWith(type.getIdent());
     }
 }

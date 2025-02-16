@@ -55,7 +55,7 @@
         <wx-java.version>4.6.9.B</wx-java.version>
         <aliyun.dysmsapi.version>3.1.0</aliyun.dysmsapi.version>
         <tencentcloud.sdk.version>3.1.759</tencentcloud.sdk.version>
-        <tianai-captcha.version>1.4.1</tianai-captcha.version>
+        <tianai-captcha.version>1.5.1</tianai-captcha.version>
         <commons-net.version>3.10.0</commons-net.version>
         <nacos.logback-adapter.version>1.0.0</nacos.logback-adapter.version>
         <nashorn.version>15.4</nashorn.version>
@@ -466,6 +466,11 @@
             <dependency>
                 <groupId>cloud.tianai.captcha</groupId>
                 <artifactId>tianai-captcha</artifactId>
+                <version>${tianai-captcha.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cloud.tianai.captcha</groupId>
+                <artifactId>tianai-captcha-springboot-starter</artifactId>
                 <version>${tianai-captcha.version}</version>
             </dependency>
             <dependency>

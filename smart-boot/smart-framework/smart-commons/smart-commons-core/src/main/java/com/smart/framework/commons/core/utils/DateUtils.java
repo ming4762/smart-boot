@@ -241,7 +241,7 @@ public final class DateUtils {
      * @param zonedDateTime zonedDateTime
      * @return Date
      */
-    public static Date ZonedDateTimeToDate(ZonedDateTime zonedDateTime) {
+    public static Date zonedDateTimeToDate(ZonedDateTime zonedDateTime) {
         return Date.from(zonedDateTime.toInstant());
     }
 

@@ -68,10 +68,6 @@ public class CaptchaGenerateDTO implements Serializable {
         private Integer templateImageWidth;
         /** 滑块图片高度. */
         private Integer templateImageHeight;
-        /** 随机值. */
-        private Integer randomX;
-        /** 容错值, 可以为空 默认 0.02容错,校验的时候用. */
-        private Float tolerant;
         /** 验证码类型. */
         private CaptchaTrackTypeEnum type;
         /** 透传字段，用于传给前端. */

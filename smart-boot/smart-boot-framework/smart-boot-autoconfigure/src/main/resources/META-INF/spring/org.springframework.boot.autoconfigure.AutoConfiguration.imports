@@ -25,7 +25,6 @@ com.smart.boot.autoconfigure.wechat.SmartWechatAppAutoconfiguration
 com.smart.boot.autoconfigure.wechat.SmartWechatMpAutoconfiguration
 com.smart.boot.autoconfigure.captcha.SmartCaptchaAutoConfiguration
 com.smart.boot.autoconfigure.xxl.SmartXxlExecutorAutoConfiguration
-com.smart.boot.autoconfigure.auth.captcha.SmartAuthCaptchaAutoConfiguration
 
 com.smart.boot.autoconfigure.tool.database.DatabaseMessageAutoConfiguration
 

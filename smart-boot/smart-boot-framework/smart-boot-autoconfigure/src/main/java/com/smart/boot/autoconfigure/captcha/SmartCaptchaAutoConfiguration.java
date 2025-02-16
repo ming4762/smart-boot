@@ -1,15 +1,6 @@
 package com.smart.boot.autoconfigure.captcha;
 
-import cloud.tianai.captcha.generator.ImageCaptchaGenerator;
-import cloud.tianai.captcha.generator.ImageTransform;
-import cloud.tianai.captcha.generator.impl.MultiImageCaptchaGenerator;
-import cloud.tianai.captcha.generator.impl.transform.Base64ImageTransform;
-import cloud.tianai.captcha.resource.ImageCaptchaResourceManager;
-import cloud.tianai.captcha.resource.ResourceStore;
-import cloud.tianai.captcha.resource.impl.DefaultImageCaptchaResourceManager;
-import cloud.tianai.captcha.resource.impl.DefaultResourceStore;
-import cloud.tianai.captcha.validator.ImageCaptchaValidator;
-import cloud.tianai.captcha.validator.impl.BasicCaptchaTrackValidator;
+import cloud.tianai.captcha.application.ImageCaptchaApplication;
 import com.smart.framework.commons.core.cache.CacheService;
 import com.smart.framework.extension.captcha.handler.SmartCaptchaHandler;
 import com.smart.framework.extension.captcha.handler.SmartImageCaptchaHandlerImpl;
@@ -33,42 +24,6 @@ import java.util.List;
 @ConditionalOnClass(SmartCaptchaService.class)
 public class SmartCaptchaAutoConfiguration {
 
-    /**
-     * 创建图片校验器
-     * @return ImageCaptchaValidator
-     */
-    @Bean
-    @ConditionalOnMissingBean
-    public ImageCaptchaValidator imageCaptchaValidator() {
-        return new BasicCaptchaTrackValidator();
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public ResourceStore resourceStore() {
-        return new DefaultResourceStore();
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public ImageCaptchaResourceManager imageCaptchaResourceManager(ResourceStore resourceStore) {
-        return new DefaultImageCaptchaResourceManager(resourceStore);
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public ImageTransform imageTransform() {
-        return new Base64ImageTransform();
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public ImageCaptchaGenerator imageCaptchaGenerator(ImageCaptchaResourceManager imageCaptchaResourceManager, ImageTransform imageTransform) {
-        MultiImageCaptchaGenerator generator = new MultiImageCaptchaGenerator(imageCaptchaResourceManager, imageTransform);
-        generator.init(true);
-        return generator;
-    }
-
     @Bean
     @ConditionalOnMissingBean
     public SmartTextCaptchaHandlerImpl textSmartCaptchaHandler(CacheService cacheService) {
@@ -77,8 +32,8 @@ public class SmartCaptchaAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public SmartImageCaptchaHandlerImpl imageSmartCaptchaHandler(ImageCaptchaGenerator imageCaptchaGenerator, ImageCaptchaValidator imageCaptchaValidator, CacheService cacheService) {
-        return new SmartImageCaptchaHandlerImpl(imageCaptchaGenerator, imageCaptchaValidator, cacheService);
+    public SmartImageCaptchaHandlerImpl imageSmartCaptchaHandler(ImageCaptchaApplication imageCaptchaApplication) {
+        return new SmartImageCaptchaHandlerImpl(imageCaptchaApplication);
     }
 
     @Bean

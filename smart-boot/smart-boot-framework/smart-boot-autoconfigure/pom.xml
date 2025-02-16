@@ -201,13 +201,6 @@
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
-        <dependency>
-            <groupId>com.smart</groupId>
-            <artifactId>smart-auth-captcha</artifactId>
-            <version>${project.version}</version>
-            <optional>true</optional>
-        </dependency>
-
         <!--    tool-database    -->
         <dependency>
             <groupId>com.smart</groupId>
@@ -326,6 +319,11 @@
             <groupId>com.smart</groupId>
             <artifactId>smart-ai-dify</artifactId>
             <version>${project.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>cloud.tianai.captcha</groupId>
+            <artifactId>tianai-captcha-springboot-starter</artifactId>
             <optional>true</optional>
         </dependency>
     </dependencies>

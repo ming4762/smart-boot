@@ -16,7 +16,6 @@
     <modules>
         <module>smart-auth-cache-guava</module>
         <module>smart-auth-cache-redis</module>
-        <module>smart-auth-captcha</module>
         <module>smart-auth-core</module>
         <module>smart-auth-extensions-access-secret</module>
         <module>smart-auth-extensions-jwt</module>
