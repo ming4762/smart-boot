@@ -47,16 +47,19 @@ public class AuthCaptchaCreateParameter implements Serializable {
         /**
          * 字符长度
          */
+        @Builder.Default
         private Integer length = 4;
 
         /**
          * 宽度
          */
+        @Builder.Default
         private Integer width = 130;
 
         /**
          * 高度
          */
+        @Builder.Default
         private Integer height = 48;
     }
 }

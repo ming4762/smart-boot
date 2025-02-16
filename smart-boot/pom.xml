@@ -17,7 +17,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <spring-boot.version>3.4.1</spring-boot.version>
+        <spring-boot.version>3.4.2</spring-boot.version>
         <spring-cloud.version>2024.0.0</spring-cloud.version>
         <spring-cloud-alibaba.version>2023.0.3.2</spring-cloud-alibaba.version>
 
@@ -39,7 +39,7 @@
         <jacob.version>1.20</jacob.version>
         <kettle.version>9.4.0.0</kettle.version>
         <xxl-job.version>2.4.1-springboot3</xxl-job.version>
-        <druid.version>1.2.20</druid.version>
+        <druid.version>1.2.24</druid.version>
         <easy-captcha.version>1.6.2</easy-captcha.version>
         <ojdbc8.version>19.3.0.0</ojdbc8.version>
         <commons-lang.version>2.6</commons-lang.version>
@@ -538,6 +538,11 @@
             </dependency>
             <dependency>
                 <groupId>com.smart</groupId>
+                <artifactId>smart-auth-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.smart</groupId>
                 <artifactId>smart-module-auth</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -549,6 +554,11 @@
             <dependency>
                 <groupId>com.smart</groupId>
                 <artifactId>smart-module-document</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.smart</groupId>
+                <artifactId>smart-tool-database</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

@@ -19,17 +19,14 @@
 		<dependency>
 			<groupId>com.smart</groupId>
 			<artifactId>smart-boot-starter-crud</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.smart</groupId>
 			<artifactId>smart-boot-starter-freemarker</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.smart</groupId>
 			<artifactId>smart-auth-core</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
@@ -40,7 +37,6 @@
 		<dependency>
 			<groupId>com.smart</groupId>
 			<artifactId>smart-tool-database</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 

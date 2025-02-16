@@ -26,7 +26,7 @@ public class DefaultHandlerMethodValidationExceptionProcessor extends AbstractTy
      */
     @Override
     public Object message(HandlerMethodValidationException e, long exceptionNo, @Nullable HttpServletRequest request) {
-        String message = e.getAllValidationResults().stream()
+        String message = e.getParameterValidationResults().stream()
                 .flatMap(item -> item.getResolvableErrors().stream())
                 .map(MessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.joining(";"));
