@@ -46,16 +46,18 @@ public class SmartImageCaptchaHandlerImpl implements SmartCaptchaHandler {
      */
     @Override
     public CaptchaGenerateDTO generate(CaptchaGenerateParameter parameter) {
-        GenerateParam generateParam = GenerateParam.builder()
-                .type(parameter.getType().name())
-                .build();
+        GenerateParam generateParam = new GenerateParam();
+        generateParam.setType(parameter.getType().name());
         // TODO: 2024/3/6 待完善：失效时间未设置
         CaptchaResponse<ImageCaptchaVO> captchaResponse = this.imageCaptchaApplication.generateCaptcha(generateParam);
         ImageCaptchaVO captcha = captchaResponse.getCaptcha();
 
         CaptchaGenerateDTO.ImageDTO imageDto = new CaptchaGenerateDTO.ImageDTO();
         BeanUtils.copyProperties(captcha, imageDto);
+
+        imageDto.setType(CaptchaTypeEnum.valueOf(captcha.getType()));
         return CaptchaGenerateDTO.builder()
+                .key(captchaResponse.getId())
                 .type(parameter.getType())
                 .image(imageDto)
                 .build();

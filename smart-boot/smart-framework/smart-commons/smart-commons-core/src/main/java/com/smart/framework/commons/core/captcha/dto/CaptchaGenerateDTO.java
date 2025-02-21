@@ -1,6 +1,5 @@
 package com.smart.framework.commons.core.captcha.dto;
 
-import com.smart.framework.commons.core.captcha.constants.CaptchaTrackTypeEnum;
 import com.smart.framework.commons.core.captcha.constants.CaptchaTypeEnum;
 import lombok.*;
 
@@ -69,7 +68,7 @@ public class CaptchaGenerateDTO implements Serializable {
         /** 滑块图片高度. */
         private Integer templateImageHeight;
         /** 验证码类型. */
-        private CaptchaTrackTypeEnum type;
+        private CaptchaTypeEnum type;
         /** 透传字段，用于传给前端. */
         private transient Object data;
     }
