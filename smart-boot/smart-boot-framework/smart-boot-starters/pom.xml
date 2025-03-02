@@ -21,6 +21,7 @@
         <module>smart-boot-starter-crud</module>
         <module>smart-boot-starter-dingtalk</module>
         <module>smart-boot-starter-document</module>
+        <module>smart-boot-starter-druid</module>
         <module>smart-boot-starter-exception</module>
         <module>smart-boot-starter-file</module>
         <module>smart-boot-starter-freemarker</module>

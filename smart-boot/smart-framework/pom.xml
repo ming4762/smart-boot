@@ -20,6 +20,7 @@
         <module>smart-commons</module>
         <module>smart-crud</module>
         <module>smart-document</module>
+        <module>smart-druid-enhance</module>
         <module>smart-exception</module>
         <module>smart-extensions</module>
         <module>smart-file</module>

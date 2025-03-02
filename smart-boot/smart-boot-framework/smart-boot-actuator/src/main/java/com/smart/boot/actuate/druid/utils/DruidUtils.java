@@ -57,9 +57,9 @@ public class DruidUtils {
                 .filter(item -> name.equals(item.get("Name")))
                 .toList();
         if (!CollectionUtils.isEmpty(datasourceList)) {
-            return datasourceList.get(0);
+            return datasourceList.getFirst();
         }
-        return new HashMap<>(0);
+        return HashMap.newHashMap(0);
     }
 
     private static Set<Object> getDruidDataSourceInstances() {

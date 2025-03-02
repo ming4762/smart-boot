@@ -50,7 +50,7 @@ public class DruidSqlEndPoint {
     public Map<String, Object> getSqlStat(@Selector Integer id) {
         Map<String, Object> map = STAT_MANAGER_FACADE.getSqlStatData(id);
         if (map == null) {
-            return new HashMap<>(0);
+            return HashMap.newHashMap(0);
         }
         String dbType = (String) map.get("DbType");
         String sql = (String) map.get("SQL");
@@ -59,7 +59,7 @@ public class DruidSqlEndPoint {
         List<SQLStatement> statementList = SQLUtils.parseStatements(sql, dbType);
 
         if (!statementList.isEmpty()) {
-            SQLStatement sqlStmt = statementList.get(0);
+            SQLStatement sqlStmt = statementList.getFirst();
             SchemaStatVisitor visitor = SQLUtils.createSchemaStatVisitor(DbType.valueOf(dbType));
             sqlStmt.accept(visitor);
             map.put("parsedTable", visitor.getTables().toString());

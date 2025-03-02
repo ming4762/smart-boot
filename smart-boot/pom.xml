@@ -808,6 +808,11 @@
                 <artifactId>smart-boot-starter-ai-dify</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.smart</groupId>
+                <artifactId>smart-boot-starter-druid</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

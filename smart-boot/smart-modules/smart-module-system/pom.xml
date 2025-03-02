@@ -83,6 +83,12 @@
 			<artifactId>smart-file-api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.smart</groupId>
+			<artifactId>smart-druid-enhance</artifactId>
+			<version>${project.version}</version>
+			<optional>true</optional>
+		</dependency>
 	</dependencies>
 
 

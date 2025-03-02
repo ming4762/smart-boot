@@ -12,6 +12,7 @@ spring:
           enabled: true
         stat:
           enabled: true
+          slow-sql-millis: 1000
       web-stat-filter:
         enabled: true
       stat-view-servlet:
@@ -24,6 +25,7 @@ spring:
 #    url: jdbc:mysql://localhost:3308/smart-system?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: root
     password: ming8858*
+    name: smart-system
   data:
     redis:
       host: localhost

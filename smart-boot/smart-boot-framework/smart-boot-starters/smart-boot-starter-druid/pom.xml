@@ -7,18 +7,22 @@
         <artifactId>smart-boot-starters</artifactId>
         <version>5.0.0-SNAPSHOT</version>
     </parent>
-    <artifactId>smart-boot-starter-ai-dify</artifactId>
+    <artifactId>smart-boot-starter-druid</artifactId>
     <version>5.0.0-SNAPSHOT</version>
-    <name>smart-boot-starter-ai-dify</name>
-    <description>AI dify starter</description>
+    <name>smart-boot-starter-druid</name>
+    <description>druid自动配置类</description>
 
     <properties>
     </properties>
 
     <dependencies>
         <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-3-starter</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.smart</groupId>
-            <artifactId>smart-ai-dify</artifactId>
+            <artifactId>smart-druid-enhance</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

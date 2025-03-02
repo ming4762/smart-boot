@@ -326,6 +326,18 @@
             <artifactId>tianai-captcha-springboot-starter</artifactId>
             <optional>true</optional>
         </dependency>
+
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-druid-enhance</artifactId>
+            <version>${project.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-3-starter</artifactId>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
 </project>
