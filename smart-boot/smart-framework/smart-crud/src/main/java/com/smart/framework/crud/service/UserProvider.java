@@ -1,5 +1,7 @@
 package com.smart.framework.crud.service;
 
+import com.smart.framework.crud.model.UserDeptData;
+
 /**
  * 获取人员信息
  * @author zhongming4762
@@ -25,4 +27,10 @@ public interface UserProvider {
      * @return 姓名
      */
     String getCurrentUserFullName();
+
+    /**
+     * 获取当前登录人员部门信息
+     * @return 部门ID
+     */
+    UserDeptData getCurrentDept();
 }

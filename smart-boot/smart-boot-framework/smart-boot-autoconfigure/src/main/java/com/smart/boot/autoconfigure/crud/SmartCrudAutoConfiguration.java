@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
 import com.smart.framework.crud.mybatis.plus.ShortenIdGenerator;
 import com.smart.framework.crud.plus.fill.DelegateMetaObjectFill;
 import com.smart.framework.crud.plus.fill.SmartMetaObjectFill;
+import com.smart.framework.crud.plus.fill.impl.CreateDeptMetaObjectFill;
 import com.smart.framework.crud.plus.fill.impl.CreateUpdateMetaObjectFill;
 import com.smart.framework.crud.plus.fill.impl.LogicDeleteMetaObjectFill;
 import com.smart.framework.crud.service.BaseService;
@@ -72,5 +73,15 @@ public class SmartCrudAutoConfiguration {
     @Bean
     public LogicDeleteMetaObjectFill logicDeleteMetaObjectFill(UserProvider userProvider) {
         return new LogicDeleteMetaObjectFill(userProvider);
+    }
+
+    /**
+     * 添加时注入部门信息
+     * @param userProvider userProvider
+     * @return CreateDeptMetaObjectFill
+     */
+    @Bean
+    public CreateDeptMetaObjectFill createDeptMetaObjectFill(UserProvider userProvider) {
+        return new CreateDeptMetaObjectFill(userProvider);
     }
 }

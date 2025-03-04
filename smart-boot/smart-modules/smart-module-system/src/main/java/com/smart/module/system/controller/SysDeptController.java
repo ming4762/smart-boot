@@ -4,8 +4,10 @@ import com.smart.framework.commons.core.log.Log;
 import com.smart.framework.commons.core.log.LogOperationTypeEnum;
 import com.smart.framework.commons.core.message.Result;
 import com.smart.framework.crud.controller.BaseController;
+import com.smart.framework.crud.query.IdParameter;
 import com.smart.framework.crud.query.PageSortQuery;
 import com.smart.module.system.model.SysDeptPO;
+import com.smart.module.system.model.SysUserPO;
 import com.smart.module.system.pojo.dto.dept.SysDeptSaveUpdateDTO;
 import com.smart.module.system.service.SysDeptService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -82,5 +84,11 @@ public class SysDeptController extends BaseController<SysDeptService, SysDeptPO>
     @PostMapping("getById")
     public Result<SysDeptPO> getById(@RequestBody Serializable id) {
         return super.getById(id);
+    }
+
+    @Operation(summary = "通过部门ID查询用户列表")
+    @PostMapping("listUserByDeptId")
+    public Result<List<SysUserPO>> listUserByDeptId(@RequestBody IdParameter idParameter) {
+        return Result.success(this.service.listUserByDeptId(idParameter.getId()));
     }
 }

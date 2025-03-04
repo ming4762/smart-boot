@@ -9,4 +9,5 @@ import com.smart.module.system.model.SysUserDeptPO;
  * @since 3.0.0
  */
 public interface SysUserDeptService extends BaseService<SysUserDeptPO> {
+
 }

@@ -2,8 +2,10 @@ package com.smart.module.system.service;
 
 import com.smart.framework.crud.service.BaseService;
 import com.smart.module.system.model.SysDeptPO;
+import com.smart.module.system.model.SysUserPO;
 import org.springframework.lang.NonNull;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -20,4 +22,19 @@ public interface SysDeptService extends BaseService<SysDeptPO> {
      */
     @NonNull
     Set<Long> queryAllChildIds(@NonNull Set<Long> parentIds);
+
+    /**
+     * 根据部门ID查询用户列表
+     * @param deptId 部门ID
+     * @return 用户列表
+     */
+    List<SysUserPO> listUserByDeptId(Long deptId);
+
+
+    /**
+     * 获取用户部门
+     * @param userId 用户ID
+     * @return 部门列表
+     */
+    List<SysDeptPO> listUserDept(Long userId);
 }

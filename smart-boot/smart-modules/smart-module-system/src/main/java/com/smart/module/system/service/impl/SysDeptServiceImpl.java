@@ -11,9 +11,12 @@ import com.smart.module.system.mapper.CommonMapper;
 import com.smart.module.system.mapper.SysDeptMapper;
 import com.smart.module.system.model.SysDeptPO;
 import com.smart.module.system.model.SysUserDeptPO;
+import com.smart.module.system.model.SysUserPO;
 import com.smart.module.system.pojo.vo.SysDeptListVO;
 import com.smart.module.system.service.SysDeptService;
 import com.smart.module.system.service.SysUserDeptService;
+import com.smart.module.system.service.SysUserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -30,21 +33,16 @@ import java.util.stream.Collectors;
 * 2022年10月13日 上午10:24:21
 */
 @Service
+@RequiredArgsConstructor
 public class SysDeptServiceImpl extends BaseServiceImpl<SysDeptMapper, SysDeptPO> implements SysDeptService {
 
     private static final Long TOP_PARENT_ID = 0L;
 
     private final UserSetterService userSetterService;
-
     private final SysUserDeptService sysUserDeptService;
-
     private final CommonMapper commonMapper;
+    private final SysUserService sysUserService;
 
-    public SysDeptServiceImpl(UserSetterService userSetterService, SysUserDeptService sysUserDeptService, CommonMapper commonMapper) {
-        this.userSetterService = userSetterService;
-        this.sysUserDeptService = sysUserDeptService;
-        this.commonMapper = commonMapper;
-    }
 
     @Override
     public List<? extends SysDeptPO> list(@NonNull QueryWrapper<SysDeptPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
@@ -199,5 +197,59 @@ public class SysDeptServiceImpl extends BaseServiceImpl<SysDeptMapper, SysDeptPO
             parentIdList.forEach(this::updateHasChild);
         }
         return result;
+    }
+
+    /**
+     * 根据部门ID查询用户列表
+     *
+     * @param deptId 部门ID
+     * @return 用户列表
+     */
+    @Override
+    public List<SysUserPO> listUserByDeptId(Long deptId) {
+        if (deptId == null) {
+            return List.of();
+        }
+        Set<Long> userIds = this.sysUserDeptService.lambdaQuery()
+                .select(SysUserDeptPO::getUserId)
+                .eq(SysUserDeptPO::getDeptId, deptId)
+                .list().stream()
+                .map(SysUserDeptPO::getUserId)
+                .collect(Collectors.toSet());
+        if (CollectionUtils.isEmpty(userIds)) {
+            return List.of();
+        }
+        return this.sysUserService.lambdaQuery()
+                .in(SysUserPO::getUserId, userIds)
+                .eq(SysUserPO::getUseYn, Boolean.TRUE)
+                .list();
+    }
+
+    /**
+     * 获取用户部门
+     *
+     * @param userId 用户ID
+     * @return 部门列表
+     */
+    @Override
+    public List<SysDeptPO> listUserDept(Long userId) {
+        if (userId == null) {
+            return List.of();
+        }
+        Set<Long> deptIds = this.sysUserDeptService.lambdaQuery()
+                .select(SysUserDeptPO::getDeptId)
+                .eq(SysUserDeptPO::getUserId, userId)
+                .eq(SysUserDeptPO::getIdent, UserDeptIdentEnum.USER_DEPT)
+                .list().stream()
+                .map(SysUserDeptPO::getDeptId)
+                .collect(Collectors.toSet());
+        if (CollectionUtils.isEmpty(deptIds)) {
+            return List.of();
+        }
+        return this.lambdaQuery()
+                .select(SysDeptPO::getDeptId, SysDeptPO::getDeptName, SysDeptPO::getDeptCode, SysDeptPO::getEmail)
+                .eq(SysDeptPO::getUseYn, Boolean.TRUE)
+                .in(SysDeptPO::getDeptId, deptIds)
+                .list();
     }
 }

@@ -18,6 +18,10 @@ public enum ModelPropertyEnum {
     CREATE_TIME("createTime"),
     // 更新人员ID
     UPDATE_USER_ID("updateUserId"),
+    // 部门ID
+    DEPT_ID("deptId"),
+    // 部门名称
+    DEPT_NAME("deptName"),
     // 更新时间
     UPDATE_TIME("updateTime"),
     CREATE_USER("createBy"),

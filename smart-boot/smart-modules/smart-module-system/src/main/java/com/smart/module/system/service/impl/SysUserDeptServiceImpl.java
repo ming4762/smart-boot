@@ -13,4 +13,5 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class SysUserDeptServiceImpl extends BaseServiceImpl<SysUserDeptMapper, SysUserDeptPO> implements SysUserDeptService {
+
 }

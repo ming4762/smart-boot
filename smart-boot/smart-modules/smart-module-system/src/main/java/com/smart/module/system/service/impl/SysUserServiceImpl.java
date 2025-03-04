@@ -53,6 +53,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -87,7 +88,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
     private final SysFunctionService sysFunctionService;
     private final UserSetterService userSetterService;
     private final SysUserAccountService sysUserAccountService;
-    private final SysDeptService sysDeptService;
+    private final ObjectProvider<SysDeptService> sysDeptServiceObjectProvider;
     private final SysTenantUserService sysTenantUserService;
     private final SysTenantMapper sysTenantMapper;
     private final SysParameterApi sysParameterApi;
@@ -98,7 +99,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         List<Long> deptIdList = userListParameter.getDeptIdList();
         if (!CollectionUtils.isEmpty(deptIdList)) {
             // 查询部门信息
-            Set<Long> allDeptIds = this.sysDeptService.queryAllChildIds(new HashSet<>(deptIdList));
+            Set<Long> allDeptIds = this.sysDeptServiceObjectProvider.getObject().queryAllChildIds(new HashSet<>(deptIdList));
             allDeptIds.addAll(deptIdList);
             // 添加部门查询条件
             String deptStr = allDeptIds.stream().map(Object::toString).collect(Collectors.joining(","));
