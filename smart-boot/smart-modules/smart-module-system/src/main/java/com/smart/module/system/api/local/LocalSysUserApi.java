@@ -4,14 +4,18 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.smart.framework.auth.core.utils.AuthUtils;
 import com.smart.framework.commons.core.dto.auth.UserAccountStatusEnum;
 import com.smart.module.api.system.SysUserApi;
 import com.smart.module.api.system.dto.AccountLoginFailTimeUpdateDTO;
+import com.smart.module.api.system.dto.SysDeptDTO;
 import com.smart.module.api.system.dto.SysUserDTO;
 import com.smart.module.api.system.dto.UserAccountLockDTO;
 import com.smart.module.api.system.parameter.RemoteSysUserListParameter;
+import com.smart.module.api.system.parameter.SysUserDeptParameter;
 import com.smart.module.system.model.SysUserAccountPO;
 import com.smart.module.system.model.SysUserPO;
+import com.smart.module.system.service.SysDeptService;
 import com.smart.module.system.service.SysUserAccountService;
 import com.smart.module.system.service.SysUserService;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +28,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.time.ZonedDateTime;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author zhongming4762
@@ -39,6 +42,7 @@ public class LocalSysUserApi implements SysUserApi {
 
     private final SysUserService sysUserService;
     private final SysUserAccountService sysUserAccountService;
+    private final SysDeptService sysDeptService;
 
 
     /**
@@ -168,6 +172,48 @@ public class LocalSysUserApi implements SysUserApi {
         return this.sysUserService.list(queryWrapper).stream()
                 .map(item -> {
                     SysUserDTO dto = new SysUserDTO();
+                    BeanUtils.copyProperties(item, dto);
+                    return dto;
+                }).toList();
+    }
+
+    /**
+     * 查询用户部门列表
+     *
+     * @param parameter 参数
+     * @return 用户部门列表
+     */
+    @Override
+    public List<SysDeptDTO> listUserDept(SysUserDeptParameter parameter) {
+        return this.sysDeptService.listUserDept(Objects.requireNonNullElseGet(parameter.getUserId(), AuthUtils::getCurrentUserId)).stream()
+                .map(item -> {
+                    SysDeptDTO dto = new SysDeptDTO();
+                    BeanUtils.copyProperties(item, dto);
+                    return dto;
+                }).toList();
+    }
+
+    /**
+     * 查询用户部门及子部门列表
+     *
+     * @param parameter 参数
+     * @return 用户部门及子部门列表
+     */
+    @Override
+    public List<SysDeptDTO> listUserDeptWithChildren(SysUserDeptParameter parameter) {
+        List<SysDeptDTO> deptList = this.listUserDept(parameter);
+        if (CollectionUtils.isEmpty(deptList)) {
+            return deptList;
+        }
+        List<Long> deptIdList = deptList.stream().map(SysDeptDTO::getDeptId).toList();
+        Set<Long> childrenIds = this.sysDeptService.queryAllChildIds(new HashSet<>(deptIdList));
+        if (CollectionUtils.isEmpty(childrenIds)) {
+            return deptList;
+        }
+        childrenIds.addAll(deptIdList);
+        return this.sysDeptService.listByIds(childrenIds).stream()
+               .map(item -> {
+                    SysDeptDTO dto = new SysDeptDTO();
                     BeanUtils.copyProperties(item, dto);
                     return dto;
                 }).toList();

@@ -21,7 +21,7 @@ import com.smart.module.system.model.*;
 import com.smart.module.system.pojo.dto.user.*;
 import com.smart.module.system.pojo.vo.SysFunctionListVO;
 import com.smart.module.system.pojo.vo.user.SysUserListVO;
-import com.smart.module.system.pojo.vo.user.SysUserWithDataScopeDTO;
+import com.smart.module.system.pojo.vo.user.SysUserWithDeptDTO;
 import com.smart.module.system.service.SysUserAccountService;
 import com.smart.module.system.service.SysUserDeptService;
 import com.smart.module.system.service.SysUserRoleService;
@@ -77,12 +77,12 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
         return Result.success(this.service.saveOrUpdate(model));
     }
 
-    @PostMapping("saveUpdateWithDataScope")
-    @Operation(summary = "添加/更新用户(带有数据权限)")
-    @Log(value = "添加/更新用户(带有数据权限)", type = LogOperationTypeEnum.UPDATE)
+    @PostMapping("saveUpdateWithDept")
+    @Operation(summary = "添加/更新用户(带部门信息)")
+    @Log(value = "添加/更新用户(带部门信息)", type = LogOperationTypeEnum.UPDATE)
     @PreAuthorize("hasPermission('sys:user', 'save') or hasPermission('sys:user', 'update')")
-    public Result<Boolean> saveUpdateWithDataScope(@RequestBody @Valid SysUserWithDataScopeDTO parameter) {
-        return Result.success(this.service.saveUpdateWithDataScope(parameter));
+    public Result<Boolean> saveUpdateWithDept(@RequestBody @Valid UserSaveUpdateWithDeptDTO parameter) {
+        return Result.success(this.service.saveUpdateWithDept(parameter));
     }
 
     @PostMapping("getById")
@@ -103,12 +103,6 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
     @Operation(summary = "通过ID批量查询")
     public Result<List<SysUserPO>> listById(@RequestBody List<? extends Serializable> ids) {
         return super.listById(ids);
-    }
-
-    @PostMapping("getByIdWithDataScope")
-    @Operation(summary = "通过ID查询用户信息和用户数据权限信息")
-    public Result<SysUserWithDataScopeDTO> getByIdWithDataScope(@RequestBody Long userId) {
-        return Result.success(this.service.getByIdWithDataScope(userId));
     }
 
     @Override
@@ -319,5 +313,11 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
     @Operation(summary = "通过ID查询用户详情")
     public Result<SysUserListVO> getDetailById(@RequestBody Long id) {
         return Result.success(this.service.getDetailById(id));
+    }
+
+    @PostMapping("getUserByIdWithDept")
+    @Operation(summary = "通过ID查询用户详情")
+    public Result<SysUserWithDeptDTO> getUserByIdWithDept(@RequestBody Long id) {
+        return Result.success(this.service.getUserByIdWithDept(id));
     }
 }

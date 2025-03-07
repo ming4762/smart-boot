@@ -247,7 +247,6 @@ public class SysDeptServiceImpl extends BaseServiceImpl<SysDeptMapper, SysDeptPO
             return List.of();
         }
         return this.lambdaQuery()
-                .select(SysDeptPO::getDeptId, SysDeptPO::getDeptName, SysDeptPO::getDeptCode, SysDeptPO::getEmail)
                 .eq(SysDeptPO::getUseYn, Boolean.TRUE)
                 .in(SysDeptPO::getDeptId, deptIds)
                 .list();

@@ -9,10 +9,12 @@ import com.smart.module.system.model.SysFunctionPO;
 import com.smart.module.system.model.SysRolePO;
 import com.smart.module.system.model.SysUserPO;
 import com.smart.module.system.pojo.dbo.SysUserWthAccountBO;
+import com.smart.module.system.pojo.dto.user.UserSaveUpdateWithDeptDTO;
 import com.smart.module.system.pojo.dto.user.UserSetRoleDTO;
 import com.smart.module.system.pojo.vo.SysFunctionListVO;
 import com.smart.module.system.pojo.vo.user.SysUserListVO;
-import com.smart.module.system.pojo.vo.user.SysUserWithDataScopeDTO;
+import com.smart.module.system.pojo.vo.user.SysUserWithDeptDTO;
+import jakarta.validation.Valid;
 import org.springframework.lang.NonNull;
 
 import java.util.List;
@@ -108,18 +110,11 @@ public interface SysUserService extends BaseService<SysUserPO> {
     UserAccountData queryUserAccount(QueryUserAccountDTO parameter);
 
     /**
-     * 添加/更新用户(带有数据权限)
+     * 添加/更新用户(带有部门)
      * @param parameter 参数
      * @return 是否保存成功
      */
-    boolean saveUpdateWithDataScope(SysUserWithDataScopeDTO parameter);
-
-    /**
-     * 查询用户及数据权限信息
-     * @param userId 用户ID
-     * @return SysUserWithDataScopeVO
-     */
-    SysUserWithDataScopeDTO getByIdWithDataScope(Long userId);
+    boolean saveUpdateWithDept(@Valid UserSaveUpdateWithDeptDTO parameter);
 
     /**
      * 通过手机号查询用户
@@ -155,4 +150,11 @@ public interface SysUserService extends BaseService<SysUserPO> {
      * @return 用户详情
      */
     SysUserListVO getDetailById(Long userId);
+
+    /**
+     * 通过ID获取用户详情，包含部门ID
+     * @param userId 用户ID
+     * @return 用户详情
+     */
+    SysUserWithDeptDTO getUserByIdWithDept(Long userId);
 }

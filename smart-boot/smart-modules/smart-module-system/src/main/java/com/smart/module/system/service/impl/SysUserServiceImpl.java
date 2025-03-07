@@ -20,7 +20,6 @@ import com.smart.framework.commons.core.utils.PropertyUtils;
 import com.smart.framework.commons.core.utils.SmartIdGenerator;
 import com.smart.framework.crud.constants.CrudCommonEnum;
 import com.smart.framework.crud.constants.ModelPropertyEnum;
-import com.smart.framework.crud.datapermission.DataPermissionScope;
 import com.smart.framework.crud.parameter.SetUseYnParameter;
 import com.smart.framework.crud.query.PageSortQuery;
 import com.smart.framework.crud.service.BaseServiceImpl;
@@ -43,10 +42,11 @@ import com.smart.module.system.pojo.dto.tenant.SysListTenantFunctionDTO;
 import com.smart.module.system.pojo.dto.tenant.SysListTenantRoleFunctionDTO;
 import com.smart.module.system.pojo.dto.user.SysUserSetUseYnParameter;
 import com.smart.module.system.pojo.dto.user.UserListDTO;
+import com.smart.module.system.pojo.dto.user.UserSaveUpdateWithDeptDTO;
 import com.smart.module.system.pojo.dto.user.UserSetRoleDTO;
 import com.smart.module.system.pojo.vo.SysFunctionListVO;
 import com.smart.module.system.pojo.vo.user.SysUserListVO;
-import com.smart.module.system.pojo.vo.user.SysUserWithDataScopeDTO;
+import com.smart.module.system.pojo.vo.user.SysUserWithDeptDTO;
 import com.smart.module.system.service.*;
 import com.smart.module.system.service.tenant.SysTenantUserService;
 import lombok.RequiredArgsConstructor;
@@ -152,6 +152,33 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         // 查询账户信息
         this.queryUserAccount(voList);
         return voList.getFirst();
+    }
+
+    /**
+     * 通过ID获取用户详情，包含部门ID
+     *
+     * @param userId 用户ID
+     * @return 用户详情
+     */
+    @Override
+    public SysUserWithDeptDTO getUserByIdWithDept(Long userId) {
+        SysUserPO user = this.getById(userId);
+        if (user == null) {
+            return null;
+        }
+        SysUserWithDeptDTO vo = new SysUserWithDeptDTO();
+        BeanUtils.copyProperties(user, vo);
+        // 查询部门信息
+        Set<Long> deptIds = this.sysUserDeptService.list(
+                        new QueryWrapper<SysUserDeptPO>().lambda()
+                                .select(SysUserDeptPO::getDeptId, SysUserDeptPO::getUserId)
+                                .eq(SysUserDeptPO::getUserId, userId)
+                                .eq(SysUserDeptPO::getIdent, UserDeptIdentEnum.USER_DEPT)
+                ).stream()
+                .map(SysUserDeptPO::getDeptId)
+                .collect(Collectors.toSet());
+        vo.setDeptIdList(new ArrayList<>(deptIds));
+        return vo;
     }
 
     /**
@@ -634,37 +661,40 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         return this.baseMapper.listUserWithAccount(parameter);
     }
 
+    /**
+     * 添加/更新用户(带有部门)
+     *
+     * @param parameter 参数
+     * @return 是否保存成功
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean saveUpdateWithDataScope(SysUserWithDataScopeDTO parameter) {
+    public boolean saveUpdateWithDept(UserSaveUpdateWithDeptDTO parameter) {
         // 更新用户
         var userModel = new SysUserPO();
         BeanUtils.copyProperties(parameter, userModel);
         boolean isAdd = this.isAdd(userModel);
         Long userId = userModel.getUserId() == null ? SmartIdGenerator.nextId() : userModel.getUserId();
-        if (parameter.getDeptId() != null) {
-            SysUserDeptPO dataScopeModel = new SysUserDeptPO();
-            dataScopeModel.setUserId(userId);
-            dataScopeModel.setDeptId(parameter.getDeptId());
-            // 设置标识位
-            dataScopeModel.setIdent(UserDeptIdentEnum.USER_DEPT);
-            // 将数据权限数组转为逗号分隔字符串
-            if (!CollectionUtils.isEmpty(parameter.getDataScopeList())) {
-                dataScopeModel.setDataScope(
-                        parameter.getDataScopeList().stream()
-                                .map(Enum::toString)
-                                .collect(Collectors.joining(","))
-                );
-            }
-            if (userModel.getUserId() != null) {
-                // 删除之前的部门数据权限
+
+        if (!CollectionUtils.isEmpty(parameter.getDeptIdList())) {
+            if (!isAdd) {
+                // 删除之前的部门数据
                 this.sysUserDeptService.remove(
                         new QueryWrapper<SysUserDeptPO>().lambda()
                                 .eq(SysUserDeptPO::getUserId, userModel.getUserId())
                                 .eq(SysUserDeptPO::getIdent, UserDeptIdentEnum.USER_DEPT)
                 );
             }
-            this.sysUserDeptService.save(dataScopeModel);
+            this.sysUserDeptService.saveBatch(
+                    parameter.getDeptIdList().stream()
+                            .map(deptId -> {
+                                SysUserDeptPO userDept = new SysUserDeptPO();
+                                userDept.setUserId(parameter.getUserId());
+                                userDept.setDeptId(deptId);
+                                userDept.setIdent(UserDeptIdentEnum.USER_DEPT);
+                                return userDept;
+                            }).toList()
+            );
         }
         // 保存用户与租户关联关系
         if (isAdd) {
@@ -674,40 +704,10 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
             tenantUser.setTenantId(AuthUtils.getNonNullCurrentTenantId());
             tenantUser.setDefaultYn(Boolean.FALSE);
             this.sysTenantUserService.save(tenantUser);
-
             return this.save(userModel);
         }
         // 执行更新操作
         return this.updateById(userModel);
-    }
-
-    @Override
-    public SysUserWithDataScopeDTO getByIdWithDataScope(Long userId) {
-        var sysUser = this.getById(userId);
-        if (sysUser == null) {
-            return null;
-        }
-        var vo = new SysUserWithDataScopeDTO();
-        BeanUtils.copyProperties(sysUser, vo);
-        // 查询用户数据权限
-        var deptList = this.sysUserDeptService.list(
-                new QueryWrapper<SysUserDeptPO>().lambda()
-                        .select(SysUserDeptPO::getDeptId, SysUserDeptPO::getDataScope, SysUserDeptPO::getUserId)
-                        .eq(SysUserDeptPO::getUserId, userId)
-                        .eq(SysUserDeptPO::getIdent, UserDeptIdentEnum.USER_DEPT)
-        );
-        if (CollectionUtils.isEmpty(deptList)) {
-            return vo;
-        }
-        var dept = deptList.getFirst();
-        vo.setDeptId(dept.getDeptId());
-        vo.setDataScopeList(
-                Arrays.stream(dept.getDataScope().split(","))
-                        .filter(StringUtils::isNotBlank)
-                        .map(DataPermissionScope::valueOf)
-                        .toList()
-        );
-        return vo;
     }
 
     /**
