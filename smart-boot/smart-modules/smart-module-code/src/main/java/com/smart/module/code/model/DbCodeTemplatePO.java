@@ -2,7 +2,6 @@ package com.smart.module.code.model;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.smart.framework.crud.model.BaseModelUserTime;
 import lombok.Getter;
@@ -42,9 +41,6 @@ public class DbCodeTemplatePO extends BaseModelUserTime {
      * 文件名后缀
      */
     private String filenameSuffix;
-
-    @TableLogic
-    private Boolean deleteYn;
 
     private Long groupId;
 }
