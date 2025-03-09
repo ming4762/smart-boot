@@ -1,6 +1,7 @@
 package com.smart.cloud.service.file.service;
 
 import com.smart.framework.auth.core.utils.AuthUtils;
+import com.smart.framework.crud.model.UserDeptData;
 import com.smart.framework.crud.service.UserProvider;
 import org.springframework.stereotype.Component;
 import com.smart.framework.auth.core.userdetails.RestUserDetails;
@@ -44,5 +45,15 @@ public class UserProviderImpl implements UserProvider {
         return Optional.ofNullable(AuthUtils.getCurrentUser())
                 .map(RestUserDetails::getFullName)
                 .orElse(null);
+    }
+
+    /**
+     * 获取当前登录人员部门信息
+     *
+     * @return 部门ID
+     */
+    @Override
+    public UserDeptData getCurrentDept() {
+        return null;
     }
 }

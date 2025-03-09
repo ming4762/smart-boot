@@ -11,7 +11,6 @@ public interface SystemApiUrlConstants {
      * 通过用户名获取认证用户
      */
     String GET_AUTH_USER_BY_USERNAME = "/remote/system/auth/getByUsername";
-
     /**
      * 通过电话获取用户
      */
@@ -29,6 +28,11 @@ public interface SystemApiUrlConstants {
     String LOCK_ACCOUNT = "/remote/system/user/lockAccount";
     String RESET_LOGIN_FAIL_TIME = "/remote/system/user/resetLoginFailTime";
     String LIST_USER = "/remote/system/user/list";
+    /**
+     * 查询用户部门
+     */
+    String QUERY_USER_DEPT = "/remote/system/user/listUserDept";
+    String QUERY_USER_DEPT_WITH_CHILDREN = "/remote/system/user/listUserDeptWithChildren";
 
     /**
      * 读取国际化信息

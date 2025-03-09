@@ -4,9 +4,11 @@ import com.smart.cloud.common.core.constants.CloudServiceNameConstants;
 import com.smart.module.api.system.SysUserApi;
 import com.smart.module.api.system.constants.SystemApiUrlConstants;
 import com.smart.module.api.system.dto.AccountLoginFailTimeUpdateDTO;
+import com.smart.module.api.system.dto.SysDeptDTO;
 import com.smart.module.api.system.dto.SysUserDTO;
 import com.smart.module.api.system.dto.UserAccountLockDTO;
 import com.smart.module.api.system.parameter.RemoteSysUserListParameter;
+import com.smart.module.api.system.parameter.SysUserDeptParameter;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -68,4 +70,24 @@ public interface RemoteSysUserApi extends SysUserApi {
     @Override
     @PostMapping(SystemApiUrlConstants.LIST_USER)
     List<SysUserDTO> listUser(RemoteSysUserListParameter parameter);
+
+    /**
+     * 查询用户部门列表
+     *
+     * @param parameter 参数
+     * @return 用户部门列表
+     */
+    @Override
+    @PostMapping(SystemApiUrlConstants.QUERY_USER_DEPT)
+    List<SysDeptDTO> listUserDept(SysUserDeptParameter parameter);
+
+    /**
+     * 查询用户部门及子部门列表
+     *
+     * @param parameter 参数
+     * @return 用户部门及子部门列表
+     */
+    @Override
+    @PostMapping(SystemApiUrlConstants.QUERY_USER_DEPT_WITH_CHILDREN)
+    List<SysDeptDTO> listUserDeptWithChildren(SysUserDeptParameter parameter);
 }

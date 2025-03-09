@@ -58,12 +58,12 @@ public final class TreeUtils {
     /**
      * 构建树形列表
      * @param nodes 树形数据
-     * @param idParam 上级ID
+     * @param topId 上级ID
      * @param <T> 泛型
      * @return 树形列表
      */
     @NonNull
-    public static <T extends Serializable> List<Tree<T>>  buildList(@Nullable List<Tree<T>> nodes, @NonNull Serializable idParam) {
+    public static <T extends Serializable> List<Tree<T>>  buildList(@Nullable List<Tree<T>> nodes, @NonNull Serializable topId) {
         if (nodes == null) {
             return new ArrayList<>(0);
         }
@@ -71,7 +71,7 @@ public final class TreeUtils {
         final List<Tree<T>> topNodes = new ArrayList<>(8);
         for (Tree<T> children : nodes) {
             final Serializable pid = children.getParentId();
-            if (Objects.isNull(pid) || Objects.equals(idParam, pid)) {
+            if (Objects.isNull(pid) || Objects.equals(topId, pid)) {
                 topNodes.add(children);
                 continue;
             }
@@ -80,6 +80,7 @@ public final class TreeUtils {
                 if (!Objects.isNull(id) && Objects.equals(id, pid)) {
                     parent.getChildren().add(children);
                     children.setHasParent(true);
+                    children.setParent(parent);
                     parent.setHasChildren(true);
                 }
             }

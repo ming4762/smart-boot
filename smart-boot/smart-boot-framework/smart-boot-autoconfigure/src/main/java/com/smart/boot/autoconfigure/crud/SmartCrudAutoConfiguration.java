@@ -26,10 +26,10 @@ import java.util.List;
 @ConditionalOnClass(BaseService.class)
 @Import({
         CrudMybatisInterceptorConfiguration.class,
-        DataPermissionConfiguration.class,
         MybatisInterceptorAddConfiguration.class,
         MybatisPlusEnhanceConfiguration.class,
-        SmartDesensitizeAutoConfiguration.class
+        SmartDesensitizeAutoConfiguration.class,
+        SmartDataPermissionAutoConfiguration.class
 })
 public class SmartCrudAutoConfiguration {
 

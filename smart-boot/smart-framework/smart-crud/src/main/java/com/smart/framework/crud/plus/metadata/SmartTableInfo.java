@@ -19,6 +19,7 @@ import org.apache.ibatis.session.Configuration;
 import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ReflectionUtils;
 
@@ -27,6 +28,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 /**
  * table info
@@ -45,6 +47,7 @@ public class SmartTableInfo extends TableInfo {
 
     @Getter
     private List<TableFieldInfo> smartTableFieldInfoList;
+    private Map<String, TableFieldInfo> columnFieldMap;
 
     /**
      * @param configuration 配置对象
@@ -66,6 +69,8 @@ public class SmartTableInfo extends TableInfo {
 
         initField(smartTableInfo, tableInfo);
         smartTableInfo.tableInfo = tableInfo;
+        smartTableInfo.columnFieldMap = smartTableInfo.smartTableFieldInfoList.stream()
+               .collect(Collectors.toMap(TableFieldInfo::getColumn, item -> item));
         return smartTableInfo;
     }
 
@@ -163,6 +168,16 @@ public class SmartTableInfo extends TableInfo {
             return null;
         }
         return tableFieldInfoList.getFirst();
+    }
+
+    /**
+     * 通过column 获取 TableFieldInfo
+     * @param column 数据库字段
+     * @return TableFieldInfo
+     */
+    @Nullable
+    public TableFieldInfo getTableFiledByColumn(String column) {
+        return this.columnFieldMap.get(column);
     }
 
     /**
