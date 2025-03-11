@@ -11,6 +11,7 @@ import com.smart.framework.crud.query.PageSortQuery;
 import com.smart.module.system.model.SysRoleFunctionPO;
 import com.smart.module.system.model.SysRolePO;
 import com.smart.module.system.pojo.dto.role.RoleMenuSaveDTO;
+import com.smart.module.system.pojo.dto.role.RoleSetDataPermissionDTO;
 import com.smart.module.system.pojo.dto.role.RoleSetUserDTO;
 import com.smart.module.system.service.SysRoleFunctionService;
 import com.smart.module.system.service.SysRoleService;
@@ -136,5 +137,19 @@ public class SysRoleController extends BaseController<SysRoleService, SysRolePO>
     @PreAuthorize("hasPermission('sys:role', 'setRoleUser')")
     public Result<Boolean> setRoleUser(@RequestBody @Valid RoleSetUserDTO parameter) {
         return Result.success(this.service.setRoleUser(parameter));
+    }
+
+    @Operation(summary = "设置角色的数据权限")
+    @Log(value = "设置角色对应的用户", type = LogOperationTypeEnum.UPDATE)
+    @PreAuthorize("hasPermission('sys:role', 'setRoleDataPermission')")
+    @PostMapping("setRoleDataPermission")
+    public Result<Boolean> setRoleDataPermission(@RequestBody @Valid RoleSetDataPermissionDTO parameter) {
+        return Result.success(this.service.setRoleDataPermission(parameter));
+    }
+
+    @Operation(summary = "获取角色的数据权限ID集合")
+    @PostMapping("listRoleDataPermissionId")
+    public Result<List<Long>> listRoleDataPermissionId(@RequestBody IdParameter roleId) {
+        return Result.success(this.service.listRoleDataPermissionId(roleId.getId()));
     }
 }

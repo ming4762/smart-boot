@@ -43,7 +43,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Duration;
 import java.time.ZonedDateTime;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -137,7 +136,7 @@ public class AuthController {
         List<OnlineUserVO> onlineUserList = tokenMap.keySet().stream()
                 .map(userId -> {
                     OnlineUserVO vo = new OnlineUserVO();
-                    RestUserDetails user = tokenMap.get(userId).get(0).getUser();
+                    RestUserDetails user = tokenMap.get(userId).getFirst().getUser();
                     vo.setUserId(userId);
                     vo.setUsername(user.getUsername());
                     vo.setFullName(user.getFullName());

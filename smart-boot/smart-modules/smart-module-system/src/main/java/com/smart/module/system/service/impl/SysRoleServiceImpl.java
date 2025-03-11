@@ -1,28 +1,27 @@
 package com.smart.module.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.smart.framework.crud.constants.CrudCommonEnum;
-import com.smart.framework.crud.query.PageSortQuery;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.smart.framework.crud.service.BaseServiceImpl;
-import com.smart.framework.crud.service.UserSetterService;
 import com.smart.module.system.mapper.SysRoleMapper;
+import com.smart.module.system.model.SysRoleDataPermissionPO;
 import com.smart.module.system.model.SysRoleFunctionPO;
 import com.smart.module.system.model.SysRolePO;
 import com.smart.module.system.model.SysUserRolePO;
 import com.smart.module.system.pojo.dto.role.RoleMenuSaveDTO;
+import com.smart.module.system.pojo.dto.role.RoleSetDataPermissionDTO;
 import com.smart.module.system.pojo.dto.role.RoleSetUserDTO;
-import com.smart.module.system.pojo.vo.SysRoleListVO;
+import com.smart.module.system.service.SysRoleDataPermissionService;
 import com.smart.module.system.service.SysRoleFunctionService;
 import com.smart.module.system.service.SysRoleService;
 import com.smart.module.system.service.SysUserRoleService;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -30,36 +29,13 @@ import java.util.List;
  * 2020/1/24 2:20 下午
  */
 @Service
+@RequiredArgsConstructor
 public class SysRoleServiceImpl extends BaseServiceImpl<SysRoleMapper, SysRolePO> implements SysRoleService {
 
     private final SysRoleFunctionService sysRoleFunctionService;
-
     private final SysUserRoleService sysUserRoleService;
+    private final SysRoleDataPermissionService sysRoleDataPermissionService;
 
-    private UserSetterService userSetterService;
-
-    public SysRoleServiceImpl(SysRoleFunctionService sysRoleFunctionService, SysUserRoleService sysUserRoleService) {
-        this.sysRoleFunctionService = sysRoleFunctionService;
-        this.sysUserRoleService = sysUserRoleService;
-    }
-
-    @Override
-    public List<? extends SysRolePO> list(@NonNull QueryWrapper<SysRolePO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
-        List<? extends SysRolePO> sysRoleList = super.list(queryWrapper, parameter, paging);
-        if (CollectionUtils.isEmpty(sysRoleList)) {
-            return new ArrayList<>(0);
-        }
-        List<SysRoleListVO> roleVoList = sysRoleList.stream()
-                .map(item -> {
-                    SysRoleListVO vo = new SysRoleListVO();
-                    BeanUtils.copyProperties(item, vo);
-                    return vo;
-                }).toList();
-        if (Boolean.TRUE.equals(parameter.getParameter().get(CrudCommonEnum.QUERY_CREATE_UPDATE_USER.name()))) {
-            this.userSetterService.setCreateUpdateUser(roleVoList);
-        }
-        return roleVoList;
-    }
 
     /**
      * 保存角色的菜单信息
@@ -121,8 +97,51 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRoleMapper, SysRolePO
         return true;
     }
 
-    @Autowired
-    public void setUserSetterService(UserSetterService userSetterService) {
-        this.userSetterService = userSetterService;
+    /**
+     * 设置角色的数据权限
+     *
+     * @param parameter RoleSetDataPermissionDTO
+     * @return 是否保存成功
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean setRoleDataPermission(RoleSetDataPermissionDTO parameter) {
+        // 删除已配置的数据权限
+        this.sysRoleDataPermissionService.remove(
+                Wrappers.lambdaQuery(SysRoleDataPermissionPO.class)
+                        .eq(SysRoleDataPermissionPO::getRoleId, parameter.getRoleId())
+        );
+        if (CollectionUtils.isEmpty(parameter.getDataPermissionIdList())) {
+            return true;
+        }
+        // 保存角色数据权限
+        return this.sysRoleDataPermissionService.saveBatch(
+                parameter.getDataPermissionIdList().stream().map(item -> {
+                    final SysRoleDataPermissionPO sysRoleDataPermission = new SysRoleDataPermissionPO();
+                    sysRoleDataPermission.setRoleId(parameter.getRoleId());
+                    sysRoleDataPermission.setDataPermissionId(item);
+                    return sysRoleDataPermission;
+                }).toList()
+        );
+    }
+
+    /**
+     * 获取角色的数据权限
+     *
+     * @param roleId 角色id
+     * @return 数据权限id列表
+     */
+    @Override
+    public List<Long> listRoleDataPermissionId(Long roleId) {
+        if (roleId == null) {
+            return Collections.emptyList();
+        }
+        return this.sysRoleDataPermissionService.lambdaQuery()
+                .select(SysRoleDataPermissionPO::getDataPermissionId)
+                .eq(SysRoleDataPermissionPO::getRoleId, roleId)
+                .list().stream()
+                .map(SysRoleDataPermissionPO::getDataPermissionId)
+                .distinct()
+                .toList();
     }
 }
