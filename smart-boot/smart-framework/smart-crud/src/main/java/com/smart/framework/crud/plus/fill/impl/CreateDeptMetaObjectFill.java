@@ -30,10 +30,12 @@ public class CreateDeptMetaObjectFill implements SmartMetaObjectFill {
         if (!this.findTableInfo(metaObject).isWithInsertFill()) {
             return;
         }
-        UserDeptData currentDept = this.userProvider.getCurrentDept();
-        if (currentDept != null) {
-            this.strictInsertFill(metaObject, ModelPropertyEnum.DEPT_ID.getName(), currentDept::getDeptId, Long.class);
-            this.strictInsertFill(metaObject, ModelPropertyEnum.DEPT_NAME.getName(), currentDept::getDeptName, String.class);
+        if (metaObject.hasSetter(ModelPropertyEnum.DEPT_ID.getName()) || metaObject.hasSetter(ModelPropertyEnum.DEPT_NAME.getName())) {
+            UserDeptData currentDept = this.userProvider.getCurrentDept();
+            if (currentDept != null) {
+                this.strictInsertFill(metaObject, ModelPropertyEnum.DEPT_ID.getName(), currentDept::getDeptId, Long.class);
+                this.strictInsertFill(metaObject, ModelPropertyEnum.DEPT_NAME.getName(), currentDept::getDeptName, String.class);
+            }
         }
     }
 }

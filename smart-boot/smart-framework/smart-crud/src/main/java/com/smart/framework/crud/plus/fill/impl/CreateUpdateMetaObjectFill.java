@@ -30,9 +30,12 @@ public class CreateUpdateMetaObjectFill implements SmartMetaObjectFill {
         if (!this.findTableInfo(metaObject).isWithInsertFill()) {
             return;
         }
-        this.strictInsertFill(metaObject, ModelPropertyEnum.CREATE_USER_ID.getName(), this.userProvider::getCurrentUserId, Long.class);
-        this.strictInsertFill(metaObject, ModelPropertyEnum.CREATE_TIME.getName(), ZonedDateTime::now, ZonedDateTime.class);
-        this.strictInsertFill(metaObject, ModelPropertyEnum.CREATE_USER.getName(), this.userProvider::getCurrentUserFullName, String.class);
+        // 判断是否有相关字段，没有则不进行填充
+        if (metaObject.hasSetter(ModelPropertyEnum.CREATE_USER_ID.getName()) || metaObject.hasSetter(ModelPropertyEnum.CREATE_TIME.getName()) || metaObject.hasSetter(ModelPropertyEnum.CREATE_USER.getName())) {
+            this.strictInsertFill(metaObject, ModelPropertyEnum.CREATE_USER_ID.getName(), this.userProvider::getCurrentUserId, Long.class);
+            this.strictInsertFill(metaObject, ModelPropertyEnum.CREATE_TIME.getName(), ZonedDateTime::now, ZonedDateTime.class);
+            this.strictInsertFill(metaObject, ModelPropertyEnum.CREATE_USER.getName(), this.userProvider::getCurrentUserFullName, String.class);
+        }
     }
 
     /**

@@ -37,9 +37,11 @@ public class LogicDeleteMetaObjectFill implements SmartMetaObjectFill {
         if (!isLogicDelete) {
             return;
         }
-        this.fillStrategy(metaObject, ModelPropertyEnum.DELETE_BY.getName(), this.userProvider.getCurrentUserFullName());
-        this.fillStrategy(metaObject, ModelPropertyEnum.DELETE_USER_ID.getName(), this.userProvider.getCurrentUserId());
-        this.fillStrategy(metaObject, ModelPropertyEnum.DELETE_TIME.getName(), ZonedDateTime.now());
+        if (metaObject.hasSetter(ModelPropertyEnum.DELETE_BY.getName()) || metaObject.hasSetter(ModelPropertyEnum.DELETE_USER_ID.getName()) || metaObject.hasSetter(ModelPropertyEnum.DELETE_TIME.getName())) {
+            this.fillStrategy(metaObject, ModelPropertyEnum.DELETE_BY.getName(), this.userProvider.getCurrentUserFullName());
+            this.fillStrategy(metaObject, ModelPropertyEnum.DELETE_USER_ID.getName(), this.userProvider.getCurrentUserId());
+            this.fillStrategy(metaObject, ModelPropertyEnum.DELETE_TIME.getName(), ZonedDateTime.now());
+        }
     }
 
 }
