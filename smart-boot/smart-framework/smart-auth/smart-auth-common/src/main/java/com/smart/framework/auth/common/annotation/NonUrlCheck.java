@@ -1,4 +1,4 @@
-package com.smart.framework.auth.core.annotation;
+package com.smart.framework.auth.common.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

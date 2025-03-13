@@ -1,6 +1,6 @@
 package com.smart.framework.auth.core.token;
 
-import com.smart.framework.auth.core.userdetails.RestUserDetails;
+import com.smart.framework.auth.common.userdetails.RestUserDetails;
 import org.springframework.core.Ordered;
 import org.springframework.lang.NonNull;
 

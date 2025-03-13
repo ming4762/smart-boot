@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.smart.framework.auth.core.utils.AuthUtils;
+import com.smart.framework.auth.common.utils.AuthUtils;
 import com.smart.framework.commons.core.exception.BaseException;
 import com.smart.framework.commons.core.exception.BusinessException;
 import com.smart.framework.commons.core.utils.SmartIdGenerator;

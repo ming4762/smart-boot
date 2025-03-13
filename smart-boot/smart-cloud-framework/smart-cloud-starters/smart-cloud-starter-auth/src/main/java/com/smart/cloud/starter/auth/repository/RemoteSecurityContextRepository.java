@@ -1,12 +1,12 @@
 package com.smart.cloud.starter.auth.repository;
 
 import com.google.common.collect.Sets;
+import com.smart.framework.auth.common.userdetails.RestUserDetails;
 import com.smart.framework.auth.core.authentication.RestUsernamePasswordAuthenticationToken;
 import com.smart.framework.auth.core.model.PermissionGrantedAuthority;
 import com.smart.framework.auth.core.model.RestUserDetailsImpl;
 import com.smart.framework.auth.core.model.RoleGrantedAuthority;
 import com.smart.framework.auth.core.model.SmartGrantedAuthority;
-import com.smart.framework.auth.core.userdetails.RestUserDetails;
 import com.smart.framework.auth.core.utils.TokenUtils;
 import com.smart.module.api.auth.AuthApi;
 import com.smart.module.api.auth.dto.AuthUserDetailsDTO;

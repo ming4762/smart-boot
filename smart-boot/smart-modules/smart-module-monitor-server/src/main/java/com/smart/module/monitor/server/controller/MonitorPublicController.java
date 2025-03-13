@@ -2,7 +2,7 @@ package com.smart.module.monitor.server.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.smart.framework.auth.core.annotation.TempToken;
+import com.smart.framework.auth.common.annotation.TempToken;
 import com.smart.module.monitor.server.model.MonitorClientLogPO;
 import com.smart.module.monitor.server.pojo.dto.LogDownloadDTO;
 import com.smart.module.monitor.server.service.MonitorClientLogService;

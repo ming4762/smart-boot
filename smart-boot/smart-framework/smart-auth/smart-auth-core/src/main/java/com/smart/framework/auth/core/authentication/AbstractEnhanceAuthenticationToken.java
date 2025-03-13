@@ -1,12 +1,13 @@
 package com.smart.framework.auth.core.authentication;
 
-import com.smart.framework.auth.core.constants.AuthTypeEnum;
+import com.smart.framework.auth.common.constants.AuthTypeEnum;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
+import java.io.Serial;
 import java.util.Collection;
 
 /**
@@ -15,6 +16,8 @@ import java.util.Collection;
  */
 @EqualsAndHashCode(callSuper = true)
 public class AbstractEnhanceAuthenticationToken extends AbstractAuthenticationToken {
+    @Serial
+    private static final long serialVersionUID = 5651300794057062163L;
 
     private final transient Object credentials;
 

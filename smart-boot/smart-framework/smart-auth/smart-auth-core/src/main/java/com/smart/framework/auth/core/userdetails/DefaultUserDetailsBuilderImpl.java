@@ -1,5 +1,6 @@
 package com.smart.framework.auth.core.userdetails;
 
+import com.smart.framework.auth.common.userdetails.RestUserDetails;
 import com.smart.framework.auth.core.exception.LongTimeNoLoginLockedException;
 import com.smart.framework.auth.core.exception.MaxConnectionAuthenticationException;
 import com.smart.framework.auth.core.exception.PasswordNoLifeLockedException;

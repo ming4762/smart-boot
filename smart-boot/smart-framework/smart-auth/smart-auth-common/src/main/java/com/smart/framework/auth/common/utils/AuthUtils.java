@@ -1,7 +1,7 @@
-package com.smart.framework.auth.core.utils;
+package com.smart.framework.auth.common.utils;
 
-import com.smart.framework.auth.core.exception.AuthException;
-import com.smart.framework.auth.core.userdetails.RestUserDetails;
+import com.smart.framework.auth.common.exception.AuthException;
+import com.smart.framework.auth.common.userdetails.RestUserDetails;
 import com.smart.framework.commons.core.dto.auth.UserTenantDTO;
 import com.smart.framework.commons.core.exception.SystemException;
 import com.smart.framework.commons.core.http.HttpStatus;

@@ -1,6 +1,6 @@
 package com.smart.framework.auth.core.secret.data;
 
-import com.smart.framework.auth.core.userdetails.RestUserDetails;
+import com.smart.framework.auth.common.userdetails.RestUserDetails;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

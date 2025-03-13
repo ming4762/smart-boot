@@ -1,4 +1,4 @@
-package com.smart.framework.auth.core.constants;
+package com.smart.framework.auth.common.constants;
 
 /**
  * 标识认证类型

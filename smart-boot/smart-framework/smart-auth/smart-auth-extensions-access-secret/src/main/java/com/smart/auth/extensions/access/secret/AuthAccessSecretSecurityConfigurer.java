@@ -45,8 +45,4 @@ public class AuthAccessSecretSecurityConfigurer extends SmartSecurityConfigurerA
         AuthenticationManagerBuilder authenticationManagerBuilder = builder.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.parentAuthenticationManager(null);
     }
-
-    private AuthProperties getAuthProperties() {
-        return Objects.requireNonNull(this.getBean(AuthProperties.class, null));
-    }
 }

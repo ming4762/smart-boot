@@ -1,7 +1,7 @@
 package com.smart.module.system.exception;
 
-import com.smart.framework.auth.core.userdetails.RestUserDetails;
-import com.smart.framework.auth.core.utils.AuthUtils;
+import com.smart.framework.auth.common.userdetails.RestUserDetails;
+import com.smart.framework.auth.common.utils.AuthUtils;
 import com.smart.framework.commons.core.utils.ExceptionUtils;
 import com.smart.framework.commons.core.utils.IpUtils;
 import com.smart.framework.exception.notice.AbstractCommonExcludeExceptionNotice;

@@ -1,6 +1,6 @@
 package com.smart.framework.auth.core.handler;
 
-import com.smart.framework.auth.core.constants.LoginTypeEnum;
+import com.smart.framework.auth.common.constants.LoginTypeEnum;
 import com.smart.framework.auth.core.model.LoginParameter;
 import com.smart.framework.auth.core.properties.AuthProperties;
 import com.smart.framework.commons.core.message.Result;

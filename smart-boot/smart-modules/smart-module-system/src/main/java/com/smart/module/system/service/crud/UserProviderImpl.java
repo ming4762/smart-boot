@@ -1,11 +1,11 @@
 package com.smart.module.system.service.crud;
 
-import com.smart.framework.auth.core.userdetails.RestUserDetails;
-import com.smart.framework.auth.core.utils.AuthUtils;
+import com.smart.framework.auth.common.userdetails.RestUserDetails;
+import com.smart.framework.auth.common.utils.AuthUtils;
 import com.smart.framework.crud.model.UserDeptData;
 import com.smart.framework.crud.service.UserProvider;
-import com.smart.module.system.model.SysDeptPO;
-import com.smart.module.system.service.SysDeptService;
+import com.smart.module.api.system.SysUserApi;
+import com.smart.module.api.system.dto.SysDeptDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
@@ -25,7 +25,7 @@ import java.util.Optional;
 @Slf4j
 public class UserProviderImpl implements UserProvider {
 
-    private final ObjectProvider<SysDeptService> sysDeptServiceObjectProvider;
+    private final ObjectProvider<SysUserApi> sysUserApi;
 
     /**
      * 获取当前登录人员ID
@@ -66,7 +66,7 @@ public class UserProviderImpl implements UserProvider {
      */
     @Override
     public UserDeptData getCurrentDept() {
-        List<SysDeptPO> userDeptList = this.sysDeptServiceObjectProvider.getObject().listUserDept(this.getCurrentUserId());
+        List<SysDeptDTO> userDeptList = this.sysUserApi.getObject().listUserDept(null);
         if (CollectionUtils.isEmpty(userDeptList)) {
             return null;
         }
@@ -74,7 +74,7 @@ public class UserProviderImpl implements UserProvider {
             //TODO: 处理多个部门情况，设置默认部门？还是不支持多部门？
             log.warn("当前用户有多个部门，返回第一个部门信息");
         }
-        SysDeptPO dept = userDeptList.getFirst();
-        return new UserDeptData(this.getCurrentUserId(), dept.getDeptId(), dept.getDeptName());
+        SysDeptDTO userDept = userDeptList.getFirst();
+        return new UserDeptData(this.getCurrentUserId(), userDept.getDeptId(), userDept.getDeptName());
     }
 }

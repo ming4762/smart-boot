@@ -2,7 +2,7 @@ package com.smart.framework.auth.extensions.wechat.provider;
 
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
-import com.smart.framework.auth.core.constants.AuthTypeEnum;
+import com.smart.framework.auth.common.constants.AuthTypeEnum;
 import com.smart.framework.auth.core.i18n.AuthI18nMessage;
 import com.smart.framework.auth.extensions.wechat.model.WechatAppLoginResult;
 import com.smart.framework.auth.extensions.wechat.model.WechatLoginResult;

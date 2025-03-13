@@ -1,6 +1,6 @@
 package com.smart.framework.auth.core.authentication;
 
-import com.smart.framework.auth.core.constants.LoginTypeEnum;
+import com.smart.framework.auth.common.constants.LoginTypeEnum;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

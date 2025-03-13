@@ -1,9 +1,9 @@
 package com.smart.framework.auth.core.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.smart.framework.auth.core.constants.AuthTypeEnum;
-import com.smart.framework.auth.core.constants.LoginTypeEnum;
-import com.smart.framework.auth.core.userdetails.RestUserDetails;
+import com.smart.framework.auth.common.constants.AuthTypeEnum;
+import com.smart.framework.auth.common.constants.LoginTypeEnum;
+import com.smart.framework.auth.common.userdetails.RestUserDetails;
 import com.smart.framework.commons.core.dto.auth.AuthRole;
 import com.smart.framework.commons.core.dto.auth.Permission;
 import com.smart.framework.commons.core.dto.auth.UserTenantDTO;

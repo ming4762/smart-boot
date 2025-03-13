@@ -1,6 +1,6 @@
 package com.smart.framework.auth.core.authentication;
 
-import com.smart.framework.auth.core.userdetails.RestUserDetails;
+import com.smart.framework.auth.common.userdetails.RestUserDetails;
 import com.smart.framework.commons.core.dto.auth.Permission;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;

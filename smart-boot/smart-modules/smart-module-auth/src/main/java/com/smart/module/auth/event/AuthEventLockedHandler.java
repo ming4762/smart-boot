@@ -1,9 +1,9 @@
 package com.smart.module.auth.event;
 
+import com.smart.framework.auth.common.userdetails.RestUserDetails;
 import com.smart.framework.auth.core.event.AuthEventHandler;
 import com.smart.framework.auth.core.exception.LongTimeNoLoginLockedException;
 import com.smart.framework.auth.core.exception.PasswordNoLifeLockedException;
-import com.smart.framework.auth.core.userdetails.RestUserDetails;
 import com.smart.framework.commons.core.dto.auth.UserAccountStatusEnum;
 import com.smart.framework.commons.core.tenant.SmartTenantHolder;
 import com.smart.module.api.system.SysUserApi;

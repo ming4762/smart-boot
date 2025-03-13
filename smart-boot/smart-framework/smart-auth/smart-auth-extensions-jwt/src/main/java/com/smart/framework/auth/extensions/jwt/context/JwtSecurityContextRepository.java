@@ -1,8 +1,8 @@
 package com.smart.framework.auth.extensions.jwt.context;
 
+import com.smart.framework.auth.common.userdetails.RestUserDetails;
 import com.smart.framework.auth.core.authentication.RestUsernamePasswordAuthenticationToken;
 import com.smart.framework.auth.core.token.TokenRepository;
-import com.smart.framework.auth.core.userdetails.RestUserDetails;
 import com.smart.framework.auth.core.utils.TokenUtils;
 import com.smart.framework.auth.extensions.jwt.token.JwtTokenRepository;
 import io.micrometer.common.util.StringUtils;

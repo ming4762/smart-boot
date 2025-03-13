@@ -1,6 +1,6 @@
 package com.smart.framework.auth.core.wechat;
 
-import com.smart.framework.auth.core.constants.AuthTypeEnum;
+import com.smart.framework.auth.common.constants.AuthTypeEnum;
 
 /**
  * @author zhongming4762

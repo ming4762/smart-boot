@@ -1,7 +1,7 @@
 package com.smart.framework.auth.extensions.wechat.userdetails;
 
-import com.smart.framework.auth.core.constants.AuthTypeEnum;
-import com.smart.framework.auth.core.userdetails.RestUserDetails;
+import com.smart.framework.auth.common.constants.AuthTypeEnum;
+import com.smart.framework.auth.common.userdetails.RestUserDetails;
 import org.springframework.security.core.AuthenticationException;
 
 /**

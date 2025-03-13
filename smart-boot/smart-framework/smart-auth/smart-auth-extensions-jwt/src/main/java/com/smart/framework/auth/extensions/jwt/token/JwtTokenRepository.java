@@ -1,7 +1,8 @@
 package com.smart.framework.auth.extensions.jwt.token;
 
 import com.google.common.collect.Lists;
-import com.smart.framework.auth.core.constants.LoginTypeEnum;
+import com.smart.framework.auth.common.constants.LoginTypeEnum;
+import com.smart.framework.auth.common.userdetails.RestUserDetails;
 import com.smart.framework.auth.core.model.PermissionGrantedAuthority;
 import com.smart.framework.auth.core.model.RestUserDetailsImpl;
 import com.smart.framework.auth.core.model.RoleGrantedAuthority;
@@ -10,7 +11,6 @@ import com.smart.framework.auth.core.properties.AuthProperties;
 import com.smart.framework.auth.core.service.AuthCache;
 import com.smart.framework.auth.core.token.TokenData;
 import com.smart.framework.auth.core.token.TokenRepository;
-import com.smart.framework.auth.core.userdetails.RestUserDetails;
 import com.smart.framework.auth.extensions.jwt.resolver.JwtResolver;
 import com.smart.framework.commons.core.dto.auth.AuthRole;
 import com.smart.framework.commons.core.dto.auth.Permission;

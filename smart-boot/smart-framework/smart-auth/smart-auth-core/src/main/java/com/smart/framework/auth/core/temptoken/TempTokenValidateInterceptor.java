@@ -1,6 +1,6 @@
 package com.smart.framework.auth.core.temptoken;
 
-import com.smart.framework.auth.core.annotation.TempToken;
+import com.smart.framework.auth.common.annotation.TempToken;
 import com.smart.framework.auth.core.model.TempTokenData;
 import com.smart.framework.commons.core.message.Result;
 import com.smart.framework.commons.core.utils.IpUtils;

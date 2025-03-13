@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.smart.framework.auth.core.utils.AuthUtils;
+import com.smart.framework.auth.common.utils.AuthUtils;
 import com.smart.framework.commons.core.dto.auth.UserAccountStatusEnum;
 import com.smart.module.api.system.SysUserApi;
 import com.smart.module.api.system.dto.AccountLoginFailTimeUpdateDTO;
@@ -185,7 +185,8 @@ public class LocalSysUserApi implements SysUserApi {
      */
     @Override
     public List<SysDeptDTO> listUserDept(SysUserDeptParameter parameter) {
-        return this.sysDeptService.listUserDept(Objects.requireNonNullElseGet(parameter.getUserId(), AuthUtils::getCurrentUserId)).stream()
+        Long userId = parameter == null ? AuthUtils.getCurrentUserId() : Objects.requireNonNullElseGet(parameter.getUserId(), AuthUtils::getCurrentUserId);
+        return this.sysDeptService.listUserDept(userId).stream()
                 .map(item -> {
                     SysDeptDTO dto = new SysDeptDTO();
                     BeanUtils.copyProperties(item, dto);

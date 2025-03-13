@@ -6,6 +6,7 @@ import com.smart.module.api.system.dto.SysUserDTO;
 import com.smart.module.api.system.dto.UserAccountLockDTO;
 import com.smart.module.api.system.parameter.RemoteSysUserListParameter;
 import com.smart.module.api.system.parameter.SysUserDeptParameter;
+import org.springframework.lang.Nullable;
 
 import java.util.List;
 
@@ -56,7 +57,7 @@ public interface SysUserApi {
      * @param parameter 参数
      * @return 用户部门列表
      */
-    List<SysDeptDTO> listUserDept(SysUserDeptParameter parameter);
+    List<SysDeptDTO> listUserDept(@Nullable SysUserDeptParameter parameter);
 
     /**
      * 查询用户部门及子部门列表

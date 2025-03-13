@@ -1,8 +1,8 @@
 package com.smart.framework.auth.extensions.wechat.authentication;
 
-import com.smart.framework.auth.core.constants.AuthTypeEnum;
+import com.smart.framework.auth.common.constants.AuthTypeEnum;
 import com.smart.framework.auth.core.i18n.AuthI18nMessage;
-import com.smart.framework.auth.core.userdetails.RestUserDetails;
+import com.smart.framework.auth.common.userdetails.RestUserDetails;
 import com.smart.framework.auth.core.wechat.WechatAuthConfigProvider;
 import com.smart.framework.auth.extensions.wechat.exception.WechatNotBoundException;
 import com.smart.framework.auth.extensions.wechat.model.WechatAppLoginResult;

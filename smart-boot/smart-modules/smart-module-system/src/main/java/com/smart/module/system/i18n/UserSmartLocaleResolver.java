@@ -1,7 +1,7 @@
 package com.smart.module.system.i18n;
 
-import com.smart.framework.auth.core.userdetails.RestUserDetails;
-import com.smart.framework.auth.core.utils.AuthUtils;
+import com.smart.framework.auth.common.userdetails.RestUserDetails;
+import com.smart.framework.auth.common.utils.AuthUtils;
 import com.smart.framework.i18n.resolver.SmartLocaleResolver;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;

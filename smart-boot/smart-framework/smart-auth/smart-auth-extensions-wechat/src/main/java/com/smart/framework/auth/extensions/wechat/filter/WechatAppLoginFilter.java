@@ -1,6 +1,6 @@
 package com.smart.framework.auth.extensions.wechat.filter;
 
-import com.smart.framework.auth.core.constants.AuthTypeEnum;
+import com.smart.framework.auth.common.constants.AuthTypeEnum;
 import com.smart.framework.auth.extensions.wechat.authentication.WechatAuthenticationToken;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

@@ -4,7 +4,7 @@ import com.smart.framework.auth.core.model.PermissionGrantedAuthority;
 import com.smart.framework.auth.core.model.RestUserDetailsImpl;
 import com.smart.framework.auth.core.model.RoleGrantedAuthority;
 import com.smart.framework.auth.core.model.SmartGrantedAuthority;
-import com.smart.framework.auth.core.userdetails.RestUserDetails;
+import com.smart.framework.auth.common.userdetails.RestUserDetails;
 import com.smart.framework.auth.extensions.jwt.resolver.JwtResolver;
 import com.smart.framework.commons.core.dto.auth.AuthRole;
 import com.smart.framework.commons.core.dto.auth.Permission;

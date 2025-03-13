@@ -3,6 +3,7 @@ package com.smart.framework.auth.core.matcher;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
+import org.springframework.lang.Nullable;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
@@ -25,7 +26,7 @@ public class ExtensionPathMatcher implements RequestMatcher {
     private final String pattern;
     private final HttpMethod httpMethod;
 
-    public ExtensionPathMatcher(HttpMethod httpMethod, String pattern) {
+    public ExtensionPathMatcher(@Nullable HttpMethod httpMethod, String pattern) {
         this.httpMethod = httpMethod;
         this.pattern = pattern;
     }

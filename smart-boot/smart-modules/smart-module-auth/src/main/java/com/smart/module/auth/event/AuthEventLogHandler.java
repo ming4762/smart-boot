@@ -2,9 +2,9 @@ package com.smart.module.auth.event;
 
 import com.smart.framework.auth.core.authentication.AbstractEnhanceAuthenticationToken;
 import com.smart.framework.auth.core.authentication.RestUsernamePasswordAuthenticationToken;
-import com.smart.framework.auth.core.constants.AuthTypeEnum;
+import com.smart.framework.auth.common.constants.AuthTypeEnum;
 import com.smart.framework.auth.core.event.AuthEventHandler;
-import com.smart.framework.auth.core.userdetails.RestUserDetails;
+import com.smart.framework.auth.common.userdetails.RestUserDetails;
 import com.smart.framework.commons.core.http.HttpStatus;
 import com.smart.framework.commons.core.log.LogSourceEnum;
 import com.smart.module.api.system.SysLogApi;

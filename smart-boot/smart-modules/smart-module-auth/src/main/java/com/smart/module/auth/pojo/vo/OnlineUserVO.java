@@ -1,7 +1,7 @@
 package com.smart.module.auth.pojo.vo;
 
-import com.smart.framework.auth.core.constants.AuthTypeEnum;
-import com.smart.framework.auth.core.constants.LoginTypeEnum;
+import com.smart.framework.auth.common.constants.AuthTypeEnum;
+import com.smart.framework.auth.common.constants.LoginTypeEnum;
 import lombok.*;
 
 import java.io.Serial;

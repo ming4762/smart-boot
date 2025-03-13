@@ -1,6 +1,6 @@
 package com.smart.module.code.controller;
 
-import com.smart.framework.auth.core.annotation.TempToken;
+import com.smart.framework.auth.common.annotation.TempToken;
 import com.smart.module.code.model.DbCodeTemplatePO;
 import com.smart.module.code.model.DbConnectionPO;
 import com.smart.module.code.pojo.dto.DbCreateDicDTO;

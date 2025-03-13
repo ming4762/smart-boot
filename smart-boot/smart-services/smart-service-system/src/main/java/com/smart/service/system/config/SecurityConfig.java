@@ -3,8 +3,8 @@ package com.smart.service.system.config;
 import com.smart.auth.extensions.access.secret.AuthAccessSecretSecurityConfigurer;
 import com.smart.framework.auth.core.properties.AuthProperties;
 import com.smart.framework.auth.core.remember.SmartAuthPersistentTokenRememberMeServices;
-import com.smart.framework.auth.extensions.jwt.AuthJwtSecurityConfigurer;
-//import com.smart.framework.auth.extensions.sms.AuthSmsSecurityConfigurer;
+import com.smart.framework.auth.extensions.session.AuthWebSecurityConfigurer;
+import com.smart.framework.auth.extensions.sms.AuthSmsSecurityConfigurer;
 import com.smart.module.auth.config.AuthCaptchaSecurityConfigurer;
 import com.smart.module.auth.config.AuthTenantSecurityConfigurer;
 import com.smart.module.auth.config.AuthWebSecurityConfigurerAdapter;
@@ -20,6 +20,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 import java.util.UUID;
@@ -45,7 +46,7 @@ public class SecurityConfig extends AuthWebSecurityConfigurerAdapter {
     @SneakyThrows(Exception.class)
     @Bean
     @Order(0)
-    public SecurityFilterChain securityFilterChainConfig(HttpSecurity httpSecurity, SmartAuthPersistentTokenRememberMeServices rememberMeServices, AuthenticationSuccessHandler authenticationSuccessHandler) {
+    public SecurityFilterChain securityFilterChainConfig(HttpSecurity httpSecurity, SmartAuthPersistentTokenRememberMeServices rememberMeServices, AuthenticationSuccessHandler authenticationSuccessHandler, LogoutSuccessHandler logoutSuccessHandler) {
         super.configure(httpSecurity);
         httpSecurity.formLogin(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable)
@@ -54,14 +55,20 @@ public class SecurityConfig extends AuthWebSecurityConfigurerAdapter {
                         config -> config.rememberMeServices(rememberMeServices)
                                 .authenticationSuccessHandler(authenticationSuccessHandler)
                 )
-                .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                // JWT配置
-                .with(AuthJwtSecurityConfigurer.jwt(), Customizer.withDefaults())
+                .logout(config -> {
+                    config.logoutUrl(this.authProperties.getLogoutUrl())
+                            .logoutSuccessHandler(logoutSuccessHandler);
+                })
+                .sessionManagement(Customizer.withDefaults())
+                .with(AuthWebSecurityConfigurer.web(), Customizer.withDefaults())
+//                // JWT配置
+//                .with(AuthJwtSecurityConfigurer.jwt(), Customizer.withDefaults())
                 // 验证码配置
                 .with(AuthCaptchaSecurityConfigurer.captcha(), Customizer.withDefaults())
+                // 短信登录支持
+                .with(AuthSmsSecurityConfigurer.sms(), Customizer.withDefaults())
                 // 租户支持
                 .with(AuthTenantSecurityConfigurer.tenant(), Customizer.withDefaults());
-//                .with(AuthSmsSecurityConfigurer.sms(), Customizer.withDefaults());
         return httpSecurity.build();
     }
 
@@ -78,5 +85,4 @@ public class SecurityConfig extends AuthWebSecurityConfigurerAdapter {
                 .with(AuthAccessSecretSecurityConfigurer.build(), Customizer.withDefaults());
         return httpSecurity.build();
     }
-
 }

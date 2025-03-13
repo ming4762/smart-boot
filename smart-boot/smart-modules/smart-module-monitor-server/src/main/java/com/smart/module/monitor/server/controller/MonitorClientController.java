@@ -1,7 +1,7 @@
 package com.smart.module.monitor.server.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.smart.framework.auth.core.utils.AuthUtils;
+import com.smart.framework.auth.common.utils.AuthUtils;
 import com.smart.framework.commons.core.message.Result;
 import com.smart.framework.monitor.server.client.repository.ClientRepository;
 import com.smart.framework.monitor.server.common.model.ClientData;

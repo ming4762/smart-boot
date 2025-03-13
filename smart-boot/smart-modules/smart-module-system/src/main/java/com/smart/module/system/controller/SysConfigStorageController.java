@@ -1,6 +1,6 @@
 package com.smart.module.system.controller;
 
-import com.smart.framework.auth.core.utils.AuthUtils;
+import com.smart.framework.auth.common.utils.AuthUtils;
 import com.smart.framework.commons.core.message.Result;
 import com.smart.framework.crud.controller.BaseController;
 import com.smart.framework.crud.query.PageSortQuery;

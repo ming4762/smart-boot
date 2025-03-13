@@ -3,7 +3,7 @@ package com.smart.module.message.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.google.common.collect.Lists;
-import com.smart.framework.auth.core.utils.AuthUtils;
+import com.smart.framework.auth.common.utils.AuthUtils;
 import com.smart.framework.crud.plus.metadata.SmartTableInfo;
 import com.smart.framework.crud.service.BaseServiceImpl;
 import com.smart.framework.crud.utils.CrudUtils;

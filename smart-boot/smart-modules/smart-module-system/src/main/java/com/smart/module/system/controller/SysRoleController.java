@@ -1,7 +1,7 @@
 package com.smart.module.system.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.smart.framework.auth.core.annotation.NonUrlCheck;
+import com.smart.framework.auth.common.annotation.NonUrlCheck;
 import com.smart.framework.commons.core.log.Log;
 import com.smart.framework.commons.core.log.LogOperationTypeEnum;
 import com.smart.framework.commons.core.message.Result;

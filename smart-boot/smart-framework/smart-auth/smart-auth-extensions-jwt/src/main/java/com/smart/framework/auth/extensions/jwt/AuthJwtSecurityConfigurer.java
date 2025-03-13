@@ -1,24 +1,19 @@
 package com.smart.framework.auth.extensions.jwt;
 
 import com.google.common.collect.Lists;
-import com.smart.framework.auth.core.authentication.RestAuthenticationProvider;
 import com.smart.framework.auth.core.config.SmartSecurityConfigurerAdapter;
+import com.smart.framework.auth.core.filter.WebLoginFilter;
 import com.smart.framework.auth.core.handler.SecurityLogoutHandler;
 import com.smart.framework.auth.core.properties.AuthProperties;
 import com.smart.framework.auth.core.service.AuthCache;
-import com.smart.framework.auth.core.share.ShareLoginProperties;
-import com.smart.framework.auth.extensions.jwt.context.JwtContext;
 import com.smart.framework.auth.extensions.jwt.filter.JwtAuthenticationFilter;
-import com.smart.framework.auth.extensions.jwt.filter.JwtLoginFilter;
 import com.smart.framework.auth.extensions.jwt.filter.JwtLogoutFilter;
 import com.smart.framework.auth.extensions.jwt.service.JwtService;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.security.web.SecurityFilterChain;
@@ -38,7 +33,6 @@ import org.springframework.util.CollectionUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * JWT配置类
@@ -49,15 +43,9 @@ import java.util.Optional;
 @Slf4j
 public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends SmartSecurityConfigurerAdapter<H> {
 
-
-    private static final String DEFAULT_LOGIN_URL = "/auth/login";
-    private static final String DEFAULT_LOGOUT_URL = "/auth/logout";
-
     private final ServiceProvider serviceProvider = new ServiceProvider();
 
     private JwtService jwtService;
-
-    private JwtContext jwtContext;
 
     private AuthJwtSecurityConfigurer() {}
 
@@ -88,10 +76,6 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
 
     }
 
-    private AuthProperties getAuthProperties() {
-        return this.getBean(AuthProperties.class);
-    }
-
     private AuthCache<String, Object> getAuthCache() {
         return this.getBean(AuthCache.class, this.serviceProvider.authCache);
     }
@@ -101,7 +85,7 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
         AuthProperties authProperties = this.getAuthProperties();
         // 构建
         builder
-                .authenticationProvider(this.getAuthenticationProvider())
+                .authenticationProvider(this.getRestAuthenticationProvider())
                 // 添加登录 登出过滤器
                 .addFilterAfter(this.createJwtFilterChainProxy(builder), BasicAuthenticationFilter.class);
         if (Boolean.TRUE.equals(this.serviceProvider.jwtAuth)) {
@@ -110,28 +94,16 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
         }
     }
 
-    private RestAuthenticationProvider getAuthenticationProvider() {
-        UserDetailsService userDetailsService = this.getBean(UserDetailsService.class, null);
-        return new RestAuthenticationProvider(userDetailsService);
-    }
-
     /**
      * 初始化函数
      * @param builder HttpSecurity
      */
     @Override
     public void init(H builder) {
-        builder.setSharedObject(
-                ShareLoginProperties.class,
-                ShareLoginProperties.builder()
-                        .loginUrl(this.getLoginUrl())
-                        .build()
-        );
         builder.setSharedObject(SecurityContextRepository.class, this.getBean(SecurityContextRepository.class));
         // 初始化bean
         this.initBean();
         // 创建上下文
-        this.jwtContext = this.createJwtContext();
         AuthenticationManagerBuilder authenticationManagerBuilder = builder.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.parentAuthenticationManager(null);
 
@@ -144,36 +116,17 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
      * @return 拦截器链
      */
     private FilterChainProxy createJwtFilterChainProxy(H builder) {
+        AuthProperties authProperties = this.getAuthProperties();
         final List<SecurityFilterChain> chains = Lists.newArrayList();
         // 创建登录过滤器
-        final JwtLoginFilter jwtLoginFilter = this.jwtLoginFilter(builder);
-        chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher(this.getLoginUrl()), jwtLoginFilter));
+        final WebLoginFilter webLoginFilter = this.createWebLoginFilter(builder, this.getLoginUrl(), authProperties.getBindIp());
+        webLoginFilter.setAuthenticationFailureHandler(this.getBean(AuthenticationFailureHandler.class, this.serviceProvider.authenticationFailureHandler));
+        chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher(this.getLoginUrl()), webLoginFilter));
 
         // 创建logout过滤器
         chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher(this.getLogoutUrl()), this.jwtLogoutFilter(builder)));
 
         return new FilterChainProxy(chains);
-    }
-
-    /**
-     * 创建登录过滤器
-     * @return 登录过滤器
-     */
-    private JwtLoginFilter jwtLoginFilter(H builder) {
-        final JwtLoginFilter jwtLoginFilter = new JwtLoginFilter(this.jwtContext, this.serviceProvider.bindIp);
-        jwtLoginFilter.setAuthenticationManager(this.getBuilder().getSharedObject(AuthenticationManager.class));
-        jwtLoginFilter.setFilterProcessesUrl(this.getLoginUrl());
-
-        jwtLoginFilter.setAuthenticationSuccessHandler(builder.getSharedObject(AuthenticationSuccessHandler.class));
-        // 设置登录失败handler
-        jwtLoginFilter.setAuthenticationFailureHandler(this.getBean(AuthenticationFailureHandler.class, this.serviceProvider.authenticationFailureHandler));
-        jwtLoginFilter.setSecurityContextRepository(builder.getSharedObject(SecurityContextRepository.class));
-
-        RememberMeServices rememberMeServices = builder.getSharedObject(RememberMeServices.class);
-        if (rememberMeServices != null) {
-            jwtLoginFilter.setRememberMeServices(rememberMeServices);
-        }
-        return this.postProcess(jwtLoginFilter);
     }
 
     /**
@@ -203,34 +156,12 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
      * @return 登出地址
      */
     protected String getLogoutUrl() {
-        return Optional.ofNullable(this.serviceProvider.logoutUrl).orElse(DEFAULT_LOGOUT_URL);
+        return this.getAuthProperties().getLogoutUrl();
     }
 
 
     private String getLoginUrl() {
-        return Optional.ofNullable(this.serviceProvider.loginUrl).orElse(DEFAULT_LOGIN_URL);
-    }
-
-
-    /**
-     * 创建JWT 上下文
-     * @return JWT上下文
-     */
-    private JwtContext createJwtContext() {
-        return JwtContext.builder()
-                .loginUrl(this.getLoginUrl())
-                .logoutUrl(this.serviceProvider.logoutUrl)
-                .build();
-    }
-
-    /**
-     * 设置登出URL
-     * @param logoutUrl 登出URL
-     * @return this
-     */
-    public AuthJwtSecurityConfigurer<H> logoutUrl(String logoutUrl) {
-        this.serviceProvider.setLogoutUrl(logoutUrl);
-        return this;
+        return this.getAuthProperties().getLoginUrl();
     }
 
     /**
@@ -278,11 +209,6 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
         return this;
     }
 
-    public AuthJwtSecurityConfigurer<H> bindIp(boolean bindIp) {
-        this.serviceProvider.bindIp = bindIp;
-        return this;
-    }
-
     public AuthJwtSecurityConfigurer<H> rememberMe(boolean rememberMe) {
         this.serviceProvider.rememberMe = rememberMe;
         return this;
@@ -299,9 +225,6 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
     @Setter
     private static class ServiceProvider {
         private AuthCache<String, Object> authCache;
-
-        private String loginUrl;
-        private String logoutUrl;
         /**
          * 是否使用jwt认证器
          */
@@ -320,13 +243,7 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
         private Boolean rememberMe;
 
 
-        /**
-         * 是否绑定IP
-         */
-        private Boolean bindIp;
-
         public ServiceProvider() {
-            this.bindIp = true;
             this.jwtAuth = true;
             this.logoutHandlerList = new ArrayList<>();
         }

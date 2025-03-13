@@ -1,12 +1,12 @@
 package com.smart.framework.auth.core.authentication;
 
-import com.smart.framework.auth.core.constants.AuthTypeEnum;
+import com.smart.framework.auth.common.constants.AuthTypeEnum;
+import com.smart.framework.auth.common.userdetails.RestUserDetails;
 import com.smart.framework.auth.core.exception.IpBindAuthenticationException;
 import com.smart.framework.auth.core.exception.LoginInfoMissAuthenticationException;
 import com.smart.framework.auth.core.exception.RestUsernameNotFoundException;
 import com.smart.framework.auth.core.i18n.AuthI18nMessage;
 import com.smart.framework.auth.core.model.RestUserDetailsImpl;
-import com.smart.framework.auth.core.userdetails.RestUserDetails;
 import com.smart.framework.commons.core.i18n.I18nUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.authentication.*;

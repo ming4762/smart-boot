@@ -1,8 +1,8 @@
 package com.smart.module.auth.filter;
 
+import com.smart.framework.auth.common.userdetails.RestUserDetails;
+import com.smart.framework.auth.common.utils.AuthUtils;
 import com.smart.framework.auth.core.authentication.RestUsernamePasswordAuthenticationToken;
-import com.smart.framework.auth.core.userdetails.RestUserDetails;
-import com.smart.framework.auth.core.utils.AuthUtils;
 import com.smart.framework.commons.core.dto.auth.UserTenantDTO;
 import com.smart.framework.commons.core.exception.SystemException;
 import com.smart.framework.commons.core.tenant.SmartTenantHolder;

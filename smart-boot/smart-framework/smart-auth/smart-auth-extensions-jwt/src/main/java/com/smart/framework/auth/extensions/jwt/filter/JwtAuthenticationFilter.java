@@ -1,10 +1,10 @@
 package com.smart.framework.auth.extensions.jwt.filter;
 
+import com.smart.framework.auth.common.userdetails.RestUserDetails;
 import com.smart.framework.auth.core.exception.IpBindAuthenticationException;
 import com.smart.framework.auth.core.i18n.AuthI18nMessage;
 import com.smart.framework.auth.core.properties.AuthIgnoreProperties;
 import com.smart.framework.auth.core.token.TokenRepository;
-import com.smart.framework.auth.core.userdetails.RestUserDetails;
 import com.smart.framework.auth.core.utils.AuthCheckUtils;
 import com.smart.framework.auth.core.utils.TokenUtils;
 import com.smart.framework.commons.core.i18n.I18nUtils;
@@ -29,6 +29,7 @@ import java.util.List;
  * jwt拦截器
  * @author shizhongming
  * 2020/2/15 10:58 上午
+ * TODO：使用com.smart.framework.auth.core.authentication.SmartAuthenticationFilter代替
  */
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {

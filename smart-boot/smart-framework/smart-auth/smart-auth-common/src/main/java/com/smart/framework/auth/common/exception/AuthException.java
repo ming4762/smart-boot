@@ -1,4 +1,4 @@
-package com.smart.framework.auth.core.exception;
+package com.smart.framework.auth.common.exception;
 
 import com.smart.framework.commons.core.http.IHttpStatus;
 import lombok.Getter;

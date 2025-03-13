@@ -1,7 +1,7 @@
 package com.smart.framework.auth.core.tenant.filter;
 
-import com.smart.framework.auth.core.userdetails.RestUserDetails;
-import com.smart.framework.auth.core.utils.AuthUtils;
+import com.smart.framework.auth.common.userdetails.RestUserDetails;
+import com.smart.framework.auth.common.utils.AuthUtils;
 import com.smart.framework.commons.core.tenant.SmartTenantHolder;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

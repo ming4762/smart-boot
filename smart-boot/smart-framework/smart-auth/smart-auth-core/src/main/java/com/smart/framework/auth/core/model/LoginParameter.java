@@ -1,6 +1,6 @@
 package com.smart.framework.auth.core.model;
 
-import com.smart.framework.auth.core.constants.LoginTypeEnum;
+import com.smart.framework.auth.common.constants.LoginTypeEnum;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.*;
 import org.springframework.lang.NonNull;

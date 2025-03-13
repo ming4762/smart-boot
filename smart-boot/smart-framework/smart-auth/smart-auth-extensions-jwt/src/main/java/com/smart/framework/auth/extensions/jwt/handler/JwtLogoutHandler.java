@@ -1,6 +1,6 @@
 package com.smart.framework.auth.extensions.jwt.handler;
 
-import com.smart.framework.auth.core.exception.AuthException;
+import com.smart.framework.auth.common.exception.AuthException;
 import com.smart.framework.auth.core.handler.SecurityLogoutHandler;
 import com.smart.framework.auth.core.utils.TokenUtils;
 import com.smart.framework.auth.extensions.jwt.token.JwtTokenRepository;

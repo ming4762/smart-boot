@@ -26,9 +26,20 @@ public class AuthProperties implements InitializingBean {
     private static final String DEFAULT_CAPTCHA_RESOURCE_PATH = "auth/captcha/*.jpg";
 
     /**
+     * 登录登出地址
+     */
+    private String loginUrl = "/auth/login";
+    private String logoutUrl = "/auth/logout";
+
+    /**
      * 认证缓存前缀
      */
     private String prefix = "smart-session";
+
+    /**
+     * 登录是否绑定IP
+     */
+    private Boolean bindIp = Boolean.TRUE;
 
     /**
      * JWT配置

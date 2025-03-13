@@ -1,6 +1,6 @@
 package com.smart.module.system.controller;
 
-import com.smart.framework.auth.core.utils.AuthUtils;
+import com.smart.framework.auth.common.utils.AuthUtils;
 import com.smart.framework.commons.core.http.HttpStatus;
 import com.smart.framework.commons.core.i18n.I18nUtils;
 import com.smart.framework.commons.core.log.Log;

@@ -1,7 +1,7 @@
 package com.smart.framework.auth.extensions.wechat.authentication;
 
 import com.smart.framework.auth.core.authentication.AbstractEnhanceAuthenticationToken;
-import com.smart.framework.auth.core.constants.AuthTypeEnum;
+import com.smart.framework.auth.common.constants.AuthTypeEnum;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;

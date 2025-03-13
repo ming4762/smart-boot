@@ -1,8 +1,8 @@
 package com.smart.framework.auth.core.authentication.url;
 
-import com.smart.framework.auth.core.annotation.NonUrlCheck;
+import com.smart.framework.auth.common.annotation.NonUrlCheck;
+import com.smart.framework.auth.common.userdetails.RestUserDetails;
 import com.smart.framework.auth.core.beans.UrlMappingProvider;
-import com.smart.framework.auth.core.userdetails.RestUserDetails;
 import com.smart.framework.commons.core.beans.AbstractBeanNameProvider;
 import com.smart.framework.commons.core.dto.auth.Permission;
 import com.smart.framework.commons.core.http.HttpMethod;

@@ -2,7 +2,7 @@ package com.smart.module.monitor.server.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.common.collect.Maps;
-import com.smart.framework.auth.core.utils.AuthUtils;
+import com.smart.framework.auth.common.utils.AuthUtils;
 import com.smart.framework.commons.core.utils.DateUtils;
 import com.smart.framework.commons.core.utils.JsonUtils;
 import com.smart.framework.crud.constants.CrudCommonEnum;

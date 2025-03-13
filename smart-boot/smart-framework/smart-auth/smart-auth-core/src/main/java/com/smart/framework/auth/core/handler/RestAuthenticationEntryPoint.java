@@ -1,6 +1,6 @@
 package com.smart.framework.auth.core.handler;
 
-import com.smart.framework.auth.core.exception.AuthException;
+import com.smart.framework.auth.common.exception.AuthException;
 import com.smart.framework.commons.core.message.Result;
 import com.smart.framework.commons.core.utils.RestJsonWriter;
 import jakarta.servlet.ServletException;

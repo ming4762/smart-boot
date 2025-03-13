@@ -1,8 +1,7 @@
-package com.smart.framework.auth.extensions.jwt.filter;
+package com.smart.framework.auth.core.filter;
 
 import com.smart.framework.auth.core.authentication.RestUsernamePasswordAuthenticationToken;
 import com.smart.framework.auth.core.model.LoginParameter;
-import com.smart.framework.auth.extensions.jwt.context.JwtContext;
 import com.smart.framework.commons.core.utils.IpUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,12 +13,12 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
  * @author shizhongming
  * 2021/1/1 3:02 上午
  */
-public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
+public class WebLoginFilter extends AbstractAuthenticationProcessingFilter {
 
     private final Boolean bindIp;
 
-    public JwtLoginFilter(JwtContext jwtContext, Boolean bindIp) {
-        super(jwtContext.getLoginUrl());
+    public WebLoginFilter(String loginUrl, Boolean bindIp) {
+        super(loginUrl);
         this.bindIp = bindIp;
     }
 

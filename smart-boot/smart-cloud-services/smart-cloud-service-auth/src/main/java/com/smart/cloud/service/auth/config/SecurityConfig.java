@@ -36,7 +36,7 @@ public class SecurityConfig extends AuthWebSecurityConfigurerAdapter {
         httpSecurity.formLogin(AbstractHttpConfigurer::disable)
                     .logout(AbstractHttpConfigurer::disable)
                     .sessionManagement(http -> http.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .with(AuthJwtSecurityConfigurer.jwt(), http -> http.jwtAuth(false).bindIp(false))
+                .with(AuthJwtSecurityConfigurer.jwt(), http -> http.jwtAuth(false))
                 .with(AuthCaptchaSecurityConfigurer.captcha(), Customizer.withDefaults());
         return httpSecurity.build();
     }

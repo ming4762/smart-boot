@@ -1,5 +1,6 @@
 package com.smart.framework.auth.core.userdetails;
 
+import com.smart.framework.auth.common.userdetails.RestUserDetails;
 import com.smart.module.api.system.dto.AuthUserDTO;
 import org.springframework.lang.Nullable;
 

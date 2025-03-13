@@ -1,7 +1,7 @@
 package com.smart.module.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.smart.framework.auth.core.utils.AuthUtils;
+import com.smart.framework.auth.common.utils.AuthUtils;
 import com.smart.framework.crud.constants.CrudCommonEnum;
 import com.smart.framework.crud.model.CreateUpdateUserSetter;
 import com.smart.framework.crud.plus.metadata.SmartTableInfo;

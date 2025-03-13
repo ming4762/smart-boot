@@ -1,7 +1,7 @@
 package com.smart.module.system.controller.tenant;
 
 import com.github.pagehelper.Page;
-import com.smart.framework.auth.core.utils.AuthUtils;
+import com.smart.framework.auth.common.utils.AuthUtils;
 import com.smart.framework.commons.core.dto.common.LabelValueData;
 import com.smart.framework.commons.core.log.Log;
 import com.smart.framework.commons.core.log.LogOperationTypeEnum;
