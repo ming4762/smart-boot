@@ -3,6 +3,7 @@ package com.smart.framework.auth.cache.guava.cache;
 import com.smart.framework.auth.core.service.AbstractAuthCache;
 import com.smart.framework.cache.guava.GuavaCacheService;
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.util.CollectionUtils;
 
 import java.time.Duration;
@@ -12,9 +13,10 @@ import java.util.stream.Collectors;
 /**
  * authCache Guava实现
  * @author shizhongming
+ * TODO:未完成
  * 2020/9/11 9:40 下午
  */
-public class GuavaAuthCache extends AbstractAuthCache<String, Object> {
+public class GuavaAuthCache extends AbstractAuthCache<Object> {
 
     private final GuavaCacheService cacheService;
 
@@ -24,9 +26,34 @@ public class GuavaAuthCache extends AbstractAuthCache<String, Object> {
         this.cacheService = cacheService;
     }
 
+    /**
+     * 添加缓存
+     *
+     * @param key     key
+     * @param mapKey  mapKey
+     * @param value   value
+     * @param timeout 超时时间
+     */
+    @Override
+    public void put(String key, String mapKey, Object value, Duration timeout) {
+
+    }
+
     @Override
     public void put(@NonNull String key, @NonNull Object value, Duration timeout) {
         this.cacheService.put(this.getKey(key), value, timeout);
+    }
+
+    /**
+     * 添加缓存
+     *
+     * @param key     key
+     * @param value   value
+     * @param timeout 超时时间
+     */
+    @Override
+    public void putAll(String key, Map<String, Object> value, Duration timeout) {
+
     }
 
     @Override
@@ -34,9 +61,33 @@ public class GuavaAuthCache extends AbstractAuthCache<String, Object> {
         this.cacheService.expire(this.getKey(key), timeout);
     }
 
+    @Nullable
     @Override
-    public Object get(@NonNull String key) {
+    public Map<String, Object> get(@NonNull String key) {
         return this.cacheService.get(this.getKey(key));
+    }
+
+    /**
+     * 获取缓存内容
+     *
+     * @param key key
+     * @return value
+     */
+    @Override
+    public Object getValue(String key) {
+        return null;
+    }
+
+    /**
+     * 获取缓存内容
+     *
+     * @param key    key
+     * @param mapKey mapKey
+     * @return value
+     */
+    @Override
+    public Object get(String key, String mapKey) {
+        return null;
     }
 
     @Override
@@ -59,10 +110,10 @@ public class GuavaAuthCache extends AbstractAuthCache<String, Object> {
      */
     @Override
     @NonNull
-    public Set<Object> batchGet(@NonNull Collection<String> keys) {
+    public List<Map<String, Object>> batchGet(@NonNull Collection<String> keys) {
         var prefixKeys = keys.stream().map(this::getKey).collect(Collectors.toSet());
-        List<Object> cacheList = this.cacheService.batchGet(new ArrayList<>(prefixKeys));
-        return cacheList == null ? Collections. emptySet() : new HashSet<>(cacheList);
+        List<Map<String, Object>> cacheList = this.cacheService.batchGet(new ArrayList<>(prefixKeys));
+        return cacheList == null ? Collections. emptyList() : cacheList;
     }
 
     @Override
@@ -71,16 +122,16 @@ public class GuavaAuthCache extends AbstractAuthCache<String, Object> {
     }
 
     @Override
-    public Set<Object> matchGet(@NonNull String matchKey) {
+    public List<Map<String, Object>> matchGet(@NonNull String matchKey) {
         List<String> keys = this.cacheService.matchKeys(this.getKey(matchKey));
         if (CollectionUtils.isEmpty(keys)) {
-            return Collections. emptySet();
+            return Collections.emptyList();
         }
-        List<Object> dataList = this.cacheService.batchGet(keys);
+        List<Map<String, Object>> dataList = this.cacheService.batchGet(keys);
         if (CollectionUtils.isEmpty(dataList)) {
-            return Collections. emptySet();
+            return Collections. emptyList();
         }
-        return new HashSet<>(dataList);
+        return dataList;
     }
 
     @Override
@@ -98,7 +149,29 @@ public class GuavaAuthCache extends AbstractAuthCache<String, Object> {
      * @return 数据
      */
     @Override
-    public Object getAndRemove(@NonNull String key) {
+    public Map<String, Object> getAndRemove(@NonNull String key) {
         return this.cacheService.getAndRemove(key);
+    }
+
+    /**
+     * 重命名
+     *
+     * @param oldKey 旧key
+     * @param newKey 新key
+     */
+    @Override
+    public void rename(@NonNull String oldKey, @NonNull String newKey) {
+        this.cacheService.rename(this.getKey(oldKey), this.getKey(newKey));
+    }
+
+    /**
+     * 是否存在key
+     *
+     * @param key key
+     * @return 是否存在
+     */
+    @Override
+    public boolean hasKey(String key) {
+        return false;
     }
 }

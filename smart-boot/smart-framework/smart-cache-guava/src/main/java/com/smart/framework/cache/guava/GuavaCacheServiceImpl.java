@@ -183,6 +183,16 @@ public class GuavaCacheServiceImpl implements GuavaCacheService {
         return this.cache.asMap().keySet();
     }
 
+    /**
+     * 获取缓存
+     *
+     * @return 缓存
+     */
+    @Override
+    public Cache<String, CacheObject<Object>> getCache() {
+        return this.cache;
+    }
+
 
     /**
      * 获取并删除
@@ -197,5 +207,20 @@ public class GuavaCacheServiceImpl implements GuavaCacheService {
             this.delete(key);
         }
         return data;
+    }
+
+    /**
+     * 重命名缓存
+     *
+     * @param oldKey 旧key
+     * @param newKey 新key
+     */
+    @Override
+    public void rename(String oldKey, String newKey) {
+        CacheObject<Object> value = this.cache.getIfPresent(oldKey);
+        if (value != null) {
+            this.cache.put(newKey, value);
+            this.cache.invalidate(oldKey);
+        }
     }
 }

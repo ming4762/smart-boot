@@ -24,13 +24,13 @@ public class DefaultSmsCreateValidateProviderImpl implements SmsCreateValidatePr
 
     private static final String PREFIX = "smart_auth_sms_login";
 
-    private final AuthCache<String, Object> authCache;
+    private final AuthCache<Object> authCache;
 
     private final SmartMessageApi smartMessageApi;
 
     private final AuthProperties authProperties;
 
-    public DefaultSmsCreateValidateProviderImpl(AuthCache<String, Object> authCache, SmartMessageApi smartMessageApi, AuthProperties authProperties) {
+    public DefaultSmsCreateValidateProviderImpl(AuthCache<Object> authCache, SmartMessageApi smartMessageApi, AuthProperties authProperties) {
         this.authCache = authCache;
         this.smartMessageApi = smartMessageApi;
         this.authProperties = authProperties;
@@ -76,7 +76,7 @@ public class DefaultSmsCreateValidateProviderImpl implements SmsCreateValidatePr
     public boolean validate(@NonNull String phone, String code) {
         // 获取验证码
         String codeKey = this.getCodeKey(phone);
-        String cacheCode = (String) this.authCache.get(codeKey);
+        String cacheCode = (String) this.authCache.getValue(codeKey);
         if (StringUtils.isBlank(cacheCode) || !org.apache.commons.codec.binary.StringUtils.equals(cacheCode, code)) {
             return false;
         }

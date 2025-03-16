@@ -9,7 +9,7 @@ import com.smart.framework.auth.core.model.PermissionGrantedAuthority;
 import com.smart.framework.auth.core.model.RestUserDetailsImpl;
 import com.smart.framework.auth.core.model.RoleGrantedAuthority;
 import com.smart.framework.auth.core.model.SmartGrantedAuthority;
-import com.smart.framework.auth.core.token.TokenData;
+import com.smart.framework.auth.core.token.TokenCacheData;
 import com.smart.framework.auth.core.token.TokenRepository;
 import com.smart.framework.commons.core.dto.auth.MaxConnectionsPolicyEnum;
 import com.smart.framework.commons.core.dto.auth.UserAccountDTO;
@@ -154,7 +154,7 @@ public class DefaultUserDetailsBuilderImpl implements UserDetailsBuilder {
         if (connectionNum <= 0) {
             return;
         }
-        List<TokenData> tokenDataList = this.tokenRepositoryList.stream()
+        List<TokenCacheData> tokenDataList = this.tokenRepositoryList.stream()
                 .flatMap(item -> item.listData(user.getUsername(), userAccountData.getTenant().getTenantId()).stream())
                 .toList();
         if (tokenDataList.size() < connectionNum) {
@@ -169,7 +169,7 @@ public class DefaultUserDetailsBuilderImpl implements UserDetailsBuilder {
         if (MaxConnectionsPolicyEnum.FIRST_USER_LOGOUT.equals(maxConnectionsPolicy)) {
             // 最早刷新token的用户执行登出操作
             tokenDataList.stream()
-                    .min(Comparator.comparing(TokenData::getRefreshTime))
+                    .min(Comparator.comparing(TokenCacheData::getRefreshTime))
                     .ifPresent(tokenData -> this.tokenRepositoryList.forEach(item -> item.invalidateByToken(tokenData.getToken())));
         }
     }

@@ -6,7 +6,8 @@ import com.smart.framework.auth.common.utils.AuthUtils;
 import com.smart.framework.auth.core.i18n.AuthI18nMessage;
 import com.smart.framework.auth.core.model.TempTokenData;
 import com.smart.framework.auth.core.properties.AuthProperties;
-import com.smart.framework.auth.core.token.TokenData;
+import com.smart.framework.auth.core.token.SmartTokenRepository;
+import com.smart.framework.auth.core.token.TokenCacheData;
 import com.smart.framework.auth.core.token.TokenRepository;
 import com.smart.framework.commons.core.captcha.dto.CaptchaGenerateDTO;
 import com.smart.framework.commons.core.captcha.dto.CaptchaGenerateParameter;
@@ -30,6 +31,7 @@ import com.smart.module.auth.pojo.vo.OnlineUserVO;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -42,7 +44,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Duration;
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -56,22 +58,14 @@ import java.util.stream.Collectors;
 @RequestMapping
 @RestController
 @NonUrlCheck
+@RequiredArgsConstructor
 public class AuthController {
 
     private final AuthProperties authProperties;
-
     private final List<TokenRepository> tokenRepositoryList;
-
+    private final List<SmartTokenRepository> smartTokenRepositoryList;
     private final AuthApi authApi;
-
     private final AuthCaptchaApi authCaptchaApi;
-
-    public AuthController(AuthProperties authProperties, List<TokenRepository> tokenRepositoryList, AuthApi authApi, AuthCaptchaApi authCaptchaApi) {
-        this.authProperties = authProperties;
-        this.tokenRepositoryList = tokenRepositoryList;
-        this.authApi = authApi;
-        this.authCaptchaApi = authCaptchaApi;
-    }
 
     /**
      * 验证用户是否登录
@@ -126,12 +120,12 @@ public class AuthController {
     @PostMapping("auth/listOnlineUser")
     @Operation(summary = "查询所有在线用户")
     public Result<List<OnlineUserVO>> listOnlineUser(@RequestBody OnlineUserQueryDTO parameter) {
-        if (CollectionUtils.isEmpty(this.tokenRepositoryList)) {
+        if (CollectionUtils.isEmpty(this.smartTokenRepositoryList)) {
             return Result.success(new ArrayList<>(0));
         }
         // 查询所有存储的用户信息
-        List<TokenData> userTokenDataList = this.listOnlineToken(parameter);
-        Map<Long, List<TokenData>> tokenMap = userTokenDataList.stream()
+        List<TokenCacheData> userTokenDataList = this.listOnlineToken(parameter);
+        Map<Long, List<TokenCacheData>> tokenMap = userTokenDataList.stream()
                 .collect(Collectors.groupingBy(item -> item.getUser().getUserId()));
         List<OnlineUserVO> onlineUserList = tokenMap.keySet().stream()
                 .map(userId -> {
@@ -152,14 +146,14 @@ public class AuthController {
      * @param parameter 参数
      * @return token列表
      */
-    private List<TokenData> listOnlineToken(OnlineUserQueryDTO parameter) {
-        return this.tokenRepositoryList.stream()
+    private List<TokenCacheData> listOnlineToken(OnlineUserQueryDTO parameter) {
+        return this.smartTokenRepositoryList.stream()
                 .flatMap(item -> {
                     boolean isPlatformTenant = AuthUtils.isPlatformTenant();
                     if (isPlatformTenant) {
                         if (parameter.getUsername() == null) {
                             // 平台管理租户查询所有
-                            return item.listData().stream()
+                            return item.listToken().stream()
                                     .filter(userData -> {
                                         if (parameter.getTenantId() == null) {
                                             return true;
@@ -167,13 +161,13 @@ public class AuthController {
                                         return parameter.getTenantId().equals(userData.getUser().getUserTenant().getTenantId());
                                     });
                         }
-                        return item.listData(parameter.getUsername(), parameter.getTenantId()).stream();
+                        return item.listToken(parameter.getUsername(), parameter.getTenantId()).stream();
                     }
                     Long tenantId = AuthUtils.getNonNullCurrentTenantId();
                     if (parameter.getUsername() != null) {
-                        return item.listData(parameter.getUsername(), tenantId).stream();
+                        return item.listToken(parameter.getUsername(), tenantId).stream();
                     }
-                    return item.listData().stream()
+                    return item.listToken().stream()
                             .filter(userData -> userData.getUser().getUserTenant().getTenantId().equals(tenantId));
                 })
                 .toList();
@@ -184,15 +178,15 @@ public class AuthController {
      * @param tokenDataList token 列表
      * @return 用户登录信息
      */
-    private List<OnlineUserVO.UserLoginData> tokenToUserLoginData(List<TokenData> tokenDataList) {
+    private List<OnlineUserVO.UserLoginData> tokenToUserLoginData(List<TokenCacheData> tokenDataList) {
         if (CollectionUtils.isEmpty(tokenDataList)) {
             return List.of();
         }
-        ZonedDateTime now = ZonedDateTime.now();
+        Instant now = Instant.now();
         return tokenDataList.stream()
                 .map(item -> {
                     // 计算有效期
-                    ZonedDateTime timeoutTime = item.getRefreshTime().plus(item.getTimeout());
+                    Instant timeoutTime = item.getRefreshTime().plus(item.getTimeout());
                     RestUserDetails userDetails = item.getUser();
                     OnlineUserVO.UserLoginData.UserLoginDataBuilder builder = OnlineUserVO.UserLoginData.builder()
                             .loginIp(userDetails.getLoginIp())

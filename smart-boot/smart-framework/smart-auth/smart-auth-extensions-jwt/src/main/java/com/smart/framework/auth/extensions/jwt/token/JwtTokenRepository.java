@@ -9,7 +9,7 @@ import com.smart.framework.auth.core.model.RoleGrantedAuthority;
 import com.smart.framework.auth.core.model.SmartGrantedAuthority;
 import com.smart.framework.auth.core.properties.AuthProperties;
 import com.smart.framework.auth.core.service.AuthCache;
-import com.smart.framework.auth.core.token.TokenData;
+import com.smart.framework.auth.core.token.TokenCacheData;
 import com.smart.framework.auth.core.token.TokenRepository;
 import com.smart.framework.auth.extensions.jwt.resolver.JwtResolver;
 import com.smart.framework.commons.core.dto.auth.AuthRole;
@@ -19,9 +19,8 @@ import org.springframework.lang.NonNull;
 import org.springframework.util.CollectionUtils;
 
 import java.time.Duration;
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 默认的token存储器
@@ -37,12 +36,12 @@ public class JwtTokenRepository implements TokenRepository {
 
     private static final String DATA_KEY_PREFIX = "jwt-attribute";
 
-    private final AuthCache<String, Object> authCache;
+    private final AuthCache<Object> authCache;
     private final JwtResolver jwtResolver;
     private final boolean permissionCache;
     private final AuthProperties authProperties;
 
-    public JwtTokenRepository( AuthProperties authProperties, AuthCache<String, Object> authCache, JwtResolver jwtResolver) {
+    public JwtTokenRepository(AuthProperties authProperties, AuthCache<Object> authCache, JwtResolver jwtResolver) {
         this.authCache = authCache;
         this.jwtResolver = jwtResolver;
         this.permissionCache = Boolean.TRUE.equals(authProperties.getJwt().getPermissionCache());
@@ -66,10 +65,10 @@ public class JwtTokenRepository implements TokenRepository {
             timeout = authProperties.getSession().getTimeout().getRemember();
         }
         // 保存jwt到cache中
-        ZonedDateTime currentTime = ZonedDateTime.now();
+        Instant currentTime = Instant.now();
         String token = this.jwtResolver.create(user);
 
-        TokenData tokenData = new TokenData(token, currentTime, currentTime, timeout, user);
+        TokenCacheData tokenData = new TokenCacheData(token, currentTime, currentTime, timeout, user);
         if (Boolean.TRUE.equals(this.permissionCache)) {
             Set<Permission> permissions = user.getPermissions();
             Set<AuthRole> roles = user.getRoles();
@@ -93,9 +92,9 @@ public class JwtTokenRepository implements TokenRepository {
 
         String attributeKey = this.getAttributeKey(user.getUsername(), user.getUserTenant().getTenantId(), token);
         // 获取有效期
-        TokenData jwtData = (TokenData) this.authCache.get(tokenKey);
+        TokenCacheData jwtData = (TokenCacheData) this.authCache.get(tokenKey);
         if (jwtData != null) {
-            jwtData.setRefreshTime(ZonedDateTime.now());
+            jwtData.setRefreshTime(Instant.now());
             this.authCache.put(tokenKey, jwtData, jwtData.getTimeout());
             this.authCache.expire(attributeKey, jwtData.getTimeout());
             return true;
@@ -135,50 +134,19 @@ public class JwtTokenRepository implements TokenRepository {
     }
 
     /**
-     * 查询所有JWT
-     *
-     * @return 所有jwt
-     */
-    @NonNull
-    @Override
-    public Set<String> listToken() {
-        Set<String> keys = this.authCache.matchKeys(this.getTokenKey(null, null, null));
-        if (CollectionUtils.isEmpty(keys)) {
-            return Collections.emptySet();
-        }
-        return keys.stream().map(item -> item.split(JWT_SPLIT_KEY)[2]).collect(Collectors.toSet());
-    }
-
-    /**
-     * 通过用户名查询JWT
-     *
-     * @param username 用户名
-     * @return jwt列表
-     */
-    @NonNull
-    @Override
-    public Set<String> listToken(@NonNull Long tenantId, @NonNull String username) {
-        Set<String> keys = this.authCache.matchKeys(this.getTokenKey(username, tenantId, null));
-        if (CollectionUtils.isEmpty(keys)) {
-            return Collections.emptySet();
-        }
-        return keys.stream().map(item -> item.split(JWT_SPLIT_KEY)[2]).collect(Collectors.toSet());
-    }
-
-    /**
      * 查询所有数据
      *
      * @return jwt数据
      */
     @NonNull
     @Override
-    public List<TokenData> listData() {
+    public List<TokenCacheData> listData() {
         Set<String> keys = this.authCache.matchKeys(this.getTokenKey(null, null, null));
         if (CollectionUtils.isEmpty(keys)) {
             return new ArrayList<>(0);
         }
         return this.authCache.batchGet(keys).stream()
-                .map(TokenData.class::cast)
+                .map(TokenCacheData.class::cast)
                 .toList();
     }
 
@@ -190,13 +158,13 @@ public class JwtTokenRepository implements TokenRepository {
      */
     @NonNull
     @Override
-    public List<TokenData> listData(@NonNull String username, @NonNull Long tenantId) {
+    public List<TokenCacheData> listData(@NonNull String username, @NonNull Long tenantId) {
         Set<String> keys = this.authCache.matchKeys(this.getTokenKey(username, tenantId, null));
         if (CollectionUtils.isEmpty(keys)) {
             return new ArrayList<>(0);
         }
         return this.authCache.batchGet(keys).stream()
-                .map(TokenData.class::cast)
+                .map(TokenCacheData.class::cast)
                 .toList();
     }
 
@@ -207,9 +175,9 @@ public class JwtTokenRepository implements TokenRepository {
      * @return TokenData
      */
     @Override
-    public TokenData getData(String token) {
+    public TokenCacheData getData(String token) {
         RestUserDetails user = this.jwtResolver.resolver(token);
-        TokenData tokenData = (TokenData) this.authCache.get(this.getTokenKey(user.getUsername(), user.getUserTenant().getTenantId(), token));
+        TokenCacheData tokenData = (TokenCacheData) this.authCache.get(this.getTokenKey(user.getUsername(), user.getUserTenant().getTenantId(), token));
         if (tokenData == null) {
             return null;
         }
@@ -254,11 +222,11 @@ public class JwtTokenRepository implements TokenRepository {
      */
     @Override
     public RestUserDetails getUser(String token) {
-        TokenData tokenData = this.getData(token);
+        TokenCacheData tokenData = this.getData(token);
         return this.getUserFromCacheData(tokenData);
     }
 
-    private RestUserDetails getUserFromCacheData(TokenData tokenData) {
+    private RestUserDetails getUserFromCacheData(TokenCacheData tokenData) {
         if (tokenData == null) {
             return null;
         }

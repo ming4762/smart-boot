@@ -46,7 +46,7 @@ public class AuthWebSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
         builder.authenticationProvider(this.getRestAuthenticationProvider())
                 .addFilterAfter(this.createWebLoginFilter(builder, authProperties.getLoginUrl(), authProperties.getBindIp()), BasicAuthenticationFilter.class)
                 // 添加登录验证拦截器
-                .addFilterAfter(this.postProcess(new SmartAuthenticationFilter()), ExceptionTranslationFilter.class);
+                .addFilterAfter(this.postProcess(new SmartAuthenticationFilter(authProperties.getIgnores(), authProperties.getDevelopment())), ExceptionTranslationFilter.class);
 
     }
 

@@ -1,6 +1,8 @@
 package com.smart.boot.autoconfigure.auth.extension;
 
-import com.smart.framework.auth.extensions.session.UserDataSessionIdGenerator;
+import com.smart.boot.autoconfigure.auth.session.RedisSessionRepositoryBeanPostProcessor;
+import com.smart.framework.auth.core.service.AuthCache;
+import com.smart.framework.auth.extensions.session.SmartSessionTokenRepository;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,13 +28,18 @@ public class SmartAuthWebAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean(SessionIdGenerator.class)
-    public UserDataSessionIdGenerator userDataSessionIdGenerator() {
-        return new UserDataSessionIdGenerator();
+    public SmartSessionTokenRepository smartSessionTokenRepository(AuthCache<Object> authCache) {
+        return new SmartSessionTokenRepository(authCache);
     }
 
     @Bean
     @ConditionalOnMissingBean
     public HttpSessionIdResolver httpSessionIdResolver() {
         return new HeaderHttpSessionIdResolver(HttpHeaders.AUTHORIZATION);
+    }
+
+    @Bean
+    public static RedisSessionRepositoryBeanPostProcessor redisSessionRepositoryBeanPostProcessor() {
+        return new RedisSessionRepositoryBeanPostProcessor();
     }
 }

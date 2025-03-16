@@ -47,9 +47,9 @@ public class LocalAuthApiImpl implements AuthApi {
 
     private final List<TokenRepository> tokenRepositoryList;
 
-    private final AuthCache<String, Object> authCache;
+    private final AuthCache<Object> authCache;
 
-    public LocalAuthApiImpl(List<TokenRepository> tokenRepositoryList, AuthProperties authProperties, AuthCache<String, Object> authCache) {
+    public LocalAuthApiImpl(List<TokenRepository> tokenRepositoryList, AuthProperties authProperties, AuthCache<Object> authCache) {
         this.tokenRepositoryList = tokenRepositoryList;
         this.authProperties = authProperties;
         this.authCache = authCache;

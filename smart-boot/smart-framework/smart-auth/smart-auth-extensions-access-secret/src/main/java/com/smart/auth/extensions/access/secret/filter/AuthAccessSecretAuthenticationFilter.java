@@ -58,9 +58,9 @@ public class AuthAccessSecretAuthenticationFilter implements Filter {
 
     private final AccessSecretProvider accessSecretProvider;
 
-    private final AuthCache<String, Object> authCache;
+    private final AuthCache<Object> authCache;
 
-    public AuthAccessSecretAuthenticationFilter(AuthProperties authProperties, AccessSecretProvider accessSecretProvider, AuthCache<String, Object> authCache) {
+    public AuthAccessSecretAuthenticationFilter(AuthProperties authProperties, AccessSecretProvider accessSecretProvider, AuthCache<Object> authCache) {
         this.authProperties = authProperties;
         this.accessSecretProvider = accessSecretProvider;
         this.authCache = authCache;

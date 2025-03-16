@@ -308,4 +308,10 @@ public class RedisServiceImpl implements RedisService {
     public <T> T getAndRemove(@NonNull String key) {
         return this.redissonClient.<T>getBucket(key).getAndDelete();
     }
+
+    @Override
+    public void rename(String oldKey, String newKey) {
+        RKeys keys = this.redissonClient.getKeys();
+        keys.rename(oldKey, newKey);
+    }
 }

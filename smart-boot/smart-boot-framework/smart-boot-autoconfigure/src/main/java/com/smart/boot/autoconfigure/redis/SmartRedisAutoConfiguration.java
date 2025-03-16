@@ -41,7 +41,7 @@ public class SmartRedisAutoConfiguration {
      * radisson 使用jackson作为序列化工具
      * @return JacksonRedissonAutoConfigurationCustomizer
      */
-    @Bean
+//    @Bean
     public JacksonRedissonAutoConfigurationCustomizer jacksonRedissonAutoConfigurationCustomizer(@Autowired(required = false) ObjectMapper objectMapper) {
         return new JacksonRedissonAutoConfigurationCustomizer(objectMapper);
     }

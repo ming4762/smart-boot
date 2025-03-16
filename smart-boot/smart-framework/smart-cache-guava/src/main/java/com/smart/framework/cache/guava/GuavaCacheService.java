@@ -1,5 +1,7 @@
 package com.smart.framework.cache.guava;
 
+import com.google.common.cache.Cache;
+import com.smart.framework.cache.guava.data.CacheObject;
 import com.smart.framework.commons.core.cache.CacheService;
 
 import java.util.Set;
@@ -20,4 +22,10 @@ public interface GuavaCacheService extends CacheService {
      * @return 缓存key集合
      */
     Set<String> keys();
+
+    /**
+     * 获取缓存
+     * @return 缓存
+     */
+    Cache<String, CacheObject<Object>> getCache();
 }

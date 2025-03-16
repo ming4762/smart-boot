@@ -151,7 +151,7 @@ public class AuthSecurity2AutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    public PersistentTokenRepository persistentTokenRepository(AuthCache<String, Object> authCache, AuthProperties authProperties) {
+    public PersistentTokenRepository persistentTokenRepository(AuthCache<Object> authCache, AuthProperties authProperties) {
         return new AuthCachePersistentTokenRepository(authCache, authProperties);
     }
 

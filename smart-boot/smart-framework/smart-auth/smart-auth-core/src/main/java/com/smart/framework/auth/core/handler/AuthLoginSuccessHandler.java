@@ -35,7 +35,10 @@ public class AuthLoginSuccessHandler implements AuthenticationSuccessHandler, In
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
         final LoginParameter loginParameter = LoginParameter.create(httpServletRequest);
-        this.setSessionMaxInactiveInterval(httpServletRequest, loginParameter.getLoginType());
+        if (httpServletRequest.getSession(false) != null) {
+            httpServletRequest.changeSessionId();
+            this.setSessionMaxInactiveInterval(httpServletRequest, loginParameter.getLoginType());
+        }
         RestJsonWriter.writeJson(httpServletResponse, Result.success(this.authSuccessDataHandler.successData(authentication, httpServletRequest, loginParameter.getLoginType())));
     }
 
@@ -45,9 +48,6 @@ public class AuthLoginSuccessHandler implements AuthenticationSuccessHandler, In
      */
     protected void setSessionMaxInactiveInterval(HttpServletRequest request, LoginTypeEnum loginType) {
         HttpSession session = request.getSession(false);
-        if (session == null) {
-            return;
-        }
         // 获取有效期
         Duration timeout = authProperties.getSession().getTimeout().getGlobal();
         if (Objects.equals(loginType, LoginTypeEnum.MOBILE)) {

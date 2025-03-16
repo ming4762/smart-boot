@@ -76,7 +76,7 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
 
     }
 
-    private AuthCache<String, Object> getAuthCache() {
+    private AuthCache<Object> getAuthCache() {
         return this.getBean(AuthCache.class, this.serviceProvider.authCache);
     }
 
@@ -224,7 +224,7 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
      */
     @Setter
     private static class ServiceProvider {
-        private AuthCache<String, Object> authCache;
+        private AuthCache<Object> authCache;
         /**
          * 是否使用jwt认证器
          */

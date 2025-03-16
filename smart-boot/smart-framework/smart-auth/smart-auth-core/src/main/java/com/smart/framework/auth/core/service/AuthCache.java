@@ -5,6 +5,8 @@ import org.springframework.lang.Nullable;
 
 import java.time.Duration;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -12,7 +14,16 @@ import java.util.Set;
  * @author shizhongming
  * 2020/7/1 1:59 下午
  */
-public interface AuthCache<K, V> {
+public interface AuthCache<V> {
+
+    /**
+     * 添加缓存
+     * @param key key
+     * @param mapKey mapKey
+     * @param value value
+     * @param timeout 超时时间
+     */
+    void put(@NonNull String key, @NonNull String mapKey, @NonNull V value, Duration timeout);
 
     /**
      * 添加缓存
@@ -20,14 +31,22 @@ public interface AuthCache<K, V> {
      * @param value value
      * @param timeout 超时时间
      */
-    void put(@NonNull K key, @NonNull V value, Duration timeout);
+    void put(@NonNull String key, @NonNull V value, Duration timeout);
+
+    /**
+     * 添加缓存
+     * @param key key
+     * @param value value
+     * @param timeout 超时时间
+     */
+    void putAll(@NonNull String key, @NonNull Map<String, V> value, Duration timeout);
 
     /**
      * 设置超时时间
      * @param key key
      * @param timeout 超时时间
      */
-    void expire(@NonNull K key, Duration timeout);
+    void expire(@NonNull String key, Duration timeout);
 
     /**
      * 获取缓存内容
@@ -35,19 +54,35 @@ public interface AuthCache<K, V> {
      * @return value
      */
     @Nullable
-    V get(@NonNull K key);
+    Map<String, V> get(@NonNull String key);
+
+    /**
+     * 获取缓存内容
+     * @param key key
+     * @return value
+     */
+    V getValue(@NonNull String key);
+
+    /**
+     * 获取缓存内容
+     * @param key key
+     * @param mapKey mapKey
+     * @return value
+     */
+    @Nullable
+    V get(@NonNull String key, @NonNull String mapKey);
 
     /**
      * 删除缓存
      * @param key key
      */
-    void remove(@NonNull K key);
+    void remove(@NonNull String key);
 
     /**
      * 获取所有key的集合
      * @return key的集合
      */
-    Set<K> keys();
+    Set<String> keys();
 
 
     /**
@@ -56,32 +91,46 @@ public interface AuthCache<K, V> {
      * @return 获取的缓存
      */
     @NonNull
-    Set<V> batchGet(@NonNull Collection<K> keys);
+    List<Map<String, V>> batchGet(@NonNull Collection<String> keys);
 
     /**
      * 匹配删除
      * @param matchKey 匹配的key
      */
-    void matchRemove(@NonNull K matchKey);
+    void matchRemove(@NonNull String matchKey);
 
     /**
      * 匹配获取
      * @param matchKey 匹配的key
      * @return 匹配结果
      */
-    Set<V> matchGet(@NonNull K matchKey);
+    List<Map<String, V>> matchGet(@NonNull String matchKey);
 
     /**
      * 匹配获取key
      * @param matchKey 匹配的key
      * @return 匹配结果
      */
-    Set<K> matchKeys(@NonNull K matchKey);
+    Set<String> matchKeys(@NonNull String matchKey);
 
     /**
      * 获取并删除
      * @param key key
      * @return 数据
      */
-    V getAndRemove(@NonNull K key);
+    Map<String, V> getAndRemove(@NonNull String key);
+
+    /**
+     * 重命名
+     * @param oldKey 旧key
+     * @param newKey 新key
+     */
+    void rename(@NonNull String oldKey, @NonNull String newKey);
+
+    /**
+     * 是否存在key
+     * @param key key
+     * @return 是否存在
+     */
+    boolean hasKey(@NonNull String key);
 }

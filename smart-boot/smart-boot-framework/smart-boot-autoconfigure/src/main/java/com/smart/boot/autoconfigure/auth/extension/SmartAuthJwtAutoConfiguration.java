@@ -122,7 +122,7 @@ public class SmartAuthJwtAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean(JwtTokenRepository.class)
-    public JwtTokenRepository jwtTokenRepository(AuthProperties authProperties, AuthCache<String, Object> authCache, JwtResolver jwtResolver) {
+    public JwtTokenRepository jwtTokenRepository(AuthProperties authProperties, AuthCache<Object> authCache, JwtResolver jwtResolver) {
         return new JwtTokenRepository(authProperties, authCache, jwtResolver);
     }
 

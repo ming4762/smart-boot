@@ -7,9 +7,9 @@ import org.springframework.lang.NonNull;
  * 2021/6/2 14:21
  * @since 1.0
  */
-public abstract class AbstractAuthCache<K, V> implements AuthCache<K, V> {
+public abstract class AbstractAuthCache<V> implements AuthCache<V> {
 
-    private static final String SPLIT = "&##&";
+    public static final String SPLIT = ":";
 
     private final String prefix;
 

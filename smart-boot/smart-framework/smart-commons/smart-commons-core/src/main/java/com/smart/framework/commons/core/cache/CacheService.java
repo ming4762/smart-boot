@@ -166,4 +166,11 @@ public interface CacheService {
      * @return 数据
      */
     <T> T getAndRemove(@NonNull String key);
+
+    /**
+     * 重命名缓存
+     * @param oldKey 旧key
+     * @param newKey 新key
+     */
+    void rename(String oldKey, String newKey);
 }

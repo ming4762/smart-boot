@@ -5,7 +5,6 @@ import org.springframework.core.Ordered;
 import org.springframework.lang.NonNull;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * token存储器
@@ -45,26 +44,11 @@ public interface TokenRepository extends Ordered {
     boolean invalidateByUsername(@NonNull Long tenantId, @NonNull String username);
 
     /**
-     * 查询所有JWT
-     * @return 所有jwt
-     */
-    @NonNull
-    Set<String> listToken();
-
-    /**
-     * 通过用户名查询JWT
-     * @param username 用户名
-     * @return jwt列表
-     */
-    @NonNull
-    Set<String> listToken(@NonNull Long tenantId, @NonNull String username);
-
-    /**
      * 查询所有数据
      * @return jwt数据
      */
     @NonNull
-    List<TokenData> listData();
+    List<TokenCacheData> listData();
 
     /**
      * 通过用户名查询jwt数据
@@ -72,14 +56,14 @@ public interface TokenRepository extends Ordered {
      * @return jwt数据
      */
     @NonNull
-    List<TokenData> listData(String username, Long tenantId);
+    List<TokenCacheData> listData(String username, Long tenantId);
 
     /**
      * 获取token数据
      * @param token token
      * @return TokenData
      */
-    TokenData getData(String token);
+    TokenCacheData getData(String token);
 
     /**
      * 通过TOKEN获取用户信息

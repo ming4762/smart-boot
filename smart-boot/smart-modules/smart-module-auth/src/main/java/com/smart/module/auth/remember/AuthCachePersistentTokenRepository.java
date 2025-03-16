@@ -12,7 +12,8 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.Duration;
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author shizhongming
@@ -24,7 +25,7 @@ public class AuthCachePersistentTokenRepository implements PersistentTokenReposi
 
     private static final String CACHE_KEY_PREFIX = "remember-me:";
 
-    private final AuthCache<String, Object> authCache;
+    private final AuthCache<Object> authCache;
     private final AuthProperties authProperties;
 
     @Override
@@ -61,7 +62,7 @@ public class AuthCachePersistentTokenRepository implements PersistentTokenReposi
 
     @Override
     public void removeUserTokens(String username) {
-        Set<Object> cacheList = this.authCache.matchGet(CACHE_KEY_PREFIX);
+        List<Map<String, Object>> cacheList = this.authCache.matchGet(CACHE_KEY_PREFIX);
         if (CollectionUtils.isEmpty(cacheList)) {
             return;
         }

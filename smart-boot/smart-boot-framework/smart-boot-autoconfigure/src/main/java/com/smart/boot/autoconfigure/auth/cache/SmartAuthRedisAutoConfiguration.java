@@ -20,13 +20,8 @@ public class SmartAuthRedisAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(AuthCache.class)
-    public AuthCache<String, Object> redisAuthCache(RedisService redisService, AuthProperties authProperties) {
+    public AuthCache<Object> redisAuthCache(RedisService redisService, AuthProperties authProperties) {
         return new RedisAuthCache(redisService, authProperties.getPrefix());
     }
 
-//    @Bean
-//    @ConditionalOnClass(AuthWebSecurityConfigurer.class)
-//    public SmartRedisSessionRepository smartRedisSessionRepository(RedisTemplate<String, Object> redisTemplate) {
-//        return new SmartRedisSessionRepository(redisTemplate);
-//    }
 }

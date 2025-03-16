@@ -34,7 +34,7 @@ public class AuthProperties implements InitializingBean {
     /**
      * 认证缓存前缀
      */
-    private String prefix = "smart-session";
+    private String prefix = "smart-session:";
 
     /**
      * 登录是否绑定IP
@@ -71,7 +71,7 @@ public class AuthProperties implements InitializingBean {
     /**
      * 是否是开发模式
      */
-    private Boolean development;
+    private Boolean development = false;
 
     /**
      * 短信登录参数
