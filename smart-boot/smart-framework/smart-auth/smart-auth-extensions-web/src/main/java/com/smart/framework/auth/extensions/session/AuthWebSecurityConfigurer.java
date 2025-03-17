@@ -44,10 +44,11 @@ public class AuthWebSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
     public void configure(H builder) {
         AuthProperties authProperties = this.getAuthProperties();
         builder.authenticationProvider(this.getRestAuthenticationProvider())
-                .addFilterAfter(this.createWebLoginFilter(builder, authProperties.getLoginUrl(), authProperties.getBindIp()), BasicAuthenticationFilter.class)
-                // 添加登录验证拦截器
-                .addFilterAfter(this.postProcess(new SmartAuthenticationFilter(authProperties.getIgnores(), authProperties.getDevelopment())), ExceptionTranslationFilter.class);
-
+                .addFilterAfter(this.createWebLoginFilter(builder, authProperties.getLoginUrl(), authProperties.getBindIp()), BasicAuthenticationFilter.class);
+        if (this.serviceProvider.authentication) {
+            // 添加登录验证拦截器
+            builder.addFilterAfter(this.postProcess(new SmartAuthenticationFilter(authProperties.getIgnores(), authProperties.getDevelopment())), ExceptionTranslationFilter.class);
+        }
     }
 
 
@@ -61,8 +62,13 @@ public class AuthWebSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
         return this;
     }
 
-    private static class ServiceProvider {
-        private AuthenticationSuccessHandler authenticationSuccessHandler;
+    public AuthWebSecurityConfigurer<H> authentication(boolean authentication) {
+        this.serviceProvider.authentication = authentication;
+        return this;
     }
 
+    private static class ServiceProvider {
+        private AuthenticationSuccessHandler authenticationSuccessHandler;
+        private boolean authentication;
+    }
 }

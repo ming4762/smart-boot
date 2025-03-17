@@ -39,7 +39,8 @@ public class SecurityConfig extends AuthWebSecurityConfigurerAdapter {
                             .logoutSuccessHandler(logoutSuccessHandler);
                 })
                 .sessionManagement(Customizer.withDefaults())
-                .with(AuthWebSecurityConfigurer.web(), Customizer.withDefaults())
+                // 启用web认证模式，但是关闭登录认证，交给gateway统一处理
+                .with(AuthWebSecurityConfigurer.web(), configurer -> configurer.authentication(false))
                 .with(AuthCaptchaSecurityConfigurer.captcha(), Customizer.withDefaults());
         return httpSecurity.build();
     }

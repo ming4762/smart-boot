@@ -47,6 +47,6 @@ public class SmartAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
-        return AuthCheckUtils.checkIgnores(request, this.authIgnoreProperties);
+        return this.development || AuthCheckUtils.checkIgnores(request, this.authIgnoreProperties);
     }
 }
