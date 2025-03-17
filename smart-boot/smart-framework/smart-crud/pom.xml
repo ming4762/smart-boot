@@ -17,6 +17,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-crud-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus</artifactId>
         </dependency>

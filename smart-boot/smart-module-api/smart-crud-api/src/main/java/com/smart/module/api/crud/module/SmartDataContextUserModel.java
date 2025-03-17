@@ -1,4 +1,4 @@
-package com.smart.framework.crud.datapermission.model;
+package com.smart.module.api.crud.module;
 
 import lombok.*;
 

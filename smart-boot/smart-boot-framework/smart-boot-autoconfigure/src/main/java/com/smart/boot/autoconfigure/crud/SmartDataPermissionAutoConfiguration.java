@@ -6,9 +6,7 @@ import com.smart.boot.autoconfigure.crud.filter.SmartDataPermissionReactiveFilte
 import com.smart.boot.autoconfigure.crud.filter.SmartDataPermissionWebFilter;
 import com.smart.framework.crud.datapermission.handler.SmartDataPermissionHandler;
 import com.smart.framework.crud.datapermission.interceptor.SmartDataPermissionInterceptor;
-import com.smart.framework.crud.datapermission.provider.SmartDataContextProvider;
-import com.smart.framework.crud.datapermission.provider.SmartDataPermissionProvider;
-import org.springframework.beans.factory.ObjectProvider;
+import com.smart.module.api.crud.SmartCrudDataPermissionApi;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -30,8 +28,8 @@ public class SmartDataPermissionAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    public DataPermissionHandler dataPermissionHandler(ObjectProvider<SmartDataContextProvider> smartDataContextProvider, ObjectProvider<SmartDataPermissionProvider> smartDataPermissionProvider) {
-        return new SmartDataPermissionHandler(smartDataContextProvider, smartDataPermissionProvider);
+    public DataPermissionHandler dataPermissionHandler(SmartCrudDataPermissionApi smartCrudDataPermissionApi) {
+        return new SmartDataPermissionHandler(smartCrudDataPermissionApi);
     }
 
     /**

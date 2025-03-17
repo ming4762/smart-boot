@@ -1,6 +1,6 @@
 package com.smart.module.system.pojo.dto.datapermission;
 
-import com.smart.framework.crud.datapermission.constants.DataPermissionScopeEnum;
+import com.smart.module.api.crud.constants.DataPermissionScopeEnum;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;

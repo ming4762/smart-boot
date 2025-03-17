@@ -2,7 +2,8 @@ package com.smart.framework.crud.mybatis.plugin;
 
 import com.smart.framework.crud.constants.ModelPropertyEnum;
 import com.smart.framework.crud.model.BaseModel;
-import com.smart.framework.crud.service.UserProvider;
+import com.smart.module.api.crud.SmartCrudUserApi;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.binding.MapperMethod;
@@ -28,13 +29,10 @@ import java.util.Date;
 @Slf4j
 @Intercepts({ @Signature(type = Executor.class, method = "update", args = { MappedStatement.class, Object.class }) })
 @Deprecated
+@RequiredArgsConstructor
 public class CreateUpdateUserTimeMybatisInterceptor implements Interceptor {
 
-    private final UserProvider userProvider;
-
-    public CreateUpdateUserTimeMybatisInterceptor(UserProvider userProvider) {
-        this.userProvider = userProvider;
-    }
+    private final SmartCrudUserApi smartCrudUserApi;
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
@@ -53,8 +51,8 @@ public class CreateUpdateUserTimeMybatisInterceptor implements Interceptor {
         }
         if (sqlCommandType == SqlCommandType.INSERT) {
             // 插入操作
-            Long userId = this.userProvider.getCurrentUserId();
-            String fullName = this.userProvider.getCurrentUserFullName();
+            Long userId = this.smartCrudUserApi.getCurrentUserId();
+            String fullName = this.smartCrudUserApi.getCurrentUserFullName();
             // 创建人
             PropertyDescriptor createUserIdDescriptor = BeanUtils.getPropertyDescriptor(parameter.getClass(), ModelPropertyEnum.CREATE_USER_ID.getName());
             if (createUserIdDescriptor != null && createUserIdDescriptor.getReadMethod().invoke(parameter) == null) {
@@ -71,8 +69,8 @@ public class CreateUpdateUserTimeMybatisInterceptor implements Interceptor {
         }
         if (sqlCommandType == SqlCommandType.UPDATE) {
             // 更新操作
-            Long userId = this.userProvider.getCurrentUserId();
-            String fullName = this.userProvider.getCurrentUserFullName();
+            Long userId = this.smartCrudUserApi.getCurrentUserId();
+            String fullName = this.smartCrudUserApi.getCurrentUserFullName();
             // 更新人
             PropertyDescriptor updateUserIdDescriptor = BeanUtils.getPropertyDescriptor(parameter.getClass(), ModelPropertyEnum.UPDATE_USER_ID.getName());
             if (updateUserIdDescriptor != null && updateUserIdDescriptor.getReadMethod().invoke(parameter) == null) {

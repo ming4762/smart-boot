@@ -4,8 +4,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.smart.framework.crud.annotation.TableUseYnField;
-import com.smart.framework.crud.datapermission.constants.DataPermissionScopeEnum;
 import com.smart.framework.crud.model.BaseModelUserTime;
+import com.smart.module.api.crud.constants.DataPermissionScopeEnum;
 import lombok.Getter;
 import lombok.Setter;
 

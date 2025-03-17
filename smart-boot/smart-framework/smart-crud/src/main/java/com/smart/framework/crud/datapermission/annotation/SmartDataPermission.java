@@ -1,6 +1,6 @@
 package com.smart.framework.crud.datapermission.annotation;
 
-import com.smart.framework.crud.datapermission.constants.DataPermissionScopeEnum;
+import com.smart.module.api.crud.constants.DataPermissionScopeEnum;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

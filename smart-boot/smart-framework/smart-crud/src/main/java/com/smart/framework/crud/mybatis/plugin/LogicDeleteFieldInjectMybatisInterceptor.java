@@ -5,7 +5,8 @@ import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.smart.framework.crud.mybatis.model.LogicDeleteParameter;
 import com.smart.framework.crud.plus.inner.LogicDeleteFieldInjectInnerInterceptor;
-import com.smart.framework.crud.service.UserProvider;
+import com.smart.module.api.crud.SmartCrudUserApi;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.executor.Executor;
@@ -31,6 +32,7 @@ import static com.smart.framework.crud.constants.SmartCrudConstants.DELETE_FIELD
 @Slf4j
 @Deprecated(forRemoval = true)
 @Intercepts({ @Signature(type = Executor.class, method = "update", args = { MappedStatement.class, Object.class }) })
+@RequiredArgsConstructor
 public class LogicDeleteFieldInjectMybatisInterceptor implements Interceptor {
 
     private static final List<String> LOGIC_DELETE_METHODS = List.of(
@@ -39,11 +41,7 @@ public class LogicDeleteFieldInjectMybatisInterceptor implements Interceptor {
             SqlMethod.DELETE.getMethod()
     );
 
-    private final UserProvider userProvider;
-
-    public LogicDeleteFieldInjectMybatisInterceptor(UserProvider userProvider) {
-        this.userProvider = userProvider;
-    }
+    private final SmartCrudUserApi smartCrudUserApi;
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
@@ -69,8 +67,8 @@ public class LogicDeleteFieldInjectMybatisInterceptor implements Interceptor {
             return invocation.proceed();
         }
         LogicDeleteParameter logicDeleteParameter = new LogicDeleteParameter();
-        logicDeleteParameter.setDeleteBy(userProvider.getCurrentUserFullName());
-        logicDeleteParameter.setDeleteUserId(userProvider.getCurrentUserId());
+        logicDeleteParameter.setDeleteBy(smartCrudUserApi.getCurrentUserFullName());
+        logicDeleteParameter.setDeleteUserId(smartCrudUserApi.getCurrentUserId());
         logicDeleteParameter.setDeleteTime(ZonedDateTime.now());
         ((MapperMethod.ParamMap) parameter).put(DELETE_FIELDS, logicDeleteParameter);
         return invocation.proceed();

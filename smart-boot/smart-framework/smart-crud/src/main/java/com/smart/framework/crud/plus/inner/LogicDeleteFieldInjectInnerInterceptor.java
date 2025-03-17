@@ -3,8 +3,8 @@ package com.smart.framework.crud.plus.inner;
 import com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor;
 import com.smart.framework.crud.mybatis.model.LogicDeleteParameter;
 import com.smart.framework.crud.plus.metadata.SmartTableInfo;
-import com.smart.framework.crud.service.UserProvider;
 import com.smart.framework.crud.utils.CrudUtils;
+import com.smart.module.api.crud.SmartCrudUserApi;
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.executor.Executor;
@@ -25,7 +25,7 @@ import static com.smart.framework.crud.constants.SmartCrudConstants.DELETE_FIELD
 @RequiredArgsConstructor
 public class LogicDeleteFieldInjectInnerInterceptor implements InnerInterceptor {
 
-    private final UserProvider userProvider;
+    private final SmartCrudUserApi smartCrudUserApi;
 
     @Override
     public void beforeUpdate(Executor executor, MappedStatement mappedStatement, Object parameter) throws SQLException {
@@ -48,8 +48,8 @@ public class LogicDeleteFieldInjectInnerInterceptor implements InnerInterceptor 
             return;
         }
         LogicDeleteParameter logicDeleteParameter = new LogicDeleteParameter();
-        logicDeleteParameter.setDeleteBy(userProvider.getCurrentUserFullName());
-        logicDeleteParameter.setDeleteUserId(userProvider.getCurrentUserId());
+        logicDeleteParameter.setDeleteBy(smartCrudUserApi.getCurrentUserFullName());
+        logicDeleteParameter.setDeleteUserId(smartCrudUserApi.getCurrentUserId());
         logicDeleteParameter.setDeleteTime(ZonedDateTime.now());
         ((MapperMethod.ParamMap) parameter).put(DELETE_FIELDS, logicDeleteParameter);
     }

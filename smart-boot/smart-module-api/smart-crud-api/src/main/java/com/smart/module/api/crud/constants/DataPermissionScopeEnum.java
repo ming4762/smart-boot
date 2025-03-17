@@ -1,4 +1,4 @@
-package com.smart.framework.crud.datapermission.constants;
+package com.smart.module.api.crud.constants;
 
 import lombok.Getter;
 

@@ -4,14 +4,13 @@ import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.extension.plugins.handler.MultiDataPermissionHandler;
 import com.smart.framework.commons.core.utils.BeanUtils;
 import com.smart.framework.crud.datapermission.annotation.SmartDataPermission;
-import com.smart.framework.crud.datapermission.constants.DataPermissionScopeEnum;
 import com.smart.framework.crud.datapermission.exception.SmartDataPermissionException;
-import com.smart.framework.crud.datapermission.model.SmartDataContextUserModel;
-import com.smart.framework.crud.datapermission.model.SmartDataPermissionModel;
-import com.smart.framework.crud.datapermission.provider.SmartDataContextProvider;
-import com.smart.framework.crud.datapermission.provider.SmartDataPermissionProvider;
 import com.smart.framework.crud.plus.metadata.SmartTableInfo;
 import com.smart.framework.crud.utils.CrudUtils;
+import com.smart.module.api.crud.SmartCrudDataPermissionApi;
+import com.smart.module.api.crud.constants.DataPermissionScopeEnum;
+import com.smart.module.api.crud.module.SmartDataContextUserModel;
+import com.smart.module.api.crud.module.SmartDataPermissionModel;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +25,6 @@ import net.sf.jsqlparser.expression.operators.relational.InExpression;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.core.annotation.MergedAnnotation;
 import org.springframework.core.annotation.MergedAnnotations;
 import org.springframework.lang.Nullable;
@@ -60,9 +58,7 @@ public class SmartDataPermissionHandler implements MultiDataPermissionHandler {
     private static final String PLACEHOLDER_DEPT_KEY = "userDept";
     private static final String PLACEHOLDER_DEPT_CHILDREN_KEY = "userDeptWithChildren";
 
-
-    private final ObjectProvider<SmartDataContextProvider> smartDataContextProvider;
-    private final ObjectProvider<SmartDataPermissionProvider> smartDataPermissionProvider;
+    private final SmartCrudDataPermissionApi smartCrudDataPermissionApi;
 
 
     @Override
@@ -195,7 +191,7 @@ public class SmartDataPermissionHandler implements MultiDataPermissionHandler {
             return dataPermissionList;
         }
         // 从数据库配置的获取
-        dataPermissionList = this.smartDataPermissionProvider.getObject().getDataPermissionByMapper(mappedStatementId);
+        dataPermissionList = SmartDataPermissionMapperHolder.getCacheByMapperId(mappedStatementId, () -> this.smartCrudDataPermissionApi.getDataPermissionByMapper(mappedStatementId));
         if (!CollectionUtils.isEmpty(dataPermissionList)) {
             return dataPermissionList;
         }
@@ -225,7 +221,10 @@ public class SmartDataPermissionHandler implements MultiDataPermissionHandler {
             return codeMap.get(Boolean.FALSE);
         }
         // 根据code获取数据权限
-        List<SmartDataPermissionModel> dataPermissionByCode = this.smartDataPermissionProvider.getObject().getDataPermissionByCode(codeMap.get(Boolean.TRUE).stream().map(SmartDataPermissionModel::getPermissionCode).toList());
+        List<SmartDataPermissionModel> dataPermissionByCode = SmartDataPermissionMapperHolder.getCacheByCode(
+                codeMap.get(Boolean.TRUE).stream().map(SmartDataPermissionModel::getPermissionCode).toList(),
+                this.smartCrudDataPermissionApi::getDataPermissionByCode
+        );
         return Stream.concat(
                 Objects.requireNonNullElseGet(codeMap.get(Boolean.FALSE), Collections::<SmartDataPermissionModel>emptyList).stream(),
                 Objects.requireNonNullElseGet(dataPermissionByCode, Collections::<SmartDataPermissionModel>emptyList).stream()
@@ -343,7 +342,7 @@ public class SmartDataPermissionHandler implements MultiDataPermissionHandler {
      * @return 用户上下文
      */
     private SmartDataContextUserModel getUserContext() {
-        return SmartDataContextHolder.getUserContext(() -> this.smartDataContextProvider.getObject().getUserContext());
+        return SmartDataContextHolder.getUserContext(this.smartCrudDataPermissionApi::getUserContext);
     }
 
     /**
@@ -351,7 +350,7 @@ public class SmartDataPermissionHandler implements MultiDataPermissionHandler {
      * @return 用户部门列表
      */
     private List<Long> getUserDeptList() {
-        return SmartDataContextHolder.getUserDeptList(() -> this.smartDataContextProvider.getObject().getUserDeptList());
+        return SmartDataContextHolder.getUserDeptList(this.smartCrudDataPermissionApi::getUserDeptList);
     }
 
     /**
@@ -359,7 +358,7 @@ public class SmartDataPermissionHandler implements MultiDataPermissionHandler {
      * @return 用户部门及子部门列表
      */
     private List<Long> getUserDeptWithChildren() {
-        return SmartDataContextHolder.getUserDeptWithChildren(() -> this.smartDataContextProvider.getObject().getUserDeptChildren());
+        return SmartDataContextHolder.getUserDeptWithChildren(this.smartCrudDataPermissionApi::getUserDeptChildren);
     }
 
     /**

@@ -1,14 +1,15 @@
-package com.smart.module.system.service.crud;
+package com.smart.module.system.api.local;
 
 import com.smart.framework.auth.common.userdetails.RestUserDetails;
 import com.smart.framework.auth.common.utils.AuthUtils;
-import com.smart.framework.crud.model.UserDeptData;
-import com.smart.framework.crud.service.UserProvider;
+import com.smart.module.api.crud.SmartCrudUserApi;
+import com.smart.module.api.crud.module.UserDeptData;
 import com.smart.module.api.system.SysUserApi;
 import com.smart.module.api.system.dto.SysDeptDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -16,14 +17,15 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * 获取人员信息
- * @author zhongming4762
- * 2022/12/16 21:14
+ * @author shizhongming
+ * 2025/3/17 20:58
+ * @since 5.0.0
  */
-@Component
 @RequiredArgsConstructor
+@Component
+@Primary
 @Slf4j
-public class UserProviderImpl implements UserProvider {
+public class LocalSmartCrudUserApi implements SmartCrudUserApi {
 
     private final ObjectProvider<SysUserApi> sysUserApi;
 

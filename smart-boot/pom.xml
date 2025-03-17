@@ -548,6 +548,11 @@
             </dependency>
             <dependency>
                 <groupId>com.smart</groupId>
+                <artifactId>smart-auth-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.smart</groupId>
                 <artifactId>smart-module-auth</artifactId>
                 <version>${project.version}</version>
             </dependency>

@@ -1,6 +1,6 @@
 package com.smart.framework.crud.datapermission.handler;
 
-import com.smart.framework.crud.datapermission.model.SmartDataContextUserModel;
+import com.smart.module.api.crud.module.SmartDataContextUserModel;
 
 import java.util.List;
 import java.util.function.Supplier;

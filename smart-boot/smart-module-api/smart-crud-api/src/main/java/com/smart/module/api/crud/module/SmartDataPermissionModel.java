@@ -1,6 +1,6 @@
-package com.smart.framework.crud.datapermission.model;
+package com.smart.module.api.crud.module;
 
-import com.smart.framework.crud.datapermission.constants.DataPermissionScopeEnum;
+import com.smart.module.api.crud.constants.DataPermissionScopeEnum;
 import lombok.*;
 import org.springframework.lang.Nullable;
 

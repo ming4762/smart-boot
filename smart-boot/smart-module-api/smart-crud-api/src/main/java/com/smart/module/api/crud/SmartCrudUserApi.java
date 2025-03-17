@@ -1,13 +1,14 @@
-package com.smart.framework.crud.service;
+package com.smart.module.api.crud;
 
-import com.smart.framework.crud.model.UserDeptData;
+import com.smart.module.api.crud.module.UserDeptData;
 
 /**
- * 获取人员信息
- * @author zhongming4762
- * 2022/12/16 21:11
+ * crud模块获取用户信息API
+ * @author shizhongming
+ * 2025/3/17 19:52
+ * @since 5.0.0
  */
-public interface UserProvider {
+public interface SmartCrudUserApi {
 
     /**
      * 获取当前登录人员ID

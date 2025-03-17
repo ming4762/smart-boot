@@ -1,6 +1,6 @@
 package com.smart.framework.crud.datapermission.handler;
 
-import com.smart.framework.crud.datapermission.model.SmartDataPermissionModel;
+import com.smart.module.api.crud.module.SmartDataPermissionModel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

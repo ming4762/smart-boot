@@ -3,7 +3,7 @@ package com.smart.framework.crud.plus.fill.impl;
 import com.smart.framework.crud.constants.CrudConstants;
 import com.smart.framework.crud.constants.ModelPropertyEnum;
 import com.smart.framework.crud.plus.fill.SmartMetaObjectFill;
-import com.smart.framework.crud.service.UserProvider;
+import com.smart.module.api.crud.SmartCrudUserApi;
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.reflection.MetaObject;
@@ -18,7 +18,7 @@ import java.time.ZonedDateTime;
 @RequiredArgsConstructor
 public class CreateUpdateMetaObjectFill implements SmartMetaObjectFill {
 
-    private final UserProvider userProvider;
+    private final SmartCrudUserApi smartCrudUserApi;
 
     /**
      * 插入元对象字段填充（用于插入时对公共字段的填充）
@@ -32,9 +32,9 @@ public class CreateUpdateMetaObjectFill implements SmartMetaObjectFill {
         }
         // 判断是否有相关字段，没有则不进行填充
         if (metaObject.hasSetter(ModelPropertyEnum.CREATE_USER_ID.getName()) || metaObject.hasSetter(ModelPropertyEnum.CREATE_TIME.getName()) || metaObject.hasSetter(ModelPropertyEnum.CREATE_USER.getName())) {
-            this.strictInsertFill(metaObject, ModelPropertyEnum.CREATE_USER_ID.getName(), this.userProvider::getCurrentUserId, Long.class);
+            this.strictInsertFill(metaObject, ModelPropertyEnum.CREATE_USER_ID.getName(), this.smartCrudUserApi::getCurrentUserId, Long.class);
             this.strictInsertFill(metaObject, ModelPropertyEnum.CREATE_TIME.getName(), ZonedDateTime::now, ZonedDateTime.class);
-            this.strictInsertFill(metaObject, ModelPropertyEnum.CREATE_USER.getName(), this.userProvider::getCurrentUserFullName, String.class);
+            this.strictInsertFill(metaObject, ModelPropertyEnum.CREATE_USER.getName(), this.smartCrudUserApi::getCurrentUserFullName, String.class);
         }
     }
 
@@ -53,8 +53,8 @@ public class CreateUpdateMetaObjectFill implements SmartMetaObjectFill {
         if (isLogicDelete) {
             return;
         }
-        this.strictUpdateFill(metaObject, ModelPropertyEnum.UPDATE_USER_ID.getName(), this.userProvider::getCurrentUserId, Long.class);
+        this.strictUpdateFill(metaObject, ModelPropertyEnum.UPDATE_USER_ID.getName(), this.smartCrudUserApi::getCurrentUserId, Long.class);
         this.strictUpdateFill(metaObject, ModelPropertyEnum.UPDATE_TIME.getName(), ZonedDateTime::now, ZonedDateTime.class);
-        this.strictUpdateFill(metaObject, ModelPropertyEnum.UPDATE_USER.getName(), this.userProvider::getCurrentUserFullName, String.class);
+        this.strictUpdateFill(metaObject, ModelPropertyEnum.UPDATE_USER.getName(), this.smartCrudUserApi::getCurrentUserFullName, String.class);
     }
 }
