@@ -11,6 +11,7 @@ import java.util.List;
  * @author zhongming4762
  * 2023/3/6
  */
+@Deprecated
 public interface TokenRepository extends Ordered {
 
     /**

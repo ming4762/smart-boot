@@ -160,7 +160,7 @@ public class RedisAuthCache extends AbstractAuthCache<Object> {
 
     @Override
     public void matchRemove(@NonNull String matchKey) {
-        List<String> keys = this.cacheService.matchKeys(matchKey);
+        List<String> keys = this.cacheService.matchKeys(getKey(matchKey));
         if (CollectionUtils.isEmpty(keys)) {
             return;
         }

@@ -27,6 +27,6 @@ public abstract class AbstractAuthCache<V> implements AuthCache<V> {
      * @return 实际的key
      */
     protected String getRealKey(@NonNull String key) {
-        return key.split(SPLIT)[1];
+        return key.substring((this.prefix + SPLIT).length());
     }
 }

@@ -69,6 +69,6 @@ public class AuthWebSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
 
     private static class ServiceProvider {
         private AuthenticationSuccessHandler authenticationSuccessHandler;
-        private boolean authentication;
+        private boolean authentication = true;
     }
 }

@@ -124,7 +124,7 @@ public class AuthAccessSecretAuthenticationFilter implements Filter {
             this.throwException(AuthI18nMessage.ACCESS_SECRET_SIGN_ERROR);
         }
         // 设置租户信息
-        SmartTenantHolder.set(accessSecretData.getUserTenant());
+        SmartTenantHolder.set(accessSecretData::getUserTenant);
     }
 
     /**

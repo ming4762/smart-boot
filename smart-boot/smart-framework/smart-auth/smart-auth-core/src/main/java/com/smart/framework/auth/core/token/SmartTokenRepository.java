@@ -1,5 +1,6 @@
 package com.smart.framework.auth.core.token;
 
+import com.smart.framework.auth.common.userdetails.RestUserDetails;
 import org.springframework.lang.NonNull;
 
 import java.util.List;
@@ -48,5 +49,27 @@ public interface SmartTokenRepository {
      * @param attributeValue 属性值
      */
     void setAttribute(String attributeName, Object attributeValue);
+
+    /**
+     * 使token失效
+     * @param token token
+     * @return 是否失效成功
+     */
+    boolean invalidateByToken(String token);
+
+    /**
+     * 使用户登录失效
+     * @param username 用户名
+     * @param tenantId 租户ID
+     * @return 是否失效成功
+     */
+    boolean invalidateByUsername(Long tenantId, String username);
+
+    /**
+     * 通过token获取用户信息
+     * @param token token
+     * @return 用户信息
+     */
+    RestUserDetails getUserByToken(String token);
 
 }

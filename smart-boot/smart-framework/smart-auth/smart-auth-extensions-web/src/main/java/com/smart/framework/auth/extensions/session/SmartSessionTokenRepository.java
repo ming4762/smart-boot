@@ -1,5 +1,6 @@
 package com.smart.framework.auth.extensions.session;
 
+import com.google.common.collect.Lists;
 import com.smart.framework.auth.common.userdetails.RestUserDetails;
 import com.smart.framework.auth.common.utils.AuthUtils;
 import com.smart.framework.auth.core.service.AbstractAuthCache;
@@ -95,7 +96,7 @@ public class SmartSessionTokenRepository implements SmartTokenRepository, Sessio
     @Override
     @NonNull
     public List<TokenCacheData> listToken() {
-        return List.of();
+        return this.listToken(this.getCacheKey(null, null, null));
     }
 
     /**
@@ -108,7 +109,18 @@ public class SmartSessionTokenRepository implements SmartTokenRepository, Sessio
     @NonNull
     @Override
     public List<TokenCacheData> listToken(String username, Long tenantId) {
-        return List.of();
+        return this.listToken(this.getCacheKey(username, tenantId, null));
+    }
+
+    private List<TokenCacheData> listToken(String cacheKey) {
+        Set<String> keys = this.authCache.matchKeys(cacheKey);
+        if (CollectionUtils.isEmpty(keys)) {
+            return Collections.emptyList();
+        }
+        return this.authCache.batchGet(keys).stream()
+                .map(TokenCacheData::createFormCache)
+                .filter(item -> !item.isExpired())
+                .toList();
     }
 
     /**
@@ -135,6 +147,48 @@ public class SmartSessionTokenRepository implements SmartTokenRepository, Sessio
         session.setAttribute(attributeName, attributeValue);
     }
 
+    /**
+     * 使token失效
+     *
+     * @param token token
+     * @return 是否失效成功
+     */
+    @Override
+    public boolean invalidateByToken(String token) {
+        this.authCache.remove(token);
+        return true;
+    }
+
+    /**
+     * 使用户登录失效
+     *
+     * @param username 用户名
+     * @param tenantId 租户ID
+     * @return 是否失效成功
+     */
+    @Override
+    public boolean invalidateByUsername(Long tenantId, String username) {
+        String cacheKey = this.getCacheKey(username, tenantId, null);
+        this.authCache.matchRemove(cacheKey);
+        return true;
+    }
+
+    /**
+     * 通过token获取用户信息
+     *
+     * @param token token
+     * @return 用户信息
+     */
+    @Override
+    public RestUserDetails getUserByToken(String token) {
+        Map<String, Object> cacheData = this.authCache.get(token);
+        if (cacheData == null) {
+            return null;
+        }
+        TokenCacheData tokenCacheData = TokenCacheData.createFormCache(cacheData);
+        return tokenCacheData.getUser();
+    }
+
     @Override
     @NonNull
     public String generate() {
@@ -154,21 +208,20 @@ public class SmartSessionTokenRepository implements SmartTokenRepository, Sessio
 
     @Override
     public void save(SmartSession session) {
-        if (!session.isNew) {
-            String cachedKey = session.hasChangedSessionId() ? session.originalSessionId : session.getId();
-
-            boolean sessionExists = this.authCache.hasKey(cachedKey);
-            if (!sessionExists) {
-                throw new IllegalStateException("Session was invalidated");
-            }
+        if (session.isNew) {
+            session.save();
+            return;
         }
-        session.save();
+        String cachedKey = session.hasChangedSessionId() ? session.originalSessionId : session.getId();
+        boolean sessionExists = this.authCache.hasKey(cachedKey);
+        if (sessionExists) {
+            session.save();
+        }
     }
 
     @Override
     public SmartSession findById(String sessionId) {
-        String cacheKey = sessionId;
-        Map<String, Object> cacheData = this.authCache.get(cacheKey);
+        Map<String, Object> cacheData = this.authCache.get(sessionId);
         if (CollectionUtils.isEmpty(cacheData)) {
             return null;
         }
@@ -185,7 +238,14 @@ public class SmartSessionTokenRepository implements SmartTokenRepository, Sessio
         this.authCache.remove(id);
     }
 
-    final class SmartSession implements Session {
+    private String getCacheKey(String username, Long tenantId, String token) {
+        return Lists.newArrayList(TOKE_KEY_PREFIX, username, tenantId, token)
+                .stream().filter(Objects::nonNull)
+                .map(Object::toString)
+                .collect(Collectors.joining(AbstractAuthCache.SPLIT));
+    }
+
+    public final class SmartSession implements Session {
 
         private final TokenCacheData cacheData;
         private boolean isNew;

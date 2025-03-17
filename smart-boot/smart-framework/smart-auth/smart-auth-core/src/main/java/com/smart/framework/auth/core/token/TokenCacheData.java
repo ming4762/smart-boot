@@ -4,6 +4,7 @@ import com.smart.framework.auth.common.userdetails.RestUserDetails;
 import com.smart.framework.commons.core.dto.auth.AuthRole;
 import com.smart.framework.commons.core.dto.auth.Permission;
 import lombok.*;
+import org.springframework.security.core.context.SecurityContext;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -38,6 +39,7 @@ public class TokenCacheData implements Serializable {
     public static final String PERMISSIONS_KEY = "permissions";
     public static final String ROLES_KEY = "roles";
     public static final String ATTRIBUTES_KEY = "smartSessionAttr:";
+    public static final String SPRING_SECURITY_CONTEXT = "SPRING_SECURITY_CONTEXT";
 
     private String token;
 
@@ -105,15 +107,21 @@ public class TokenCacheData implements Serializable {
         tokenCacheData.setCreateTime((Instant) cacheData.get(CREATE_TIME_KEY));
         tokenCacheData.setRefreshTime((Instant) cacheData.get(REFRESH_TIME_KEY));
         tokenCacheData.setTimeout((Duration) cacheData.get(TIMEOUT_KEY));
-        tokenCacheData.setUser((RestUserDetails) cacheData.get(USER_KEY));
-        tokenCacheData.setPermissions((Set<Permission>) cacheData.get(PERMISSIONS_KEY));
-        tokenCacheData.setRoles((Set<AuthRole>) cacheData.get(ROLES_KEY));
+        tokenCacheData.setUser(getFromCacheData(cacheData));
         cacheData.forEach((key, value) -> {
             if (key.startsWith(ATTRIBUTES_KEY)) {
                 tokenCacheData.getAttributes().put(key.substring(ATTRIBUTES_KEY.length()), value);
             }
         });
         return tokenCacheData;
+    }
+
+    private static RestUserDetails getFromCacheData(Map<String, Object> cacheData) {
+        SecurityContext securityContext = (SecurityContext) cacheData.get(ATTRIBUTES_KEY + SPRING_SECURITY_CONTEXT);
+        if (securityContext == null) {
+            return null;
+        }
+        return (RestUserDetails) securityContext.getAuthentication().getPrincipal();
     }
 
     public static String getAttributeKey(String attributeName) {

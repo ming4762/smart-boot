@@ -6,7 +6,7 @@ import com.smart.framework.auth.core.exception.IpBindAuthenticationException;
 import com.smart.framework.auth.core.i18n.AuthI18nMessage;
 import com.smart.framework.auth.core.properties.AuthProperties;
 import com.smart.framework.auth.core.service.AuthCache;
-import com.smart.framework.auth.core.token.TokenRepository;
+import com.smart.framework.auth.core.token.SmartTokenRepository;
 import com.smart.framework.auth.core.utils.AuthCheckUtils;
 import com.smart.framework.auth.core.utils.TokenUtils;
 import com.smart.framework.auth.core.utils.request.MatcherHttpServletRequest;
@@ -44,12 +44,12 @@ public class LocalAuthApiImpl implements AuthApi {
 
     private final AuthProperties authProperties;
 
-    private final List<TokenRepository> tokenRepositoryList;
+    private final List<SmartTokenRepository> smartTokenRepositoryList;
 
     private final AuthCache<Object> authCache;
 
-    public LocalAuthApiImpl(List<TokenRepository> tokenRepositoryList, AuthProperties authProperties, AuthCache<Object> authCache) {
-        this.tokenRepositoryList = tokenRepositoryList;
+    public LocalAuthApiImpl(List<SmartTokenRepository> smartTokenRepositoryList, AuthProperties authProperties, AuthCache<Object> authCache) {
+        this.smartTokenRepositoryList = smartTokenRepositoryList;
         this.authProperties = authProperties;
         this.authCache = authCache;
     }
@@ -63,7 +63,7 @@ public class LocalAuthApiImpl implements AuthApi {
     @Override
     public boolean offlineByToken(@NonNull String token) {
         boolean result = false;
-        for (TokenRepository repository : this.tokenRepositoryList) {
+        for (SmartTokenRepository repository : this.smartTokenRepositoryList) {
             result = repository.invalidateByToken(token);
             if (result) {
                 break;
@@ -81,7 +81,7 @@ public class LocalAuthApiImpl implements AuthApi {
     @Override
     public boolean offlineByUsername(@NonNull String username) {
         boolean result = false;
-        for (TokenRepository repository : this.tokenRepositoryList) {
+        for (SmartTokenRepository repository : this.smartTokenRepositoryList) {
             result = repository.invalidateByUsername(AuthUtils.getNonNullCurrentTenantId(), username);
             if (result) {
                 break;
@@ -102,8 +102,8 @@ public class LocalAuthApiImpl implements AuthApi {
         if (AuthUtils.getCurrentUser() != null && AuthUtils.getNonNullCurrentUser().getToken().equals(token)) {
             userDetails = AuthUtils.getCurrentUser();
         } else {
-            for (TokenRepository tokenRepository : this.tokenRepositoryList) {
-                userDetails = tokenRepository.getUser(token);
+            for (SmartTokenRepository tokenRepository : this.smartTokenRepositoryList) {
+                userDetails = tokenRepository.getUserByToken(token);
                 if (userDetails != null) {
                     break;
                 }
