@@ -3,13 +3,11 @@ package com.smart.module.system.api.local;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.Page;
-import com.smart.framework.auth.common.userdetails.RestUserDetails;
 import com.smart.framework.auth.common.utils.AuthUtils;
 import com.smart.framework.crud.datapermission.handler.SmartDataPermissionController;
 import com.smart.framework.crud.utils.CrudPageHelper;
 import com.smart.framework.crud.utils.CrudUtils;
 import com.smart.module.api.crud.SmartCrudDataPermissionApi;
-import com.smart.module.api.crud.module.SmartDataContextUserModel;
 import com.smart.module.api.crud.module.SmartDataPermissionModel;
 import com.smart.module.api.system.SysUserApi;
 import com.smart.module.api.system.dto.SysDeptDTO;
@@ -38,27 +36,6 @@ public class LocalSmartCrudDataPermissionApi implements SmartCrudDataPermissionA
 
     private final ObjectProvider<SysUserApi> sysUserApi;
     private final ObjectProvider<SysDataPermissionService> sysDataPermissionService;
-
-    /**
-     * 获取用户信息
-     *
-     * @return 用户信息
-     */
-    @Override
-    public SmartDataContextUserModel getUserContext() {
-        RestUserDetails currentUser = AuthUtils.getCurrentUser();
-        if (currentUser == null) {
-            return null;
-        }
-        return SmartDataContextUserModel.builder()
-                .userId(currentUser.getUserId())
-                .username(currentUser.getUsername())
-                .fullName(currentUser.getFullName())
-                .tenantId(currentUser.getUserTenant().getTenantId())
-                .tenantCode(currentUser.getUserTenant().getTenantCode())
-                .isSuperAdmin(AuthUtils.isSuperAdmin())
-                .build();
-    }
 
     /**
      * 获取用户部门列表

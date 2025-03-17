@@ -1,5 +1,7 @@
 package com.smart.module.api.crud;
 
+import com.smart.framework.auth.common.userdetails.RestUserDetails;
+import com.smart.framework.auth.common.utils.AuthUtils;
 import com.smart.module.api.crud.module.SmartDataContextUserModel;
 import com.smart.module.api.crud.module.SmartDataPermissionModel;
 
@@ -17,7 +19,20 @@ public interface SmartCrudDataPermissionApi {
      * 获取用户信息
      * @return 用户信息
      */
-    SmartDataContextUserModel getUserContext();
+    default SmartDataContextUserModel getUserContext() {
+        RestUserDetails currentUser = AuthUtils.getCurrentUser();
+        if (currentUser == null) {
+            return null;
+        }
+        return SmartDataContextUserModel.builder()
+                .userId(currentUser.getUserId())
+                .username(currentUser.getUsername())
+                .fullName(currentUser.getFullName())
+                .tenantId(currentUser.getUserTenant().getTenantId())
+                .tenantCode(currentUser.getUserTenant().getTenantCode())
+                .isSuperAdmin(AuthUtils.isSuperAdmin())
+                .build();
+    }
 
     /**
      * 获取用户部门列表
