@@ -6,10 +6,13 @@ import com.smart.framework.auth.core.service.AbstractAuthCache;
 import com.smart.framework.auth.core.service.AuthCache;
 import com.smart.framework.auth.core.token.SmartTokenRepository;
 import com.smart.framework.auth.core.token.TokenCacheData;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.lang.NonNull;
 import org.springframework.session.*;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -106,6 +109,30 @@ public class SmartSessionTokenRepository implements SmartTokenRepository, Sessio
     @Override
     public List<TokenCacheData> listToken(String username, Long tenantId) {
         return List.of();
+    }
+
+    /**
+     * 获取用户缓存数据
+     *
+     * @param attributeName 属性名称
+     * @return 属性值
+     */
+    @Override
+    public <T> T getAttribute(String attributeName) {
+        HttpSession session = Objects.requireNonNull(((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())).getRequest().getSession();
+        return (T) session.getAttribute(attributeName);
+    }
+
+    /**
+     * 设置用户缓存数据
+     *
+     * @param attributeName  属性名称
+     * @param attributeValue 属性值
+     */
+    @Override
+    public void setAttribute(String attributeName, Object attributeValue) {
+        HttpSession session = Objects.requireNonNull(((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())).getRequest().getSession();
+        session.setAttribute(attributeName, attributeValue);
     }
 
     @Override

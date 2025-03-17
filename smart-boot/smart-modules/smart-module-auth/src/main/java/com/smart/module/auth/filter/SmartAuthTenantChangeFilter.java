@@ -53,9 +53,11 @@ public class SmartAuthTenantChangeFilter extends AbstractAuthenticationProcessin
         }
 
         // TODO:这段代码是否可以优化？
-        UserTenantDTO tenant = new UserTenantDTO();
-        tenant.setTenantId(tenantId);
-        SmartTenantHolder.set(tenant);
+        SmartTenantHolder.set(() -> {
+            UserTenantDTO tenant = new UserTenantDTO();
+            tenant.setTenantId(tenantId);
+            return tenant;
+        });
 
         // 构建登录token
         RestUsernamePasswordAuthenticationToken loginToken = new RestUsernamePasswordAuthenticationToken(

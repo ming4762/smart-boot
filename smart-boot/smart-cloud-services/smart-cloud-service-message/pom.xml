@@ -91,8 +91,8 @@
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid-spring-boot-3-starter</artifactId>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-boot-starter-druid</artifactId>
         </dependency>
 
         <dependency>

@@ -55,7 +55,7 @@ public class RemoteSecurityContextRepository implements SecurityContextRepositor
             return this.generateSecurityContext(request, userDetails);
         }
         AuthUserDetailsDTO dto = this.authApi.getUserDetails(token);
-        if (dto == null) {
+        if (dto == null || dto.getUserId() == null) {
             return this.generateNewContext();
         }
         RestUserDetailsImpl restUserDetails = new RestUserDetailsImpl();

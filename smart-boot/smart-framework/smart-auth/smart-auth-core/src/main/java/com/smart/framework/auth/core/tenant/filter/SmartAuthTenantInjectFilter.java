@@ -12,6 +12,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  * Tenant注入 拦截器
@@ -24,10 +25,11 @@ public class SmartAuthTenantInjectFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
-        RestUserDetails currentUser = AuthUtils.getCurrentUser();
-        if (currentUser != null) {
-            SmartTenantHolder.set(currentUser.getUserTenant());
-        }
+        SmartTenantHolder.set(
+                () -> Optional.ofNullable(AuthUtils.getCurrentUser())
+                        .map(RestUserDetails::getUserTenant)
+                        .orElse(null)
+        );
         try {
             filterChain.doFilter(request, response);
         } finally {

@@ -33,4 +33,20 @@ public interface SmartTokenRepository {
      */
     @NonNull
     List<TokenCacheData> listToken(String username, Long tenantId);
+
+    /**
+     * 获取用户缓存数据
+     * @param attributeName 属性名称
+     * @return 属性值
+     * @param <T> 属性值类型
+     */
+    <T> T getAttribute(String attributeName);
+
+    /**
+     * 设置用户缓存数据
+     * @param attributeName 属性名称
+     * @param attributeValue 属性值
+     */
+    void setAttribute(String attributeName, Object attributeValue);
+
 }

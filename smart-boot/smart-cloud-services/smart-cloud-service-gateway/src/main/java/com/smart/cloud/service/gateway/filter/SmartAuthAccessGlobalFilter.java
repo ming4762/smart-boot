@@ -59,7 +59,7 @@ public class SmartAuthAccessGlobalFilter implements GlobalFilter, Ordered {
 
         CompletableFuture<Result<Boolean>> future = CompletableFuture.supplyAsync(() -> {
             if (!CollectionUtils.isEmpty(tokenList)) {
-                String token = tokenList.get(0);
+                String token = tokenList.getFirst();
                 TokenHolder.set(token);
             }
             return this.remoteAuthApi.authenticate(

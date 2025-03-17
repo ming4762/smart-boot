@@ -416,7 +416,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
             return null;
         }
         userAccountData.setTenant(userTenant);
-        SmartTenantHolder.set(userTenant);
+        SmartTenantHolder.set(() -> userTenant);
         // 查询账户信息
         SysUserAccountPO sysUserAccount = this.sysUserAccountService.getOne(
                 new LambdaQueryWrapper<>(SysUserAccountPO.class)

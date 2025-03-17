@@ -2,7 +2,9 @@ package com.smart.boot.autoconfigure.auth.extension;
 
 import com.smart.boot.autoconfigure.auth.session.RedisSessionRepositoryBeanPostProcessor;
 import com.smart.framework.auth.core.service.AuthCache;
+import com.smart.framework.auth.extensions.session.AuthWebSecurityConfigurer;
 import com.smart.framework.auth.extensions.session.SmartSessionTokenRepository;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +22,7 @@ import org.springframework.session.web.http.HttpSessionIdResolver;
  */
 @Configuration(proxyBeanMethods = false)
 @EnableSpringHttpSession
+@ConditionalOnClass(AuthWebSecurityConfigurer.class)
 public class SmartAuthWebAutoConfiguration {
 
     /**

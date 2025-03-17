@@ -25,7 +25,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -100,16 +99,23 @@ public class LocalAuthApiImpl implements AuthApi {
     @Override
     public AuthUserDetailsDTO getUserDetails(@NonNull String token) {
         RestUserDetails userDetails = null;
-        for (TokenRepository tokenRepository : this.tokenRepositoryList) {
-            userDetails = tokenRepository.getUser(token);
-            if (userDetails != null) {
-                break;
+        if (AuthUtils.getCurrentUser() != null && AuthUtils.getNonNullCurrentUser().getToken().equals(token)) {
+            userDetails = AuthUtils.getCurrentUser();
+        } else {
+            for (TokenRepository tokenRepository : this.tokenRepositoryList) {
+                userDetails = tokenRepository.getUser(token);
+                if (userDetails != null) {
+                    break;
+                }
             }
         }
+        return this.buildAuthUserDetails(userDetails);
+    }
+
+    private AuthUserDetailsDTO buildAuthUserDetails(RestUserDetails userDetails) {
         if (userDetails == null) {
             return null;
         }
-
         UserAccountData userAccountData = new UserAccountData();
         userAccountData.setRoleCodes(userDetails.getRoles());
         userAccountData.setPermissions(userDetails.getPermissions());
@@ -162,11 +168,6 @@ public class LocalAuthApiImpl implements AuthApi {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (!(principal instanceof RestUserDetails user)) {
             throw new BadCredentialsException(I18nUtils.get(AuthI18nMessage.ERROR_TOKEN_EXPIRE));
-        }
-        // 验证JWT
-        boolean validate = this.tokenRepositoryList.stream().anyMatch(item -> item.validate(token, user));
-        if (!validate) {
-            throw new CredentialsExpiredException(I18nUtils.get(AuthI18nMessage.ERROR_TOKEN_EXPIRE));
         }
         // 验证IP
         if (Boolean.TRUE.equals(user.getBindIp()) && !StringUtils.equals(user.getLoginIp(), IpUtils.getIpAddr(request))) {
