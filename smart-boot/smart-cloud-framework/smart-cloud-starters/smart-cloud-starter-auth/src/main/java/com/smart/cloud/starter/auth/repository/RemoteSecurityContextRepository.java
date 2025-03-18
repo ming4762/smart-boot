@@ -12,6 +12,8 @@ import com.smart.module.api.auth.AuthApi;
 import com.smart.module.api.auth.dto.AuthUserDetailsDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.security.core.context.SecurityContext;
@@ -19,10 +21,16 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.security.web.context.HttpRequestResponseHolder;
 import org.springframework.security.web.context.SecurityContextRepository;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 远程调用获取登录用户信息并缓存 生成SecurityContext
@@ -32,6 +40,12 @@ import java.util.Set;
 public class RemoteSecurityContextRepository implements SecurityContextRepository {
 
     public static final String USER_CACHE_NAME = "auth_user_cache";
+
+    public static final String TOKEN_ACCESS_CACHE_NAME = "smart_auth_token_access";
+    private static final String LAST_CLEAR_TIME_KEY = "smart_auth_last_clear_time";
+    private static final String TOKEN_CACHED_KEY = "smart_auth_cached_token";
+    private static final Duration CLEAR_TOKEN_INTERVAL = Duration.ofMinutes(10);
+    private static final Duration TOKEN_EXPIRE_TIME = Duration.ofHours(6);
 
     private final CacheManager cacheManager;
 
@@ -49,8 +63,10 @@ public class RemoteSecurityContextRepository implements SecurityContextRepositor
         if (!StringUtils.hasText(token)) {
             return this.generateNewContext();
         }
-        Cache cache = this.cacheManager.getCache(USER_CACHE_NAME);
-        if (cache != null && cache.get(token) != null) {
+        Cache cache = this.getUserCache();
+        // 清除过期的token，防止内存泄露
+        this.clearCachedToken();
+        if (cache.get(token) != null) {
             RestUserDetails userDetails = (RestUserDetails) Optional.ofNullable(cache.get(token)).map(Cache.ValueWrapper::get).orElse(null);
             return this.generateSecurityContext(request, userDetails);
         }
@@ -81,10 +97,52 @@ public class RemoteSecurityContextRepository implements SecurityContextRepositor
         restUserDetails.setIpWhiteList(dto.getIpWhiteList());
         restUserDetails.setToken(token);
         restUserDetails.setUserTenant(dto.getUserAccountData().getTenant());
-        if (cache != null) {
-            cache.put(token, restUserDetails);
-        }
+
+        cache.put(token, restUserDetails);
+        this.setCachedToken(token);
+
         return this.generateSecurityContext(request, restUserDetails);
+    }
+
+    private void setCachedToken(String token) {
+        Cache cache = this.getTokenAccessCache();
+        if (cache.get(TOKEN_CACHED_KEY) == null) {
+            cache.put(TOKEN_CACHED_KEY, new ConcurrentHashMap<String, Instant>(10));
+        }
+        ((Map<String, Instant>)cache.get(TOKEN_CACHED_KEY).get()).put(token, Instant.now());
+    }
+
+    private void clearCachedToken() {
+        Cache cache = this.getTokenAccessCache();
+        Cache.ValueWrapper lastClearTime = cache.get(LAST_CLEAR_TIME_KEY);
+        if (lastClearTime == null) {
+            cache.put(LAST_CLEAR_TIME_KEY, Instant.now());
+            return;
+        }
+        if (Instant.now().isAfter(((Instant) Objects.requireNonNull(lastClearTime.get())).plus(CLEAR_TOKEN_INTERVAL))) {
+            Map<String, Instant> cachedToken = Optional.ofNullable(cache.get(TOKEN_CACHED_KEY))
+                    .map(item -> (Map<String, Instant>) item.get())
+                    .orElse(null);
+            if (cachedToken == null || CollectionUtils.isEmpty(cachedToken)) {
+                return;
+            }
+
+            Cache userCache = this.getUserCache();
+            cachedToken.forEach((key, value) -> {
+                if (Instant.now().isAfter(value.plus(TOKEN_EXPIRE_TIME))) {
+                    cachedToken.remove(key);
+                    userCache.evict(key);
+                }
+            });
+        }
+    }
+
+    private Cache getTokenAccessCache() {
+        return Objects.requireNonNull(this.cacheManager.getCache(TOKEN_ACCESS_CACHE_NAME));
+    }
+
+    private Cache getUserCache() {
+        return Objects.requireNonNull(this.cacheManager.getCache(USER_CACHE_NAME));
     }
 
     protected SecurityContext generateSecurityContext(HttpServletRequest request, RestUserDetails user) {
@@ -118,5 +176,12 @@ public class RemoteSecurityContextRepository implements SecurityContextRepositor
 
     protected SecurityContext generateNewContext() {
         return SecurityContextHolder.createEmptyContext();
+    }
+
+    @AllArgsConstructor
+    @Getter
+    private static class CachedToken {
+        private final String token;
+        private final Instant lastAccessTime;
     }
 }

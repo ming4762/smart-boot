@@ -48,9 +48,10 @@ public class SmartCloudCommonAuthAutoConfiguration {
     @ConditionalOnMissingBean
     public CacheManager cacheManager() {
         SimpleCacheManager simpleCacheManager = new SimpleCacheManager();
-        simpleCacheManager.setCaches(
-                List.of(new ConcurrentMapCache(RemoteSecurityContextRepository.USER_CACHE_NAME))
-        );
+        simpleCacheManager.setCaches(List.of(
+                new ConcurrentMapCache(RemoteSecurityContextRepository.USER_CACHE_NAME),
+                new ConcurrentMapCache(RemoteSecurityContextRepository.TOKEN_ACCESS_CACHE_NAME)
+        ));
         return simpleCacheManager;
     }
 
