@@ -31,13 +31,22 @@
 			<artifactId>smart-module-auth</artifactId>
 		</dependency>
 
+<!--		<dependency>-->
+<!--			<groupId>com.smart</groupId>-->
+<!--			<artifactId>smart-boot-starter-auth-jwt</artifactId>-->
+<!--		</dependency>-->
 		<dependency>
 			<groupId>com.smart</groupId>
-			<artifactId>smart-boot-starter-auth-jwt</artifactId>
+			<artifactId>smart-boot-starter-auth-web</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.smart</groupId>
 			<artifactId>smart-boot-starter-auth-cache-redis</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.smart</groupId>
+			<artifactId>smart-boot-starter-auth-sms</artifactId>
 		</dependency>
 
 		<!--	短信登录支持	-->
@@ -54,9 +63,13 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>druid-spring-boot-3-starter</artifactId>
+			<groupId>com.smart</groupId>
+			<artifactId>smart-boot-starter-druid</artifactId>
 		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>com.alibaba</groupId>-->
+<!--			<artifactId>druid-spring-boot-3-starter</artifactId>-->
+<!--		</dependency>-->
 
 		<!--	消息支持	-->
 		<dependency>
