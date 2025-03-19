@@ -4,6 +4,9 @@ import com.smart.module.api.crud.constants.DataPermissionScopeEnum;
 import lombok.*;
 import org.springframework.lang.Nullable;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 /**
  * 数据权限模型
  * @author shizhongming
@@ -16,7 +19,10 @@ import org.springframework.lang.Nullable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class SmartDataPermissionModel {
+public class SmartDataPermissionModel implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 7587823326556024808L;
 
     /**
      * 权限编码
@@ -43,4 +49,6 @@ public class SmartDataPermissionModel {
      */
     @Nullable
     private String tableName;
+
+    private String mapperStatementId;
 }

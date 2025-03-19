@@ -75,7 +75,7 @@ public class SmartDataPermissionHandler implements MultiDataPermissionHandler {
         }
         Method mapperMethod = this.getMapperMethod(mappedStatementId);
         // 获取数据权限列表
-        List<SmartDataPermissionModel> dataPermissionList = this.getDataPermissionList(mappedStatementId, mapperMethod);
+        List<SmartDataPermissionModel> dataPermissionList = this.getDataPermissionList(userContext.getToken(), mappedStatementId, mapperMethod);
         if (CollectionUtils.isEmpty(dataPermissionList)) {
             // 未配置数据权限
             return null;
@@ -184,14 +184,14 @@ public class SmartDataPermissionHandler implements MultiDataPermissionHandler {
      * @param mapperMethod mapper方法
      * @return 数据权限列表
      */
-    private List<SmartDataPermissionModel> getDataPermissionList(String mappedStatementId, @Nullable Method mapperMethod) {
+    private List<SmartDataPermissionModel> getDataPermissionList(String token, String mappedStatementId, @Nullable Method mapperMethod) {
         // 优先从上下文获取
         List<SmartDataPermissionModel> dataPermissionList = SmartDataPermissionController.getManualDataPermission();
         if (!CollectionUtils.isEmpty(dataPermissionList)) {
             return dataPermissionList;
         }
         // 从数据库配置的获取
-        dataPermissionList = SmartDataPermissionMapperHolder.getCacheByMapperId(mappedStatementId, () -> this.smartCrudDataPermissionApi.getDataPermissionByMapper(mappedStatementId));
+        dataPermissionList = SmartDataPermissionMapperHolder.getCacheByMapperId(token, mappedStatementId, () -> this.smartCrudDataPermissionApi.getCurrentUserDataPermission());
         if (!CollectionUtils.isEmpty(dataPermissionList)) {
             return dataPermissionList;
         }

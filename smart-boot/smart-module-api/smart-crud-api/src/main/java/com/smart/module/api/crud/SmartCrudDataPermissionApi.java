@@ -1,7 +1,5 @@
 package com.smart.module.api.crud;
 
-import com.smart.framework.auth.common.userdetails.RestUserDetails;
-import com.smart.framework.auth.common.utils.AuthUtils;
 import com.smart.module.api.crud.module.SmartDataContextUserModel;
 import com.smart.module.api.crud.module.SmartDataPermissionModel;
 
@@ -19,20 +17,7 @@ public interface SmartCrudDataPermissionApi {
      * 获取用户信息
      * @return 用户信息
      */
-    default SmartDataContextUserModel getUserContext() {
-        RestUserDetails currentUser = AuthUtils.getCurrentUser();
-        if (currentUser == null) {
-            return null;
-        }
-        return SmartDataContextUserModel.builder()
-                .userId(currentUser.getUserId())
-                .username(currentUser.getUsername())
-                .fullName(currentUser.getFullName())
-                .tenantId(currentUser.getUserTenant().getTenantId())
-                .tenantCode(currentUser.getUserTenant().getTenantCode())
-                .isSuperAdmin(AuthUtils.isSuperAdmin())
-                .build();
-    }
+    SmartDataContextUserModel getUserContext();
 
     /**
      * 获取用户部门列表
@@ -47,11 +32,10 @@ public interface SmartCrudDataPermissionApi {
     List<Long> getUserDeptChildren();
 
     /**
-     * 根据mapperId获取数据权限
-     * @param mapperId mapperId
+     * 获取当前用户所有数据权限
      * @return 数据权限
      */
-    List<SmartDataPermissionModel> getDataPermissionByMapper(String mapperId);
+    List<SmartDataPermissionModel> getCurrentUserDataPermission();
 
     /**
      * 根据code获取数据权限

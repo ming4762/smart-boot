@@ -437,7 +437,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         }
         userAccountData.setRoleCodes(
                 sysRoleList.stream()
-                        .map(item -> new AuthRole(item.getRoleCode(), item.getRoleName(), item.getSuperAdminYn()))
+                        .map(item -> new AuthRole(item.getRoleId(), item.getRoleCode(), item.getRoleName(), item.getSuperAdminYn()))
                         .collect(Collectors.toSet())
         );
         List<SysFunctionPO> functionList = this.listPermissionFunctionIds(

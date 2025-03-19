@@ -6,6 +6,7 @@ import com.smart.framework.commons.core.log.Log;
 import com.smart.framework.commons.core.log.LogOperationTypeEnum;
 import com.smart.framework.commons.core.message.Result;
 import com.smart.framework.crud.controller.BaseController;
+import com.smart.framework.crud.datapermission.handler.SmartDataPermissionMapperHolder;
 import com.smart.framework.crud.query.IdParameter;
 import com.smart.framework.crud.query.PageSortQuery;
 import com.smart.module.system.model.SysRoleFunctionPO;
@@ -144,6 +145,7 @@ public class SysRoleController extends BaseController<SysRoleService, SysRolePO>
     @PreAuthorize("hasPermission('sys:role', 'setRoleDataPermission')")
     @PostMapping("setRoleDataPermission")
     public Result<Boolean> setRoleDataPermission(@RequestBody @Valid RoleSetDataPermissionDTO parameter) {
+        SmartDataPermissionMapperHolder.clear();
         return Result.success(this.service.setRoleDataPermission(parameter));
     }
 

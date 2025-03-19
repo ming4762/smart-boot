@@ -15,6 +15,8 @@ import lombok.*;
 @Builder
 public class SmartDataContextUserModel {
 
+    private String token;
+
     private Long userId;
 
     private String username;

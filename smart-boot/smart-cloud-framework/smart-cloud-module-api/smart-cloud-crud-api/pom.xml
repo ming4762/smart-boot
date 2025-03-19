@@ -34,6 +34,11 @@
             <artifactId>smart-cloud-system-api</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-auth-common</artifactId>
+        </dependency>
     </dependencies>
 
 

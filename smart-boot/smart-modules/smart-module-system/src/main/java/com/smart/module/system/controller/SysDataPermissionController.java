@@ -7,6 +7,7 @@ import com.smart.framework.commons.core.log.Log;
 import com.smart.framework.commons.core.log.LogOperationTypeEnum;
 import com.smart.framework.commons.core.message.Result;
 import com.smart.framework.crud.controller.BaseController;
+import com.smart.framework.crud.datapermission.handler.SmartDataPermissionMapperHolder;
 import com.smart.framework.crud.parameter.SetUseYnParameter;
 import com.smart.framework.crud.query.PageSortQuery;
 import com.smart.module.system.model.SysDataPermissionPO;
@@ -59,6 +60,7 @@ public class SysDataPermissionController extends BaseController<SysDataPermissio
         }
         SysDataPermissionPO model = new SysDataPermissionPO();
         BeanUtils.copyProperties(parameter, model);
+        SmartDataPermissionMapperHolder.clear();
         return super.save(model);
     }
 
@@ -69,6 +71,7 @@ public class SysDataPermissionController extends BaseController<SysDataPermissio
     public Result<Boolean> update(@RequestBody @Valid SysDataPermissionSaveUpdateDTO parameter) {
         SysDataPermissionPO model = new SysDataPermissionPO();
         BeanUtils.copyProperties(parameter, model);
+        SmartDataPermissionMapperHolder.clear();
         return super.update(model);
     }
 
@@ -81,6 +84,7 @@ public class SysDataPermissionController extends BaseController<SysDataPermissio
         if (CollectionUtils.isEmpty(idList)) {
             return Result.success(false);
         }
+        SmartDataPermissionMapperHolder.clear();
         return super.batchDeleteById(idList);
     }
 
@@ -103,6 +107,7 @@ public class SysDataPermissionController extends BaseController<SysDataPermissio
     @Log(value = "启用停用数据权限表", type = LogOperationTypeEnum.DELETE)
     @PreAuthorize("hasPermission('sys:function', 'setUseYn')")
     public Result<Boolean> setUseYn(@RequestBody @Valid SetUseYnParameter parameter) {
+        SmartDataPermissionMapperHolder.clear();
         return super.setUseYn(parameter);
     }
 
