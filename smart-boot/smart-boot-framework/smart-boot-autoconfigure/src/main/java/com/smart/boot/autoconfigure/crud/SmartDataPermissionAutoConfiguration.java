@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.handler.DataPermissionHandler;
 import com.baomidou.mybatisplus.extension.plugins.inner.DataPermissionInterceptor;
 import com.smart.boot.autoconfigure.crud.filter.SmartDataPermissionReactiveFilter;
 import com.smart.boot.autoconfigure.crud.filter.SmartDataPermissionWebFilter;
+import com.smart.framework.crud.datapermission.aspect.DataPermissionContextAspect;
 import com.smart.framework.crud.datapermission.handler.SmartDataPermissionHandler;
 import com.smart.framework.crud.datapermission.interceptor.SmartDataPermissionInterceptor;
 import com.smart.module.api.crud.SmartCrudDataPermissionApi;
@@ -58,5 +59,10 @@ public class SmartDataPermissionAutoConfiguration {
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
     public SmartDataPermissionReactiveFilter smartDataPermissionReactiveFilter() {
         return new SmartDataPermissionReactiveFilter();
+    }
+
+    @Bean
+    public DataPermissionContextAspect dataPermissionContextAspect() {
+        return new DataPermissionContextAspect();
     }
 }

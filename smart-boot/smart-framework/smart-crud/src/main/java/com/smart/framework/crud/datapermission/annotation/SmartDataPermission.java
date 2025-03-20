@@ -2,10 +2,7 @@ package com.smart.framework.crud.datapermission.annotation;
 
 import com.smart.module.api.crud.constants.DataPermissionScopeEnum;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * 数据权限注解
@@ -15,6 +12,7 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
+@Repeatable(SmartDataPermissions.class)
 public @interface SmartDataPermission {
 
     /**
@@ -37,8 +35,16 @@ public @interface SmartDataPermission {
 
     /**
      * 需要加数据权限的表名
+     * 优先级比tableClass高
      * @return 表名
      */
     String tableName() default "";
+
+    /**
+     * 数据权限表对应的实体类
+     * 优先级比tableName低
+     * @return 实体类
+     */
+    Class<?> tableClass() default Void.class;
 
 }

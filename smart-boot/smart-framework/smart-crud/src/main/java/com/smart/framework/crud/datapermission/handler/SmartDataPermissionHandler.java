@@ -3,7 +3,7 @@ package com.smart.framework.crud.datapermission.handler;
 import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.extension.plugins.handler.MultiDataPermissionHandler;
 import com.smart.framework.commons.core.utils.BeanUtils;
-import com.smart.framework.crud.datapermission.annotation.SmartDataPermission;
+import com.smart.framework.crud.datapermission.aspect.DataPermissionContextHolder;
 import com.smart.framework.crud.datapermission.exception.SmartDataPermissionException;
 import com.smart.framework.crud.plus.metadata.SmartTableInfo;
 import com.smart.framework.crud.utils.CrudUtils;
@@ -26,8 +26,6 @@ import net.sf.jsqlparser.expression.operators.relational.InExpression;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
-import org.springframework.core.annotation.MergedAnnotation;
-import org.springframework.core.annotation.MergedAnnotations;
 import org.springframework.lang.Nullable;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.PropertyPlaceholderHelper;
@@ -74,9 +72,8 @@ public class SmartDataPermissionHandler implements MultiDataPermissionHandler {
             // 用户上下文为空或者是超级管理员，直接返回
             return null;
         }
-        Method mapperMethod = this.getMapperMethod(mappedStatementId);
         // 获取数据权限列表
-        List<SmartDataPermissionModel> dataPermissionList = this.getDataPermissionList(userContext.getToken(), mappedStatementId, mapperMethod);
+        List<SmartDataPermissionModel> dataPermissionList = this.getDataPermissionList(userContext.getToken(), mappedStatementId);
         if (CollectionUtils.isEmpty(dataPermissionList)) {
             // 未配置数据权限
             return null;
@@ -179,14 +176,13 @@ public class SmartDataPermissionHandler implements MultiDataPermissionHandler {
 
     /**
      * 获取数据权限列表
-     * 优先从上下文获取
+     * 优先从手动指定获取
      * 从数据库配置的获取
      * 从注解获取
-     * @param mapperMethod mapper方法
      * @return 数据权限列表
      */
-    private List<SmartDataPermissionModel> getDataPermissionList(String token, String mappedStatementId, @Nullable Method mapperMethod) {
-        // 优先从上下文获取
+    private List<SmartDataPermissionModel> getDataPermissionList(String token, String mappedStatementId) {
+        // 优先从手动指定获取
         List<SmartDataPermissionModel> dataPermissionList = SmartDataPermissionController.getManualDataPermission();
         if (!CollectionUtils.isEmpty(dataPermissionList)) {
             return dataPermissionList;
@@ -196,19 +192,23 @@ public class SmartDataPermissionHandler implements MultiDataPermissionHandler {
         if (!CollectionUtils.isEmpty(dataPermissionList)) {
             return dataPermissionList;
         }
-        // 一般来说不会为null，但是如果使用原生mybatis，可能会为null
-        if (mapperMethod == null) {
-            return Collections.emptyList();
-        }
-        // 从注解获取
-        dataPermissionList = MergedAnnotations.from(mapperMethod).stream(SmartDataPermission.class)
-                .map(MergedAnnotation::synthesize)
-                .map(item -> SmartDataPermissionModel.builder()
-                        .permissionCode(item.configCode())
-                        .scope(item.scope())
-                        .column(item.column())
-                        .tableName(item.tableName())
-                        .build())
+        // 注解上下文获取
+        dataPermissionList = DataPermissionContextHolder.get().stream()
+                .map(item -> {
+                    String tableName = item.tableName();
+                    if (!StringUtils.hasText(tableName) && !Void.class.equals(item.tableClass())) {
+                        SmartTableInfo smartTableInfo = CrudUtils.getTableInfo(item.tableClass());
+                        if (smartTableInfo != null) {
+                            tableName = smartTableInfo.getTableName();
+                        }
+                    }
+                    return SmartDataPermissionModel.builder()
+                            .permissionCode(item.configCode())
+                            .scope(item.scope())
+                            .column(item.column())
+                            .tableName(tableName)
+                            .build();
+                })
                 .toList();
         if (CollectionUtils.isEmpty(dataPermissionList)) {
             return Collections.emptyList();
@@ -245,7 +245,7 @@ public class SmartDataPermissionHandler implements MultiDataPermissionHandler {
         return dataPermissionList.stream()
                 .map(permission -> {
                     DataPermissionScopeEnum dataScope = permission.getScope();
-                    String permissionColumn = Objects.requireNonNullElseGet(permission.getColumn(), dataScope::getColumn);
+                    String permissionColumn = StringUtils.hasText(permission.getColumn()) ? permission.getColumn() : dataScope.getColumn();
                     return switch (dataScope) {
                         // TODO:策略模式
                         case DATA_PERSONAL -> this.buildPersonalExpression(tableAlias, permissionColumn);
