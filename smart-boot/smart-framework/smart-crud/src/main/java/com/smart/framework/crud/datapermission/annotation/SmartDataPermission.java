@@ -47,4 +47,9 @@ public @interface SmartDataPermission {
      */
     Class<?> tableClass() default Void.class;
 
+    /**
+     * 自定义数据权限规则值
+     */
+    String permissionValue() default "";
+
 }

@@ -209,6 +209,7 @@ public class SmartDataPermissionHandler implements MultiDataPermissionHandler {
                             .scope(item.scope())
                             .column(item.column())
                             .tableName(tableName)
+                            .permissionValue(item.permissionValue())
                             .build();
                 })
                 .toList();
@@ -395,7 +396,7 @@ public class SmartDataPermissionHandler implements MultiDataPermissionHandler {
 
         HashMap<String, String> result = HashMap.newHashMap(userMap.size() + 2);
         result.putAll(userMap);
-        // 这里优化性能，只有在规则值中包含占位符时，才获取值
+        // TODO:这里优化性能，只有在规则值中包含占位符时，才获取值
         if (scopeValue.contains(PLACEHOLDER_DEPT_KEY)) {
             result.put(PLACEHOLDER_DEPT_KEY, this.buildDeptListParam(Objects.requireNonNullElseGet(this.getUserDeptList(), Collections::emptyList)));
         }
