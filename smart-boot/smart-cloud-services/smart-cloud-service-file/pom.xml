@@ -96,6 +96,12 @@
             <version>${project.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-cloud-crud-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <!--    引入认证模块    -->
         <dependency>
             <groupId>com.smart</groupId>

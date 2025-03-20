@@ -35,6 +35,7 @@ public class SmartCrudDataPermissionCloudApi implements SmartCrudDataPermissionA
             return null;
         }
         return SmartDataContextUserModel.builder()
+                .token(currentUser.getToken())
                 .userId(currentUser.getUserId())
                 .username(currentUser.getUsername())
                 .fullName(currentUser.getFullName())

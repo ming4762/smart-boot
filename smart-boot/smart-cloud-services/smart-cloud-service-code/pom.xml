@@ -77,6 +77,12 @@
             <artifactId>caffeine</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-cloud-crud-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
     </dependencies>
 
 
