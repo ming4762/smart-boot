@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jsqlparser.JSQLParserException;
+import net.sf.jsqlparser.expression.Alias;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.LongValue;
 import net.sf.jsqlparser.expression.Parenthesis;
@@ -191,7 +192,7 @@ public class SmartDataPermissionHandler implements MultiDataPermissionHandler {
             return dataPermissionList;
         }
         // 从数据库配置的获取
-        dataPermissionList = SmartDataPermissionMapperHolder.getCacheByMapperId(token, mappedStatementId, () -> this.smartCrudDataPermissionApi.getCurrentUserDataPermission());
+        dataPermissionList = SmartDataPermissionMapperHolder.getCacheByMapperId(token, mappedStatementId, this.smartCrudDataPermissionApi::getCurrentUserDataPermission);
         if (!CollectionUtils.isEmpty(dataPermissionList)) {
             return dataPermissionList;
         }
@@ -239,7 +240,8 @@ public class SmartDataPermissionHandler implements MultiDataPermissionHandler {
      * @return 表达式
      */
     private List<Expression> buildExpressionList(Table table, String mappedStatementId, List<SmartDataPermissionModel> dataPermissionList) {
-        String tableAlias = table.getAlias().getName();
+        // 获取表别名（可能为空）
+        String tableAlias = Optional.ofNullable(table.getAlias()).map(Alias::getName).orElse(null);
         return dataPermissionList.stream()
                 .map(permission -> {
                     DataPermissionScopeEnum dataScope = permission.getScope();

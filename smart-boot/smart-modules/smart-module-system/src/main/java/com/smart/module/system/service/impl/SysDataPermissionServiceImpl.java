@@ -1,16 +1,20 @@
 package com.smart.module.system.service.impl;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.smart.framework.commons.core.data.Tree;
 import com.smart.framework.commons.core.utils.TreeUtils;
 import com.smart.framework.crud.service.BaseServiceImpl;
 import com.smart.module.system.mapper.SysDataPermissionMapper;
 import com.smart.module.system.model.SysDataPermissionPO;
 import com.smart.module.system.model.SysFunctionPO;
+import com.smart.module.system.model.SysRoleDataPermissionPO;
 import com.smart.module.system.pojo.vo.datapermission.SysDataPermissionListVO;
 import com.smart.module.system.service.SysDataPermissionService;
 import com.smart.module.system.service.SysFunctionService;
+import com.smart.module.system.service.SysRoleDataPermissionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
@@ -26,6 +30,7 @@ import java.util.stream.Collectors;
 public class SysDataPermissionServiceImpl extends BaseServiceImpl<SysDataPermissionMapper, SysDataPermissionPO> implements SysDataPermissionService {
 
     private final SysFunctionService sysFunctionService;
+    private final SysRoleDataPermissionService sysRoleDataPermissionService;
 
     @Override
     public List<Tree<SysDataPermissionListVO>> listAllWithFunction() {
@@ -128,4 +133,23 @@ public class SysDataPermissionServiceImpl extends BaseServiceImpl<SysDataPermiss
                 .build();
     }
 
+    /**
+     * 重写批量删除方法，如果ID只有一个调用removeById方法
+     *
+     * @param idList ID列表
+     * @return 删除结果
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean removeByIds(Collection<?> idList) {
+        if (CollectionUtils.isEmpty(idList)) {
+            return false;
+        }
+        // 删除角色数据权限关联
+        this.sysRoleDataPermissionService.remove(
+                Wrappers.lambdaQuery(SysRoleDataPermissionPO.class)
+                        .in(SysRoleDataPermissionPO::getDataPermissionId, idList)
+        );
+        return super.removeByIds(idList);
+    }
 }

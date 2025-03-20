@@ -29,7 +29,8 @@ import java.util.List;
         MybatisInterceptorAddConfiguration.class,
         MybatisPlusEnhanceConfiguration.class,
         SmartDesensitizeAutoConfiguration.class,
-        SmartDataPermissionAutoConfiguration.class
+        SmartDataPermissionAutoConfiguration.class,
+        SmartPageHelperAutoConfiguration.class
 })
 public class SmartCrudAutoConfiguration {
 

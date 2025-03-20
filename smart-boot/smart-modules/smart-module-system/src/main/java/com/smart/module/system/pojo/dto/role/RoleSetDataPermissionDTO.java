@@ -1,6 +1,5 @@
 package com.smart.module.system.pojo.dto.role;
 
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +24,5 @@ public class RoleSetDataPermissionDTO implements Serializable {
     @NotNull(message = "角色ID不能为空")
     private Long roleId;
 
-    @NotEmpty(message = "数据权限ID不能为空")
     private List<Long> dataPermissionIdList;
 }
