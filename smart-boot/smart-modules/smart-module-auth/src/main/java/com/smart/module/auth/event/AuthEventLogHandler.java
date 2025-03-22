@@ -75,6 +75,7 @@ public class AuthEventLogHandler implements AuthEventHandler {
                 .result(String.format("登出成功,用户名:[%s],fullName:[%s]", user.getUsername(), user.getFullName()))
                 .createUserId(user.getUserId())
                 .createBy(user.getFullName())
+                .tenantId(user.getUserTenant().getTenantId())
                 .build();
         this.sysLogApi.saveLog(sysLog);
     }
