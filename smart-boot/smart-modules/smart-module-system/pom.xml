@@ -26,10 +26,10 @@
 			<artifactId>smart-boot-starter-license-server</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>com.smart</groupId>
-			<artifactId>smart-exception</artifactId>
-			<version>${project.version}</version>
+			<artifactId>smart-boot-starter-exception</artifactId>
 		</dependency>
 
 		<dependency>

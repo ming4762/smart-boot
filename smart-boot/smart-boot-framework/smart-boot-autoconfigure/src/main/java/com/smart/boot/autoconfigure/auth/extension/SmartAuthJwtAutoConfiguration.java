@@ -11,9 +11,11 @@ import com.smart.framework.auth.core.properties.AuthProperties;
 import com.smart.framework.auth.core.service.AuthCache;
 import com.smart.framework.auth.extensions.jwt.AuthJwtSecurityConfigurer;
 import com.smart.framework.auth.extensions.jwt.context.JwtSecurityContextRepository;
+import com.smart.framework.auth.extensions.jwt.handler.JwtAuthSuccessDataHandler;
 import com.smart.framework.auth.extensions.jwt.handler.JwtLogoutHandler;
+import com.smart.framework.auth.extensions.jwt.resolver.DefaultJwtResolverImpl;
 import com.smart.framework.auth.extensions.jwt.resolver.JwtResolver;
-import com.smart.framework.auth.extensions.jwt.service.JwtService;
+import com.smart.framework.auth.extensions.jwt.token.DefaultJwtTokenRepositoryImpl;
 import com.smart.framework.auth.extensions.jwt.token.JwtTokenRepository;
 import com.smart.framework.commons.core.utils.auth.RsaUtils;
 import com.smart.framework.commons.jwt.JwtDecoder;
@@ -34,6 +36,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.interfaces.RSAPublicKey;
+import java.util.List;
 
 /**
  * @author shizhongming
@@ -52,9 +55,9 @@ public class SmartAuthJwtAutoConfiguration {
      * @return JwtService
      */
     @Bean
-    @ConditionalOnMissingBean(JwtService.class)
-    public JwtService jwtService(AuthProperties authProperties) {
-        return new JwtService(authProperties.getJwt().getPermissionCache());
+    @ConditionalOnMissingBean(JwtResolver.class)
+    public JwtResolver jwtResolver() {
+        return new DefaultJwtResolverImpl();
     }
 
     /**
@@ -109,21 +112,19 @@ public class SmartAuthJwtAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean(SecurityLogoutHandler.class)
-    public SecurityLogoutHandler jwtLogoutHandler(JwtTokenRepository tokenRepository) {
+    public SecurityLogoutHandler jwtLogoutHandler(List<JwtTokenRepository> tokenRepository) {
         return new JwtLogoutHandler(tokenRepository);
     }
 
-    /**
-     * 创建JWT token存储器
-     * @param authProperties properties
-     * @param authCache 缓存器
-     * @param jwtResolver JWT解析器
-     * @return JwtTokenRepository
-     */
     @Bean
-    @ConditionalOnMissingBean(JwtTokenRepository.class)
     public JwtTokenRepository jwtTokenRepository(AuthProperties authProperties, AuthCache<Object> authCache, JwtResolver jwtResolver) {
-        return new JwtTokenRepository(authProperties, authCache, jwtResolver);
+        return new DefaultJwtTokenRepositoryImpl(authProperties, jwtResolver, authCache);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(JwtAuthSuccessDataHandler.class)
+    public JwtAuthSuccessDataHandler jwtAuthSuccessDataHandler(List<JwtTokenRepository> jwtTokenRepositoryList) {
+        return new JwtAuthSuccessDataHandler(jwtTokenRepositoryList);
     }
 
 

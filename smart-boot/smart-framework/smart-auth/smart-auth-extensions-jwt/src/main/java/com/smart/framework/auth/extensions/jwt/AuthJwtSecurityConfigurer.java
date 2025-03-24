@@ -1,14 +1,11 @@
 package com.smart.framework.auth.extensions.jwt;
 
 import com.google.common.collect.Lists;
+import com.smart.framework.auth.core.authentication.SmartAuthenticationFilter;
 import com.smart.framework.auth.core.config.SmartSecurityConfigurerAdapter;
 import com.smart.framework.auth.core.filter.WebLoginFilter;
 import com.smart.framework.auth.core.handler.SecurityLogoutHandler;
 import com.smart.framework.auth.core.properties.AuthProperties;
-import com.smart.framework.auth.core.service.AuthCache;
-import com.smart.framework.auth.extensions.jwt.filter.JwtAuthenticationFilter;
-import com.smart.framework.auth.extensions.jwt.filter.JwtLogoutFilter;
-import com.smart.framework.auth.extensions.jwt.service.JwtService;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.config.Customizer;
@@ -21,18 +18,17 @@ import org.springframework.security.web.access.ExceptionTranslationFilter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.RememberMeServices;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessEventPublishingLogoutHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * JWT配置类
@@ -44,8 +40,6 @@ import java.util.Objects;
 public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends SmartSecurityConfigurerAdapter<H> {
 
     private final ServiceProvider serviceProvider = new ServiceProvider();
-
-    private JwtService jwtService;
 
     private AuthJwtSecurityConfigurer() {}
 
@@ -62,24 +56,6 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
         return this.getBuilder();
     }
 
-    /**
-     * 初始化bean
-     */
-    private void initBean() {
-        if (Objects.isNull(this.getAuthCache())) {
-            Assert.notNull(this.serviceProvider.authCache, "auth cache is null, please init it");
-        }
-        this.jwtService = this.getBean(JwtService.class, this.jwtService);
-        if (Objects.isNull(this.jwtService)) {
-            this.jwtService = new JwtService(this.getAuthProperties().getJwt().getPermissionCache());
-        }
-
-    }
-
-    private AuthCache<Object> getAuthCache() {
-        return this.getBean(AuthCache.class, this.serviceProvider.authCache);
-    }
-
     @Override
     public void configure(H builder) {
         AuthProperties authProperties = this.getAuthProperties();
@@ -90,7 +66,7 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
                 .addFilterAfter(this.createJwtFilterChainProxy(builder), BasicAuthenticationFilter.class);
         if (Boolean.TRUE.equals(this.serviceProvider.jwtAuth)) {
             // 添加认证过滤器
-            builder.addFilterAfter(this.postProcess(new JwtAuthenticationFilter(authProperties.getDevelopment(), authProperties.getIgnores())), ExceptionTranslationFilter.class);
+            builder.addFilterAfter(this.postProcess(new SmartAuthenticationFilter(authProperties.getIgnores(), authProperties.getDevelopment())), ExceptionTranslationFilter.class);
         }
     }
 
@@ -101,8 +77,6 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
     @Override
     public void init(H builder) {
         builder.setSharedObject(SecurityContextRepository.class, this.getBean(SecurityContextRepository.class));
-        // 初始化bean
-        this.initBean();
         // 创建上下文
         AuthenticationManagerBuilder authenticationManagerBuilder = builder.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.parentAuthenticationManager(null);
@@ -133,7 +107,7 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
      * 创建登出过滤器
      * @return 登出过滤器
      */
-    private JwtLogoutFilter jwtLogoutFilter(H builder) {
+    private LogoutFilter jwtLogoutFilter(H builder) {
         // 创建LogoutHandler
         List<LogoutHandler> logoutHandlerList = this.serviceProvider.logoutHandlerList;
         if (CollectionUtils.isEmpty(logoutHandlerList)) {
@@ -146,7 +120,7 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
         if (rememberMeServices instanceof LogoutHandler logoutHandler) {
             logoutHandlerList.add(logoutHandler);
         }
-        final JwtLogoutFilter logoutFilter = new JwtLogoutFilter(this.getBean(LogoutSuccessHandler.class, this.serviceProvider.logoutSuccessHandler), logoutHandlerList.toArray(new LogoutHandler[]{}));
+        LogoutFilter logoutFilter = new LogoutFilter(this.getBean(LogoutSuccessHandler.class, this.serviceProvider.logoutSuccessHandler), logoutHandlerList.toArray(new LogoutHandler[]{}));
         logoutFilter.setFilterProcessesUrl(this.getLogoutUrl());
         return logoutFilter;
     }
@@ -224,7 +198,6 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
      */
     @Setter
     private static class ServiceProvider {
-        private AuthCache<Object> authCache;
         /**
          * 是否使用jwt认证器
          */

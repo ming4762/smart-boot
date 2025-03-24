@@ -39,7 +39,7 @@ public class AuthLoginSuccessHandler implements AuthenticationSuccessHandler, In
             httpServletRequest.changeSessionId();
             this.setSessionMaxInactiveInterval(httpServletRequest, loginParameter.getLoginType());
         }
-        RestJsonWriter.writeJson(httpServletResponse, Result.success(this.authSuccessDataHandler.successData(authentication, httpServletRequest, loginParameter.getLoginType())));
+        RestJsonWriter.writeJson(httpServletResponse, Result.success(this.authSuccessDataHandler.successData(authentication, httpServletRequest, httpServletResponse)));
     }
 
     /**

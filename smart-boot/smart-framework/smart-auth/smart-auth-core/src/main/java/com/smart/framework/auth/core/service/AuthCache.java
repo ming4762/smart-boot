@@ -21,9 +21,8 @@ public interface AuthCache<V> {
      * @param key key
      * @param mapKey mapKey
      * @param value value
-     * @param timeout 超时时间
      */
-    void put(@NonNull String key, @NonNull String mapKey, @NonNull V value, Duration timeout);
+    void putMap(@NonNull String key, @NonNull String mapKey, @NonNull V value);
 
     /**
      * 添加缓存

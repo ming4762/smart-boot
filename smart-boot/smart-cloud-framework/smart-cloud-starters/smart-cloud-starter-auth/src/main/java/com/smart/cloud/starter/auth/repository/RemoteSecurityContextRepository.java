@@ -1,12 +1,10 @@
 package com.smart.cloud.starter.auth.repository;
 
-import com.google.common.collect.Sets;
 import com.smart.framework.auth.common.userdetails.RestUserDetails;
 import com.smart.framework.auth.core.authentication.RestUsernamePasswordAuthenticationToken;
 import com.smart.framework.auth.core.model.PermissionGrantedAuthority;
 import com.smart.framework.auth.core.model.RestUserDetailsImpl;
 import com.smart.framework.auth.core.model.RoleGrantedAuthority;
-import com.smart.framework.auth.core.model.SmartGrantedAuthority;
 import com.smart.framework.auth.core.utils.TokenUtils;
 import com.smart.module.api.auth.AuthApi;
 import com.smart.module.api.auth.dto.AuthUserDetailsDTO;
@@ -29,8 +27,8 @@ import java.time.Instant;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * 远程调用获取登录用户信息并缓存 生成SecurityContext
@@ -74,29 +72,26 @@ public class RemoteSecurityContextRepository implements SecurityContextRepositor
         if (dto == null || dto.getUserId() == null) {
             return this.generateNewContext();
         }
-        RestUserDetailsImpl restUserDetails = new RestUserDetailsImpl();
-        restUserDetails.setUserId(dto.getUserId());
-        restUserDetails.setUsername(dto.getUsername());
-        restUserDetails.setFullName(dto.getFullName());
-        restUserDetails.setLocale(dto.getLocale());
-        restUserDetails.setLoginTime(dto.getLoginTime());
-        Set<SmartGrantedAuthority> grantedAuthoritySet = Sets.newHashSet();
-        grantedAuthoritySet.addAll(
-                dto.getUserAccountData().getRoleCodes().stream()
-                        .map(RoleGrantedAuthority::new).toList()
-        );
-        // 添加权限
-        grantedAuthoritySet.addAll(
-                dto.getUserAccountData().getPermissions()
-                        .stream()
-                        .map(PermissionGrantedAuthority::new).toList()
-        );
-        restUserDetails.setAuthorities(grantedAuthoritySet);
-        restUserDetails.setLoginIp(dto.getLoginIp());
-        restUserDetails.setBindIp(dto.getBindIp());
-        restUserDetails.setIpWhiteList(dto.getIpWhiteList());
-        restUserDetails.setToken(token);
-        restUserDetails.setUserTenant(dto.getUserAccountData().getTenant());
+        RestUserDetailsImpl restUserDetails = RestUserDetailsImpl.builder()
+                .userId(dto.getUserId())
+                .username(dto.getUsername())
+                .fullName(dto.getFullName())
+                .locale(dto.getLocale())
+                .loginTime(dto.getLoginTime())
+                .roles(
+                        dto.getUserAccountData().getRoleCodes().stream()
+                                .map(RoleGrantedAuthority::new).collect(Collectors.toSet())
+                ).permissions(
+                        dto.getUserAccountData().getPermissions()
+                                .stream()
+                                .map(PermissionGrantedAuthority::new).collect(Collectors.toSet())
+                )
+                .loginIp(dto.getLoginIp())
+                .bindIp(dto.getBindIp())
+                .ipWhiteList(dto.getIpWhiteList())
+                .token(token)
+                .userTenant(dto.getUserAccountData().getTenant())
+                .build();
 
         cache.put(token, restUserDetails);
         this.setCachedToken(token);

@@ -202,7 +202,7 @@ public class NimbusJwtEncoder implements JwtEncoder {
             throw new JwtEncodingException(
                     String.format(ENCODING_ERROR_MESSAGE_TEMPLATE, "Failed to select a JWK signing key"));
         }
-        return jwkList.get(0);
+        return jwkList.getFirst();
     }
 
     protected JWKMatcher createJwkMatcher(JwsHeader jwsHeader) {

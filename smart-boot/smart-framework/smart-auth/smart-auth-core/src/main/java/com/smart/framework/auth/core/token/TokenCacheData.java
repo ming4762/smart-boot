@@ -1,8 +1,6 @@
 package com.smart.framework.auth.core.token;
 
 import com.smart.framework.auth.common.userdetails.RestUserDetails;
-import com.smart.framework.commons.core.dto.auth.AuthRole;
-import com.smart.framework.commons.core.dto.auth.Permission;
 import lombok.*;
 import org.springframework.security.core.context.SecurityContext;
 
@@ -12,7 +10,6 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -51,15 +48,6 @@ public class TokenCacheData implements Serializable {
     private Duration timeout;
 
     private RestUserDetails user;
-    /**
-     * 权限信息
-     */
-    private Set<Permission> permissions;
-
-    /**
-     * 角色信息
-     */
-    private Set<AuthRole> roles;
 
     @Builder.Default
     private Map<String, Object> attributes = HashMap.newHashMap(0);
@@ -82,14 +70,12 @@ public class TokenCacheData implements Serializable {
     }
 
     public Map<String, Object> convertToMap() {
-        Map<String, Object> map = HashMap.newHashMap(attributes.size() + 7);
+        Map<String, Object> map = HashMap.newHashMap(5);
         map.put(TOKEN_KEY, this.token);
         map.put(CREATE_TIME_KEY, this.createTime);
         map.put(REFRESH_TIME_KEY, this.refreshTime);
         map.put(TIMEOUT_KEY, this.timeout);
         map.put(USER_KEY, this.user);
-        map.put(PERMISSIONS_KEY, this.permissions);
-        map.put(ROLES_KEY, this.roles);
         return map.entrySet().stream()
                 .filter(item -> item.getValue() != null)
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
@@ -98,6 +84,17 @@ public class TokenCacheData implements Serializable {
     public Map<String, Object> convertAttributesToMap() {
         Map<String, Object> map = HashMap.newHashMap(attributes.size());
         attributes.forEach((key, value) -> map.put(ATTRIBUTES_KEY + key, value));
+        return map;
+    }
+
+    /**
+     * 所有数据转为map
+     * @return map
+     */
+    public Map<String, Object> convertAllToMap() {
+        Map<String, Object> map = HashMap.newHashMap(attributes.size() + 5);
+        map.putAll(convertToMap());
+        map.putAll(convertAttributesToMap());
         return map;
     }
 

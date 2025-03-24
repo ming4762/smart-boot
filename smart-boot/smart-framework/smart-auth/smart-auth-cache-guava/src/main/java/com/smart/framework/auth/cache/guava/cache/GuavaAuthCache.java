@@ -26,19 +26,26 @@ public class GuavaAuthCache extends AbstractAuthCache<Object> {
         this.cacheService = cacheService;
     }
 
+
+    /**
+     * 添加缓存
+     *
+     * @param key    key
+     * @param mapKey mapKey
+     * @param value  value
+     */
+    @Override
+    public void putMap(@NonNull String key, @NonNull String mapKey, @NonNull Object value) {
+
+    }
+
     /**
      * 添加缓存
      *
      * @param key     key
-     * @param mapKey  mapKey
      * @param value   value
      * @param timeout 超时时间
      */
-    @Override
-    public void put(String key, String mapKey, Object value, Duration timeout) {
-
-    }
-
     @Override
     public void put(@NonNull String key, @NonNull Object value, Duration timeout) {
         this.cacheService.put(this.getKey(key), value, timeout);
@@ -74,7 +81,7 @@ public class GuavaAuthCache extends AbstractAuthCache<Object> {
      * @return value
      */
     @Override
-    public Object getValue(String key) {
+    public Object getValue(@NonNull String key) {
         return null;
     }
 
@@ -86,7 +93,7 @@ public class GuavaAuthCache extends AbstractAuthCache<Object> {
      * @return value
      */
     @Override
-    public Object get(String key, String mapKey) {
+    public Object get(@NonNull String key, @NonNull String mapKey) {
         return null;
     }
 
@@ -171,7 +178,7 @@ public class GuavaAuthCache extends AbstractAuthCache<Object> {
      * @return 是否存在
      */
     @Override
-    public boolean hasKey(String key) {
+    public boolean hasKey(@NonNull String key) {
         return false;
     }
 }

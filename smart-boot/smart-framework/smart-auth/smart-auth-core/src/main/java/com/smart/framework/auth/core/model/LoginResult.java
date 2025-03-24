@@ -28,6 +28,8 @@ public class LoginResult implements Serializable {
 
     private String token;
 
+    private String refreshToken;
+
     private Set<AuthRole> roles;
 
     private Set<String> permissions;

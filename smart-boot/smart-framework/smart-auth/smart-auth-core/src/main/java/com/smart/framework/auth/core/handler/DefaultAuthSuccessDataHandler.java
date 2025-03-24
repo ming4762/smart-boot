@@ -1,10 +1,10 @@
 package com.smart.framework.auth.core.handler;
 
-import com.smart.framework.auth.common.constants.LoginTypeEnum;
 import com.smart.framework.auth.core.model.LoginResult;
 import com.smart.framework.auth.core.model.RestUserDetailsImpl;
 import com.smart.framework.commons.core.dto.auth.Permission;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 
 import java.util.Optional;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  */
 public class DefaultAuthSuccessDataHandler implements AuthSuccessDataHandler {
     @Override
-    public LoginResult successData(Authentication authentication, HttpServletRequest request, LoginTypeEnum loginType) {
+    public LoginResult successData(Authentication authentication, HttpServletRequest request, HttpServletResponse response) {
         final RestUserDetailsImpl userDetails = (RestUserDetailsImpl) authentication.getPrincipal();
         userDetails.setPassword(null);
         // 处理用户权限信息

@@ -22,6 +22,7 @@ import org.springframework.util.Assert;
 
 import java.security.interfaces.RSAPublicKey;
 import java.text.ParseException;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -60,7 +61,10 @@ public class NimbusJwtDecoder implements JwtDecoder {
             throw new BadJwtException("Unsupported algorithm of " + jwt.getHeader().getAlgorithm());
         }
         Jwt createJwt = this.createJwt(token, jwt);
-        // todo:验证JWT
+        Instant expiresAt = createJwt.getExpiresAt();
+        if (expiresAt != null && expiresAt.isBefore(Instant.now())) {
+            throw new BadJwtException("Expired at " + expiresAt);
+        }
         return createJwt;
     }
 

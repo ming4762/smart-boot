@@ -12,7 +12,7 @@ import com.smart.framework.auth.core.event.AuthEventListener;
 import com.smart.framework.auth.core.handler.*;
 import com.smart.framework.auth.core.properties.AuthProperties;
 import com.smart.framework.auth.core.service.AuthCache;
-import com.smart.framework.auth.core.token.TokenRepository;
+import com.smart.framework.auth.core.token.SmartTokenRepository;
 import com.smart.framework.auth.core.userdetails.DefaultUserDetailsBuilderImpl;
 import com.smart.framework.auth.core.userdetails.UserDetailsBuilder;
 import com.smart.module.api.system.SysLogApi;
@@ -183,7 +183,7 @@ public class AuthSecurity2AutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public UserDetailsBuilder userDetailsBuilder(SystemAuthUserApi systemAuthUserApi, List<TokenRepository> tokenRepositoryList) {
+    public UserDetailsBuilder userDetailsBuilder(SystemAuthUserApi systemAuthUserApi, List<SmartTokenRepository> tokenRepositoryList) {
         return new DefaultUserDetailsBuilderImpl(systemAuthUserApi, tokenRepositoryList);
     }
 

@@ -8,9 +8,8 @@ import com.smart.framework.auth.core.i18n.AuthI18nMessage;
 import com.smart.framework.auth.core.model.PermissionGrantedAuthority;
 import com.smart.framework.auth.core.model.RestUserDetailsImpl;
 import com.smart.framework.auth.core.model.RoleGrantedAuthority;
-import com.smart.framework.auth.core.model.SmartGrantedAuthority;
+import com.smart.framework.auth.core.token.SmartTokenRepository;
 import com.smart.framework.auth.core.token.TokenCacheData;
-import com.smart.framework.auth.core.token.TokenRepository;
 import com.smart.framework.commons.core.dto.auth.MaxConnectionsPolicyEnum;
 import com.smart.framework.commons.core.dto.auth.UserAccountDTO;
 import com.smart.framework.commons.core.dto.auth.UserAccountData;
@@ -38,7 +37,7 @@ import java.util.stream.Collectors;
 public class DefaultUserDetailsBuilderImpl implements UserDetailsBuilder {
 
     private final SystemAuthUserApi systemAuthUserApi;
-    private final List<TokenRepository> tokenRepositoryList;
+    private final List<SmartTokenRepository> tokenRepositoryList;
 
     /**
      * 构建 RestUserDetails
@@ -62,42 +61,40 @@ public class DefaultUserDetailsBuilderImpl implements UserDetailsBuilder {
         }
         UserAccountDTO userAccount = userAccountData.getAccount();
 
-        RestUserDetailsImpl restUserDetails = new RestUserDetailsImpl();
-        restUserDetails.setUserId(user.getUserId());
-        restUserDetails.setUsername(user.getUsername());
-        restUserDetails.setFullName(user.getFullName());
-        restUserDetails.setPassword(user.getPassword());
-        restUserDetails.setLoginFailTime(userAccount.getLoginFailTime());
-        // IP白名单
-        restUserDetails.setIpWhiteList(
-                Optional.ofNullable(userAccount.getIpWhiteList())
-                        .map(
-                                item -> Arrays.stream(item.split(";"))
-                                        .map(String::trim)
-                                        .filter(org.springframework.util.StringUtils::hasText)
-                                        .toList()
-                        ).orElse(new ArrayList<>(0))
-        );
+        RestUserDetailsImpl restUserDetails = RestUserDetailsImpl.builder()
+                .userId(user.getUserId())
+                .username(user.getUsername())
+                .fullName(user.getFullName())
+                .password(user.getPassword())
+                .loginFailTime(userAccount.getLoginFailTime())
+                .ipWhiteList(
+                        Optional.ofNullable(userAccount.getIpWhiteList())
+                                .map(
+                                        item -> Arrays.stream(item.split(";"))
+                                                .map(String::trim)
+                                                .filter(org.springframework.util.StringUtils::hasText)
+                                                .toList()
+                                ).orElse(new ArrayList<>(0))
+                )
+                .accountNonLocked(UserAccountStatusEnum.NORMAL.equals(userAccount.getAccountStatus()))
+                .build();
 
         // 设置账户锁定状态
-        restUserDetails.setAccountNonLocked(UserAccountStatusEnum.NORMAL.equals(userAccount.getAccountStatus()));
         if (UserAccountStatusEnum.LOGIN_FAIL_LOCKED.equals(userAccount.getAccountStatus())) {
             // 用户登录失败锁定执行解锁策略
             restUserDetails.setAccountNonLocked(this.unLockPasswordErrorLock(user, userAccountData));
         }
-        // 设置权限信息
-        Set<SmartGrantedAuthority> grantedAuthoritySet = HashSet.newHashSet(20);
         // 添加角色
-        grantedAuthoritySet.addAll(
+        restUserDetails.setRoles(
                 userAccountData.getRoleCodes().stream()
                         .map(RoleGrantedAuthority::new).collect(Collectors.toSet())
         );
         // 添加权限
-        grantedAuthoritySet.addAll(
+        restUserDetails.setPermissions(
                 userAccountData.getPermissions().stream()
-                        .map(PermissionGrantedAuthority::new).toList()
+                        .map(PermissionGrantedAuthority::new).collect(Collectors.toSet())
         );
-        restUserDetails.setAuthorities(grantedAuthoritySet);
+
         // 设置租户信息
         restUserDetails.setUserTenant(userAccountData.getTenant());
         return restUserDetails;
@@ -155,7 +152,7 @@ public class DefaultUserDetailsBuilderImpl implements UserDetailsBuilder {
             return;
         }
         List<TokenCacheData> tokenDataList = this.tokenRepositoryList.stream()
-                .flatMap(item -> item.listData(user.getUsername(), userAccountData.getTenant().getTenantId()).stream())
+                .flatMap(item -> item.listToken(user.getUsername(), userAccountData.getTenant().getTenantId()).stream())
                 .toList();
         if (tokenDataList.size() < connectionNum) {
             // 未达到连接数上限

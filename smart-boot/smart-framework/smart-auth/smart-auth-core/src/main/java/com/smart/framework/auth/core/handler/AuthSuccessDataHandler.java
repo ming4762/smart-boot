@@ -1,8 +1,8 @@
 package com.smart.framework.auth.core.handler;
 
-import com.smart.framework.auth.common.constants.LoginTypeEnum;
 import com.smart.framework.auth.core.model.LoginResult;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 
 /**
@@ -16,8 +16,8 @@ public interface AuthSuccessDataHandler {
      * 登录成功数据
      * @param authentication 认证信息
      * @param request 请求体
-     * @param loginType 登录方式
+     * @param response 响应体
      * @return 登录成功数据
      */
-    LoginResult successData(Authentication authentication, HttpServletRequest request, LoginTypeEnum loginType);
+    LoginResult successData(Authentication authentication, HttpServletRequest request, HttpServletResponse response);
 }

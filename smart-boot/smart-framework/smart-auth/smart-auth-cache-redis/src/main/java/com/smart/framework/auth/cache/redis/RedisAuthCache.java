@@ -35,13 +35,11 @@ public class RedisAuthCache extends AbstractAuthCache<Object> {
      * @param key     key
      * @param mapKey  mapKey
      * @param value   value
-     * @param timeout 超时时间
      */
     @Override
-    public void put(@NonNull String key, @NonNull String mapKey, @NonNull Object value, Duration timeout) {
+    public void putMap(@NonNull String key, @NonNull String mapKey, @NonNull Object value) {
         RMap<Object, Object> map = this.redissonClient.getMap(this.getKey(key));
         map.put(mapKey, value);
-        map.expire(timeout);
     }
 
     /**

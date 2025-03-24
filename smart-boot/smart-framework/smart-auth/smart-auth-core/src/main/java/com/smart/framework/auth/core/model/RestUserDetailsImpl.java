@@ -1,5 +1,6 @@
 package com.smart.framework.auth.core.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.smart.framework.auth.common.constants.AuthTypeEnum;
 import com.smart.framework.auth.common.constants.LoginTypeEnum;
@@ -7,18 +8,12 @@ import com.smart.framework.auth.common.userdetails.RestUserDetails;
 import com.smart.framework.commons.core.dto.auth.AuthRole;
 import com.smart.framework.commons.core.dto.auth.Permission;
 import com.smart.framework.commons.core.dto.auth.UserTenantDTO;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -26,7 +21,10 @@ import java.util.stream.Collectors;
  * 2020/1/16 9:11 下午
  */
 @Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RestUserDetailsImpl implements RestUserDetails, Serializable {
     @Serial
     private static final long serialVersionUID = -6184955894751051086L;
@@ -45,8 +43,11 @@ public class RestUserDetailsImpl implements RestUserDetails, Serializable {
 
     private String locale;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private Set<SmartGrantedAuthority> authorities;
+    @Builder.Default
+    private Set<PermissionGrantedAuthority> permissions = HashSet.newHashSet(0);
+
+    @Builder.Default
+    private Set<RoleGrantedAuthority> roles = HashSet.newHashSet(0);
 
     @Getter
     private ZonedDateTime loginTime;
@@ -86,9 +87,11 @@ public class RestUserDetailsImpl implements RestUserDetails, Serializable {
     private Boolean accountNonLocked;
 
     @Override
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public Collection<SmartGrantedAuthority> getAuthorities() {
-        return this.authorities;
+        Set<SmartGrantedAuthority> authorities = new HashSet<>();
+        authorities.addAll(this.permissions);
+        authorities.addAll(this.roles);
+        return authorities;
     }
 
     /**
@@ -97,14 +100,12 @@ public class RestUserDetailsImpl implements RestUserDetails, Serializable {
      */
     @Override
     @NonNull
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public Set<AuthRole> getRoles() {
-        if (Objects.isNull(this.authorities)) {
+        if (Objects.isNull(this.roles)) {
             return Set.of();
         }
-        return this.authorities.stream()
-                .filter(SmartGrantedAuthority::isRole)
-                .map(item -> ((RoleGrantedAuthority) item).getAuthRole())
+        return this.roles.stream()
+                .map(RoleGrantedAuthority::getAuthRole)
                 .collect(Collectors.toSet());
     }
 
@@ -114,14 +115,12 @@ public class RestUserDetailsImpl implements RestUserDetails, Serializable {
      */
     @Override
     @NonNull
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public Set<Permission> getPermissions() {
-        if (Objects.isNull(this.authorities)) {
+        if (Objects.isNull(this.permissions)) {
             return Set.of();
         }
-        return this.authorities.stream()
-                .filter(SmartGrantedAuthority :: isPermission)
-                .map(item -> ((PermissionGrantedAuthority)item).getPermission())
+        return this.permissions.stream()
+                .map(PermissionGrantedAuthority::getPermission)
                 .collect(Collectors.toSet());
     }
 

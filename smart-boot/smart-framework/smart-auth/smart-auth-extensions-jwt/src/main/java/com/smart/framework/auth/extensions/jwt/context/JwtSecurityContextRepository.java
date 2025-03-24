@@ -2,10 +2,8 @@ package com.smart.framework.auth.extensions.jwt.context;
 
 import com.smart.framework.auth.common.userdetails.RestUserDetails;
 import com.smart.framework.auth.core.authentication.RestUsernamePasswordAuthenticationToken;
-import com.smart.framework.auth.core.token.TokenRepository;
 import com.smart.framework.auth.core.utils.TokenUtils;
 import com.smart.framework.auth.extensions.jwt.token.JwtTokenRepository;
-import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -15,8 +13,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.security.web.context.HttpRequestResponseHolder;
 import org.springframework.security.web.context.SecurityContextRepository;
+import org.springframework.util.StringUtils;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -27,21 +28,21 @@ import java.util.List;
 @Slf4j
 public class JwtSecurityContextRepository implements SecurityContextRepository {
 
-    private List<JwtTokenRepository> repositoryList;
+    private List<JwtTokenRepository> jwtTokenRepositoryList;
 
-
+    
     @Override
     public SecurityContext loadContext(HttpRequestResponseHolder requestResponseHolder) {
         HttpServletRequest request = requestResponseHolder.getRequest();
-        String jwt = TokenUtils.getToken(request);
-        if (!org.springframework.util.StringUtils.hasText(jwt)) {
+        String token = TokenUtils.getToken(request);
+        if (!StringUtils.hasText(token)) {
+            // 没有token
             return generateNewContext();
         }
-        // 解析jwt
         try {
             RestUserDetails user = null;
-            for (JwtTokenRepository repository : this.repositoryList) {
-                user = repository.getUser(jwt);
+            for (JwtTokenRepository jwtTokenRepository : Objects.requireNonNullElseGet(this.jwtTokenRepositoryList, Collections::<JwtTokenRepository>emptyList)) {
+                user = jwtTokenRepository.getUserByToken(token);
                 if (user != null) {
                     break;
                 }
@@ -64,36 +65,22 @@ public class JwtSecurityContextRepository implements SecurityContextRepository {
     @Override
     public void saveContext(SecurityContext context, HttpServletRequest request, HttpServletResponse response) {
         // do Nothing
-        RestUserDetails user = (RestUserDetails) context.getAuthentication().getPrincipal();
-        String token = null;
-        for (TokenRepository tokenRepository : repositoryList) {
-            token = tokenRepository.save(user);
-            if (org.springframework.util.StringUtils.hasText(token)) {
-                break;
-            }
-        }
-        user.setToken(token);
+        // JWT 不存储信息
     }
 
     @Override
     public boolean containsContext(HttpServletRequest request) {
         String jwt = TokenUtils.getToken(request);
-        return StringUtils.isNotBlank(jwt);
+        return StringUtils.hasText(jwt);
     }
 
-    /**
-     * By default, calls {@link SecurityContextHolder#createEmptyContext()} to obtain a
-     * new context (there should be no context present in the holder when this method is
-     * called). Using this approach the context creation strategy is decided by the
-     * return a new <tt>SecurityContextImpl</tt>.
-     * @return a new SecurityContext instance. Never null.
-     */
+
     protected SecurityContext generateNewContext() {
         return SecurityContextHolder.createEmptyContext();
     }
 
     @Autowired
-    public void setRepositoryList(List<JwtTokenRepository> repositoryList) {
-        this.repositoryList = repositoryList;
+    public void setJwtTokenRepositoryList(List<JwtTokenRepository> jwtTokenRepositoryList) {
+        this.jwtTokenRepositoryList = jwtTokenRepositoryList;
     }
 }

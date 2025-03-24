@@ -40,9 +40,6 @@ public class ExtensionPathMatcher implements RequestMatcher {
     public boolean matches(HttpServletRequest request) {
         // 验证请求方式
         if (this.httpMethod != null && org.springframework.util.StringUtils.hasText(request.getMethod()) && !Objects.equals(valueOf(request.getMethod()), this.httpMethod)) {
-            if (log.isDebugEnabled()) {
-                log.debug("Request '" + request.getMethod() + " " + request.getRequestURI() + "' doesn't match '" + this.httpMethod + " " + this.pattern + "'");
-            }
             return false;
         }
         // 判断是否是文件扩展名
