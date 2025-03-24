@@ -142,9 +142,10 @@ public class SmartSessionTokenRepository implements SmartTokenRepository, Sessio
      * @param attributeValue 属性值
      */
     @Override
-    public void setAttribute(String attributeName, Object attributeValue) {
+    public boolean setAttribute(String attributeName, Object attributeValue) {
         HttpSession session = Objects.requireNonNull(((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())).getRequest().getSession();
         session.setAttribute(attributeName, attributeValue);
+        return true;
     }
 
     /**

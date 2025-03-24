@@ -15,6 +15,7 @@ import com.smart.framework.auth.extensions.jwt.handler.JwtAuthSuccessDataHandler
 import com.smart.framework.auth.extensions.jwt.handler.JwtLogoutHandler;
 import com.smart.framework.auth.extensions.jwt.resolver.DefaultJwtResolverImpl;
 import com.smart.framework.auth.extensions.jwt.resolver.JwtResolver;
+import com.smart.framework.auth.extensions.jwt.token.CompositeJwtTokenRepository;
 import com.smart.framework.auth.extensions.jwt.token.DefaultJwtTokenRepositoryImpl;
 import com.smart.framework.auth.extensions.jwt.token.JwtTokenRepository;
 import com.smart.framework.commons.core.utils.auth.RsaUtils;
@@ -29,6 +30,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.web.context.SecurityContextRepository;
 
@@ -112,7 +114,7 @@ public class SmartAuthJwtAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean(SecurityLogoutHandler.class)
-    public SecurityLogoutHandler jwtLogoutHandler(List<JwtTokenRepository> tokenRepository) {
+    public SecurityLogoutHandler jwtLogoutHandler(JwtTokenRepository tokenRepository) {
         return new JwtLogoutHandler(tokenRepository);
     }
 
@@ -122,9 +124,15 @@ public class SmartAuthJwtAutoConfiguration {
     }
 
     @Bean
+    @Primary
+    public CompositeJwtTokenRepository compositeJwtTokenRepository(List<JwtTokenRepository> jwtTokenRepositoryList) {
+        return new CompositeJwtTokenRepository(jwtTokenRepositoryList);
+    }
+
+    @Bean
     @ConditionalOnMissingBean(JwtAuthSuccessDataHandler.class)
-    public JwtAuthSuccessDataHandler jwtAuthSuccessDataHandler(List<JwtTokenRepository> jwtTokenRepositoryList) {
-        return new JwtAuthSuccessDataHandler(jwtTokenRepositoryList);
+    public JwtAuthSuccessDataHandler jwtAuthSuccessDataHandler(JwtTokenRepository jwtTokenRepository) {
+        return new JwtAuthSuccessDataHandler(jwtTokenRepository);
     }
 
 

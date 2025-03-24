@@ -10,8 +10,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 
-import java.util.List;
-
 /**
  * @author ShiZhongMing
  * 2022/8/9
@@ -20,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JwtLogoutHandler implements SecurityLogoutHandler {
 
-    private final List<JwtTokenRepository> jwtTokenRepositoryList;
+    private final JwtTokenRepository jwtTokenRepository;
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
@@ -28,10 +26,6 @@ public class JwtLogoutHandler implements SecurityLogoutHandler {
         if (StringUtils.isBlank(refreshToken)) {
             throw new AuthException("refreshToken为null，无法登出");
         }
-        for (JwtTokenRepository jwtTokenRepository : this.jwtTokenRepositoryList) {
-            if (jwtTokenRepository.invalidateByToken(refreshToken)) {
-                break;
-            }
-        }
+        this.jwtTokenRepository.invalidateByToken(refreshToken);
     }
 }

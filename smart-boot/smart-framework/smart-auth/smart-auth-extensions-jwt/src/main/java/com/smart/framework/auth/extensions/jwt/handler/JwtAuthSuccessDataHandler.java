@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.util.StringUtils;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -26,7 +25,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class JwtAuthSuccessDataHandler implements AuthSuccessDataHandler {
 
-    private final List<JwtTokenRepository> jwtTokenRepositoryList;
+    private final JwtTokenRepository jwtTokenRepository;
 
     /**
      * 登录成功数据
@@ -39,31 +38,18 @@ public class JwtAuthSuccessDataHandler implements AuthSuccessDataHandler {
     @Override
     public LoginResult successData(Authentication authentication, HttpServletRequest request, HttpServletResponse response) {
         final RestUserDetailsImpl userDetails = (RestUserDetailsImpl) authentication.getPrincipal();
-        String jwt = "";
-        for (JwtTokenRepository jwtTokenRepository : this.jwtTokenRepositoryList) {
-            jwt = jwtTokenRepository.generateToken(userDetails);
-            if (StringUtils.hasText(jwt)) {
-                break;
-            }
-        }
+        String jwt = this.jwtTokenRepository.generateToken(userDetails);
         if (!StringUtils.hasText(jwt)) {
             throw new SystemException("JWT生成失败");
         }
         userDetails.setToken(jwt);
+
         // 生成refresh token
-        String refreshToken = "";
-        for (JwtTokenRepository jwtTokenRepository : this.jwtTokenRepositoryList) {
-            refreshToken = jwtTokenRepository.generateRefreshToken(userDetails);
-            if (StringUtils.hasText(refreshToken)) {
-                break;
-            }
-        }
+        String refreshToken = this.jwtTokenRepository.generateRefreshToken(userDetails);
+
         if (!StringUtils.hasText(refreshToken)) {
             throw new SystemException("生成refresh token失败");
         }
-        // 将token放入响应头
-//        TokenUtils.setHeaderToken(jwt, response);
-//        TokenUtils.setHeaderRefreshToken(refreshToken, response);
         return LoginResult.builder()
                 .user(userDetails)
                 .token(userDetails.getToken())

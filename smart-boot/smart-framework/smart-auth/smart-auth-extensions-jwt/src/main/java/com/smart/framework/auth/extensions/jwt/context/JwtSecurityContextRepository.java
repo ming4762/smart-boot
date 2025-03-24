@@ -15,10 +15,6 @@ import org.springframework.security.web.context.HttpRequestResponseHolder;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.util.StringUtils;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-
 
 /**
  * @author ShiZhongMing
@@ -28,7 +24,7 @@ import java.util.Objects;
 @Slf4j
 public class JwtSecurityContextRepository implements SecurityContextRepository {
 
-    private List<JwtTokenRepository> jwtTokenRepositoryList;
+    private JwtTokenRepository jwtTokenRepository;
 
     
     @Override
@@ -40,13 +36,7 @@ public class JwtSecurityContextRepository implements SecurityContextRepository {
             return generateNewContext();
         }
         try {
-            RestUserDetails user = null;
-            for (JwtTokenRepository jwtTokenRepository : Objects.requireNonNullElseGet(this.jwtTokenRepositoryList, Collections::<JwtTokenRepository>emptyList)) {
-                user = jwtTokenRepository.getUserByToken(token);
-                if (user != null) {
-                    break;
-                }
-            }
+            RestUserDetails user = this.jwtTokenRepository.getUserByToken(token);
             if (user == null) {
                 return generateNewContext();
             }
@@ -80,7 +70,7 @@ public class JwtSecurityContextRepository implements SecurityContextRepository {
     }
 
     @Autowired
-    public void setJwtTokenRepositoryList(List<JwtTokenRepository> jwtTokenRepositoryList) {
-        this.jwtTokenRepositoryList = jwtTokenRepositoryList;
+    public void setJwtTokenRepository(JwtTokenRepository jwtTokenRepository) {
+        this.jwtTokenRepository = jwtTokenRepository;
     }
 }

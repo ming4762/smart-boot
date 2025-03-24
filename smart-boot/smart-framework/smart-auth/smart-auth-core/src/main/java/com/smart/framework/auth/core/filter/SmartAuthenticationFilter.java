@@ -1,4 +1,4 @@
-package com.smart.framework.auth.core.authentication;
+package com.smart.framework.auth.core.filter;
 
 import com.smart.framework.auth.common.userdetails.RestUserDetails;
 import com.smart.framework.auth.common.utils.AuthUtils;

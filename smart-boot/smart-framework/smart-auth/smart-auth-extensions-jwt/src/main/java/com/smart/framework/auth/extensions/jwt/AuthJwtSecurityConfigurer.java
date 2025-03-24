@@ -1,8 +1,8 @@
 package com.smart.framework.auth.extensions.jwt;
 
 import com.google.common.collect.Lists;
-import com.smart.framework.auth.core.authentication.SmartAuthenticationFilter;
 import com.smart.framework.auth.core.config.SmartSecurityConfigurerAdapter;
+import com.smart.framework.auth.core.filter.SmartAuthenticationFilter;
 import com.smart.framework.auth.core.filter.WebLoginFilter;
 import com.smart.framework.auth.core.handler.SecurityLogoutHandler;
 import com.smart.framework.auth.core.properties.AuthProperties;

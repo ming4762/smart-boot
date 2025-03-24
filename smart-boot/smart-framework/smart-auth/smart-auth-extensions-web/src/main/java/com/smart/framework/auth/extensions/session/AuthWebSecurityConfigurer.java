@@ -1,7 +1,7 @@
 package com.smart.framework.auth.extensions.session;
 
-import com.smart.framework.auth.core.authentication.SmartAuthenticationFilter;
 import com.smart.framework.auth.core.config.SmartSecurityConfigurerAdapter;
+import com.smart.framework.auth.core.filter.SmartAuthenticationFilter;
 import com.smart.framework.auth.core.properties.AuthProperties;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;

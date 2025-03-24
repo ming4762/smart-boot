@@ -21,10 +21,8 @@ import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.util.CollectionUtils;
 
 import java.time.Duration;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.time.Instant;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -106,6 +104,7 @@ public class DefaultJwtTokenRepositoryImpl implements JwtTokenRepository {
                 .timeout(timeout)
                 .user(user)
                 .token(refreshToken)
+                .refreshTime(Instant.now())
                 .build();
         String refreshTokenKey = this.getRefreshTokenKey(user.getUsername(), user.getUserTenant().getTenantId(), refreshToken);
         this.authCache.putAll(
@@ -156,8 +155,20 @@ public class DefaultJwtTokenRepositoryImpl implements JwtTokenRepository {
      * @return jwt数据
      */
     @Override
+    @NonNull
     public List<TokenCacheData> listToken() {
-        return List.of();
+        String refreshTokenKey = this.getRefreshTokenKey(null, null, null);
+        return this.listTokenKey(refreshTokenKey);
+    }
+
+    private List<TokenCacheData> listTokenKey(String cachedKey) {
+        Set<String> keys = this.authCache.matchKeys(cachedKey);
+        if (CollectionUtils.isEmpty(keys)) {
+            return Collections.emptyList();
+        }
+        return this.authCache.batchGet(keys).stream()
+                .map(TokenCacheData::createFormCache)
+                .toList();
     }
 
     /**
@@ -168,8 +179,9 @@ public class DefaultJwtTokenRepositoryImpl implements JwtTokenRepository {
      * @return token
      */
     @Override
+    @NonNull
     public List<TokenCacheData> listToken(String username, Long tenantId) {
-        return List.of();
+        return this.listTokenKey(this.getRefreshTokenKey(username, tenantId, null));
     }
 
     /**
@@ -190,8 +202,8 @@ public class DefaultJwtTokenRepositoryImpl implements JwtTokenRepository {
      * @param attributeValue 属性值
      */
     @Override
-    public void setAttribute(String attributeName, Object attributeValue) {
-
+    public boolean setAttribute(String attributeName, Object attributeValue) {
+        return false;
     }
 
     /**
@@ -218,13 +230,19 @@ public class DefaultJwtTokenRepositoryImpl implements JwtTokenRepository {
 
     /**
      * 使用户登录失效
-     *
+     * 永远返回false，true会中断后续的token失效
      * @param tenantId 租户ID
      * @param username 用户名
      * @return 是否失效成功
      */
     @Override
     public boolean invalidateByUsername(Long tenantId, String username) {
+        String cachedKey = this.getRefreshTokenKey(username, tenantId, null);
+        Set<String> keys = this.authCache.matchKeys(cachedKey);
+        if (CollectionUtils.isEmpty(keys)) {
+            return false;
+        }
+        keys.forEach(key -> this.invalidateByToken(this.getTokenFromCachedKey(key)));
         return false;
     }
 
@@ -283,6 +301,11 @@ public class DefaultJwtTokenRepositoryImpl implements JwtTokenRepository {
                 .filter(Objects::nonNull)
                 .map(Object::toString)
                 .collect(Collectors.joining(AbstractAuthCache.SPLIT));
+    }
+
+    private String getTokenFromCachedKey(String cachedKey) {
+        String[] split = cachedKey.split(AbstractAuthCache.SPLIT);
+        return split[split.length - 1];
     }
 
     private record RefreshTokenPayload(String username, UserTenantDTO userTenant) {

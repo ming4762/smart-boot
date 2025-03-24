@@ -48,7 +48,7 @@ public interface SmartTokenRepository {
      * @param attributeName 属性名称
      * @param attributeValue 属性值
      */
-    void setAttribute(String attributeName, Object attributeValue);
+    boolean setAttribute(String attributeName, Object attributeValue);
 
     /**
      * 使token失效

@@ -2,17 +2,21 @@ package com.smart.boot.autoconfigure.auth.extension;
 
 import com.smart.boot.autoconfigure.auth.session.RedisSessionRepositoryBeanPostProcessor;
 import com.smart.framework.auth.core.service.AuthCache;
+import com.smart.framework.auth.core.token.CompositeSmartTokenRepository;
+import com.smart.framework.auth.core.token.SmartTokenRepository;
 import com.smart.framework.auth.extensions.session.AuthWebSecurityConfigurer;
 import com.smart.framework.auth.extensions.session.SmartSessionTokenRepository;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpHeaders;
-import org.springframework.session.SessionIdGenerator;
 import org.springframework.session.config.annotation.web.http.EnableSpringHttpSession;
 import org.springframework.session.web.http.HeaderHttpSessionIdResolver;
 import org.springframework.session.web.http.HttpSessionIdResolver;
+
+import java.util.List;
 
 /**
  * 基于SESSION认证自动配置1
@@ -30,9 +34,16 @@ public class SmartAuthWebAutoConfiguration {
      * @return UserDataSessionIdGenerator
      */
     @Bean
-    @ConditionalOnMissingBean(SessionIdGenerator.class)
+    @ConditionalOnMissingBean(SmartSessionTokenRepository.class)
     public SmartSessionTokenRepository smartSessionTokenRepository(AuthCache<Object> authCache) {
         return new SmartSessionTokenRepository(authCache);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    @Primary
+    public CompositeSmartTokenRepository compositeSmartTokenRepository(List<SmartTokenRepository> jwtTokenRepositoryList) {
+        return new CompositeSmartTokenRepository(jwtTokenRepositoryList.stream().map(SmartTokenRepository.class::cast).toList());
     }
 
     @Bean

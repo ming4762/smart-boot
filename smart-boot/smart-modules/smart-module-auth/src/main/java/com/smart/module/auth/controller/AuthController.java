@@ -8,7 +8,6 @@ import com.smart.framework.auth.core.model.TempTokenData;
 import com.smart.framework.auth.core.properties.AuthProperties;
 import com.smart.framework.auth.core.token.SmartTokenRepository;
 import com.smart.framework.auth.core.token.TokenCacheData;
-import com.smart.framework.auth.core.token.TokenRepository;
 import com.smart.framework.commons.core.captcha.dto.CaptchaGenerateDTO;
 import com.smart.framework.commons.core.captcha.dto.CaptchaGenerateParameter;
 import com.smart.framework.commons.core.captcha.dto.CaptchaValidateParameter;
@@ -45,7 +44,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -62,8 +60,7 @@ import java.util.stream.Collectors;
 public class AuthController {
 
     private final AuthProperties authProperties;
-    private final List<TokenRepository> tokenRepositoryList;
-    private final List<SmartTokenRepository> smartTokenRepositoryList;
+    private final SmartTokenRepository smartTokenRepository;
     private final AuthApi authApi;
     private final AuthCaptchaApi authCaptchaApi;
 
@@ -120,9 +117,6 @@ public class AuthController {
     @PostMapping("auth/listOnlineUser")
     @Operation(summary = "查询所有在线用户")
     public Result<List<OnlineUserVO>> listOnlineUser(@RequestBody OnlineUserQueryDTO parameter) {
-        if (CollectionUtils.isEmpty(this.smartTokenRepositoryList)) {
-            return Result.success(new ArrayList<>(0));
-        }
         // 查询所有存储的用户信息
         List<TokenCacheData> userTokenDataList = this.listOnlineToken(parameter);
         Map<Long, List<TokenCacheData>> tokenMap = userTokenDataList.stream()
@@ -147,29 +141,26 @@ public class AuthController {
      * @return token列表
      */
     private List<TokenCacheData> listOnlineToken(OnlineUserQueryDTO parameter) {
-        return this.smartTokenRepositoryList.stream()
-                .flatMap(item -> {
-                    boolean isPlatformTenant = AuthUtils.isPlatformTenant();
-                    if (isPlatformTenant) {
-                        if (parameter.getUsername() == null) {
-                            // 平台管理租户查询所有
-                            return item.listToken().stream()
-                                    .filter(userData -> {
-                                        if (parameter.getTenantId() == null) {
-                                            return true;
-                                        }
-                                        return parameter.getTenantId().equals(userData.getUser().getUserTenant().getTenantId());
-                                    });
-                        }
-                        return item.listToken(parameter.getUsername(), parameter.getTenantId()).stream();
-                    }
-                    Long tenantId = AuthUtils.getNonNullCurrentTenantId();
-                    if (parameter.getUsername() != null) {
-                        return item.listToken(parameter.getUsername(), tenantId).stream();
-                    }
-                    return item.listToken().stream()
-                            .filter(userData -> userData.getUser().getUserTenant().getTenantId().equals(tenantId));
-                })
+        boolean isPlatformTenant = AuthUtils.isPlatformTenant();
+        if (isPlatformTenant) {
+            if (parameter.getUsername() == null) {
+                // 平台管理租户查询所有
+                return this.smartTokenRepository.listToken().stream()
+                        .filter(userData -> {
+                            if (parameter.getTenantId() == null) {
+                                return true;
+                            }
+                            return parameter.getTenantId().equals(userData.getUser().getUserTenant().getTenantId());
+                        }).toList();
+            }
+            return smartTokenRepository.listToken(parameter.getUsername(), parameter.getTenantId());
+        }
+        Long tenantId = AuthUtils.getNonNullCurrentTenantId();
+        if (parameter.getUsername() != null) {
+            return smartTokenRepository.listToken(parameter.getUsername(), tenantId);
+        }
+        return smartTokenRepository.listToken().stream()
+                .filter(userData -> userData.getUser().getUserTenant().getTenantId().equals(tenantId))
                 .toList();
     }
 

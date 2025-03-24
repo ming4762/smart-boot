@@ -104,7 +104,11 @@ public class TokenCacheData implements Serializable {
         tokenCacheData.setCreateTime((Instant) cacheData.get(CREATE_TIME_KEY));
         tokenCacheData.setRefreshTime((Instant) cacheData.get(REFRESH_TIME_KEY));
         tokenCacheData.setTimeout((Duration) cacheData.get(TIMEOUT_KEY));
-        tokenCacheData.setUser(getFromCacheData(cacheData));
+        if (cacheData.containsKey(USER_KEY)) {
+            tokenCacheData.setUser((RestUserDetails) cacheData.get(USER_KEY));
+        } else {
+            tokenCacheData.setUser(getFromCacheData(cacheData));
+        }
         cacheData.forEach((key, value) -> {
             if (key.startsWith(ATTRIBUTES_KEY)) {
                 tokenCacheData.getAttributes().put(key.substring(ATTRIBUTES_KEY.length()), value);
