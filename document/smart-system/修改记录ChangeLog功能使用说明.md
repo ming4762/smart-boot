@@ -10,7 +10,7 @@
 <dependency>
     <groupId>com.smart</groupId>
     <artifactId>smart-system-api</artifactId>
-    <version>${smart-boot.version}</version>
+    <version>${project.version}</version>
 </dependency>
 ```
 

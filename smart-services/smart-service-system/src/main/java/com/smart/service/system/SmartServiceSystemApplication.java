@@ -2,10 +2,7 @@ package com.smart.service.system;
 
 import com.smart.framework.auth.core.temptoken.EnableAuthTempToken;
 import com.smart.framework.commons.core.cors.EnableCors;
-import com.smart.framework.commons.core.spring.EnableApplicationContext;
-import com.smart.framework.commons.core.spring.EnableMultiTimeZone;
-import com.smart.framework.commons.core.spring.EnableRateLimit;
-import com.smart.framework.commons.core.spring.EnabledCustomObjectMapper;
+import com.smart.framework.commons.core.spring.*;
 import com.smart.framework.commons.core.validate.EnableGlobalValidator;
 import com.smart.framework.crud.spring.EnableMybatisPlusTenant;
 import com.smart.framework.i18n.config.EnableValidatorI18nSource;
@@ -28,6 +25,7 @@ import org.springframework.cache.annotation.EnableCaching;
 @EnableMybatisPlusTenant
 @EnableApplicationContext
 @EnableMultiTimeZone
+@EnableRest
 public class SmartServiceSystemApplication {
 
     public static void main(String[] args) {

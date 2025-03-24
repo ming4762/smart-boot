@@ -29,12 +29,18 @@ spring:
   data:
     redis:
       host: localhost
-#      password: ming8858
+  #      host: r-m5evuhtpukonm35fe0pd.redis.rds.aliyuncs.com
+#      port: 12256
+#      username: ftsc
+#      password: B1R3Aoh253O%
+#      database: 10
 
 logging:
   level:
     root: info
     com.smart: debug
+    com.smart.framework.crud.plus.inner: info
+    com.smart.framework.crud.datapermission.interceptor: info
 
 management:
   endpoint:
@@ -75,6 +81,7 @@ smart:
         - /xrebel/**
         - /websocket/**
         - /druid/**
+        - /public/**
     session:
       timeout:
         global: 360m
@@ -83,6 +90,10 @@ smart:
       text:
         ignoreCase: true
         length: 2
+  captcha:
+    image:
+      init-default-resource: true
+      prefix: smart-captcha
 
 knife4j:
   enable: true

@@ -1,0 +1,118 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 110MB
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    druid:
+      stat-view-servlet:
+        enabled: true
+        login-username: root
+        login-password: root
+    url: jdbc:mysql://localhost:3306/smart-system?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: password
+  data:
+    redis:
+      host: localhost
+      password: password
+
+logging:
+  level:
+    root: info
+    com.smart: info
+
+smart:
+  auth:
+#    认证缓存的前缀，多个系统使用一个缓存应单独设置
+    prefix: smart-session
+#    是否是开发模式：开发模式下，不进行认证（一般不建议设置为true）
+    development: false
+    jwt:
+#      是否启用jwt
+      enabled: false
+#      是否使用缓存存储权限信息,如果设置为false,权限信息会写入jwt中,可能导致jwt过长
+      permission-cache: false
+#      jwt私钥
+      private-key: classpath:auth/jwt/key/pri.key
+#      jwt公钥
+      public-key: classpath:auth/jwt/key/pub.key
+    session:
+      timeout:
+#        session全局过期时间
+        global: 1800s
+#        移动端过期时间
+        mobile: 2592000s
+#        开启remember功能后，过期时间
+        remember: 604800s
+#    SAML2单点登录配置
+    saml2:
+#      saml2 entity
+      entity-id: null
+      key:
+        name: null
+        file-path: null
+        password: null
+      entity-base-url: null
+#      saml2登录失败重试次数
+      retry: 5
+      identity:
+        discovery-enabled: true
+        metadata-file-path: null
+#    忽略认证配置
+    ignores:
+#      需要忽略的 URL 格式，不考虑请求方法
+      pattern:
+        - /public/**
+#      忽略的 GET 请求，以下同此
+      get:
+      post:
+      delete:
+      put:
+      head:
+      patch:
+      options:
+      trace:
+#    临时token配置
+    temp-token:
+      timeout: 60s
+#    短信登录配置
+    sms:
+#      短信签名
+      sign-name: null
+#      短息模板
+      template: null
+#    验证码配置
+    captcha:
+      enabled: true
+#      验证码类型：SLIDER滑块 CONCAT滑动还原 WORD_IMAGE_CLICK文字点选 TEXT_PNGpng格式 TEXT_GIFGIF文本 TEXT_CHINESE中文文本 TEXT_CHINESE_GIF中文GIF文本 TEXT_ARITHMETIC算数类型
+      type: text_png
+#      获取验证码的URL
+      create-url: /auth/createCaptcha
+#      验证码有效期
+      expire-in: 5m
+#      文本验证码参数
+      text:
+#        字符长度
+        length: 4
+#        宽度
+        width: 130
+#        高度
+        height: 40
+#        字体
+        font: null
+#        文本类型：1 字母数字混合，2 纯数字，3 纯字母，4 纯大写字母，5 纯小写字母，6 数字大写字母
+        char-type:
+#        是否忽略大小写
+        ignore-case: true
+#    access secret模式配置
+    access-secret:
+#      校验的URL
+      url-matcher:
+#      token前缀
+      token-prefix: SMART-BOOT
+#      过期时间
+      expire: 10m
+

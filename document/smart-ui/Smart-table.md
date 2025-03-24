@@ -38,7 +38,7 @@
 | 序号 | 属性 | 类型 | 默认值 | 可选值 | 说明 |
 | ---- | ---- | ---- | ------ | ------ | ---- |
 |1 | searchSymbol |String|||参考下面搜索符号说明|
-|2 | customSymbol |(schema, value, model) => Recordable|||自定义搜索符号，函数返回|
+|2 | customSymbol |(schema, value, com.smart.framework.tool.code.model) => Recordable|||自定义搜索符号，函数返回|
 
 ### 3、搜索符号说明
 

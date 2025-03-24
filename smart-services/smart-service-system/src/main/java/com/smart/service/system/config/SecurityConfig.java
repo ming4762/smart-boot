@@ -3,7 +3,7 @@ package com.smart.service.system.config;
 import com.smart.auth.extensions.access.secret.AuthAccessSecretSecurityConfigurer;
 import com.smart.framework.auth.core.properties.AuthProperties;
 import com.smart.framework.auth.core.remember.SmartAuthPersistentTokenRememberMeServices;
-import com.smart.framework.auth.extensions.session.AuthWebSecurityConfigurer;
+import com.smart.framework.auth.extensions.jwt.AuthJwtSecurityConfigurer;
 import com.smart.framework.auth.extensions.sms.AuthSmsSecurityConfigurer;
 import com.smart.module.auth.config.AuthCaptchaSecurityConfigurer;
 import com.smart.module.auth.config.AuthTenantSecurityConfigurer;
@@ -49,20 +49,20 @@ public class SecurityConfig extends AuthWebSecurityConfigurerAdapter {
     public SecurityFilterChain securityFilterChainConfig(HttpSecurity httpSecurity, SmartAuthPersistentTokenRememberMeServices rememberMeServices, AuthenticationSuccessHandler authenticationSuccessHandler, LogoutSuccessHandler logoutSuccessHandler) {
         super.configure(httpSecurity);
         httpSecurity.formLogin(AbstractHttpConfigurer::disable)
-                .logout(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .rememberMe(
                         config -> config.rememberMeServices(rememberMeServices)
                                 .authenticationSuccessHandler(authenticationSuccessHandler)
                 )
-                .logout(config -> {
-                    config.logoutUrl(this.authProperties.getLogoutUrl())
-                            .logoutSuccessHandler(logoutSuccessHandler);
-                })
-                .sessionManagement(Customizer.withDefaults())
-                .with(AuthWebSecurityConfigurer.web(), Customizer.withDefaults())
-//                // JWT配置
-//                .with(AuthJwtSecurityConfigurer.jwt(), Customizer.withDefaults())
+//                .logout(config -> {
+//                    config.logoutUrl(this.authProperties.getLogoutUrl())
+//                            .logoutSuccessHandler(logoutSuccessHandler);
+//                })
+//                .sessionManagement(Customizer.withDefaults())
+//                .with(AuthWebSecurityConfigurer.web(), Customizer.withDefaults())
+                // JWT配置
+                .sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .with(AuthJwtSecurityConfigurer.jwt(), Customizer.withDefaults())
                 // 验证码配置
                 .with(AuthCaptchaSecurityConfigurer.captcha(), Customizer.withDefaults())
                 // 短信登录支持
