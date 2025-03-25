@@ -5,6 +5,8 @@ import com.smart.framework.auth.core.matcher.ExtensionPathMatcher;
 import com.smart.framework.auth.core.utils.TokenUtils;
 import com.smart.framework.auth.extensions.jwt.token.JwtTokenRepository;
 import com.smart.framework.commons.core.i18n.I18nUtils;
+import com.smart.framework.commons.core.message.Result;
+import com.smart.framework.commons.core.utils.RestJsonWriter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,7 +32,7 @@ public class JwtRefreshTokenLoginFilter extends OncePerRequestFilter {
     private JwtTokenRepository jwtTokenRepository;
 
     public JwtRefreshTokenLoginFilter(String refreshTokenLoginUrl) {
-        this.requestMatcher = new ExtensionPathMatcher(refreshTokenLoginUrl);
+        this(new ExtensionPathMatcher(refreshTokenLoginUrl));
     }
 
     public JwtRefreshTokenLoginFilter(ExtensionPathMatcher requestMatcher) {
@@ -38,17 +40,19 @@ public class JwtRefreshTokenLoginFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws IOException {
         String refreshToken = TokenUtils.getRefreshToken(request);
         if (!StringUtils.hasText(refreshToken)) {
             throw new AuthenticationServiceException(I18nUtils.get(AuthI18nMessage.ERROR_TOKEN_EMPTY));
         }
+        String newToken = this.jwtTokenRepository.applyToken(refreshToken);
+        RestJsonWriter.writeJson(response, Result.success(newToken));
     }
 
 
     @Override
     protected boolean shouldNotFilter(@NonNull HttpServletRequest request) throws ServletException {
-        return this.requestMatcher.matches(request);
+        return !this.requestMatcher.matches(request);
     }
 
     @Autowired

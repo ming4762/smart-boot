@@ -1,5 +1,6 @@
 package com.smart.framework.auth.core.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.smart.framework.auth.common.constants.AuthTypeEnum;
@@ -87,6 +88,7 @@ public class RestUserDetailsImpl implements RestUserDetails, Serializable {
     private Boolean accountNonLocked;
 
     @Override
+    @JsonIgnore
     public Collection<SmartGrantedAuthority> getAuthorities() {
         Set<SmartGrantedAuthority> authorities = new HashSet<>();
         authorities.addAll(this.permissions);

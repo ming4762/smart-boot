@@ -6,6 +6,7 @@ import com.smart.framework.auth.core.filter.SmartAuthenticationFilter;
 import com.smart.framework.auth.core.filter.WebLoginFilter;
 import com.smart.framework.auth.core.handler.SecurityLogoutHandler;
 import com.smart.framework.auth.core.properties.AuthProperties;
+import com.smart.framework.auth.extensions.jwt.filter.JwtRefreshTokenLoginFilter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.config.Customizer;
@@ -66,7 +67,8 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
                 .addFilterAfter(this.createJwtFilterChainProxy(builder), BasicAuthenticationFilter.class);
         if (Boolean.TRUE.equals(this.serviceProvider.jwtAuth)) {
             // 添加认证过滤器
-            builder.addFilterAfter(this.postProcess(new SmartAuthenticationFilter(authProperties.getIgnores(), authProperties.getDevelopment())), ExceptionTranslationFilter.class);
+            builder.addFilterAfter(this.postProcess(new SmartAuthenticationFilter(authProperties.getIgnores(), authProperties.getDevelopment())), ExceptionTranslationFilter.class)
+                    .addFilterBefore(this.postProcess(new JwtRefreshTokenLoginFilter(authProperties.getRefreshTokenUrl())), SmartAuthenticationFilter.class);
         }
     }
 

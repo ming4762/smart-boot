@@ -84,7 +84,7 @@ smart:
         - /public/**
     session:
       timeout:
-        global: 360m
+        global: 30m
     captcha:
       type: TEXT_ARITHMETIC
       text:

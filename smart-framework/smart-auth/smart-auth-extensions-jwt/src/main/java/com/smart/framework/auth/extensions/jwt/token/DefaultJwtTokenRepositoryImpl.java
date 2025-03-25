@@ -255,6 +255,9 @@ public class DefaultJwtTokenRepositoryImpl implements JwtTokenRepository {
     @Override
     public RestUserDetails getUserByToken(String token) {
         RestUserDetailsImpl userDetails = (RestUserDetailsImpl) this.jwtResolver.resolver(token);
+        if (userDetails == null) {
+            return null;
+        }
         // 注入权限角色信息
         if (!this.isPermissionCache()) {
             return userDetails;

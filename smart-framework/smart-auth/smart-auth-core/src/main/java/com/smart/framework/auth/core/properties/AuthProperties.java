@@ -30,6 +30,7 @@ public class AuthProperties implements InitializingBean {
      */
     private String loginUrl = "/auth/login";
     private String logoutUrl = "/auth/logout";
+    private String refreshTokenUrl = "/auth/refresh";
 
     /**
      * 认证缓存前缀

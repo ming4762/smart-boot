@@ -9,6 +9,7 @@ import com.smart.framework.commons.jwt.JwtEncoder;
 import com.smart.framework.commons.jwt.JwtEncoderParameters;
 import com.smart.framework.commons.jwt.algorithm.SignatureAlgorithm;
 import com.smart.framework.commons.jwt.claim.JwtClaimsSet;
+import com.smart.framework.commons.jwt.exception.JwtExpiredException;
 import com.smart.framework.commons.jwt.header.JwsHeader;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,11 +39,16 @@ public class DefaultJwtResolverImpl implements JwtResolver {
 
     @Override
     public RestUserDetails resolver(@NonNull String jwtStr) {
-        Jwt jwt = this.jwtDecoder.decode(jwtStr);
-        Map<String, Object> claims = jwt.getClaims();
-        RestUserDetailsImpl userDetails = JsonUtils.parse((String) claims.get(USER_KEY), RestUserDetailsImpl.class);
-        userDetails.setToken(jwtStr);
-        return userDetails;
+        try {
+            Jwt jwt = this.jwtDecoder.decode(jwtStr);
+            Map<String, Object> claims = jwt.getClaims();
+            RestUserDetailsImpl userDetails = JsonUtils.parse((String) claims.get(USER_KEY), RestUserDetailsImpl.class);
+            userDetails.setToken(jwtStr);
+            return userDetails;
+        } catch (JwtExpiredException e) {
+            log.error("jwt已过期:{}", e.getMessage());
+            return null;
+        }
     }
 
     @Override

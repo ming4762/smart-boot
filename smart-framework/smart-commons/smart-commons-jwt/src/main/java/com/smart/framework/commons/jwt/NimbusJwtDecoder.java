@@ -16,6 +16,7 @@ import com.smart.framework.commons.jwt.algorithm.SignatureAlgorithm;
 import com.smart.framework.commons.jwt.converter.MappedJwtClaimSetConverter;
 import com.smart.framework.commons.jwt.exception.BadJwtException;
 import com.smart.framework.commons.jwt.exception.JwtException;
+import com.smart.framework.commons.jwt.exception.JwtExpiredException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.util.Assert;
@@ -63,7 +64,7 @@ public class NimbusJwtDecoder implements JwtDecoder {
         Jwt createJwt = this.createJwt(token, jwt);
         Instant expiresAt = createJwt.getExpiresAt();
         if (expiresAt != null && expiresAt.isBefore(Instant.now())) {
-            throw new BadJwtException("Expired at " + expiresAt);
+            throw new JwtExpiredException("Expired at " + expiresAt);
         }
         return createJwt;
     }
