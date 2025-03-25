@@ -35,13 +35,13 @@ public class SmartAuthWebAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean(SmartSessionTokenRepository.class)
+    @Primary
     public SmartSessionTokenRepository smartSessionTokenRepository(AuthCache<Object> authCache) {
         return new SmartSessionTokenRepository(authCache);
     }
 
     @Bean
     @ConditionalOnMissingBean
-    @Primary
     public CompositeSmartTokenRepository compositeSmartTokenRepository(List<SmartTokenRepository> jwtTokenRepositoryList) {
         return new CompositeSmartTokenRepository(jwtTokenRepositoryList.stream().map(SmartTokenRepository.class::cast).toList());
     }

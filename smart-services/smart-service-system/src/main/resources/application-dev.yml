@@ -29,11 +29,6 @@ spring:
   data:
     redis:
       host: localhost
-  #      host: r-m5evuhtpukonm35fe0pd.redis.rds.aliyuncs.com
-#      port: 12256
-#      username: ftsc
-#      password: B1R3Aoh253O%
-#      database: 10
 
 logging:
   level:

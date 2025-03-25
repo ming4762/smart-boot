@@ -6,7 +6,7 @@ import com.smart.framework.auth.common.utils.AuthUtils;
 import com.smart.framework.auth.core.i18n.AuthI18nMessage;
 import com.smart.framework.auth.core.model.TempTokenData;
 import com.smart.framework.auth.core.properties.AuthProperties;
-import com.smart.framework.auth.core.token.SmartTokenRepository;
+import com.smart.framework.auth.core.token.CompositeSmartTokenRepository;
 import com.smart.framework.auth.core.token.TokenCacheData;
 import com.smart.framework.commons.core.captcha.dto.CaptchaGenerateDTO;
 import com.smart.framework.commons.core.captcha.dto.CaptchaGenerateParameter;
@@ -60,7 +60,7 @@ import java.util.stream.Collectors;
 public class AuthController {
 
     private final AuthProperties authProperties;
-    private final SmartTokenRepository smartTokenRepository;
+    private final CompositeSmartTokenRepository smartTokenRepository;
     private final AuthApi authApi;
     private final AuthCaptchaApi authCaptchaApi;
 

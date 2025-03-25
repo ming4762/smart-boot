@@ -8,7 +8,7 @@ import com.smart.framework.auth.core.i18n.AuthI18nMessage;
 import com.smart.framework.auth.core.model.PermissionGrantedAuthority;
 import com.smart.framework.auth.core.model.RestUserDetailsImpl;
 import com.smart.framework.auth.core.model.RoleGrantedAuthority;
-import com.smart.framework.auth.core.token.SmartTokenRepository;
+import com.smart.framework.auth.core.token.CompositeSmartTokenRepository;
 import com.smart.framework.auth.core.token.TokenCacheData;
 import com.smart.framework.commons.core.dto.auth.MaxConnectionsPolicyEnum;
 import com.smart.framework.commons.core.dto.auth.UserAccountDTO;
@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 public class DefaultUserDetailsBuilderImpl implements UserDetailsBuilder {
 
     private final SystemAuthUserApi systemAuthUserApi;
-    private final List<SmartTokenRepository> tokenRepositoryList;
+    private final CompositeSmartTokenRepository tokenRepository;
 
     /**
      * 构建 RestUserDetails
@@ -151,9 +151,7 @@ public class DefaultUserDetailsBuilderImpl implements UserDetailsBuilder {
         if (connectionNum <= 0) {
             return;
         }
-        List<TokenCacheData> tokenDataList = this.tokenRepositoryList.stream()
-                .flatMap(item -> item.listToken(user.getUsername(), userAccountData.getTenant().getTenantId()).stream())
-                .toList();
+        List<TokenCacheData> tokenDataList = this.tokenRepository.listToken(user.getUsername(), userAccountData.getTenant().getTenantId());
         if (tokenDataList.size() < connectionNum) {
             // 未达到连接数上限
             return;
@@ -167,7 +165,7 @@ public class DefaultUserDetailsBuilderImpl implements UserDetailsBuilder {
             // 最早刷新token的用户执行登出操作
             tokenDataList.stream()
                     .min(Comparator.comparing(TokenCacheData::getRefreshTime))
-                    .ifPresent(tokenData -> this.tokenRepositoryList.forEach(item -> item.invalidateByToken(tokenData.getToken())));
+                    .ifPresent(tokenData -> this.tokenRepository.invalidateByToken(tokenData.getToken()));
         }
     }
 }

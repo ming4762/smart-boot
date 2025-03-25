@@ -12,7 +12,7 @@ import com.smart.framework.auth.core.event.AuthEventListener;
 import com.smart.framework.auth.core.handler.*;
 import com.smart.framework.auth.core.properties.AuthProperties;
 import com.smart.framework.auth.core.service.AuthCache;
-import com.smart.framework.auth.core.token.SmartTokenRepository;
+import com.smart.framework.auth.core.token.CompositeSmartTokenRepository;
 import com.smart.framework.auth.core.userdetails.DefaultUserDetailsBuilderImpl;
 import com.smart.framework.auth.core.userdetails.UserDetailsBuilder;
 import com.smart.module.api.system.SysLogApi;
@@ -40,8 +40,6 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
-
-import java.util.List;
 
 /**
  * AUTH 自动配置类
@@ -183,8 +181,8 @@ public class AuthSecurity2AutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public UserDetailsBuilder userDetailsBuilder(SystemAuthUserApi systemAuthUserApi, List<SmartTokenRepository> tokenRepositoryList) {
-        return new DefaultUserDetailsBuilderImpl(systemAuthUserApi, tokenRepositoryList);
+    public UserDetailsBuilder userDetailsBuilder(SystemAuthUserApi systemAuthUserApi, CompositeSmartTokenRepository tokenRepository) {
+        return new DefaultUserDetailsBuilderImpl(systemAuthUserApi, tokenRepository);
     }
 
     @Bean

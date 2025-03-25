@@ -6,7 +6,7 @@ import com.smart.framework.auth.core.exception.IpBindAuthenticationException;
 import com.smart.framework.auth.core.i18n.AuthI18nMessage;
 import com.smart.framework.auth.core.properties.AuthProperties;
 import com.smart.framework.auth.core.service.AuthCache;
-import com.smart.framework.auth.core.token.SmartTokenRepository;
+import com.smart.framework.auth.core.token.CompositeSmartTokenRepository;
 import com.smart.framework.auth.core.utils.AuthCheckUtils;
 import com.smart.framework.auth.core.utils.TokenUtils;
 import com.smart.framework.auth.core.utils.request.MatcherHttpServletRequest;
@@ -20,6 +20,7 @@ import com.smart.module.api.auth.dto.AuthCacheDTO;
 import com.smart.module.api.auth.dto.AuthUserDetailsDTO;
 import com.smart.module.api.auth.dto.AuthenticationDTO;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Primary;
 import org.springframework.lang.NonNull;
@@ -31,7 +32,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -40,19 +40,12 @@ import java.util.Optional;
  */
 @Component
 @Primary
+@RequiredArgsConstructor
 public class LocalAuthApiImpl implements AuthApi {
 
     private final AuthProperties authProperties;
-
-    private final List<SmartTokenRepository> smartTokenRepositoryList;
-
+    private final CompositeSmartTokenRepository tokenRepository;
     private final AuthCache<Object> authCache;
-
-    public LocalAuthApiImpl(List<SmartTokenRepository> smartTokenRepositoryList, AuthProperties authProperties, AuthCache<Object> authCache) {
-        this.smartTokenRepositoryList = smartTokenRepositoryList;
-        this.authProperties = authProperties;
-        this.authCache = authCache;
-    }
 
     /**
      * 通过token离线
@@ -62,14 +55,7 @@ public class LocalAuthApiImpl implements AuthApi {
      */
     @Override
     public boolean offlineByToken(@NonNull String token) {
-        boolean result = false;
-        for (SmartTokenRepository repository : this.smartTokenRepositoryList) {
-            result = repository.invalidateByToken(token);
-            if (result) {
-                break;
-            }
-        }
-        return result;
+        return this.tokenRepository.invalidateByToken(token);
     }
 
     /**
@@ -80,14 +66,7 @@ public class LocalAuthApiImpl implements AuthApi {
      */
     @Override
     public boolean offlineByUsername(@NonNull String username) {
-        boolean result = false;
-        for (SmartTokenRepository repository : this.smartTokenRepositoryList) {
-            result = repository.invalidateByUsername(AuthUtils.getNonNullCurrentTenantId(), username);
-            if (result) {
-                break;
-            }
-        }
-        return result;
+        return this.tokenRepository.invalidateByUsername(AuthUtils.getNonNullCurrentTenantId(), username);
     }
 
     /**
@@ -98,16 +77,11 @@ public class LocalAuthApiImpl implements AuthApi {
      */
     @Override
     public AuthUserDetailsDTO getUserDetails(@NonNull String token) {
-        RestUserDetails userDetails = null;
+        RestUserDetails userDetails;
         if (AuthUtils.getCurrentUser() != null && AuthUtils.getNonNullCurrentUser().getToken().equals(token)) {
             userDetails = AuthUtils.getCurrentUser();
         } else {
-            for (SmartTokenRepository tokenRepository : this.smartTokenRepositoryList) {
-                userDetails = tokenRepository.getUserByToken(token);
-                if (userDetails != null) {
-                    break;
-                }
-            }
+            userDetails = this.tokenRepository.getUserByToken(token);
         }
         return this.buildAuthUserDetails(userDetails);
     }
