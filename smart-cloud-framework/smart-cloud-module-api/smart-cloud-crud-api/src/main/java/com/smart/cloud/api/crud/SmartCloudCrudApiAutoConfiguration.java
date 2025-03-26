@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 public class SmartCloudCrudApiAutoConfiguration {
 
     @Bean
-    public SmartCrudUserCloudApi remoteSmartFileApi(SysUserApi sysUserApi) {
+    public SmartCrudUserCloudApi smartCrudUserCloudApi(SysUserApi sysUserApi) {
         return new SmartCrudUserCloudApi(sysUserApi);
     }
 
