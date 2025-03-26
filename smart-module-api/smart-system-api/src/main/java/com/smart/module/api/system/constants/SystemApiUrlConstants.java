@@ -76,4 +76,10 @@ public interface SystemApiUrlConstants {
      */
     String USER_ACCOUNT_UNLOCK = "/remote/account/unlock";
 
+    /**
+     * 租户
+     */
+    String TENANT_LIST_BY_ID = "/remote/system/tenant/listTenantById";
+    String TENANT_LIST_BY_CODE = "/remote/system/tenant/listTenantByCode";
+
 }
