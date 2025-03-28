@@ -7,7 +7,6 @@ import com.smart.framework.commons.core.log.Log;
 import com.smart.framework.commons.core.log.LogOperationTypeEnum;
 import com.smart.framework.commons.core.message.Result;
 import com.smart.framework.crud.controller.BaseController;
-import com.smart.framework.crud.datapermission.annotation.SmartDataPermission;
 import com.smart.framework.crud.query.PageSortQuery;
 import com.smart.module.system.model.SysParameterPO;
 import com.smart.module.system.pojo.dto.parameter.SysParameterSaveUpdateDTO;
@@ -44,7 +43,6 @@ public class SysParameterController extends BaseController<SysParameterService, 
     @PostMapping("list")
     @Operation(summary = "查询角色列表（支持分页、实体类属性查询）")
     @PreAuthorize("hasPermission('sys:parameter', 'query')")
-    @SmartDataPermission(configCode = "test_code")
     public Result<Object> list(@RequestBody @NonNull PageSortQuery parameter) {
         return super.list(parameter);
     }

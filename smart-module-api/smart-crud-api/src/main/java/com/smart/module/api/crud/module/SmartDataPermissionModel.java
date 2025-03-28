@@ -50,5 +50,7 @@ public class SmartDataPermissionModel implements Serializable {
     @Nullable
     private String tableName;
 
+    private Class<?> tableClass;
+
     private String mapperStatementId;
 }

@@ -1,14 +1,12 @@
 package com.smart.framework.crud.datapermission.handler;
 
+import com.smart.framework.crud.utils.CrudUtils;
 import com.smart.module.api.crud.module.SmartDataPermissionModel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 数据权限控制器
@@ -40,6 +38,11 @@ public class SmartDataPermissionController {
         IGNORE_DATA.get().add(new IgnoreData(IgnoreType.TABLE, tableName));
     }
 
+    public static void ignoreTable(Class<?> tableClass) {
+        String tableName = CrudUtils.getTableName(tableClass);
+        IGNORE_DATA.get().add(new IgnoreData(IgnoreType.TABLE, tableName));
+    }
+
     /**
      * 根据mapperId忽略数据权限
      * @param mapperId mapperId
@@ -52,8 +55,11 @@ public class SmartDataPermissionController {
      * 设置数据权限
      * @param dataPermission 数据权限模型
      */
-    public static void setManualDataPermission(SmartDataPermissionModel dataPermission) {
-        MANUAL_DATA_PERMISSION.get().add(dataPermission);
+    public static void addManualDataPermission(SmartDataPermissionModel ...dataPermission) {
+        if (dataPermission.length == 0) {
+            return;
+        }
+        MANUAL_DATA_PERMISSION.get().addAll(Arrays.stream(dataPermission).toList());
     }
 
     public static void clear() {
