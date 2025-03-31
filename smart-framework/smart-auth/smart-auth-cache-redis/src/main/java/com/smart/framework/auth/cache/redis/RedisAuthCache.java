@@ -86,7 +86,11 @@ public class RedisAuthCache extends AbstractAuthCache<Object> {
     @Override
     @Nullable
     public Map<String, Object> get(@NonNull String key) {
-        return this.redissonClient.<String, Object>getMap(this.getKey(key)).readAllMap();
+        RMap<String, Object> map = this.redissonClient.getMap(this.getKey(key));
+        if (!map.isExists()) {
+            return null;
+        }
+        return map.readAllMap();
     }
 
     /**
