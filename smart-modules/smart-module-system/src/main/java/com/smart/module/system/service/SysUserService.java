@@ -9,6 +9,7 @@ import com.smart.module.system.model.SysFunctionPO;
 import com.smart.module.system.model.SysRolePO;
 import com.smart.module.system.model.SysUserPO;
 import com.smart.module.system.pojo.dbo.SysUserWthAccountBO;
+import com.smart.module.system.pojo.dto.user.ListUserByRoleTenantDTO;
 import com.smart.module.system.pojo.dto.user.UserSaveUpdateWithDeptDTO;
 import com.smart.module.system.pojo.dto.user.UserSetRoleDTO;
 import com.smart.module.system.pojo.vo.SysFunctionListVO;
@@ -157,4 +158,11 @@ public interface SysUserService extends BaseService<SysUserPO> {
      * @return 用户详情
      */
     SysUserWithDeptDTO getUserByIdWithDept(Long userId);
+
+    /**
+     * 通过角色ID&租户ID查询用户信息
+     * @param parameter 参数
+     * @return 用户信息
+     */
+    List<SysUserPO> listUserByRoleTenant(@Valid ListUserByRoleTenantDTO parameter);
 }

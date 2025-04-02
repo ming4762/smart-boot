@@ -5,6 +5,7 @@ import com.smart.module.system.model.SysRolePO;
 import com.smart.module.system.pojo.dto.role.RoleMenuSaveDTO;
 import com.smart.module.system.pojo.dto.role.RoleSetDataPermissionDTO;
 import com.smart.module.system.pojo.dto.role.RoleSetUserDTO;
+import com.smart.module.system.pojo.dto.role.RoleSetUserWithTenantDTO;
 import jakarta.validation.Valid;
 
 import java.util.List;
@@ -30,6 +31,13 @@ public interface SysRoleService extends BaseService<SysRolePO> {
     boolean setRoleUser(RoleSetUserDTO parameter);
 
     /**
+     * 设置角色对应的用户，手动指定租户
+     * @param parameter RoleSetUserWithTenantDTO
+     * @return 是否保存成功
+     */
+    boolean setRoleUserWithTenant(@Valid RoleSetUserWithTenantDTO parameter);
+
+    /**
      * 设置角色的数据权限
      * @param parameter RoleSetDataPermissionDTO
      * @return 是否保存成功
@@ -42,4 +50,5 @@ public interface SysRoleService extends BaseService<SysRolePO> {
      * @return 数据权限id列表
      */
     List<Long> listRoleDataPermissionId(Long roleId);
+
 }

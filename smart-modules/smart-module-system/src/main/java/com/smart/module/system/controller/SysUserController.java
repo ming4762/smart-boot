@@ -13,9 +13,11 @@ import com.smart.framework.commons.core.log.LogOperationTypeEnum;
 import com.smart.framework.commons.core.message.Result;
 import com.smart.framework.commons.core.utils.TreeUtils;
 import com.smart.framework.crud.controller.BaseController;
+import com.smart.framework.crud.plus.tenant.SmartTenantControl;
 import com.smart.framework.crud.query.IdParameter;
 import com.smart.module.api.system.SystemAuthUserApi;
 import com.smart.module.api.system.parameter.UserAccountUnLockParameter;
+import com.smart.module.system.constants.SystemConstantEnum;
 import com.smart.module.system.constants.UserDeptIdentEnum;
 import com.smart.module.system.model.*;
 import com.smart.module.system.pojo.dto.user.*;
@@ -30,6 +32,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.ibatis.mapping.SqlCommandType;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.AccessDeniedException;
@@ -127,6 +130,26 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
     @PostMapping("list")
     @Operation(summary = "查询用户列表（支持分页、实体类属性查询）")
     public Result<Object> list(@RequestBody @NonNull UserListDTO parameter) {
+        if (parameter.getTenantId() == null) {
+            parameter.setTenantId(AuthUtils.getCurrentTenantId());
+        }
+        return super.list(parameter);
+    }
+
+    @PostMapping("listWithAccount")
+    @Operation(summary = "查询用户列表（支持分页、实体类属性查询）")
+    public Result<Object> listWithAccount(@RequestBody @NonNull UserListDTO parameter) {
+        if (parameter.getTenantId() == null) {
+            parameter.setTenantId(AuthUtils.getCurrentTenantId());
+        }
+        parameter.getParameter().put(SystemConstantEnum.LIST_USER_WITH_ACCOUNT.name(), Boolean.TRUE);
+        return super.list(parameter);
+    }
+
+    @PostMapping("listByTenant")
+    @Operation(summary = "查询用户列表（支持分页、实体类属性查询）,根据自定义租户过滤")
+    public Result<Object> listByTenant(@RequestBody @NonNull UserListDTO parameter) {
+        parameter.getParameter().put(SystemConstantEnum.LIST_FILTER_TENANT.name(), Boolean.TRUE);
         return super.list(parameter);
     }
 
@@ -219,6 +242,17 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
     @Operation(summary = "通过角色ID查询用户信息")
     public Result<List<SysUserPO>> listUserByRoleId(@RequestBody List<Long> roleIdList) {
         return Result.success(this.service.listUserByRoleId(roleIdList));
+    }
+
+    @PostMapping("listUserByRoleTenant")
+    @Operation(summary = "通过角色ID&租户ID查询用户信息")
+    public Result<List<SysUserPO>> listUserByRoleTenant(@RequestBody @Valid ListUserByRoleTenantDTO parameter)   {
+        // 忽略租户控制
+        SmartTenantControl.ignore(SysUserRolePO.class, null, List.of(SqlCommandType.SELECT));
+        if (parameter.getTenantId() == null) {
+            parameter.setTenantId(AuthUtils.getNonNullCurrentTenantId());
+        }
+        return Result.success(this.service.listUserByRoleTenant(parameter));
     }
 
     /**

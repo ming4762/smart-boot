@@ -2,6 +2,7 @@ package com.smart.module.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.smart.framework.crud.plus.tenant.SmartTenantControl;
 import com.smart.framework.crud.service.BaseServiceImpl;
 import com.smart.module.system.mapper.SysRoleMapper;
 import com.smart.module.system.model.SysRoleDataPermissionPO;
@@ -11,11 +12,13 @@ import com.smart.module.system.model.SysUserRolePO;
 import com.smart.module.system.pojo.dto.role.RoleMenuSaveDTO;
 import com.smart.module.system.pojo.dto.role.RoleSetDataPermissionDTO;
 import com.smart.module.system.pojo.dto.role.RoleSetUserDTO;
+import com.smart.module.system.pojo.dto.role.RoleSetUserWithTenantDTO;
 import com.smart.module.system.service.SysRoleDataPermissionService;
 import com.smart.module.system.service.SysRoleFunctionService;
 import com.smart.module.system.service.SysRoleService;
 import com.smart.module.system.service.SysUserRoleService;
 import lombok.RequiredArgsConstructor;
+import org.apache.ibatis.mapping.SqlCommandType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -89,10 +92,39 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRoleMapper, SysRolePO
                 .eq(SysUserRolePO :: getRoleId, parameter.getRoleId())
         );
         if (CollectionUtils.isEmpty(parameter.getUserIdList())) {
-            return false;
+            return true;
         }
         this.sysUserRoleService.saveBatch(
                 parameter.getUserIdList().stream().map(item -> new SysUserRolePO(item, parameter.getRoleId(), true, null)).toList()
+        );
+        return true;
+    }
+
+    /**
+     * 设置角色对应的用户，手动指定租户
+     *
+     * @param parameter RoleSetUserWithTenantDTO
+     * @return 是否保存成功
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean setRoleUserWithTenant(RoleSetUserWithTenantDTO parameter) {
+        // 忽略租户条件
+        SmartTenantControl.ignore(SysUserRolePO.class, null, List.of(
+                SqlCommandType.DELETE,
+                SqlCommandType.INSERT
+        ));
+        // 删除角色
+        this.sysUserRoleService.remove(
+                new QueryWrapper<SysUserRolePO>().lambda()
+                        .eq(SysUserRolePO :: getRoleId, parameter.getRoleId())
+                        .eq(SysUserRolePO::getTenantId, parameter.getTenantId())
+        );
+        if (CollectionUtils.isEmpty(parameter.getUserIdList())) {
+            return true;
+        }
+        this.sysUserRoleService.saveBatch(
+                parameter.getUserIdList().stream().map(item -> new SysUserRolePO(item, parameter.getRoleId(), true, parameter.getTenantId())).toList()
         );
         return true;
     }

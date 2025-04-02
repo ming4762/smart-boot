@@ -27,6 +27,7 @@ import com.smart.module.system.service.tenant.SysTenantService;
 import com.smart.module.system.service.tenant.SysTenantUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -50,7 +51,7 @@ public class SysFunctionServiceImpl extends BaseServiceImpl<SysFunctionMapper, S
     private final CommonMapper commonMapper;
     private final SysRoleFunctionService sysRoleFunctionService;
     private final SysTenantUserService sysTenantUserService;
-    private final SysTenantService sysTenantService;
+    private final ObjectProvider<SysTenantService> sysTenantService;
 
 
     @Override
@@ -123,7 +124,7 @@ public class SysFunctionServiceImpl extends BaseServiceImpl<SysFunctionMapper, S
      */
     @Override
     public List<SysFunctionPO> listTenantFunction(@NonNull Long tenantId) {
-        SysTenantPO sysTenant = this.sysTenantService.getById(tenantId);
+        SysTenantPO sysTenant = this.sysTenantService.getObject().getById(tenantId);
         if (sysTenant == null) {
             throw new SystemException("查询租户失败，租户ID：" + tenantId);
         }

@@ -26,4 +26,6 @@ public class UserListDTO extends PageSortQuery {
     private List<Long> deptIdList;
 
     private Boolean useYn;
+
+    private Long tenantId;
 }

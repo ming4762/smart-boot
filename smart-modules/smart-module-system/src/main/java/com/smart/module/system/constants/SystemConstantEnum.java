@@ -17,4 +17,6 @@ public enum SystemConstantEnum {
      * 查询租户信息
      */
     LIST_WITH_TENANT,
+
+    LIST_USER_WITH_ACCOUNT,
 }

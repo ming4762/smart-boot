@@ -15,10 +15,7 @@ import com.smart.framework.crud.query.PageSortQuery;
 import com.smart.framework.crud.utils.CrudPageHelper;
 import com.smart.module.system.model.SysRoleFunctionPO;
 import com.smart.module.system.model.SysRolePO;
-import com.smart.module.system.pojo.dto.role.RoleListByTenantIdDTO;
-import com.smart.module.system.pojo.dto.role.RoleMenuSaveDTO;
-import com.smart.module.system.pojo.dto.role.RoleSetDataPermissionDTO;
-import com.smart.module.system.pojo.dto.role.RoleSetUserDTO;
+import com.smart.module.system.pojo.dto.role.*;
 import com.smart.module.system.service.SysRoleFunctionService;
 import com.smart.module.system.service.SysRoleService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -144,6 +141,13 @@ public class SysRoleController extends BaseController<SysRoleService, SysRolePO>
     @PreAuthorize("hasPermission('sys:role', 'setRoleUser')")
     public Result<Boolean> setRoleUser(@RequestBody @Valid RoleSetUserDTO parameter) {
         return Result.success(this.service.setRoleUser(parameter));
+    }
+
+    @PostMapping("setRoleUserWithTenant")
+    @Log(value = "设置角色对应的用户，手动指定租户", type = LogOperationTypeEnum.UPDATE)
+    @Operation(summary = "设置角色对应的用户，手动指定租户")
+    public Result<Boolean> setRoleUserWithTenant(@RequestBody @Valid RoleSetUserWithTenantDTO parameter) {
+        return Result.success(this.service.setRoleUserWithTenant(parameter));
     }
 
     @Operation(summary = "设置角色的数据权限")

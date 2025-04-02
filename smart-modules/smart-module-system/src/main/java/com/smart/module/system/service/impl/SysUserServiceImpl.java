@@ -29,6 +29,7 @@ import com.smart.module.api.system.SysParameterApi;
 import com.smart.module.api.system.constants.SysParameterCodeEnum;
 import com.smart.module.api.system.dto.QueryUserAccountDTO;
 import com.smart.module.system.constants.FunctionTypeEnum;
+import com.smart.module.system.constants.SystemConstantEnum;
 import com.smart.module.system.constants.UserDeptIdentEnum;
 import com.smart.module.system.mapper.SysUserGroupUserMapper;
 import com.smart.module.system.mapper.SysUserMapper;
@@ -40,10 +41,7 @@ import com.smart.module.system.pojo.dbo.SysUserWthAccountBO;
 import com.smart.module.system.pojo.dbo.tenant.SysTenantListByUserDO;
 import com.smart.module.system.pojo.dto.tenant.SysListTenantFunctionDTO;
 import com.smart.module.system.pojo.dto.tenant.SysListTenantRoleFunctionDTO;
-import com.smart.module.system.pojo.dto.user.SysUserSetUseYnParameter;
-import com.smart.module.system.pojo.dto.user.UserListDTO;
-import com.smart.module.system.pojo.dto.user.UserSaveUpdateWithDeptDTO;
-import com.smart.module.system.pojo.dto.user.UserSetRoleDTO;
+import com.smart.module.system.pojo.dto.user.*;
 import com.smart.module.system.pojo.vo.SysFunctionListVO;
 import com.smart.module.system.pojo.vo.user.SysUserListVO;
 import com.smart.module.system.pojo.vo.user.SysUserWithDeptDTO;
@@ -105,12 +103,13 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
             String deptStr = allDeptIds.stream().map(Object::toString).collect(Collectors.joining(","));
             queryWrapper.apply(String.format("user_id in (select m.user_id from sys_user_dept m where m.dept_id in (%s) and ident = 'USER_DEPT')", deptStr));
         }
+        boolean filterTenant = Boolean.TRUE.equals(userListParameter.getParameter().get(SystemConstantEnum.LIST_FILTER_TENANT.name()));
         // 添加租户查询条件
-        if (!AuthUtils.isPlatformTenant()) {
+        if (!AuthUtils.isPlatformTenant() || filterTenant) {
             if (userListParameter.getUseYn() == null) {
-                queryWrapper.apply("user_id in (select M.user_id from sys_tenant_user M where M.tenant_id = {0})", AuthUtils.getNonNullCurrentTenantId());
+                queryWrapper.apply("user_id in (select M.user_id from sys_tenant_user M where M.tenant_id = {0})", userListParameter.getTenantId());
             } else {
-                queryWrapper.apply("user_id in (select M.user_id from sys_tenant_user M where M.tenant_id = {0} and M.use_yn = {1})", AuthUtils.getNonNullCurrentTenantId(), userListParameter.getUseYn());
+                queryWrapper.apply("user_id in (select M.user_id from sys_tenant_user M where M.tenant_id = {0} and M.use_yn = {1})", userListParameter.getTenantId(), userListParameter.getUseYn());
             }
         }
         List<? extends SysUserPO> userList = super.list(queryWrapper, parameter, paging);
@@ -126,8 +125,10 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         if (Boolean.TRUE.equals(parameter.getParameter().get(CrudCommonEnum.QUERY_CREATE_UPDATE_USER.name()))) {
             this.userSetterService.setCreateUpdateUser(voList);
         }
-        // 查询账户信息
-        this.queryUserAccount(voList);
+        if (Boolean.TRUE.equals(parameter.getParameter().get(SystemConstantEnum.LIST_USER_WITH_ACCOUNT.name()))) {
+            // 查询账户信息
+            this.queryUserAccount(voList);
+        }
         return voList;
     }
 
@@ -654,6 +655,24 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
                 .eq(SysUserPO :: getUseYn, Boolean.TRUE)
                 .orderByAsc(SysUserPO :: getSeq)
         );
+    }
+
+    /**
+     * 通过角色ID&租户ID查询用户信息
+     *
+     * @param parameter 参数
+     * @return 用户信息
+     */
+    @Override
+    public List<SysUserPO> listUserByRoleTenant(ListUserByRoleTenantDTO parameter) {
+        if (CollectionUtils.isEmpty(parameter.getRoleIdList()) || parameter.getTenantId() == null) {
+            return Collections.emptyList();
+        }
+        String roleIdArgs = parameter.getRoleIdList().stream()
+                .map(Object::toString)
+                .collect(Collectors.joining(","));
+        return this.lambdaQuery().apply("user_id in (select M.user_id from sys_user_role M where M.role_id in ({0}) and M.tenant_id = {1})", roleIdArgs, parameter.getTenantId())
+                .list();
     }
 
     @Override
