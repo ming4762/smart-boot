@@ -14,7 +14,10 @@ public class SmartTenantWebFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        chain.doFilter(request, response);
-        SmartTenantControl.clear();
+        try {
+            chain.doFilter(request, response);
+        } finally {
+            SmartTenantControl.clear();
+        }
     }
 }
