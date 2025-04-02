@@ -3,6 +3,9 @@ package com.smart.module.system.service;
 import com.smart.framework.crud.service.BaseService;
 import com.smart.module.system.model.SysFunctionPO;
 import com.smart.module.system.pojo.vo.function.SysFunctionVO;
+import org.springframework.lang.NonNull;
+
+import java.util.List;
 
 /**
  * @author jackson
@@ -16,4 +19,11 @@ public interface SysFunctionService extends BaseService<SysFunctionPO> {
      * @return SysFunctionListVO
      */
     SysFunctionVO getUserAndParentById(Long functionId);
+
+    /**
+     * 根据租户ID查询功能
+     * @param tenantId 租户ID
+     * @return 功能列表
+     */
+    List<SysFunctionPO> listTenantFunction(@NonNull Long tenantId);
 }

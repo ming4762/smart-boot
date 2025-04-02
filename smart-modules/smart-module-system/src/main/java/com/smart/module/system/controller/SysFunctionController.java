@@ -6,8 +6,8 @@ import com.smart.framework.commons.core.log.Log;
 import com.smart.framework.commons.core.log.LogOperationTypeEnum;
 import com.smart.framework.commons.core.message.Result;
 import com.smart.framework.crud.controller.BaseController;
+import com.smart.framework.crud.query.IdParameter;
 import com.smart.framework.crud.query.PageSortQuery;
-import com.smart.module.system.constants.SystemConstantEnum;
 import com.smart.module.system.model.SysFunctionPO;
 import com.smart.module.system.pojo.vo.function.SysFunctionVO;
 import com.smart.module.system.service.SysFunctionService;
@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 功能controller
@@ -72,12 +73,8 @@ public class SysFunctionController extends BaseController<SysFunctionService, Sy
     }
 
     @PostMapping("listTenantFunction")
-    @Operation(summary = "查询租户对应的功能（支持分页、实体类属性查询）")
-    public Result<Object> listTenantFunction(@RequestBody @NonNull PageSortQuery parameter) {
-        boolean platformTenant = AuthUtils.isPlatformTenant();
-        if (!platformTenant) {
-            parameter.getParameter().put(SystemConstantEnum.LIST_FILTER_TENANT, Boolean.TRUE);
-        }
-        return super.list(parameter);
+    @Operation(summary = "查询租户对应的功能")
+    public Result<List<SysFunctionPO>> listTenantFunction(@RequestBody IdParameter parameter) {
+        return Result.success(this.service.listTenantFunction(Objects.requireNonNullElseGet(parameter.getId(), AuthUtils::getNonNullCurrentTenantId)));
     }
 }

@@ -10,20 +10,24 @@ import com.smart.framework.commons.core.message.Result;
 import com.smart.framework.commons.core.utils.EnumUtils;
 import com.smart.framework.crud.controller.BaseController;
 import com.smart.framework.crud.parameter.SetUseYnParameter;
+import com.smart.framework.crud.plus.tenant.SmartTenantControl;
 import com.smart.framework.crud.query.IdParameter;
 import com.smart.framework.crud.query.PageSortQuery;
 import com.smart.framework.crud.utils.CrudPageHelper;
 import com.smart.module.system.constants.SysTenantIsolationStrategyEnum;
+import com.smart.module.system.model.SysRolePO;
 import com.smart.module.system.model.SysUserPO;
 import com.smart.module.system.model.tenant.SysTenantPO;
 import com.smart.module.system.model.tenant.SysTenantPackagePO;
 import com.smart.module.system.pojo.dbo.tenant.SysTenantUserListDO;
 import com.smart.module.system.pojo.dto.tenant.*;
+import com.smart.module.system.service.SysRoleService;
 import com.smart.module.system.service.SysUserAccountService;
 import com.smart.module.system.service.tenant.SysTenantService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.ibatis.mapping.SqlCommandType;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.AccessDeniedException;
@@ -48,6 +52,7 @@ import java.util.List;
 public class SysTenantController extends BaseController<SysTenantService, SysTenantPO> {
 
     private final SysUserAccountService sysUserAccountService;
+    private final SysRoleService sysRoleService;
 
     @Override
     @PostMapping("list")
@@ -177,5 +182,13 @@ public class SysTenantController extends BaseController<SysTenantService, SysTen
                         .orderByAsc(SysTenantPO::getSeq)
                         .list()
         );
+    }
+
+    @PostMapping("getRoleById")
+    @Operation(summary = "根据ID查询角色")
+    public Result<SysRolePO> getRoleById(@RequestBody IdParameter id) {
+        // 平台租户忽略查询租户条件
+        SmartTenantControl.ignore(SysRolePO.class, null, List.of(SqlCommandType.SELECT));
+        return Result.success(this.sysRoleService.getById(id.getId()));
     }
 }

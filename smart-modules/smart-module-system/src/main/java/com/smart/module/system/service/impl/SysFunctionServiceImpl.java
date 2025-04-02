@@ -1,7 +1,10 @@
 package com.smart.module.system.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.smart.framework.auth.common.utils.AuthUtils;
+import com.smart.framework.commons.core.exception.SystemException;
 import com.smart.framework.crud.constants.CrudCommonEnum;
 import com.smart.framework.crud.model.CreateUpdateUserSetter;
 import com.smart.framework.crud.plus.metadata.SmartTableInfo;
@@ -14,11 +17,13 @@ import com.smart.module.system.mapper.CommonMapper;
 import com.smart.module.system.mapper.SysFunctionMapper;
 import com.smart.module.system.model.SysFunctionPO;
 import com.smart.module.system.model.SysRoleFunctionPO;
+import com.smart.module.system.model.tenant.SysTenantPO;
 import com.smart.module.system.pojo.dto.tenant.SysListTenantFunctionDTO;
 import com.smart.module.system.pojo.vo.SysFunctionListVO;
 import com.smart.module.system.pojo.vo.function.SysFunctionVO;
 import com.smart.module.system.service.SysFunctionService;
 import com.smart.module.system.service.SysRoleFunctionService;
+import com.smart.module.system.service.tenant.SysTenantService;
 import com.smart.module.system.service.tenant.SysTenantUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -45,6 +50,7 @@ public class SysFunctionServiceImpl extends BaseServiceImpl<SysFunctionMapper, S
     private final CommonMapper commonMapper;
     private final SysRoleFunctionService sysRoleFunctionService;
     private final SysTenantUserService sysTenantUserService;
+    private final SysTenantService sysTenantService;
 
 
     @Override
@@ -109,6 +115,39 @@ public class SysFunctionServiceImpl extends BaseServiceImpl<SysFunctionMapper, S
         return functionVoList;
     }
 
+    /**
+     * 根据租户ID查询功能
+     *
+     * @param tenantId 租户ID
+     * @return 功能列表
+     */
+    @Override
+    public List<SysFunctionPO> listTenantFunction(@NonNull Long tenantId) {
+        SysTenantPO sysTenant = this.sysTenantService.getById(tenantId);
+        if (sysTenant == null) {
+            throw new SystemException("查询租户失败，租户ID：" + tenantId);
+        }
+        LambdaQueryWrapper<SysFunctionPO> queryWrapper = Wrappers.lambdaQuery(SysFunctionPO.class)
+                .select(
+                        SysFunctionPO::getFunctionId, SysFunctionPO::getParentId, SysFunctionPO::getFunctionName,
+                        SysFunctionPO::getFunctionType
+                ).orderByAsc(SysFunctionPO::getSeq)
+                .eq(SysFunctionPO::getUseYn, Boolean.TRUE);
+        if (Boolean.TRUE.equals(sysTenant.getPlatformYn())) {
+            // 平台管理租户 查询所有的
+            return this.list(queryWrapper);
+        }
+        // 需要根据租户套餐过滤
+        SysListTenantFunctionDTO tenantParameter = new SysListTenantFunctionDTO();
+        tenantParameter.setTenantId(tenantId);
+        List<Long> functionIds = this.sysTenantUserService.listTenantFunctionIds(tenantParameter);
+        if (CollectionUtils.isEmpty(functionIds)) {
+            return Collections.emptyList();
+        }
+        queryWrapper.in(SysFunctionPO::getFunctionId, new HashSet<>(functionIds));
+        return this.list(queryWrapper);
+    }
+
     @Override
     public SysFunctionVO getUserAndParentById(Long functionId) {
         SysFunctionPO function = this.getById(functionId);
@@ -120,7 +159,7 @@ public class SysFunctionServiceImpl extends BaseServiceImpl<SysFunctionMapper, S
         List<SysFunctionVO> voList = List.of(vo);
         this.queryCreateUpdateUser(voList);
         this.queryParent(voList);
-        return voList.get(0);
+        return voList.getFirst();
     }
 
     /**

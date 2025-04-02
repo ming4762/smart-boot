@@ -7,6 +7,7 @@ import com.smart.framework.crud.utils.CrudUtils;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.ibatis.mapping.SqlCommandType;
+import org.springframework.lang.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -39,8 +40,19 @@ public final class SmartTenantControl {
      * @param ignoreCommandList 忽略的命令
      * @param platformTenantIgnoreCommandList 平台管理租户忽略的命令
      */
-    public static void changeIgnore(String tableName, List<SqlCommandType> ignoreCommandList, List<SqlCommandType> platformTenantIgnoreCommandList) {
+    public static void ignore(String tableName, @Nullable List<SqlCommandType> ignoreCommandList, @Nullable List<SqlCommandType> platformTenantIgnoreCommandList) {
         THREAD_IGNORE_LOCAL.get().put(tableName, new SmartTenantIgnoreData(tableName, ignoreCommandList, platformTenantIgnoreCommandList));
+    }
+
+    /**
+     * 修改忽略租户的信息
+     * @param tableClass 表类
+     * @param ignoreCommandList 忽略的命令
+     * @param platformTenantIgnoreCommandList 平台管理租户忽略的命令
+     */
+    public static void ignore(Class<?> tableClass, @Nullable List<SqlCommandType> ignoreCommandList, @Nullable List<SqlCommandType> platformTenantIgnoreCommandList) {
+        String tableName = CrudUtils.getTableName(tableClass);
+        ignore(tableName, ignoreCommandList, platformTenantIgnoreCommandList);
     }
 
     /**

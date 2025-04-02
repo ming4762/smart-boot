@@ -1,16 +1,21 @@
 package com.smart.module.system.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.github.pagehelper.Page;
 import com.smart.framework.auth.common.annotation.NonUrlCheck;
 import com.smart.framework.commons.core.log.Log;
 import com.smart.framework.commons.core.log.LogOperationTypeEnum;
+import com.smart.framework.commons.core.message.PageData;
 import com.smart.framework.commons.core.message.Result;
 import com.smart.framework.crud.controller.BaseController;
 import com.smart.framework.crud.datapermission.handler.SmartDataPermissionMapperHolder;
+import com.smart.framework.crud.plus.tenant.SmartTenantControl;
 import com.smart.framework.crud.query.IdParameter;
 import com.smart.framework.crud.query.PageSortQuery;
+import com.smart.framework.crud.utils.CrudPageHelper;
 import com.smart.module.system.model.SysRoleFunctionPO;
 import com.smart.module.system.model.SysRolePO;
+import com.smart.module.system.pojo.dto.role.RoleListByTenantIdDTO;
 import com.smart.module.system.pojo.dto.role.RoleMenuSaveDTO;
 import com.smart.module.system.pojo.dto.role.RoleSetDataPermissionDTO;
 import com.smart.module.system.pojo.dto.role.RoleSetUserDTO;
@@ -19,6 +24,7 @@ import com.smart.module.system.service.SysRoleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.apache.ibatis.mapping.SqlCommandType;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -153,5 +159,22 @@ public class SysRoleController extends BaseController<SysRoleService, SysRolePO>
     @PostMapping("listRoleDataPermissionId")
     public Result<List<Long>> listRoleDataPermissionId(@RequestBody IdParameter roleId) {
         return Result.success(this.service.listRoleDataPermissionId(roleId.getId()));
+    }
+
+    @Operation(summary = "根据租户ID查询角色信息")
+    @PostMapping("listRoleByTenantId")
+    public Result<PageData<SysRolePO>> listRoleByTenantId(@RequestBody @Valid RoleListByTenantIdDTO parameter) {
+        // 平台租户忽略查询租户条件
+        SmartTenantControl.ignore(SysRolePO.class, null, List.of(SqlCommandType.SELECT));
+        // 设置分页
+        Page<SysRolePO> page = this.doPage(parameter);
+        CrudPageHelper.setPage(page);
+        // 查询数据
+        this.service.lambdaQuery()
+                .eq(SysRolePO::getTenantId, parameter.getTenantId())
+                .list();
+        return Result.success(
+                new PageData<>(page.getResult(), page.getTotal())
+        );
     }
 }
