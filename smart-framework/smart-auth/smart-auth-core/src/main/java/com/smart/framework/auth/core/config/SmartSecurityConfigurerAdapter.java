@@ -17,6 +17,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.DefaultSecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.security.web.context.SecurityContextRepository;
@@ -69,8 +70,11 @@ public class SmartSecurityConfigurerAdapter<H extends HttpSecurityBuilder<H>> ex
         webLoginFilter.setAuthenticationManager(this.getBuilder().getSharedObject(AuthenticationManager.class));
         webLoginFilter.setFilterProcessesUrl(loginUrl);
 
+        // 设置登录成功handler
         webLoginFilter.setAuthenticationSuccessHandler(builder.getSharedObject(AuthenticationSuccessHandler.class));
         // 设置登录失败handler
+        webLoginFilter.setAuthenticationFailureHandler(builder.getSharedObject(AuthenticationFailureHandler.class));
+
         webLoginFilter.setSecurityContextRepository(builder.getSharedObject(SecurityContextRepository.class));
 
         RememberMeServices rememberMeServices = builder.getSharedObject(RememberMeServices.class);

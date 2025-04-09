@@ -7,6 +7,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
 import org.springframework.security.web.access.ExceptionTranslationFilter;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
@@ -38,6 +39,9 @@ public class AuthWebSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
 
         AuthenticationSuccessHandler successHandler = this.getBean(AuthenticationSuccessHandler.class, this.serviceProvider.authenticationSuccessHandler);
         builder.setSharedObject(AuthenticationSuccessHandler.class, successHandler);
+
+        AuthenticationFailureHandler authenticationFailureHandler = this.getBean(AuthenticationFailureHandler.class, null);
+        builder.setSharedObject(AuthenticationFailureHandler.class, authenticationFailureHandler);
     }
 
     @Override
