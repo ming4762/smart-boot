@@ -22,7 +22,7 @@ import java.io.IOException;
 public class AuthLoginFailureHandler implements AuthenticationFailureHandler {
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        log.error("登录时发生错误: " + exception.getMessage(), exception);
+        log.error("登录时发生错误: {}", exception.getMessage(), exception);
         RestJsonWriter.writeJson(response, Result.failure(HttpStatus.UNAUTHORIZED.value(), exception.getMessage()));
     }
 }

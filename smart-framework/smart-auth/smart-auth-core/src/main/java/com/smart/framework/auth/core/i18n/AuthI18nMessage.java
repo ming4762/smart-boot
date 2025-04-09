@@ -23,7 +23,7 @@ public enum AuthI18nMessage implements I18nMessage {
     ERROR_TEMP_TOKEN_APPLY_RESOURCE_FAIL("auth.error.tempToken.apply.resourceFail", "Temp Token apply fail, resource validate fail"),
 
     // 用户名密码错误
-    USERNAME_PASSWORD_ERROR("auth.error.usernamePasswordError", "username or password error"),
+    USERNAME_PASSWORD_ERROR("auth.error.usernamePasswordError", "username or password error, login fail [{0}] time"),
     // 用户不存在错误
     USER_NOT_FOUND_ERROR("auth.error.userNotFoundError", "The user does not exist or has not created an account"),
     // 用户名密码不能为null
