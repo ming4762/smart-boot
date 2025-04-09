@@ -96,4 +96,16 @@ public class RemoteSmartFileApiController implements SmartFileApi {
     public FileHandlerResult delete(@NonNull @RequestBody Long fileId) {
         return SmartFileApi.super.delete(fileId);
     }
+
+    /**
+     * 获取文件的访问地址
+     *
+     * @param idList ID 列表
+     * @return 访问地址列表
+     */
+    @Override
+    @PostMapping(SmartFileApiUrlConstants.LIST_ADDRESS)
+    public List<String> listAddress(@RequestBody List<Long> idList) {
+        return this.smartFileApi.listAddress(idList);
+    }
 }

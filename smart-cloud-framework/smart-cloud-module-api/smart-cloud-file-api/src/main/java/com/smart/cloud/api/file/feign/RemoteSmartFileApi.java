@@ -51,6 +51,17 @@ public class RemoteSmartFileApi implements SmartFileApi {
         return this.feignSmartFileApi.save(parameter);
     }
 
+    /**
+     * 获取文件的访问地址
+     *
+     * @param idList ID 列表
+     * @return 访问地址列表
+     */
+    @Override
+    public List<String> listAddress(List<Long> idList) {
+        return this.feignSmartFileApi.listAddress(idList);
+    }
+
     @Override
     public FileHandlerResult delete(@NonNull Long fileId) {
         return SmartFileApi.super.delete(fileId);

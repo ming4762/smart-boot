@@ -18,4 +18,6 @@ public interface SmartFileApiUrlConstants {
     String SAVE = "/remote/file/storage/save";
 
     String DELETE = "/remote/file/storage/delete";
+
+    String LIST_ADDRESS = "/remote/file/listAddress";
 }

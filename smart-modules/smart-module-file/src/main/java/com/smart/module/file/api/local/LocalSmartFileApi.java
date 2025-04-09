@@ -58,4 +58,15 @@ public class LocalSmartFileApi implements SmartFileApi {
     public FileHandlerResult save(RemoteFileSaveParameter parameter) {
         return this.fileService.save(parameter.getMultipartFile(), parameter);
     }
+
+    /**
+     * 获取文件的访问地址
+     *
+     * @param idList ID 列表
+     * @return 访问地址列表
+     */
+    @Override
+    public List<String> listAddress(List<Long> idList) {
+        return this.fileService.listAddress(idList);
+    }
 }

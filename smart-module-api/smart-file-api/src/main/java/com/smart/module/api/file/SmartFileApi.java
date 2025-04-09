@@ -41,7 +41,7 @@ public interface SmartFileApi {
         deleteIds.add(fileId);
         List<FileHandlerResult> fileHandlerResults = this.batchDelete(deleteIds);
         if (!CollectionUtils.isEmpty(fileHandlerResults)) {
-            return fileHandlerResults.get(0);
+            return fileHandlerResults.getFirst();
         }
         return null;
     }
@@ -53,4 +53,10 @@ public interface SmartFileApi {
      */
     FileHandlerResult save(RemoteFileSaveParameter parameter);
 
+    /**
+     * 获取文件的访问地址
+     * @param idList ID 列表
+     * @return 访问地址列表
+     */
+    List<String> listAddress(List<Long> idList);
 }

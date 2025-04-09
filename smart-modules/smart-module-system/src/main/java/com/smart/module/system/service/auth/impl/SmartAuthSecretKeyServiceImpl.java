@@ -135,6 +135,7 @@ public class SmartAuthSecretKeyServiceImpl extends BaseServiceImpl<SmartAuthSecr
                             .type(secretFileType)
                             .build()
             );
+
             privateKeySaveResult = this.getNonnullSmartFileApi().save(
                     RemoteFileSaveParameter.builder()
                             .multipartFile(parameter.getPrivateKeyFile())

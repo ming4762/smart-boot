@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.smart.framework.crud.mapper.CrudBaseMapper;
 import com.smart.module.system.model.SysUserPO;
 import com.smart.module.system.pojo.dbo.SysUserWthAccountBO;
-import com.smart.module.system.pojo.dto.user.ListUserByRoleTenantDTO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

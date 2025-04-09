@@ -54,4 +54,8 @@ public interface FeignSmartFileApi {
      */
     @PostMapping(SmartFileApiUrlConstants.SAVE)
     FileHandlerResult save(RemoteFileSaveParameter parameter);
+
+    @PostMapping(SmartFileApiUrlConstants.LIST_ADDRESS)
+    List<String> listAddress(List<Long> idList);
+
 }
