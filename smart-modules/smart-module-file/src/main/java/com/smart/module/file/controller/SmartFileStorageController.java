@@ -100,4 +100,15 @@ public class SmartFileStorageController extends BaseController<SmartFileStorageS
     public Result<Boolean> setDefault(@RequestBody IdParameter parameter) {
         return Result.success(this.service.setDefault(parameter.getId()));
     }
+
+    @PostMapping("setEncrypt")
+    @Operation(summary = "设置为加密存储器")
+    @Log(value = "设置为加密存储器", type = LogOperationTypeEnum.UPDATE)
+    @PreAuthorize("hasPermission('smart:fileStorage', 'setFileEncrypt')")
+    public Result<Boolean> setEncrypt(@RequestBody List<Long> fileStorageIdList) {
+        if (CollectionUtils.isEmpty(fileStorageIdList)) {
+            return Result.success(false);
+        }
+        return Result.success(this.service.setEncrypt(fileStorageIdList));
+    }
 }

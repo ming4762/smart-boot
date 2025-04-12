@@ -4,6 +4,7 @@ import com.smart.framework.crud.service.BaseService;
 import com.smart.module.file.model.SmartFileStoragePO;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
 * smart_file_storage - 文件存储器配置 Service
@@ -31,4 +32,11 @@ public interface SmartFileStorageService extends BaseService<SmartFileStoragePO>
      * @return 默认存储器
      */
     SmartFileStoragePO getDefault();
+
+    /**
+     * 设置为加密存储器
+     * @param fileStorageIdList 文件存储ID列表
+     * @return 是否设置成功
+     */
+    boolean setEncrypt(List<Long> fileStorageIdList);
 }

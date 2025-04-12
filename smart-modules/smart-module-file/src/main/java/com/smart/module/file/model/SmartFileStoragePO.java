@@ -65,6 +65,21 @@ public class SmartFileStoragePO extends BaseModelUserTime {
     private String storageConfig;
 
     /**
+     * 文件是否加密
+     */
+    private Boolean encryptedYn;
+
+    /**
+    * encrypt_key - 加密秘钥
+    */
+    private String publicKey;
+
+    /**
+    * encrypt_key - 加密秘钥
+    */
+    private String privateKey;
+
+    /**
     * use_yn - useYn
     */
     private Boolean useYn;
