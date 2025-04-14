@@ -4,11 +4,14 @@ import com.smart.framework.commons.core.utils.JsonUtils;
 import com.smart.framework.file.core.common.FileStorageServiceRegisterName;
 import com.smart.framework.file.core.parameter.FileStorageDeleteParameter;
 import com.smart.framework.file.core.parameter.FileStorageGetParameter;
+import com.smart.framework.file.core.parameter.FileStorageInitProperties;
 import com.smart.framework.file.core.parameter.FileStorageSaveParameter;
 import com.smart.framework.file.core.pojo.bo.DiskFilePathBO;
+import com.smart.framework.file.core.pojo.dto.FileStorageSaveResult;
 import com.smart.framework.file.core.properties.SmartFileStorageAmazonS3Properties;
 import com.smart.module.api.file.constants.FileStorageTypeEnum;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.springframework.lang.NonNull;
@@ -34,11 +37,31 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DefaultAmazonS3ServiceImpl implements AmazonS3Service{
 
-    private static final Map<String, ClientCache> CLIENT_CACHE = new ConcurrentHashMap<>();
+    private static final Map<Long, ClientCache> CLIENT_CACHE = new ConcurrentHashMap<>();
 
-    protected ClientCache getClientCache(String properties) {
-        return CLIENT_CACHE.computeIfAbsent(properties, key -> {
-            SmartFileStorageAmazonS3Properties s3Properties = JsonUtils.parse(key, SmartFileStorageAmazonS3Properties.class);
+    protected ClientCache getClientCache(Long id) {
+        return CLIENT_CACHE.get(id);
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @Builder
+    protected static class ClientCache {
+        private Long fileStorageId;
+        private boolean encryptedYn;
+        private SmartFileStorageAmazonS3Properties properties;
+        private S3Client client;
+    }
+
+    /**
+     * 初始化
+     *
+     * @param initProperties 初始化参数
+     */
+    @Override
+    public void init(FileStorageInitProperties initProperties) {
+        CLIENT_CACHE.computeIfAbsent(initProperties.getFileStorageId(), key -> {
+            SmartFileStorageAmazonS3Properties s3Properties = JsonUtils.parse(initProperties.getProperties(), SmartFileStorageAmazonS3Properties.class);
             S3Client s3Client = S3Client.builder()
                     .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(s3Properties.getAccessKey(), s3Properties.getSecretKey())))
                     .region(Region.AWS_GLOBAL)
@@ -49,16 +72,13 @@ public class DefaultAmazonS3ServiceImpl implements AmazonS3Service{
                                     .chunkedEncodingEnabled(false)
                                     .build()
                     ).build();
-            return new ClientCache(s3Client, s3Properties);
+            return ClientCache.builder()
+                    .fileStorageId(initProperties.getFileStorageId())
+                    .encryptedYn(initProperties.isEncryptedYn())
+                    .properties(s3Properties)
+                    .client(s3Client)
+                    .build();
         });
-    }
-
-    @Getter
-    @AllArgsConstructor
-    protected static class ClientCache {
-        private S3Client client;
-
-        private SmartFileStorageAmazonS3Properties properties;
     }
 
     /**
@@ -82,7 +102,7 @@ public class DefaultAmazonS3ServiceImpl implements AmazonS3Service{
      * @return 文件存储标识
      */
     @Override
-    public String save(@NonNull InputStream inputStream, @NonNull FileStorageSaveParameter parameter) {
+    public FileStorageSaveResult save(@NonNull InputStream inputStream, @NonNull FileStorageSaveParameter parameter) {
         return this.save(inputStream, parameter, null);
     }
 
@@ -104,13 +124,13 @@ public class DefaultAmazonS3ServiceImpl implements AmazonS3Service{
      */
     @Override
     public void delete(FileStorageDeleteParameter parameter, String bucketName) {
-        ClientCache clientCache = this.getClientCache(parameter.getStorageProperties());
+        ClientCache clientCache = this.getClientCache(parameter.getFileStorageId());
         if (bucketName == null) {
             bucketName = clientCache.getProperties().getBucketName();
         }
-        List<ObjectIdentifier> keys = parameter.getFileStoreKeyList().stream()
+        List<ObjectIdentifier> keys = parameter.getFileStoreList().stream()
                 .map(item -> ObjectIdentifier.builder()
-                        .key(this.getObjectKey(item))
+                        .key(this.getObjectKey(item.getFileStoreKey()))
                         .build()).toList();
         Delete del = Delete.builder()
                 .objects(keys)
@@ -144,13 +164,13 @@ public class DefaultAmazonS3ServiceImpl implements AmazonS3Service{
      */
     @Override
     public InputStream download(FileStorageGetParameter parameter, String bucketName) {
-        ClientCache clientCache = this.getClientCache(parameter.getStorageProperties());
+        ClientCache clientCache = this.getClientCache(parameter.getFileStorageId());
         if (bucketName == null) {
             bucketName = clientCache.getProperties().getBucketName();
         }
         GetObjectRequest objectRequest = GetObjectRequest
                 .builder()
-                .key(this.getObjectKey(parameter.getFileStorageKey()))
+                .key(this.getObjectKey(parameter.getStorageStoreKey()))
                 .bucket(bucketName)
                 .build();
         return clientCache.getClient().getObject(objectRequest);
@@ -164,10 +184,10 @@ public class DefaultAmazonS3ServiceImpl implements AmazonS3Service{
      */
     @Override
     public String getAddress(@NonNull FileStorageGetParameter parameter) {
-        ClientCache clientCache = this.getClientCache(parameter.getStorageProperties());
+        ClientCache clientCache = this.getClientCache(parameter.getFileStorageId());
         GetObjectRequest objectRequest = GetObjectRequest.builder()
                 .bucket(clientCache.getProperties().getBucketName())
-                .key(parameter.getFileStorageKey())
+                .key(parameter.getStorageStoreKey())
                 .build();
 
 //        GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
@@ -188,8 +208,8 @@ public class DefaultAmazonS3ServiceImpl implements AmazonS3Service{
     @SneakyThrows(IOException.class)
     @NonNull
     @Override
-    public String save(@NonNull InputStream inputStream, FileStorageSaveParameter parameter, String bucketName) {
-        ClientCache clientCache = this.getClientCache(parameter.getStorageProperties());
+    public FileStorageSaveResult save(@NonNull InputStream inputStream, FileStorageSaveParameter parameter, String bucketName) {
+        ClientCache clientCache = this.getClientCache(parameter.getFileStorageId());
         String bucket = bucketName == null ? clientCache.getProperties().getBucketName() : bucketName;
         DiskFilePathBO diskFilePath = new DiskFilePathBO("", parameter);
         clientCache.getClient().putObject(
@@ -198,7 +218,11 @@ public class DefaultAmazonS3ServiceImpl implements AmazonS3Service{
                         .bucket(bucket),
                 RequestBody.fromInputStream(inputStream, inputStream.available())
         );
-        return diskFilePath.getFileId();
+        return FileStorageSaveResult.builder()
+                .fileStorageId(parameter.getFileStorageId())
+                .fileStoreKey(diskFilePath.getFileId())
+                .encryptedYn(clientCache.isEncryptedYn())
+               .build();
     }
 
     protected String getObjectKey(String id) {

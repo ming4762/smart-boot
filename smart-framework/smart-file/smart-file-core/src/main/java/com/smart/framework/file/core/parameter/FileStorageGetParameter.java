@@ -19,5 +19,10 @@ public class FileStorageGetParameter extends FileStorageCommonParameter {
     @Serial
     private static final long serialVersionUID = 5327844538893435761L;
 
-    private String fileStorageKey;
+    private String storageStoreKey;
+
+    /**
+     * 是否加密
+     */
+    private boolean encryptedYn;
 }

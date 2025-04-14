@@ -21,10 +21,6 @@ public class FileStorageSaveParameter extends FileStorageCommonParameter {
 
     @Serial
     private static final long serialVersionUID = -7345281261754013964L;
-    /**
-     * 文件存储器ID
-     */
-    private Long fileStorageId;
 
     /**
      * 文件名，默认为文件实际名字

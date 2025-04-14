@@ -13,11 +13,14 @@ import com.smart.framework.commons.core.utils.RestUtils;
 import com.smart.framework.file.core.common.FileStorageServiceRegisterName;
 import com.smart.framework.file.core.parameter.FileStorageDeleteParameter;
 import com.smart.framework.file.core.parameter.FileStorageGetParameter;
+import com.smart.framework.file.core.parameter.FileStorageInitProperties;
 import com.smart.framework.file.core.parameter.FileStorageSaveParameter;
 import com.smart.framework.file.core.pojo.bo.DiskFilePathBO;
+import com.smart.framework.file.core.pojo.dto.FileStorageSaveResult;
 import com.smart.framework.file.core.properties.SmartFileStorageQiniuProperties;
 import com.smart.module.api.file.constants.FileStorageTypeEnum;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +31,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.io.*;
 import java.time.Duration;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -38,11 +42,14 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class FileStorageQiniuServiceImpl implements QiniuService {
 
-    private static final Map<String, QiniuClientCache> CLIENT_CACHE = new ConcurrentHashMap<>(16);
+    private static final Map<Long, QiniuClientCache> CLIENT_CACHE = new ConcurrentHashMap<>(16);
 
     @Getter
     @AllArgsConstructor
+    @Builder
     private static class QiniuClientCache {
+        private Long fileStorageId;
+        private boolean encryptedYn;
         private SmartFileStorageQiniuProperties properties;
 
         private Auth auth;
@@ -54,14 +61,32 @@ public class FileStorageQiniuServiceImpl implements QiniuService {
         private BucketManager bucketManager;
     }
 
-    protected QiniuClientCache getClientCache(String qiniuProperties) {
-        return CLIENT_CACHE.computeIfAbsent(qiniuProperties, key -> {
-            SmartFileStorageQiniuProperties properties = JsonUtils.parse(key, SmartFileStorageQiniuProperties.class);
+    private QiniuClientCache getClientCache(Long id) {
+        return CLIENT_CACHE.get(id);
+    }
+
+    /**
+     * 初始化
+     *
+     * @param initProperties 初始化参数
+     */
+    @Override
+    public void init(FileStorageInitProperties initProperties) {
+        CLIENT_CACHE.computeIfAbsent(initProperties.getFileStorageId(), key -> {
+            SmartFileStorageQiniuProperties properties = JsonUtils.parse(initProperties.getProperties(), SmartFileStorageQiniuProperties.class);
             Configuration configuration = new Configuration();
             UploadManager uploadManager = new UploadManager(configuration);
             Auth auth = Auth.create(properties.getAccessKey(), properties.getSecretKey());
             String uploadToken = auth.uploadToken(properties.getBucketName());
-            return new QiniuClientCache(properties, auth, uploadToken, uploadManager, new BucketManager(auth, configuration));
+            return QiniuClientCache.builder()
+                    .fileStorageId(initProperties.getFileStorageId())
+                    .encryptedYn(initProperties.isEncryptedYn())
+                    .properties(properties)
+                    .auth(auth)
+                    .uploadToken(uploadToken)
+                    .uploadManager(uploadManager)
+                    .bucketManager(new BucketManager(auth, configuration))
+                    .build();
         });
     }
 
@@ -86,7 +111,7 @@ public class FileStorageQiniuServiceImpl implements QiniuService {
      * @return 文件存储标识
      */
     @Override
-    public String save(@NonNull InputStream inputStream, @NonNull FileStorageSaveParameter parameter) {
+    public FileStorageSaveResult save(@NonNull InputStream inputStream, @NonNull FileStorageSaveParameter parameter) {
         return this.save(inputStream, parameter, null);
     }
 
@@ -132,8 +157,8 @@ public class FileStorageQiniuServiceImpl implements QiniuService {
     @Override
     @SneakyThrows(QiniuException.class)
     public String getObjectUrl(FileStorageGetParameter parameter, Duration expiry) {
-        QiniuClientCache clientCache = this.getClientCache(parameter.getStorageProperties());
-        DownloadUrl downloadUrl = new DownloadUrl(clientCache.getProperties().getUrl(), Boolean.TRUE.equals(clientCache.getProperties().getUseHttps()), parameter.getFileStorageKey());
+        QiniuClientCache clientCache = this.getClientCache(parameter.getFileStorageId());
+        DownloadUrl downloadUrl = new DownloadUrl(clientCache.getProperties().getUrl(), Boolean.TRUE.equals(clientCache.getProperties().getUseHttps()), parameter.getStorageStoreKey());
         long deadline = System.currentTimeMillis() / 1000 + expiry.getSeconds();
         return downloadUrl.buildURL(clientCache.getAuth(), deadline);
     }
@@ -148,8 +173,8 @@ public class FileStorageQiniuServiceImpl implements QiniuService {
      */
     @SneakyThrows(QiniuException.class)
     @Override
-    public String save(@NonNull InputStream inputStream, @NonNull FileStorageSaveParameter parameter, String bucketName) {
-        QiniuClientCache clientCache = this.getClientCache(parameter.getStorageProperties());
+    public FileStorageSaveResult save(@NonNull InputStream inputStream, @NonNull FileStorageSaveParameter parameter, String bucketName) {
+        QiniuClientCache clientCache = this.getClientCache(parameter.getFileStorageId());
         DiskFilePathBO diskFilePath = new DiskFilePathBO("", parameter);
         String uploadToken = clientCache.getUploadToken();
         if (StringUtils.isNotBlank(bucketName)) {
@@ -157,7 +182,11 @@ public class FileStorageQiniuServiceImpl implements QiniuService {
         }
         Response response = clientCache.getUploadManager().put(inputStream, diskFilePath.getFilePath(true), uploadToken, null, null);
         DefaultPutRet putRet = JsonUtils.parse(response.bodyString(), DefaultPutRet.class);
-        return putRet.key;
+        return FileStorageSaveResult.builder()
+               .fileStoreKey(putRet.key)
+               .fileStorageId(parameter.getFileStorageId())
+               .encryptedYn(clientCache.isEncryptedYn())
+               .build();
     }
 
     /**
@@ -169,15 +198,16 @@ public class FileStorageQiniuServiceImpl implements QiniuService {
     @Override
     @SneakyThrows(QiniuException.class)
     public void delete(@NonNull FileStorageDeleteParameter parameter, String bucketName) {
-        if (CollectionUtils.isEmpty(parameter.getFileStoreKeyList())) {
+        List<FileStorageDeleteParameter.FileStorageDeleteItem> itemList = parameter.getFileStoreList();
+        if (CollectionUtils.isEmpty(itemList)) {
             return;
         }
-        QiniuClientCache clientCache = this.getClientCache(parameter.getStorageProperties());
+        QiniuClientCache clientCache = this.getClientCache(parameter.getFileStorageId());
         if (StringUtils.isBlank(bucketName)) {
             bucketName = clientCache.getProperties().getBucketName();
         }
         BucketManager.BatchOperations batchOperations = new BucketManager.BatchOperations();
-        batchOperations.addDeleteOp(bucketName, parameter.getFileStoreKeyList().toArray(new String[]{}));
+        batchOperations.addDeleteOp(bucketName, itemList.stream().map(FileStorageDeleteParameter.FileStorageDeleteItem::getFileStoreKey).toList().toArray(new String[]{}));
         clientCache.getBucketManager().batch(batchOperations);
     }
 

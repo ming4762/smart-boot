@@ -5,8 +5,10 @@ import com.smart.framework.file.core.common.FileStorageServiceRegisterName;
 import com.smart.framework.file.core.exception.SmartFileException;
 import com.smart.framework.file.core.parameter.FileStorageDeleteParameter;
 import com.smart.framework.file.core.parameter.FileStorageGetParameter;
+import com.smart.framework.file.core.parameter.FileStorageInitProperties;
 import com.smart.framework.file.core.parameter.FileStorageSaveParameter;
 import com.smart.framework.file.core.pojo.bo.DiskFilePathBO;
+import com.smart.framework.file.core.pojo.dto.FileStorageSaveResult;
 import com.smart.framework.file.core.properties.SmartFileStorageFtpProperties;
 import com.smart.framework.file.core.service.FileStorageService;
 import com.smart.framework.file.extensions.ftp.pool.FtpClientKeyedPooledObjectFactory;
@@ -18,6 +20,8 @@ import org.springframework.lang.NonNull;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author zhongming4762
@@ -25,6 +29,7 @@ import java.nio.charset.StandardCharsets;
  */
 public class FileStorageFtpServiceImpl implements FileStorageService {
 
+    private static final Map<Long, FileStorageInitProperties> PROPERTIES_MAP = new ConcurrentHashMap<>();
     private final GenericKeyedObjectPool<SmartFileStorageFtpProperties, FTPClient> objectPool;
 
     public FileStorageFtpServiceImpl() {
@@ -32,8 +37,8 @@ public class FileStorageFtpServiceImpl implements FileStorageService {
     }
 
 
-    protected SmartFileStorageFtpProperties getProperties(String key) {
-        return JsonUtils.parse(key, SmartFileStorageFtpProperties.class);
+    protected SmartFileStorageFtpProperties getProperties(Long fileStorageId) {
+        return JsonUtils.parse(PROPERTIES_MAP.get(fileStorageId).getProperties(), SmartFileStorageFtpProperties.class);
     }
 
     /**
@@ -58,8 +63,9 @@ public class FileStorageFtpServiceImpl implements FileStorageService {
      */
     @Override
     @SneakyThrows(Exception.class)
-    public String save(@NonNull InputStream inputStream, @NonNull FileStorageSaveParameter parameter) {
-        SmartFileStorageFtpProperties properties = this.getProperties(parameter.getStorageProperties());
+    public FileStorageSaveResult save(@NonNull InputStream inputStream, @NonNull FileStorageSaveParameter parameter) {
+        FileStorageInitProperties initProperties = PROPERTIES_MAP.get(parameter.getFileStorageId());
+        SmartFileStorageFtpProperties properties = this.getProperties(parameter.getFileStorageId());
         FTPClient ftpClient = this.objectPool.borrowObject(properties);
         try {
             DiskFilePathBO diskFilePath = new DiskFilePathBO(properties.getBasePath(), parameter);
@@ -72,7 +78,11 @@ public class FileStorageFtpServiceImpl implements FileStorageService {
             if (!storeFile) {
                 throw new SmartFileException("FTP文件上传失败");
             }
-            return diskFilePath.getFileId();
+            return FileStorageSaveResult.builder()
+                    .fileStoreKey(diskFilePath.getFileId())
+                    .fileStorageId(parameter.getFileStorageId())
+                    .encryptedYn(initProperties.isEncryptedYn())
+                    .build();
         } finally {
             this.objectPool.returnObject(properties, ftpClient);
         }
@@ -86,11 +96,11 @@ public class FileStorageFtpServiceImpl implements FileStorageService {
     @Override
     @SneakyThrows(Exception.class)
     public void delete(@NonNull FileStorageDeleteParameter parameter) {
-        SmartFileStorageFtpProperties properties = this.getProperties(parameter.getStorageProperties());
+        SmartFileStorageFtpProperties properties = this.getProperties(parameter.getFileStorageId());
         FTPClient ftpClient = this.objectPool.borrowObject(properties);
         try {
-            for (String key : parameter.getFileStoreKeyList()) {
-                DiskFilePathBO diskFilePath = DiskFilePathBO.createById(key, properties.getBasePath());
+            for (FileStorageDeleteParameter.FileStorageDeleteItem item : parameter.getFileStoreList()) {
+                DiskFilePathBO diskFilePath = DiskFilePathBO.createById(item.getFileStoreKey(), properties.getBasePath());
                 ftpClient.changeWorkingDirectory(diskFilePath.getRelativePath());
                 ftpClient.deleteFile(this.getDiskFilename(diskFilePath.getDiskFilename()));
             }
@@ -124,10 +134,10 @@ public class FileStorageFtpServiceImpl implements FileStorageService {
     @Override
     @SneakyThrows(Exception.class)
     public void download(FileStorageGetParameter parameter, OutputStream outputStream) {
-        SmartFileStorageFtpProperties properties = this.getProperties(parameter.getStorageProperties());
+        SmartFileStorageFtpProperties properties = this.getProperties(parameter.getFileStorageId());
         FTPClient ftpClient = this.objectPool.borrowObject(properties);
         try {
-            DiskFilePathBO diskFilePath = DiskFilePathBO.createById(parameter.getFileStorageKey(), properties.getBasePath());
+            DiskFilePathBO diskFilePath = DiskFilePathBO.createById(parameter.getStorageStoreKey(), properties.getBasePath());
             ftpClient.changeWorkingDirectory(diskFilePath.getRelativePath());
             ftpClient.retrieveFile(this.getDiskFilename(diskFilePath.getDiskFilename()), outputStream);
         } finally {
@@ -148,5 +158,15 @@ public class FileStorageFtpServiceImpl implements FileStorageService {
     @Override
     public String getAddress(@NonNull FileStorageGetParameter parameter) {
         throw new UnsupportedOperationException("FTP存储不支持获取地址");
+    }
+
+    /**
+     * 初始化
+     *
+     * @param initProperties 初始化参数
+     */
+    @Override
+    public void init(FileStorageInitProperties initProperties) {
+        PROPERTIES_MAP.put(initProperties.getFileStorageId(), initProperties);
     }
 }

@@ -3,7 +3,9 @@ package com.smart.framework.file.core.service;
 import com.smart.framework.file.core.common.FileStorageServiceRegisterName;
 import com.smart.framework.file.core.parameter.FileStorageDeleteParameter;
 import com.smart.framework.file.core.parameter.FileStorageGetParameter;
+import com.smart.framework.file.core.parameter.FileStorageInitProperties;
 import com.smart.framework.file.core.parameter.FileStorageSaveParameter;
+import com.smart.framework.file.core.pojo.dto.FileStorageSaveResult;
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
 import org.springframework.lang.NonNull;
@@ -31,7 +33,7 @@ public interface FileStorageService {
      * @param parameter 参数
      * @return 文件存储标识
      */
-    String save(@NonNull InputStream inputStream, @NonNull FileStorageSaveParameter parameter);
+    FileStorageSaveResult save(@NonNull InputStream inputStream, @NonNull FileStorageSaveParameter parameter);
 
     /**
      * 删除文件
@@ -64,4 +66,10 @@ public interface FileStorageService {
      * @return address
      */
     String getAddress(@NonNull FileStorageGetParameter parameter);
+
+    /**
+     * 初始化
+     * @param initProperties 初始化参数
+     */
+    void init(FileStorageInitProperties initProperties);
 }

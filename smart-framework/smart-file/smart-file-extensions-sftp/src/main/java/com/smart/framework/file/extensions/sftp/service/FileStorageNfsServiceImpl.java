@@ -6,8 +6,10 @@ import com.smart.framework.commons.core.utils.JsonUtils;
 import com.smart.framework.file.core.common.FileStorageServiceRegisterName;
 import com.smart.framework.file.core.parameter.FileStorageDeleteParameter;
 import com.smart.framework.file.core.parameter.FileStorageGetParameter;
+import com.smart.framework.file.core.parameter.FileStorageInitProperties;
 import com.smart.framework.file.core.parameter.FileStorageSaveParameter;
 import com.smart.framework.file.core.pojo.bo.DiskFilePathBO;
+import com.smart.framework.file.core.pojo.dto.FileStorageSaveResult;
 import com.smart.framework.file.core.properties.SmartFileStorageSftpProperties;
 import com.smart.framework.file.core.service.FileStorageService;
 import com.smart.framework.file.extensions.sftp.provider.JschChannelProvider;
@@ -20,6 +22,8 @@ import org.springframework.lang.NonNull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author zhongming4762
@@ -27,14 +31,25 @@ import java.io.OutputStream;
  */
 public class FileStorageNfsServiceImpl implements FileStorageService {
 
+    private static final Map<Long, FileStorageInitProperties> PROPERTIES_MAP = new ConcurrentHashMap<>();
     private final JschChannelProvider<ChannelSftp> channelProvider;
 
     public FileStorageNfsServiceImpl(JschChannelProvider<ChannelSftp> channelProvider) {
         this.channelProvider = channelProvider;
     }
 
-    protected SmartFileStorageSftpProperties getProperties(String key) {
-        return JsonUtils.parse(key, SmartFileStorageSftpProperties.class);
+    protected SmartFileStorageSftpProperties getProperties(Long id) {
+        return JsonUtils.parse(PROPERTIES_MAP.get(id).getProperties(), SmartFileStorageSftpProperties.class);
+    }
+
+    /**
+     * 初始化
+     *
+     * @param initProperties 初始化参数
+     */
+    @Override
+    public void init(FileStorageInitProperties initProperties) {
+        PROPERTIES_MAP.put(initProperties.getFileStorageId(), initProperties);
     }
 
     @Override
@@ -47,69 +62,77 @@ public class FileStorageNfsServiceImpl implements FileStorageService {
 
     @SneakyThrows(SftpException.class)
     @Override
-    public String save(@NonNull InputStream inputStream, @NonNull FileStorageSaveParameter parameter) {
-        SmartFileStorageSftpProperties properties = this.getProperties(parameter.getStorageProperties());
-        ChannelSftp channelSftp = this.channelProvider.getChannel(parameter.getStorageProperties());
+    public FileStorageSaveResult save(@NonNull InputStream inputStream, @NonNull FileStorageSaveParameter parameter) {
+        FileStorageInitProperties initProperties = PROPERTIES_MAP.get(parameter.getFileStorageId());
+        SmartFileStorageSftpProperties properties = this.getProperties(parameter.getFileStorageId());
+        ChannelSftp channelSftp = this.channelProvider.getChannel(initProperties.getProperties());
         try {
             DiskFilePathBO diskFilePath = new DiskFilePathBO(properties.getBasePath(), parameter);
             // 创建并进入路径
             JschUtils.createDirectories(channelSftp, diskFilePath.getAbsolutePath());
             channelSftp.put(inputStream, diskFilePath.getDiskFilename());
-            return diskFilePath.getFileId();
+            return FileStorageSaveResult.builder()
+                   .fileStoreKey(diskFilePath.getFileId())
+                    .fileStorageId(parameter.getFileStorageId())
+                    .encryptedYn(initProperties.isEncryptedYn())
+                   .build();
         } finally {
-            this.channelProvider.returnChannel(parameter.getStorageProperties(), channelSftp);
+            this.channelProvider.returnChannel(initProperties.getProperties(), channelSftp);
         }
     }
 
     @Override
     @SneakyThrows(SftpException.class)
     public void delete(@NonNull FileStorageDeleteParameter parameter) {
-        SmartFileStorageSftpProperties properties = this.getProperties(parameter.getStorageProperties());
-        ChannelSftp channelSftp = this.channelProvider.getChannel(parameter.getStorageProperties());
+        FileStorageInitProperties initProperties = PROPERTIES_MAP.get(parameter.getFileStorageId());
+        SmartFileStorageSftpProperties properties = this.getProperties(parameter.getFileStorageId());
+        ChannelSftp channelSftp = this.channelProvider.getChannel(initProperties.getProperties());
         try {
-            for (String key : parameter.getFileStoreKeyList()) {
-                DiskFilePathBO diskFilePath = DiskFilePathBO.createById(key, properties.getBasePath());
+            for (FileStorageDeleteParameter.FileStorageDeleteItem item : parameter.getFileStoreList()) {
+                DiskFilePathBO diskFilePath = DiskFilePathBO.createById(item.getFileStoreKey(), properties.getBasePath());
                 channelSftp.cd(diskFilePath.getAbsolutePath());
                 channelSftp.rm(diskFilePath.getDiskFilename());
             }
         } finally {
-            this.channelProvider.returnChannel(parameter.getStorageProperties(), channelSftp);
+            this.channelProvider.returnChannel(initProperties.getProperties(), channelSftp);
         }
     }
 
     @SneakyThrows(SftpException.class)
     @Override
     public InputStream download(@NonNull FileStorageGetParameter parameter) {
-        SmartFileStorageSftpProperties properties = this.getProperties(parameter.getStorageProperties());
-        ChannelSftp channelSftp = this.channelProvider.getChannel(parameter.getStorageProperties());
+        FileStorageInitProperties initProperties = PROPERTIES_MAP.get(parameter.getFileStorageId());
+        SmartFileStorageSftpProperties properties = this.getProperties(parameter.getFileStorageId());
+        ChannelSftp channelSftp = this.channelProvider.getChannel(initProperties.getProperties());
         try {
-            DiskFilePathBO diskFilePath = DiskFilePathBO.createById(parameter.getFileStorageKey(), properties.getBasePath());
+            DiskFilePathBO diskFilePath = DiskFilePathBO.createById(parameter.getStorageStoreKey(), properties.getBasePath());
             channelSftp.cd(diskFilePath.getAbsolutePath());
             return channelSftp.get(diskFilePath.getDiskFilename());
         } finally {
-            this.channelProvider.returnChannel(parameter.getStorageProperties(), channelSftp);
+            this.channelProvider.returnChannel(initProperties.getProperties(), channelSftp);
         }
     }
 
     @SneakyThrows({SftpException.class, IOException.class})
     @Override
     public void download(@NonNull FileStorageGetParameter parameter, OutputStream outputStream) {
-        SmartFileStorageSftpProperties properties = this.getProperties(parameter.getStorageProperties());
-        ChannelSftp channelSftp = this.channelProvider.getChannel(parameter.getStorageProperties());
+        FileStorageInitProperties initProperties = PROPERTIES_MAP.get(parameter.getFileStorageId());
+        SmartFileStorageSftpProperties properties = this.getProperties(parameter.getFileStorageId());
+        ChannelSftp channelSftp = this.channelProvider.getChannel(initProperties.getProperties());
         try {
-            DiskFilePathBO diskFilePath = DiskFilePathBO.createById(parameter.getFileStorageKey(), properties.getBasePath());
+            DiskFilePathBO diskFilePath = DiskFilePathBO.createById(parameter.getStorageStoreKey(), properties.getBasePath());
             channelSftp.cd(diskFilePath.getAbsolutePath());
             try (final InputStream inputStream = channelSftp.get(diskFilePath.getDiskFilename())) {
                 IOUtils.copy(inputStream, outputStream);
             }
         } finally {
-            this.channelProvider.returnChannel(parameter.getStorageProperties(), channelSftp);
+            this.channelProvider.returnChannel(initProperties.getProperties(), channelSftp);
         }
     }
 
     @Override
     public String getAddress(@NonNull FileStorageGetParameter parameter) {
-        SmartFileStorageSftpProperties diskProperties = this.getProperties(parameter.getStorageProperties());
-        return DiskFilePathBO.createById(parameter.getFileStorageKey(), diskProperties.getBasePath()).getFilePath();
+        SmartFileStorageSftpProperties diskProperties = this.getProperties(parameter.getFileStorageId());
+        return DiskFilePathBO.createById(parameter.getStorageStoreKey(), diskProperties.getBasePath()).getFilePath();
     }
 }

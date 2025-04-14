@@ -2,15 +2,23 @@ package com.smart.framework.file.extensions.aliyun.oss;
 
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
+import com.aliyun.oss.OSSEncryptionClient;
+import com.aliyun.oss.OSSEncryptionClientBuilder;
+import com.aliyun.oss.crypto.SimpleRSAEncryptionMaterials;
 import com.smart.framework.commons.core.utils.JsonUtils;
+import com.smart.framework.commons.core.utils.auth.RsaUtils;
 import com.smart.framework.file.core.common.FileStorageServiceRegisterName;
+import com.smart.framework.file.core.exception.SmartFileException;
 import com.smart.framework.file.core.parameter.FileStorageDeleteParameter;
 import com.smart.framework.file.core.parameter.FileStorageGetParameter;
+import com.smart.framework.file.core.parameter.FileStorageInitProperties;
 import com.smart.framework.file.core.parameter.FileStorageSaveParameter;
 import com.smart.framework.file.core.pojo.bo.DiskFilePathBO;
+import com.smart.framework.file.core.pojo.dto.FileStorageSaveResult;
 import com.smart.framework.file.core.properties.SmartFileStorageAliyunOssProperties;
 import com.smart.module.api.file.constants.FileStorageTypeEnum;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
@@ -18,6 +26,9 @@ import org.springframework.lang.NonNull;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.security.KeyPair;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -30,22 +41,28 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class AliyunOssServiceImpl implements AliyunOssService, DisposableBean {
 
-    private static final Map<String, OssClientCache> OSS_CLIENT_CACHE_MAP = new ConcurrentHashMap<>();
+    private static final Map<Long, OssClientCache> OSS_CLIENT_CACHE_MAP = new ConcurrentHashMap<>();
 
-    protected OssClientCache getOssClientCache(String properties) {
-        return OSS_CLIENT_CACHE_MAP.computeIfAbsent(properties, key -> {
-            SmartFileStorageAliyunOssProperties ossProperties = JsonUtils.parse(key, SmartFileStorageAliyunOssProperties.class);
-            OSS ossClient = new OSSClientBuilder().build(ossProperties.getEndpoint(), ossProperties.getAccessKey(), ossProperties.getSecretKey());
-            return new OssClientCache(ossClient, ossProperties);
-        });
+    protected OssClientCache getOssClientCache(Long id) {
+        OssClientCache ossClientCache = OSS_CLIENT_CACHE_MAP.get(id);
+        if (ossClientCache == null) {
+            throw new IllegalArgumentException("oss client cache is null, please init oss client first");
+        }
+        return ossClientCache;
     }
 
     @Getter
     @AllArgsConstructor
+    @Builder
     protected static class OssClientCache {
+        private Long fileStorageId;
+        private boolean encryptedYn;
         private OSS ossClient;
-
+        // 加密客户端
+        private OSSEncryptionClient ossEncryptionClient;
         private SmartFileStorageAliyunOssProperties properties;
+        private String privateKey;
+        private String publicKey;
     }
 
     /**
@@ -69,7 +86,7 @@ public class AliyunOssServiceImpl implements AliyunOssService, DisposableBean {
      * @return 文件存储标识
      */
     @Override
-    public String save(@NonNull InputStream inputStream, @NonNull FileStorageSaveParameter parameter) {
+    public FileStorageSaveResult save(@NonNull InputStream inputStream, @NonNull FileStorageSaveParameter parameter) {
         return this.save(parameter, null, inputStream);
     }
 
@@ -102,10 +119,12 @@ public class AliyunOssServiceImpl implements AliyunOssService, DisposableBean {
      */
     @Override
     public String getAddress(@NonNull FileStorageGetParameter parameter) {
-        OssClientCache clientCache = this.getOssClientCache(parameter.getStorageProperties());
-
+        if (parameter.isEncryptedYn()) {
+            throw new SmartFileException("加密文件无法直接访问");
+        }
+        OssClientCache clientCache = this.getOssClientCache(parameter.getFileStorageId());
         Date expiration = new Date(System.currentTimeMillis() + 3600 * 1000);
-        URL url = clientCache.getOssClient().generatePresignedUrl(clientCache.getProperties().getBucketName(), this.getObject(parameter.getFileStorageKey()), expiration);
+        URL url = this.getOssClient(parameter.getFileStorageId(), false).generatePresignedUrl(clientCache.getProperties().getBucketName(), this.getObject(parameter.getStorageStoreKey()), expiration);
         return url.toString();
     }
 
@@ -119,14 +138,18 @@ public class AliyunOssServiceImpl implements AliyunOssService, DisposableBean {
      */
     @NonNull
     @Override
-    public String save(FileStorageSaveParameter parameter, String bucketName, @NonNull InputStream inputStream) {
-        OssClientCache ossClientCache = this.getOssClientCache(parameter.getStorageProperties());
+    public FileStorageSaveResult save(FileStorageSaveParameter parameter, String bucketName, @NonNull InputStream inputStream) {
+        OssClientCache ossClientCache = this.getOssClientCache(parameter.getFileStorageId());
         if (bucketName == null) {
             bucketName = ossClientCache.getProperties().getBucketName();
         }
         DiskFilePathBO diskFilePath = new DiskFilePathBO("", parameter);
-        ossClientCache.getOssClient().putObject(bucketName, diskFilePath.getFilePath(true), inputStream);
-        return diskFilePath.getFileId();
+        this.getOssClient(parameter.getFileStorageId(), ossClientCache.isEncryptedYn()).putObject(bucketName, diskFilePath.getFilePath(true), inputStream);
+        return FileStorageSaveResult.builder()
+                .fileStoreKey(diskFilePath.getFileId())
+                .fileStorageId(ossClientCache.getFileStorageId())
+                .encryptedYn(ossClientCache.isEncryptedYn())
+                .build();
     }
 
     /**
@@ -137,12 +160,12 @@ public class AliyunOssServiceImpl implements AliyunOssService, DisposableBean {
      */
     @Override
     public void delete(FileStorageDeleteParameter parameter, String bucketName) {
-        OssClientCache clientCache = this.getOssClientCache(parameter.getStorageProperties());
+        OssClientCache clientCache = this.getOssClientCache(parameter.getFileStorageId());
         if (bucketName == null) {
             bucketName = clientCache.getProperties().getBucketName();
         }
-        for (String key : parameter.getFileStoreKeyList()) {
-            clientCache.getOssClient().deleteObject(bucketName, this.getObject(key));
+        for (FileStorageDeleteParameter.FileStorageDeleteItem item : parameter.getFileStoreList()) {
+            this.getOssClient(parameter.getFileStorageId(), item.isEncryptedYn()).deleteObject(bucketName, this.getObject(item.getFileStoreKey()));
         }
     }
 
@@ -155,12 +178,12 @@ public class AliyunOssServiceImpl implements AliyunOssService, DisposableBean {
      */
     @Override
     public InputStream download(FileStorageGetParameter parameter, String bucketName) {
-        OssClientCache clientCache = this.getOssClientCache(parameter.getStorageProperties());
+        OssClientCache clientCache = this.getOssClientCache(parameter.getFileStorageId());
         if (bucketName == null) {
             bucketName = clientCache.getProperties().getBucketName();
         }
-        return clientCache.getOssClient()
-                .getObject(bucketName, this.getObject(parameter.getFileStorageKey()))
+        return this.getOssClient(clientCache.getFileStorageId(), parameter.isEncryptedYn())
+                .getObject(bucketName, this.getObject(parameter.getStorageStoreKey()))
                 .getObjectContent();
     }
 
@@ -171,12 +194,54 @@ public class AliyunOssServiceImpl implements AliyunOssService, DisposableBean {
     /**
      * 获取oss客户端
      *
-     * @param storageProperties 配置信息
+     * @param id 配置信息
      * @return OSS客户端
      */
     @Override
-    public OSS getOssClient(String storageProperties) {
-        return this.getOssClientCache(storageProperties).getOssClient();
+    public OSS getOssClient(Long id) {
+        OssClientCache ossClientCache = this.getOssClientCache(id);
+        return ossClientCache.isEncryptedYn() ? ossClientCache.getOssEncryptionClient() : ossClientCache.getOssClient();
+    }
+
+    private OSS getOssClient(Long id, boolean encryptedYn) {
+        OssClientCache ossClientCache = this.getOssClientCache(id);
+        if (encryptedYn) {
+            return ossClientCache.getOssEncryptionClient();
+        }
+        return ossClientCache.getOssClient();
+    }
+
+    /**
+     * 初始化
+     *
+     * @param initProperties 初始化参数
+     */
+    @Override
+    public void init(FileStorageInitProperties initProperties) {
+        if (OSS_CLIENT_CACHE_MAP.containsKey(initProperties.getFileStorageId())) {
+            return;
+        }
+        SmartFileStorageAliyunOssProperties ossProperties = JsonUtils.parse(initProperties.getProperties(), SmartFileStorageAliyunOssProperties.class);
+        OSS ossClient = new OSSClientBuilder().build(ossProperties.getEndpoint(), ossProperties.getAccessKey(), ossProperties.getSecretKey());
+        OssClientCache.OssClientCacheBuilder builder = OssClientCache.builder()
+                .ossClient(ossClient)
+                .properties(ossProperties)
+                .privateKey(initProperties.getPrivateKey())
+                .encryptedYn(initProperties.isEncryptedYn())
+                .fileStorageId(initProperties.getFileStorageId())
+                .publicKey(initProperties.getPublicKey());
+        // 构建加密客户端
+        if (initProperties.isEncryptedYn()) {
+            PrivateKey privateKey = RsaUtils.generaPrivateKey(initProperties.getPrivateKey());
+            PublicKey publicKey = RsaUtils.generaPublicKey(initProperties.getPublicKey());
+            KeyPair keyPair = new KeyPair(publicKey, privateKey);
+
+            SimpleRSAEncryptionMaterials encryptionMaterials = new SimpleRSAEncryptionMaterials(keyPair, Map.of("id", initProperties.getFileStorageId().toString()));
+            OSSEncryptionClient ossEncryptionClient = new OSSEncryptionClientBuilder().
+                    build(ossProperties.getEndpoint(), ossProperties.getAccessKey(), ossProperties.getSecretKey(), encryptionMaterials);
+            builder.ossEncryptionClient(ossEncryptionClient);
+        }
+        OSS_CLIENT_CACHE_MAP.put(initProperties.getFileStorageId(), builder.build());
     }
 
     /**

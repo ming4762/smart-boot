@@ -3,6 +3,7 @@ package com.smart.framework.file.extensions.s3;
 import com.smart.framework.file.core.parameter.FileStorageDeleteParameter;
 import com.smart.framework.file.core.parameter.FileStorageGetParameter;
 import com.smart.framework.file.core.parameter.FileStorageSaveParameter;
+import com.smart.framework.file.core.pojo.dto.FileStorageSaveResult;
 import com.smart.framework.file.core.service.FileStorageService;
 import org.springframework.lang.NonNull;
 
@@ -24,7 +25,7 @@ public interface AmazonS3Service extends FileStorageService {
      * @return 文件ID
      */
     @NonNull
-    String save(@NonNull InputStream inputStream, FileStorageSaveParameter parameter, String bucketName);
+    FileStorageSaveResult save(@NonNull InputStream inputStream, FileStorageSaveParameter parameter, String bucketName);
 
     /**
      * 删除文件

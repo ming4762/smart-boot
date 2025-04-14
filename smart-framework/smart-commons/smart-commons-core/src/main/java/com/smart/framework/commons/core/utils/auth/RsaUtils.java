@@ -6,6 +6,8 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.lang.NonNull;
 
 import javax.crypto.Cipher;
+import javax.crypto.spec.OAEPParameterSpec;
+import javax.crypto.spec.PSource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -14,6 +16,7 @@ import java.security.*;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
+import java.security.spec.MGF1ParameterSpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
@@ -33,6 +36,8 @@ public class RsaUtils {
      * 秘钥算法
      */
     private static final String ALGORITHM = "RSA";
+
+    private static final String TRANSFORMATION = "RSA/ECB/OAEPWITHSHA-256ANDMGF1PADDING";
 
     /**
      * 秘钥长度
@@ -133,8 +138,8 @@ public class RsaUtils {
      */
     @SneakyThrows({Exception.class})
     public static byte[] publicEncrypt(String data, RSAPublicKey publicKey) {
-        Cipher cipher = Cipher.getInstance(ALGORITHM);
-        cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+        Cipher cipher = Cipher.getInstance(TRANSFORMATION);
+        cipher.init(Cipher.ENCRYPT_MODE, publicKey, createMGF1ParameterSpec());
         return cipher.doFinal(data.getBytes(StandardCharsets.UTF_8));
     }
 
@@ -146,8 +151,8 @@ public class RsaUtils {
      */
     @SneakyThrows(Exception.class)
     public static byte[] privateEncrypt(String data, RSAPrivateKey privateKey) {
-        Cipher cipher = Cipher.getInstance(ALGORITHM);
-        cipher.init(Cipher.ENCRYPT_MODE, privateKey);
+        Cipher cipher = Cipher.getInstance(TRANSFORMATION);
+        cipher.init(Cipher.ENCRYPT_MODE, privateKey, createMGF1ParameterSpec());
         return cipher.doFinal(data.getBytes(StandardCharsets.UTF_8));
     }
 
@@ -159,8 +164,8 @@ public class RsaUtils {
      */
     @SneakyThrows(Exception.class)
     public static byte[] publicDecrypt(String data, RSAPublicKey publicKey) {
-        Cipher cipher = Cipher.getInstance(ALGORITHM);
-        cipher.init(Cipher.DECRYPT_MODE, publicKey);
+        Cipher cipher = Cipher.getInstance(TRANSFORMATION);
+        cipher.init(Cipher.DECRYPT_MODE, publicKey, createMGF1ParameterSpec());
         return cipher.doFinal(data.getBytes(StandardCharsets.UTF_8));
     }
 
@@ -172,8 +177,12 @@ public class RsaUtils {
      */
     @SneakyThrows(Exception.class)
     public static byte[] privateDecrypt(String data, RSAPrivateKey privateKey) {
-        Cipher cipher = Cipher.getInstance(ALGORITHM);
-        cipher.init(Cipher.DECRYPT_MODE, privateKey);
+        Cipher cipher = Cipher.getInstance(TRANSFORMATION);
+        cipher.init(Cipher.DECRYPT_MODE, privateKey, createMGF1ParameterSpec());
         return cipher.doFinal(data.getBytes(StandardCharsets.UTF_8));
+    }
+
+    private static OAEPParameterSpec createMGF1ParameterSpec() {
+        return new OAEPParameterSpec("SHA-256", "MGF1", MGF1ParameterSpec.SHA256, PSource.PSpecified.DEFAULT);
     }
 }

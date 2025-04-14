@@ -3,7 +3,9 @@ package com.smart.module.file.service.impl;
 import com.smart.framework.file.core.exception.SmartFileException;
 import com.smart.framework.file.core.parameter.FileStorageDeleteParameter;
 import com.smart.framework.file.core.parameter.FileStorageGetParameter;
+import com.smart.framework.file.core.parameter.FileStorageInitProperties;
 import com.smart.framework.file.core.parameter.FileStorageSaveParameter;
+import com.smart.framework.file.core.pojo.dto.FileStorageSaveResult;
 import com.smart.framework.file.core.service.FileService;
 import com.smart.framework.file.core.service.FileStorageService;
 import com.smart.module.api.file.bo.FileDownloadResult;
@@ -32,6 +34,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.time.ZonedDateTime;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -40,6 +43,9 @@ import java.util.stream.Collectors;
  * 2023/2/16
  */
 public class DefaultFileServiceImpl implements FileService, ApplicationContextAware {
+
+    private static final Map<Long, FileStorageService> FILE_STORAGE_SERVICE_ID_MAP = new ConcurrentHashMap<>();
+    private static final Map<String, FileStorageService> FILE_STORAGE_SERVICE_CODE_MAP = new ConcurrentHashMap<>();
 
     private Map<FileStorageTypeEnum, FileStorageService> actualFileServiceMap;
 
@@ -53,25 +59,11 @@ public class DefaultFileServiceImpl implements FileService, ApplicationContextAw
     }
 
     protected FileStorageSaveParameter getFileSaveStorageParameter(FileSaveParameter parameter) {
-        // 获取文件存储器
-        SmartFileStoragePO smartFileStorage;
-        if (parameter.getFileStorageId() != null) {
-            smartFileStorage = this.smartFileStorageService.getById(parameter.getFileStorageId());
-        } else if (StringUtils.hasText(parameter.getFileStorageCode())) {
-            smartFileStorage = this.smartFileStorageService.getByCode(parameter.getFileStorageCode());
-        } else {
-            smartFileStorage = this.smartFileStorageService.getDefault();
-        }
-        if (smartFileStorage == null) {
-            throw new SmartFileException(String.format("获取文件存储器失败，请检查是否存在对应的文件存储器，存储器编码：%s", parameter.getFileStorageCode()));
-        }
         return FileStorageSaveParameter.builder()
                 .filename(parameter.getFilename())
                 .folder(parameter.getFolder())
-                .storageType(smartFileStorage.getStorageType())
-                .storageProperties(smartFileStorage.getStorageConfig())
-                .fileStorageId(smartFileStorage.getId())
                 .useOriginalFilename(parameter.isUseOriginalFilename())
+                .fileStorageId(parameter.getFileStorageId())
                 .build();
     }
 
@@ -132,29 +124,21 @@ public class DefaultFileServiceImpl implements FileService, ApplicationContextAw
         if (CollectionUtils.isEmpty(sysFileList)) {
             return Collections.emptyList();
         }
-        // 获取文件存储器
-        Set<Long> fileStorageIds = sysFileList.stream().map(SmartFilePO::getFileStorageId).collect(Collectors.toSet());
-        List<SmartFileStoragePO> fileStorageList = this.smartFileStorageService.listByIds(fileStorageIds);
-        // 验证文件存储器是否缺少
-        Set<Long> validateFileStorageIds = fileStorageList.stream().map(SmartFileStoragePO::getId).collect(Collectors.toSet());
-        if (fileStorageIds.size() > validateFileStorageIds.size()) {
-            throw new SmartFileException("缺少文件存储器信息");
-        }
         // 删除文件信息
         this.sysFileService.removeByIds(fileIds);
-        // 将文件存储器转为map
-        Map<Long, SmartFileStoragePO> smartFileStorageMap = fileStorageList.stream().collect(Collectors.toMap(SmartFileStoragePO::getId, item -> item));
         // 删除实际文件
         sysFileList.stream()
                 .collect(Collectors.groupingBy(SmartFilePO::getFileStorageId))
                 .forEach((storageId, list) -> {
-                    SmartFileStoragePO fileStorage = smartFileStorageMap.get(storageId);
-                    FileStorageService fileStorageService = this.getFileStorageService(fileStorage.getStorageType());
+                    FileStorageService fileStorageService = this.getFileStorageService(storageId, null);
                     fileStorageService.delete(
                             FileStorageDeleteParameter.builder()
-                                    .storageProperties(fileStorage.getStorageConfig())
-                                    .storageType(fileStorage.getStorageType())
-                                    .fileStoreKeyList(list.stream().map(SmartFilePO::getStorageStoreKey).toList())
+                                    .fileStorageId(storageId)
+                                    .fileStoreList(
+                                            list.stream()
+                                                    .map(item -> new FileStorageDeleteParameter.FileStorageDeleteItem(item.getStorageStoreKey(), Boolean.TRUE.equals(item.getEncryptedYn())))
+                                                    .toList()
+                                    )
                                     .build()
                     );
                 });
@@ -183,16 +167,12 @@ public class DefaultFileServiceImpl implements FileService, ApplicationContextAw
             // 文件已经过期，但是还未被删除
             return null;
         }
-        SmartFileStoragePO fileStorageData = this.smartFileStorageService.getById(sysFileData.getFileStorageId());
-        if (fileStorageData == null) {
-            throw new SmartFileException("未找到文件存储器");
-        }
-        FileStorageService fileStorageService = this.getFileStorageService(fileStorageData.getStorageType());
+        FileStorageService fileStorageService = this.getFileStorageService(sysFileData.getFileStorageId(), null);
         InputStream inputStream = fileStorageService.download(
                 FileStorageGetParameter.builder()
-                        .storageType(fileStorageData.getStorageType())
-                        .storageProperties(fileStorageData.getStorageConfig())
-                        .fileStorageKey(sysFileData.getStorageStoreKey())
+                        .fileStorageId(sysFileData.getFileStorageId())
+                        .storageStoreKey(sysFileData.getStorageStoreKey())
+                        .encryptedYn(Boolean.TRUE.equals(sysFileData.getEncryptedYn()))
                         .build()
         );
         if (inputStream == null) {
@@ -220,27 +200,20 @@ public class DefaultFileServiceImpl implements FileService, ApplicationContextAw
         if (CollectionUtils.isEmpty(fileList)) {
             throw new SmartFileException("获取文件信息失败，文件ID：" + idList);
         }
-        // 获取文件存储器
-        Set<Long> fileStorageIds = fileList.stream()
-                .map(SmartFilePO::getFileStorageId)
-                .collect(Collectors.toSet());
-        List<SmartFileStoragePO> fileStorageList = this.smartFileStorageService.listByIds(fileStorageIds);
-        if (CollectionUtils.isEmpty(fileStorageList) || fileStorageIds.size() != fileStorageList.size()) {
-            throw new SmartFileException("获取文件存储器信息失败，文件存储器ID：" + fileStorageIds);
+        // 校验文件是否加密
+        boolean hasEncrypted = fileList.stream()
+                .anyMatch(item -> Boolean.TRUE.equals(item.getEncryptedYn()));
+        if (hasEncrypted) {
+            throw new SmartFileException("文件已加密，无法获取访问地址");
         }
-        Map<Long, SmartFileStoragePO> fileStorageMap = fileStorageList.stream().collect(Collectors.toMap(SmartFileStoragePO::getId, item -> item));
         return fileList.stream()
                 .map(item -> {
-                    SmartFileStoragePO fileStorage = fileStorageMap.get(item.getFileStorageId());
-                    if (fileStorage == null) {
-                        throw new SmartFileException("获取文件存储器失败，id：" + item.getFileStorageId());
-                    }
-                    FileStorageService fileStorageService = this.getFileStorageService(fileStorage.getStorageType());
+                    FileStorageService fileStorageService = this.getFileStorageService(item.getFileStorageId(), null);
                     return fileStorageService.getAddress(
                             FileStorageGetParameter.builder()
-                                    .storageType(fileStorage.getStorageType())
-                                    .fileStorageKey(item.getStorageStoreKey())
-                                    .storageProperties(fileStorage.getStorageConfig())
+                                    .storageStoreKey(item.getStorageStoreKey())
+                                    .encryptedYn(false)
+                                    .fileStorageId(item.getFileStorageId())
                                     .build()
                     );
                 }).toList();
@@ -251,25 +224,26 @@ public class DefaultFileServiceImpl implements FileService, ApplicationContextAw
         if (!StringUtils.hasText(fileSaveStorageParameter.getFilename())) {
             fileSaveStorageParameter.setFilename(file.getFile().getFilename());
         }
-        file.getFile().setFileStorageId(fileSaveStorageParameter.getFileStorageId());
         // 获取文件存储器
-        FileStorageService fileStorageService = this.getFileStorageService(fileSaveStorageParameter.getStorageType());
+        FileStorageService fileStorageService = this.getFileStorageService(file.getParameter().getFileStorageId(), file.getParameter().getFileStorageCode());
         // 保存文件
-        String storageStoreKey = null;
+        FileStorageSaveResult fileStorageSaveResult = null;
         try (InputStream inputStream = file.getInputStream()) {
-            storageStoreKey = fileStorageService.save(inputStream, fileSaveStorageParameter);
-            file.getFile().setStorageStoreKey(storageStoreKey);
+            fileStorageSaveResult = fileStorageService.save(inputStream, fileSaveStorageParameter);
+            file.getFile().setStorageStoreKey(fileStorageSaveResult.getFileStoreKey());
+            file.getFile().setFileStorageId(fileStorageSaveResult.getFileStorageId());
+            file.getFile().setEncryptedYn(fileStorageSaveResult.isEncryptedYn());
             this.sysFileService.save(file.getFile());
             FileHandlerResult fileSaveResult = new FileHandlerResult();
             BeanUtils.copyProperties(file.getFile(), fileSaveResult);
             return fileSaveResult;
         } catch (Exception e) {
-            if (storageStoreKey != null) {
+            if (fileStorageSaveResult != null) {
                 fileStorageService.delete(
                         FileStorageDeleteParameter.builder()
-                                .fileStoreKeyList(List.of(storageStoreKey))
-                                .storageType(fileSaveStorageParameter.getStorageType())
-                                .storageProperties(fileSaveStorageParameter.getStorageProperties())
+                                .fileStoreList(
+                                        List.of(new FileStorageDeleteParameter.FileStorageDeleteItem(fileStorageSaveResult.getFileStoreKey(), fileStorageSaveResult.isEncryptedYn()))
+                                )
                                 .build()
                 );
             }
@@ -288,14 +262,49 @@ public class DefaultFileServiceImpl implements FileService, ApplicationContextAw
     }
 
     /**
-     * 获取文件存储器服务
-     * @param fileStorageType  文件存储器类型
-     * @return 文件存储器服务
+     * 获取并初始化文件存储服务
+     * @param fileStorageId 文件存储ID
+     * @param fileStorageCode 文件存储编码
+     * @return 文件存储服务
      */
-    protected FileStorageService getFileStorageService(FileStorageTypeEnum fileStorageType) {
-        FileStorageService fileStorageService = this.actualFileServiceMap.get(fileStorageType);
+    protected FileStorageService getFileStorageService(Long fileStorageId, String fileStorageCode) {
+        // 根据ID或code获取
+        if (fileStorageId != null && FILE_STORAGE_SERVICE_ID_MAP.containsKey(fileStorageId)) {
+            return FILE_STORAGE_SERVICE_ID_MAP.get(fileStorageId);
+        }
+        if (StringUtils.hasText(fileStorageCode) && FILE_STORAGE_SERVICE_CODE_MAP.containsKey(fileStorageCode)) {
+            return FILE_STORAGE_SERVICE_CODE_MAP.get(fileStorageCode);
+        }
+        // 获取文件存储器
+        SmartFileStoragePO smartFileStorage;
+        if (fileStorageId != null) {
+            smartFileStorage = this.smartFileStorageService.getById(fileStorageId);
+        } else if (StringUtils.hasText(fileStorageCode)) {
+            smartFileStorage = this.smartFileStorageService.getByCode(fileStorageCode);
+        } else {
+            smartFileStorage = this.smartFileStorageService.getDefault();
+        }
+        if (smartFileStorage == null) {
+            throw new SmartFileException(String.format("获取文件存储器失败，请检查是否存在对应的文件存储器，存储器编码：%s", fileStorageCode));
+        }
+        FileStorageService fileStorageService = this.actualFileServiceMap.get(smartFileStorage.getStorageType());
         if (fileStorageService == null) {
-            throw new SmartFileException(String.format("获取文件存储器失败，未找到对应的文件执行器，执行器名称：%s", fileStorageType.name()));
+            throw new SmartFileException(String.format("获取文件存储器失败，未找到对应的文件执行器，执行器名称：%s", smartFileStorage.getStorageType().name()));
+        }
+        fileStorageService.init(
+                FileStorageInitProperties.builder()
+                        .properties(smartFileStorage.getStorageConfig())
+                        .encryptedYn(Boolean.TRUE.equals(smartFileStorage.getEncryptedYn()))
+                        .privateKey(smartFileStorage.getPrivateKey())
+                        .publicKey(smartFileStorage.getPublicKey())
+                        .fileStorageId(smartFileStorage.getId())
+                        .build()
+        );
+        if (fileStorageId != null) {
+            FILE_STORAGE_SERVICE_ID_MAP.put(fileStorageId, fileStorageService);
+        }
+        if (StringUtils.hasText(fileStorageCode)) {
+            FILE_STORAGE_SERVICE_CODE_MAP.put(fileStorageCode, fileStorageService);
         }
         return fileStorageService;
     }

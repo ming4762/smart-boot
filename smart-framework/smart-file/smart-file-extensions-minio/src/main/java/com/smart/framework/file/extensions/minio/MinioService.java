@@ -4,6 +4,7 @@ import com.smart.framework.file.core.parameter.FileStorageCommonParameter;
 import com.smart.framework.file.core.parameter.FileStorageDeleteParameter;
 import com.smart.framework.file.core.parameter.FileStorageGetParameter;
 import com.smart.framework.file.core.parameter.FileStorageSaveParameter;
+import com.smart.framework.file.core.pojo.dto.FileStorageSaveResult;
 import com.smart.framework.file.core.service.FileStorageService;
 import io.minio.ListBucketsArgs;
 import io.minio.messages.Bucket;
@@ -69,7 +70,7 @@ public interface MinioService extends FileStorageService {
      * @return 文件id
      */
     @NonNull
-    String save(FileStorageSaveParameter parameter, String bucketName, @NonNull File file);
+    FileStorageSaveResult save(FileStorageSaveParameter parameter, String bucketName, @NonNull File file);
 
 
     /**
@@ -80,7 +81,7 @@ public interface MinioService extends FileStorageService {
      * @return 文件ID
      */
     @NonNull
-    String save(FileStorageSaveParameter parameter, String bucketName, @NonNull InputStream inputStream);
+    FileStorageSaveResult save(FileStorageSaveParameter parameter, String bucketName, @NonNull InputStream inputStream);
 
     /**
      * 获取文件外链

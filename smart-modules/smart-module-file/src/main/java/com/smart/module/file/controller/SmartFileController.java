@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,18 +35,13 @@ import java.util.List;
 @Tag(name = "文件管理", description = "文件管理")
 @RequestMapping("smart/file")
 @RestController
+@RequiredArgsConstructor
 public class SmartFileController extends BaseController<SmartFileService, SmartFilePO> {
 
     private static final String PERMISSION_QUERY_SECRET = "sys:file:querySecret";
 
     private final FileService fileService;
-
     private final SysParameterApi sysParameterApi;
-
-    public SmartFileController(FileService fileService, SysParameterApi sysParameterApi) {
-        this.fileService = fileService;
-        this.sysParameterApi = sysParameterApi;
-    }
 
     @Override
     @PostMapping("list")

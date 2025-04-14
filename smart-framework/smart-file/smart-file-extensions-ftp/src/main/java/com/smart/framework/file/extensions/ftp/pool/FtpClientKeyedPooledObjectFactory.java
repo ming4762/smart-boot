@@ -23,7 +23,7 @@ public class FtpClientKeyedPooledObjectFactory implements KeyedPooledObjectFacto
     private static final String DEFAULT_USER_NAME = "Anonymous";
 
     @Override
-    public void activateObject(SmartFileStorageFtpProperties key, PooledObject<FTPClient> p) throws Exception {
+    public void activateObject(SmartFileStorageFtpProperties key, PooledObject<FTPClient> p) {
         // do nothing
     }
 

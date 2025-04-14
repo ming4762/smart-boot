@@ -2,15 +2,16 @@ package com.smart.framework.file.extensions.disk.service;
 
 import com.smart.framework.commons.core.utils.JsonUtils;
 import com.smart.framework.file.core.common.FileStorageServiceRegisterName;
-import com.smart.framework.file.core.parameter.FileStorageCommonParameter;
-import com.smart.framework.file.core.parameter.FileStorageDeleteParameter;
-import com.smart.framework.file.core.parameter.FileStorageGetParameter;
-import com.smart.framework.file.core.parameter.FileStorageSaveParameter;
+import com.smart.framework.file.core.parameter.*;
 import com.smart.framework.file.core.pojo.bo.DiskFilePathBO;
+import com.smart.framework.file.core.pojo.dto.FileStorageSaveResult;
 import com.smart.framework.file.core.properties.SmartFileStorageDiskProperties;
 import com.smart.framework.file.core.service.FileStorageService;
 import com.smart.module.api.file.constants.FileStorageTypeEnum;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.SneakyThrows;
+import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
 
 import java.io.File;
@@ -19,12 +20,17 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author zhongming4762
  * 2023/2/16 22:01
  */
 public class FileStorageDiskServiceImpl implements FileStorageService {
+
+    private static final Map<Long, FileStorageDiskProperties> PROPERTIES_MAP = new ConcurrentHashMap<>();
+
     /**
      * 获取注册名字
      *
@@ -38,8 +44,12 @@ public class FileStorageDiskServiceImpl implements FileStorageService {
                 .build();
     }
 
-    protected SmartFileStorageDiskProperties getDiskProperties(FileStorageCommonParameter parameter) {
-        return JsonUtils.parse(parameter.getStorageProperties(), SmartFileStorageDiskProperties.class);
+    protected SmartFileStorageDiskProperties getDiskProperties(Long fileStorageId) {
+        FileStorageDiskProperties fileStorageDiskProperties = PROPERTIES_MAP.get(fileStorageId);
+        if (fileStorageDiskProperties == null) {
+            throw new UnsupportedOperationException("未找到文件存储配置信息");
+        }
+        return fileStorageDiskProperties.getDiskProperties();
     }
 
     /**
@@ -51,8 +61,8 @@ public class FileStorageDiskServiceImpl implements FileStorageService {
      */
     @SneakyThrows({IOException.class})
     @Override
-    public String save(@NonNull InputStream inputStream, @NonNull FileStorageSaveParameter parameter) {
-        SmartFileStorageDiskProperties diskProperties = this.getDiskProperties(parameter);
+    public FileStorageSaveResult save(@NonNull InputStream inputStream, @NonNull FileStorageSaveParameter parameter) {
+        SmartFileStorageDiskProperties diskProperties = this.getDiskProperties(parameter.getFileStorageId());
         DiskFilePathBO diskFilePath = new DiskFilePathBO(diskProperties.getBasePath(), parameter);
         // 获取文件路径
         final Path folderPath = Paths.get(diskFilePath.getAbsolutePath());
@@ -62,7 +72,11 @@ public class FileStorageDiskServiceImpl implements FileStorageService {
         final String filePath = diskFilePath.getFilePath();
         final Path inPath = Paths.get(filePath);
         Files.copy(inputStream, inPath);
-        return diskFilePath.getFileId();
+        return FileStorageSaveResult.builder()
+                .fileStorageId(parameter.getFileStorageId())
+                .fileStoreKey(diskFilePath.getFileId())
+                .encryptedYn(PROPERTIES_MAP.get(parameter.getFileStorageId()).isEncryptedYn())
+                .build();
     }
 
     /**
@@ -73,9 +87,9 @@ public class FileStorageDiskServiceImpl implements FileStorageService {
     @SneakyThrows({IOException.class})
     @Override
     public void delete(@NonNull FileStorageDeleteParameter parameter) {
-        SmartFileStorageDiskProperties diskProperties = this.getDiskProperties(parameter);
-        for (String key : parameter.getFileStoreKeyList()) {
-            String filePath = DiskFilePathBO.createById(key, diskProperties.getBasePath()).getFilePath();
+        SmartFileStorageDiskProperties diskProperties = this.getDiskProperties(parameter.getFileStorageId());
+        for (FileStorageDeleteParameter.FileStorageDeleteItem item : parameter.getFileStoreList()) {
+            String filePath = DiskFilePathBO.createById(item.getFileStoreKey(), diskProperties.getBasePath()).getFilePath();
             Path path = Paths.get(filePath);
             if (Files.exists(path)) {
                 Files.delete(path);
@@ -92,8 +106,8 @@ public class FileStorageDiskServiceImpl implements FileStorageService {
     @SneakyThrows({IOException.class})
     @Override
     public InputStream download(@NonNull FileStorageGetParameter parameter) {
-        SmartFileStorageDiskProperties diskProperties = this.getDiskProperties(parameter);
-        String filePath = DiskFilePathBO.createById(parameter.getFileStorageKey(), diskProperties.getBasePath()).getFilePath();
+        SmartFileStorageDiskProperties diskProperties = this.getDiskProperties(parameter.getFileStorageId());
+        String filePath = DiskFilePathBO.createById(parameter.getStorageStoreKey(), diskProperties.getBasePath()).getFilePath();
         File file = new File(filePath);
         return Files.newInputStream(file.toPath());
     }
@@ -106,7 +120,31 @@ public class FileStorageDiskServiceImpl implements FileStorageService {
      */
     @Override
     public String getAddress(@NonNull FileStorageGetParameter parameter) {
-        SmartFileStorageDiskProperties diskProperties = this.getDiskProperties(parameter);
-        return DiskFilePathBO.createById(parameter.getFileStorageKey(), diskProperties.getBasePath()).getFilePath();
+        SmartFileStorageDiskProperties diskProperties = this.getDiskProperties(parameter.getFileStorageId());
+        return DiskFilePathBO.createById(parameter.getStorageStoreKey(), diskProperties.getBasePath()).getFilePath();
+    }
+
+    /**
+     * 初始化
+     *
+     * @param initProperties 初始化参数
+     */
+    @Override
+    public void init(FileStorageInitProperties initProperties) {
+        SmartFileStorageDiskProperties diskProperties = JsonUtils.parse(initProperties.getProperties(), SmartFileStorageDiskProperties.class);
+        if (initProperties.isEncryptedYn()) {
+            throw new UnsupportedOperationException("磁盘存储暂不支持加密");
+        }
+        FileStorageDiskProperties fileStorageDiskProperties = new FileStorageDiskProperties();
+        BeanUtils.copyProperties(initProperties, fileStorageDiskProperties);
+        fileStorageDiskProperties.setDiskProperties(diskProperties);
+        PROPERTIES_MAP.put(initProperties.getFileStorageId(), fileStorageDiskProperties);
+    }
+
+    @Getter
+    @Setter
+    private static class FileStorageDiskProperties extends FileStorageInitProperties {
+
+       private SmartFileStorageDiskProperties diskProperties;
     }
 }

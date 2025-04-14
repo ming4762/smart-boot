@@ -1,5 +1,6 @@
 package com.smart.module.file.pojo.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -16,6 +17,7 @@ import java.io.Serializable;
 @ToString
 public class FileUploadDTO implements Serializable {
 
+    @NotNull(message = "文件不能为空")
     private transient MultipartFile file;
 
     private String fileName;

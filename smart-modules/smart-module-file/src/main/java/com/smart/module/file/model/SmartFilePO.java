@@ -2,9 +2,7 @@ package com.smart.module.file.model;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.smart.framework.crud.annotation.TableLogicField;
 import com.smart.framework.crud.model.BaseModelCreateUserTime;
 import lombok.*;
 
@@ -77,9 +75,12 @@ public class SmartFilePO extends BaseModelCreateUserTime {
      */
     private ZonedDateTime expireTime;
 
-    @TableLogic
+    /**
+     * 文件是否加密，与存储器文件加密不同，这里可以单独指定每个文件是否加密，保证存储器这设置为加密之前的文件也可正常读取
+     */
+    private Boolean encryptedYn;
+
     private Boolean deleteYn;
 
-    @TableLogicField(isDeleteKey = true)
     private Long deleteKey;
 }

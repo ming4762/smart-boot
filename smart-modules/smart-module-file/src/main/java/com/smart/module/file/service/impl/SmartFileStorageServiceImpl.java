@@ -3,6 +3,8 @@ package com.smart.module.file.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.smart.framework.commons.core.utils.Base64Utils;
+import com.smart.framework.commons.core.utils.auth.RsaUtils;
 import com.smart.framework.crud.query.PageSortQuery;
 import com.smart.framework.crud.service.BaseServiceImpl;
 import com.smart.framework.crud.utils.CrudUtils;
@@ -15,7 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.io.Serializable;
+import java.security.KeyPair;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
 * smart_file_storage - 文件存储器配置 Service实现类
@@ -104,10 +109,28 @@ public class SmartFileStorageServiceImpl extends BaseServiceImpl<SmartFileStorag
         if (CollectionUtils.isEmpty(fileStorageIdList)) {
             return false;
         }
-        return this.update(
-                Wrappers.lambdaUpdate(this.getEntityClass())
-                        .set(SmartFileStoragePO::getEncryptedYn, Boolean.TRUE)
-                        .in(SmartFileStoragePO::getId, fileStorageIdList)
-        );
+        // 获取加密的文件
+        Map<Long, Boolean> encryptedMap = this.lambdaQuery()
+                .select(SmartFileStoragePO::getId, SmartFileStoragePO::getEncryptedYn)
+                .in(SmartFileStoragePO::getId, fileStorageIdList)
+                .list().stream()
+                .collect(Collectors.toMap(SmartFileStoragePO::getId, SmartFileStoragePO::getEncryptedYn));
+        List<Long> noEncryptedIdList = fileStorageIdList.stream()
+                .filter(item -> !encryptedMap.getOrDefault(item, true))
+                .toList();
+        if (CollectionUtils.isEmpty(noEncryptedIdList)) {
+            return true;
+        }
+        noEncryptedIdList.forEach(item -> {
+            KeyPair keyPair = RsaUtils.generateKeyPair();
+            this.update(
+                    Wrappers.lambdaUpdate(this.getEntityClass())
+                            .set(SmartFileStoragePO::getEncryptedYn, Boolean.TRUE)
+                            .set(SmartFileStoragePO::getPublicKey, Base64Utils.encode(keyPair.getPublic().getEncoded()))
+                            .set(SmartFileStoragePO::getPrivateKey, Base64Utils.encode(keyPair.getPrivate().getEncoded()))
+                            .eq(SmartFileStoragePO::getId, item)
+            );
+        });
+        return true;
     }
 }

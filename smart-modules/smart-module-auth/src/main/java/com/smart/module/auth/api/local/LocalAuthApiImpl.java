@@ -158,7 +158,7 @@ public class LocalAuthApiImpl implements AuthApi {
      */
     @Override
     public Object getAuthCache(@NonNull String key) {
-        return this.authCache.get(key);
+        return this.authCache.getValue(key);
     }
 
     /**

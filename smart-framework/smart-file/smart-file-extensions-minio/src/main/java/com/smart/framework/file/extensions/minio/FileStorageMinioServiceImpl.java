@@ -2,11 +2,9 @@ package com.smart.framework.file.extensions.minio;
 
 import com.smart.framework.commons.core.utils.JsonUtils;
 import com.smart.framework.file.core.common.FileStorageServiceRegisterName;
-import com.smart.framework.file.core.parameter.FileStorageCommonParameter;
-import com.smart.framework.file.core.parameter.FileStorageDeleteParameter;
-import com.smart.framework.file.core.parameter.FileStorageGetParameter;
-import com.smart.framework.file.core.parameter.FileStorageSaveParameter;
+import com.smart.framework.file.core.parameter.*;
 import com.smart.framework.file.core.pojo.bo.DiskFilePathBO;
+import com.smart.framework.file.core.pojo.dto.FileStorageSaveResult;
 import com.smart.framework.file.core.properties.SmartFileStorageMinioProperties;
 import com.smart.module.api.file.constants.FileStorageTypeEnum;
 import io.minio.*;
@@ -14,6 +12,7 @@ import io.minio.errors.*;
 import io.minio.http.Method;
 import io.minio.messages.Bucket;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.springframework.lang.NonNull;
@@ -37,25 +36,42 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class FileStorageMinioServiceImpl implements MinioService {
 
-    private static final Map<String, MinioClientCache> MINIO_CLIENT_MAP = new ConcurrentHashMap<>();
+    private static final Map<Long, MinioClientCache> MINIO_CLIENT_MAP = new ConcurrentHashMap<>();
 
-    protected MinioClientCache getMinioClientCache(String minioProperties) {
-        return MINIO_CLIENT_MAP.computeIfAbsent(minioProperties, key -> {
-            SmartFileStorageMinioProperties properties = JsonUtils.parse(minioProperties, SmartFileStorageMinioProperties.class);
-            MinioClient client = MinioClient.builder()
-                    .endpoint(properties.getEndpoint())
-                    .credentials(properties.getAccessKey(), properties.getSecretKey())
-                    .build();
-            return new MinioClientCache(client, properties);
-        });
+    private MinioClientCache getMinioClientCache(Long id) {
+        return MINIO_CLIENT_MAP.get(id);
     }
 
     @Getter
     @AllArgsConstructor
+    @Builder
     private static class MinioClientCache {
-        private MinioClient minioClient;
-
+        private Long fileStorageId;
+        private boolean encryptedYn;
         private SmartFileStorageMinioProperties minioProperties;
+        private MinioClient minioClient;
+    }
+
+    /**
+     * 初始化
+     *
+     * @param initProperties 初始化参数
+     */
+    @Override
+    public void init(FileStorageInitProperties initProperties) {
+        MINIO_CLIENT_MAP.computeIfAbsent(initProperties.getFileStorageId(), id -> {
+            SmartFileStorageMinioProperties minioProperties = JsonUtils.parse(initProperties.getProperties(), SmartFileStorageMinioProperties.class);
+            MinioClient client = MinioClient.builder()
+                    .endpoint(minioProperties.getEndpoint())
+                    .credentials(minioProperties.getAccessKey(), minioProperties.getSecretKey())
+                    .build();
+            return MinioClientCache.builder()
+                    .fileStorageId(initProperties.getFileStorageId())
+                    .encryptedYn(initProperties.isEncryptedYn())
+                    .minioProperties(minioProperties)
+                    .minioClient(client)
+                    .build();
+        });
     }
 
     /**
@@ -79,7 +95,7 @@ public class FileStorageMinioServiceImpl implements MinioService {
      * @return 文件存储标识
      */
     @Override
-    public String save(@NonNull InputStream inputStream, @NonNull FileStorageSaveParameter parameter) {
+    public FileStorageSaveResult save(@NonNull InputStream inputStream, @NonNull FileStorageSaveParameter parameter) {
         return this.save(parameter, null, inputStream);
     }
 
@@ -135,7 +151,7 @@ public class FileStorageMinioServiceImpl implements MinioService {
             XmlParserException.class
     })
     public boolean bucketExists(FileStorageCommonParameter parameter, String bucketName) {
-        return this.getMinioClientCache(parameter.getStorageProperties())
+        return this.getMinioClientCache(parameter.getFileStorageId())
                 .getMinioClient()
                 .bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
     }
@@ -160,7 +176,7 @@ public class FileStorageMinioServiceImpl implements MinioService {
             XmlParserException.class
     })
     public boolean makeBucket(FileStorageCommonParameter parameter, String bucketName) {
-        this.getMinioClientCache(parameter.getStorageProperties())
+        this.getMinioClientCache(parameter.getFileStorageId())
                 .getMinioClient()
                 .makeBucket(
                         MakeBucketArgs.builder()
@@ -190,7 +206,7 @@ public class FileStorageMinioServiceImpl implements MinioService {
             XmlParserException.class
     })
     public boolean removeBucket(FileStorageCommonParameter parameter, String bucketName) {
-        this.getMinioClientCache(parameter.getStorageProperties())
+        this.getMinioClientCache(parameter.getFileStorageId())
                 .getMinioClient()
                 .removeBucket(
                         RemoveBucketArgs.builder()
@@ -219,7 +235,7 @@ public class FileStorageMinioServiceImpl implements MinioService {
             XmlParserException.class
     })
     public List<Bucket> listBuckets(FileStorageCommonParameter parameter) {
-        return this.getMinioClientCache(parameter.getStorageProperties())
+        return this.getMinioClientCache(parameter.getFileStorageId())
                 .getMinioClient()
                 .listBuckets();
     }
@@ -244,7 +260,7 @@ public class FileStorageMinioServiceImpl implements MinioService {
             XmlParserException.class
     })
     public List<Bucket> listBuckets(FileStorageCommonParameter parameter, ListBucketsArgs args) {
-        return this.getMinioClientCache(parameter.getStorageProperties())
+        return this.getMinioClientCache(parameter.getFileStorageId())
                 .getMinioClient()
                 .listBuckets(args);
     }
@@ -260,7 +276,7 @@ public class FileStorageMinioServiceImpl implements MinioService {
     @SneakyThrows(IOException.class)
     @NonNull
     @Override
-    public String save(FileStorageSaveParameter parameter, String bucketName, @NonNull File file) {
+    public FileStorageSaveResult save(FileStorageSaveParameter parameter, String bucketName, @NonNull File file) {
         try (InputStream inputStream = Files.newInputStream(file.toPath())) {
             return this.save(parameter, bucketName, inputStream);
         }
@@ -287,8 +303,8 @@ public class FileStorageMinioServiceImpl implements MinioService {
             ServerException.class,
             XmlParserException.class
     })
-    public String save(FileStorageSaveParameter parameter, String bucketName, @NonNull InputStream inputStream) {
-        MinioClientCache minioClientCache = this.getMinioClientCache(parameter.getStorageProperties());
+    public FileStorageSaveResult save(FileStorageSaveParameter parameter, String bucketName, @NonNull InputStream inputStream) {
+        MinioClientCache minioClientCache = this.getMinioClientCache(parameter.getFileStorageId());
         if (bucketName == null) {
             bucketName = minioClientCache.getMinioProperties().getBucketName();
         }
@@ -300,7 +316,11 @@ public class FileStorageMinioServiceImpl implements MinioService {
                 .stream(inputStream, inputStream.available(), -1)
                 .build();
         minioClientCache.getMinioClient().putObject(putObjectArgs);
-        return diskFilePath.getFileId();
+        return FileStorageSaveResult.builder()
+                .fileStoreKey(diskFilePath.getFileId())
+                .fileStorageId(parameter.getFileStorageId())
+                .encryptedYn(minioClientCache.isEncryptedYn())
+                .build();
     }
 
     /**
@@ -324,13 +344,13 @@ public class FileStorageMinioServiceImpl implements MinioService {
             XmlParserException.class
     })
     public String getObjectUrl(FileStorageGetParameter parameter, String bucketName, Duration expiry) {
-        MinioClientCache minioClientCache = this.getMinioClientCache(parameter.getStorageProperties());
+        MinioClientCache minioClientCache = this.getMinioClientCache(parameter.getFileStorageId());
         if (bucketName == null) {
             bucketName = minioClientCache.getMinioProperties().getBucketName();
         }
         GetPresignedObjectUrlArgs.Builder builder = GetPresignedObjectUrlArgs.builder()
                 .bucket(bucketName)
-                .object(this.getObject(parameter.getFileStorageKey()))
+                .object(this.getObject(parameter.getStorageStoreKey()))
                 .method(Method.GET);
         if (expiry != null) {
             builder.expiry(Long.valueOf(expiry.getSeconds()).intValue());
@@ -372,13 +392,13 @@ public class FileStorageMinioServiceImpl implements MinioService {
             XmlParserException.class
     })
     public InputStream download(FileStorageGetParameter parameter, String bucketName) {
-        MinioClientCache minioClientCache = this.getMinioClientCache(parameter.getStorageProperties());
+        MinioClientCache minioClientCache = this.getMinioClientCache(parameter.getFileStorageId());
         if (bucketName == null) {
             bucketName = minioClientCache.getMinioProperties().getBucketName();
         }
         GetObjectArgs objectArgs = GetObjectArgs.builder()
                 .bucket(bucketName)
-                .object(this.getObject(parameter.getFileStorageKey()))
+                .object(this.getObject(parameter.getStorageStoreKey()))
                 .build();
         return minioClientCache.getMinioClient().getObject(objectArgs);
     }
@@ -402,14 +422,14 @@ public class FileStorageMinioServiceImpl implements MinioService {
             XmlParserException.class
     })
     public void delete(FileStorageDeleteParameter parameter, String bucketName) {
-        MinioClientCache minioClientCache = this.getMinioClientCache(parameter.getStorageProperties());
+        MinioClientCache minioClientCache = this.getMinioClientCache(parameter.getFileStorageId());
         if (bucketName == null) {
             bucketName = minioClientCache.getMinioProperties().getBucketName();
         }
-        for (String key : parameter.getFileStoreKeyList()) {
+        for (FileStorageDeleteParameter.FileStorageDeleteItem item : parameter.getFileStoreList()) {
             RemoveObjectArgs removeObjectArgs = RemoveObjectArgs.builder()
                     .bucket(bucketName)
-                    .object(this.getObject(key))
+                    .object(this.getObject(item.getFileStoreKey()))
                     .build();
             // TODO:minio批量删除接口
             minioClientCache.getMinioClient().removeObject(removeObjectArgs);

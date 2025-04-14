@@ -64,6 +64,7 @@
         <dingtalk.server.old.version>2.0.0</dingtalk.server.old.version>
         <redisson.version>3.37.0</redisson.version>
         <libphonenumber.version>8.13.52</libphonenumber.version>
+        <bcprov-jdk15on.version>1.70</bcprov-jdk15on.version>
     </properties>
 
     <packaging>pom</packaging>
@@ -348,7 +349,11 @@
                 <artifactId>commons-lang</artifactId>
                 <version>${commons-lang.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk15on</artifactId>
+                <version>${bcprov-jdk15on.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.xuxueli</groupId>
                 <artifactId>xxl-job-core</artifactId>

@@ -4,6 +4,7 @@ import com.aliyun.oss.OSS;
 import com.smart.framework.file.core.parameter.FileStorageDeleteParameter;
 import com.smart.framework.file.core.parameter.FileStorageGetParameter;
 import com.smart.framework.file.core.parameter.FileStorageSaveParameter;
+import com.smart.framework.file.core.pojo.dto.FileStorageSaveResult;
 import com.smart.framework.file.core.service.FileStorageService;
 import lombok.SneakyThrows;
 import org.springframework.lang.NonNull;
@@ -22,10 +23,10 @@ public interface AliyunOssService extends FileStorageService {
 
     /**
      * 获取oss客户端
-     * @param storageProperties 配置信息
+     * @param id 配置信息
      * @return OSS客户端
      */
-    OSS getOssClient(String storageProperties);
+    OSS getOssClient(Long id);
 
     /**
      * 保存文件
@@ -36,7 +37,7 @@ public interface AliyunOssService extends FileStorageService {
      */
     @SneakyThrows(IOException.class)
     @NonNull
-    default String save(FileStorageSaveParameter parameter, String bucketName, @NonNull File file) {
+    default FileStorageSaveResult save(FileStorageSaveParameter parameter, String bucketName, @NonNull File file) {
         return this.save(parameter, bucketName, Files.newInputStream(file.toPath()));
     }
 
@@ -48,7 +49,7 @@ public interface AliyunOssService extends FileStorageService {
      * @return 文件ID
      */
     @NonNull
-    String save(FileStorageSaveParameter parameter, String bucketName, @NonNull InputStream inputStream);
+    FileStorageSaveResult save(FileStorageSaveParameter parameter, String bucketName, @NonNull InputStream inputStream);
 
     /**
      * 删除文件
