@@ -3,6 +3,7 @@ package com.smart.module.system.service.tenant.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
+import com.smart.framework.auth.common.utils.AuthUtils;
 import com.smart.framework.commons.core.exception.BusinessException;
 import com.smart.framework.commons.core.utils.SmartIdGenerator;
 import com.smart.framework.crud.plus.metadata.SmartTableInfo;
@@ -13,6 +14,7 @@ import com.smart.module.system.inject.SysTenantInject;
 import com.smart.module.system.mapper.tenant.SysTenantMapper;
 import com.smart.module.system.mapper.tenant.SysTenantUserMapper;
 import com.smart.module.system.model.SysRolePO;
+import com.smart.module.system.model.SysUserAccountPO;
 import com.smart.module.system.model.SysUserPO;
 import com.smart.module.system.model.SysUserRolePO;
 import com.smart.module.system.model.tenant.SysTenantPO;
@@ -127,9 +129,16 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean removeBindUser(SysTenantRemoveBindUserDTO parameter) {
+        Long tenantId = Objects.requireNonNullElseGet(parameter.getTenantId(), AuthUtils::getNonNullCurrentTenantId);
+        // 删除用户账户信息
+        this.sysUserAccountService.remove(
+                new LambdaQueryWrapper<>(SysUserAccountPO.class)
+                      .in(SysUserAccountPO::getUserId, parameter.getUserIdList())
+                        .eq(SysUserAccountPO::getTenantId, tenantId)
+        );
         return this.sysTenantUserService.remove(
                 new LambdaQueryWrapper<>(SysTenantUserPO.class)
-                        .eq(SysTenantUserPO::getTenantId, parameter.getTenantId())
+                        .eq(SysTenantUserPO::getTenantId, tenantId)
                         .in(SysTenantUserPO::getUserId, parameter.getUserIdList())
         );
     }
