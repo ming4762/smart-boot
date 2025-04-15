@@ -31,6 +31,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.io.*;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -88,6 +89,26 @@ public class FileStorageQiniuServiceImpl implements QiniuService {
                     .bucketManager(new BucketManager(auth, configuration))
                     .build();
         });
+    }
+
+    /**
+     * 根据ID销毁存储器
+     *
+     * @param fileStorageId 存储器ID
+     */
+    @Override
+    public void destroy(Long fileStorageId) {
+        QiniuClientCache qiniuClientCache = CLIENT_CACHE.get(fileStorageId);
+        if (qiniuClientCache == null) {
+            return;
+        }
+        CLIENT_CACHE.remove(fileStorageId);
+    }
+
+
+    @Override
+    public void destroy() throws Exception {
+        this.destroy(new ArrayList<>(CLIENT_CACHE.keySet()));
     }
 
     /**

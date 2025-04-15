@@ -2,7 +2,10 @@ package com.smart.framework.file.extensions.disk.service;
 
 import com.smart.framework.commons.core.utils.JsonUtils;
 import com.smart.framework.file.core.common.FileStorageServiceRegisterName;
-import com.smart.framework.file.core.parameter.*;
+import com.smart.framework.file.core.parameter.FileStorageDeleteParameter;
+import com.smart.framework.file.core.parameter.FileStorageGetParameter;
+import com.smart.framework.file.core.parameter.FileStorageInitProperties;
+import com.smart.framework.file.core.parameter.FileStorageSaveParameter;
 import com.smart.framework.file.core.pojo.bo.DiskFilePathBO;
 import com.smart.framework.file.core.pojo.dto.FileStorageSaveResult;
 import com.smart.framework.file.core.properties.SmartFileStorageDiskProperties;
@@ -20,6 +23,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -139,6 +143,22 @@ public class FileStorageDiskServiceImpl implements FileStorageService {
         BeanUtils.copyProperties(initProperties, fileStorageDiskProperties);
         fileStorageDiskProperties.setDiskProperties(diskProperties);
         PROPERTIES_MAP.put(initProperties.getFileStorageId(), fileStorageDiskProperties);
+    }
+
+    /**
+     * 根据ID销毁存储器
+     *
+     * @param fileStorageId 存储器ID
+     */
+    @Override
+    public void destroy(Long fileStorageId) {
+        PROPERTIES_MAP.remove(fileStorageId);
+    }
+
+
+    @Override
+    public void destroy() throws Exception {
+        this.destroy(new ArrayList<>(PROPERTIES_MAP.keySet()));
     }
 
     @Getter

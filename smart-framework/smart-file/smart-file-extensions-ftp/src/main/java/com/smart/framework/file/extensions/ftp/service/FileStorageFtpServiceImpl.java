@@ -20,6 +20,7 @@ import org.springframework.lang.NonNull;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -133,7 +134,7 @@ public class FileStorageFtpServiceImpl implements FileStorageService {
      */
     @Override
     @SneakyThrows(Exception.class)
-    public void download(FileStorageGetParameter parameter, OutputStream outputStream) {
+    public void download(@NonNull FileStorageGetParameter parameter, OutputStream outputStream) {
         SmartFileStorageFtpProperties properties = this.getProperties(parameter.getFileStorageId());
         FTPClient ftpClient = this.objectPool.borrowObject(properties);
         try {
@@ -168,5 +169,26 @@ public class FileStorageFtpServiceImpl implements FileStorageService {
     @Override
     public void init(FileStorageInitProperties initProperties) {
         PROPERTIES_MAP.put(initProperties.getFileStorageId(), initProperties);
+    }
+
+    /**
+     * 根据ID销毁存储器
+     *
+     * @param fileStorageId 存储器ID
+     */
+    @Override
+    public void destroy(Long fileStorageId) {
+        FileStorageInitProperties initProperties = PROPERTIES_MAP.get(fileStorageId);
+        if (initProperties == null) {
+            return;
+        }
+        this.objectPool.clear(this.getProperties(fileStorageId));
+        PROPERTIES_MAP.remove(fileStorageId);
+    }
+
+
+    @Override
+    public void destroy() throws Exception {
+        this.destroy(new ArrayList<>(PROPERTIES_MAP.keySet()));
     }
 }

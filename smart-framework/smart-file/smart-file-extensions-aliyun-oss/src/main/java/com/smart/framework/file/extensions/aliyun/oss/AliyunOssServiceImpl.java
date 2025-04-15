@@ -21,7 +21,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.DisposableBean;
 import org.springframework.lang.NonNull;
 
 import java.io.InputStream;
@@ -29,6 +28,7 @@ import java.net.URL;
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -39,7 +39,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * 2023/3/4
  */
 @Slf4j
-public class AliyunOssServiceImpl implements AliyunOssService, DisposableBean {
+public class AliyunOssServiceImpl implements AliyunOssService {
 
     private static final Map<Long, OssClientCache> OSS_CLIENT_CACHE_MAP = new ConcurrentHashMap<>();
 
@@ -245,16 +245,32 @@ public class AliyunOssServiceImpl implements AliyunOssService, DisposableBean {
     }
 
     /**
+     * 根据ID销毁存储器
+     *
+     * @param fileStorageId 存储器ID
+     */
+    @Override
+    public void destroy(Long fileStorageId) {
+        OssClientCache ossClientCache = OSS_CLIENT_CACHE_MAP.get(fileStorageId);
+        if (ossClientCache == null) {
+            return;
+        }
+        OSS ossClient = ossClientCache.getOssClient();
+        if (ossClient != null) {
+            ossClient.shutdown();
+        }
+        OSS ossEncryptionClient = ossClientCache.getOssEncryptionClient();
+        if (ossEncryptionClient != null) {
+            ossEncryptionClient.shutdown();
+        }
+        OSS_CLIENT_CACHE_MAP.remove(fileStorageId);
+    }
+
+    /**
      * 对象销毁时销毁 ossclient
      */
     @Override
     public void destroy() {
-        OSS_CLIENT_CACHE_MAP.forEach((key, value) -> {
-            try {
-                value.getOssClient().shutdown();
-            } catch (Exception e) {
-                log.error(e.getMessage(), e);
-            }
-        });
+        this.destroy(new ArrayList<>(OSS_CLIENT_CACHE_MAP.keySet()));
     }
 }

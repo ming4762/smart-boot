@@ -8,6 +8,10 @@ import com.smart.framework.commons.core.utils.auth.RsaUtils;
 import com.smart.framework.crud.query.PageSortQuery;
 import com.smart.framework.crud.service.BaseServiceImpl;
 import com.smart.framework.crud.utils.CrudUtils;
+import com.smart.framework.file.core.exception.SmartFileException;
+import com.smart.framework.file.core.parameter.FileStorageInitProperties;
+import com.smart.framework.file.core.service.FileStorageService;
+import com.smart.module.api.file.constants.FileStorageTypeEnum;
 import com.smart.module.file.mapper.SmartFileStorageMapper;
 import com.smart.module.file.model.SmartFileStoragePO;
 import com.smart.module.file.service.SmartFileStorageService;
@@ -15,11 +19,16 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 import java.security.KeyPair;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 /**
@@ -29,6 +38,20 @@ import java.util.stream.Collectors;
 */
 @Service
 public class SmartFileStorageServiceImpl extends BaseServiceImpl<SmartFileStorageMapper, SmartFileStoragePO> implements SmartFileStorageService {
+
+    private static final ConcurrentHashMap<FileStorageLockObject, ReentrantLock> LOCKS = new ConcurrentHashMap<>();
+
+    private static final String DEFAULT_FILE_STORAGE_CODE = "default_%$_123";
+
+    private static final Map<Long, FileStorageService> FILE_STORAGE_SERVICE_ID_MAP = new ConcurrentHashMap<>();
+    private static final Map<String, FileStorageService> FILE_STORAGE_SERVICE_CODE_MAP = new ConcurrentHashMap<>();
+
+    private final Map<FileStorageTypeEnum, FileStorageService> actualFileServiceMap;
+
+    public SmartFileStorageServiceImpl(List<FileStorageService> fileStorageServiceList) {
+        actualFileServiceMap = fileStorageServiceList.stream()
+                .collect(Collectors.toMap(item -> item.getRegisterName().getStorageType(), item -> item));
+    }
 
     /**
      * 查询函数
@@ -97,6 +120,21 @@ public class SmartFileStorageServiceImpl extends BaseServiceImpl<SmartFileStorag
         );
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean saveOrUpdateBatch(Collection<SmartFileStoragePO> entityList) {
+        if (CollectionUtils.isEmpty(entityList)) {
+            return false;
+        }
+        boolean result = super.saveOrUpdateBatch(entityList);
+        // 重置存储器
+        List<Long> fileStorageIdList = entityList.stream()
+                .map(SmartFileStoragePO::getId)
+                .toList();
+        this.destroyFileStorageById(fileStorageIdList);
+        return result;
+    }
+
     /**
      * 设置为加密存储器
      *
@@ -109,14 +147,15 @@ public class SmartFileStorageServiceImpl extends BaseServiceImpl<SmartFileStorag
         if (CollectionUtils.isEmpty(fileStorageIdList)) {
             return false;
         }
-        // 获取加密的文件
-        Map<Long, Boolean> encryptedMap = this.lambdaQuery()
-                .select(SmartFileStoragePO::getId, SmartFileStoragePO::getEncryptedYn)
+        // 获取加密的存储器
+        List<SmartFileStoragePO> fileStorageList = this.lambdaQuery()
+                .select(SmartFileStoragePO::getId, SmartFileStoragePO::getEncryptedYn, SmartFileStoragePO::getStorageType, SmartFileStoragePO::getStorageCode)
                 .in(SmartFileStoragePO::getId, fileStorageIdList)
                 .list().stream()
-                .collect(Collectors.toMap(SmartFileStoragePO::getId, SmartFileStoragePO::getEncryptedYn));
-        List<Long> noEncryptedIdList = fileStorageIdList.stream()
-                .filter(item -> !encryptedMap.getOrDefault(item, true))
+                .filter(item -> !Boolean.TRUE.equals(item.getEncryptedYn()))
+                .toList();
+        List<Long> noEncryptedIdList = fileStorageList.stream()
+                .map(SmartFileStoragePO::getId)
                 .toList();
         if (CollectionUtils.isEmpty(noEncryptedIdList)) {
             return true;
@@ -131,6 +170,118 @@ public class SmartFileStorageServiceImpl extends BaseServiceImpl<SmartFileStorag
                             .eq(SmartFileStoragePO::getId, item)
             );
         });
+        // 重置存储器
+        this.destroyFileStorage(fileStorageList);
         return true;
+    }
+
+    /**
+     * 获取文件存储服务
+     * 优先通过ID获取,如果ID不存在,则通过code获取
+     * 如果都不存在,则获取默认的文件存储器
+     *
+     * @param fileStorageId   文件存储ID
+     * @param fileStorageCode 文件存储code
+     * @return 文件存储服务
+     */
+    @Override
+    public FileStorageService getFileStorageService(Long fileStorageId, String fileStorageCode) {
+        // 根据ID或code获取
+        if (fileStorageId != null && FILE_STORAGE_SERVICE_ID_MAP.containsKey(fileStorageId)) {
+            return FILE_STORAGE_SERVICE_ID_MAP.get(fileStorageId);
+        }
+        if (StringUtils.hasText(fileStorageCode) && FILE_STORAGE_SERVICE_CODE_MAP.containsKey(fileStorageCode)) {
+            return FILE_STORAGE_SERVICE_CODE_MAP.get(fileStorageCode);
+        }
+        if (FILE_STORAGE_SERVICE_CODE_MAP.containsKey(DEFAULT_FILE_STORAGE_CODE)) {
+            return FILE_STORAGE_SERVICE_CODE_MAP.get(DEFAULT_FILE_STORAGE_CODE);
+        }
+        // 加锁,防止重复初始化
+        ReentrantLock lock = LOCKS.computeIfAbsent(new FileStorageLockObject(fileStorageId, fileStorageCode), key -> new ReentrantLock());
+        lock.lock();
+
+        try {
+            // 获取文件存储器
+            SmartFileStoragePO smartFileStorage;
+            if (fileStorageId != null) {
+                smartFileStorage = this.getById(fileStorageId);
+            } else if (StringUtils.hasText(fileStorageCode)) {
+                smartFileStorage = this.getByCode(fileStorageCode);
+            } else {
+                smartFileStorage = this.getDefault();
+            }
+            if (smartFileStorage == null) {
+                throw new SmartFileException(String.format("获取文件存储器失败，请检查是否存在对应的文件存储器，存储器编码：%s", fileStorageCode));
+            }
+            FileStorageService fileStorageService = this.actualFileServiceMap.get(smartFileStorage.getStorageType());
+            if (fileStorageService == null) {
+                throw new SmartFileException(String.format("获取文件存储器失败，未找到对应的文件执行器，执行器名称：%s", smartFileStorage.getStorageType().name()));
+            }
+            fileStorageService.init(
+                    FileStorageInitProperties.builder()
+                            .properties(smartFileStorage.getStorageConfig())
+                            .encryptedYn(Boolean.TRUE.equals(smartFileStorage.getEncryptedYn()))
+                            .privateKey(smartFileStorage.getPrivateKey())
+                            .publicKey(smartFileStorage.getPublicKey())
+                            .fileStorageId(smartFileStorage.getId())
+                            .build()
+            );
+            if (fileStorageId != null) {
+                FILE_STORAGE_SERVICE_ID_MAP.put(fileStorageId, fileStorageService);
+            } else if (StringUtils.hasText(fileStorageCode)) {
+                FILE_STORAGE_SERVICE_CODE_MAP.put(fileStorageCode, fileStorageService);
+            } else {
+                FILE_STORAGE_SERVICE_CODE_MAP.put(DEFAULT_FILE_STORAGE_CODE, fileStorageService);
+            }
+            return fileStorageService;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    /**
+     * 重置存储器
+     * @param fileStorageIdList 需要重置的存储器ID
+     */
+    private synchronized void destroyFileStorageById(List<Long> fileStorageIdList) {
+        Set<Long> needDestroyIdList = fileStorageIdList.stream()
+                .filter(FILE_STORAGE_SERVICE_ID_MAP::containsKey)
+                .collect(Collectors.toSet());
+        if (CollectionUtils.isEmpty(needDestroyIdList)) {
+            return;
+        }
+        this.destroyFileStorage(
+                this.lambdaQuery()
+                        .select(SmartFileStoragePO::getId, SmartFileStoragePO::getStorageType, SmartFileStoragePO::getStorageCode)
+                        .in(SmartFileStoragePO::getId, needDestroyIdList)
+                        .list()
+        );
+    }
+
+    /**
+     * 重置存储器
+     * @param fileStorageList 需要重置的存储器列表
+     */
+    private synchronized void destroyFileStorage(List<SmartFileStoragePO> fileStorageList) {
+        if (CollectionUtils.isEmpty(fileStorageList)) {
+            return;
+        }
+        Map<FileStorageTypeEnum, List<SmartFileStoragePO>> typeIdMap = fileStorageList.stream()
+                .collect(
+                        Collectors.groupingBy(
+                                SmartFileStoragePO::getStorageType
+                        )
+                );
+        typeIdMap.forEach((type, list) -> {
+            FileStorageService fileStorageService = this.actualFileServiceMap.get(type);
+            list.forEach(item -> {
+                FILE_STORAGE_SERVICE_ID_MAP.remove(item.getId());
+                FILE_STORAGE_SERVICE_CODE_MAP.remove(item.getStorageCode());
+                fileStorageService.destroy(item.getId());
+            });
+        });
+    }
+
+    private record FileStorageLockObject(Long fileStorageId, String fileStorageCode) {
     }
 }

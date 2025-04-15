@@ -3,25 +3,19 @@ package com.smart.module.file.service.impl;
 import com.smart.framework.file.core.exception.SmartFileException;
 import com.smart.framework.file.core.parameter.FileStorageDeleteParameter;
 import com.smart.framework.file.core.parameter.FileStorageGetParameter;
-import com.smart.framework.file.core.parameter.FileStorageInitProperties;
 import com.smart.framework.file.core.parameter.FileStorageSaveParameter;
 import com.smart.framework.file.core.pojo.dto.FileStorageSaveResult;
 import com.smart.framework.file.core.service.FileService;
 import com.smart.framework.file.core.service.FileStorageService;
 import com.smart.module.api.file.bo.FileDownloadResult;
 import com.smart.module.api.file.bo.FileHandlerResult;
-import com.smart.module.api.file.constants.FileStorageTypeEnum;
 import com.smart.module.api.file.dto.FileSaveParameter;
 import com.smart.module.file.model.SmartFilePO;
-import com.smart.module.file.model.SmartFileStoragePO;
 import com.smart.module.file.pojo.bo.SysFileBO;
 import com.smart.module.file.service.SmartFileService;
 import com.smart.module.file.service.SmartFileStorageService;
 import lombok.SneakyThrows;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.lang.NonNull;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -33,8 +27,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.time.ZonedDateTime;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -42,12 +37,7 @@ import java.util.stream.Collectors;
  * @author zhongming4762
  * 2023/2/16
  */
-public class DefaultFileServiceImpl implements FileService, ApplicationContextAware {
-
-    private static final Map<Long, FileStorageService> FILE_STORAGE_SERVICE_ID_MAP = new ConcurrentHashMap<>();
-    private static final Map<String, FileStorageService> FILE_STORAGE_SERVICE_CODE_MAP = new ConcurrentHashMap<>();
-
-    private Map<FileStorageTypeEnum, FileStorageService> actualFileServiceMap;
+public class DefaultFileServiceImpl implements FileService {
 
     private final SmartFileStorageService smartFileStorageService;
 
@@ -268,52 +258,6 @@ public class DefaultFileServiceImpl implements FileService, ApplicationContextAw
      * @return 文件存储服务
      */
     protected FileStorageService getFileStorageService(Long fileStorageId, String fileStorageCode) {
-        // 根据ID或code获取
-        if (fileStorageId != null && FILE_STORAGE_SERVICE_ID_MAP.containsKey(fileStorageId)) {
-            return FILE_STORAGE_SERVICE_ID_MAP.get(fileStorageId);
-        }
-        if (StringUtils.hasText(fileStorageCode) && FILE_STORAGE_SERVICE_CODE_MAP.containsKey(fileStorageCode)) {
-            return FILE_STORAGE_SERVICE_CODE_MAP.get(fileStorageCode);
-        }
-        // 获取文件存储器
-        SmartFileStoragePO smartFileStorage;
-        if (fileStorageId != null) {
-            smartFileStorage = this.smartFileStorageService.getById(fileStorageId);
-        } else if (StringUtils.hasText(fileStorageCode)) {
-            smartFileStorage = this.smartFileStorageService.getByCode(fileStorageCode);
-        } else {
-            smartFileStorage = this.smartFileStorageService.getDefault();
-        }
-        if (smartFileStorage == null) {
-            throw new SmartFileException(String.format("获取文件存储器失败，请检查是否存在对应的文件存储器，存储器编码：%s", fileStorageCode));
-        }
-        FileStorageService fileStorageService = this.actualFileServiceMap.get(smartFileStorage.getStorageType());
-        if (fileStorageService == null) {
-            throw new SmartFileException(String.format("获取文件存储器失败，未找到对应的文件执行器，执行器名称：%s", smartFileStorage.getStorageType().name()));
-        }
-        fileStorageService.init(
-                FileStorageInitProperties.builder()
-                        .properties(smartFileStorage.getStorageConfig())
-                        .encryptedYn(Boolean.TRUE.equals(smartFileStorage.getEncryptedYn()))
-                        .privateKey(smartFileStorage.getPrivateKey())
-                        .publicKey(smartFileStorage.getPublicKey())
-                        .fileStorageId(smartFileStorage.getId())
-                        .build()
-        );
-        if (fileStorageId != null) {
-            FILE_STORAGE_SERVICE_ID_MAP.put(fileStorageId, fileStorageService);
-        }
-        if (StringUtils.hasText(fileStorageCode)) {
-            FILE_STORAGE_SERVICE_CODE_MAP.put(fileStorageCode, fileStorageService);
-        }
-        return fileStorageService;
+        return this.smartFileStorageService.getFileStorageService(fileStorageId, fileStorageCode);
     }
-
-    @Override
-    public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
-        this.actualFileServiceMap = applicationContext.getBeansOfType(FileStorageService.class)
-                .values().stream()
-                .collect(Collectors.toMap(item -> item.getRegisterName().getStorageType(), item -> item));
-    }
-
 }

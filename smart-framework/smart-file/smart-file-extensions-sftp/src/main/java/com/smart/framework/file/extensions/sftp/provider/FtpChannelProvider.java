@@ -21,6 +21,7 @@ import org.springframework.beans.factory.InitializingBean;
 public class FtpChannelProvider implements JschChannelProvider<ChannelSftp>, InitializingBean, DisposableBean {
 
     private GenericKeyedObjectPool<String, ChannelSftp> objectPool;
+    private GenericKeyedObjectPool<String, Session> sessionPool;
 
 
     @Override
@@ -47,9 +48,9 @@ public class FtpChannelProvider implements JschChannelProvider<ChannelSftp>, Ini
     public void afterPropertiesSet() {
         // 创建session连接池
         JschSessionKeyedPooledObjectFactory sessionKeyedPooledObjectFactory = new JschSessionKeyedPooledObjectFactory();
-        GenericKeyedObjectPool<String, Session> sessionGenericKeyedObjectPool = new GenericKeyedObjectPool<>(sessionKeyedPooledObjectFactory);
+        this.sessionPool = new GenericKeyedObjectPool<>(sessionKeyedPooledObjectFactory);
         // 创建channel连接池
-        ChannelKeyedPooledObjectFactory<ChannelSftp> channelKeyedPooledObjectFactory = new ChannelKeyedPooledObjectFactory<>(sessionGenericKeyedObjectPool, ChannelTypeEnum.SFTP);
+        ChannelKeyedPooledObjectFactory<ChannelSftp> channelKeyedPooledObjectFactory = new ChannelKeyedPooledObjectFactory<>(this.sessionPool, ChannelTypeEnum.SFTP);
         this.objectPool = new GenericKeyedObjectPool<>(channelKeyedPooledObjectFactory);
     }
 
@@ -59,5 +60,16 @@ public class FtpChannelProvider implements JschChannelProvider<ChannelSftp>, Ini
     @Override
     public void destroy() {
         this.objectPool.close();
+    }
+
+    /**
+     * 根据key销毁连接池
+     *
+     * @param key 连接池key
+     */
+    @Override
+    public void destroyByKey(String key) {
+        this.objectPool.clear(key);
+        this.sessionPool.clear(key);
     }
 }

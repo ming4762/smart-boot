@@ -23,4 +23,10 @@ public interface JschChannelProvider<T extends Channel> {
      * @param channel 通道
      */
     void returnChannel(String key, T channel);
+
+    /**
+     * 根据key销毁连接池
+     * @param key 连接池key
+     */
+    void destroyByKey(String key);
 }

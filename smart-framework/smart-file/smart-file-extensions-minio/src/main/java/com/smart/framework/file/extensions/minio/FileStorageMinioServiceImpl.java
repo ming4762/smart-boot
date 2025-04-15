@@ -26,6 +26,7 @@ import java.nio.file.Files;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -72,6 +73,28 @@ public class FileStorageMinioServiceImpl implements MinioService {
                     .minioClient(client)
                     .build();
         });
+    }
+
+    /**
+     * 根据ID销毁存储器
+     *
+     * @param fileStorageId 存储器ID
+     */
+    @SneakyThrows(Exception.class)
+    @Override
+    public void destroy(Long fileStorageId) {
+        MinioClientCache minioClientCache = MINIO_CLIENT_MAP.get(fileStorageId);
+        if (minioClientCache == null) {
+            return;
+        }
+        minioClientCache.getMinioClient().close();
+        MINIO_CLIENT_MAP.remove(fileStorageId);
+    }
+
+
+    @Override
+    public void destroy() throws Exception {
+        this.destroy(new ArrayList<>(MINIO_CLIENT_MAP.keySet()));
     }
 
     /**

@@ -14,6 +14,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.lang.NonNull;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
@@ -26,6 +28,7 @@ import software.amazon.awssdk.services.s3.model.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -35,7 +38,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * 2024/4/24 20:36
  * @since 3.0.0
  */
-public class DefaultAmazonS3ServiceImpl implements AmazonS3Service{
+@Slf4j
+public class DefaultAmazonS3ServiceImpl implements AmazonS3Service, DisposableBean {
 
     private static final Map<Long, ClientCache> CLIENT_CACHE = new ConcurrentHashMap<>();
 
@@ -79,6 +83,27 @@ public class DefaultAmazonS3ServiceImpl implements AmazonS3Service{
                     .client(s3Client)
                     .build();
         });
+    }
+
+
+    @Override
+    public void destroy() {
+        this.destroy(new ArrayList<>(CLIENT_CACHE.keySet()));
+    }
+
+    /**
+     * 根据ID销毁存储器
+     *
+     * @param fileStorageId 存储器ID
+     */
+    @Override
+    public void destroy(Long fileStorageId) {
+        ClientCache clientCache = CLIENT_CACHE.get(fileStorageId);
+        if (clientCache == null) {
+            return;
+        }
+        clientCache.getClient().close();
+        CLIENT_CACHE.remove(fileStorageId);
     }
 
     /**

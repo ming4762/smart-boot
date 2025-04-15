@@ -8,18 +8,25 @@ import com.smart.framework.file.core.parameter.FileStorageSaveParameter;
 import com.smart.framework.file.core.pojo.dto.FileStorageSaveResult;
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.lang.NonNull;
+import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 
 /**
  * 文件存储器服务
  * @author zhongming4762
  * 2023/2/16
  */
-public interface FileStorageService {
+public interface FileStorageService extends DisposableBean {
+
+    Logger LOGGER = LoggerFactory.getLogger(FileStorageService.class);
 
     /**
      * 获取注册名字
@@ -72,4 +79,27 @@ public interface FileStorageService {
      * @param initProperties 初始化参数
      */
     void init(FileStorageInitProperties initProperties);
+
+    /**
+     * 根据ID销毁存储器
+     * @param fileStorageIdList 存储器列表
+     */
+    default void destroy(List<Long> fileStorageIdList) {
+        if (CollectionUtils.isEmpty(fileStorageIdList)) {
+            return;
+        }
+        for (Long id : fileStorageIdList) {
+            try {
+                this.destroy(id);
+            } catch (Exception e) {
+                LOGGER.error("destroy file storage error, id:{}", id, e);
+            }
+        }
+    }
+
+    /**
+     * 根据ID销毁存储器
+     * @param fileStorageId 存储器ID
+     */
+    void destroy(Long fileStorageId);
 }

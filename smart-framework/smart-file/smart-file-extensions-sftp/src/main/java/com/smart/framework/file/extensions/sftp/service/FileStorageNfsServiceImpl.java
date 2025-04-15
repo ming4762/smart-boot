@@ -22,6 +22,7 @@ import org.springframework.lang.NonNull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -50,6 +51,27 @@ public class FileStorageNfsServiceImpl implements FileStorageService {
     @Override
     public void init(FileStorageInitProperties initProperties) {
         PROPERTIES_MAP.put(initProperties.getFileStorageId(), initProperties);
+    }
+
+
+    @Override
+    public void destroy() {
+        this.destroy(new ArrayList<>(PROPERTIES_MAP.keySet()));
+    }
+
+    /**
+     * 根据ID销毁存储器
+     *
+     * @param fileStorageId 存储器ID
+     */
+    @Override
+    public void destroy(Long fileStorageId) {
+        FileStorageInitProperties initProperties = PROPERTIES_MAP.get(fileStorageId);
+        if (initProperties == null) {
+            return;
+        }
+        this.channelProvider.destroyByKey(initProperties.getProperties());
+        PROPERTIES_MAP.remove(fileStorageId);
     }
 
     @Override
