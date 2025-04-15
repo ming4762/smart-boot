@@ -112,10 +112,11 @@ public interface SysUserService extends BaseService<SysUserPO> {
 
     /**
      * 添加/更新用户(带有部门)
+     * @param tenantId 租户ID
      * @param parameter 参数
      * @return 是否保存成功
      */
-    boolean saveUpdateWithDept(@Valid UserSaveUpdateWithDeptDTO parameter);
+    boolean saveUpdateWithDept(Long tenantId, UserSaveUpdateWithDeptDTO parameter);
 
     /**
      * 通过手机号查询用户
@@ -165,4 +166,12 @@ public interface SysUserService extends BaseService<SysUserPO> {
      * @return 用户信息
      */
     List<SysUserPO> listUserByRoleTenant(@Valid ListUserByRoleTenantDTO parameter);
+
+    /**
+     * 保存用户信息，同时创建账号信息
+     * @param tenantId
+     * @param parameter 参数
+     * @return 是否保存成功
+     */
+    boolean saveAndCreateAccount(Long tenantId, UserSaveUpdateWithDeptDTO parameter);
 }

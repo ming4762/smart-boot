@@ -682,13 +682,13 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
 
     /**
      * 添加/更新用户(带有部门)
-     *
+     * @param tenantId 租户ID,如果为空，则使用当前租户ID
      * @param parameter 参数
      * @return 是否保存成功
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean saveUpdateWithDept(UserSaveUpdateWithDeptDTO parameter) {
+    public boolean saveUpdateWithDept(Long tenantId, UserSaveUpdateWithDeptDTO parameter) {
         // 更新用户
         var userModel = new SysUserPO();
         BeanUtils.copyProperties(parameter, userModel);
@@ -720,7 +720,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
             userModel.setUserId(userId);
             SysTenantUserPO tenantUser = new SysTenantUserPO();
             tenantUser.setUserId(userId);
-            tenantUser.setTenantId(AuthUtils.getNonNullCurrentTenantId());
+            tenantUser.setTenantId(Objects.requireNonNullElseGet(tenantId, AuthUtils::getNonNullCurrentTenantId));
             tenantUser.setDefaultYn(Boolean.FALSE);
             this.sysTenantUserService.save(tenantUser);
             return this.save(userModel);
@@ -848,5 +848,26 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
                         .in(SysTenantUserPO::getUserId, parameter.getIdList())
                         .in(SysTenantUserPO::getTenantId, tenantIdList)
         );
+    }
+
+    /**
+     * 保存用户信息，同时创建账号信息
+     *
+     * @param tenantId 租户ID,如果未指明,则使用当前登录用户租户
+     * @param parameter 参数
+     * @return 是否保存成功
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean saveAndCreateAccount(Long tenantId, UserSaveUpdateWithDeptDTO parameter) {
+        if (tenantId == null) {
+            tenantId = AuthUtils.getNonNullCurrentTenantId();
+        }
+        long userId = SmartIdGenerator.nextId();
+        parameter.setUserId(userId);
+        // 未支持租户,保存用户信息
+        this.saveUpdateWithDept(tenantId, parameter);
+        this.sysUserAccountService.createAccount(tenantId, List.of(userId));
+        return true;
     }
 }

@@ -85,7 +85,15 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
     @Log(value = "添加/更新用户(带部门信息)", type = LogOperationTypeEnum.UPDATE)
     @PreAuthorize("hasPermission('sys:user', 'save') or hasPermission('sys:user', 'update')")
     public Result<Boolean> saveUpdateWithDept(@RequestBody @Valid UserSaveUpdateWithDeptDTO parameter) {
-        return Result.success(this.service.saveUpdateWithDept(parameter));
+        return Result.success(this.service.saveUpdateWithDept(null, parameter));
+    }
+
+    @PostMapping("saveAndCreateAccount")
+    @Operation(summary = "保存用户并创建账户")
+    @Log(value = "保存用户并创建账户", type = LogOperationTypeEnum.ADD)
+    @PreAuthorize("hasPermission('sys:user', 'save') and hasPermission('sys:account', 'add')")
+    public Result<Boolean> saveAndCreateAccount(@RequestBody @Valid UserSaveUpdateWithDeptDTO parameter) {
+        return Result.success(this.service.saveAndCreateAccount(null, parameter));
     }
 
     @PostMapping("getById")
