@@ -1,6 +1,7 @@
 package com.smart.module.system.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.smart.framework.auth.common.utils.AuthUtils;
 import com.smart.framework.commons.core.dto.auth.UserAccountData;
 import com.smart.framework.crud.service.BaseService;
 import com.smart.module.api.system.dto.QueryUserAccountDTO;
@@ -148,17 +149,28 @@ public interface SysUserService extends BaseService<SysUserPO> {
 
     /**
      * 通过ID获取用户详情
+     * @param tenantId 租户ID
      * @param userId 用户ID
      * @return 用户详情
      */
-    SysUserListVO getDetailById(Long userId);
+    SysUserListVO getDetailById(@NonNull Long tenantId, Long userId);
+
+    /**
+     * 通过ID获取用户详情
+     * @param userId 用户ID
+     * @return 用户详情
+     */
+    default SysUserListVO getDetailById(Long userId) {
+        return this.getDetailById(AuthUtils.getNonNullCurrentTenantId(), userId);
+    }
 
     /**
      * 通过ID获取用户详情，包含部门ID
+     * @param tenantId 租户ID,如果未指定在查询当前租户
      * @param userId 用户ID
      * @return 用户详情
      */
-    SysUserWithDeptDTO getUserByIdWithDept(Long userId);
+    SysUserWithDeptDTO getUserByIdWithDept(Long tenantId, Long userId);
 
     /**
      * 通过角色ID&租户ID查询用户信息
@@ -174,4 +186,12 @@ public interface SysUserService extends BaseService<SysUserPO> {
      * @return 是否保存成功
      */
     boolean saveAndCreateAccount(Long tenantId, UserSaveUpdateWithDeptDTO parameter);
+
+    /**
+     * 指定租户删除用户
+     * @param tenantId 租户ID
+     * @param userIdList 用户ID列表
+     * @return 是否删除成功
+     */
+    boolean removeByIdsWithTenant(Long tenantId, List<Long> userIdList);
 }

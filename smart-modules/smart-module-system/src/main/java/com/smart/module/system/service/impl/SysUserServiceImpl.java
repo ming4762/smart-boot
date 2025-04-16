@@ -21,6 +21,7 @@ import com.smart.framework.commons.core.utils.SmartIdGenerator;
 import com.smart.framework.crud.constants.CrudCommonEnum;
 import com.smart.framework.crud.constants.ModelPropertyEnum;
 import com.smart.framework.crud.parameter.SetUseYnParameter;
+import com.smart.framework.crud.plus.tenant.SmartTenantControl;
 import com.smart.framework.crud.query.PageSortQuery;
 import com.smart.framework.crud.service.BaseServiceImpl;
 import com.smart.framework.crud.service.UserSetterService;
@@ -50,6 +51,7 @@ import com.smart.module.system.service.tenant.SysTenantUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.mapping.SqlCommandType;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.NoSuchMessageException;
@@ -127,7 +129,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         }
         if (Boolean.TRUE.equals(parameter.getParameter().get(SystemConstantEnum.LIST_USER_WITH_ACCOUNT.name()))) {
             // 查询账户信息
-            this.queryUserAccount(voList);
+            this.queryUserAccount(AuthUtils.getNonNullCurrentTenantId(), voList);
         }
         return voList;
     }
@@ -139,7 +141,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
      * @return 用户详情
      */
     @Override
-    public SysUserListVO getDetailById(Long userId) {
+    public SysUserListVO getDetailById(@NonNull Long tenantId, Long userId) {
         SysUserPO user = super.getById(userId);
         if (user == null) {
             return null;
@@ -148,10 +150,8 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         BeanUtils.copyProperties(user, vo);
 
         List<SysUserListVO> voList = List.of(vo);
-        // 查询创建人和审批人
-        this.userSetterService.setCreateUpdateUser(voList);
         // 查询账户信息
-        this.queryUserAccount(voList);
+        this.queryUserAccount(tenantId, voList);
         return voList.getFirst();
     }
 
@@ -162,7 +162,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
      * @return 用户详情
      */
     @Override
-    public SysUserWithDeptDTO getUserByIdWithDept(Long userId) {
+    public SysUserWithDeptDTO getUserByIdWithDept(Long tenantId, Long userId) {
         SysUserPO user = this.getById(userId);
         if (user == null) {
             return null;
@@ -170,12 +170,15 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         SysUserWithDeptDTO vo = new SysUserWithDeptDTO();
         BeanUtils.copyProperties(user, vo);
         // 查询部门信息
-        Set<Long> deptIds = this.sysUserDeptService.list(
-                        new QueryWrapper<SysUserDeptPO>().lambda()
-                                .select(SysUserDeptPO::getDeptId, SysUserDeptPO::getUserId)
-                                .eq(SysUserDeptPO::getUserId, userId)
-                                .eq(SysUserDeptPO::getIdent, UserDeptIdentEnum.USER_DEPT)
-                ).stream()
+        LambdaQueryWrapper<SysUserDeptPO> queryWrapper = Wrappers.lambdaQuery(SysUserDeptPO.class)
+                .select(SysUserDeptPO::getDeptId, SysUserDeptPO::getUserId)
+                .eq(SysUserDeptPO::getUserId, userId)
+                .eq(SysUserDeptPO::getIdent, UserDeptIdentEnum.USER_DEPT);
+        if (tenantId != null && AuthUtils.isPlatformTenant()) {
+            SmartTenantControl.ignore(SysUserDeptPO.class, null, List.of(SqlCommandType.SELECT));
+            queryWrapper.eq(SysUserDeptPO::getTenantId, tenantId);
+        }
+        Set<Long> deptIds = this.sysUserDeptService.list(queryWrapper).stream()
                 .map(SysUserDeptPO::getDeptId)
                 .collect(Collectors.toSet());
         vo.setDeptIdList(new ArrayList<>(deptIds));
@@ -184,9 +187,10 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
 
     /**
      * 查询用户账户信息
+     * @param tenantId 租户ID
      * @param userList 用户列表
      */
-    private void queryUserAccount(List<SysUserListVO> userList) {
+    private void queryUserAccount(Long tenantId, List<SysUserListVO> userList) {
         if (CollectionUtils.isEmpty(userList)) {
             return;
         }
@@ -195,7 +199,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
                 .flatMap(idList -> this.sysUserAccountService.list(
                         new QueryWrapper<SysUserAccountPO>().lambda()
                         .in(SysUserAccountPO::getUserId, idList)
-                                .eq(SysUserAccountPO::getTenantId, AuthUtils.getNonNullCurrentTenantId())
+                                .eq(SysUserAccountPO::getTenantId, tenantId)
                 ).stream()).collect(Collectors.toMap(SysUserAccountPO::getUserId, item -> item));
         userList.forEach(item -> item.setUserAccount(sysUserAccountMap.get(item.getUserId())));
     }
@@ -247,13 +251,14 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
     }
 
     /**
-     * 重写删除方法：删除用户关系
-     * @param idList ID列表
-     * @return 是否删除
+     * 指定租户删除用户
+     *
+     * @param tenantId   租户ID
+     * @param idList 用户ID列表
+     * @return 是否删除成功
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public boolean removeByIds(Collection<?> idList) {
+    public boolean removeByIdsWithTenant(Long tenantId, List<Long> idList) {
         if (CollectionUtils.isEmpty(idList)) {
             return false;
         }
@@ -264,6 +269,14 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
                 .count();
         if (buildInCount > 0) {
             throw new BusinessException("系统内置用户不能删除");
+        }
+        // 校验是否和其他租户绑定
+        Long hasBindTenant = this.sysTenantUserService.lambdaQuery()
+                .in(SysTenantUserPO::getUserId, idList)
+                .ne(SysTenantUserPO::getTenantId, Objects.requireNonNullElseGet(tenantId, AuthUtils::getNonNullCurrentTenantId))
+                .count();
+        if (hasBindTenant > 0) {
+            throw new BusinessException("用户已被其他租户绑定，不能删除");
         }
         Lists.partition(Arrays.asList(idList.toArray()), 500).forEach(list -> {
             // 删除用户与用户组管理

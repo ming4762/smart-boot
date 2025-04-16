@@ -7,7 +7,6 @@ import com.google.common.collect.Sets;
 import com.smart.framework.auth.common.annotation.NonUrlCheck;
 import com.smart.framework.auth.common.utils.AuthUtils;
 import com.smart.framework.commons.core.data.Tree;
-import com.smart.framework.commons.core.http.HttpStatus;
 import com.smart.framework.commons.core.log.Log;
 import com.smart.framework.commons.core.log.LogOperationTypeEnum;
 import com.smart.framework.commons.core.message.Result;
@@ -21,6 +20,7 @@ import com.smart.module.system.constants.SystemConstantEnum;
 import com.smart.module.system.constants.UserDeptIdentEnum;
 import com.smart.module.system.model.*;
 import com.smart.module.system.pojo.dto.user.*;
+import com.smart.module.system.pojo.parameter.common.SysTenantIdParameter;
 import com.smart.module.system.pojo.vo.SysFunctionListVO;
 import com.smart.module.system.pojo.vo.user.SysUserListVO;
 import com.smart.module.system.pojo.vo.user.SysUserWithDeptDTO;
@@ -150,6 +150,7 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
         if (parameter.getTenantId() == null) {
             parameter.setTenantId(AuthUtils.getCurrentTenantId());
         }
+        parameter.getParameter().put(SystemConstantEnum.LIST_FILTER_TENANT.name(), Boolean.TRUE);
         parameter.getParameter().put(SystemConstantEnum.LIST_USER_WITH_ACCOUNT.name(), Boolean.TRUE);
         return super.list(parameter);
     }
@@ -158,24 +159,20 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
     @Operation(summary = "查询用户列表（支持分页、实体类属性查询）,根据自定义租户过滤")
     public Result<Object> listByTenant(@RequestBody @NonNull UserListDTO parameter) {
         parameter.getParameter().put(SystemConstantEnum.LIST_FILTER_TENANT.name(), Boolean.TRUE);
+        if (parameter.getTenantId() == null) {
+            parameter.setTenantId(AuthUtils.getCurrentTenantId());
+        }
         return super.list(parameter);
     }
 
-    /**
-     * 通过ID批量删除
-     * @param idList ID集合
-     * @return 是否删除成功
-     */
     @PreAuthorize("hasPermission('sys:user', 'delete')")
     @Operation(summary = "通过ID批量删除用户")
-    @PostMapping("batchDeleteById")
+    @PostMapping("batchDeleteByIdWithTenant")
     @Log(value = "通过ID批量删除用户", type = LogOperationTypeEnum.DELETE)
-    @Override
-    public Result<Boolean> batchDeleteById(@RequestBody List<Serializable> idList) {
-        if (idList.isEmpty()) {
-            return Result.ofStatus(HttpStatus.PARAM_NOT_NULL, "用户ID集合不能为空");
-        }
-        return Result.success(this.service.removeByIds(idList));
+    public Result<Boolean> batchDeleteByIdWithTenant(@RequestBody @Valid SysUserDeleteDTO parameter) {
+        return Result.success(
+                this.service.removeByIdsWithTenant(parameter.getTenantId(), parameter.getUserIdList())
+        );
     }
 
     /**
@@ -360,6 +357,15 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
     @PostMapping("getUserByIdWithDept")
     @Operation(summary = "通过ID查询用户详情")
     public Result<SysUserWithDeptDTO> getUserByIdWithDept(@RequestBody Long id) {
-        return Result.success(this.service.getUserByIdWithDept(id));
+        return Result.success(this.service.getUserByIdWithDept(null, id));
+    }
+
+    @PostMapping("getUserByTenantIdWithDept")
+    @Operation(summary = "指定租户通过ID查询用户详情")
+    public Result<SysUserWithDeptDTO> getUserByTenantIdWithDept(@RequestBody SysTenantIdParameter parameter) {
+        if (!AuthUtils.isPlatformTenant()) {
+            throw new AccessDeniedException("");
+        }
+        return Result.success(this.service.getUserByIdWithDept(parameter.getTenantId(), parameter.getId()));
     }
 }
