@@ -31,4 +31,9 @@ public class SysTenantBindUserDTO implements Serializable {
 
     @NotEmpty(message = "用户ID不能为空")
     private List<Long> userIdList;
+
+    /**
+     * 是否创建账户
+     */
+    private Boolean createAccount;
 }

@@ -36,6 +36,7 @@ import com.smart.module.system.service.tenant.SysTenantSubscribeService;
 import com.smart.module.system.service.tenant.SysTenantUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -110,6 +111,9 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean bindTenantUser(SysTenantBindUserDTO parameter) {
+        if (CollectionUtils.isEmpty(parameter.getUserIdList())) {
+            return false;
+        }
         List<SysTenantUserPO> modelList = parameter.getUserIdList().stream()
                 .map(userId -> {
                     SysTenantUserPO tenantUser = new SysTenantUserPO();
@@ -117,7 +121,16 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
                     tenantUser.setUserId(userId);
                     return tenantUser;
                 }).toList();
-        return this.sysTenantUserService.saveBatch(modelList);
+        boolean result = this.sysTenantUserService.saveBatch(modelList);
+        // 创建账户
+        if (!Boolean.TRUE.equals(parameter.getCreateAccount())) {
+            return result;
+        }
+        if (!AuthUtils.isPlatformTenant()) {
+            throw new AccessDeniedException("非平台管理租户无权限创建其他租户账户");
+        }
+        this.sysUserAccountService.createAccount(parameter.getTenantId(), parameter.getUserIdList());
+        return result;
     }
 
     /**
