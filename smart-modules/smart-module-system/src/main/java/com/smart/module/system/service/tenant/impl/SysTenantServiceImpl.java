@@ -22,10 +22,7 @@ import com.smart.module.system.model.tenant.SysTenantPackagePO;
 import com.smart.module.system.model.tenant.SysTenantSubscribePO;
 import com.smart.module.system.model.tenant.SysTenantUserPO;
 import com.smart.module.system.pojo.dbo.tenant.SysTenantUserListDO;
-import com.smart.module.system.pojo.dto.tenant.SysTenantBindUserDTO;
-import com.smart.module.system.pojo.dto.tenant.SysTenantListNoBindUserDTO;
-import com.smart.module.system.pojo.dto.tenant.SysTenantRemoveBindUserDTO;
-import com.smart.module.system.pojo.dto.tenant.SysTenantUserListDTO;
+import com.smart.module.system.pojo.dto.tenant.*;
 import com.smart.module.system.service.SysRoleService;
 import com.smart.module.system.service.SysUserAccountService;
 import com.smart.module.system.service.SysUserRoleService;
@@ -332,5 +329,21 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
             return;
         }
         dataList.forEach(item -> item.setTenant(tenantMap.get(item.getTenantId())));
+    }
+
+    /**
+     * 指定租户保存用户
+     *
+     * @param parameter 参数
+     * @return 是否保存成功
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean saveTenantUser(SysTenantSaveUpdateUserDTO parameter) {
+        boolean createAccount = Boolean.TRUE.equals(parameter.getCreateAccount());
+        if (!createAccount) {
+            return this.sysUserService.saveUpdateWithDept(parameter.getTenantId(), parameter);
+        }
+        return this.sysUserService.saveAndCreateAccount(parameter.getTenantId(), parameter);
     }
 }

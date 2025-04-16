@@ -865,7 +865,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         }
         long userId = SmartIdGenerator.nextId();
         parameter.setUserId(userId);
-        // 未支持租户,保存用户信息
+        // 保存用户信息
         this.saveUpdateWithDept(tenantId, parameter);
         this.sysUserAccountService.createAccount(tenantId, List.of(userId));
         return true;

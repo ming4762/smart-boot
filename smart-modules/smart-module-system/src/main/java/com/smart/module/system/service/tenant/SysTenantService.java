@@ -7,10 +7,8 @@ import com.smart.module.system.model.SysUserPO;
 import com.smart.module.system.model.tenant.SysTenantPO;
 import com.smart.module.system.model.tenant.SysTenantPackagePO;
 import com.smart.module.system.pojo.dbo.tenant.SysTenantUserListDO;
-import com.smart.module.system.pojo.dto.tenant.SysTenantBindUserDTO;
-import com.smart.module.system.pojo.dto.tenant.SysTenantListNoBindUserDTO;
-import com.smart.module.system.pojo.dto.tenant.SysTenantRemoveBindUserDTO;
-import com.smart.module.system.pojo.dto.tenant.SysTenantUserListDTO;
+import com.smart.module.system.pojo.dto.tenant.*;
+import jakarta.validation.Valid;
 import org.springframework.lang.NonNull;
 
 import java.util.List;
@@ -69,4 +67,11 @@ public interface SysTenantService extends BaseService<SysTenantPO> {
      * @param dataList 数据列表
      */
     void injectTenant(List<? extends SysTenantInject> dataList);
+
+    /**
+     * 指定租户保存用户
+     * @param parameter 参数
+     * @return 是否保存成功
+     */
+    boolean saveTenantUser(@Valid SysTenantSaveUpdateUserDTO parameter);
 }

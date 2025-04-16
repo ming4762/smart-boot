@@ -15,12 +15,14 @@ import com.smart.framework.crud.query.IdParameter;
 import com.smart.framework.crud.query.PageSortQuery;
 import com.smart.framework.crud.utils.CrudPageHelper;
 import com.smart.module.system.constants.SysTenantIsolationStrategyEnum;
+import com.smart.module.system.model.SysDeptPO;
 import com.smart.module.system.model.SysRolePO;
 import com.smart.module.system.model.SysUserPO;
 import com.smart.module.system.model.tenant.SysTenantPO;
 import com.smart.module.system.model.tenant.SysTenantPackagePO;
 import com.smart.module.system.pojo.dbo.tenant.SysTenantUserListDO;
 import com.smart.module.system.pojo.dto.tenant.*;
+import com.smart.module.system.service.SysDeptService;
 import com.smart.module.system.service.SysRoleService;
 import com.smart.module.system.service.SysUserAccountService;
 import com.smart.module.system.service.tenant.SysTenantService;
@@ -53,6 +55,7 @@ public class SysTenantController extends BaseController<SysTenantService, SysTen
 
     private final SysUserAccountService sysUserAccountService;
     private final SysRoleService sysRoleService;
+    private final SysDeptService sysDeptService;
 
     @Override
     @PostMapping("list")
@@ -164,18 +167,15 @@ public class SysTenantController extends BaseController<SysTenantService, SysTen
     @PostMapping("createTenantUserAccount")
     public Result<Boolean> createTenantUserAccount(@RequestBody @Valid SysCreateTenantUserAccountDTO parameter) {
         // 验证用户是否是平台账户
-        if (!AuthUtils.isPlatformTenant()) {
-            throw new AccessDeniedException("非平台管理租户无权限创建其他租户账户");
-        }
+        this.validatePlatformTenant("非平台管理租户无权限创建其他租户账户");
         return Result.success(this.sysUserAccountService.createAccount(parameter.getTenantId(), parameter.getUserIdList()));
     }
 
     @Operation(summary = "查询租户权限")
     @PostMapping("listTenantNoAuth")
     public Result<List<SysTenantPO>> listTenantNoAuth() {
-        if (!AuthUtils.isPlatformTenant()) {
-            throw new AccessDeniedException("非平台管理租户无权限查看租户列表");
-        }
+
+        this.validatePlatformTenant("非平台管理租户无权限查看租户列表");
         return Result.success(
                 this.service.lambdaQuery()
                         .eq(SysTenantPO::getUseYn, Boolean.TRUE)
@@ -190,5 +190,32 @@ public class SysTenantController extends BaseController<SysTenantService, SysTen
         // 平台租户忽略查询租户条件
         SmartTenantControl.ignore(SysRolePO.class, null, List.of(SqlCommandType.SELECT));
         return Result.success(this.sysRoleService.getById(id.getId()));
+    }
+
+    @PostMapping("saveTenantUser")
+    @Operation(summary = "指定租户保存用户")
+    public Result<Boolean> saveTenantUser(@RequestBody @Valid SysTenantSaveUpdateUserDTO parameter) {
+        this.validatePlatformTenant("非平台管理租户无权限修改其他租户用户");
+        return Result.success(this.service.saveTenantUser(parameter));
+    }
+
+    @PostMapping("listDeptByTenant")
+    @Operation(summary = "查询指定租户的部门信息")
+    public Result<List<SysDeptPO>> listDeptByTenant(@RequestBody IdParameter tenantId) {
+        this.validatePlatformTenant("非平台管理租户无权限查看其他租户部门");
+        // 忽略租户条件
+        SmartTenantControl.ignore(SysDeptPO.class, null, List.of(SqlCommandType.SELECT));
+        return Result.success(
+                this.sysDeptService.lambdaQuery()
+                        .select(SysDeptPO::getDeptId, SysDeptPO::getDeptName, SysDeptPO::getParentId, SysDeptPO::getDeptCode)
+                        .eq(SysDeptPO::getTenantId, tenantId.getId())
+                        .list()
+        );
+    }
+
+    private void validatePlatformTenant(String message) {
+        if (!AuthUtils.isPlatformTenant()) {
+            throw new AccessDeniedException(message);
+        }
     }
 }

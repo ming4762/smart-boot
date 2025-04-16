@@ -169,7 +169,7 @@ public interface SysUserService extends BaseService<SysUserPO> {
 
     /**
      * 保存用户信息，同时创建账号信息
-     * @param tenantId
+     * @param tenantId 租户ID
      * @param parameter 参数
      * @return 是否保存成功
      */

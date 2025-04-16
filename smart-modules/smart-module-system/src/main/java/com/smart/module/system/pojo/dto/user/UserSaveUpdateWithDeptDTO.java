@@ -1,10 +1,10 @@
 package com.smart.module.system.pojo.dto.user;
 
-import com.smart.module.system.model.SysUserPO;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -15,10 +15,40 @@ import java.util.List;
  */
 @Getter
 @Setter
-public class UserSaveUpdateWithDeptDTO extends SysUserPO {
+public class UserSaveUpdateWithDeptDTO implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -5130819953765895017L;
 
     private List<Long> deptIdList;
+
+    /**
+     * 用户ID
+     */
+    private Long userId;
+
+    /**
+     * 用户名
+     */
+    private String username;
+
+    /**
+     * 姓名
+     */
+    private String fullName;
+
+    /**
+     * 邮箱
+     */
+    private String email;
+
+    /**
+     * 手机
+     */
+    private String mobile;
+
+    /**
+     * 序号
+     */
+    private Integer seq;
 }
