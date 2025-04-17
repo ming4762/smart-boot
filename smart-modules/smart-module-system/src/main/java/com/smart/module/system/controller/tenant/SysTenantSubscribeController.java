@@ -34,13 +34,13 @@ import java.util.List;
 public class SysTenantSubscribeController extends BaseController<SysTenantSubscribeService, SysTenantSubscribePO> {
 
     @PostMapping("list")
-    @Operation(summary = "查询角色列表（支持分页、实体类属性查询）")
+    @Operation(summary = "查询订阅列表（支持分页、实体类属性查询）")
     public Result<Object> list(@RequestBody @NonNull @Valid SysTenantSubscribeListDTO parameter) {
         return super.list(parameter);
     }
 
     @PostMapping("listWithPackage")
-    @Operation(summary = "查询角色列表（支持分页、实体类属性查询）")
+    @Operation(summary = "查询订阅列表（支持分页、实体类属性查询）")
     public Result<Object> listWithPackage(@RequestBody @NonNull @Valid SysTenantSubscribeListDTO parameter) {
         parameter.getParameter().put(SystemConstantEnum.TENANT_SUBSCRIBE_LIST_WITH_PACKAGE.name(), Boolean.TRUE);
         return super.list(parameter);

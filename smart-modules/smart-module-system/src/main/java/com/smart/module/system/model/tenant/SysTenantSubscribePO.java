@@ -69,7 +69,6 @@ public class SysTenantSubscribePO extends BaseModelDeleteUserTime {
     /**
     * delete_yn - deleteYn
     */
-    @TableLogic
     private Boolean deleteYn;
 
 
