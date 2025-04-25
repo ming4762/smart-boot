@@ -43,4 +43,9 @@ public class CommonQuery implements Serializable {
      * 查询的属性列表
      */
     private List<String> propertyList = new ArrayList<>(0);
+
+    /**
+     * 排除的属性列表
+     */
+    private List<String> excludePropertyList = new ArrayList<>(0);
 }

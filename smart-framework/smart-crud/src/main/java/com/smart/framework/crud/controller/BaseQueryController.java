@@ -23,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -64,6 +65,10 @@ public abstract class BaseQueryController<K extends BaseService<T>, T extends Ba
         // 设置查询字段
         if (!parameter.getPropertyList().isEmpty()) {
             CrudUtils.setQueryField(parameter.getPropertyList(), this.getEntityClass(), queryWrapper);
+        }
+        // 排除的查询字典
+        if (!CollectionUtils.isEmpty(parameter.getExcludePropertyList())) {
+            queryWrapper.select(this.getEntityClass(), fieldInfo -> !parameter.getExcludePropertyList().contains(fieldInfo.getProperty()));
         }
         String keyword = parameter.getKeyword();
         if (org.apache.commons.lang3.StringUtils.isNotBlank(keyword)) {

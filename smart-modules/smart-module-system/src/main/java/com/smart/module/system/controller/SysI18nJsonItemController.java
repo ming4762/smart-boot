@@ -7,6 +7,7 @@ import com.smart.framework.commons.core.message.Result;
 import com.smart.framework.crud.controller.BaseController;
 import com.smart.framework.crud.parameter.SetUseYnParameter;
 import com.smart.framework.crud.query.PageSortQuery;
+import com.smart.framework.crud.utils.CrudUtils;
 import com.smart.module.system.model.SysI18nJsonItemPO;
 import com.smart.module.system.pojo.dto.SysI18nJsonItemSaveUpdateDTO;
 import com.smart.module.system.service.SysI18nJsonItemService;
@@ -37,6 +38,9 @@ public class SysI18nJsonItemController extends BaseController<SysI18nJsonItemSer
     @PostMapping("list")
     @Operation(summary = "查询角色列表（支持分页、实体类属性查询）")
     public Result<Object> list(@RequestBody @NonNull PageSortQuery parameter) {
+        if (CollectionUtils.isEmpty(parameter.getExcludePropertyList())) {
+            parameter.getExcludePropertyList().add(CrudUtils.getJavaProperty(SysI18nJsonItemPO::getData));
+        }
         return super.list(parameter);
     }
 
