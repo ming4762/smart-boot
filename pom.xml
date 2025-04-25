@@ -65,6 +65,7 @@
         <redisson.version>3.37.0</redisson.version>
         <libphonenumber.version>8.13.52</libphonenumber.version>
         <bcprov-jdk15on.version>1.70</bcprov-jdk15on.version>
+        <grpc-netty.version>1.57.2</grpc-netty.version>
     </properties>
 
     <packaging>pom</packaging>
@@ -538,6 +539,11 @@
                 <groupId>com.googlecode.libphonenumber</groupId>
                 <artifactId>libphonenumber</artifactId>
                 <version>${libphonenumber.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-netty</artifactId>
+                <version>${grpc-netty.version}</version>
             </dependency>
 
             <!--      smart-boot      -->
