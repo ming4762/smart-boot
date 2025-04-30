@@ -1,8 +1,11 @@
 package com.smart.framework.commons.core.utils;
 
 
+import lombok.SneakyThrows;
 import org.springframework.lang.NonNull;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
@@ -46,6 +49,16 @@ public final class Base64Utils {
     @NonNull
     public static String encode(@NonNull byte[] bytes) {
         return ENCODER.encodeToString(bytes);
+    }
+
+    /**
+     * InputStream转为base64编码
+     * @param inputStream InputStream
+     * @return base64编码后的字符串
+     */
+    @SneakyThrows(IOException.class)
+    public static String encode(@NonNull InputStream inputStream) {
+        return encode(inputStream.readAllBytes());
     }
 
     /**
