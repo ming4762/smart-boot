@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smart.module.system.mapper.SysChangeLogMapper">
+    <sql id="columnList">
+        <!--   id 主键  索引   -->
+        id,
+        <!--   版本号      -->
+        version,
+        <!--   变更模块      -->
+        change_module,
+        <!--   变更时间      -->
+        log_time,
+        <!--   标题      -->
+        title,
+        <!--   变更内容      -->
+        change_content,
+        <!--   变更类型      -->
+        change_type,
+        <!--   影响范围      -->
+        affected_scope,
+        <!--   是否发送系统消息      -->
+        send_system_message_yn,
+        <!--   系统消息ID      -->
+        system_message_id,
+        <!--   备注      -->
+        remark,
+        <!--   是否发布      -->
+        release_yn,
+        <!--   发布时间      -->
+        release_time,
+        <!--   发布人ID      -->
+        release_user_id,
+        <!--   发布人      -->
+        release_by,
+        <!--   是否撤销      -->
+        revoked_yn,
+        <!--   撤销时间      -->
+        revoke_time,
+        <!--   撤销人ID      -->
+        revoke_user_id,
+        <!--   撤销人      -->
+        revoke_by,
+        <!--   撤销备注      -->
+        revoke_remark,
+        <!--   创建时间      -->
+        create_time,
+        <!--   创建人ID      -->
+        create_user_id,
+        <!--   创建人      -->
+        create_by,
+        <!--   更新时间      -->
+        update_time,
+        <!--   更新人ID      -->
+        update_user_id,
+        <!--   更新人      -->
+        update_by
+    </sql>
+
+    <resultMap id="commonResultMap" type="com.smart.module.system.model.SysChangeLogPO">
+        <!--   id 主键  索引   -->
+        <id column="id" property="id" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   版本号      -->
+        <result column="version" property="version" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   变更模块      -->
+        <result column="change_module" property="changeModule" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   变更时间      -->
+        <result column="log_time" property="logTime" javaType="java.time.ZonedDateTime" jdbcType="TIMESTAMP"/>
+        <!--   标题      -->
+        <result column="title" property="title" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   变更内容      -->
+        <result column="change_content" property="changeContent" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   变更类型      -->
+        <result column="change_type" property="changeType" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   影响范围      -->
+        <result column="affected_scope" property="affectedScope" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   是否发送系统消息      -->
+        <result column="send_system_message_yn" property="sendSystemMessageYn" javaType="java.lang.Boolean" jdbcType="BIT"/>
+        <!--   系统消息ID      -->
+        <result column="system_message_id" property="systemMessageId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   备注      -->
+        <result column="remark" property="remark" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   是否发布      -->
+        <result column="release_yn" property="releaseYn" javaType="java.lang.Boolean" jdbcType="BIT"/>
+        <!--   发布时间      -->
+        <result column="release_time" property="releaseTime" javaType="java.time.ZonedDateTime" jdbcType="TIMESTAMP"/>
+        <!--   发布人ID      -->
+        <result column="release_user_id" property="releaseUserId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   发布人      -->
+        <result column="release_by" property="releaseBy" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   是否撤销      -->
+        <result column="revoked_yn" property="revokedYn" javaType="java.lang.Boolean" jdbcType="BIT"/>
+        <!--   撤销时间      -->
+        <result column="revoke_time" property="revokeTime" javaType="java.time.ZonedDateTime" jdbcType="TIMESTAMP"/>
+        <!--   撤销人ID      -->
+        <result column="revoke_user_id" property="revokeUserId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   撤销人      -->
+        <result column="revoke_by" property="revokeBy" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   撤销备注      -->
+        <result column="revoke_remark" property="revokeRemark" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   创建时间      -->
+        <result column="create_time" property="createTime" javaType="java.time.ZonedDateTime" jdbcType="TIMESTAMP"/>
+        <!--   创建人ID      -->
+        <result column="create_user_id" property="createUserId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   创建人      -->
+        <result column="create_by" property="createBy" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   更新时间      -->
+        <result column="update_time" property="updateTime" javaType="java.time.ZonedDateTime" jdbcType="TIMESTAMP"/>
+        <!--   更新人ID      -->
+        <result column="update_user_id" property="updateUserId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   更新人      -->
+        <result column="update_by" property="updateBy" javaType="java.lang.String" jdbcType="VARCHAR"/>
+    </resultMap>
+</mapper>
