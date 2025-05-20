@@ -109,6 +109,11 @@ public class SysFunctionPO extends BaseModelUserTime {
      */
     private Boolean cached;
 
+    /**
+     * 菜单meta
+     */
+    private String meta;
+
     private Boolean hasChild;
 
     private Boolean useYn;
