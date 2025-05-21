@@ -85,6 +85,9 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
 
         AuthenticationSuccessHandler successHandler = this.getBean(AuthenticationSuccessHandler.class, this.serviceProvider.authenticationSuccessHandler);
         builder.setSharedObject(AuthenticationSuccessHandler.class, successHandler);
+
+        AuthenticationFailureHandler authenticationFailureHandler = this.getBean(AuthenticationFailureHandler.class, null);
+        builder.setSharedObject(AuthenticationFailureHandler.class, authenticationFailureHandler);
     }
 
     /**
