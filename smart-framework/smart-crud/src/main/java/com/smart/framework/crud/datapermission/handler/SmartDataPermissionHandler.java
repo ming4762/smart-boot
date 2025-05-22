@@ -25,6 +25,7 @@ import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
 import net.sf.jsqlparser.expression.operators.relational.EqualsTo;
 import net.sf.jsqlparser.expression.operators.relational.ExpressionList;
 import net.sf.jsqlparser.expression.operators.relational.InExpression;
+import net.sf.jsqlparser.expression.operators.relational.ParenthesedExpressionList;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
@@ -305,7 +306,7 @@ public class SmartDataPermissionHandler implements MultiDataPermissionHandler {
                         .toList()
         );
         expression.withLeftExpression(this.buildColumn(tableAlias, permissionColumn))
-                .withRightExpression(new Parenthesis(deptExpressionList));
+                .withRightExpression(ParenthesedExpressionList.from(deptExpressionList));
         return expression;
     }
 
