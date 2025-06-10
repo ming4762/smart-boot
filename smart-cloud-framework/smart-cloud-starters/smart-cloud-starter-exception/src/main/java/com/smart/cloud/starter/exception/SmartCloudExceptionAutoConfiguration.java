@@ -2,6 +2,7 @@ package com.smart.cloud.starter.exception;
 
 import com.smart.cloud.starter.exception.notice.RemoteExceptionNotice;
 import com.smart.module.api.system.SysExceptionApi;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 public class SmartCloudExceptionAutoConfiguration {
 
     @Bean
+    @ConditionalOnMissingBean(name = "dbExceptionNotice")
     public RemoteExceptionNotice remoteExceptionNotice(SysExceptionApi sysExceptionApi) {
         return new RemoteExceptionNotice(sysExceptionApi);
     }

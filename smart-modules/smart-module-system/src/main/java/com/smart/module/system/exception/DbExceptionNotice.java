@@ -22,7 +22,7 @@ import java.time.ZonedDateTime;
  * 2022/6/10
  * @since 3.0.0
  */
-@Component
+@Component("dbExceptionNotice")
 @Slf4j
 public class DbExceptionNotice extends AbstractCommonExcludeExceptionNotice {
 
