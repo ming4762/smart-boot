@@ -1,5 +1,6 @@
 package com.smart.cloud.api.system.feign;
 
+import com.smart.cloud.api.system.feign.fallback.RemoteSysExceptionApiFallback;
 import com.smart.cloud.common.core.constants.CloudServiceNameConstants;
 import com.smart.module.api.system.SysExceptionApi;
 import com.smart.module.api.system.constants.SystemApiUrlConstants;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
  * @author zhongming4762
  * 2023/3/12
  */
-@FeignClient(value = CloudServiceNameConstants.SYSTEM_SERVICE, contextId = "sysExceptionApi")
+@FeignClient(value = CloudServiceNameConstants.SYSTEM_SERVICE, fallback = RemoteSysExceptionApiFallback.class)
 public interface RemoteSysExceptionApi extends SysExceptionApi {
 
     /**

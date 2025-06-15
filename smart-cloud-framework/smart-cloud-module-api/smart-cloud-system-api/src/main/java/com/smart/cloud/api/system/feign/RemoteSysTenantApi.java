@@ -1,8 +1,11 @@
 package com.smart.cloud.api.system.feign;
 
+import com.smart.cloud.api.system.feign.fallback.RemoteSysTenantApiFallback;
+import com.smart.cloud.common.core.constants.CloudServiceNameConstants;
 import com.smart.module.api.system.SysTenantApi;
 import com.smart.module.api.system.constants.SystemApiUrlConstants;
 import com.smart.module.api.system.dto.SysTenantDTO;
+import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
@@ -12,6 +15,7 @@ import java.util.List;
  * 2025/3/26 18:01
  * @since 5.0.0
  */
+@FeignClient(value = CloudServiceNameConstants.SYSTEM_SERVICE, fallback = RemoteSysTenantApiFallback.class)
 public interface RemoteSysTenantApi extends SysTenantApi {
 
     /**

@@ -1,5 +1,6 @@
 package com.smart.cloud.api.system.feign;
 
+import com.smart.cloud.api.system.feign.fallback.RemoteSysDictApiFallback;
 import com.smart.cloud.common.core.constants.CloudServiceNameConstants;
 import com.smart.module.api.system.SysDictApi;
 import com.smart.module.api.system.constants.SystemApiUrlConstants;
@@ -14,7 +15,7 @@ import java.util.Map;
  * @author zhongming4762
  * 2023/6/1 14:41
  */
-@FeignClient(value = CloudServiceNameConstants.SYSTEM_SERVICE, contextId = "sysDictApi")
+@FeignClient(value = CloudServiceNameConstants.SYSTEM_SERVICE, fallback = RemoteSysDictApiFallback.class)
 public interface RemoteSysDictApi extends SysDictApi {
 
     /**

@@ -1,5 +1,6 @@
 package com.smart.cloud.api.system.feign;
 
+import com.smart.cloud.api.system.feign.fallback.RemoteSysI18nApiFallback;
 import com.smart.cloud.common.core.constants.CloudServiceNameConstants;
 import com.smart.module.api.system.SysI18nApi;
 import com.smart.module.api.system.constants.SystemApiUrlConstants;
@@ -13,7 +14,7 @@ import java.util.Map;
  * @author zhongming4762
  * 2023/3/12
  */
-@FeignClient(value = CloudServiceNameConstants.SYSTEM_SERVICE, contextId = "remoteSysI18nApi")
+@FeignClient(value = CloudServiceNameConstants.SYSTEM_SERVICE, fallback = RemoteSysI18nApiFallback.class)
 public interface RemoteSysI18nApi extends SysI18nApi {
 
     /**
