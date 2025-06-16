@@ -3,6 +3,7 @@ package com.smart.module.system.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.smart.framework.commons.core.utils.JsonUtils;
+import com.smart.framework.crud.datapermission.handler.SmartDataPermissionController;
 import com.smart.framework.crud.service.BaseServiceImpl;
 import com.smart.module.system.constants.SysI18nPlatformEnum;
 import com.smart.module.system.mapper.SysI18nJsonMapper;
@@ -57,6 +58,9 @@ public class SysI18nJsonServiceImpl extends BaseServiceImpl<SysI18nJsonMapper, S
      */
     @Override
     public JsonNode readToJsonByLocale(Locale locale, SysI18nPlatformEnum platform) {
+        // 忽略数据权限
+        SmartDataPermissionController.ignoreAll();
+
         LambdaQueryWrapper<SysI18nJsonPO> queryWrapper = new LambdaQueryWrapper<SysI18nJsonPO>()
                 .select(SysI18nJsonPO::getId)
                 .eq(SysI18nJsonPO::getUseYn, true);
