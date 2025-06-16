@@ -10,8 +10,7 @@ import com.smart.module.api.auth.AuthApi;
 import com.smart.module.api.auth.dto.AuthUserDetailsDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.security.core.context.SecurityContext;
@@ -35,6 +34,7 @@ import java.util.stream.Collectors;
  * @author zhongming4762
  * 2023/3/9
  */
+@Slf4j
 public class RemoteSecurityContextRepository implements SecurityContextRepository {
 
     public static final String USER_CACHE_NAME = "auth_user_cache";
@@ -68,7 +68,13 @@ public class RemoteSecurityContextRepository implements SecurityContextRepositor
             RestUserDetails userDetails = (RestUserDetails) Optional.ofNullable(cache.get(token)).map(Cache.ValueWrapper::get).orElse(null);
             return this.generateSecurityContext(request, userDetails);
         }
-        AuthUserDetailsDTO dto = this.authApi.getUserDetails(token);
+        AuthUserDetailsDTO dto;
+        try {
+            dto = this.authApi.getUserDetails(token);
+        } catch (Exception e) {
+            log.error("获取用户信息失败", e);
+            return this.generateNewContext();
+        }
         if (dto == null || dto.getUserId() == null) {
             return this.generateNewContext();
         }
@@ -173,10 +179,4 @@ public class RemoteSecurityContextRepository implements SecurityContextRepositor
         return SecurityContextHolder.createEmptyContext();
     }
 
-    @AllArgsConstructor
-    @Getter
-    private static class CachedToken {
-        private final String token;
-        private final Instant lastAccessTime;
-    }
 }

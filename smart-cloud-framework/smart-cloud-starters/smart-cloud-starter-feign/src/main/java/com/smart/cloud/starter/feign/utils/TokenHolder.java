@@ -20,4 +20,11 @@ public class TokenHolder {
         THREAD_LOCAL.remove();
         THREAD_LOCAL.set(token);
     }
+
+    /**
+     * 清除当前线程的token
+     */
+    public static void clear() {
+        THREAD_LOCAL.remove();
+    }
 }
