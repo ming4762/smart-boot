@@ -1,5 +1,6 @@
 package com.smart.cloud.api.file.feign;
 
+import com.smart.cloud.api.file.feign.fallback.FeignSmartFileApiFallback;
 import com.smart.cloud.common.core.constants.CloudServiceNameConstants;
 import com.smart.module.api.file.bo.FileHandlerResult;
 import com.smart.module.api.file.constants.SmartFileApiUrlConstants;
@@ -16,7 +17,7 @@ import java.util.List;
  * @author zhongming4762
  * 2023/3/21 14:53
  */
-@FeignClient(value = CloudServiceNameConstants.FILE_SERVICE, contextId = "remoteSmartFileApi")
+@FeignClient(value = CloudServiceNameConstants.FILE_SERVICE, fallbackFactory = FeignSmartFileApiFallback.class, contextId = "feignSmartFileApi")
 public interface FeignSmartFileApi {
 
     /**

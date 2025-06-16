@@ -6,6 +6,8 @@ import com.smart.module.api.system.dto.SmartChangeLogListDTO;
 import com.smart.module.api.system.parameter.RemoteChangeLogListParameter;
 import com.smart.module.api.system.parameter.RemoteChangeLogSaveParameter;
 import com.smart.module.api.system.parameter.SerialCodeCreateParameter;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -16,24 +18,38 @@ import java.util.List;
  * @since 5.0.0
  */
 @Component
-public class RemoteSysToolApiFallback implements RemoteSysToolApi {
-    @Override
-    public SerialCodeCreateDTO createSerial(SerialCodeCreateParameter parameter) {
-        return null;
-    }
+@Slf4j
+public class RemoteSysToolApiFallback implements FallbackFactory<RemoteSysToolApi> {
 
     @Override
-    public List<SerialCodeCreateDTO> createSerial(List<SerialCodeCreateParameter> parameterList) {
-        return List.of();
-    }
+    public RemoteSysToolApi create(Throwable cause) {
+        return new RemoteSysToolApi() {
+            private void errorLog() {
+                log.error("RemoteSysToolApiFallback", cause);
+            }
+            @Override
+            public SerialCodeCreateDTO createSerial(SerialCodeCreateParameter parameter) {
+                this.errorLog();
+                return null;
+            }
 
-    @Override
-    public boolean saveChangeLog(RemoteChangeLogSaveParameter parameter) {
-        return false;
-    }
+            @Override
+            public List<SerialCodeCreateDTO> createSerial(List<SerialCodeCreateParameter> parameterList) {
+                this.errorLog();
+                return List.of();
+            }
 
-    @Override
-    public List<SmartChangeLogListDTO> listChangeLog(RemoteChangeLogListParameter parameter) {
-        return List.of();
+            @Override
+            public boolean saveChangeLog(RemoteChangeLogSaveParameter parameter) {
+                this.errorLog();
+                return false;
+            }
+
+            @Override
+            public List<SmartChangeLogListDTO> listChangeLog(RemoteChangeLogListParameter parameter) {
+                this.errorLog();
+                return List.of();
+            }
+        };
     }
 }

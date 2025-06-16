@@ -15,7 +15,7 @@ import java.util.List;
  * 2025/3/26 18:01
  * @since 5.0.0
  */
-@FeignClient(value = CloudServiceNameConstants.SYSTEM_SERVICE, fallback = RemoteSysTenantApiFallback.class)
+@FeignClient(value = CloudServiceNameConstants.SYSTEM_SERVICE, fallbackFactory = RemoteSysTenantApiFallback.class, contextId = "remoteSysTenantApi")
 public interface RemoteSysTenantApi extends SysTenantApi {
 
     /**

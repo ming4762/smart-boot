@@ -19,7 +19,7 @@ import java.util.List;
  * @author zhongming4762
  * 2023/3/11
  */
-@FeignClient(value = CloudServiceNameConstants.SYSTEM_SERVICE, fallback = RemoteSysUserApiFallback.class)
+@FeignClient(value = CloudServiceNameConstants.SYSTEM_SERVICE, fallbackFactory = RemoteSysUserApiFallback.class, contextId = "remoteSysUserApi")
 public interface RemoteSysUserApi extends SysUserApi {
 
     /**

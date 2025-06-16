@@ -15,7 +15,7 @@ import java.util.Map;
  * @author zhongming4762
  * 2023/6/1 14:41
  */
-@FeignClient(value = CloudServiceNameConstants.SYSTEM_SERVICE, fallback = RemoteSysDictApiFallback.class)
+@FeignClient(value = CloudServiceNameConstants.SYSTEM_SERVICE, contextId = "remoteSysDictApi", fallbackFactory = RemoteSysDictApiFallback.class)
 public interface RemoteSysDictApi extends SysDictApi {
 
     /**

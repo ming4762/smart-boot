@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
  * @author zhongming4762
  * 2023/3/11
  */
-@FeignClient(value = CloudServiceNameConstants.SYSTEM_SERVICE, fallback = RemoteSysLogApiFallback.class)
+@FeignClient(value = CloudServiceNameConstants.SYSTEM_SERVICE, fallbackFactory = RemoteSysLogApiFallback.class, contextId = "remoteSysLogApi")
 public interface RemoteSysLogApi extends SysLogApi {
 
     /**

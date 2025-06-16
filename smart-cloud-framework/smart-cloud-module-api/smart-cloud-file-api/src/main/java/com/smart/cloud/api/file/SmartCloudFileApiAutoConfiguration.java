@@ -3,6 +3,7 @@ package com.smart.cloud.api.file;
 import com.smart.cloud.api.file.feign.FeignSmartFileApi;
 import com.smart.cloud.api.file.feign.RemoteSmartFileApi;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -10,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
  * 2023/3/22
  */
 @Configuration(proxyBeanMethods = false)
+@ComponentScan
 public class SmartCloudFileApiAutoConfiguration {
 
     @Bean

@@ -7,6 +7,8 @@ import com.smart.module.api.system.dto.SysUserDTO;
 import com.smart.module.api.system.dto.UserAccountLockDTO;
 import com.smart.module.api.system.parameter.RemoteSysUserListParameter;
 import com.smart.module.api.system.parameter.SysUserDeptParameter;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -17,39 +19,57 @@ import java.util.List;
  * @since 5.0.0
  */
 @Component
-public class RemoteSysUserApiFallback implements RemoteSysUserApi {
-    @Override
-    public List<SysUserDTO> listUserByUsername(List<String> usernameList) {
-        return List.of();
-    }
+@Slf4j
+public class RemoteSysUserApiFallback implements FallbackFactory<RemoteSysUserApi> {
 
     @Override
-    public List<SysUserDTO> listUserById(List<Long> userIdList) {
-        return List.of();
-    }
+    public RemoteSysUserApi create(Throwable cause) {
+        return new RemoteSysUserApi() {
 
-    @Override
-    public boolean lockAccount(UserAccountLockDTO parameter) {
-        return false;
-    }
+            private void errorLog() {
+                log.error("RemoteSysUserApiFallback", cause);
+            }
+            @Override
+            public List<SysUserDTO> listUserByUsername(List<String> usernameList) {
+                this.errorLog();
+                return List.of();
+            }
 
-    @Override
-    public boolean updateLoginFailTime(AccountLoginFailTimeUpdateDTO userId) {
-        return false;
-    }
+            @Override
+            public List<SysUserDTO> listUserById(List<Long> userIdList) {
+                this.errorLog();
+                return List.of();
+            }
 
-    @Override
-    public List<SysUserDTO> listUser(RemoteSysUserListParameter parameter) {
-        return List.of();
-    }
+            @Override
+            public boolean lockAccount(UserAccountLockDTO parameter) {
+                this.errorLog();
+                return false;
+            }
 
-    @Override
-    public List<SysDeptDTO> listUserDept(SysUserDeptParameter parameter) {
-        return List.of();
-    }
+            @Override
+            public boolean updateLoginFailTime(AccountLoginFailTimeUpdateDTO userId) {
+                this.errorLog();
+                return false;
+            }
 
-    @Override
-    public List<SysDeptDTO> listUserDeptWithChildren(SysUserDeptParameter parameter) {
-        return List.of();
+            @Override
+            public List<SysUserDTO> listUser(RemoteSysUserListParameter parameter) {
+                this.errorLog();
+                return List.of();
+            }
+
+            @Override
+            public List<SysDeptDTO> listUserDept(SysUserDeptParameter parameter) {
+                this.errorLog();
+                return List.of();
+            }
+
+            @Override
+            public List<SysDeptDTO> listUserDeptWithChildren(SysUserDeptParameter parameter) {
+                this.errorLog();
+                return List.of();
+            }
+        };
     }
 }

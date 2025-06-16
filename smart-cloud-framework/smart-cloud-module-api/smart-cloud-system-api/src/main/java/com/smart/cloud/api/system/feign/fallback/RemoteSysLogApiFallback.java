@@ -4,6 +4,7 @@ import com.smart.cloud.api.system.feign.RemoteSysLogApi;
 import com.smart.framework.commons.core.utils.JsonUtils;
 import com.smart.module.api.system.dto.SysLogSaveDTO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,10 +14,17 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Slf4j
-public class RemoteSysLogApiFallback implements RemoteSysLogApi {
+public class RemoteSysLogApiFallback implements FallbackFactory<RemoteSysLogApi> {
+
     @Override
-    public Boolean saveLog(SysLogSaveDTO parameter) {
-        log.error("saveLog error,log:{}", JsonUtils.toJsonString(parameter));
-        return false;
+    public RemoteSysLogApi create(Throwable cause) {
+        return new RemoteSysLogApi() {
+
+            @Override
+            public Boolean saveLog(SysLogSaveDTO parameter) {
+                log.error("RemoteSysLogApiFallback, parameter:{}", JsonUtils.toJsonString(parameter), cause);
+                return false;
+            }
+        };
     }
 }

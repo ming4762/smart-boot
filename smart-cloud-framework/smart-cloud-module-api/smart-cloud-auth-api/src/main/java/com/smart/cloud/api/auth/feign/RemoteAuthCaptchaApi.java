@@ -1,5 +1,6 @@
 package com.smart.cloud.api.auth.feign;
 
+import com.smart.cloud.api.auth.feign.fallback.RemoteAuthCaptchaApiFallback;
 import com.smart.cloud.common.core.constants.CloudServiceNameConstants;
 import com.smart.framework.commons.core.captcha.dto.CaptchaGenerateDTO;
 import com.smart.framework.commons.core.captcha.dto.CaptchaGenerateParameter;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
  * @author zhongming4762
  * 2023/6/27
  */
-@FeignClient(value = CloudServiceNameConstants.AUTH_SERVICE, contextId = "remoteAuthCaptchaApi")
+@FeignClient(value = CloudServiceNameConstants.AUTH_SERVICE, fallbackFactory = RemoteAuthCaptchaApiFallback.class, contextId = "remoteAuthCaptchaApi")
 public interface RemoteAuthCaptchaApi extends AuthCaptchaApi {
 
     /**

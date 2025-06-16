@@ -2,6 +2,8 @@ package com.smart.cloud.api.system.feign.fallback;
 
 import com.smart.cloud.api.system.feign.RemoteSysDictApi;
 import com.smart.module.api.system.dto.SysDictItemDTO;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -13,14 +15,28 @@ import java.util.Map;
  * @since 5.0.0
  */
 @Component
-public class RemoteSysDictApiFallback implements RemoteSysDictApi {
-    @Override
-    public List<SysDictItemDTO> listByDictCode(String dictCode) {
-        return List.of();
-    }
+@Slf4j
+public class RemoteSysDictApiFallback implements FallbackFactory<RemoteSysDictApi> {
 
     @Override
-    public Map<String, List<SysDictItemDTO>> listByDictCode(List<String> dictCode) {
-        return Map.of();
+    public RemoteSysDictApi create(Throwable cause) {
+        return new RemoteSysDictApi() {
+
+            private void errorLog() {
+                log.error("RemoteSysDictApiFallback", cause);
+            }
+
+            @Override
+            public List<SysDictItemDTO> listByDictCode(String dictCode) {
+                this.errorLog();
+                return List.of();
+            }
+
+            @Override
+            public Map<String, List<SysDictItemDTO>> listByDictCode(List<String> dictCode) {
+                this.errorLog();
+                return Map.of();
+            }
+        };
     }
 }

@@ -1,9 +1,10 @@
 package com.smart.cloud.api.system.feign.fallback;
 
 import com.smart.cloud.api.system.feign.RemoteSysI18nApi;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
 
@@ -13,9 +14,22 @@ import java.util.Map;
  * @since 5.0.0
  */
 @Component
-public class RemoteSysI18nApiFallback implements RemoteSysI18nApi {
+@Slf4j
+public class RemoteSysI18nApiFallback implements FallbackFactory<RemoteSysI18nApi> {
+
     @Override
-    public Map<String, String> readI18nByLocale(Locale locale) {
-        return Collections.emptyMap();
+    public RemoteSysI18nApi create(Throwable cause) {
+        return new RemoteSysI18nApi() {
+
+            private void errorLog() {
+                log.error("RemoteSysI18nApiFallback", cause);
+            }
+
+            @Override
+            public Map<String, String> readI18nByLocale(Locale locale) {
+                this.errorLog();
+                return Map.of();
+            }
+        };
     }
 }

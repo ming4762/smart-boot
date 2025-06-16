@@ -18,7 +18,7 @@ import java.util.List;
  * @author zhongming4762
  * 2023/6/2 17:05
  */
-@FeignClient(value = CloudServiceNameConstants.SYSTEM_SERVICE, fallback = RemoteSysToolApiFallback.class)
+@FeignClient(value = CloudServiceNameConstants.SYSTEM_SERVICE, fallbackFactory = RemoteSysToolApiFallback.class, contextId = "remoteSysToolApi")
 public interface RemoteSysToolApi extends SysToolApi {
 
     /**

@@ -1,5 +1,6 @@
 package com.smart.cloud.api.auth.feign;
 
+import com.smart.cloud.api.auth.feign.fallback.RemoteAuthApiFallback;
 import com.smart.cloud.common.core.constants.CloudServiceNameConstants;
 import com.smart.framework.commons.core.message.Result;
 import com.smart.module.api.auth.AuthApi;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
  * @author zhongming4762
  * 2023/3/9
  */
-@FeignClient(value = CloudServiceNameConstants.AUTH_SERVICE, contextId = "remoteAuthApi")
+@FeignClient(value = CloudServiceNameConstants.AUTH_SERVICE, fallbackFactory = RemoteAuthApiFallback.class, contextId = "remoteAuthApi")
 public interface RemoteAuthApi extends AuthApi {
 
 

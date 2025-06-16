@@ -1,5 +1,6 @@
 package com.smart.cloud.api.message;
 
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -8,5 +9,6 @@ import org.springframework.context.annotation.Configuration;
  * 2023/6/6
  */
 @Configuration(proxyBeanMethods = false)
+@ComponentScan
 public class SmartCloudMessageApiAutoConfiguration {
 }

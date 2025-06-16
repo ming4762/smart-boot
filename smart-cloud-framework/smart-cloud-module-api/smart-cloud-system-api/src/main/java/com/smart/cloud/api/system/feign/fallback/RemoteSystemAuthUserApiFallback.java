@@ -7,6 +7,8 @@ import com.smart.module.api.system.dto.QueryUserAccountDTO;
 import com.smart.module.api.system.parameter.UserAccountUnLockParameter;
 import com.smart.module.api.system.parameter.WechatUserQueryParameter;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,34 +17,51 @@ import org.springframework.stereotype.Component;
  * @since 5.0.0
  */
 @Component
-public class RemoteSystemAuthUserApiFallback implements RemoteSystemAuthUserApi {
-    @Override
-    public AuthUserDTO getByUsername(@NonNull String username) {
-        return null;
-    }
+@Slf4j
+public class RemoteSystemAuthUserApiFallback implements FallbackFactory<RemoteSystemAuthUserApi> {
 
     @Override
-    public AuthUserDTO getByMobile(@NonNull String mobile) {
-        return null;
-    }
+    public RemoteSystemAuthUserApi create(Throwable cause) {
+        return new RemoteSystemAuthUserApi() {
 
-    @Override
-    public UserAccountData queryUserAccount(@NonNull QueryUserAccountDTO parameter) {
-        return null;
-    }
+            private void errorLog() {
+                log.error("RemoteSystemAuthUserApiFallback", cause);
+            }
+            @Override
+            public AuthUserDTO getByUsername(@NonNull String username) {
+                this.errorLog();
+                return null;
+            }
 
-    @Override
-    public AuthUserDTO getByAppOpenid(WechatUserQueryParameter parameter) {
-        return null;
-    }
+            @Override
+            public AuthUserDTO getByMobile(@NonNull String mobile) {
+                this.errorLog();
+                return null;
+            }
 
-    @Override
-    public AuthUserDTO getByUnionid(WechatUserQueryParameter parameter) {
-        return null;
-    }
+            @Override
+            public UserAccountData queryUserAccount(@NonNull QueryUserAccountDTO parameter) {
+                this.errorLog();
+                return null;
+            }
 
-    @Override
-    public boolean unlockAccount(UserAccountUnLockParameter parameter) {
-        return false;
+            @Override
+            public AuthUserDTO getByAppOpenid(WechatUserQueryParameter parameter) {
+                this.errorLog();
+                return null;
+            }
+
+            @Override
+            public AuthUserDTO getByUnionid(WechatUserQueryParameter parameter) {
+                this.errorLog();
+                return null;
+            }
+
+            @Override
+            public boolean unlockAccount(UserAccountUnLockParameter parameter) {
+                this.errorLog();
+                return false;
+            }
+        };
     }
 }

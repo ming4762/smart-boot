@@ -1,6 +1,8 @@
 package com.smart.cloud.api.system.feign.fallback;
 
 import com.smart.cloud.api.system.feign.RemoteSysParameterApi;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
@@ -13,15 +15,28 @@ import java.util.Map;
  * @since 5.0.0
  */
 @Component
-public class RemoteSysParameterApiFallback implements RemoteSysParameterApi {
-    @Override
-    public String getParameter(@NonNull String code) {
-        return "";
-    }
+@Slf4j
+public class RemoteSysParameterApiFallback implements FallbackFactory<RemoteSysParameterApi> {
 
     @Override
-    @NonNull
-    public Map<String, String> getParameter(@NonNull List<String> codeList) {
-        return Map.of();
+    public RemoteSysParameterApi create(Throwable cause) {
+        return new RemoteSysParameterApi() {
+
+            private void errorLog() {
+                log.error("RemoteSysParameterApiFallback", cause);
+            }
+            @Override
+            public String getParameter(@NonNull String code) {
+                this.errorLog();
+                return "";
+            }
+
+            @Override
+            @NonNull
+            public Map<String, String> getParameter(@NonNull List<String> codeList) {
+                this.errorLog();
+                return Map.of();
+            }
+        };
     }
 }

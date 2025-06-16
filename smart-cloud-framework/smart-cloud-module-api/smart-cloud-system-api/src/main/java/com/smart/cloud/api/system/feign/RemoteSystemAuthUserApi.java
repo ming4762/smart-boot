@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
  * @author zhongming4762
  * 2023/3/8
  */
-@FeignClient(value = CloudServiceNameConstants.SYSTEM_SERVICE, fallback = RemoteSystemAuthUserApiFallback.class)
+@FeignClient(value = CloudServiceNameConstants.SYSTEM_SERVICE, fallbackFactory = RemoteSystemAuthUserApiFallback.class, contextId = "remoteSystemAuthUserApi")
 public interface RemoteSystemAuthUserApi extends SystemAuthUserApi {
 
     /**

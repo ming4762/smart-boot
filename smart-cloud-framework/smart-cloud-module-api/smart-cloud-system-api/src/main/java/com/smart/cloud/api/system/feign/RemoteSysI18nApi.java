@@ -14,7 +14,7 @@ import java.util.Map;
  * @author zhongming4762
  * 2023/3/12
  */
-@FeignClient(value = CloudServiceNameConstants.SYSTEM_SERVICE, fallback = RemoteSysI18nApiFallback.class)
+@FeignClient(value = CloudServiceNameConstants.SYSTEM_SERVICE, fallbackFactory = RemoteSysI18nApiFallback.class, contextId = "remoteSysI18nApi")
 public interface RemoteSysI18nApi extends SysI18nApi {
 
     /**

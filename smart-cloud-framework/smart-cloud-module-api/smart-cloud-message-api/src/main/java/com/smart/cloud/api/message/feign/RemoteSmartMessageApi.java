@@ -1,5 +1,6 @@
 package com.smart.cloud.api.message.feign;
 
+import com.smart.cloud.api.message.feign.fallback.RemoteSmartMessageApiFallback;
 import com.smart.cloud.common.core.constants.CloudServiceNameConstants;
 import com.smart.module.api.message.SmartMessageApi;
 import com.smart.module.api.message.constants.SmartMessageApiUrlConstants;
@@ -17,7 +18,7 @@ import java.util.List;
  * @author zhongming4762
  * 2023/6/6
  */
-@FeignClient(value = CloudServiceNameConstants.MESSAGE_SERVICE, contextId = "smartMessageApi")
+@FeignClient(value = CloudServiceNameConstants.MESSAGE_SERVICE, fallbackFactory = RemoteSmartMessageApiFallback.class, contextId = "remoteSmartMessageApi")
 public interface RemoteSmartMessageApi extends SmartMessageApi {
 
     /**
