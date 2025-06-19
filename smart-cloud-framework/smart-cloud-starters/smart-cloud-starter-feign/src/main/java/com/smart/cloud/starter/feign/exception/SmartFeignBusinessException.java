@@ -18,4 +18,9 @@ public class SmartFeignBusinessException extends RuntimeException {
     public SmartFeignBusinessException(Object errorData) {
         this.errorData = errorData;
     }
+
+    public SmartFeignBusinessException(String message, Object errorData) {
+        super(message);
+        this.errorData = errorData;
+    }
 }

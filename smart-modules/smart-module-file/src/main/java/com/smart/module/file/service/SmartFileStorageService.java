@@ -1,8 +1,8 @@
 package com.smart.module.file.service;
 
 import com.smart.framework.crud.service.BaseService;
-import com.smart.framework.file.core.service.FileStorageService;
 import com.smart.module.file.model.SmartFileStoragePO;
+import com.smart.module.file.pojo.FileStorageServiceCacheData;
 
 import java.io.Serializable;
 import java.util.List;
@@ -49,5 +49,5 @@ public interface SmartFileStorageService extends BaseService<SmartFileStoragePO>
      * @param fileStorageCode 文件存储code
      * @return 文件存储服务
      */
-    FileStorageService getFileStorageService(Long fileStorageId, String fileStorageCode);
+    FileStorageServiceCacheData getFileStorageService(Long fileStorageId, String fileStorageCode);
 }

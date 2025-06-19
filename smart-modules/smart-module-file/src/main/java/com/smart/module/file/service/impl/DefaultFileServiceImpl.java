@@ -11,6 +11,7 @@ import com.smart.module.api.file.bo.FileDownloadResult;
 import com.smart.module.api.file.bo.FileHandlerResult;
 import com.smart.module.api.file.dto.FileSaveParameter;
 import com.smart.module.file.model.SmartFilePO;
+import com.smart.module.file.pojo.FileStorageServiceCacheData;
 import com.smart.module.file.pojo.bo.SysFileBO;
 import com.smart.module.file.service.SmartFileService;
 import com.smart.module.file.service.SmartFileStorageService;
@@ -120,7 +121,7 @@ public class DefaultFileServiceImpl implements FileService {
         sysFileList.stream()
                 .collect(Collectors.groupingBy(SmartFilePO::getFileStorageId))
                 .forEach((storageId, list) -> {
-                    FileStorageService fileStorageService = this.getFileStorageService(storageId, null);
+                    FileStorageService fileStorageService = this.getFileStorageService(storageId, null).getFileStorageService();
                     fileStorageService.delete(
                             FileStorageDeleteParameter.builder()
                                     .fileStorageId(storageId)
@@ -157,7 +158,7 @@ public class DefaultFileServiceImpl implements FileService {
             // 文件已经过期，但是还未被删除
             return null;
         }
-        FileStorageService fileStorageService = this.getFileStorageService(sysFileData.getFileStorageId(), null);
+        FileStorageService fileStorageService = this.getFileStorageService(sysFileData.getFileStorageId(), null).getFileStorageService();
         InputStream inputStream = fileStorageService.download(
                 FileStorageGetParameter.builder()
                         .fileStorageId(sysFileData.getFileStorageId())
@@ -198,7 +199,7 @@ public class DefaultFileServiceImpl implements FileService {
         }
         return fileList.stream()
                 .map(item -> {
-                    FileStorageService fileStorageService = this.getFileStorageService(item.getFileStorageId(), null);
+                    FileStorageService fileStorageService = this.getFileStorageService(item.getFileStorageId(), null).getFileStorageService();
                     return fileStorageService.getAddress(
                             FileStorageGetParameter.builder()
                                     .storageStoreKey(item.getStorageStoreKey())
@@ -215,7 +216,11 @@ public class DefaultFileServiceImpl implements FileService {
             fileSaveStorageParameter.setFilename(file.getFile().getFilename());
         }
         // 获取文件存储器
-        FileStorageService fileStorageService = this.getFileStorageService(file.getParameter().getFileStorageId(), file.getParameter().getFileStorageCode());
+        FileStorageServiceCacheData serviceCacheData = this.getFileStorageService(file.getParameter().getFileStorageId(), file.getParameter().getFileStorageCode());
+        FileStorageService fileStorageService = serviceCacheData.getFileStorageService();
+        if (fileSaveStorageParameter.getFileStorageId() == null) {
+            fileSaveStorageParameter.setFileStorageId(serviceCacheData.getId());
+        }
         // 保存文件
         FileStorageSaveResult fileStorageSaveResult = null;
         try (InputStream inputStream = file.getInputStream()) {
@@ -257,7 +262,7 @@ public class DefaultFileServiceImpl implements FileService {
      * @param fileStorageCode 文件存储编码
      * @return 文件存储服务
      */
-    protected FileStorageService getFileStorageService(Long fileStorageId, String fileStorageCode) {
+    protected FileStorageServiceCacheData getFileStorageService(Long fileStorageId, String fileStorageCode) {
         return this.smartFileStorageService.getFileStorageService(fileStorageId, fileStorageCode);
     }
 }

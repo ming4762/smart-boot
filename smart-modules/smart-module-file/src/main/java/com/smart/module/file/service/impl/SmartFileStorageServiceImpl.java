@@ -14,6 +14,7 @@ import com.smart.framework.file.core.service.FileStorageService;
 import com.smart.module.api.file.constants.FileStorageTypeEnum;
 import com.smart.module.file.mapper.SmartFileStorageMapper;
 import com.smart.module.file.model.SmartFileStoragePO;
+import com.smart.module.file.pojo.FileStorageServiceCacheData;
 import com.smart.module.file.service.SmartFileStorageService;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -43,8 +44,8 @@ public class SmartFileStorageServiceImpl extends BaseServiceImpl<SmartFileStorag
 
     private static final String DEFAULT_FILE_STORAGE_CODE = "default_%$_123";
 
-    private static final Map<Long, FileStorageService> FILE_STORAGE_SERVICE_ID_MAP = new ConcurrentHashMap<>();
-    private static final Map<String, FileStorageService> FILE_STORAGE_SERVICE_CODE_MAP = new ConcurrentHashMap<>();
+    private static final Map<Long, FileStorageServiceCacheData> FILE_STORAGE_SERVICE_ID_MAP = new ConcurrentHashMap<>();
+    private static final Map<String, FileStorageServiceCacheData> FILE_STORAGE_SERVICE_CODE_MAP = new ConcurrentHashMap<>();
 
     private final Map<FileStorageTypeEnum, FileStorageService> actualFileServiceMap;
 
@@ -90,6 +91,8 @@ public class SmartFileStorageServiceImpl extends BaseServiceImpl<SmartFileStorag
                         .set(SmartFileStoragePO::getDefaultStorage, true)
                         .eq(SmartFileStoragePO::getId, id)
         );
+        // 清除默认的存储器
+        FILE_STORAGE_SERVICE_CODE_MAP.remove(DEFAULT_FILE_STORAGE_CODE);
         return true;
     }
 
@@ -185,7 +188,7 @@ public class SmartFileStorageServiceImpl extends BaseServiceImpl<SmartFileStorag
      * @return 文件存储服务
      */
     @Override
-    public FileStorageService getFileStorageService(Long fileStorageId, String fileStorageCode) {
+    public FileStorageServiceCacheData getFileStorageService(Long fileStorageId, String fileStorageCode) {
         // 根据ID或code获取
         if (fileStorageId != null && FILE_STORAGE_SERVICE_ID_MAP.containsKey(fileStorageId)) {
             return FILE_STORAGE_SERVICE_ID_MAP.get(fileStorageId);
@@ -193,6 +196,7 @@ public class SmartFileStorageServiceImpl extends BaseServiceImpl<SmartFileStorag
         if (StringUtils.hasText(fileStorageCode) && FILE_STORAGE_SERVICE_CODE_MAP.containsKey(fileStorageCode)) {
             return FILE_STORAGE_SERVICE_CODE_MAP.get(fileStorageCode);
         }
+        // 默认值变更之后需要清除
         if (FILE_STORAGE_SERVICE_CODE_MAP.containsKey(DEFAULT_FILE_STORAGE_CODE)) {
             return FILE_STORAGE_SERVICE_CODE_MAP.get(DEFAULT_FILE_STORAGE_CODE);
         }
@@ -226,14 +230,14 @@ public class SmartFileStorageServiceImpl extends BaseServiceImpl<SmartFileStorag
                             .fileStorageId(smartFileStorage.getId())
                             .build()
             );
-            if (fileStorageId != null) {
-                FILE_STORAGE_SERVICE_ID_MAP.put(fileStorageId, fileStorageService);
-            } else if (StringUtils.hasText(fileStorageCode)) {
-                FILE_STORAGE_SERVICE_CODE_MAP.put(fileStorageCode, fileStorageService);
+            FileStorageServiceCacheData cacheData = new FileStorageServiceCacheData(smartFileStorage.getId(), smartFileStorage.getStorageCode(), fileStorageService);
+            FILE_STORAGE_SERVICE_ID_MAP.put(smartFileStorage.getId(), cacheData);
+            if (StringUtils.hasText(fileStorageCode)) {
+                FILE_STORAGE_SERVICE_CODE_MAP.put(fileStorageCode, cacheData);
             } else {
-                FILE_STORAGE_SERVICE_CODE_MAP.put(DEFAULT_FILE_STORAGE_CODE, fileStorageService);
+                FILE_STORAGE_SERVICE_CODE_MAP.put(DEFAULT_FILE_STORAGE_CODE, cacheData);
             }
-            return fileStorageService;
+            return cacheData;
         } finally {
             lock.unlock();
         }

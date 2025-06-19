@@ -8,6 +8,7 @@ import com.smart.module.api.file.dto.RemoteFileSaveParameter;
 import feign.Response;
 import lombok.NonNull;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Collection;
@@ -53,7 +54,7 @@ public interface FeignSmartFileApi {
      * @param parameter 保存参数
      * @return 文件信息
      */
-    @PostMapping(SmartFileApiUrlConstants.SAVE)
+    @PostMapping(value = SmartFileApiUrlConstants.SAVE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     FileHandlerResult save(RemoteFileSaveParameter parameter);
 
     @PostMapping(SmartFileApiUrlConstants.LIST_ADDRESS)

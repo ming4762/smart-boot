@@ -198,6 +198,10 @@ public final class JsonUtils {
         }
     }
 
+    public static ObjectMapper getObjectMapper() {
+        return OBJECT_MAPPER;
+    }
+
     private static void deepMerge(JsonNode target, JsonNode source) {
         for (Iterator<Map.Entry<String, JsonNode>> it = source.fields(); it.hasNext(); ) {
             Map.Entry<String, JsonNode> field = it.next();
