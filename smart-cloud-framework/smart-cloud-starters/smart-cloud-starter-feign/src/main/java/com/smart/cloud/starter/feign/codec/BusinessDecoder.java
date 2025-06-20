@@ -26,7 +26,7 @@ import java.util.Map;
 public class BusinessDecoder extends ResponseEntityDecoder {
 
     private static final String CODE_KEY = "code";
-    private static final String SUCCESS_CODE = "200";
+    private static final String ERROR_CODE = "500";
     private static final String DATA_KEY = "data";
 
     public BusinessDecoder(Decoder decoder) {
@@ -44,17 +44,11 @@ public class BusinessDecoder extends ResponseEntityDecoder {
         }
         if (root.isObject() && root.has(CODE_KEY)) {
             String code = root.get(CODE_KEY).asText();
-            if (!SUCCESS_CODE.equals(code)) {
+            if (ERROR_CODE.equals(code)) {
                 // 业务异常
                 Map<?,?> err = objectMapper.convertValue(root, Map.class);
                 throw new SmartFeignBusinessException(err.get(DATA_KEY) == null ? null : JsonUtils.toJsonString(err.get(DATA_KEY)), err);
             }
-            JsonNode dataNode = root.get(DATA_KEY);
-            if (dataNode == null || dataNode.isNull()) {
-                return null;
-            }
-            JavaType javaType = objectMapper.getTypeFactory().constructType(type);
-            return objectMapper.convertValue(dataNode, javaType);
         }
 
         JavaType javaType = objectMapper.getTypeFactory().constructType(type);
