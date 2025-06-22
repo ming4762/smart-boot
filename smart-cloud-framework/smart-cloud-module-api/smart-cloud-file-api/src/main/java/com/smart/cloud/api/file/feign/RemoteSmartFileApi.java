@@ -10,6 +10,8 @@ import lombok.SneakyThrows;
 import org.springframework.http.HttpHeaders;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.List;
 
@@ -37,7 +39,7 @@ public class RemoteSmartFileApi implements SmartFileApi {
                 .findFirst()
                 .map(item -> item.split("filename=")[1])
                 .orElse("");
-        result.setFilename(filename);
+        result.setFilename(URLDecoder.decode(filename, StandardCharsets.UTF_8));
         return result;
     }
 

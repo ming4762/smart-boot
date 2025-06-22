@@ -48,7 +48,7 @@ public class FileController {
         FileDownloadResult downloadResult = this.fileService.download(id);
         if (downloadResult != null) {
             //设置文件名并转码
-            response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(downloadResult.getFilename(), StandardCharsets.UTF_8.name()));
+            response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(downloadResult.getFilename(), StandardCharsets.UTF_8));
             response.setContentType(downloadResult.getContentType());
             try (InputStream inputStream = downloadResult.getInputStream()) {
                 IOUtils.copy(inputStream, response.getOutputStream());

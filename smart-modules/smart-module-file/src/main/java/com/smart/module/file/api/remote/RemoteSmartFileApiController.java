@@ -20,6 +20,8 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -55,7 +57,7 @@ public class RemoteSmartFileApiController implements SmartFileApi {
                 .orElse(null);
         if (response != null) {
             response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
-            response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + downloadResult.getFilename());
+            response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + URLEncoder.encode(downloadResult.getFilename(), StandardCharsets.UTF_8));
             IOUtils.copy(downloadResult.getInputStream(), response.getOutputStream());
         }
         return null;

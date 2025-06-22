@@ -10,10 +10,13 @@ import feign.Response;
 import feign.Util;
 import feign.codec.Decoder;
 import org.springframework.cloud.openfeign.support.ResponseEntityDecoder;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -35,6 +38,13 @@ public class BusinessDecoder extends ResponseEntityDecoder {
 
     @Override
     public Object decode(Response response, Type type) throws IOException, FeignException {
+        // 判断是否是application/json类型，如果不是则调用父类的decode方法
+        Collection<String> contentTypes = response.headers().get(HttpHeaders.CONTENT_TYPE);
+        String contentType = contentTypes != null && !contentTypes.isEmpty() ? contentTypes.iterator().next() : "";
+        if (!contentType.contains(MediaType.APPLICATION_JSON_VALUE)) {
+            return super.decode(response, type);
+        }
+
         String string = Util.toString(response.body().asReader(StandardCharsets.UTF_8));
         ObjectMapper objectMapper = JsonUtils.getObjectMapper();
         JsonNode root = objectMapper.readTree(string);
