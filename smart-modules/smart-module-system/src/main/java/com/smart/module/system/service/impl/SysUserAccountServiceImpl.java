@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
+import com.smart.framework.auth.common.utils.AuthUtils;
 import com.smart.framework.commons.core.dto.auth.UserAccountStatusEnum;
+import com.smart.framework.commons.core.exception.SystemException;
 import com.smart.framework.commons.core.i18n.I18nException;
 import com.smart.framework.crud.service.BaseServiceImpl;
 import com.smart.module.api.system.constants.SysParameterCodeEnum;
@@ -170,10 +172,18 @@ public class SysUserAccountServiceImpl extends BaseServiceImpl<SysUserAccountMap
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean unlock(@NonNull Long userId, UserAccountStatusEnum lockStatus) {
-        SysUserAccountPO userAccount = this.getById(userId);
-        if (userAccount == null) {
+        Long tenantId = AuthUtils.getNonNullCurrentTenantId();
+        List<SysUserAccountPO> accountList = this.lambdaQuery()
+                .eq(SysUserAccountPO::getUserId, userId)
+                .eq(SysUserAccountPO::getTenantId, tenantId)
+                .list();
+        if (CollectionUtils.isEmpty(accountList)) {
             return false;
         }
+        if (accountList.size() > 1) {
+            throw new SystemException(String.format("用户账户异常，单个租户有多个账户，租户id：%s，1用户ID：%s", tenantId, userId));
+        }
+        SysUserAccountPO userAccount = accountList.getFirst();
         return this.unlock(userAccount, lockStatus);
     }
 
