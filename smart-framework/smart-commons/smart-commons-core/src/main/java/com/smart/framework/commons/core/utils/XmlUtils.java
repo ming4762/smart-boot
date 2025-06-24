@@ -1,7 +1,9 @@
 package com.smart.framework.commons.core.utils;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import lombok.SneakyThrows;
 import org.springframework.lang.NonNull;
@@ -18,6 +20,11 @@ public class XmlUtils {
 
     private XmlUtils() {
         throw new IllegalStateException("Utility class");
+    }
+
+    static {
+        XML_MAPPER.setSerializationInclusion(JsonInclude.Include.ALWAYS);
+        XML_MAPPER.enable(SerializationFeature.INDENT_OUTPUT);
     }
 
     /**
