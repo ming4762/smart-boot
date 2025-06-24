@@ -79,8 +79,14 @@ public class SmartDataPermissionController {
     @Getter
     @EqualsAndHashCode
     static class IgnoreData {
+        /**
+         * 忽略类型
+         */
         private IgnoreType type;
 
+        /**
+         * 表名或者mapperId
+         */
         private String value;
     }
 
