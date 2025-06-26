@@ -50,7 +50,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 @EnableConfigurationProperties(AuthProperties.class)
 @Import(AuthMethodSecurityConfig.class)
 @ComponentScan(basePackages = {"com.smart.module.auth.controller", "com.smart.module.auth.api"})
-public class AuthSecurity2AutoConfiguration {
+public class SmartAuthSecurityAutoConfiguration {
 
     /**
      * 创建 AuthenticationSuccessHandler

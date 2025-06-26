@@ -61,7 +61,7 @@ public class FileController {
     public Result<String> getAddress(@RequestBody IdParameter idParameter) {
         List<String> addressList = this.fileService.listAddress(List.of(idParameter.getId()));
         if (!CollectionUtils.isEmpty(addressList)) {
-            return Result.success(addressList.get(0));
+            return Result.success(addressList.getFirst());
         }
         return Result.failure("获取连接失败");
     }
