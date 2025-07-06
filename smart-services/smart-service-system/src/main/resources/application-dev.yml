@@ -72,6 +72,8 @@ smart:
         - /doc.html
         - /webjars/**
         - /v3/api-docs/**
+        - /swagger-ui.html
+        - /swagger-ui/**
       pattern:
         - /xrebel/**
         - /websocket/**
@@ -90,10 +92,6 @@ smart:
       init-default-resource: true
       prefix: smart-captcha
 
-knife4j:
-  enable: true
-  setting:
-    language: zh_cn
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
