@@ -23,7 +23,7 @@ import java.util.List;
 @Aspect
 public class DataPermissionContextAspect {
 
-    @Around("@annotation(com.smart.framework.crud.datapermission.annotation.SmartDataPermissions)")
+    @Around("@annotation(com.smart.framework.crud.datapermission.annotation.SmartDataPermission)")
     public Object around(ProceedingJoinPoint point) throws Throwable {
         Signature signature = point.getSignature();
         if (!(signature instanceof MethodSignature methodSignature)) {

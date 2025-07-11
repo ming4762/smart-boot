@@ -70,8 +70,8 @@ public class SmartDataPermissionHandler implements MultiDataPermissionHandler {
         }
         // 获取用户上下文
         SmartDataContextUserModel userContext = this.getUserContext();
-        if (userContext == null || Boolean.TRUE.equals(userContext.getIsSuperAdmin())) {
-            // 用户上下文为空或者是超级管理员，直接返回
+        if (userContext == null) {
+            // 用户上下文为空，直接返回
             return null;
         }
         // 获取数据权限列表
@@ -207,7 +207,7 @@ public class SmartDataPermissionHandler implements MultiDataPermissionHandler {
                     return SmartDataPermissionModel.builder()
                             .permissionCode(item.configCode())
                             .scope(item.scope())
-                            .column(item.column())
+                            .column(StringUtils.hasText(item.column()) ? item.column() : null)
                             .tableName(tableName)
                             .permissionValue(item.permissionValue())
                             .build();
