@@ -525,10 +525,13 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
             }
         } else {
             // 非平台租户的普通角色
-            SysListTenantRoleFunctionDTO parameter = new SysListTenantRoleFunctionDTO();
-            parameter.setTenantId(tenantId);
-            parameter.setRoleIdList(roleIdProvider.get());
-            functionIds = new HashSet<>(this.sysTenantUserService.listTenantRoleFunctionIds(parameter));
+            List<Long> roleIdList = roleIdProvider.get();
+            if (!CollectionUtils.isEmpty(roleIdList)) {
+                SysListTenantRoleFunctionDTO parameter = new SysListTenantRoleFunctionDTO();
+                parameter.setTenantId(tenantId);
+                parameter.setRoleIdList(roleIdProvider.get());
+                functionIds = new HashSet<>(this.sysTenantUserService.listTenantRoleFunctionIds(parameter));
+            }
         }
 
         if (CollectionUtils.isEmpty(functionIds)) {
