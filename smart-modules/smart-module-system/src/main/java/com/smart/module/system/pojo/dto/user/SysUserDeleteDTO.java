@@ -3,6 +3,7 @@ package com.smart.module.system.pojo.dto.user;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
  */
 @Getter
 @Setter
+@ToString
 public class SysUserDeleteDTO implements Serializable {
 
     @NotEmpty(message = "用户ID不能为空")

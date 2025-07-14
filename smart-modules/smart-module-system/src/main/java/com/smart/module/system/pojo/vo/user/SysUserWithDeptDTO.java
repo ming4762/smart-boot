@@ -3,6 +3,7 @@ package com.smart.module.system.pojo.vo.user;
 import com.smart.module.system.model.SysUserPO;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serial;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
  */
 @Getter
 @Setter
+@ToString
 public class SysUserWithDeptDTO extends SysUserPO {
 
     @Serial

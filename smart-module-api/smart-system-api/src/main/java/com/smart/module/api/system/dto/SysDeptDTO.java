@@ -2,6 +2,7 @@ package com.smart.module.api.system.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * 部门信息DTO
@@ -11,6 +12,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@ToString
 public class SysDeptDTO {
 
     private Long deptId;

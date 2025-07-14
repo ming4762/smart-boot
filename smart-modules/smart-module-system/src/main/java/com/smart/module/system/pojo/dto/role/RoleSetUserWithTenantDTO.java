@@ -3,6 +3,7 @@ package com.smart.module.system.pojo.dto.role;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * 角色设置用户DTO
@@ -12,6 +13,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@ToString
 public class RoleSetUserWithTenantDTO extends RoleSetUserDTO {
 
     @NotNull(message = "租户ID不能为空")

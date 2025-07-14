@@ -2,6 +2,7 @@ package com.smart.module.system.pojo.dto.user;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -15,6 +16,7 @@ import java.util.List;
  */
 @Getter
 @Setter
+@ToString
 public class UserSaveUpdateWithDeptDTO implements Serializable {
 
     @Serial

@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * @author shizhongming
@@ -14,6 +15,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
+@ToString
 public class RoleListByTenantIdDTO extends PageSortQuery {
 
     @NotNull(message = "租户ID不能为空")

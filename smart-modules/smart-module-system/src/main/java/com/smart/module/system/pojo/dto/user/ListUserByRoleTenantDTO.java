@@ -3,6 +3,7 @@ package com.smart.module.system.pojo.dto.user;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
  */
 @Getter
 @Setter
+@ToString
 public class ListUserByRoleTenantDTO implements Serializable {
 
     private Long tenantId;

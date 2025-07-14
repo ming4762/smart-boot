@@ -2,6 +2,7 @@ package com.smart.module.system.pojo.dbo.datapermission;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -14,6 +15,7 @@ import java.io.Serializable;
  */
 @Getter
 @Setter
+@ToString
 public class SysDataPermissionListBO implements Serializable {
 
     @Serial

@@ -3,6 +3,7 @@ package com.smart.module.system.pojo.dto.tenant;
 import com.smart.module.system.pojo.dto.user.UserSaveUpdateWithDeptDTO;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * 租户管理添加修改用户DTO
@@ -12,6 +13,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@ToString
 public class SysTenantSaveUpdateUserDTO extends UserSaveUpdateWithDeptDTO {
 
     /**

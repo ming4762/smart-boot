@@ -3,6 +3,7 @@ package com.smart.module.system.pojo.dto.role;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -16,6 +17,7 @@ import java.util.List;
  */
 @Getter
 @Setter
+@ToString
 public class RoleSetDataPermissionDTO implements Serializable {
 
     @Serial
