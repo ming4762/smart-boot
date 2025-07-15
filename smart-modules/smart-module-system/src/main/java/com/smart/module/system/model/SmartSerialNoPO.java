@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serial;
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
 /**
@@ -80,7 +81,7 @@ public class SmartSerialNoPO extends BaseModelUserTime {
     /**
      * 当前日期，标记重置当前值
      */
-    private ZonedDateTime lastCurrentDate;
+    private LocalDate lastCurrentDate;
 
     /**
     * current_value - 当前值

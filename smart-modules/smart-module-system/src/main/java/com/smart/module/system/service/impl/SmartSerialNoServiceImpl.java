@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -85,7 +86,7 @@ public class SmartSerialNoServiceImpl extends BaseServiceImpl<SmartSerialNoMappe
         List<Long> numberList = new ArrayList<>(parameter.getNumber());
         Long currentValue = serialConfig.getCurrentValue();
         // 判断是否重置当前值，日期变化重置当前值
-        if (serialConfig.getLastCurrentDate() == null || ZonedDateTime.now().isAfter(serialConfig.getLastCurrentDate())) {
+        if (serialConfig.getLastCurrentDate() == null || LocalDate.now().isAfter(serialConfig.getLastCurrentDate())) {
             currentValue = 1L;
         }
         for (int i = 0; i < parameter.getNumber(); i++) {
