@@ -1,10 +1,14 @@
 package com.smart.framework.extension.dingtalk.api;
 
+import com.aliyun.dingtalkcontact_1_0.models.GetUserHeaders;
+import com.aliyun.dingtalkcontact_1_0.models.GetUserResponse;
+import com.aliyun.dingtalkcontact_1_0.models.GetUserResponseBody;
+import com.aliyun.teautil.models.RuntimeOptions;
 import com.dingtalk.api.request.OapiV2UserGetbymobileRequest;
 import com.dingtalk.api.response.OapiV2UserGetbymobileResponse;
 import com.smart.framework.extension.dingtalk.constants.url.DingTalkUserApiUrlEnum;
 import com.smart.framework.extension.dingtalk.pojo.dto.GetUserByMobileResult;
-import com.smart.framework.extension.dingtalk.pojo.parameter.GetAccessTokenParameter;
+import com.smart.framework.extension.dingtalk.pojo.parameter.AppKeySecretParameter;
 import com.taobao.api.ApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -34,7 +38,7 @@ public class UserApi extends AbstractDingtalkApi {
      * @return 用户信息
      */
     @SneakyThrows(ApiException.class)
-    public GetUserByMobileResult getByMobile(String mobile, GetAccessTokenParameter accessTokenParameter) {
+    public GetUserByMobileResult getByMobile(String mobile, AppKeySecretParameter accessTokenParameter) {
         Assert.notNull(mobile, "mobile must not be null");
         OapiV2UserGetbymobileRequest request = new OapiV2UserGetbymobileRequest();
         request.setMobile(mobile);
@@ -51,12 +55,28 @@ public class UserApi extends AbstractDingtalkApi {
      * @param accessTokenParameter token信息
      * @return 用户信息
      */
-    public Map<String, GetUserByMobileResult> batchGetByMobile(List<String> mobiles, GetAccessTokenParameter accessTokenParameter) {
+    public Map<String, GetUserByMobileResult> batchGetByMobile(List<String> mobiles, AppKeySecretParameter accessTokenParameter) {
         if (CollectionUtils.isEmpty(mobiles)) {
             return Map.of();
         }
         Map<String, GetUserByMobileResult> result = new HashMap<>(mobiles.size());
         mobiles.forEach(mobile -> result.put(mobile, this.getByMobile(mobile, accessTokenParameter)));
         return result;
+    }
+
+    /**
+     * 通过用户token获取获取用户通讯录个人信息
+     * @param userAccessToken 用户token
+     * @return 获取用户通讯录个人信息
+     */
+    @SneakyThrows(Exception.class)
+    public GetUserResponseBody getUserByUserToken(String userAccessToken) {
+        com.aliyun.dingtalkcontact_1_0.Client client = this.createContactClient();
+        GetUserHeaders getUserHeaders = new GetUserHeaders();
+        getUserHeaders.setXAcsDingtalkAccessToken(userAccessToken);
+        GetUserResponse userResponse = client.getUserWithOptions("me", getUserHeaders, new RuntimeOptions());
+        this.validateResponse(userResponse);
+
+        return userResponse.getBody();
     }
 }

@@ -11,7 +11,7 @@ import com.smart.framework.commons.core.utils.JsonUtils;
 import com.smart.framework.commons.validate.utils.ValidatorUtils;
 import com.smart.framework.extension.dingtalk.constants.url.DingTalkWorkNoticeApiUrlEnum;
 import com.smart.framework.extension.dingtalk.pojo.dto.WorkNoticeAsyncSendResult;
-import com.smart.framework.extension.dingtalk.pojo.parameter.GetAccessTokenParameter;
+import com.smart.framework.extension.dingtalk.pojo.parameter.AppKeySecretParameter;
 import com.smart.framework.extension.dingtalk.pojo.parameter.WorkNoticeAsyncSendParameter;
 import com.smart.framework.extension.dingtalk.pojo.parameter.message.*;
 import com.taobao.api.ApiException;
@@ -39,7 +39,7 @@ public class WorkNoticeApi extends AbstractDingtalkApi {
      * @return 工作通知发送结果
      */
     @SneakyThrows(ApiException.class)
-    public WorkNoticeAsyncSendResult syncSend(WorkNoticeAsyncSendParameter parameter, GetAccessTokenParameter accessTokenParameter) {
+    public WorkNoticeAsyncSendResult syncSend(WorkNoticeAsyncSendParameter parameter, AppKeySecretParameter accessTokenParameter) {
         // 校验参数
         ValidatorUtils.validate(parameter);
         // 获取token
@@ -119,7 +119,7 @@ public class WorkNoticeApi extends AbstractDingtalkApi {
      * @return 是否撤回成功
      */
     @SneakyThrows(ApiException.class)
-    public boolean recall(Long agentId, Long taskId, GetAccessTokenParameter accessTokenParameter) {
+    public boolean recall(Long agentId, Long taskId, AppKeySecretParameter accessTokenParameter) {
         DingTalkClient client = this.getOldClient(DingTalkWorkNoticeApiUrlEnum.RECALL);
         OapiMessageCorpconversationRecallRequest request = new OapiMessageCorpconversationRecallRequest();
         request.setAgentId(agentId);
@@ -139,7 +139,7 @@ public class WorkNoticeApi extends AbstractDingtalkApi {
      * @return 发送结果
      */
     @SneakyThrows(ApiException.class)
-    public OapiMessageCorpconversationGetsendresultResponse.AsyncSendResult getSendResult(Long agentId, Long taskId, GetAccessTokenParameter accessTokenParameter) {
+    public OapiMessageCorpconversationGetsendresultResponse.AsyncSendResult getSendResult(Long agentId, Long taskId, AppKeySecretParameter accessTokenParameter) {
         DingTalkClient client = this.getOldClient(DingTalkWorkNoticeApiUrlEnum.GET_SEND_RESULT);
         OapiMessageCorpconversationGetsendresultRequest request = new OapiMessageCorpconversationGetsendresultRequest();
         request.setAgentId(agentId);

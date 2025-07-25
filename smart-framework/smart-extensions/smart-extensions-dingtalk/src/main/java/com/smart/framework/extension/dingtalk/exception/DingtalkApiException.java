@@ -1,6 +1,5 @@
 package com.smart.framework.extension.dingtalk.exception;
 
-import com.taobao.api.TaobaoResponse;
 import lombok.Getter;
 
 import java.io.Serial;
@@ -17,7 +16,7 @@ public class DingtalkApiException extends RuntimeException {
     @Serial
     private static final long serialVersionUID = -3752290778515026166L;
 
-    private TaobaoResponse taobaoResponse;
+    private Object response;
 
     public DingtalkApiException() {
         super();
@@ -33,8 +32,8 @@ public class DingtalkApiException extends RuntimeException {
         super(message, cause);
     }
 
-    public DingtalkApiException(TaobaoResponse taobaoResponse) {
-        super(taobaoResponse.getMsg());
-        this.taobaoResponse = taobaoResponse;
+    public DingtalkApiException(String message, Object response) {
+        super(message);
+        this.response = response;
     }
 }

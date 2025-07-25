@@ -17,11 +17,17 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Builder
 @ToString
-public class GetAccessTokenParameter implements Serializable {
+public class AppKeySecretParameter implements Serializable {
     @Serial
     private static final long serialVersionUID = -2567069358104376154L;
 
+    /**
+     * 应用的AppKey或client id
+     */
     private String appKey;
 
+    /**
+     * 应用的AppSecret或client secret
+     */
     private String appSecret;
 }

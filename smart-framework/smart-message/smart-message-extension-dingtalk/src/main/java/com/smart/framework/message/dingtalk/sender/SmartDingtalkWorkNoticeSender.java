@@ -5,7 +5,7 @@ import com.smart.framework.extension.dingtalk.api.UserApi;
 import com.smart.framework.extension.dingtalk.api.WorkNoticeApi;
 import com.smart.framework.extension.dingtalk.constants.DingtalkMessageTypeEnum;
 import com.smart.framework.extension.dingtalk.pojo.dto.WorkNoticeAsyncSendResult;
-import com.smart.framework.extension.dingtalk.pojo.parameter.GetAccessTokenParameter;
+import com.smart.framework.extension.dingtalk.pojo.parameter.AppKeySecretParameter;
 import com.smart.framework.extension.dingtalk.pojo.parameter.WorkNoticeAsyncSendParameter;
 import com.smart.framework.extension.dingtalk.pojo.parameter.message.MarkdownMessageParameter;
 import com.smart.framework.extension.dingtalk.pojo.parameter.message.TextMessageParameter;
@@ -72,7 +72,7 @@ public class SmartDingtalkWorkNoticeSender implements SmartMessageSender {
     @Override
     public MessageSendDTO send(@Nullable String channelProperties, List<SmartMessageToUserDTO> toUserList, RemoteMessageSendParameter parameter) {
         SmartMessageDingtalkChannelProperties properties = JsonUtils.parse(channelProperties, SmartMessageDingtalkChannelProperties.class);
-        GetAccessTokenParameter tokenParameter = new GetAccessTokenParameter(properties.getAppKey(), properties.getAppSecret());
+        AppKeySecretParameter tokenParameter = new AppKeySecretParameter(properties.getAppKey(), properties.getAppSecret());
         String noMobileUsers = toUserList.stream()
                 .filter(item -> !StringUtils.hasText(item.getMobile()))
                 .map(SmartMessageToUserDTO::getFullName)
