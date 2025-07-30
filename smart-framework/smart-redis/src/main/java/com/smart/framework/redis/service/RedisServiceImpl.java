@@ -1,8 +1,8 @@
 package com.smart.framework.redis.service;
 
+import com.smart.framework.commons.core.cache.AbstractCacheService;
 import com.smart.framework.redis.constants.RedisInfoParameterEnum;
 import com.smart.framework.redis.model.RedisKeySpace;
-import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.redisson.api.*;
 import org.redisson.api.options.KeysScanOptions;
@@ -24,34 +24,38 @@ import java.util.stream.StreamSupport;
  * @author shizhongming
  * 2020/1/17 8:47 下午
  */
-@RequiredArgsConstructor
-public class RedisServiceImpl implements RedisService {
+public class RedisServiceImpl extends AbstractCacheService implements RedisService {
 
     private static final String MATCH_STR = "*";
 
     private final RedissonClient redissonClient;
 
+    public RedisServiceImpl(String keyPrefix, RedissonClient redissonClient) {
+        super(keyPrefix);
+        this.redissonClient = redissonClient;
+    }
+
     @Override
     public void matchDelete(@NonNull String prefixKey) {
-        final List<String> keys = this.matchKeys(prefixKey);
+        final List<String> keys = this.matchKeys(this.getCachedKey(prefixKey));
         this.batchDelete(keys);
     }
 
     @Override
     public void put(@NonNull String key, @NonNull Object value) {
-        redissonClient.getBucket(key).set(value);
+        redissonClient.getBucket(getCachedKey(key)).set(value);
 
     }
 
     @Override
     public void put(@NonNull String key, @NonNull Object value, @NonNull Duration timeout) {
-        this.redissonClient.getBucket(key).set(value, timeout);
+        this.redissonClient.getBucket(getCachedKey(key)).set(value, timeout);
     }
 
     @Override
     public void put(@NonNull String key, @NonNull Object value, @NonNull Instant expireTime) {
         this.put(key, value);
-        this.redissonClient.getBucket(key).expire(expireTime);
+        this.redissonClient.getBucket(getCachedKey(key)).expire(expireTime);
     }
 
     @Override
@@ -60,7 +64,7 @@ public class RedisServiceImpl implements RedisService {
             return;
         }
         RBatch batch = this.redissonClient.createBatch();
-        keyValues.forEach((key, value) -> batch.getBucket(key).setAsync(value));
+        keyValues.forEach((key, value) -> batch.getBucket(getCachedKey(key)).setAsync(value));
         batch.execute();
     }
 
@@ -75,7 +79,7 @@ public class RedisServiceImpl implements RedisService {
             return;
         }
         RBatch batch = this.redissonClient.createBatch();
-        keyValues.forEach((key, value) -> batch.getBucket(key).setAsync(value, timeout));
+        keyValues.forEach((key, value) -> batch.getBucket(getCachedKey(key)).setAsync(value, timeout));
         batch.execute();
     }
 
@@ -86,7 +90,7 @@ public class RedisServiceImpl implements RedisService {
         }
         RBatch batch = this.redissonClient.createBatch();
         keyValues.forEach((key, value) -> {
-            RBucketAsync<Object> bucket = batch.getBucket(key);
+            RBucketAsync<Object> bucket = batch.getBucket(getCachedKey(key));
             bucket.setAsync(value);
             bucket.expireAsync(expireTime);
         });
@@ -100,7 +104,7 @@ public class RedisServiceImpl implements RedisService {
      */
     @Override
     public void expire(@NonNull String key, Duration timeout) {
-        this.redissonClient.getBucket(key).expire(timeout);
+        this.redissonClient.getBucket(getCachedKey(key)).expire(timeout);
     }
 
     /**
@@ -115,13 +119,13 @@ public class RedisServiceImpl implements RedisService {
             return;
         }
         RBatch batch = this.redissonClient.createBatch();
-        keys.forEach(key -> batch.getBucket(key).expireAsync(timeout));
+        keys.forEach(key -> batch.getBucket(getCachedKey(key)).expireAsync(timeout));
         batch.execute();
     }
 
     @Override
     public <T> T get(@NonNull String key) {
-        return this.redissonClient.<T>getBucket(key).get();
+        return this.redissonClient.<T>getBucket(getCachedKey(key)).get();
     }
 
     @SneakyThrows({InterruptedException.class, ExecutionException.class})
@@ -135,7 +139,7 @@ public class RedisServiceImpl implements RedisService {
 
         // 为每个 key 添加批量读取操作
         for (String key : keys) {
-            RBucketAsync<T> bucket = batch.getBucket(key);
+            RBucketAsync<T> bucket = batch.getBucket(getCachedKey(key));
             RFuture<T> async = bucket.getAsync();
             asyncList.add(async);
         }
@@ -152,7 +156,7 @@ public class RedisServiceImpl implements RedisService {
 
     @Override
     public void delete(@NonNull String key) {
-        this.redissonClient.getBucket(key).delete();
+        this.redissonClient.getBucket(getCachedKey(key)).delete();
     }
 
     @Override
@@ -161,7 +165,7 @@ public class RedisServiceImpl implements RedisService {
         RBatch batch = redissonClient.createBatch();
         // 为每个 key 添加删除操作
         for (String key : keys) {
-            batch.getBucket(key).deleteAsync();
+            batch.getBucket(getCachedKey(key)).deleteAsync();
         }
         // 执行批处理
         batch.execute();
@@ -177,16 +181,17 @@ public class RedisServiceImpl implements RedisService {
     @Override
     public List<String> matchKeys(@NonNull String patternKey) {
         RKeys keys = this.redissonClient.getKeys();
-        Iterable<String> stringIterable = keys.getKeys(KeysScanOptions.defaults().pattern(patternKey + MATCH_STR));
-
+        Iterable<String> stringIterable = keys.getKeys(KeysScanOptions.defaults().pattern(this.getCachedKey(patternKey) + MATCH_STR));
+        int subLength = this.getKeyPrefix().length();
         return StreamSupport.stream(stringIterable.spliterator(), false)
+                .map(item -> item.substring(subLength))
                 .toList();
     }
 
     @Override
     public boolean hasKey(@NonNull String key) {
         RKeys keys = this.redissonClient.getKeys();
-        return keys.countExists(key) > 0;
+        return keys.countExists(getCachedKey(key)) > 0;
     }
 
     @Override
@@ -220,77 +225,98 @@ public class RedisServiceImpl implements RedisService {
 
     @Override
     public long listSize(String key) {
-        return this.redissonClient.getList(key).size();
+        return this.redissonClient.getList(getCachedKey(key)).size();
     }
 
     @Override
     public void listLeftPush(String key, List<Object> dataList) {
-        this.redissonClient.getList(key).addFirst(dataList);
+        this.redissonClient.getList(getCachedKey(key)).addFirst(dataList);
     }
 
     @Override
     public void listRightPush(String key, List<Object> dataList) {
-        this.redissonClient.getList(key).addLast(dataList);
+        this.redissonClient.getList(getCachedKey(key)).addLast(dataList);
     }
 
     @Override
     public void listSet(String key, int index, Object value) {
-        this.redissonClient.getList(key).add(index, value);
+        this.redissonClient.getList(getCachedKey(key)).add(index, value);
     }
 
     @Override
     public boolean listRemove(String key, int count, Object value) {
-        return this.redissonClient.getList(key).remove(value, count);
+        return this.redissonClient.getList(getCachedKey(key)).remove(value, count);
     }
 
     @Override
     public Object listIndex(String key, int index) {
-        return this.redissonClient.getList(key).get(index);
+        return this.redissonClient.getList(getCachedKey(key)).get(index);
     }
 
     @Override
     public <T> List<T> listRange(String key, int start, int end) {
-        return this.redissonClient.<T>getList(key).range(start, end);
+        return this.redissonClient.<T>getList(getCachedKey(key)).range(start, end);
     }
 
     @Override
     public long hashDelete(String key, List<Object> hashKeys) {
-        return this.redissonClient.getMap(key).fastRemove(hashKeys.toArray());
+        return this.redissonClient.getMap(getCachedKey(key)).fastRemove(hashKeys.toArray());
+    }
+
+    /**
+     * 根据key删除hash内的所有元素
+     *
+     * @param key key
+     */
+    @Override
+    public boolean hashDelete(String key) {
+        return this.redissonClient.getMap(getCachedKey(key)).delete();
+    }
+
+    /**
+     * 设置hash的过期时间
+     *
+     * @param key     key
+     * @param timeout 过期时间
+     */
+    @Override
+    public boolean hashExpire(String key, Duration timeout) {
+        return this.redissonClient.getMap(getCachedKey(key)).expire(timeout);
     }
 
     @Override
     public boolean hashHasKey(String key, Object hashKey) {
-        return this.redissonClient.getMap(key).containsKey(hashKey);
+        return this.redissonClient.getMap(getCachedKey(key)).containsKey(hashKey);
     }
 
     @Override
     public <T> T hashGet(String key, Object hashKey) {
-        return this.redissonClient.<Object, T>getMap(key).get(hashKey);
+        return this.redissonClient.<Object, T>getMap(getCachedKey(key)).get(hashKey);
     }
 
     @Override
     public Set<Object> hashKeys(String key) {
-        return this.redissonClient.getMap(key).keySet();
+        return this.redissonClient.getMap(getCachedKey(key)).keySet();
     }
 
     @Override
     public long hashSize(String key) {
-        return this.redissonClient.getMap(key).size();
+        return this.redissonClient.getMap(getCachedKey(key)).size();
     }
 
     @Override
     public <K, V> void hashPutAll(String key, Map<? extends K, ? extends V> dataMap) {
-        this.redissonClient.<K, V>getMap(key).putAll(dataMap);
+        this.redissonClient.<K, V>getMap(getCachedKey(key)).putAll(dataMap);
     }
 
     @Override
     public void hashPut(String key, Object hashKey, Object value) {
-        this.redissonClient.getMap(key).put(value, hashKey);
+        this.redissonClient.getMap(this.getCachedKey(key)).put(hashKey, value);
     }
 
     @Override
-    public Map<Object, Object> hashEntries(String key) {
-        return this.redissonClient.getMap(key).readAllMap();
+    public <K, V> Map<K, V> hashEntries(String key) {
+        return this.redissonClient.<K, V>getMap(this.getCachedKey(key)).readAllMap();
     }
 
     @Override
@@ -306,7 +332,7 @@ public class RedisServiceImpl implements RedisService {
      */
     @Override
     public <T> T getAndRemove(@NonNull String key) {
-        return this.redissonClient.<T>getBucket(key).getAndDelete();
+        return this.redissonClient.<T>getBucket(this.getCachedKey(key)).getAndDelete();
     }
 
     @Override

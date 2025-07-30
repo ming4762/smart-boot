@@ -3,15 +3,12 @@ package com.smart.framework.auth.cache.redis;
 
 import com.smart.framework.auth.core.service.AbstractAuthCache;
 import com.smart.framework.redis.service.RedisService;
-import lombok.SneakyThrows;
-import org.redisson.api.*;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.util.CollectionUtils;
 
 import java.time.Duration;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 /**
@@ -21,12 +18,10 @@ import java.util.stream.Collectors;
 public class RedisAuthCache extends AbstractAuthCache<Object> {
 
     private final RedisService cacheService;
-    private final RedissonClient redissonClient;
 
     public RedisAuthCache(RedisService cacheService, String prefix) {
         super(prefix);
         this.cacheService = cacheService;
-        this.redissonClient = cacheService.getRedissonClient();
     }
 
     /**
@@ -38,8 +33,7 @@ public class RedisAuthCache extends AbstractAuthCache<Object> {
      */
     @Override
     public void putMap(@NonNull String key, @NonNull String mapKey, @NonNull Object value) {
-        RMap<Object, Object> map = this.redissonClient.getMap(this.getKey(key));
-        map.put(mapKey, value);
+        this.cacheService.hashPut(this.getKey(key), mapKey, value);
     }
 
     /**
@@ -63,9 +57,8 @@ public class RedisAuthCache extends AbstractAuthCache<Object> {
      */
     @Override
     public void putAll(@NonNull String key, @NonNull Map<String, Object> value, Duration timeout) {
-        RMap<Object, Object> map = this.redissonClient.getMap(this.getKey(key));
-        map.putAll(value);
-        map.expire(timeout);
+        this.cacheService.hashPutAll(this.getKey(key), value);
+        this.cacheService.expire(this.getKey(key), timeout);
     }
 
     /**
@@ -75,7 +68,7 @@ public class RedisAuthCache extends AbstractAuthCache<Object> {
      */
     @Override
     public void expire(@NonNull String key, Duration timeout) {
-        this.redissonClient.getMap(this.getKey(key)).expire(timeout);
+        this.cacheService.hashExpire(this.getKey(key), timeout);
     }
 
     /**
@@ -86,11 +79,7 @@ public class RedisAuthCache extends AbstractAuthCache<Object> {
     @Override
     @Nullable
     public Map<String, Object> get(@NonNull String key) {
-        RMap<String, Object> map = this.redissonClient.getMap(this.getKey(key));
-        if (!map.isExists()) {
-            return null;
-        }
-        return map.readAllMap();
+        return this.cacheService.hashEntries(this.getKey(key));
     }
 
     /**
@@ -113,7 +102,7 @@ public class RedisAuthCache extends AbstractAuthCache<Object> {
      */
     @Override
     public Object get(@NonNull String key, @NonNull String mapKey) {
-        return this.redissonClient.getMap(this.getKey(key)).get(mapKey);
+        return this.cacheService.hashGet(this.getKey(key), mapKey);
     }
 
     /**
@@ -122,7 +111,7 @@ public class RedisAuthCache extends AbstractAuthCache<Object> {
      */
     @Override
     public void remove(@NonNull String key) {
-        this.redissonClient.getMap(this.getKey(key)).delete();
+        this.cacheService.hashDelete(this.getKey(key));
     }
 
     /**
@@ -140,24 +129,15 @@ public class RedisAuthCache extends AbstractAuthCache<Object> {
      * @param keys keys
      * @return 获取的缓存
      */
-    @SneakyThrows({InterruptedException.class, ExecutionException.class})
     @Override
     @NonNull
     public List<Map<String, Object>> batchGet(@NonNull Collection<String> keys) {
-        RBatch batch = this.redissonClient.createBatch();
-        // 存储批量读取的结果
-        List<RFuture<Map<String, Object>>> asyncList = new ArrayList<>();
-        for (String key : keys) {
-            RMapAsync<String, Object> map = batch.<String, Object>getMap(this.getKey(key));
-            RFuture<Map<String, Object>> async = map.readAllMapAsync();
-            asyncList.add(async);
+        if (CollectionUtils.isEmpty(keys)) {
+            return Collections.emptyList();
         }
-        batch.execute();
-        List<Map<String, Object>> dataList = new ArrayList<>(asyncList.size());
-        for (RFuture<Map<String, Object>> async : asyncList) {
-            dataList.add(async.get());
-        }
-        return dataList;
+        return keys.stream()
+                .map(item -> this.cacheService.<String, Object>hashEntries(this.getKey(item)))
+                .toList();
     }
 
     @Override
@@ -166,36 +146,18 @@ public class RedisAuthCache extends AbstractAuthCache<Object> {
         if (CollectionUtils.isEmpty(keys)) {
             return;
         }
-        // 创建批处理对象
-        RBatch batch = redissonClient.createBatch();
-        for (String key : keys) {
-            batch.getMap(key).deleteAsync();
-        }
-        batch.execute();
+        keys.forEach(this.cacheService::hashDelete);
     }
 
-    @SneakyThrows({InterruptedException.class, ExecutionException.class})
     @Override
     public List<Map<String, Object>> matchGet(@NonNull String matchKey) {
         List<String> keys = this.cacheService.matchKeys(this.getKey(matchKey));
         if (CollectionUtils.isEmpty(keys)) {
             return Collections.emptyList();
         }
-        // 创建批处理对象
-        RBatch batch = redissonClient.createBatch();
-        // 存储批量读取的结果
-        List<RFuture<Map<String, Object>>> asyncList = new ArrayList<>();
-        for (String key : keys) {
-            RFuture<Map<String, Object>> async = batch.<String, Object>getMap(this.getKey(key)).readAllMapAsync();
-            asyncList.add(async);
-        }
-        // 执行批处理
-        batch.execute();
-        List<Map<String, Object>> dataList = new ArrayList<>(asyncList.size());
-        for (RFuture<Map<String, Object>> future : asyncList) {
-            dataList.add(future.get());
-        }
-        return dataList;
+        return keys.stream()
+                .map(item -> this.cacheService.<String, Object>hashEntries(this.getKey(item)))
+                .toList();
     }
 
     @Override
@@ -214,8 +176,8 @@ public class RedisAuthCache extends AbstractAuthCache<Object> {
      */
     @Override
     public Map<String, Object> getAndRemove(@NonNull String key) {
-        Map<String, Object> data = this.redissonClient.<String, Object>getMap(this.getKey(key)).readAllMap();
-        this.redissonClient.getMap(this.getKey(key)).delete();
+        Map<String, Object> data = this.cacheService.hashEntries(this.getKey(key));
+        this.cacheService.hashDelete(this.getKey(key));
         return data;
     }
 

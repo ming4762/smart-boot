@@ -7,6 +7,7 @@ import org.redisson.api.RedissonClient;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -97,6 +98,19 @@ public interface RedisService extends CacheService {
     long hashDelete(String key, List<Object> hashKeys);
 
     /**
+     * 根据key删除hash内的所有元素
+     * @param key key
+     */
+    boolean hashDelete(String key);
+
+    /**
+     * 设置hash的过期时间
+     * @param key key
+     * @param timeout 过期时间
+     */
+    boolean hashExpire(String key, Duration timeout);
+
+    /**
      * 确定哈希hashKey是否存在
      * @param key key
      * @param hashKey hashKey
@@ -146,7 +160,7 @@ public interface RedisService extends CacheService {
      * @param key key
      * @return hash
      */
-    Map<Object, Object> hashEntries(String key);
+    <K, V> Map<K, V> hashEntries(String key);
 
     RedissonClient getRedissonClient();
 }

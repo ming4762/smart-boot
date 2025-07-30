@@ -3,6 +3,7 @@ package com.smart.framework.cache.guava;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.smart.framework.cache.guava.data.CacheObject;
+import com.smart.framework.commons.core.cache.AbstractCacheService;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.Nullable;
@@ -13,6 +14,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * 缓存服务类-基于GUAVA实现
@@ -21,11 +23,12 @@ import java.util.concurrent.TimeUnit;
  * @since 1.0
  */
 @Slf4j
-public class GuavaCacheServiceImpl implements GuavaCacheService {
+public class GuavaCacheServiceImpl extends AbstractCacheService implements GuavaCacheService {
 
     private final Cache<String, CacheObject<Object>> cache;
 
-    public GuavaCacheServiceImpl() {
+    public GuavaCacheServiceImpl(String keyPrefix) {
+        super(keyPrefix);
         this.cache = CacheBuilder.newBuilder()
                 .build();
         ThreadPoolTaskScheduler threadPoolTaskScheduler = this.createThreadPoolTaskScheduler();
@@ -53,28 +56,28 @@ public class GuavaCacheServiceImpl implements GuavaCacheService {
     @Override
     public void put(@NonNull String key, @NonNull Object value) {
         CacheObject<Object> cacheObject = new CacheObject<>(Instant.now(), value, null);
-        this.cache.put(key, cacheObject);
+        this.cache.put(this.getCachedKey(key), cacheObject);
     }
 
     @Override
     public void put(@NonNull String key, @NonNull Object value, long timeout) {
-        this.cache.put(key, new CacheObject<>(value, Duration.ofSeconds(timeout)));
+        this.cache.put(this.getCachedKey(key), new CacheObject<>(value, Duration.ofSeconds(timeout)));
     }
 
     @Override
     public void put(@NonNull String key, @NonNull Object value, @NonNull Duration timeout) {
-        this.cache.put(key, new CacheObject<>(value, timeout));
+        this.cache.put(this.getCachedKey(key), new CacheObject<>(value, timeout));
     }
 
     @Override
     public void put(@NonNull String key, @NonNull Object value, @NonNull Instant expireTime) {
-        this.cache.put(key, new CacheObject<>(value, Duration.ofMillis(expireTime.toEpochMilli() - Instant.now().toEpochMilli())));
+        this.cache.put(this.getCachedKey(key), new CacheObject<>(value, Duration.ofMillis(expireTime.toEpochMilli() - Instant.now().toEpochMilli())));
     }
 
     @Override
     public void batchPut(@NonNull Map<String, Object> keyValues) {
         Map<String, CacheObject<Object>> cacheObjectMap = HashMap.newHashMap(keyValues.size());
-        keyValues.forEach((key, value) -> cacheObjectMap.put(key, new CacheObject<>(value, null)));
+        keyValues.forEach((key, value) -> cacheObjectMap.put(this.getCachedKey(key), new CacheObject<>(value, null)));
         this.cache.putAll(cacheObjectMap);
     }
 
@@ -86,7 +89,7 @@ public class GuavaCacheServiceImpl implements GuavaCacheService {
     @Override
     public void batchPut(@NonNull Map<String, Object> keyValues, @NonNull Duration timeout) {
         Map<String, CacheObject<Object>> cacheObjectMap = HashMap.newHashMap(keyValues.size());
-        keyValues.forEach((key, value) -> cacheObjectMap.put(key, new CacheObject<>(value, timeout)));
+        keyValues.forEach((key, value) -> cacheObjectMap.put(this.getCachedKey(key), new CacheObject<>(value, timeout)));
         this.cache.putAll(cacheObjectMap);
     }
 
@@ -97,11 +100,11 @@ public class GuavaCacheServiceImpl implements GuavaCacheService {
 
     @Override
     public void expire(@NonNull String key, Duration timeout) {
-        CacheObject<Object> cacheObject = this.cache.getIfPresent(key);
+        CacheObject<Object> cacheObject = this.cache.getIfPresent(this.getCachedKey(key));
         if (cacheObject != null) {
             cacheObject.setTimeout(timeout);
             cacheObject.setOperationTime(Instant.now());
-            this.cache.put(key, cacheObject);
+            this.cache.put(this.getCachedKey(key), cacheObject);
         }
     }
 
@@ -113,20 +116,20 @@ public class GuavaCacheServiceImpl implements GuavaCacheService {
      */
     @Override
     public void batchExpire(@org.springframework.lang.NonNull Collection<String> keys, Duration timeout) {
-        keys.forEach(item -> this.expire(item, timeout));
+        keys.forEach(item -> this.expire(this.getCachedKey(item), timeout));
     }
 
     @Nullable
     @Override
     public <T> T get(@NonNull String key) {
-        CacheObject<Object> cacheObject = this.cache.getIfPresent(key);
+        CacheObject<Object> cacheObject = this.cache.getIfPresent(this.getCachedKey(key));
         if (cacheObject == null) {
             return null;
         }
         // 判断是否超时
         if (cacheObject.getTimeout() != null && cacheObject.getOperationTime().plus(cacheObject.getTimeout()).isBefore(Instant.now())) {
             // 超时删除
-            this.cache.invalidate(key);
+            this.cache.invalidate(this.getCachedKey(key));
             return null;
         }
         return (T) cacheObject.getData();
@@ -141,19 +144,26 @@ public class GuavaCacheServiceImpl implements GuavaCacheService {
 
     @Override
     public void delete(@NonNull String key) {
-        this.cache.invalidate(key);
+        this.cache.invalidate(this.getCachedKey(key));
     }
 
     @Override
     public void batchDelete(@NonNull List<String> keys) {
-        this.cache.invalidateAll(keys);
+        if (CollectionUtils.isEmpty(keys)) {
+            return;
+        }
+        List<String> prefixKeys = keys.stream().map(this::getCachedKey)
+                .toList();
+        this.cache.invalidateAll(prefixKeys);
     }
 
     @Override
     public List<String> matchKeys(@NonNull String patternKey) {
         this.clearExpire();
+        int subLength = this.getKeyPrefix().length();
         return this.cache.asMap().keySet().stream()
-                .filter(objectCacheObject -> objectCacheObject.startsWith(patternKey))
+                .filter(objectCacheObject -> objectCacheObject.startsWith(this.getCachedKey(patternKey)))
+                .map(item -> item.substring(subLength))
                 .toList();
     }
 
@@ -181,7 +191,10 @@ public class GuavaCacheServiceImpl implements GuavaCacheService {
 
     @Override
     public Set<String> keys() {
-        return this.cache.asMap().keySet();
+        int subLength = this.getKeyPrefix().length();
+        return this.cache.asMap().keySet().stream()
+                .map(item -> item.substring(subLength))
+                .collect(Collectors.toSet());
     }
 
     /**
@@ -218,10 +231,12 @@ public class GuavaCacheServiceImpl implements GuavaCacheService {
      */
     @Override
     public void rename(String oldKey, String newKey) {
-        CacheObject<Object> value = this.cache.getIfPresent(oldKey);
+        String oldCachedKey = this.getCachedKey(oldKey);
+        String newCachedKey = this.getCachedKey(newKey);
+        CacheObject<Object> value = this.cache.getIfPresent(oldCachedKey);
         if (value != null) {
-            this.cache.put(newKey, value);
-            this.cache.invalidate(oldKey);
+            this.cache.put(newCachedKey, value);
+            this.cache.invalidate(oldCachedKey);
         }
     }
 }
