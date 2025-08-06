@@ -1,21 +1,26 @@
 package com.smart.framework.commons.core.utils;
 
+import com.smart.framework.commons.core.exception.SystemException;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.io.OutputStream;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
+import java.util.function.Function;
 
 /**
  * @author shizhongming
@@ -28,6 +33,9 @@ public class RestUtils {
     }
 
     private static WebClient webClient;
+
+    private static final Function<ClientResponse, Mono<? extends Throwable>> ERROR_HANDLER = response -> response.bodyToMono(String.class)
+            .flatMap(errorBody -> Mono.error(new SystemException("服务器错误: " + errorBody)));
 
     /**
      * 发送请求
@@ -52,6 +60,7 @@ public class RestUtils {
                         headers.forEach(httpHeaders::add);
                     }
                 }).retrieve()
+                .onStatus(HttpStatusCode::is5xxServerError, ERROR_HANDLER)
                 .bodyToMono(typeReference)
                 .block();
     }
@@ -78,6 +87,7 @@ public class RestUtils {
                     }
                 }).bodyValue(Objects.requireNonNullElse(parameter, ""))
                 .retrieve()
+                .onStatus(HttpStatusCode::is5xxServerError, ERROR_HANDLER)
                 .bodyToFlux(typeReference);
     }
 
@@ -108,6 +118,7 @@ public class RestUtils {
                     }
                 }).body(BodyInserters.fromMultipartData(nonNullParameter))
                 .retrieve()
+                .onStatus(HttpStatusCode::is5xxServerError, ERROR_HANDLER)
                 .bodyToMono(typeReference)
                 .block();
     }
@@ -135,6 +146,7 @@ public class RestUtils {
                 })
                 .bodyValue(Objects.requireNonNullElse(parameter, ""))
                 .retrieve()
+                .onStatus(HttpStatusCode::is5xxServerError, ERROR_HANDLER)
                 .bodyToFlux(DataBuffer.class);
 
         DataBufferUtils.write(dataBufferFlux, outputStream)
