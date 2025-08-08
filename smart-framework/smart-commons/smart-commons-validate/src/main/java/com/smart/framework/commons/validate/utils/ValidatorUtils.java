@@ -53,9 +53,24 @@ public final class ValidatorUtils {
         return Pattern.matches(regex,idCard);
     }
 
+    /**
+     * 校验数据
+     * @param data 数据
+     * @return 校验结果
+     */
     public static boolean validate(Object data) {
+        return validate(data, Default.class);
+    }
+
+    /**
+     * 校验数据
+     * @param data 数据
+     * @param groups 校验组
+     * @return 校验结果
+     */
+    public static boolean validate(Object data, Class<?>... groups) {
         initValidator();
-        Set<ConstraintViolation<Object>> validateResult = validator.validate(data, Default.class);
+        Set<ConstraintViolation<Object>> validateResult = validator.validate(data, groups);
         if (!validateResult.isEmpty()) {
             throw new ValidateException(validateResult);
         }
