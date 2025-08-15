@@ -226,7 +226,7 @@ public final class LogAspect {
      */
     private Map<String, Object> getParameter(ProceedingJoinPoint point) {
         final Map<String, Object> parameter = AopUtils.getParameterMap(point);
-        Map<String, Object> result = BeanUtils.beanToMapDeep(parameter);
+        Map<String, Object> result = BeanUtils.deepBeanToMap(parameter);
         this.removeExcludeClass(result);
         return result;
     }
