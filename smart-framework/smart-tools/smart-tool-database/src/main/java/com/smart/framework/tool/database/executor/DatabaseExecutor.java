@@ -4,6 +4,7 @@ import com.smart.framework.tool.database.constants.DbTableTypeEnum;
 import com.smart.framework.tool.database.pojo.bo.ColumnBO;
 import com.smart.framework.tool.database.pojo.bo.TableViewBO;
 import com.smart.framework.tool.database.pojo.dbo.*;
+import com.smart.framework.tool.database.pojo.dto.SmartSelectSqlInfo;
 import com.smart.framework.tool.database.pool.model.DbConnectionConfig;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -156,4 +157,11 @@ public interface DatabaseExecutor {
      */
     List<ColumnDO> listBaseColumn(@NonNull DbConnectionConfig connectionConfig, @NonNull String tableName);
 
+    /**
+     * 执行SQL语句获取SQL信息
+     * @param connectionConfig 数据库连接信息
+     * @param sql SQL语句
+     * @return SQL信息
+     */
+    SmartSelectSqlInfo executeSqlGetInfo(@NonNull DbConnectionConfig connectionConfig, @NonNull String sql);
 }

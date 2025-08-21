@@ -28,9 +28,9 @@ public final class StringUtils {
     @NonNull
     public static String humpToLine(@NonNull String camelCaseName) {
         final Matcher matcher = PATTERN.matcher(camelCaseName);
-        StringBuffer stringBuffer = new StringBuffer(camelCaseName);
+        StringBuilder stringBuffer = new StringBuilder(camelCaseName);
         if (matcher.find()) {
-            stringBuffer = new StringBuffer();
+            stringBuffer = new StringBuilder();
             matcher.appendReplacement(stringBuffer,"_"+matcher.group(0).toLowerCase());
             matcher.appendTail(stringBuffer);
         } else {
@@ -47,7 +47,7 @@ public final class StringUtils {
     public static String lineToHump(String str) {
         str = str.toLowerCase();
         Matcher matcher = LINE_PATTERN.matcher(str);
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         while (matcher.find()) {
             matcher.appendReplacement(sb, matcher.group(1).toUpperCase());
         }

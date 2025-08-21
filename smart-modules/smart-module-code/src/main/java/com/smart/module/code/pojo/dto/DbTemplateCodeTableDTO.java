@@ -31,7 +31,7 @@ public class DbTemplateCodeTableDTO extends DbCodeMainPO {
 
     public DbTemplateCodeTableDTO() {
         this.hasId = Boolean.FALSE;
-        this.modelClassImportList = new HashSet<>(0);
+        this.modelClassImportList = HashSet.newHashSet(0);
         this.leftButtonList = new ArrayList<>(0);
         this.rightButtonList = new ArrayList<>(0);
         this.rowButtonList = new ArrayList<>(0);

@@ -1,7 +1,6 @@
 package com.smart.module.code.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.google.common.collect.Sets;
 import com.smart.framework.auth.common.utils.AuthUtils;
 import com.smart.framework.commons.core.exception.BusinessException;
 import com.smart.framework.crud.query.PageSortQuery;
@@ -24,12 +23,10 @@ import lombok.SneakyThrows;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * @author ShiZhongMing
@@ -76,15 +73,7 @@ public class DbConnectionServiceImpl extends BaseServiceImpl<DbConnectionMapper,
         if (AuthUtils.isSuperAdmin()) {
             return;
         }
-        // 查询用户组对应的连接信息
-        final Set<Long> connectionIds = Sets.newHashSet();
-
-        queryWrapper.lambda().and(wrapper -> {
-            wrapper.eq(DbConnectionPO :: getCreateUserId, AuthUtils.getNonNullCurrentUserId());
-            if (!CollectionUtils.isEmpty(connectionIds)) {
-                wrapper.or(query -> query.in(DbConnectionPO :: getId, connectionIds));
-            }
-        });
+        queryWrapper.lambda().apply("system_id in (select A.id from sys_system A join sys_system_user B on A.id = B.system_id where B.user_id = {0})", AuthUtils.getNonNullCurrentUserId());
     }
 
     @Override

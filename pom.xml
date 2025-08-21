@@ -68,6 +68,7 @@
         <langchain4j.version>1.0.0-beta3</langchain4j.version>
         <aliyun.ocr.version>3.1.2</aliyun.ocr.version>
         <springdoc.version>2.8.9</springdoc.version>
+        <jsqlparser.version>5.1</jsqlparser.version>
     </properties>
 
     <packaging>pom</packaging>
@@ -553,6 +554,11 @@
                 <groupId>com.aliyun</groupId>
                 <artifactId>ocr_api20210707</artifactId>
                 <version>${aliyun.ocr.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.jsqlparser</groupId>
+                <artifactId>jsqlparser</artifactId>
+                <version>${jsqlparser.version}</version>
             </dependency>
 
             <!--      smart-boot      -->

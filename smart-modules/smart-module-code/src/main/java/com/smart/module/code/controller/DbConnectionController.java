@@ -131,7 +131,6 @@ public class DbConnectionController extends BaseController<DbConnectionService, 
     @PostMapping("listByAuth")
     public Result<Object> listByAuth(@RequestBody PageSortQuery parameter) {
         parameter.getParameter().put(DbCrudEnum.LIST_BY_AUTH.name(), Boolean.TRUE);
-        parameter.getParameter().put(DbCrudEnum.QUERY_CREATE_UPDATE_USER.name(), Boolean.TRUE);
         return super.list(parameter);
     }
 

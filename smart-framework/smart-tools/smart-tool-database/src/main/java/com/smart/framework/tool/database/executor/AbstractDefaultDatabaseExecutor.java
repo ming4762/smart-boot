@@ -1,19 +1,22 @@
 package com.smart.framework.tool.database.executor;
 
+import com.smart.framework.commons.core.exception.BusinessException;
 import com.smart.framework.commons.core.utils.ReflectUtils;
 import com.smart.framework.tool.database.annotation.DatabaseField;
-import com.smart.framework.tool.database.constants.DbTableTypeEnum;
-import com.smart.framework.tool.database.constants.ExceptionConstant;
-import com.smart.framework.tool.database.constants.ExtMappingEnum;
-import com.smart.framework.tool.database.constants.TypeMappingEnum;
+import com.smart.framework.tool.database.constants.*;
 import com.smart.framework.tool.database.converter.DbJavaTypeConverter;
 import com.smart.framework.tool.database.exception.SmartDatabaseException;
+import com.smart.framework.tool.database.exception.SmartSqlCheckerException;
 import com.smart.framework.tool.database.pojo.bo.ColumnBO;
 import com.smart.framework.tool.database.pojo.dbo.*;
+import com.smart.framework.tool.database.pojo.dto.SmartSelectMetaDataColumn;
+import com.smart.framework.tool.database.pojo.dto.SmartSelectSqlInfo;
+import com.smart.framework.tool.database.pojo.dto.SmartSqlInfo;
 import com.smart.framework.tool.database.pool.DbConnectionProvider;
 import com.smart.framework.tool.database.pool.model.DbConnectionConfig;
 import com.smart.framework.tool.database.utils.CacheUtils;
 import com.smart.framework.tool.database.utils.DatabaseUtils;
+import com.smart.framework.tool.database.utils.SqlSecurityCheckerUtils;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
@@ -25,10 +28,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.Field;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -297,6 +297,91 @@ public abstract class AbstractDefaultDatabaseExecutor implements DatabaseExecuto
     @Override
     public List<IndexDO> listUniqueIndex(@NonNull DbConnectionConfig connectionConfig, String tableName) {
         return this.listIndex(connectionConfig, tableName, true, true);
+    }
+
+    /**
+     * 执行SQL语句获取SQL信息
+     *
+     * @param connectionConfig 数据库连接信息
+     * @param sql              SQL语句
+     * @return SQL信息
+     */
+    @SneakyThrows(SQLException.class)
+    @Override
+    public SmartSelectSqlInfo executeSqlGetInfo(@NonNull DbConnectionConfig connectionConfig, @NonNull String sql) {
+        //  校验SQL
+        try {
+            SqlSecurityCheckerUtils.validate(sql, List.of(SqlTypeEnum.SELECT), true);
+        } catch (SmartSqlCheckerException e) {
+            throw new BusinessException(e.getMessage(), e);
+        }
+        // 判断SQL是否是查询语句
+        SmartSqlInfo smartSqlInfo = DatabaseUtils.parseSql(sql);
+        if (!(smartSqlInfo instanceof SmartSelectSqlInfo smartSelectSqlInfo)) {
+            throw new UnsupportedOperationException("只支持SELECT语句");
+        }
+        // 获取数据库链接
+        Connection connection = this.dbConnectionProvider.getConnection(connectionConfig);
+        try (
+                Statement statement = connection.createStatement();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql)
+        ) {
+            // 优先通过PreparedStatement获取元数据
+            if (preparedStatement.getMetaData() != null) {
+                ResultSetMetaData metaData = preparedStatement.getMetaData();
+                List<SmartSelectMetaDataColumn> columnList = this.getColumnList(metaData);
+                smartSelectSqlInfo.setMetaDataColumnList(columnList);
+            } else {
+                // 设置为只读
+                connection.setReadOnly(true);
+                try (ResultSet resultSet = statement.executeQuery(this.buildZeroRowSql(sql))) {
+                    ResultSetMetaData metaData = resultSet.getMetaData();
+                    List<SmartSelectMetaDataColumn> columnList = this.getColumnList(metaData);
+                    smartSelectSqlInfo.setMetaDataColumnList(columnList);
+                } catch (SQLException e) {
+                    throw new BusinessException(e.getMessage(), e);
+                }
+            }
+        } finally {
+            this.dbConnectionProvider.returnConnection(connectionConfig, connection);
+        }
+        return smartSelectSqlInfo;
+    }
+
+    /**
+     * 获取列信息
+     * @param metaData 结果集元数据
+     * @return 列信息
+     * @throws SQLException SQL异常
+     */
+    private List<SmartSelectMetaDataColumn> getColumnList(ResultSetMetaData metaData) throws SQLException {
+        final List<SmartSelectMetaDataColumn> columnList = new ArrayList<>(metaData.getColumnCount());
+        for (int i = 1; i <= metaData.getColumnCount(); i++) {
+            TypeMappingEnum dataType = TypeMappingEnum.ofDateType(metaData.getColumnType(i));
+            if (dataType == null) {
+                throw new SmartDatabaseException(ExceptionConstant.COLUMN_TYPE_MAPPING_ERROR, metaData.getColumnType(i), metaData.getColumnTypeName(i));
+            }
+            columnList.add(SmartSelectMetaDataColumn.builder()
+                    .tableName(metaData.getTableName(i))
+                    .label(metaData.getColumnLabel(i))
+                    .columnName(metaData.getColumnName(i))
+                    .columnType(dataType)
+                    .columnTypeName(metaData.getColumnTypeName(i))
+                    .precision(metaData.getPrecision(i))
+                    .scale(metaData.getScale(i))
+                    .nullable(metaData.isNullable(i) == ResultSetMetaData.columnNullable)
+                    .build());
+        }
+        return columnList;
+    }
+
+    /**
+     * 构建返回0行数据
+     * @param sql SQL脚本
+     * @return 0行数据SQL脚本
+     */
+    protected String buildZeroRowSql(@NonNull String sql) {
+        return String.format("select * from (%s) as _sub where 1=0", sql);
     }
 
     /**

@@ -7,11 +7,16 @@ import com.google.common.collect.Maps;
 import com.smart.framework.auth.common.utils.AuthUtils;
 import com.smart.framework.commons.core.exception.BaseException;
 import com.smart.framework.commons.core.exception.BusinessException;
+import com.smart.framework.commons.core.exception.SystemException;
 import com.smart.framework.commons.core.utils.SmartIdGenerator;
 import com.smart.framework.crud.query.PageSortQuery;
 import com.smart.framework.crud.service.BaseServiceImpl;
 import com.smart.framework.freemarker.engine.TemplateEngine;
 import com.smart.framework.freemarker.template.SmartValueTemplateElement;
+import com.smart.framework.tool.database.executor.DatabaseExecutor;
+import com.smart.framework.tool.database.executor.DbExecutorProvider;
+import com.smart.framework.tool.database.pojo.dto.SmartSelectSqlInfo;
+import com.smart.framework.tool.database.pool.model.DbConnectionConfig;
 import com.smart.module.code.constants.*;
 import com.smart.module.code.mapper.DbCodeMainMapper;
 import com.smart.module.code.model.*;
@@ -19,6 +24,7 @@ import com.smart.module.code.pojo.dto.*;
 import com.smart.module.code.pojo.query.RelatedTableDeleteByMainConfigQuery;
 import com.smart.module.code.pojo.vo.*;
 import com.smart.module.code.service.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
@@ -39,37 +45,28 @@ import java.util.stream.Collectors;
  * @since 1.0
  */
 @Service
+@RequiredArgsConstructor
 public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbCodeMainPO> implements DbCodeMainService {
 
+    /**
+     * SQL MAPPER 模板列表
+     */
+    private static final List<String> SQL_MAPPER_TEMPLATE_LIST = Lists.newArrayList(
+            "Sql2Mapper java模板",
+            "Sql2Mapper XML模板",
+            "Sql2Mapper DO类模板"
+    );
+
     private final DbCodePageConfigService dbCodePageConfigService;
-
     private final DbCodeFormConfigService dbCodeFormConfigService;
-
     private final DbConnectionService databaseConnectionService;
-
     private final DbCodeTemplateService dbCodeTemplateService;
-
     private final TemplateEngine templateEngine;
-
     private final DbCodeSearchConfigService dbCodeSearchConfigService;
-
     private final DbCodeButtonConfigService dbCodeButtonConfigService;
-
     private final DbCodeRelatedTableService dbCodeRelatedTableService;
-
     private final DbCodeRuleConfigService dbCodeRuleConfigService;
-
-    public DbCodeMainServiceImpl(DbCodePageConfigService dbCodePageConfigService, DbCodeFormConfigService dbCodeFormConfigService, DbConnectionService databaseConnectionService, DbCodeTemplateService dbCodeTemplateService, TemplateEngine templateEngine, DbCodeSearchConfigService dbCodeSearchConfigService, DbCodeButtonConfigService dbCodeButtonConfigService, DbCodeRelatedTableService dbCodeRelatedTableService, DbCodeRuleConfigService dbCodeRuleConfigService) {
-        this.dbCodePageConfigService = dbCodePageConfigService;
-        this.dbCodeFormConfigService = dbCodeFormConfigService;
-        this.databaseConnectionService = databaseConnectionService;
-        this.dbCodeTemplateService = dbCodeTemplateService;
-        this.templateEngine = templateEngine;
-        this.dbCodeSearchConfigService = dbCodeSearchConfigService;
-        this.dbCodeButtonConfigService = dbCodeButtonConfigService;
-        this.dbCodeRelatedTableService = dbCodeRelatedTableService;
-        this.dbCodeRuleConfigService = dbCodeRuleConfigService;
-    }
+    private final DbExecutorProvider dbExecutorProvider;
 
     @Override
     public List<? extends DbCodeMainPO> list(@NonNull QueryWrapper<DbCodeMainPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
@@ -350,12 +347,70 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
                 .select(DbCodeTemplatePO :: getTemplateId, DbCodeTemplatePO :: getName, DbCodeTemplatePO :: getLanguage, DbCodeTemplatePO :: getTemplate, DbCodeTemplatePO :: getFilenameSuffix)
                 .in(DbCodeTemplatePO :: getTemplateId, parameter.getTemplateIdList())
         );
-        return dbCodeTemplateList.stream().map(template -> {
+        return this.generateCodeFromTemplate(dbCodeTemplateList, dbCodeTemplateData, dbCodeTemplateData.getClassName());
+    }
+
+    /**
+     * 通过SQL生成Mapper
+     *
+     * @param parameter 参数
+     * @return 代码
+     */
+    @Override
+    public List<DbCodeVO> generateMapperBySql(DbGenerateMapperBySqlParameter parameter) {
+        // 获取数据库连接
+        DbConnectionPO dbConnection = this.databaseConnectionService.getById(parameter.getDbConnectionId());
+        if (dbConnection == null) {
+            throw new SystemException("数据库连接不存在");
+        }
+        DbConnectionConfig connectionConfig = dbConnection.createConnectionConfig();
+        DatabaseExecutor databaseExecutor = this.dbExecutorProvider.getDatabaseExecutor(connectionConfig);
+        SmartSelectSqlInfo smartSqlInfo = databaseExecutor.executeSqlGetInfo(connectionConfig, parameter.getSql());
+        // 获取模板
+        List<DbCodeTemplatePO> templateList = this.dbCodeTemplateService.list(
+                new QueryWrapper<DbCodeTemplatePO>().lambda()
+                .select(DbCodeTemplatePO :: getTemplateId, DbCodeTemplatePO :: getName, DbCodeTemplatePO :: getLanguage, DbCodeTemplatePO :: getTemplate, DbCodeTemplatePO :: getFilenameSuffix)
+                .in(DbCodeTemplatePO :: getName, SQL_MAPPER_TEMPLATE_LIST)
+        );
+        // 构建数据
+        // 1、DO类
+        String methodName = parameter.getMethodName();
+        String doClassName = Character.toLowerCase(methodName.charAt(0)) + methodName.substring(1);
+        List<DbGenerateMapperBySqlTemplateVO.Column> columnList = smartSqlInfo.getMetaDataColumnList().stream()
+                .map(column -> {
+                    String javaProperty = com.smart.framework.commons.core.utils.StringUtils.lineToHump(column.getColumnName());
+                    return DbGenerateMapperBySqlTemplateVO.Column.builder()
+                            .columnName(column.getColumnName())
+                            .javaProperty(javaProperty)
+                            .simpleJavaType(column.getColumnType().getJavaClass().getSimpleName())
+                            .typeName(column.getColumnTypeName())
+                            .build();
+                }).toList();
+        DbGenerateMapperBySqlTemplateVO templateVo = DbGenerateMapperBySqlTemplateVO.builder()
+                .packageName(parameter.getPackageName())
+                .className(parameter.getClassName())
+                .methodName(parameter.getMethodName())
+                .doClassName(doClassName)
+                .sql(parameter.getSql())
+                .columnList(columnList)
+                .build();
+        return this.generateCodeFromTemplate(templateList, templateVo, parameter.getClassName());
+    }
+
+    /**
+     * 生成代码
+     * @param templateList 模板列表
+     * @param modelData 模型数据
+     * @param className 类名
+     * @return 代码
+     */
+    private List<DbCodeVO> generateCodeFromTemplate(List<DbCodeTemplatePO> templateList, Object modelData, String className) {
+        return templateList.stream().map(template -> {
             String code;
             try (final StringWriter stringWriter = new StringWriter()) {
                 this.templateEngine.processToWriter(
                         new SmartValueTemplateElement(template.getName(), template.getTemplate()),
-                        dbCodeTemplateData,
+                        modelData,
                         stringWriter
                 );
                 code = stringWriter.toString();
@@ -367,7 +422,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
                     .templateId(template.getTemplateId())
                     .templateName(template.getName())
                     .language(template.getLanguage())
-                    .filename(dbCodeTemplateData.getClassName() + template.getFilenameSuffix())
+                    .filename(className + template.getFilenameSuffix())
                     .code(code)
                     .build();
         }).toList();
@@ -512,7 +567,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
                 if (relatedTableList.size() > 1) {
                     throw new BaseException("系统发生未知错误，下拉表格只能设置一个");
                 }
-                dbCodeFormConfigTemplate.setSelectTable(relatedTableList.get(0));
+                dbCodeFormConfigTemplate.setSelectTable(relatedTableList.getFirst());
             }
             // 设置验证类型
             final List<DbCodeRuleConfigPO> ruleList = ruleConfigMap.get(dbCodeFormConfigTemplate.getId());
@@ -545,7 +600,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
                 if (relatedTableList.size() > 1) {
                     throw new BaseException("系统发生未知错误，下拉表格只能设置一个");
                 }
-                dbCodeSearchConfigTemplate.setSelectTable(relatedTableList.get(0));
+                dbCodeSearchConfigTemplate.setSelectTable(relatedTableList.getFirst());
             }
             return dbCodeSearchConfigTemplate;
         }).toList();
@@ -561,7 +616,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
      */
     private Map<Long, List<DbTemplateCodeTableDTO>> queryRelatedTableData(@NonNull List<Long> mainIdList, @NonNull RelatedTableIdentEnum ident, @NonNull RelatedTableTypeEnum type) {
         if (mainIdList.isEmpty()) {
-            return new HashMap<>(0);
+            return HashMap.newHashMap(0);
         }
         // 查询关联信息
         final List<DbCodeRelatedTablePO> dbCodeRelatedTableList = this.dbCodeRelatedTableService.list(
@@ -572,7 +627,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
                 .eq(DbCodeRelatedTablePO :: getType, type)
         );
         if (dbCodeRelatedTableList.isEmpty()) {
-            return new HashMap<>(0);
+            return HashMap.newHashMap(0);
         }
         // 查询表信息并转为map
         final Map<Long, DbTemplateCodeTableDTO> dbTemplateCodeTableMap = dbCodeRelatedTableList.stream()
@@ -621,10 +676,10 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
         final List<DbCodePageConfigTemplateVO> primaryKeyList = dbCodePageConfigTemplateList.stream().filter(DbCodePageConfigPO::getPrimaryKey).toList();
         if (!primaryKeyList.isEmpty()) {
             // 将第一个主键设置添加注解主键（mybatis plus无法添加多个主键）
-            primaryKeyList.get(0).setIdAnnotation(true);
+            primaryKeyList.getFirst().setIdAnnotation(true);
             // 设置有主键
             dbTemplateCodeTable.setHasId(true);
-            dbTemplateCodeTable.setIdField(primaryKeyList.get(0));
+            dbTemplateCodeTable.setIdField(primaryKeyList.getFirst());
         } else {
             dbTemplateCodeTable.setIdField(new DbCodePageConfigTemplateVO());
         }

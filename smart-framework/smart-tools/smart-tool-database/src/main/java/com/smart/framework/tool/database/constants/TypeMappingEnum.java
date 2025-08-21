@@ -104,4 +104,17 @@ public enum TypeMappingEnum {
         this.dataType = dataType;
         this.javaClass = javaClass;
     }
+    /**
+     * 根据数据库类型获取java类型
+     * @param dataType 数据库类型
+     * @return java类型
+     */
+    public static TypeMappingEnum ofDateType(int dataType) {
+        for (TypeMappingEnum typeMappingEnum : TypeMappingEnum.values()) {
+            if (typeMappingEnum.dataType == dataType) {
+                return typeMappingEnum;
+            }
+        }
+        return null;
+    }
 }

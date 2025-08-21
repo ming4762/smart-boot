@@ -22,7 +22,9 @@ public enum ExceptionConstant {
 
     DATABASE_FILE_MAPPING_NOT_FOUND("未找到数据库字段与实体类的对应关系，请检查实体类是否添加DatabaseField注解，实体类：%s"),
 
-    DATABASE_FIELD_TO_JAVA_CONVERT_ERROR("数据库字段转为java类型失败，数据库类型：%s，java类型：%s，java属性：%s");
+    DATABASE_FIELD_TO_JAVA_CONVERT_ERROR("数据库字段转为java类型失败，数据库类型：%s，java类型：%s，java属性：%s"),
+
+    COLUMN_TYPE_MAPPING_ERROR("数据库字段类型映射失败，字段类型：%s，字段类型名称：%s");
 
     private final String value;
 
