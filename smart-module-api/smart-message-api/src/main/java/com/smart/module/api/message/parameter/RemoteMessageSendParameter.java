@@ -119,6 +119,8 @@ public class RemoteMessageSendParameter implements Serializable {
     @Getter
     @Setter
     @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
     public static class EmailSendParameter implements Serializable {
 
         @Serial
@@ -129,5 +131,13 @@ public class RemoteMessageSendParameter implements Serializable {
          */
         @NotNull
         private String from;
+        /**
+         * 收件人列表
+         */
+        private List<String> toList;
+        /**
+         * 抄送列表
+         */
+        private List<String> ccList;
     }
 }

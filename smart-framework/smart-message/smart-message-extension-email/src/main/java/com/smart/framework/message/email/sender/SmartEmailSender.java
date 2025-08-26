@@ -1,5 +1,6 @@
 package com.smart.framework.message.email.sender;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.smart.framework.message.core.constants.SmartMessageChannelType1Enum;
 import com.smart.framework.message.core.exception.SmartMessageException;
 import com.smart.framework.message.core.pojo.dto.SmartMessageToUserDTO;
@@ -65,10 +66,16 @@ public class SmartEmailSender implements SmartMessageSender {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
 
+        List<String> toList = this.getToList(toUserList, parameter);
+
         helper.setFrom(parameter.getEmailSendParameter().getFrom());
-        helper.setTo(toUserList.stream().map(SmartMessageToUserDTO::getEmail).toArray(String[]::new));
+        helper.setTo(toList.toArray(String[]::new));
         helper.setSubject(parameter.getTitle());
         helper.setText(parameter.getContent());
+        // 设置抄送人
+        if (!CollectionUtils.isEmpty(parameter.getEmailSendParameter().getCcList())) {
+            helper.setCc(parameter.getEmailSendParameter().getCcList().toArray(String[]::new));
+        }
         javaMailSender.send(mimeMessage);
         return MessageSendDTO.builder().build();
     }
@@ -78,7 +85,8 @@ public class SmartEmailSender implements SmartMessageSender {
      * @param toUserList 接收人
      */
     private void validateParameter(List<SmartMessageToUserDTO> toUserList, RemoteMessageSendParameter parameter) {
-        if (CollectionUtils.isEmpty(toUserList)) {
+        List<String> toList = this.getToList(toUserList, parameter);
+        if (CollectionUtils.isEmpty(toList)) {
             throw new SmartMessageException("收件人列表为空");
         }
         List<SmartMessageToUserDTO> nullEmailList = toUserList.stream()
@@ -95,6 +103,18 @@ public class SmartEmailSender implements SmartMessageSender {
         }
     }
 
+    /**
+     * 获取收件人列表
+     * @param toUserList 接收人
+     * @param parameter 发送参数
+     * @return 收件人列表
+     */
+    private List<String> getToList(List<SmartMessageToUserDTO> toUserList, RemoteMessageSendParameter parameter) {
+        if (CollectionUtils.isEmpty(toUserList)) {
+            return parameter.getEmailSendParameter().getToList();
+        }
+        return toUserList.stream().map(SmartMessageToUserDTO::getEmail).toList();
+    }
 
     /**
      * 获取 JavaMailSender
@@ -116,9 +136,13 @@ public class SmartEmailSender implements SmartMessageSender {
                 javaMailSender.setDefaultEncoding(properties.getDefaultEncoding().name());
             }
 
-            if (!CollectionUtils.isEmpty(properties.getProperties())) {
-                javaMailSender.setJavaMailProperties(asProperties(properties.getProperties()));
+            String propertiesStr = channelProperties.getProperties();
+            if (StringUtils.hasText(propertiesStr)) {
+                Map<String, String> propertiesMap = JsonUtils.parse(propertiesStr, new TypeReference<>() {
+                });
+                javaMailSender.setJavaMailProperties(asProperties(propertiesMap));
             }
+
             return javaMailSender;
         });
     }

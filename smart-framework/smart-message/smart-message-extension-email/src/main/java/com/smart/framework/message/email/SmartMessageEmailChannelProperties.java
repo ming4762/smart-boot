@@ -6,8 +6,6 @@ import lombok.Setter;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 邮件消息通道信息
@@ -53,5 +51,5 @@ public class SmartMessageEmailChannelProperties {
     /**
      * Additional JavaMail Session properties.
      */
-    private final Map<String, String> properties = new HashMap<>();
+    private String properties;
 }
