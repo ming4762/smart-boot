@@ -8,7 +8,6 @@ import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -51,7 +50,7 @@ public class RemoteMessageSendParameter implements Serializable {
     private String templateCode;
 
     @Schema(description = "模板数据")
-    private LinkedHashMap<String, String> templateData;
+    private transient Object templateData;
 
     @Schema(description = "是否是markdown消息")
     private Boolean isMarkdown;

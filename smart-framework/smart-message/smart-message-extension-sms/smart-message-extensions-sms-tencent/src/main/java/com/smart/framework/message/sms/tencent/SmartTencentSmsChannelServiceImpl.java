@@ -1,11 +1,11 @@
 package com.smart.framework.message.sms.tencent;
 
+import com.smart.framework.commons.core.utils.JsonUtils;
+import com.smart.framework.commons.validate.utils.ValidatorUtils;
 import com.smart.framework.message.core.constants.SmartMessageChannelType1Enum;
 import com.smart.framework.message.core.constants.SmartMessageChannelType2Enum;
 import com.smart.framework.message.core.exception.SmartSmsException;
 import com.smart.framework.message.core.pojo.dto.SmartMessageToUserDTO;
-import com.smart.framework.commons.core.utils.JsonUtils;
-import com.smart.framework.commons.validate.utils.ValidatorUtils;
 import com.smart.module.api.message.dto.MessageSendDTO;
 import com.smart.module.api.message.dto.SmsSendDTO;
 import com.smart.module.api.message.parameter.RemoteMessageSendParameter;
@@ -19,7 +19,6 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -123,8 +122,11 @@ public class SmartTencentSmsChannelServiceImpl implements SmartTencentSmsChannel
         request.setTemplateId(smsSendParameter.getTemplate());
 
         // 获取参数
-        if (!CollectionUtils.isEmpty(parameter.getTemplateData())) {
-            request.setTemplateParamSet(parameter.getTemplateData().values().toArray(new String[0]));
+        if (parameter.getTemplateData() != null) {
+            if (!(parameter.getTemplateData() instanceof List<?> parameterList)) {
+                throw new SmartSmsException("Tencent sms templateData must be List");
+            }
+            request.setTemplateParamSet(parameterList.toArray(new String[0]));
         }
         // 设置手机号
         request.setPhoneNumberSet(mobiles.toArray(new String[0]));

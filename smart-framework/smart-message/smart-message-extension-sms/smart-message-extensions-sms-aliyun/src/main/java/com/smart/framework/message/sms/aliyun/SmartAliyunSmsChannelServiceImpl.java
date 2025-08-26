@@ -5,12 +5,12 @@ import com.aliyun.dysmsapi20170525.models.SendSmsRequest;
 import com.aliyun.dysmsapi20170525.models.SendSmsResponse;
 import com.aliyun.teaopenapi.models.Config;
 import com.aliyun.teautil.models.RuntimeOptions;
+import com.smart.framework.commons.core.utils.JsonUtils;
+import com.smart.framework.commons.validate.utils.ValidatorUtils;
 import com.smart.framework.message.core.constants.SmartMessageChannelType1Enum;
 import com.smart.framework.message.core.constants.SmartMessageChannelType2Enum;
 import com.smart.framework.message.core.exception.SmartSmsException;
 import com.smart.framework.message.core.pojo.dto.SmartMessageToUserDTO;
-import com.smart.framework.commons.core.utils.JsonUtils;
-import com.smart.framework.commons.validate.utils.ValidatorUtils;
 import com.smart.module.api.message.dto.MessageSendDTO;
 import com.smart.module.api.message.dto.SmsSendDTO;
 import com.smart.module.api.message.parameter.RemoteMessageSendParameter;
@@ -19,7 +19,6 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -137,7 +136,7 @@ public class SmartAliyunSmsChannelServiceImpl implements SmartAliyunSmsChannelSe
                 )
                 .setSignName(smsSendParameter.getSignName())
                 .setTemplateCode(smsSendParameter.getTemplate());
-        if (!CollectionUtils.isEmpty(parameter.getTemplateData())) {
+        if (parameter.getTemplateData() != null) {
             sendSmsRequest.setTemplateParam(JsonUtils.toJsonString(parameter.getTemplateData()));
         }
         try {
