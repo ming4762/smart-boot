@@ -1,5 +1,6 @@
 package com.smart.module.system.api.local;
 
+import com.smart.framework.crud.datapermission.handler.SmartDataPermissionController;
 import com.smart.module.api.system.SysLogApi;
 import com.smart.module.api.system.dto.SysLogSaveDTO;
 import com.smart.module.system.model.SysLogPO;
@@ -31,6 +32,8 @@ public class LocalSysLogApi implements SysLogApi {
      */
     @Override
     public Boolean saveLog(SysLogSaveDTO parameter) {
+        // 关闭数据权限
+        SmartDataPermissionController.ignoreAll();
         SysLogPO po = new SysLogPO();
         BeanUtils.copyProperties(parameter, po);
         return this.sysLogService.save(po);

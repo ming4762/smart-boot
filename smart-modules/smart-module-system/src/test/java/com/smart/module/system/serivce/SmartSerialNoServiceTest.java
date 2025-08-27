@@ -1,8 +1,6 @@
 package com.smart.module.system.serivce;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.config.GlobalConfig;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.smart.module.api.system.dto.SerialCodeCreateDTO;
 import com.smart.module.api.system.parameter.SerialCodeCreateParameter;
@@ -19,9 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.time.Duration;
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
