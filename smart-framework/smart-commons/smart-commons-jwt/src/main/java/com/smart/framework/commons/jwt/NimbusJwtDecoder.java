@@ -74,7 +74,7 @@ public class NimbusJwtDecoder implements JwtDecoder {
             return JWTParser.parse(token);
         }
         catch (Exception ex) {
-            log.trace("Failed to parse token", ex);
+            log.error("Failed to parse token, token: {}", token, ex);
             throw new BadJwtException(String.format(DECODING_ERROR_MESSAGE_TEMPLATE, ex.getMessage()), ex);
         }
     }
@@ -90,10 +90,10 @@ public class NimbusJwtDecoder implements JwtDecoder {
                     .claims(c -> c.putAll(claims))
                     .build();
         } catch (JOSEException ex) {
-            log.trace("Failed to process JWT", ex);
+            log.error("Failed to process JWT, token: {}", token, ex);
             throw new JwtException(String.format(DECODING_ERROR_MESSAGE_TEMPLATE, ex.getMessage()), ex);
         } catch (Exception ex) {
-            log.trace("Failed to process JWT", ex);
+            log.error("Failed to process JWT, token: {}", token, ex);
             if (ex.getCause() instanceof ParseException) {
                 throw new BadJwtException(String.format(DECODING_ERROR_MESSAGE_TEMPLATE, "Malformed payload"), ex);
             }
