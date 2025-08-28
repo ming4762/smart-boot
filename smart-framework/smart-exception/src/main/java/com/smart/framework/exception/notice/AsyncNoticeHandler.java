@@ -45,6 +45,7 @@ public class AsyncNoticeHandler implements ApplicationContextAware {
         }
         if (Boolean.TRUE.equals(IN_EXCEPTION_HANDLER.get())) {
             log.warn("Skipping recursive exception handling: {}", e.getMessage(), e);
+            return;
         }
         try {
             ExceptionNoticeDTO exceptionData = ExceptionNoticeDTO.builder()
