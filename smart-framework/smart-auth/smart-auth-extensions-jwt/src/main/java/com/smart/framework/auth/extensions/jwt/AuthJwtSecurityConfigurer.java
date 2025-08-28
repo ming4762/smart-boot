@@ -25,7 +25,7 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessEvent
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.context.SecurityContextRepository;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
@@ -100,10 +100,10 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
         // 创建登录过滤器
         final WebLoginFilter webLoginFilter = this.createWebLoginFilter(builder, this.getLoginUrl(), authProperties.getBindIp());
         webLoginFilter.setAuthenticationFailureHandler(this.getBean(AuthenticationFailureHandler.class, this.serviceProvider.authenticationFailureHandler));
-        chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher(this.getLoginUrl()), webLoginFilter));
+        chains.add(new DefaultSecurityFilterChain(PathPatternRequestMatcher.withDefaults().matcher(this.getLoginUrl()), webLoginFilter));
 
         // 创建logout过滤器
-        chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher(this.getLogoutUrl()), this.jwtLogoutFilter(builder)));
+        chains.add(new DefaultSecurityFilterChain(PathPatternRequestMatcher.withDefaults().matcher(this.getLogoutUrl()), this.jwtLogoutFilter(builder)));
 
         return new FilterChainProxy(chains);
     }

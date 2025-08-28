@@ -19,7 +19,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 
 import java.util.List;
 import java.util.Objects;
@@ -68,8 +68,8 @@ public class AuthSmsSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
     private FilterChainProxy createLoginFilter() {
         final List<SecurityFilterChain> chains = Lists.newArrayList();
         // 添加验证码创建拦截器
-        chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher(this.getUrl(SMS_CREATE_CODE)), this.createSmsCodeCreateFilter()));
-        chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher(this.getUrl(SMS_LOGIN)), this.createSmsLoginFilter()));
+        chains.add(new DefaultSecurityFilterChain(PathPatternRequestMatcher.withDefaults().matcher(this.getUrl(SMS_CREATE_CODE)), this.createSmsCodeCreateFilter()));
+        chains.add(new DefaultSecurityFilterChain(PathPatternRequestMatcher.withDefaults().matcher(this.getUrl(SMS_LOGIN)), this.createSmsLoginFilter()));
         return new FilterChainProxy(chains);
     }
 

@@ -24,7 +24,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 
 import java.util.List;
 import java.util.Objects;
@@ -80,16 +80,16 @@ public class AuthSaml2SecurityConfigurer<H extends HttpSecurityBuilder<H>> exten
     private FilterChainProxy createSamlFilter() {
         List<SecurityFilterChain> chains = Lists.newArrayList();
         // 登录过滤器
-        chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher(this.getUrl(SamlUrlConstants.LOGIN)), this.getBean(SAMLEntryPoint.class)));
+        chains.add(new DefaultSecurityFilterChain(PathPatternRequestMatcher.withDefaults().matcher(this.getUrl(SamlUrlConstants.LOGIN)), this.getBean(SAMLEntryPoint.class)));
 
         // 登出过滤器
-        chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher(this.getUrl(SamlUrlConstants.LOGOUT)), this.samlLogoutFilter()));
+        chains.add(new DefaultSecurityFilterChain(PathPatternRequestMatcher.withDefaults().matcher(this.getUrl(SamlUrlConstants.LOGOUT)), this.samlLogoutFilter()));
 
         // 添加 SAMLDiscovery
-        chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher(this.getUrl(SamlUrlConstants.DISCOVERY)), this.createSamlDiscovery()));
+        chains.add(new DefaultSecurityFilterChain(PathPatternRequestMatcher.withDefaults().matcher(this.getUrl(SamlUrlConstants.DISCOVERY)), this.createSamlDiscovery()));
 
         // 添加登录拦截器
-        chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher(this.getUrl(SamlUrlConstants.SSO)), this.createSamlProcessingFilter()));
+        chains.add(new DefaultSecurityFilterChain(PathPatternRequestMatcher.withDefaults().matcher(this.getUrl(SamlUrlConstants.SSO)), this.createSamlProcessingFilter()));
         return new FilterChainProxy(chains);
     }
 

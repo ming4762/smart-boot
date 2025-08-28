@@ -16,11 +16,10 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.BeanUtils;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -94,11 +93,11 @@ public class AuthCaptchaFilter extends OncePerRequestFilter {
     }
 
     private boolean isCreate(@NonNull HttpServletRequest request) {
-        return (new AntPathRequestMatcher(this.authProperties.getCaptcha().getCreateUrl(), HttpMethod.POST.name())).matches(request);
+        return PathPatternRequestMatcher.withDefaults().matcher(this.authProperties.getCaptcha().getCreateUrl()).matches(request);
     }
 
     private boolean isValidate(@NonNull HttpServletRequest request) {
-        return new AntPathRequestMatcher(this.loginUrl).matches(request);
+        return PathPatternRequestMatcher.withDefaults().matcher(this.loginUrl).matches(request);
     }
 
     @Override
