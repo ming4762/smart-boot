@@ -1,5 +1,7 @@
 package com.smart.module.system.api.local;
 
+import com.smart.framework.auth.common.userdetails.RestUserDetails;
+import com.smart.framework.auth.common.utils.AuthUtils;
 import com.smart.module.api.system.SysExceptionApi;
 import com.smart.module.api.system.dto.SysExceptionSaveDTO;
 import com.smart.module.system.model.SysExceptionPO;
@@ -35,6 +37,13 @@ public class LocalSysExceptionApi implements SysExceptionApi {
         SysExceptionPO po = new SysExceptionPO();
         BeanUtils.copyProperties(parameter, po);
         po.setCreateTime(ZonedDateTime.now());
+        if (parameter.getOperateUserId() == null) {
+            RestUserDetails currentUser = AuthUtils.getCurrentUser();
+            if (currentUser != null) {
+                po.setOperateUserId(currentUser.getUserId());
+                po.setOperationBy(currentUser.getFullName());
+            }
+        }
         return this.sysExceptionService.save(po);
     }
 }
