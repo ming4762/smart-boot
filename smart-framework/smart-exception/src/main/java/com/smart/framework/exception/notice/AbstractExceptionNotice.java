@@ -1,6 +1,6 @@
 package com.smart.framework.exception.notice;
 
-import jakarta.servlet.http.HttpServletRequest;
+import com.smart.framework.exception.pojo.dto.ExceptionNoticeDTO;
 import org.springframework.lang.NonNull;
 
 import java.util.List;
@@ -14,9 +14,9 @@ import java.util.List;
 public abstract class AbstractExceptionNotice implements ExceptionNotice {
 
     @Override
-    public void notice(@NonNull Exception e, long exceptionNo, @NonNull HttpServletRequest request) {
-        if (this.isInclude(e) && !this.isExclude(e)) {
-            this.doNotice(e, exceptionNo, request);
+    public void notice(@NonNull ExceptionNoticeDTO exceptionData) {
+        if (this.isInclude(exceptionData.getException()) && !this.isExclude(exceptionData.getException())) {
+            this.doNotice(exceptionData);
         }
     }
 
@@ -49,5 +49,5 @@ public abstract class AbstractExceptionNotice implements ExceptionNotice {
      * @param exceptionNo 异常编号
      * @param request 请求信息
      */
-    protected abstract void doNotice(@NonNull Exception e, long exceptionNo, @NonNull HttpServletRequest request);
+    protected abstract void doNotice(@NonNull ExceptionNoticeDTO exceptionData);
 }

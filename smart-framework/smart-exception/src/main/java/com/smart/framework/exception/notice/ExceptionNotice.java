@@ -1,6 +1,6 @@
 package com.smart.framework.exception.notice;
 
-import jakarta.servlet.http.HttpServletRequest;
+import com.smart.framework.exception.pojo.dto.ExceptionNoticeDTO;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -16,11 +16,9 @@ public interface ExceptionNotice {
 
     /**
      * 异常通知
-     * @param e 异常信息
-     * @param exceptionNo 异常编号
-     * @param request 请求信息
+     * @param exceptionData 异常信息
      */
-    void notice(@NonNull Exception e, long exceptionNo, @NonNull HttpServletRequest request);
+    void notice(@NonNull ExceptionNoticeDTO exceptionData);
 
     /**
      * 包含的异常进行通知

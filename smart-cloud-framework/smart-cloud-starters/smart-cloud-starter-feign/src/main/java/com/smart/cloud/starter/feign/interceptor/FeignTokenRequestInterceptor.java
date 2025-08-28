@@ -1,6 +1,6 @@
 package com.smart.cloud.starter.feign.interceptor;
 
-import com.smart.cloud.starter.feign.utils.TokenHolder;
+import com.smart.framework.commons.core.auth.TokenHolder;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import org.springframework.context.annotation.Configuration;

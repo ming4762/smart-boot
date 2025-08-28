@@ -1,4 +1,4 @@
-package com.smart.cloud.starter.feign.utils;
+package com.smart.framework.commons.core.auth;
 
 /**
  * @author zhongming4762

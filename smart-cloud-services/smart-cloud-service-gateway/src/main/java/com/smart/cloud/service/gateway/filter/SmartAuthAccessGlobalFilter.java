@@ -1,7 +1,7 @@
 package com.smart.cloud.service.gateway.filter;
 
 import com.smart.cloud.api.auth.feign.RemoteAuthApi;
-import com.smart.cloud.starter.feign.utils.TokenHolder;
+import com.smart.framework.commons.core.auth.TokenHolder;
 import com.smart.framework.commons.core.http.HttpStatus;
 import com.smart.framework.commons.core.message.Result;
 import com.smart.framework.commons.core.utils.JsonUtils;

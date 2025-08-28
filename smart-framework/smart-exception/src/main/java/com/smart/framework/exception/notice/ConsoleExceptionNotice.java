@@ -1,6 +1,6 @@
 package com.smart.framework.exception.notice;
 
-import jakarta.servlet.http.HttpServletRequest;
+import com.smart.framework.exception.pojo.dto.ExceptionNoticeDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 
@@ -13,8 +13,8 @@ import org.springframework.lang.NonNull;
 public class ConsoleExceptionNotice extends AbstractCommonExcludeExceptionNotice {
 
     @Override
-    protected void doNotice(@NonNull Exception e, long exceptionNo, @NonNull HttpServletRequest request) {
-        log.info("系统发生异常\n异常信息：{}:{}\n异常编号：{}", e.getClass().getSimpleName(), e.getMessage(), exceptionNo);
-        log.error("错误信息", e);
+    protected void doNotice(@NonNull ExceptionNoticeDTO exceptionData) {
+        log.info("系统发生异常\n异常信息：{}:{}\n异常编号：{}", exceptionData.getException().getClass().getSimpleName(), exceptionData.getException().getMessage(), exceptionData.getExceptionNo());
+        log.error("错误信息", exceptionData.getException());
     }
 }

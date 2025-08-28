@@ -42,6 +42,7 @@ public class LocalSysExceptionApi implements SysExceptionApi {
             if (currentUser != null) {
                 po.setOperateUserId(currentUser.getUserId());
                 po.setOperationBy(currentUser.getFullName());
+                po.setTenantId(AuthUtils.getCurrentTenantId());
             }
         }
         return this.sysExceptionService.save(po);

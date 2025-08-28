@@ -28,7 +28,7 @@
 
         <dependency>
             <groupId>com.smart</groupId>
-            <artifactId>smart-boot-starter-auth-web</artifactId>
+            <artifactId>smart-boot-starter-auth-jwt</artifactId>
         </dependency>
         <dependency>
             <groupId>com.smart</groupId>

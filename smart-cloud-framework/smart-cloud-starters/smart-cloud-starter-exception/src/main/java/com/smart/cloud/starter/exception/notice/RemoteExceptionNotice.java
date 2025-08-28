@@ -1,16 +1,14 @@
 package com.smart.cloud.starter.exception.notice;
 
 import com.smart.framework.commons.core.utils.ExceptionUtils;
-import com.smart.framework.commons.core.utils.IpUtils;
 import com.smart.framework.exception.notice.AbstractCommonExcludeExceptionNotice;
+import com.smart.framework.exception.pojo.dto.ExceptionNoticeDTO;
 import com.smart.module.api.system.SysExceptionApi;
 import com.smart.module.api.system.dto.SysExceptionSaveDTO;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 /**
  * @author zhongming4762
@@ -28,26 +26,21 @@ public class RemoteExceptionNotice extends AbstractCommonExcludeExceptionNotice 
     /**
      * 进行通知
      *
-     * @param e           异常信息
-     * @param exceptionNo 异常编号
-     * @param request     请求信息
+     * @param exceptionData 异常信息
      */
     @Override
-    protected void doNotice(@NonNull Exception e, long exceptionNo, @NonNull HttpServletRequest request) {
+    protected void doNotice(@NonNull ExceptionNoticeDTO exceptionData) {
         try {
             SysExceptionSaveDTO dto = SysExceptionSaveDTO.builder()
-                    .id(exceptionNo)
-                    .exceptionMessage(e.toString())
-                    .stackTrace(ExceptionUtils.throwableToString(e, true))
-                    .requestIp(IpUtils.getIpAddr(request))
+                    .id(exceptionData.getExceptionNo())
+                    .exceptionMessage(exceptionData.getException().toString())
+                    .stackTrace(ExceptionUtils.throwableToString(exceptionData.getException(), true))
+                    .requestIp(exceptionData.getRequestIp())
                     .serverIp(InetAddress.getLocalHost().getHostAddress())
-                    .requestPath(request.getServletPath())
-                    // TODO:待完善注释部分
-//                    .operateUserId(user == null ? null : user.getUserId())
-//                    .operationBy(user == null ? null : user.getFullName())
+                    .requestPath(exceptionData.getRequestPath())
                     .build();
             this.sysExceptionApi.saveException(dto);
-        } catch (UnknownHostException ex) {
+        } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
         }
     }

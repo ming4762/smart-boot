@@ -1,7 +1,7 @@
 package com.smart.cloud.service.auth.config;
 
 import com.smart.framework.auth.core.properties.AuthProperties;
-import com.smart.framework.auth.extensions.session.AuthWebSecurityConfigurer;
+import com.smart.framework.auth.extensions.jwt.AuthJwtSecurityConfigurer;
 import com.smart.module.auth.config.AuthCaptchaSecurityConfigurer;
 import com.smart.module.auth.config.AuthWebSecurityConfigurerAdapter;
 import lombok.SneakyThrows;
@@ -11,6 +11,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
@@ -34,13 +35,9 @@ public class SecurityConfig extends AuthWebSecurityConfigurerAdapter {
 
         httpSecurity.formLogin(AbstractHttpConfigurer::disable)
                     .logout(AbstractHttpConfigurer::disable)
-                .logout(config -> {
-                    config.logoutUrl(this.authProperties.getLogoutUrl())
-                            .logoutSuccessHandler(logoutSuccessHandler);
-                })
-                .sessionManagement(Customizer.withDefaults())
-                // 启用web认证模式，但是关闭登录认证，交给gateway统一处理
-                .with(AuthWebSecurityConfigurer.web(), configurer -> configurer.authentication(false))
+                // JWT配置
+                .sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .with(AuthJwtSecurityConfigurer.jwt(), Customizer.withDefaults())
                 .with(AuthCaptchaSecurityConfigurer.captcha(), Customizer.withDefaults());
         return httpSecurity.build();
     }
