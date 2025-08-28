@@ -130,7 +130,7 @@ public class DefaultJwtTokenRepositoryImpl implements JwtTokenRepository {
         // 获取缓存的用户数据
         String refreshTokenKey = this.getRefreshTokenKey(userDetails.getUsername(), userDetails.getUserTenant().getTenantId(), refreshToken);
         Map<String, Object> cachedData = this.authCache.get(refreshTokenKey);
-        if (cachedData == null) {
+        if (CollectionUtils.isEmpty(cachedData)) {
             throw new CredentialsExpiredException(I18nUtils.get(AuthI18nMessage.ERROR_TOKEN_EXPIRE));
         }
         TokenCacheData tokenCacheData = TokenCacheData.createFormCache(cachedData);
