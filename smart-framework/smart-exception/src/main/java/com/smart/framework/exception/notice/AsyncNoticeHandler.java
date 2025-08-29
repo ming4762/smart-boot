@@ -1,5 +1,7 @@
 package com.smart.framework.exception.notice;
 
+import com.alibaba.ttl.TransmittableThreadLocal;
+import com.alibaba.ttl.TtlRunnable;
 import com.smart.framework.commons.core.auth.TokenHolder;
 import com.smart.framework.commons.core.utils.IpUtils;
 import com.smart.framework.exception.pojo.dto.ExceptionNoticeDTO;
@@ -28,7 +30,13 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 public class AsyncNoticeHandler implements ApplicationContextAware {
 
-    private static final ThreadLocal<Boolean> IN_EXCEPTION_HANDLER = ThreadLocal.withInitial(() -> false);
+    private static final TransmittableThreadLocal<Boolean> IN_EXCEPTION_HANDLER =
+            new TransmittableThreadLocal<>() {
+                @Override
+                protected Boolean initialValue() {
+                    return false;
+                }
+            };
 
     private List<ExceptionNotice> exceptionNoticeList;
 
@@ -59,19 +67,23 @@ public class AsyncNoticeHandler implements ApplicationContextAware {
                     .map(ServletRequestAttributes::getRequest)
                     .map(item -> item.getHeader(HttpHeaders.AUTHORIZATION))
                     .orElse(null);
-            CompletableFuture.runAsync(new DelegatingSecurityContextRunnable(() -> {
-                TokenHolder.set(token);
-                exceptionNoticeList.forEach(item -> {
-                    try {
-                        item.notice(exceptionData);
-                    } catch (Exception exception) {
-                        log.error(exception.getMessage(), exception);
-                    }
-                });
+            TtlRunnable task = TtlRunnable.get(new DelegatingSecurityContextRunnable(() -> {
+                try {
+                    TokenHolder.set(token);
+                    exceptionNoticeList.forEach(item -> {
+                        try {
+                            item.notice(exceptionData);
+                        } catch (Exception exception) {
+                            log.error(exception.getMessage(), exception);
+                        }
+                    });
+                } finally {
+                    TokenHolder.clear();
+                }
             }));
+            CompletableFuture.runAsync(task);
         } finally {
             IN_EXCEPTION_HANDLER.remove();
-            TokenHolder.clear();
         }
     }
 
