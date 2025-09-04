@@ -4,6 +4,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.time.temporal.ChronoUnit;
 
 /**
  * 限流注解
@@ -19,13 +20,19 @@ public @interface RateLimit {
      * 限流的key
      * @return key
      */
-    String value();
+    String value() default "";
 
     /**
-     * 每秒访问次数限制
+     * 单位事件内访问次数限制
      * @return 限制
      */
     long limit() default 2L;
+
+    /**
+     * 时间单位
+     * @return 时间单位
+     */
+    ChronoUnit unit() default ChronoUnit.SECONDS;
 
     /**
      * 提示

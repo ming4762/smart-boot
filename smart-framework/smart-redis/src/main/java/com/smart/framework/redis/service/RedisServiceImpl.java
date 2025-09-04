@@ -319,6 +319,27 @@ public class RedisServiceImpl extends AbstractCacheService implements RedisServi
         return this.redissonClient.<K, V>getMap(this.getCachedKey(key)).readAllMap();
     }
 
+    /**
+     * 获取限流器
+     * @param key 限流器key
+     * @return 限流器
+     */
+    @Override
+    public RRateLimiter getRateLimiter(String key) {
+        return this.redissonClient.getRateLimiter(this.getCachedKey(key));
+    }
+
+    /**
+     * 获取锁
+     *
+     * @param key 锁key
+     * @return 锁
+     */
+    @Override
+    public RLock getLock(String key) {
+        return this.redissonClient.getLock(this.getCachedKey(key));
+    }
+
     @Override
     public RedissonClient getRedissonClient() {
         return this.redissonClient;

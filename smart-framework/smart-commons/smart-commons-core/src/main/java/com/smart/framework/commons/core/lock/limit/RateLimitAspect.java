@@ -10,6 +10,11 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.util.StringUtils;
+
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * 限流切换
@@ -21,10 +26,12 @@ import org.springframework.core.annotation.AnnotationUtils;
 @Slf4j
 public class RateLimitAspect {
 
+    private static final String DEFAULT_KEY_FORMAT = "%s#%s(%s)";
+
     @Setter
     private RateLimitService rateLimitService;
 
-    @Pointcut("@annotation(com.smart.commons.core.lock.limit.RateLimit)")
+    @Pointcut("@annotation(com.smart.framework.commons.core.lock.limit.RateLimit)")
     public void limiterPointCut() {
         // do nothing
     }
@@ -38,12 +45,35 @@ public class RateLimitAspect {
             if (rateLimit == null) {
                 throw new SystemException("系统发生未知错误");
             }
-            var result = this.rateLimitService.acquire(rateLimit.value(), rateLimit.limit());
+            String key = rateLimit.value();
+            if (!StringUtils.hasText(key)) {
+                key = getDefaultKey(methodSignature);
+            }
+            var result = this.rateLimitService.acquire(key, rateLimit.limit(), rateLimit.unit());
             if (!result) {
-                log.warn("超出最大访问速度，触发限流，限流key：{}，每秒最大访问次数：{}", rateLimit.value(), rateLimit.limit());
+                log.warn("超出最大访问速度，触发限流，限流key：{}，每秒最大访问次数：{}", key, rateLimit.limit());
                 throw new RateLimitException(rateLimit.message());
             }
         }
         return point.proceed();
+    }
+
+    /**
+     * 获取默认的key
+     * @param methodSignature 方法签名
+     * @return key
+     */
+    private String getDefaultKey(MethodSignature methodSignature) {
+        Method method = methodSignature.getMethod();
+
+        String className = method.getDeclaringClass().getName();
+        String methodName = method.getName();
+        // 参数类型列表
+        Class<?>[] parameterTypes = method.getParameterTypes();
+        String params = Arrays.stream(parameterTypes)
+                .map(Class::getName)
+                .collect(Collectors.joining(", "));
+
+        return String.format(DEFAULT_KEY_FORMAT, className, methodName, params);
     }
 }

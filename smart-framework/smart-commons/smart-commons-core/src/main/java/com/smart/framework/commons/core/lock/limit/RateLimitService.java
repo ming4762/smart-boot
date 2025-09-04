@@ -2,6 +2,8 @@ package com.smart.framework.commons.core.lock.limit;
 
 import org.springframework.lang.NonNull;
 
+import java.time.temporal.ChronoUnit;
+
 /**
  * 限流服务类
  * @author ShiZhongMing
@@ -16,5 +18,5 @@ public interface RateLimitService {
      * @param limit 每秒访问次数
      * @return true：未限制，false限制
      */
-    boolean acquire(@NonNull String key, long limit);
+    boolean acquire(@NonNull String key, long limit, @NonNull ChronoUnit unit);
 }
