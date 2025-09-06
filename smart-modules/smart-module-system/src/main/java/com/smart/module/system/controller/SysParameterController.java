@@ -8,6 +8,7 @@ import com.smart.framework.commons.core.log.LogOperationTypeEnum;
 import com.smart.framework.commons.core.message.Result;
 import com.smart.framework.crud.controller.BaseController;
 import com.smart.framework.crud.query.PageSortQuery;
+import com.smart.module.system.constants.SystemConstantEnum;
 import com.smart.module.system.model.SysParameterPO;
 import com.smart.module.system.pojo.dto.parameter.SysParameterSaveUpdateDTO;
 import com.smart.module.system.service.SysParameterService;
@@ -41,9 +42,17 @@ public class SysParameterController extends BaseController<SysParameterService, 
 
     @Override
     @PostMapping("list")
-    @Operation(summary = "查询角色列表（支持分页、实体类属性查询）")
+    @Operation(summary = "查询系统参数列表（支持分页、实体类属性查询）")
     @PreAuthorize("hasPermission('sys:parameter', 'query')")
     public Result<Object> list(@RequestBody @NonNull PageSortQuery parameter) {
+        return super.list(parameter);
+    }
+
+    @PostMapping("listWithCommon")
+    @Operation(summary = "查询系统参数列表（支持分页、实体类属性查询），包含默认参数")
+    @PreAuthorize("hasPermission('sys:parameter', 'query')")
+    public Result<Object> listWithCommon(@RequestBody @NonNull PageSortQuery parameter) {
+        parameter.getParameter().put(SystemConstantEnum.LIST_PARAMETER_WITH_COMMON, Boolean.TRUE);
         return super.list(parameter);
     }
 

@@ -40,11 +40,6 @@ public class SysParameterPO extends BaseModelUserTime {
     private String name;
 
     /**
-    * parameter - 参数值
-    */
-    private String parameter;
-
-    /**
     * remark - 备注
     */
     private String remark;

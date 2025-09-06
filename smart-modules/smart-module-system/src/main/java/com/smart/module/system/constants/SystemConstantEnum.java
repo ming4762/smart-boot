@@ -19,4 +19,9 @@ public enum SystemConstantEnum {
     LIST_WITH_TENANT,
 
     LIST_USER_WITH_ACCOUNT,
+
+    /**
+     * 查询系统参数列表（支持分页、实体类属性查询），包含默认参数
+     */
+    LIST_PARAMETER_WITH_COMMON,
 }

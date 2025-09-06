@@ -1,6 +1,6 @@
 package com.smart.module.system.inject;
 
-import com.smart.module.system.model.tenant.SysTenantPO;
+import com.smart.module.api.system.dto.SysTenantDTO;
 
 /**
  * 注入租户信息接口
@@ -20,5 +20,5 @@ public interface SysTenantInject {
      * 设置租户
      * @param tenant 租户
      */
-    void setTenant(SysTenantPO tenant);
+    void setTenant(SysTenantDTO tenant);
 }

@@ -29,10 +29,7 @@ public class SysParameterSaveUpdateDTO implements Serializable {
     * 参数名字
     */
     private String name;
-    /**
-    * 参数值
-    */
-    private String parameter;
+
     /**
     * 备注
     */

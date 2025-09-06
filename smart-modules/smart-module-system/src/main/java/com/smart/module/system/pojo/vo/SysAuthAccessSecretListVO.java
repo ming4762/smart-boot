@@ -1,8 +1,8 @@
 package com.smart.module.system.pojo.vo;
 
+import com.smart.module.api.system.dto.SysTenantDTO;
 import com.smart.module.system.inject.SysTenantInject;
 import com.smart.module.system.model.auth.SysAuthAccessSecretPO;
-import com.smart.module.system.model.tenant.SysTenantPO;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,6 +24,6 @@ public class SysAuthAccessSecretListVO extends SysAuthAccessSecretPO implements 
     @Serial
     private static final long serialVersionUID = -2998353517922789665L;
 
-    private SysTenantPO tenant;
+    private SysTenantDTO tenant;
 
 }

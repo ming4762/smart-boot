@@ -10,6 +10,7 @@ import com.smart.framework.crud.plus.metadata.SmartTableInfo;
 import com.smart.framework.crud.query.IdParameter;
 import com.smart.framework.crud.service.BaseServiceImpl;
 import com.smart.framework.crud.utils.CrudUtils;
+import com.smart.module.api.system.dto.SysTenantDTO;
 import com.smart.module.system.inject.SysTenantInject;
 import com.smart.module.system.mapper.tenant.SysTenantMapper;
 import com.smart.module.system.mapper.tenant.SysTenantUserMapper;
@@ -32,6 +33,7 @@ import com.smart.module.system.service.tenant.SysTenantService;
 import com.smart.module.system.service.tenant.SysTenantSubscribeService;
 import com.smart.module.system.service.tenant.SysTenantUserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -314,7 +316,7 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
         if (CollectionUtils.isEmpty(tenantIds)) {
             return;
         }
-        Map<Long, SysTenantPO> tenantMap = this.lambdaQuery()
+        Map<Long, SysTenantDTO> tenantMap = this.lambdaQuery()
                 .select(
                         SysTenantPO::getId,
                         SysTenantPO::getTenantCode,
@@ -324,7 +326,12 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
                         SysTenantPO::getUseYn
                 ).in(SysTenantPO::getId, tenantIds)
                 .list().stream()
-                .collect(Collectors.toMap(SysTenantPO::getId, item -> item));
+                .map(item -> {
+                    SysTenantDTO dto = new SysTenantDTO();
+                    BeanUtils.copyProperties(item, dto);
+                    return dto;
+                })
+                .collect(Collectors.toMap(SysTenantDTO::getId, item -> item));
         if (CollectionUtils.isEmpty(tenantMap)) {
             return;
         }

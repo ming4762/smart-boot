@@ -6,9 +6,11 @@ import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.smart.framework.crud.annotation.TableUseYnField;
 import com.smart.framework.crud.model.BaseModelDeleteUserTime;
+import com.smart.module.api.system.dto.SysTenantDTO;
 import com.smart.module.system.constants.SysTenantIsolationStrategyEnum;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.BeanUtils;
 
 import java.io.Serial;
 import java.time.ZonedDateTime;
@@ -138,6 +140,10 @@ public class SysTenantPO extends BaseModelDeleteUserTime {
     @TableLogic
     private Boolean deleteYn;
 
-
+    public SysTenantDTO createDto() {
+        SysTenantDTO dto = new SysTenantDTO();
+        BeanUtils.copyProperties(this, dto);
+        return dto;
+    }
 
 }
