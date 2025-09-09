@@ -49,6 +49,15 @@ public class SysAuthAccessSecretServiceImpl extends BaseServiceImpl<SysAuthAcces
         return super.save(entity);
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean saveOrUpdate(SysAuthAccessSecretPO entity) {
+        if (this.isAdd(entity)) {
+            return this.save(entity);
+        }
+        return this.updateById(entity);
+    }
+
     /**
      * 查询函数
      *
