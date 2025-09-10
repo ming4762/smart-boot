@@ -9,8 +9,10 @@ import com.smart.framework.crud.query.PageSortQuery;
 import com.smart.module.system.model.auth.SysAuthAccessSecretPO;
 import com.smart.module.system.pojo.dto.access.SysAccessCreateSignDTO;
 import com.smart.module.system.pojo.dto.access.SysAuthAccessSecretSaveUpdateDTO;
+import com.smart.module.system.pojo.dto.auth.SmartAuthAccessTestDTO;
 import com.smart.module.system.service.auth.SysAuthAccessSecretService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
@@ -85,5 +87,11 @@ public class SysAuthAccessSecretController extends BaseController<SysAuthAccessS
     @PostMapping("createSign")
     public Result<String> createSign(@RequestBody @Valid SysAccessCreateSignDTO parameter) {
         return Result.success(this.service.createSign(parameter));
+    }
+
+    @Operation(summary = "测试access")
+    @PostMapping("testAccessSecret")
+    public Result<String> testAccessSecret(@RequestBody SmartAuthAccessTestDTO parameter, HttpServletRequest request) {
+        return Result.success(this.service.testAccessSecret(request, parameter));
     }
 }

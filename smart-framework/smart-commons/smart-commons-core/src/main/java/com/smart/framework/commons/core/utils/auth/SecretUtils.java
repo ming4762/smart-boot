@@ -27,20 +27,19 @@ public class SecretUtils {
      * @param httpMethod 请求方法
      * @param contentType 请求体类型
      * @param date 日期GTM格式
-     * @param notice 随机串
      * @param prefix 前缀
      * @param accessKey accessKey
      * @param secretKey secretKey
      * @return 认证签名
      */
-    public static String createSign(String httpMethod, String contentType, String date, String notice, String prefix, String accessKey, String secretKey) {
+    public static String createSign(String httpMethod, String contentType, String date, String parameterStr, String prefix, String accessKey, String secretKey) {
         String encryptKey = String.join(SPLIT, List.of(
                 httpMethod,
                 contentType,
                 date,
-                notice
+                parameterStr
         ));
-        String encodeSign = Base64Utils.encode(ShaUtils.hmacSha1Encrypt(secretKey, encryptKey));
+        String encodeSign = Base64Utils.encode(ShaUtils.hmacSha256Encrypt(secretKey, encryptKey));
         return String.join(SPLIT, List.of(
                 prefix,
                 accessKey,
@@ -53,15 +52,23 @@ public class SecretUtils {
      * @param httpMethod 请求方法
      * @param contentType 请求体类型
      * @param date 日期
-     * @param notice 随机串
      * @param prefix 前缀
      * @param accessKey accessKey
      * @param secretKey secretKey
      * @return 认证签名
      */
-    public static String createSign(String httpMethod, String contentType, ZonedDateTime date, String notice, String prefix, String accessKey, String secretKey) {
+    public static String createSign(String httpMethod, String contentType, ZonedDateTime date, String parameterStr, String prefix, String accessKey, String secretKey) {
         ZonedDateTime zonedDateTime = date.withZoneSameInstant(ZoneId.of("GMT"));
 
-        return createSign(httpMethod, contentType, DATE_FORMATTER.format(zonedDateTime), notice, prefix, accessKey, secretKey);
+        return createSign(httpMethod, contentType, DATE_FORMATTER.format(zonedDateTime), parameterStr, prefix, accessKey, secretKey);
+    }
+
+    /**
+     * 获取认证签名时间
+     * @param zonedDateTime 日期
+     * @return 认证签名时间
+     */
+    public static String getSignDate(ZonedDateTime zonedDateTime) {
+        return DATE_FORMATTER.format(zonedDateTime);
     }
 }

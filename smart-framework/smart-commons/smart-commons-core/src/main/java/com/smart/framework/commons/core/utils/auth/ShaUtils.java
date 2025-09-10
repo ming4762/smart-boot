@@ -16,6 +16,7 @@ import java.security.NoSuchAlgorithmException;
 public class ShaUtils {
 
     private static final String HMAC_SHA1 = "HmacSHA1";
+    private static final String HMAC_SHA256 = "HmacSHA256";
 
     private ShaUtils() {
         // nothing
@@ -27,13 +28,33 @@ public class ShaUtils {
      * @param encryptKey 加密值
      * @return 加密后
      */
-    @SneakyThrows({NoSuchAlgorithmException.class, InvalidKeyException.class})
     public static byte[] hmacSha1Encrypt(String encryptContent, String encryptKey) {
+        return hmacShaEncrypt(encryptContent, encryptKey, HMAC_SHA1);
+    }
 
+    /**
+     * hmacSha256 加密
+     * @param encryptContent 加密内容
+     * @param encryptKey 加密值
+     * @return 加密后
+     */
+    public static byte[] hmacSha256Encrypt(String encryptContent, String encryptKey) {
+        return hmacShaEncrypt(encryptContent, encryptKey, HMAC_SHA256);
+    }
+
+    /**
+     * hmacSha 加密
+     * @param encryptContent 加密内容
+     * @param encryptKey 加密值
+     * @param algorithm 算法
+     * @return 加密后
+     */
+    @SneakyThrows({NoSuchAlgorithmException.class, InvalidKeyException.class})
+    private static byte[] hmacShaEncrypt(String encryptContent, String encryptKey, String algorithm) {
         byte[] keyBytes = encryptKey.getBytes(StandardCharsets.UTF_8);
-        SecretKeySpec secretKeySpec = new SecretKeySpec(keyBytes, HMAC_SHA1);
+        SecretKeySpec secretKeySpec = new SecretKeySpec(keyBytes, algorithm);
 
-        Mac mac = Mac.getInstance(HMAC_SHA1);
+        Mac mac = Mac.getInstance(algorithm);
         mac.init(secretKeySpec);
         byte[] contentBytes = encryptContent.getBytes(StandardCharsets.UTF_8);
 

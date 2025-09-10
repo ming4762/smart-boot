@@ -31,9 +31,6 @@ public class SysAccessCreateSignDTO implements Serializable {
     @NotNull(message = "Date不能为空")
     private ZonedDateTime date;
 
-    @NotNull(message = "nonce不能为空")
-    private String nonce;
-
     @NotNull(message = "Http method不能为空")
     private HttpMethod httpMethod;
 
@@ -41,4 +38,9 @@ public class SysAccessCreateSignDTO implements Serializable {
     private String contentType;
 
     private String tokenPrefix;
+
+    /**
+     * 参数
+     */
+    private String parameterStr;
 }

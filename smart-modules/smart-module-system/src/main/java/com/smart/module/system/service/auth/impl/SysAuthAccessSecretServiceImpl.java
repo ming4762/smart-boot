@@ -1,8 +1,13 @@
 package com.smart.module.system.service.auth.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.smart.framework.commons.core.exception.BusinessException;
 import com.smart.framework.commons.core.exception.SystemException;
+import com.smart.framework.commons.core.message.Result;
 import com.smart.framework.commons.core.utils.Base64Utils;
+import com.smart.framework.commons.core.utils.JsonUtils;
+import com.smart.framework.commons.core.utils.RestUtils;
 import com.smart.framework.commons.core.utils.SmartIdGenerator;
 import com.smart.framework.commons.core.utils.auth.SecretUtils;
 import com.smart.framework.commons.core.utils.auth.ShaUtils;
@@ -12,18 +17,32 @@ import com.smart.framework.crud.service.BaseServiceImpl;
 import com.smart.module.system.mapper.auth.SysAuthAccessSecretMapper;
 import com.smart.module.system.model.auth.SysAuthAccessSecretPO;
 import com.smart.module.system.pojo.dto.access.SysAccessCreateSignDTO;
+import com.smart.module.system.pojo.dto.auth.SmartAuthAccessTestDTO;
 import com.smart.module.system.pojo.vo.SysAuthAccessSecretListVO;
 import com.smart.module.system.service.auth.SysAuthAccessSecretService;
 import com.smart.module.system.service.tenant.SysTenantService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
 * sys_auth_access_secret -  Service实现类
@@ -32,6 +51,7 @@ import java.util.UUID;
 */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class SysAuthAccessSecretServiceImpl extends BaseServiceImpl<SysAuthAccessSecretMapper, SysAuthAccessSecretPO> implements SysAuthAccessSecretService {
 
     private final SysTenantService sysTenantService;
@@ -44,8 +64,8 @@ public class SysAuthAccessSecretServiceImpl extends BaseServiceImpl<SysAuthAcces
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean save(SysAuthAccessSecretPO entity) {
-        entity.setAccessKey(Base64Utils.encode(ShaUtils.hmacSha1Encrypt(UUID.randomUUID().toString(), SmartIdGenerator.nextId() + "")));
-        entity.setSecretKey(Base64Utils.encode(ShaUtils.hmacSha1Encrypt(UUID.randomUUID().toString(), SmartIdGenerator.nextId() + "")));
+        entity.setAccessKey(Base64Utils.encode(ShaUtils.hmacSha256Encrypt(UUID.randomUUID().toString(), SmartIdGenerator.nextId() + "")));
+        entity.setSecretKey(Base64Utils.encode(ShaUtils.hmacSha256Encrypt(UUID.randomUUID().toString(), SmartIdGenerator.nextId() + "")));
         return super.save(entity);
     }
 
@@ -100,9 +120,80 @@ public class SysAuthAccessSecretServiceImpl extends BaseServiceImpl<SysAuthAcces
                 parameter.getHttpMethod().name(),
                 parameter.getContentType(),
                 parameter.getDate(),
-                parameter.getNonce(),
+                parameter.getParameterStr(),
                 parameter.getTokenPrefix(),
                 accessSecret.getAccessKey(),
                 accessSecret.getSecretKey());
+    }
+
+    /**
+     * 测试访问权限
+     *
+     * @param parameter 测试参数
+     * @return 是否通过
+     */
+    @Override
+    public String testAccessSecret(HttpServletRequest request, SmartAuthAccessTestDTO parameter) {
+        SysAuthAccessSecretPO accessSecret = this.getById(parameter.getAccessId());
+        if (accessSecret == null) {
+            throw new SystemException("查询Access secret失败");
+        }
+        String httpMethod = request.getMethod().toUpperCase();
+        String contentType = request.getContentType();
+        String data = request.getHeader(HttpHeaders.DATE);
+        if (data == null) {
+            data = SecretUtils.getSignDate(ZonedDateTime.now());
+        }
+        String parameterStr = Stream.of("/access/api/test/test", parameter.getQueryParameter(), parameter.getJsonParameter() == null ? null : JsonUtils.toJsonString(JsonUtils.parse(parameter.getJsonParameter())))
+                .filter(StringUtils::hasText)
+                .collect(Collectors.joining());
+        String sign = SecretUtils.createSign(
+                httpMethod,
+                contentType.split(";")[0],
+                data,
+                parameterStr,
+                parameter.getTokenPrefix(),
+                accessSecret.getAccessKey(),
+                accessSecret.getSecretKey()
+        );
+        String url = Stream.of(this.getBaseUrl(request) + "/access/api/test/test?Authorization=" + URLEncoder.encode(sign, StandardCharsets.UTF_8), parameter.getQueryParameter()).filter(StringUtils::hasText).collect(Collectors.joining("&"));
+        String resultStr = RestUtils.rest(
+                url,
+                HttpMethod.POST,
+                Map.of(
+                        HttpHeaders.DATE,
+                        data,
+                        HttpHeaders.CONTENT_TYPE,
+                        MediaType.APPLICATION_JSON_VALUE
+                ),
+                parameter.getJsonParameter(),
+                new ParameterizedTypeReference<>() {
+                },
+                null
+        );
+        Result<Map<String, Object>> result = JsonUtils.parse(resultStr, new TypeReference<>() {
+        });
+        log.info("测试访问权限,结果:{}", JsonUtils.toJsonString(resultStr));
+        if (!result.isSuccess()) {
+            throw new BusinessException(result.getMessage());
+        }
+        return sign;
+    }
+
+    /**
+     * 获取baseUrl
+     * @param request 请求
+     * @return baseUrl
+     */
+    public String getBaseUrl(HttpServletRequest request) {
+        // 获取协议 http 或 https
+        String scheme = request.getScheme(); // http
+        // 获取主机名
+        String serverName = request.getServerName(); // localhost
+        // 获取端口
+        int serverPort = request.getServerPort(); // 5666
+
+        // 拼接成完整的 base URL
+        return scheme + "://" + serverName + (serverPort == 80 || serverPort == 443 ? "" : ":" + serverPort);
     }
 }
