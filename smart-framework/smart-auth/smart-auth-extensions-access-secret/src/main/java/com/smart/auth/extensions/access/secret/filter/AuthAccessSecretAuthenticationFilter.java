@@ -98,7 +98,7 @@ public class AuthAccessSecretAuthenticationFilter implements Filter {
             throw new SystemException("Content-Type header is required");
         }
         String contentType = contentTypeHeader.split(";")[0];
-        String date = servletRequest.getHeader(HttpHeaders.DATE);
+        String date = this.getParameter(servletRequest, HttpHeaders.DATE);
 
         if (!StringUtils.hasText(token)) {
             this.throwException(AuthI18nMessage.ACCESS_SECRET_TOKEN_EMPTY);
