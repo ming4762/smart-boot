@@ -1,5 +1,6 @@
 package com.smart.module.system.pojo.dto.auth;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,8 +20,15 @@ public class SmartAuthAccessTestDTO implements Serializable {
 
     private String jsonParameter;
 
+    @NotNull(message = "accessId不能为空")
     private Long accessId;
 
+    @NotNull(message = "tokenPrefix不能为空")
     private String tokenPrefix;
+
+    @NotNull(message = "nonce不能为空")
+    private String nonce;
+
+    private String contentType;
 
 }

@@ -1,12 +1,16 @@
 package com.smart.framework.commons.core.utils.auth;
 
+import com.smart.framework.commons.core.dto.auth.AuthAkSkCreateTokenDTO;
 import com.smart.framework.commons.core.utils.Base64Utils;
+import org.springframework.util.StringUtils;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author shizhongming
@@ -24,43 +28,37 @@ public class SecretUtils {
 
     /**
      * 获取认证签名
-     * @param httpMethod 请求方法
-     * @param contentType 请求体类型
+     * @param parameter 参数
      * @param date 日期GTM格式
-     * @param prefix 前缀
-     * @param accessKey accessKey
-     * @param secretKey secretKey
      * @return 认证签名
      */
-    public static String createSign(String httpMethod, String contentType, String date, String parameterStr, String prefix, String accessKey, String secretKey) {
-        String encryptKey = String.join(SPLIT, List.of(
-                httpMethod,
-                contentType,
-                date,
-                parameterStr
-        ));
-        String encodeSign = Base64Utils.encode(ShaUtils.hmacSha256Encrypt(secretKey, encryptKey));
+    public static String createSign(AuthAkSkCreateTokenDTO parameter, String date) {
+        String encryptKey = Stream.of(
+                        parameter.getHttpMethod().name(),
+                        parameter.getContentType(),
+                        date,
+                        parameter.getNonce(),
+                        parameter.getParameterStr()
+                ).filter(StringUtils::hasText)
+                .collect(Collectors.joining(SPLIT));
+        String encodeSign = Base64Utils.encode(ShaUtils.hmacSha256Encrypt(parameter.getSecretKey(), encryptKey));
         return String.join(SPLIT, List.of(
-                prefix,
-                accessKey,
+                parameter.getPrefix(),
+                parameter.getAccessKey(),
                 encodeSign
         ));
     }
 
     /**
      * 获取认证签名
-     * @param httpMethod 请求方法
-     * @param contentType 请求体类型
+     * @param parameter 参数
      * @param date 日期
-     * @param prefix 前缀
-     * @param accessKey accessKey
-     * @param secretKey secretKey
      * @return 认证签名
      */
-    public static String createSign(String httpMethod, String contentType, ZonedDateTime date, String parameterStr, String prefix, String accessKey, String secretKey) {
+    public static String createSign(AuthAkSkCreateTokenDTO parameter, ZonedDateTime date) {
         ZonedDateTime zonedDateTime = date.withZoneSameInstant(ZoneId.of("GMT"));
 
-        return createSign(httpMethod, contentType, DATE_FORMATTER.format(zonedDateTime), parameterStr, prefix, accessKey, secretKey);
+        return createSign(parameter, DATE_FORMATTER.format(zonedDateTime));
     }
 
     /**

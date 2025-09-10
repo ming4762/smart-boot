@@ -1,12 +1,13 @@
 package com.smart.auth.extensions.access.secret.filter;
 
-import com.smart.auth.extensions.access.secret.constants.AccessSignatureEnum;
+import com.smart.framework.auth.common.constants.AccessSignatureEnum;
 import com.smart.framework.auth.common.exception.AuthException;
 import com.smart.framework.auth.core.i18n.AuthI18nMessage;
 import com.smart.framework.auth.core.properties.AuthProperties;
 import com.smart.framework.auth.core.secret.AccessSecretProvider;
 import com.smart.framework.auth.core.secret.data.AccessSecretData;
-import com.smart.framework.commons.core.exception.SystemException;
+import com.smart.framework.auth.core.service.AuthCache;
+import com.smart.framework.commons.core.dto.auth.AuthAkSkCreateTokenDTO;
 import com.smart.framework.commons.core.http.RepeatReadBodyHttpServletRequest;
 import com.smart.framework.commons.core.i18n.I18nUtils;
 import com.smart.framework.commons.core.message.Result;
@@ -19,6 +20,7 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
@@ -54,9 +56,13 @@ public class AuthAccessSecretAuthenticationFilter implements Filter {
 
     private static final String UNSIGNED_PAYLOAD = "UNSIGNED-PAYLOAD";
 
+    private static final String ACCESS_SECRET_CACHE_KEY = "ACCESS_SECRET:";
+
     private final AuthProperties authProperties;
 
     private final AccessSecretProvider accessSecretProvider;
+
+    private final AuthCache<Object> authCache;
 
     /**
      * 签名排除的key
@@ -67,9 +73,10 @@ public class AuthAccessSecretAuthenticationFilter implements Filter {
     ).toList();
 
 
-    public AuthAccessSecretAuthenticationFilter(AuthProperties authProperties, AccessSecretProvider accessSecretProvider) {
+    public AuthAccessSecretAuthenticationFilter(AuthProperties authProperties, AccessSecretProvider accessSecretProvider, AuthCache<Object> authCache) {
         this.authProperties = authProperties;
         this.accessSecretProvider = accessSecretProvider;
+        this.authCache = authCache;
     }
 
     @Override
@@ -93,19 +100,17 @@ public class AuthAccessSecretAuthenticationFilter implements Filter {
     private void filter(HttpServletRequest servletRequest) {
         String token = this.getParameter(servletRequest, HttpHeaders.AUTHORIZATION);
         String httpMethod = servletRequest.getMethod();
-        String contentTypeHeader = servletRequest.getHeader(HttpHeaders.CONTENT_TYPE);
-        if (!StringUtils.hasText(contentTypeHeader)) {
-            throw new SystemException("Content-Type header is required");
-        }
+        String contentTypeHeader = Objects.requireNonNullElse(servletRequest.getHeader(HttpHeaders.CONTENT_TYPE), "");
         String contentType = contentTypeHeader.split(";")[0];
         String date = this.getParameter(servletRequest, HttpHeaders.DATE);
+        String nonce = this.getParameter(servletRequest, AccessSignatureEnum.X_SIGNATURE_NONCE.getKey());
 
         if (!StringUtils.hasText(token)) {
             this.throwException(AuthI18nMessage.ACCESS_SECRET_TOKEN_EMPTY);
         }
 
         // 验证时间和随机串
-        this.validateDateNonce(date);
+        this.validateDateNonce(date, nonce);
 
         // 验证token格式
         List<String> tokeList = Arrays.asList(token.split(SPLIT));
@@ -130,7 +135,18 @@ public class AuthAccessSecretAuthenticationFilter implements Filter {
         }
         String parameterStr = this.getParameterStr(servletRequest);
         // 计算sign
-        String encodeSign = SecretUtils.createSign(httpMethod, contentType, date, parameterStr, this.authProperties.getAccessSecret().getTokenPrefix(), accessSecretData.getAccessKey(), accessSecretData.getSecretKey());
+        String encodeSign = SecretUtils.createSign(
+                AuthAkSkCreateTokenDTO.builder()
+                        .httpMethod(HttpMethod.valueOf(httpMethod))
+                        .contentType(contentType)
+                        .nonce(nonce)
+                        .parameterStr(parameterStr)
+                        .prefix(this.authProperties.getAccessSecret().getTokenPrefix())
+                        .accessKey(accessSecretData.getAccessKey())
+                        .secretKey(accessSecretData.getSecretKey())
+                        .build(),
+                date
+        );
         if (!token.equals(encodeSign)) {
             this.throwException(AuthI18nMessage.ACCESS_SECRET_SIGN_ERROR);
         }
@@ -181,8 +197,9 @@ public class AuthAccessSecretAuthenticationFilter implements Filter {
     /**
      * 验证时间和随机串
      * @param date 时间
+     * @param nonce 随机串
      */
-    private void validateDateNonce(String date) {
+    private void validateDateNonce(String date, String nonce) {
         // 验证时间格式
         if(!StringUtils.hasText(date)) {
             this.throwException(AuthI18nMessage.ACCESS_SECRET_DATE_ERROR);
@@ -202,6 +219,15 @@ public class AuthAccessSecretAuthenticationFilter implements Filter {
         ) {
             this.throwException(AuthI18nMessage.ACCESS_SECRET_DATE_EXPIRE);
         }
+        if (!StringUtils.hasText(nonce)) {
+            this.throwException(AuthI18nMessage.ACCESS_SECRET_NONCE_ERROR);
+        }
+        // 验证随机串
+        String nonceKey = this.getCacheKey(nonce);
+        if (this.authCache.getValue(nonceKey) != null) {
+            this.throwException(AuthI18nMessage.ACCESS_SECRET_NONCE_USED);
+        }
+        this.authCache.put(nonceKey, nonce, this.authProperties.getAccessSecret().getExpire());
     }
 
     /**
@@ -256,6 +282,10 @@ public class AuthAccessSecretAuthenticationFilter implements Filter {
      */
     private boolean isJsonContentType(HttpServletRequest request) {
         String contentType = request.getContentType();
-        return contentType.contains("json");
+        return contentType != null && contentType.contains("json");
+    }
+
+    private String getCacheKey(String key) {
+        return ACCESS_SECRET_CACHE_KEY + key;
     }
 }

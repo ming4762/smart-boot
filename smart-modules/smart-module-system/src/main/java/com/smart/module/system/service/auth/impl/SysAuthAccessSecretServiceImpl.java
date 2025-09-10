@@ -2,6 +2,8 @@ package com.smart.module.system.service.auth.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.smart.framework.auth.common.constants.AccessSignatureEnum;
+import com.smart.framework.commons.core.dto.auth.AuthAkSkCreateTokenDTO;
 import com.smart.framework.commons.core.exception.BusinessException;
 import com.smart.framework.commons.core.exception.SystemException;
 import com.smart.framework.commons.core.message.Result;
@@ -16,7 +18,6 @@ import com.smart.framework.crud.query.PageSortQuery;
 import com.smart.framework.crud.service.BaseServiceImpl;
 import com.smart.module.system.mapper.auth.SysAuthAccessSecretMapper;
 import com.smart.module.system.model.auth.SysAuthAccessSecretPO;
-import com.smart.module.system.pojo.dto.access.SysAccessCreateSignDTO;
 import com.smart.module.system.pojo.dto.auth.SmartAuthAccessTestDTO;
 import com.smart.module.system.pojo.vo.SysAuthAccessSecretListVO;
 import com.smart.module.system.service.auth.SysAuthAccessSecretService;
@@ -28,7 +29,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +38,7 @@ import org.springframework.util.StringUtils;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -105,28 +106,6 @@ public class SysAuthAccessSecretServiceImpl extends BaseServiceImpl<SysAuthAcces
     }
 
     /**
-     * 创建签名
-     *
-     * @param parameter 签名参数
-     * @return 签名
-     */
-    @Override
-    public String createSign(SysAccessCreateSignDTO parameter) {
-        SysAuthAccessSecretPO accessSecret = this.getById(parameter.getAccessId());
-        if (accessSecret == null) {
-            throw new SystemException("查询Access secret失败");
-        }
-        return SecretUtils.createSign(
-                parameter.getHttpMethod().name(),
-                parameter.getContentType(),
-                parameter.getDate(),
-                parameter.getParameterStr(),
-                parameter.getTokenPrefix(),
-                accessSecret.getAccessKey(),
-                accessSecret.getSecretKey());
-    }
-
-    /**
      * 测试访问权限
      *
      * @param parameter 测试参数
@@ -139,7 +118,6 @@ public class SysAuthAccessSecretServiceImpl extends BaseServiceImpl<SysAuthAcces
             throw new SystemException("查询Access secret失败");
         }
         String httpMethod = request.getMethod().toUpperCase();
-        String contentType = request.getContentType();
         String data = request.getHeader(HttpHeaders.DATE);
         if (data == null) {
             data = SecretUtils.getSignDate(ZonedDateTime.now());
@@ -148,24 +126,31 @@ public class SysAuthAccessSecretServiceImpl extends BaseServiceImpl<SysAuthAcces
                 .filter(StringUtils::hasText)
                 .collect(Collectors.joining());
         String sign = SecretUtils.createSign(
-                httpMethod,
-                contentType.split(";")[0],
-                data,
-                parameterStr,
-                parameter.getTokenPrefix(),
-                accessSecret.getAccessKey(),
-                accessSecret.getSecretKey()
+                AuthAkSkCreateTokenDTO.builder()
+                        .httpMethod(HttpMethod.valueOf(httpMethod))
+                        .contentType(parameter.getContentType())
+                        .nonce(parameter.getNonce())
+                        .parameterStr(parameterStr)
+                        .prefix(parameter.getTokenPrefix())
+                        .accessKey(accessSecret.getAccessKey())
+                        .secretKey(accessSecret.getSecretKey())
+                        .build(),
+                data
         );
-        String url = Stream.of(this.getBaseUrl(request) + "/access/api/test/test?Authorization=" + URLEncoder.encode(sign, StandardCharsets.UTF_8), parameter.getQueryParameter()).filter(StringUtils::hasText).collect(Collectors.joining("&"));
+        String url = Stream.of(
+                        this.getBaseUrl(request) + "/access/api/test/test?Authorization=" + URLEncoder.encode(sign, StandardCharsets.UTF_8),
+                        parameter.getQueryParameter(),
+                        String.format("%s=%s", AccessSignatureEnum.X_SIGNATURE_NONCE.getKey(), parameter.getNonce())
+                ).filter(StringUtils::hasText)
+                .collect(Collectors.joining("&"));
+        Map<String, String> headers = new HashMap<>(Map.of(HttpHeaders.DATE, data));
+        if (StringUtils.hasText(parameter.getContentType())) {
+            headers.put(HttpHeaders.CONTENT_TYPE, parameter.getContentType());
+        }
         String resultStr = RestUtils.rest(
                 url,
                 HttpMethod.POST,
-                Map.of(
-                        HttpHeaders.DATE,
-                        data,
-                        HttpHeaders.CONTENT_TYPE,
-                        MediaType.APPLICATION_JSON_VALUE
-                ),
+                headers,
                 parameter.getJsonParameter(),
                 new ParameterizedTypeReference<>() {
                 },

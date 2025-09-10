@@ -83,12 +83,6 @@ public class SysAuthAccessSecretController extends BaseController<SysAuthAccessS
         return super.getById(id);
     }
 
-    @Operation(summary = "生成签名")
-    @PostMapping("createSign")
-    public Result<String> createSign(@RequestBody @Valid SysAccessCreateSignDTO parameter) {
-        return Result.success(this.service.createSign(parameter));
-    }
-
     @Operation(summary = "测试access")
     @PostMapping("testAccessSecret")
     public Result<String> testAccessSecret(@RequestBody SmartAuthAccessTestDTO parameter, HttpServletRequest request) {

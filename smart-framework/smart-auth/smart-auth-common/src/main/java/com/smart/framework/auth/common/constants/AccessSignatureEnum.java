@@ -1,4 +1,4 @@
-package com.smart.auth.extensions.access.secret.constants;
+package com.smart.framework.auth.common.constants;
 
 import lombok.Getter;
 
@@ -12,6 +12,7 @@ import lombok.Getter;
 public enum AccessSignatureEnum {
 
     X_SIGNATURE_BODY_HASH("X-Signature-Body-Hash", "请求体hash值"),
+    X_SIGNATURE_NONCE("X-Signature-Nonce", "请求随机数"),
     ;
 
     private final String key;

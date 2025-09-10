@@ -3,6 +3,7 @@ package com.smart.auth.extensions.access.secret;
 import com.smart.auth.extensions.access.secret.filter.AuthAccessSecretAuthenticationFilter;
 import com.smart.framework.auth.core.config.SmartSecurityConfigurerAdapter;
 import com.smart.framework.auth.core.secret.AccessSecretProvider;
+import com.smart.framework.auth.core.service.AuthCache;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -29,8 +30,8 @@ public class AuthAccessSecretSecurityConfigurer extends SmartSecurityConfigurerA
         builder.addFilterAfter(
                         new AuthAccessSecretAuthenticationFilter(
                                 this.getAuthProperties(),
-
-                                this.getBean(AccessSecretProvider.class, null)
+                                this.getBean(AccessSecretProvider.class, null),
+                                this.getBean(AuthCache.class, null)
                         ),
                         ExceptionTranslationFilter.class);
     }
