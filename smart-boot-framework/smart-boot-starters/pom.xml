@@ -16,6 +16,7 @@
     <modules>
         <module>smart-boot-starter-actuator</module>
         <module>smart-boot-starter-ai-dify</module>
+        <module>smart-boot-starter-ai-langchain4j</module>
         <module>smart-boot-starter-auth</module>
         <module>smart-boot-starter-captcha</module>
         <module>smart-boot-starter-crud</module>

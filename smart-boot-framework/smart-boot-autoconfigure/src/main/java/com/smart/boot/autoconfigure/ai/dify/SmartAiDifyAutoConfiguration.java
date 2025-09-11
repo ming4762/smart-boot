@@ -1,4 +1,4 @@
-package com.smart.boot.autoconfigure.ai;
+package com.smart.boot.autoconfigure.ai.dify;
 
 import com.smart.framework.ai.dify.api.DefaultDifyClient;
 import com.smart.framework.ai.dify.api.DefaultDifyDatasetClient;
