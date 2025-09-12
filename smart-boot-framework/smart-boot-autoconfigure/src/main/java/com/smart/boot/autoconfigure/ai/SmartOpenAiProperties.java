@@ -1,4 +1,4 @@
-package com.smart.boot.autoconfigure.ai.langchain4j;
+package com.smart.boot.autoconfigure.ai;
 
 import lombok.Getter;
 import lombok.Setter;

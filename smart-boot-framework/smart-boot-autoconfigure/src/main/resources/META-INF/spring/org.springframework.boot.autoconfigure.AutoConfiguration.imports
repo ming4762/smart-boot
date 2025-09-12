@@ -56,5 +56,6 @@ com.smart.boot.autoconfigure.monitor.SmartMonitorClientAutoConfiguration
 com.smart.boot.autoconfigure.freemarker.SmartFreemarkerAutoConfiguration
 
 com.smart.boot.autoconfigure.ai.dify.SmartAiDifyAutoConfiguration
+com.smart.boot.autoconfigure.ai.langchain4j.SmartAiLangchain4jOpenAiAutoConfiguration
 
 com.smart.boot.autoconfigure.druid.SmartDruidAutoConfiguration

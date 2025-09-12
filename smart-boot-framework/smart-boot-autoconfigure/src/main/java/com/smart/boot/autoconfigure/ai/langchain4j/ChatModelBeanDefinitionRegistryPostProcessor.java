@@ -1,5 +1,6 @@
 package com.smart.boot.autoconfigure.ai.langchain4j;
 
+import com.smart.boot.autoconfigure.ai.SmartOpenAiProperties;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
