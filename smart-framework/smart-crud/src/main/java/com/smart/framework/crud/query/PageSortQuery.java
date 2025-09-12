@@ -17,23 +17,10 @@ import java.util.Optional;
 @Setter
 @EqualsAndHashCode(callSuper = true)
 @Schema(description = "分页排序查询参数")
-public class PageSortQuery extends CommonQuery {
+public class PageSortQuery extends SortQuery {
 
     @Serial
     private static final long serialVersionUID = 401040997642894963L;
-
-
-    /**
-     * 排序方向已逗号分隔
-     */
-    @Schema(description = "排序方向，以逗号分隔", example = "desc,asc")
-    private String sortOrder;
-
-    /**
-     * 排序字段 已逗号分隔
-     */
-    @Schema(description = "排序字段，以逗号分隔")
-    private String sortName;
 
     /**
      * 每页条数
@@ -61,12 +48,6 @@ public class PageSortQuery extends CommonQuery {
 
     @Schema(description = "当前页数，page优先")
     private Integer currentPage;
-
-    /**
-     * 关键字查询
-     */
-    @Schema(description = "查询关键字")
-    private String keyword;
 
     public Integer getLimit() {
         return Optional.ofNullable(this.limit)

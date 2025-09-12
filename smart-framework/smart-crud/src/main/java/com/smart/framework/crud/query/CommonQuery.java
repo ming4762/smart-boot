@@ -1,5 +1,6 @@
 package com.smart.framework.crud.query;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -48,4 +49,11 @@ public class CommonQuery implements Serializable {
      * 排除的属性列表
      */
     private List<String> excludePropertyList = new ArrayList<>(0);
+
+
+    /**
+     * 关键字查询
+     */
+    @Schema(description = "查询关键字")
+    private String keyword;
 }
