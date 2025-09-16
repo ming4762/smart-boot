@@ -70,6 +70,7 @@
         <springdoc.version>2.8.9</springdoc.version>
         <jsqlparser.version>5.1</jsqlparser.version>
         <alibaba.transmittable.version>2.14.5</alibaba.transmittable.version>
+        <spring.ai.version>1.0.1</spring.ai.version>
     </properties>
 
     <packaging>pom</packaging>
@@ -82,6 +83,8 @@
         <module>smart-module-api</module>
         <module>smart-modules</module>
         <module>smart-services</module>
+
+        <module>smart-smc</module>
     </modules>
 
     <developers>
@@ -155,6 +158,14 @@
             </dependency>
 
             <dependency>
+                <groupId>org.springframework.ai</groupId>
+                <artifactId>spring-ai-bom</artifactId>
+                <version>${spring.ai.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
                 <groupId>dev.langchain4j</groupId>
                 <artifactId>langchain4j-bom</artifactId>
                 <version>${langchain4j.version}</version>
@@ -165,6 +176,12 @@
             <dependency>
                 <groupId>com.smart</groupId>
                 <artifactId>smart-commons-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.smart</groupId>
+                <artifactId>smart-commons-validate</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -561,6 +578,11 @@
                 <artifactId>transmittable-thread-local</artifactId>
                 <version>${alibaba.transmittable.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.springframework.ai</groupId>
+                <artifactId>spring-ai-client-chat</artifactId>
+                <version>${spring.ai.version}</version>
+            </dependency>
 
             <!--      smart-boot      -->
             <dependency>
@@ -848,6 +870,17 @@
             <dependency>
                 <groupId>com.smart</groupId>
                 <artifactId>smart-boot-starter-druid</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.smart</groupId>
+                <artifactId>smart-boot-starter-ai-langchain4j</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.smart</groupId>
+                <artifactId>smart-system-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

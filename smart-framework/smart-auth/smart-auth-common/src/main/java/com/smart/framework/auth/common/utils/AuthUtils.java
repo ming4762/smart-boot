@@ -82,6 +82,16 @@ public final class AuthUtils {
     }
 
     /**
+     * 获取当前登录人员用户姓名
+     * @return 用户姓名
+     */
+    public static String getCurrentFullName() {
+        return Optional.ofNullable(getCurrentUser())
+                .map(RestUserDetails::getFullName)
+                .orElse(null);
+    }
+
+    /**
      * 获取当前登录用户ID（不能为null）
      * @return 当前登录用户ID
      */

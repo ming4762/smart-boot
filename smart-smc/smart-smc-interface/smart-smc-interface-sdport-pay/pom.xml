@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.smart</groupId>
+		<artifactId>smart-smc-interface</artifactId>
+		<version>5.0.0-SNAPSHOT</version>
+	</parent>
+	<artifactId>smart-smc-interface-sdport-pay</artifactId>
+	<version>5.0.0-SNAPSHOT</version>
+	<name>smart-smc-interface-sdport-pay</name>
+	<description>SMC接口模块-上港云付</description>
+
+	<modules>
+
+	</modules>
+
+	<properties>
+	</properties>
+
+	<dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-commons-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-commons-validate</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-system-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-boot-starter-freemarker</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-auth-common</artifactId>
+        </dependency>
+	</dependencies>
+
+
+</project>
