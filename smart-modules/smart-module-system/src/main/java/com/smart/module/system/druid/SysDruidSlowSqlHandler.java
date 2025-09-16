@@ -1,6 +1,7 @@
 package com.smart.module.system.druid;
 
 import com.smart.framework.commons.core.utils.JsonUtils;
+import com.smart.framework.crud.utils.CrudUtils;
 import com.smart.framework.druid.filter.stat.EnhancedStatFilter;
 import com.smart.framework.druid.support.slow.AbstractSlowSqlHandler;
 import com.smart.framework.druid.support.slow.SlowSqlData;
@@ -39,6 +40,12 @@ public class SysDruidSlowSqlHandler extends AbstractSlowSqlHandler {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void doHandler(@NonNull SlowSqlData slowSqlData) {
+        // 排除插入慢SQL本身
+        String sql = slowSqlData.getSql();
+        String tableName = CrudUtils.getTableName(SmartMonitorSlowSqlPO.class);
+        if (sql.contains(tableName)) {
+            return;
+        }
         ZonedDateTime zonedDateTime = Instant.ofEpochMilli(slowSqlData.getTimestamp())
                 .atZone(ZoneId.systemDefault());
         SmartMonitorSlowSqlPO model = SmartMonitorSlowSqlPO.builder()
