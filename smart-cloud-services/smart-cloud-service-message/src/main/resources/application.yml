@@ -4,6 +4,8 @@ server:
 spring:
   application:
     name: @artifactId@
+  profiles:
+    active: @profiles.active@
   cloud:
     nacos:
       server-addr: @nacos.server-addr@
