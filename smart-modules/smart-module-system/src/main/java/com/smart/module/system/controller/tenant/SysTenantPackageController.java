@@ -103,7 +103,7 @@ public class SysTenantPackageController extends BaseController<SysTenantPackageS
      * @param parameter 角色ID
      * @return 功能ID集合
      */
-    @Operation(summary = "获取角色对应的功能ID集合")
+    @Operation(summary = "获取套餐包对应的功能ID集合")
     @PostMapping("listFunctionId")
     public Result<List<Long>> listFunctionId(@RequestBody IdParameter parameter) {
         return Result.success(

@@ -84,7 +84,6 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
     private final SysUserDeptService sysUserDeptService;
     private final SysUserGroupUserMapper sysUserGroupUserMapper;
     private final SysRoleService sysRoleService;
-    private final SysRoleFunctionService sysRoleFunctionService;
     private final SysFunctionService sysFunctionService;
     private final UserSetterService userSetterService;
     private final SysUserAccountService sysUserAccountService;
@@ -457,7 +456,6 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         List<SysFunctionPO> functionList = this.listPermissionFunctionIds(
                 userTenant.getTenantId(),
                 () -> sysRoleList.stream().map(SysRolePO::getRoleId).toList(),
-                Boolean.TRUE.equals(userTenant.getPlatformYn()),
                 sysRoleList.stream()
                         .anyMatch(item -> Boolean.TRUE.equals(item.getSuperAdminYn())),
                 List.of(FunctionTypeEnum.FUNCTION)
@@ -491,38 +489,19 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
      * 查询用户的菜单
      * @param tenantId 用户租户
      * @param roleIdProvider 用户角色
-     * @param isPlatformTenant 是否平台租户
      * @param isSuperAdmin 是否超级管理员
      * @param functionTypeList 功能类型
      * @return 功能列表
      */
-    private List<SysFunctionPO> listPermissionFunctionIds(Long tenantId, Supplier<List<Long>> roleIdProvider, boolean isPlatformTenant, boolean isSuperAdmin, List<FunctionTypeEnum> functionTypeList) {
+    private List<SysFunctionPO> listPermissionFunctionIds(Long tenantId, Supplier<List<Long>> roleIdProvider, boolean isSuperAdmin, List<FunctionTypeEnum> functionTypeList) {
         if (CollectionUtils.isEmpty(functionTypeList)) {
             return List.of();
-        }
-        if (isPlatformTenant && isSuperAdmin) {
-            // 平台租户管理员，直接返回所有菜单
-            return this.sysFunctionService.lambdaQuery()
-                    .in(SysFunctionPO :: getFunctionType, functionTypeList.stream().map(FunctionTypeEnum::getValue).toList())
-                    .orderByAsc(SysFunctionPO :: getSeq)
-                    .list();
         }
         Set<Long> functionIds = null;
         if (isSuperAdmin) {
             SysListTenantFunctionDTO parameter = new SysListTenantFunctionDTO();
             parameter.setTenantId(tenantId);
             functionIds = new HashSet<>(this.sysTenantUserService.listTenantFunctionIds(parameter));
-        } else if (isPlatformTenant) {
-            // 平台租户但不是管理员
-            // 2、查询角色对应的功能ID
-            List<Long> roleIdList = roleIdProvider.get();
-            if (!CollectionUtils.isEmpty(roleIdList)) {
-                functionIds = this.sysRoleFunctionService.list(
-                        new QueryWrapper<SysRoleFunctionPO>().lambda()
-                                .select(SysRoleFunctionPO::getFunctionId)
-                                .in(SysRoleFunctionPO::getRoleId, roleIdProvider.get())
-                ).stream().map(SysRoleFunctionPO::getFunctionId).collect(Collectors.toSet());
-            }
         } else {
             // 非平台租户的普通角色
             List<Long> roleIdList = roleIdProvider.get();
@@ -533,7 +512,6 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
                 functionIds = new HashSet<>(this.sysTenantUserService.listTenantRoleFunctionIds(parameter));
             }
         }
-
         if (CollectionUtils.isEmpty(functionIds)) {
             return List.of();
         }
@@ -592,7 +570,6 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
                 () -> this.listRole(userId)
                         .stream().map(SysRolePO::getRoleId)
                         .toList(),
-                AuthUtils.isPlatformTenant(),
                 AuthUtils.isSuperAdmin(),
                 types
         );
