@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
@@ -38,7 +39,7 @@ public class SysDruidSlowSqlHandler extends AbstractSlowSqlHandler {
      * @param slowSqlData 慢SQL数据
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public void doHandler(@NonNull SlowSqlData slowSqlData) {
         // 排除插入慢SQL本身
         String sql = slowSqlData.getSql();
