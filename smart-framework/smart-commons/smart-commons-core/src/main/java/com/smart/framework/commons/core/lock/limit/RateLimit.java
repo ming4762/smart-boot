@@ -23,10 +23,10 @@ public @interface RateLimit {
     String value() default "";
 
     /**
-     * 单位事件内访问次数限制
+     * 单位时间内访问次数限制
      * @return 限制
      */
-    long limit() default 2L;
+    long limit();
 
     /**
      * 时间单位
