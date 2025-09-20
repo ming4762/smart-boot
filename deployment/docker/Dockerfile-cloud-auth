@@ -1,0 +1,6 @@
+FROM smc-acr-registry.cn-qingdao.cr.aliyuncs.com/smc-common/openjdk:21-oracle
+VOLUME /tmp
+LABEL org.opencontainers.image.authors="zhongming4762"
+ADD smart-cloud-service-auth/target/smart-cloud-service-auth.jar app.jar
+EXPOSE 8092
+ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -jar /app.jar ${JAVA_OPTS2}"]
