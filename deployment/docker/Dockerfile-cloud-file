@@ -1,6 +1,0 @@
-FROM smc-acr-registry.cn-qingdao.cr.aliyuncs.com/smc-common/openjdk:21-oracle
-VOLUME /tmp
-LABEL org.opencontainers.image.authors="zhongming4762"
-ADD smart-cloud-service-file/target/smart-cloud-service-file.jar app.jar
-EXPOSE 8094
-ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -jar /app.jar ${JAVA_OPTS2}"]
