@@ -14,7 +14,8 @@ import com.smart.framework.message.core.constants.SmartMessageChannelType2Enum;
 import com.smart.framework.message.core.pojo.dto.SmartMessageToUserDTO;
 import com.smart.framework.message.core.service.SmartMessageSender;
 import com.smart.framework.message.dingtalk.SmartMessageDingtalkChannelProperties;
-import com.smart.module.api.message.dto.MessageSendDTO;
+import com.smart.framework.message.dingtalk.dto.DingtalkWorkNoticeSendResult;
+import com.smart.module.api.message.dto.MessageSendResult;
 import com.smart.module.api.message.parameter.RemoteMessageSendParameter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -70,7 +71,7 @@ public class SmartDingtalkWorkNoticeSender implements SmartMessageSender {
      * @return 消息发送结果
      */
     @Override
-    public MessageSendDTO send(@Nullable String channelProperties, List<SmartMessageToUserDTO> toUserList, RemoteMessageSendParameter parameter) {
+    public MessageSendResult send(@Nullable String channelProperties, List<SmartMessageToUserDTO> toUserList, RemoteMessageSendParameter parameter) {
         SmartMessageDingtalkChannelProperties properties = JsonUtils.parse(channelProperties, SmartMessageDingtalkChannelProperties.class);
         AppKeySecretParameter tokenParameter = new AppKeySecretParameter(properties.getAppKey(), properties.getAppSecret());
         String noMobileUsers = toUserList.stream()
@@ -100,8 +101,8 @@ public class SmartDingtalkWorkNoticeSender implements SmartMessageSender {
                         )
                 .build();
         WorkNoticeAsyncSendResult result = this.workNoticeApi.syncSend(sendParameter, tokenParameter);
-        return MessageSendDTO.builder()
-                .dingtalkWorkNoticeSendResult(new MessageSendDTO.DingtalkWorkNoticeSendDTO(result.getTaskId()))
-                .build();
+        DingtalkWorkNoticeSendResult sendResult = new DingtalkWorkNoticeSendResult();
+        sendResult.setTaskId(result.getTaskId());
+        return sendResult;
     }
 }

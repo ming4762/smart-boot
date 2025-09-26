@@ -3,23 +3,19 @@ package com.smart.module.api.message.dto;
 import com.smart.module.api.message.constants.SmartSmsChannelEnum;
 import lombok.*;
 
-import java.io.Serial;
-import java.io.Serializable;
-
 /**
- * @author zhongming4762
- * 2023/5/25 14:26
+ * 短信发送结果
+ * @author shizhongming
+ * 2025/9/26 14:03
+ * @since 5.0.0
  */
 @Getter
 @Setter
-@EqualsAndHashCode
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class SmsSendDTO implements Serializable {
+@Builder
+public class SmsSendResult extends MessageSendResult {
 
-    @Serial
-    private static final long serialVersionUID = 3829789206600975660L;
     /**
      * 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
      */
@@ -35,5 +31,4 @@ public class SmsSendDTO implements Serializable {
     private String channelCode;
 
     private SmartSmsChannelEnum channelType;
-
 }

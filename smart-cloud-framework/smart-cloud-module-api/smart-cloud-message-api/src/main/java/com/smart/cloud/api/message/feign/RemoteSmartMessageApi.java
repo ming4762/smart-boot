@@ -4,8 +4,8 @@ import com.smart.cloud.api.message.feign.fallback.RemoteSmartMessageApiFallback;
 import com.smart.cloud.common.core.constants.CloudServiceNameConstants;
 import com.smart.module.api.message.SmartMessageApi;
 import com.smart.module.api.message.constants.SmartMessageApiUrlConstants;
-import com.smart.module.api.message.dto.MessageSendDTO;
-import com.smart.module.api.message.dto.SmsSendDTO;
+import com.smart.module.api.message.dto.MessageSendResult;
+import com.smart.module.api.message.dto.SmsSendResult;
 import com.smart.module.api.message.parameter.RemoteMessageSendParameter;
 import com.smart.module.api.message.parameter.RemoteSmsSendParameter;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -29,7 +29,7 @@ public interface RemoteSmartMessageApi extends SmartMessageApi {
      */
     @Override
     @PostMapping(SmartMessageApiUrlConstants.SMS_SEND)
-    SmsSendDTO sendSms(RemoteSmsSendParameter parameter);
+    SmsSendResult sendSms(RemoteSmsSendParameter parameter);
 
     /**
      * 发送消息
@@ -39,5 +39,5 @@ public interface RemoteSmartMessageApi extends SmartMessageApi {
      */
     @Override
     @PostMapping(SmartMessageApiUrlConstants.SEND)
-    List<MessageSendDTO> send(RemoteMessageSendParameter parameter);
+    List<MessageSendResult> send(RemoteMessageSendParameter parameter);
 }

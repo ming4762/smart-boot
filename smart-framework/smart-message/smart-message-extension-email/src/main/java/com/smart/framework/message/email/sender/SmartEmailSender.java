@@ -1,13 +1,14 @@
 package com.smart.framework.message.email.sender;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.smart.framework.commons.core.utils.JsonUtils;
 import com.smart.framework.message.core.constants.SmartMessageChannelType1Enum;
 import com.smart.framework.message.core.exception.SmartMessageException;
 import com.smart.framework.message.core.pojo.dto.SmartMessageToUserDTO;
 import com.smart.framework.message.core.service.SmartMessageSender;
-import com.smart.framework.commons.core.utils.JsonUtils;
 import com.smart.framework.message.email.SmartMessageEmailChannelProperties;
-import com.smart.module.api.message.dto.MessageSendDTO;
+import com.smart.framework.message.email.dto.EmailMessageSendResult;
+import com.smart.module.api.message.dto.MessageSendResult;
 import com.smart.module.api.message.parameter.RemoteMessageSendParameter;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -56,7 +57,7 @@ public class SmartEmailSender implements SmartMessageSender {
      */
     @SneakyThrows(MessagingException.class)
     @Override
-    public MessageSendDTO send(@Nullable String channelProperties, List<SmartMessageToUserDTO> toUserList, RemoteMessageSendParameter parameter) {
+    public MessageSendResult send(@Nullable String channelProperties, List<SmartMessageToUserDTO> toUserList, RemoteMessageSendParameter parameter) {
         this.validateParameter(toUserList, parameter);
 
         SmartMessageEmailChannelProperties properties = JsonUtils.parse(channelProperties, SmartMessageEmailChannelProperties.class);
@@ -77,7 +78,7 @@ public class SmartEmailSender implements SmartMessageSender {
             helper.setCc(parameter.getEmailSendParameter().getCcList().toArray(String[]::new));
         }
         javaMailSender.send(mimeMessage);
-        return MessageSendDTO.builder().build();
+        return new EmailMessageSendResult();
     }
 
     /**

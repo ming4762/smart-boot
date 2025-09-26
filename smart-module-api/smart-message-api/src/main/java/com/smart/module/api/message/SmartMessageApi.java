@@ -1,7 +1,7 @@
 package com.smart.module.api.message;
 
-import com.smart.module.api.message.dto.MessageSendDTO;
-import com.smart.module.api.message.dto.SmsSendDTO;
+import com.smart.module.api.message.dto.MessageSendResult;
+import com.smart.module.api.message.dto.SmsSendResult;
 import com.smart.module.api.message.parameter.RemoteMessageSendParameter;
 import com.smart.module.api.message.parameter.RemoteSmsSendParameter;
 
@@ -19,12 +19,12 @@ public interface SmartMessageApi {
      * @param parameter 发送短信参数
      * @return 返回结果
      */
-    SmsSendDTO sendSms(RemoteSmsSendParameter parameter);
+    SmsSendResult sendSms(RemoteSmsSendParameter parameter);
 
     /**
      * 发送消息
      * @param parameter 消息发送参数
      * @return 消息发送结果
      */
-    List<MessageSendDTO> send(RemoteMessageSendParameter parameter);
+    List<MessageSendResult> send(RemoteMessageSendParameter parameter);
 }

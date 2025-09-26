@@ -9,8 +9,8 @@ import com.smart.framework.message.core.exception.SmartMessageException;
 import com.smart.framework.message.core.pojo.dto.SmartMessageToUserDTO;
 import com.smart.framework.message.core.service.SmartMessageSender;
 import com.smart.module.api.message.SmartMessageApi;
-import com.smart.module.api.message.dto.MessageSendDTO;
-import com.smart.module.api.message.dto.SmsSendDTO;
+import com.smart.module.api.message.dto.MessageSendResult;
+import com.smart.module.api.message.dto.SmsSendResult;
 import com.smart.module.api.message.parameter.RemoteMessageSendParameter;
 import com.smart.module.api.message.parameter.RemoteSmsSendParameter;
 import com.smart.module.api.system.SysUserApi;
@@ -80,7 +80,7 @@ public class LocalSmartMessageApi implements SmartMessageApi {
      * @return 返回结果
      */
     @Override
-    public SmsSendDTO sendSms(RemoteSmsSendParameter parameter) {
+    public SmsSendResult sendSms(RemoteSmsSendParameter parameter) {
         // TODO 待开发
         return null;
     }
@@ -92,7 +92,7 @@ public class LocalSmartMessageApi implements SmartMessageApi {
      * @return 消息发送结果
      */
     @Override
-    public List<MessageSendDTO> send(RemoteMessageSendParameter parameter) {
+    public List<MessageSendResult> send(RemoteMessageSendParameter parameter) {
         if (CollectionUtils.isEmpty(parameter.getMessageChannelCodeList())) {
             throw new SmartMessageException("未指定发送通道");
         }
@@ -113,7 +113,7 @@ public class LocalSmartMessageApi implements SmartMessageApi {
                             return dto;
                         }).toList();
 
-        List<MessageSendDTO> resultList = new ArrayList<>(messageChannelMap.size());
+        List<MessageSendResult> resultList = new ArrayList<>(messageChannelMap.size());
         messageChannelMap.values().forEach(channel -> {
             SmartMessageChannelType1Enum channelType1 = channel.getChannelType1();
             SmartMessageChannelType2Enum channelType2 = channel.getChannelType2();
@@ -125,7 +125,7 @@ public class LocalSmartMessageApi implements SmartMessageApi {
             if (smartMessageSender == null) {
                 throw new SmartMessageException("不支持的通道类型：" + channelSenderKey);
             }
-            MessageSendDTO sendResult = smartMessageSender.send(channel.getChannelProperties(), toUserList, parameter);
+            MessageSendResult sendResult = smartMessageSender.send(channel.getChannelProperties(), toUserList, parameter);
             resultList.add(sendResult);
         });
         this.applicationContext.publishEvent(new SmartMessageSendEvent(parameter, resultList, this));

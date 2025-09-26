@@ -3,8 +3,9 @@ package com.smart.framework.message.websocket.sender;
 import com.smart.framework.message.core.constants.SmartMessageChannelType1Enum;
 import com.smart.framework.message.core.pojo.dto.SmartMessageToUserDTO;
 import com.smart.framework.message.core.service.SmartMessageSender;
+import com.smart.framework.message.websocket.dto.WebsocketMessageSendResult;
 import com.smart.framework.message.websocket.server.WebSocket;
-import com.smart.module.api.message.dto.MessageSendDTO;
+import com.smart.module.api.message.dto.MessageSendResult;
 import com.smart.module.api.message.parameter.RemoteMessageSendParameter;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -44,8 +45,8 @@ public class SmartMessageWebSocketSender implements SmartMessageSender {
      * @return 消息发送结果
      */
     @Override
-    public MessageSendDTO send(@Nullable String channelProperties, List<SmartMessageToUserDTO> toUserList, RemoteMessageSendParameter parameter) {
+    public MessageSendResult send(@Nullable String channelProperties, List<SmartMessageToUserDTO> toUserList, RemoteMessageSendParameter parameter) {
         toUserList.forEach(item -> webSocket.pushMessage(item.getUserId(), parameter.getContent()));
-        return new MessageSendDTO();
+        return new WebsocketMessageSendResult();
     }
 }

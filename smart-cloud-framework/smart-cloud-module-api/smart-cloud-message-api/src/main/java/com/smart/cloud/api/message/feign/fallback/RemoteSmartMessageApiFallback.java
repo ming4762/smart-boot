@@ -1,8 +1,8 @@
 package com.smart.cloud.api.message.feign.fallback;
 
 import com.smart.cloud.api.message.feign.RemoteSmartMessageApi;
-import com.smart.module.api.message.dto.MessageSendDTO;
-import com.smart.module.api.message.dto.SmsSendDTO;
+import com.smart.module.api.message.dto.MessageSendResult;
+import com.smart.module.api.message.dto.SmsSendResult;
 import com.smart.module.api.message.parameter.RemoteMessageSendParameter;
 import com.smart.module.api.message.parameter.RemoteSmsSendParameter;
 import lombok.extern.slf4j.Slf4j;
@@ -28,13 +28,13 @@ public class RemoteSmartMessageApiFallback implements FallbackFactory<RemoteSmar
             }
 
             @Override
-            public SmsSendDTO sendSms(RemoteSmsSendParameter parameter) {
+            public SmsSendResult sendSms(RemoteSmsSendParameter parameter) {
                 this.errorLog();
                 return null;
             }
 
             @Override
-            public List<MessageSendDTO> send(RemoteMessageSendParameter parameter) {
+            public List<MessageSendResult> send(RemoteMessageSendParameter parameter) {
                 this.errorLog();
                 return List.of();
             }

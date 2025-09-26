@@ -3,7 +3,7 @@ package com.smart.framework.auth.extensions.sms.provider;
 import com.smart.framework.auth.core.properties.AuthProperties;
 import com.smart.framework.auth.core.service.AuthCache;
 import com.smart.module.api.message.SmartMessageApi;
-import com.smart.module.api.message.dto.SmsSendDTO;
+import com.smart.module.api.message.dto.SmsSendResult;
 import com.smart.module.api.message.parameter.RemoteSmsSendParameter;
 import io.micrometer.common.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -51,7 +51,7 @@ public class DefaultSmsCreateValidateProviderImpl implements SmsCreateValidatePr
         // 发送短信
         LinkedHashMap<String, String> templateParameter = LinkedHashMap.newLinkedHashMap(1);
         templateParameter.put("code", code);
-        SmsSendDTO sendResult = this.smartMessageApi.sendSms(
+        SmsSendResult sendResult = this.smartMessageApi.sendSms(
                 RemoteSmsSendParameter.builder()
                         .phoneNumberList(List.of(phone))
                         .signName(smsProperties.getSignName())

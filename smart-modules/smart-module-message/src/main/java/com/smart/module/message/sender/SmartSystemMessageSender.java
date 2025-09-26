@@ -8,12 +8,13 @@ import com.smart.framework.commons.core.utils.SmartIdGenerator;
 import com.smart.framework.message.core.constants.SmartMessageChannelType1Enum;
 import com.smart.framework.message.core.pojo.dto.SmartMessageToUserDTO;
 import com.smart.framework.message.core.service.SmartMessageSender;
-import com.smart.module.api.message.dto.MessageSendDTO;
+import com.smart.module.api.message.dto.MessageSendResult;
 import com.smart.module.api.message.parameter.RemoteMessageSendParameter;
 import com.smart.module.message.constants.MessageSendStatusEnum;
 import com.smart.module.message.constants.MessageTypeEnum;
 import com.smart.module.message.model.SmartMessageSystemPO;
 import com.smart.module.message.model.SmartMessageSystemSendPO;
+import com.smart.module.message.pojo.dto.SystemMessageSendResult;
 import com.smart.module.message.service.SmartMessageSystemSendService;
 import com.smart.module.message.service.SmartMessageSystemService;
 import org.springframework.lang.NonNull;
@@ -61,7 +62,7 @@ public class SmartSystemMessageSender implements SmartMessageSender {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public MessageSendDTO send(@Nullable String channelProperties, List<SmartMessageToUserDTO> toUserList, RemoteMessageSendParameter parameter) {
+    public MessageSendResult send(@Nullable String channelProperties, List<SmartMessageToUserDTO> toUserList, RemoteMessageSendParameter parameter) {
         List<Long> userIdList = toUserList.stream()
                 .map(SmartMessageToUserDTO::getUserId)
                 .toList();
@@ -113,8 +114,8 @@ public class SmartSystemMessageSender implements SmartMessageSender {
                     return messageSystemSend;
                 }).toList();
         this.smartMessageSystemSendService.saveBatch(messageSendList);
-        MessageSendDTO result = new MessageSendDTO();
-        result.setSystemMessageSendResult(new MessageSendDTO.SystemMessageSendDTO(messageId));
+        SystemMessageSendResult result = new SystemMessageSendResult();
+        result.setMessageId(messageId);
         return result;
     }
 }

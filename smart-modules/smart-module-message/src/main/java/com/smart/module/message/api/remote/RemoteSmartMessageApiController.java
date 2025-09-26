@@ -1,12 +1,12 @@
 package com.smart.module.message.api.remote;
 
-import com.smart.module.message.api.local.LocalSmartMessageApi;
 import com.smart.module.api.message.SmartMessageApi;
 import com.smart.module.api.message.constants.SmartMessageApiUrlConstants;
-import com.smart.module.api.message.dto.MessageSendDTO;
-import com.smart.module.api.message.dto.SmsSendDTO;
+import com.smart.module.api.message.dto.MessageSendResult;
+import com.smart.module.api.message.dto.SmsSendResult;
 import com.smart.module.api.message.parameter.RemoteMessageSendParameter;
 import com.smart.module.api.message.parameter.RemoteSmsSendParameter;
+import com.smart.module.message.api.local.LocalSmartMessageApi;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,7 +37,7 @@ public class RemoteSmartMessageApiController implements SmartMessageApi {
      */
     @Override
     @PostMapping(SmartMessageApiUrlConstants.SMS_SEND)
-    public SmsSendDTO sendSms(@RequestBody RemoteSmsSendParameter parameter) {
+    public SmsSendResult sendSms(@RequestBody RemoteSmsSendParameter parameter) {
         return this.localSmartMessageApi.sendSms(parameter);
     }
 
@@ -49,7 +49,7 @@ public class RemoteSmartMessageApiController implements SmartMessageApi {
      */
     @Override
     @PostMapping(SmartMessageApiUrlConstants.SEND)
-    public List<MessageSendDTO> send(RemoteMessageSendParameter parameter) {
-        return List.of();
+    public List<MessageSendResult> send(RemoteMessageSendParameter parameter) {
+        return this.localSmartMessageApi.send(parameter);
     }
 }
