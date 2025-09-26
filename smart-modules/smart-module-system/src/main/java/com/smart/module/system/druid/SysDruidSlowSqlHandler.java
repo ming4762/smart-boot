@@ -32,6 +32,7 @@ import java.time.ZonedDateTime;
 public class SysDruidSlowSqlHandler extends AbstractSlowSqlHandler {
 
     private final ObjectProvider<SmartMonitorSlowSqlService> smartMonitorSlowSqlServiceProvider;
+    private final ObjectProvider<SysDruidSlowSqlHandler> sysDruidSlowSqlHandlerProvider;
 
     /**
      * 慢SQL处理
@@ -41,6 +42,11 @@ public class SysDruidSlowSqlHandler extends AbstractSlowSqlHandler {
     @Override
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public void doHandler(@NonNull SlowSqlData slowSqlData) {
+        this.sysDruidSlowSqlHandlerProvider.getObject().innerHandler(slowSqlData);
+    }
+
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
+    public void innerHandler(@NonNull SlowSqlData slowSqlData) {
         // 排除插入慢SQL本身
         String sql = slowSqlData.getSql();
         String tableName = CrudUtils.getTableName(SmartMonitorSlowSqlPO.class);
