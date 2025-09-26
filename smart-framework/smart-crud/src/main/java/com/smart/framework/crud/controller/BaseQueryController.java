@@ -1,5 +1,6 @@
 package com.smart.framework.crud.controller;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.reflect.GenericTypeUtils;
 import com.github.pagehelper.Page;
@@ -29,7 +30,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -59,8 +62,34 @@ public abstract class BaseQueryController<K extends BaseService<T>, T extends Ba
      * @return 查询结果
      */
     public Result<Object> list(@NonNull PageSortQuery parameter) {
+        return this.list(parameter, true);
+    }
+
+    /**
+     * list查询方法
+     * @param parameter 参数
+     * @param isPickOmit 是否提取排除属性
+     * @return 查询结果
+     */
+    public Result<Object> list(@NonNull PageSortQuery parameter, boolean isPickOmit) {
         final Page<T> page = this.doPage(parameter);
         PageCache.set(page);
+        List<?> data = this.listData(parameter);
+        if (isPickOmit) {
+            data = this.pickOmitByPropertyExclude(data, parameter);
+        }
+        if (page != null) {
+            return Result.success(new PageData<>(data, page.getTotal()));
+        }
+        return Result.success(data);
+    }
+
+    /**
+     * 查询列表
+     * @param parameter 参数
+     * @return 查询结果
+     */
+    public List<? extends T> listData(@NonNull PageSortQuery parameter) {
         final QueryWrapper<T> queryWrapper = CrudUtils.createQueryWrapperFromParameters(parameter.getParameter(), this.getEntityClass());
         // 设置查询字段
         if (!parameter.getPropertyList().isEmpty()) {
@@ -74,11 +103,44 @@ public abstract class BaseQueryController<K extends BaseService<T>, T extends Ba
         if (org.apache.commons.lang3.StringUtils.isNotBlank(keyword)) {
             this.addKeyword(queryWrapper, keyword);
         }
-        final List<? extends T> data = this.service.list(queryWrapper, parameter, page != null);
-        if (page != null) {
-            return Result.success(new PageData<>(data, page.getTotal()));
+        return this.service.list(queryWrapper, parameter, false);
+    }
+
+    /**
+     * 提取排除属性
+     * 降低网络IO开销
+     * @param dataList 需要提取的列表
+     * @param parameter 分页参数
+     * @return 提取后的列表
+     */
+    protected List<?> pickOmitByPropertyExclude(List<?> dataList, PageSortQuery parameter) {
+        if (CollectionUtils.isEmpty(dataList)) {
+            return Collections.emptyList();
         }
-        return Result.success(data);
+        if (CollectionUtils.isEmpty(parameter.getPropertyList()) && CollectionUtils.isEmpty(parameter.getExcludePropertyList())) {
+            return dataList;
+        }
+        return dataList.stream().map(entity -> this.doPickOmit(entity, parameter)).toList();
+    }
+
+    /**
+     * 提取排除属性
+     * @param entity 实体类
+     * @param parameter 参数
+     * @return 提取后的map
+     */
+    private Map<String, Object> doPickOmit(Object entity, PageSortQuery parameter) {
+        Map<String, Object> result = null;
+        if (!CollectionUtils.isEmpty(parameter.getPropertyList())) {
+            result = BeanUtil.beanToMap(entity, parameter.getPropertyList().toArray(new String[]{}));
+        }
+        if (!CollectionUtils.isEmpty(parameter.getExcludePropertyList())) {
+            if (result == null) {
+                result = BeanUtil.beanToMap(entity);
+            }
+            parameter.getExcludePropertyList().forEach(result::remove);
+        }
+        return result;
     }
 
 

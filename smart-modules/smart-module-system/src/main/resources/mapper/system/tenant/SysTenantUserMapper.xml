@@ -80,7 +80,8 @@
         join sys_tenant_package_function C on C.tenant_package_id = B.id
         join sys_role_function D on D.function_id = C.function_id
         join sys_role M on D.role_id = M.role_id and M.tenant_id = A.tenant_id
-        where A.effect_time  &lt;= #{now}
+        where A.use_yn = 1
+            and A.effect_time  &lt;= #{now}
             and A.expire_time &gt;= #{now}
             and B.effect_time  &lt;= #{now}
             and B.expire_time &gt;= #{now}
@@ -97,7 +98,8 @@
         from sys_tenant_subscribe A
         join sys_tenant_package B on A.package_id = B.id
         join sys_tenant_package_function C on C.tenant_package_id = B.id
-        where A.effect_time  &lt;= #{now}
+        where A.use_yn = 1
+          and A.effect_time  &lt;= #{now}
           and A.expire_time &gt;= #{now}
           and B.effect_time  &lt;= #{now}
           and B.expire_time &gt;= #{now}

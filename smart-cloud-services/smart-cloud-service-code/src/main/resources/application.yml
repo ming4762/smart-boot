@@ -1,9 +1,11 @@
 server:
-  port: 8084
+  port: 8096
 
 spring:
   application:
     name: @artifactId@
+  profiles:
+    active: @profiles.active@
   cloud:
     nacos:
       server-addr: @nacos.server-addr@
@@ -17,6 +19,6 @@ spring:
   config:
     import:
       - optional:nacos:application.yml
-      - optional:nacos:${spring.application.name}.yml
+      - optional:nacos:${spring.application.name}-${profiles.active}.yml
   freemarker:
     check-template-location: false

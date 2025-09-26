@@ -86,6 +86,12 @@ public class EnhancedStatFilter extends StatFilter implements ApplicationContext
                 parameters.add(value);
                 continue;
             }
+            boolean match = PARAMETER_TYPE_LIST.stream()
+                    .anyMatch(item -> item.isAssignableFrom(valueClass));
+            if (match) {
+                parameters.add(value);
+                continue;
+            }
             if (PARAMETER_STRING_TYPE_MAP.containsKey(valueClass)) {
                 parameters.add(PARAMETER_STRING_TYPE_MAP.get(valueClass));
                 continue;

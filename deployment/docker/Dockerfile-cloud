@@ -1,0 +1,32 @@
+# ---- 第一阶段：构建 ----
+FROM maven:3.9.9-eclipse-temurin-21 AS builder
+
+WORKDIR /build
+
+# 声明必传参数
+ARG MODULE
+ARG PROFILE
+
+# 必传检查
+RUN if [ -z "$MODULE" ]; then echo "Error: MODULE argument is required" && exit 1; fi
+RUN if [ -z "$PROFILE" ]; then echo "Error: PROFILE argument is required" && exit 1; fi
+
+# COPY 整个项目
+COPY . /build
+
+# ---- 构建指定模块及依赖 ----
+RUN mvn -B clean package -pl smart-cloud-services/${MODULE} -am -P${PROFILE} -Dmaven.test.skip=true -Dautoconfig.skip \
+    && cp smart-cloud-services/${MODULE}/target/${MODULE}.jar /build/app.jar
+
+# ---- 第二阶段：运行 ----
+FROM openjdk:21-oracle
+
+WORKDIR /app
+VOLUME /tmp
+LABEL org.opencontainers.image.authors="zhongming4762"
+
+# 拷贝打包好的 jar
+COPY --from=builder /build/app.jar app.jar
+
+EXPOSE 8091
+ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -jar app.jar ${JAVA_OPTS2}"]

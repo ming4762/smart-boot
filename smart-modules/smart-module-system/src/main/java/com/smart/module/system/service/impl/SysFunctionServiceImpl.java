@@ -134,10 +134,6 @@ public class SysFunctionServiceImpl extends BaseServiceImpl<SysFunctionMapper, S
                         SysFunctionPO::getFunctionType
                 ).orderByAsc(SysFunctionPO::getSeq)
                 .eq(SysFunctionPO::getUseYn, Boolean.TRUE);
-        if (Boolean.TRUE.equals(sysTenant.getPlatformYn())) {
-            // 平台管理租户 查询所有的
-            return this.list(queryWrapper);
-        }
         // 需要根据租户套餐过滤
         SysListTenantFunctionDTO tenantParameter = new SysListTenantFunctionDTO();
         tenantParameter.setTenantId(tenantId);

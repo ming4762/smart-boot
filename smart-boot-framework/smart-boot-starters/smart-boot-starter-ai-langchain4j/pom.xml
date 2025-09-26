@@ -4,24 +4,23 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.smart</groupId>
-        <artifactId>smart-framework</artifactId>
+        <artifactId>smart-boot-starters</artifactId>
         <version>5.0.0-SNAPSHOT</version>
     </parent>
-    <artifactId>smart-ai</artifactId>
+    <artifactId>smart-boot-starter-ai-langchain4j</artifactId>
     <version>5.0.0-SNAPSHOT</version>
-    <name>smart-ai</name>
-    <description>AI工具包</description>
-    <packaging>pom</packaging>
-
-    <modules>
-        <module>smart-ai-dify</module>
-        <module>smart-ai-langchain4j</module>
-    </modules>
+    <name>smart-boot-starter-ai-langchain4j</name>
+    <description>AI langchain4j starter</description>
 
     <properties>
     </properties>
 
     <dependencies>
-
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-ai-langchain4j</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
+
 </project>

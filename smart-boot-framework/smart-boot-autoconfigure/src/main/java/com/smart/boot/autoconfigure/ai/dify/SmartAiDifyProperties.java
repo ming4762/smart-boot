@@ -1,4 +1,4 @@
-package com.smart.boot.autoconfigure.ai;
+package com.smart.boot.autoconfigure.ai.dify;
 
 import lombok.Getter;
 import lombok.Setter;
