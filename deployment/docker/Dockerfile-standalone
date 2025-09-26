@@ -29,4 +29,4 @@ LABEL org.opencontainers.image.authors="zhongming4762"
 COPY --from=builder /build/app.jar app.jar
 
 EXPOSE 8091
-ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -jar /app.jar ${JAVA_OPTS2}"]
+ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -jar app.jar ${JAVA_OPTS2}"]

@@ -1,5 +1,5 @@
 # ---- 第一阶段：构建 ----
-FROM smc-acr-registry.cn-qingdao.cr.aliyuncs.com/smc-common/maven:3.9.9-eclipse-temurin-21 AS builder
+FROM maven:3.9.9-eclipse-temurin-21 AS builder
 
 WORKDIR /build
 
@@ -19,7 +19,7 @@ RUN mvn -B clean package -pl smart-cloud-services/${MODULE} -am -P${PROFILE} -Dm
     && cp smart-cloud-services/${MODULE}/target/${MODULE}.jar /build/app.jar
 
 # ---- 第二阶段：运行 ----
-FROM smc-acr-registry.cn-qingdao.cr.aliyuncs.com/smc-common/openjdk:21-oracle
+FROM openjdk:21-oracle
 
 WORKDIR /app
 VOLUME /tmp
@@ -29,4 +29,4 @@ LABEL org.opencontainers.image.authors="zhongming4762"
 COPY --from=builder /build/app.jar app.jar
 
 EXPOSE 8091
-ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -jar /app.jar ${JAVA_OPTS2}"]
+ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -jar app.jar ${JAVA_OPTS2}"]

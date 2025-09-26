@@ -18,6 +18,6 @@ docker build \
   -f deployment/docker/Dockerfile-cloud \
   --build-arg MODULE=smart-cloud-service-system \
   --build-arg PROFILE=uat \
-  -t module-a:uat \
-  ../
+  -t smart-cloud-service-system:uat \
+  .
 ```
