@@ -756,6 +756,17 @@
             </dependency>
             <dependency>
                 <groupId>com.smart</groupId>
+                <artifactId>smart-message-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.smart</groupId>
+                <artifactId>smart-cloud-message-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.smart</groupId>
                 <artifactId>smart-boot-starter-message-dingtalk</artifactId>
                 <version>${project.version}</version>
             </dependency>

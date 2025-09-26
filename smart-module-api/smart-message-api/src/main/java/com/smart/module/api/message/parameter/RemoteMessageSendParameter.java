@@ -37,7 +37,7 @@ public class RemoteMessageSendParameter implements Serializable {
     @Schema(description = "消息通道列表", requiredMode = Schema.RequiredMode.REQUIRED)
     private List<String> messageChannelCodeList;
 
-    @Schema(description = "接收人ID集合", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "接收人ID集合")
     private Set<Long> toUserIds;
 
     @Schema(description = "标题", requiredMode = Schema.RequiredMode.REQUIRED)
