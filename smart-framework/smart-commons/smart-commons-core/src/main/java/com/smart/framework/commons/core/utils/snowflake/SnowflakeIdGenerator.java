@@ -4,13 +4,9 @@ import com.smart.framework.commons.core.exception.SystemException;
 import com.smart.framework.commons.core.utils.SystemClock;
 import lombok.extern.slf4j.Slf4j;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.function.Supplier;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * 雪花ID生成器
@@ -21,8 +17,6 @@ import java.util.regex.Pattern;
 @Slf4j
 public class SnowflakeIdGenerator {
 
-    private static final Pattern PATTERN_HOSTNAME = Pattern.compile("^.*\\D+([0-9]+)$");
-
     /**
      * 获取VM options前缀key
      */
@@ -32,11 +26,6 @@ public class SnowflakeIdGenerator {
      * 初始偏移时间戳 默认2000年
      */
     private static final long OFFSET = LocalDate.of(Integer.parseInt(getVmOptions("year", () -> "2000")), 1, 1).atStartOfDay(ZoneId.of("Z")).toEpochSecond();
-
-    /**
-     * 机器id 低半区为主，高半区为备
-     */
-    private final long workerId;
 
     private final long backWorkerIdBegin;
 
@@ -75,18 +64,16 @@ public class SnowflakeIdGenerator {
      */
     private final long workerShiftBits;
 
-    public SnowflakeIdGenerator(long workerIdBits, long sequenceIdBits, long workerId, long backTimeUnit, long backTimeMax) {
-        long workerIdMax = ((1L << workerIdBits) - 1) >> 1;
-        if (workerId < 0 || workerId > workerIdMax) {
-            throw new IllegalArgumentException(String.format("workerId范围: 0 ~ %d 目前: %d", workerIdMax, workerId));
-        }
-        this.workerId = workerId;
+    private final SnowflakeWorkIdAllocator workIdAllocator;
+
+    public SnowflakeIdGenerator(long workerIdBits, long sequenceIdBits, long backTimeUnit, long backTimeMax, SnowflakeWorkIdAllocator workIdAllocator) {
         this.backTimeUnit = backTimeUnit;
         this.sequenceMax = (1L << sequenceIdBits) - 1L;
         this.offsetShiftBits = sequenceIdBits + workerIdBits;
         this.backTimeMax = backTimeMax;
         this.backWorkerIdBegin = (1L << workerIdBits) >> 1;
         this.workerShiftBits = sequenceIdBits;
+        this.workIdAllocator = workIdAllocator;
     }
 
     /**
@@ -112,6 +99,7 @@ public class SnowflakeIdGenerator {
             sequence--;
             return nextIdBackup(timestamp);
         }
+        long workerId = workIdAllocator.allocateWorkId();
         return ((timestamp - OFFSET) << offsetShiftBits) | (workerId << workerShiftBits) | sequence;
     }
 
@@ -131,15 +119,8 @@ public class SnowflakeIdGenerator {
             // 秒内序列用尽
             return nextIdBackup(timestamp + 1);
         }
+        long workerId = workIdAllocator.allocateWorkId();
         return ((timestamp - OFFSET) << offsetShiftBits) | ((workerId ^ backWorkerIdBegin) << workerShiftBits) | sequenceBak;
-    }
-
-    /**
-     * 获取当前机器ID
-     * @return 当前机器ID
-     */
-    public static Long getWorkerId() {
-        return Long.parseLong(getVmOptions("workerId", () -> getDefaultWorkId() + ""));
     }
 
     private static String getVmOptions(String key, Supplier<String> defaultHandler) {
@@ -148,26 +129,5 @@ public class SnowflakeIdGenerator {
             return property;
         }
         return defaultHandler.get();
-    }
-
-    private static long getDefaultWorkId() {
-        return getServerIdAsLong();
-    }
-
-    private static long getServerIdAsLong() {
-        try {
-            String hostname = InetAddress.getLocalHost().getHostName();
-            Matcher matcher = PATTERN_HOSTNAME.matcher(hostname);
-            if (matcher.matches()) {
-                long n = Long.parseLong(matcher.group(1));
-                if (n >= 0) {
-                    log.info("detect server id from host name {}: {}.", hostname, n);
-                    return n;
-                }
-            }
-        } catch (UnknownHostException e) {
-            log.warn("unable to get host name. set server id = 0.");
-        }
-        return 0;
     }
 }

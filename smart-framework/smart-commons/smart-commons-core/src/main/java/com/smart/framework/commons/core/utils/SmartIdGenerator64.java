@@ -20,9 +20,9 @@ public class SmartIdGenerator64 {
     private static final SnowflakeIdGenerator SNOWFLAKE_ID_GENERATOR = new SnowflakeIdGenerator(
             10L,
             12L,
-            SnowflakeIdGenerator.getWorkerId(),
             1L,
-            1000L
+            1000L,
+            null
     );
 
     /**
