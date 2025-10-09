@@ -38,7 +38,7 @@ public class RedisSnowflakeWorkIdAllocator extends AbstractSnowflakeWorkIdAlloca
     private long workerId;
     private boolean shutdown = false;
     private String redisValue;
-    private boolean initialized = false;
+    private volatile boolean initialized = false;
 
     public RedisSnowflakeWorkIdAllocator(String workspace, RedisService redisService) {
         this.workspace = workspace;
@@ -47,8 +47,8 @@ public class RedisSnowflakeWorkIdAllocator extends AbstractSnowflakeWorkIdAlloca
     }
 
     public void init() {
-        this.acquireWorkId();
         this.threadPoolTaskScheduler.initialize();
+        this.acquireWorkId();
         // 每10秒续期一次WORK ID
         // 初始延迟10秒
         Duration duration = Duration.ofSeconds(10);
@@ -73,9 +73,13 @@ public class RedisSnowflakeWorkIdAllocator extends AbstractSnowflakeWorkIdAlloca
      * @return WORK ID
      */
     @Override
-    public synchronized long allocateWorkId() {
+    public long allocateWorkId() {
         if (!this.initialized) {
-            this.init();
+            synchronized (this) {
+                if (!this.initialized) {
+                    this.init();
+                }
+            }
         }
         return this.workerId;
     }
@@ -87,7 +91,7 @@ public class RedisSnowflakeWorkIdAllocator extends AbstractSnowflakeWorkIdAlloca
         lock.lock();
         try {
             SecureRandom random = new SecureRandom();
-            long randomWorkId = random.nextLong(this.workerIdMax);
+            long randomWorkId = random.nextLong(this.workerIdMax) & Long.MAX_VALUE % this.workerIdMax;
             String uuid = UUID.randomUUID().toString();
             boolean success = false;
             for (long i = 0; i < this.workerIdMax; i++) {
@@ -97,7 +101,7 @@ public class RedisSnowflakeWorkIdAllocator extends AbstractSnowflakeWorkIdAlloca
                 if (success) {
                     this.workerId = randomWorkId;
                     this.redisValue = uuid;
-                    log.info("🎉 Acquired workId={} for instanceId={}", i, uuid);
+                    log.info("🎉 Acquired workId={} for instanceId={}", randomWorkId, uuid);
                     break;
                 }
                 randomWorkId = (randomWorkId + 1) % this.workerIdMax;
@@ -145,7 +149,7 @@ public class RedisSnowflakeWorkIdAllocator extends AbstractSnowflakeWorkIdAlloca
      * @return Redis Bucket
      */
     private RBucket<String> getBucket(long workerId) {
-        return this.redisService.getRedissonClient().getBucket(workspace + ":" + WORK_ID_PREFIX + ":" + workerId);
+        return this.redisService.getRedissonClient().getBucket(WORK_ID_PREFIX + ":" + workspace + ":" + workerId);
     }
 
     private ThreadPoolTaskScheduler createThreadPoolTaskScheduler() {
