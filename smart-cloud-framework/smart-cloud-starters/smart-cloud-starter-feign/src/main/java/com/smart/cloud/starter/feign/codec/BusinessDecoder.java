@@ -30,7 +30,7 @@ public class BusinessDecoder extends ResponseEntityDecoder {
 
     private static final String CODE_KEY = "code";
     private static final String ERROR_CODE = "500";
-    private static final String MESSAGE_KEY = "message";
+    private static final String DATA_KEY = "data";
 
     public BusinessDecoder(Decoder decoder) {
         super(decoder);
@@ -57,7 +57,7 @@ public class BusinessDecoder extends ResponseEntityDecoder {
             if (ERROR_CODE.equals(code)) {
                 // 业务异常
                 Map<?,?> err = objectMapper.convertValue(root, Map.class);
-                throw new SmartFeignBusinessException(err.get(MESSAGE_KEY) == null ? null : err.get(MESSAGE_KEY).toString(), err);
+                throw new SmartFeignBusinessException(err.get(DATA_KEY) == null ? null : JsonUtils.toJsonString(err.get(DATA_KEY)), err);
             }
         }
 
