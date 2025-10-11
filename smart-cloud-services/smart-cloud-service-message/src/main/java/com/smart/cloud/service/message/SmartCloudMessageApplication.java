@@ -1,5 +1,6 @@
 package com.smart.cloud.service.message;
 
+import com.smart.framework.commons.core.spring.EnableApplicationContext;
 import com.smart.framework.commons.core.spring.EnabledCustomObjectMapper;
 import com.smart.framework.commons.core.validate.EnableGlobalValidator;
 import com.smart.framework.i18n.config.EnableValidatorI18nSource;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableValidatorI18nSource
 @EnableGlobalValidator
 @EnabledCustomObjectMapper
+@EnableApplicationContext
 public class SmartCloudMessageApplication {
 
     public static void main(String[] args) {

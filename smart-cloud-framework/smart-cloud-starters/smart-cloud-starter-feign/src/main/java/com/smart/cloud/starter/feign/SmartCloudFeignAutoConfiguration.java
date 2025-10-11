@@ -1,6 +1,7 @@
 package com.smart.cloud.starter.feign;
 
 import com.smart.cloud.starter.feign.codec.BusinessDecoder;
+import com.smart.cloud.starter.feign.interceptor.FeignHeaderRequestInterceptor;
 import com.smart.cloud.starter.feign.interceptor.FeignTokenRequestInterceptor;
 import feign.codec.Decoder;
 import org.springframework.beans.factory.ObjectFactory;
@@ -17,7 +18,7 @@ import org.springframework.context.annotation.Import;
  * 2023/3/10
  */
 @Configuration(proxyBeanMethods = false)
-@Import(FeignTokenRequestInterceptor.class)
+@Import({FeignTokenRequestInterceptor.class, FeignHeaderRequestInterceptor.class})
 public class SmartCloudFeignAutoConfiguration {
 
     @Bean

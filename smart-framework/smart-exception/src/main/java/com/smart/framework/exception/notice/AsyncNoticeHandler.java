@@ -1,10 +1,12 @@
 package com.smart.framework.exception.notice;
 
-import com.alibaba.ttl.TransmittableThreadLocal;
 import com.alibaba.ttl.TtlRunnable;
 import com.smart.framework.commons.core.auth.TokenHolder;
+import com.smart.framework.commons.core.trace.SmartTraceUtils;
 import com.smart.framework.commons.core.utils.IpUtils;
 import com.smart.framework.exception.pojo.dto.ExceptionNoticeDTO;
+import io.micrometer.tracing.Span;
+import io.micrometer.tracing.Tracer;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
@@ -30,14 +32,6 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 public class AsyncNoticeHandler implements ApplicationContextAware {
 
-    private static final TransmittableThreadLocal<Boolean> IN_EXCEPTION_HANDLER =
-            new TransmittableThreadLocal<>() {
-                @Override
-                protected Boolean initialValue() {
-                    return false;
-                }
-            };
-
     private List<ExceptionNotice> exceptionNoticeList;
 
     /**
@@ -47,44 +41,35 @@ public class AsyncNoticeHandler implements ApplicationContextAware {
      */
     public void noticeException(Exception e, long exceptionNo, HttpServletRequest request) {
         // 执行通知
-        // 防止递归处理
         if (CollectionUtils.isEmpty(exceptionNoticeList)) {
             return;
         }
-        if (Boolean.TRUE.equals(IN_EXCEPTION_HANDLER.get())) {
-            log.warn("Skipping recursive exception handling: {}", e.getMessage(), e);
-            return;
-        }
-        try {
-            ExceptionNoticeDTO exceptionData = ExceptionNoticeDTO.builder()
-                    .exception(e)
-                    .exceptionNo(exceptionNo)
-                    .requestIp(IpUtils.getIpAddr(request))
-                    .requestPath(request.getServletPath())
-                    .build();
-            IN_EXCEPTION_HANDLER.set(true);
-            String token = Optional.ofNullable((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
-                    .map(ServletRequestAttributes::getRequest)
-                    .map(item -> item.getHeader(HttpHeaders.AUTHORIZATION))
-                    .orElse(null);
-            TtlRunnable task = TtlRunnable.get(new DelegatingSecurityContextRunnable(() -> {
-                try {
-                    TokenHolder.set(token);
-                    exceptionNoticeList.forEach(item -> {
-                        try {
-                            item.notice(exceptionData);
-                        } catch (Exception exception) {
-                            log.error(exception.getMessage(), exception);
-                        }
-                    });
-                } finally {
-                    TokenHolder.clear();
-                }
-            }));
-            CompletableFuture.runAsync(task);
-        } finally {
-            IN_EXCEPTION_HANDLER.remove();
-        }
+        ExceptionNoticeDTO exceptionData = ExceptionNoticeDTO.builder()
+                .exception(e)
+                .exceptionNo(exceptionNo)
+                .requestIp(IpUtils.getIpAddr(request))
+                .requestPath(request.getServletPath())
+                .build();
+        String token = Optional.ofNullable((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+                .map(ServletRequestAttributes::getRequest)
+                .map(item -> item.getHeader(HttpHeaders.AUTHORIZATION))
+                .orElse(null);
+        Span currentSpan = SmartTraceUtils.getTracer().currentSpan();
+        TtlRunnable task = TtlRunnable.get(new DelegatingSecurityContextRunnable(() -> {
+            try (Tracer.SpanInScope ignore = SmartTraceUtils.getTracer().withSpan(currentSpan)) {
+                TokenHolder.set(token);
+                exceptionNoticeList.forEach(item -> {
+                    try {
+                        item.notice(exceptionData);
+                    } catch (Exception exception) {
+                        log.error(exception.getMessage(), exception);
+                    }
+                });
+            } finally {
+                TokenHolder.clear();
+            }
+        }));
+        CompletableFuture.runAsync(task);
     }
 
     @Override

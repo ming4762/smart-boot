@@ -7,6 +7,7 @@ import com.smart.module.api.auth.dto.AuthCacheDTO;
 import com.smart.module.api.auth.dto.AuthUserDetailsDTO;
 import com.smart.module.api.auth.dto.AuthenticationDTO;
 import com.smart.module.auth.api.local.LocalAuthApiImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping
+@Slf4j
 public class RemoteAuthApiController implements AuthApi {
 
     private final LocalAuthApiImpl localAuthApi;
@@ -61,7 +63,13 @@ public class RemoteAuthApiController implements AuthApi {
     @Override
     @PostMapping(SmartAuthApiUrlConstants.GET_USER_DETAILS_BY_TOKEN)
     public AuthUserDetailsDTO getUserDetails(@NonNull @RequestBody String token) {
-        return this.localAuthApi.getUserDetails(token);
+        try {
+            return this.localAuthApi.getUserDetails(token);
+        } catch (Exception e) {
+            // 这里拦截异常，防止远程调用失败导致保存异常日志产生递归调用
+            log.error("获取用户详情失败", e);
+            return null;
+        }
     }
 
     /**

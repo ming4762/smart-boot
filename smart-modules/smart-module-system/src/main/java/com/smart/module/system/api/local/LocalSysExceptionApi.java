@@ -6,6 +6,7 @@ import com.smart.module.api.system.SysExceptionApi;
 import com.smart.module.api.system.dto.SysExceptionSaveDTO;
 import com.smart.module.system.model.SysExceptionPO;
 import com.smart.module.system.service.SysExceptionService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
@@ -18,6 +19,7 @@ import java.time.ZonedDateTime;
  */
 @Component
 @Primary
+@Slf4j
 public class LocalSysExceptionApi implements SysExceptionApi {
 
     private final SysExceptionService sysExceptionService;

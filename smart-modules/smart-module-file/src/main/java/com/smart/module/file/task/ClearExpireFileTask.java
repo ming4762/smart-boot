@@ -1,7 +1,6 @@
 package com.smart.module.file.task;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.smart.framework.commons.core.utils.SmartIdGenerator;
 import com.smart.framework.file.core.service.FileService;
 import com.smart.module.file.model.SmartFilePO;
 import com.smart.module.file.service.SmartFileService;
@@ -47,7 +46,6 @@ public class ClearExpireFileTask implements CommandLineRunner {
 
         threadPoolTaskScheduler.scheduleWithFixedDelay(() -> {
             try {
-                SmartIdGenerator.nextId();
                 log.info("start clear expire file");
                 long startTime = System.nanoTime();
                 this.clear();

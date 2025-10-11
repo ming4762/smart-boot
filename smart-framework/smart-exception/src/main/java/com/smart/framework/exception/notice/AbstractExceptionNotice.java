@@ -45,9 +45,7 @@ public abstract class AbstractExceptionNotice implements ExceptionNotice {
 
     /**
      * 进行通知
-     * @param e 异常信息
-     * @param exceptionNo 异常编号
-     * @param request 请求信息
+     * @param exceptionData 异常信息
      */
     protected abstract void doNotice(@NonNull ExceptionNoticeDTO exceptionData);
 }

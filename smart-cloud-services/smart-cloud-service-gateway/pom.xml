@@ -63,6 +63,11 @@
             <groupId>io.grpc</groupId>
             <artifactId>grpc-netty</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-boot-autoconfigure</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

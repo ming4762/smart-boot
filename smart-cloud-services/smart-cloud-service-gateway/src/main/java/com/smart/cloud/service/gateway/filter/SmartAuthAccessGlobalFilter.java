@@ -1,7 +1,7 @@
 package com.smart.cloud.service.gateway.filter;
 
 import com.smart.cloud.api.auth.feign.RemoteAuthApi;
-import com.smart.framework.commons.core.auth.TokenHolder;
+import com.smart.cloud.starter.feign.holder.ServerWebExchangeContextHolder;
 import com.smart.framework.commons.core.http.HttpStatus;
 import com.smart.framework.commons.core.message.Result;
 import com.smart.framework.commons.core.utils.JsonUtils;
@@ -12,20 +12,17 @@ import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.Ordered;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.netty.ByteBufFlux;
 
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -50,19 +47,12 @@ public class SmartAuthAccessGlobalFilter implements GlobalFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
         // 获取请求路径
-        String requestPath = request.getURI().getPath();
-        // 删除前缀
-        String servicePath = requestPath.substring(1).substring(requestPath.indexOf("/", 1) - 1);
+        String servicePath = request.getURI().getPath();
         HttpMethod httpMethod = request.getMethod();
-        List<String> tokenList = request.getHeaders().get(HttpHeaders.AUTHORIZATION);
-
 
         CompletableFuture<Result<Boolean>> future = CompletableFuture.supplyAsync(() -> {
             try {
-                if (!CollectionUtils.isEmpty(tokenList)) {
-                    String token = tokenList.getFirst();
-                    TokenHolder.set(token);
-                }
+                ServerWebExchangeContextHolder.set(exchange);
                 return this.remoteAuthApi.authenticate(
                         AuthenticationDTO.builder()
                                 .url(servicePath)
@@ -70,7 +60,7 @@ public class SmartAuthAccessGlobalFilter implements GlobalFilter, Ordered {
                                 .build()
                 );
             } finally {
-                TokenHolder.clear();
+                ServerWebExchangeContextHolder.clear();
             }
         });
 
@@ -96,6 +86,6 @@ public class SmartAuthAccessGlobalFilter implements GlobalFilter, Ordered {
 
     @Override
     public int getOrder() {
-        return 0;
+        return Integer.MAX_VALUE;
     }
 }

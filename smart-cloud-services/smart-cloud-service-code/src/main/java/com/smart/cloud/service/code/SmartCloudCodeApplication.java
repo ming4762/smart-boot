@@ -1,12 +1,12 @@
 package com.smart.cloud.service.code;
 
+import com.smart.framework.commons.core.spring.EnableApplicationContext;
 import com.smart.framework.commons.core.spring.EnabledCustomObjectMapper;
 import com.smart.framework.commons.core.validate.EnableGlobalValidator;
 import com.smart.framework.i18n.config.EnableValidatorI18nSource;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableValidatorI18nSource
 @EnableGlobalValidator
 @EnabledCustomObjectMapper
+@EnableApplicationContext
 public class SmartCloudCodeApplication {
 
     public static void main(String[] args) {

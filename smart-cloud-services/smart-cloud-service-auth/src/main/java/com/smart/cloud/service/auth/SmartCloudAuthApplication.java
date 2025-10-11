@@ -1,10 +1,10 @@
 package com.smart.cloud.service.auth;
 
+import com.smart.framework.commons.core.spring.EnableApplicationContext;
 import com.smart.framework.commons.core.spring.EnabledCustomObjectMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.openfeign.EnableFeignClients;
 
 /**
  * 认证模块微服务
@@ -14,6 +14,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnabledCustomObjectMapper
+@EnableApplicationContext
 public class SmartCloudAuthApplication {
 
     public static void main(String[] args) {
