@@ -45,10 +45,3 @@ spring:
                 - Path=/smart-message/**
               filters:
                 - StripPrefix=1
-            #        海道网内贸订舱
-            - id: spgline-domestic-booking
-              uri: lb://spgline-domestic-booking
-              predicates:
-                - Path=/spgline-domestic-booking/**
-              filters:
-                - StripPrefix=1

@@ -2,6 +2,7 @@ logging:
   level:
     root: info
     com.smart: debug
+    com.smart.framework.crud.plus.inner: info
 
 management:
   endpoint:
@@ -25,14 +26,26 @@ management:
 spring:
   data:
     redis:
-      host: one.smart-ming.online
-      password: ming8858
+      host: 127.0.0.1
 
 smart:
   auth:
+    bindIp: false
+    captcha:
+      type: TEXT_ARITHMETIC
+      text:
+        ignoreCase: true
+        length: 2
+    jwt:
+      permission-cache: true
     ignores:
       post:
         - /auth/login
         - /auth/logout
-      get:
+        - /auth/refresh
         - /auth/createCaptcha
+        - /remote/public/**
+
+feign:
+  sentinel:
+    enabled: true

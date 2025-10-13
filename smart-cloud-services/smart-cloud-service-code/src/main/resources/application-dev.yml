@@ -1,14 +1,14 @@
 spring:
   servlet:
     multipart:
-      max-file-size: 1000MB
-      max-request-size: 1100MB
+      max-file-size: 100MB
+      max-request-size: 110MB
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://one.smart-ming.online:3306/smart-system?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://localhost:3306/smart-system?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: root
-    password: ming8858
+    password: ming8858*
 
 logging:
   level:
@@ -33,3 +33,7 @@ management:
   health:
     mail:
       enabled: false
+
+feign:
+  sentinel:
+    enabled: true
