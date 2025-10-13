@@ -86,6 +86,6 @@ public class SmartAuthAccessGlobalFilter implements GlobalFilter, Ordered {
 
     @Override
     public int getOrder() {
-        return Integer.MAX_VALUE;
+        return 10100;
     }
 }
