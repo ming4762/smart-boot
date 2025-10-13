@@ -30,6 +30,17 @@ public interface FeignSmartFileApi {
     @PostMapping(SmartFileApiUrlConstants.DOWNLOAD_FILE)
     Response download(@NonNull Long id);
 
+     /**
+     * 下载文件
+     *
+     * @param fileStorageCode 文件存储器代码
+     * @param filename        文件名
+     * @return 下载内容
+     */
+    @PostMapping(SmartFileApiUrlConstants.DOWNLOAD_FILE_BY_NAME)
+    Response download(@NonNull String fileStorageCode, @NonNull String filename);
+
+
     /**
      * 批量删除文件信息
      *

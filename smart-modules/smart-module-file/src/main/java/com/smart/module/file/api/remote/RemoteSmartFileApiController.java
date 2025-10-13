@@ -7,11 +7,11 @@ import com.smart.module.api.file.constants.SmartFileApiUrlConstants;
 import com.smart.module.api.file.dto.RemoteFileSaveParameter;
 import com.smart.module.file.api.local.LocalSmartFileApi;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.NonNull;
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,20 +47,43 @@ public class RemoteSmartFileApiController implements SmartFileApi {
      * @param id 文件ID
      * @return 下载内容
      */
-    @SneakyThrows(IOException.class)
     @Override
     @PostMapping(SmartFileApiUrlConstants.DOWNLOAD_FILE)
     public FileDownloadResult download(@NonNull @RequestBody Long id) {
         FileDownloadResult downloadResult = this.smartFileApi.download(id);
+        this.doDownload(downloadResult);
+        return null;
+    }
+
+    /**
+     * 下载文件
+     *
+     * @param fileStorageCode 文件存储器代码
+     * @param filename        文件名
+     * @return 下载内容
+     */
+    @Override
+    public FileDownloadResult download(@NonNull String fileStorageCode, @NonNull String filename) {
+        FileDownloadResult downloadResult = this.smartFileApi.download(fileStorageCode, filename);
+        this.doDownload(downloadResult);
+        return null;
+    }
+
+    @SneakyThrows(IOException.class)
+    private void doDownload(FileDownloadResult downloadResult) {
+        if (downloadResult == null) {
+            return;
+        }
         HttpServletResponse response = Optional.ofNullable((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
                 .map(ServletRequestAttributes::getResponse)
                 .orElse(null);
-        if (response != null) {
-            response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
-            response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + URLEncoder.encode(downloadResult.getFilename(), StandardCharsets.UTF_8));
-            IOUtils.copy(downloadResult.getInputStream(), response.getOutputStream());
+        if (response == null) {
+            return;
         }
-        return null;
+        response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + URLEncoder.encode(downloadResult.getFilename(), StandardCharsets.UTF_8));
+        response.setHeader(FILE_ID_HEADER, downloadResult.getFileId().toString());
+        IOUtils.copy(downloadResult.getInputStream(), response.getOutputStream());
     }
 
     /**

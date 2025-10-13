@@ -37,4 +37,16 @@ public class RemoteSmartFileStorageApiController implements SmartFileStorageApi 
     public List<SmartFileStorageListDTO> listByIds(@RequestBody Collection<Long> idList) {
         return this.smartFileStorageApi.listByIds(idList);
     }
+
+    /**
+     * 通过代码查询列表
+     *
+     * @param codeList 代码列表
+     * @return 文件存储器列表
+     */
+    @Override
+    @PostMapping(SmartFileApiUrlConstants.FILE_STORAGE_LIST_BY_CODE)
+    public List<SmartFileStorageListDTO> listByCode(@RequestBody Collection<String> codeList) {
+        return this.smartFileStorageApi.listByCode(codeList);
+    }
 }

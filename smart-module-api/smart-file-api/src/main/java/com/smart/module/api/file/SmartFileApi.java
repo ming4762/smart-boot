@@ -3,7 +3,7 @@ package com.smart.module.api.file;
 import com.smart.module.api.file.bo.FileDownloadResult;
 import com.smart.module.api.file.bo.FileHandlerResult;
 import com.smart.module.api.file.dto.RemoteFileSaveParameter;
-import lombok.NonNull;
+import org.springframework.lang.NonNull;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
@@ -17,12 +17,22 @@ import java.util.List;
  */
 public interface SmartFileApi {
 
+    String FILE_ID_HEADER = "X-Smart-File-Id";
+
     /**
      * 下载文件
      * @param id 文件ID
      * @return 下载内容
      */
     FileDownloadResult download(@NonNull Long id);
+
+    /**
+     * 下载文件
+     * @param fileStorageCode 文件存储器代码
+     * @param filename 文件名
+     * @return 下载内容
+     */
+    FileDownloadResult download(@NonNull String fileStorageCode, @NonNull String filename);
 
     /**
      * 批量删除文件信息

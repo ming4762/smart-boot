@@ -9,6 +9,7 @@ import com.smart.module.file.model.SmartFileStoragePO;
 import com.smart.module.file.service.SmartFileStorageService;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -45,6 +46,25 @@ public class LocalSmartFileStorageApi implements SmartFileStorageApi {
             }
             queryWrapper.in(SmartFileStoragePO::getId, idList);
         }
+        List<SmartFileStoragePO> list = this.smartFileStorageService.list(queryWrapper);
+        return BeanUtils.copyProperties(list, SmartFileStorageListDTO.class);
+    }
+
+    /**
+     * 通过代码查询列表
+     *
+     * @param codeList 代码列表
+     * @return 文件存储器列表
+     */
+    @Override
+    public List<SmartFileStorageListDTO> listByCode(Collection<String> codeList) {
+        if (CollectionUtils.isEmpty(codeList)) {
+            return Collections.emptyList();
+        }
+        LambdaQueryWrapper<SmartFileStoragePO> queryWrapper = new QueryWrapper<SmartFileStoragePO>().lambda()
+                .eq(SmartFileStoragePO::getUseYn, Boolean.TRUE)
+                .orderByAsc(SmartFileStoragePO::getSeq);
+        queryWrapper.in(SmartFileStoragePO::getStorageCode, codeList);
         List<SmartFileStoragePO> list = this.smartFileStorageService.list(queryWrapper);
         return BeanUtils.copyProperties(list, SmartFileStorageListDTO.class);
     }

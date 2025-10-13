@@ -5,8 +5,8 @@ import com.smart.module.api.file.SmartFileApi;
 import com.smart.module.api.file.bo.FileDownloadResult;
 import com.smart.module.api.file.bo.FileHandlerResult;
 import com.smart.module.api.file.dto.RemoteFileSaveParameter;
-import lombok.NonNull;
 import org.springframework.context.annotation.Primary;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -35,6 +35,18 @@ public class LocalSmartFileApi implements SmartFileApi {
     @Override
     public FileDownloadResult download(@NonNull Long id) {
         return this.fileService.download(id);
+    }
+
+    /**
+     * 下载文件
+     *
+     * @param fileStorageCode 文件存储器代码
+     * @param filename        文件名
+     * @return 下载内容
+     */
+    @Override
+    public FileDownloadResult download(@NonNull String fileStorageCode, @NonNull String filename) {
+        return this.fileService.download(fileStorageCode, filename);
     }
 
     /**

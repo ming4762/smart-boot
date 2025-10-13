@@ -35,6 +35,19 @@ public class FeignSmartFileApiFallback implements FallbackFactory<FeignSmartFile
                 return null;
             }
 
+            /**
+             * 下载文件
+             *
+             * @param fileStorageCode 文件存储器代码
+             * @param filename        文件名
+             * @return 下载内容
+             */
+            @Override
+            public Response download(@NonNull String fileStorageCode, @NonNull String filename) {
+                this.errorLog();
+                return null;
+            }
+
             @Override
             public List<FileHandlerResult> batchDelete(@NonNull Collection<Long> fileIds) {
                 this.errorLog();

@@ -27,4 +27,14 @@ public interface RemoteSmartFileStorageApi extends SmartFileStorageApi {
     @Override
     @PostMapping(SmartFileApiUrlConstants.FILE_STORAGE_LIST_BY_ID)
     List<SmartFileStorageListDTO> listByIds(Collection<Long> idList);
+
+     /**
+     * 通过代码查询列表
+     *
+     * @param codeList 代码列表
+     * @return 文件存储器列表
+     */
+    @Override
+    @PostMapping(SmartFileApiUrlConstants.FILE_STORAGE_LIST_BY_CODE)
+    List<SmartFileStorageListDTO> listByCode(Collection<String> codeList);
 }
