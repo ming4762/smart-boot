@@ -215,6 +215,9 @@ public class DefaultJwtTokenRepositoryImpl implements JwtTokenRepository {
     @Override
     public boolean invalidateByToken(String refreshToken) {
         RestUserDetails userDetails = this.jwtResolver.resolver(refreshToken);
+        if (userDetails == null) {
+            return false;
+        }
         String cachedKey = this.getRefreshTokenKey(userDetails.getUsername(), userDetails.getUserTenant().getTenantId(), refreshToken);
         if (this.isPermissionCache()) {
             // 清除token缓存
