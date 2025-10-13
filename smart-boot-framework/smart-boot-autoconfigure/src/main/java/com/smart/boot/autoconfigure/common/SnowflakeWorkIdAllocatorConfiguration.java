@@ -3,6 +3,7 @@ package com.smart.boot.autoconfigure.common;
 import com.smart.framework.commons.core.utils.snowflake.DefaultSnowflakeWorkIdAllocator;
 import com.smart.framework.commons.core.utils.snowflake.SnowflakeWorkIdAllocator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
  * 2025/9/30 15:21
  * @since 5.0.0
  */
+@EnableConfigurationProperties(SmartWorkIdProperties.class)
 @Configuration(proxyBeanMethods = false)
 public class SnowflakeWorkIdAllocatorConfiguration {
 

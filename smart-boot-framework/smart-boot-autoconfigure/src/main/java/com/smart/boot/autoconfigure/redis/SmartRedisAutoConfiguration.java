@@ -2,6 +2,7 @@ package com.smart.boot.autoconfigure.redis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smart.boot.autoconfigure.cache.SmartCacheProperties;
+import com.smart.boot.autoconfigure.common.SmartWorkIdProperties;
 import com.smart.boot.autoconfigure.common.SnowflakeWorkIdAllocatorConfiguration;
 import com.smart.boot.autoconfigure.redis.customizer.JacksonRedissonAutoConfigurationCustomizer;
 import com.smart.framework.commons.core.lock.limit.RateLimitService;
@@ -28,7 +29,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration(proxyBeanMethods = false)
 @AutoConfigureBefore({RedisAutoConfiguration.class, SnowflakeWorkIdAllocatorConfiguration.class})
 @ConditionalOnClass(RedisService.class)
-@EnableConfigurationProperties({ SmartCacheProperties.class, SmartRedisProperties.class })
+@EnableConfigurationProperties({ SmartCacheProperties.class })
 public class SmartRedisAutoConfiguration {
 
     @Bean("redisService")
@@ -58,7 +59,7 @@ public class SmartRedisAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    public SnowflakeWorkIdAllocator redisSnowflakeWorkIdAllocator(SmartRedisProperties properties, RedisService redisService) {
-        return new RedisSnowflakeWorkIdAllocator(properties.getSnowflakeWorkId().getWorkspace(), redisService);
+    public SnowflakeWorkIdAllocator redisSnowflakeWorkIdAllocator(SmartWorkIdProperties properties, RedisService redisService) {
+        return new RedisSnowflakeWorkIdAllocator(properties.getRedis().getWorkspace(), redisService);
     }
 }

@@ -23,7 +23,7 @@ import java.util.concurrent.locks.ReentrantLock;
 @Slf4j
 public class RedisSnowflakeWorkIdAllocator extends AbstractSnowflakeWorkIdAllocator {
 
-    private static final String WORK_ID_PREFIX = "snowflake:workid";
+    private static final String WORK_ID_PREFIX = "smart:snowflake:workid";
     private static final Duration WORK_ID_EXPIRE = Duration.ofSeconds(30);
 
     /**
