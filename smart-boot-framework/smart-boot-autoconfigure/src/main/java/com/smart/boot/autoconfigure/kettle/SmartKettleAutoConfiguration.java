@@ -2,6 +2,7 @@ package com.smart.boot.autoconfigure.kettle;
 
 import com.smart.framework.kettle.core.KettleActuator;
 import com.smart.framework.kettle.core.KettleProperties;
+import com.smart.framework.kettle.core.listener.SmartKettleEventGlobalHandler;
 import com.smart.framework.kettle.core.log.KettleLogController;
 import com.smart.framework.kettle.core.log.modifier.LogModifierHandler;
 import com.smart.framework.kettle.core.repository.pool.KettleDatabaseRepositoryProvider;
@@ -60,5 +61,11 @@ public class SmartKettleAutoConfiguration {
     @ConditionalOnMissingBean
     public KettleService kettleService(KettleDatabaseRepositoryProvider provider, KettleLogController kettleLogController, KettleProperties kettleProperties) {
         return new KettleServiceImpl(provider, kettleLogController, kettleProperties);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public SmartKettleEventGlobalHandler smartKettleEventGlobalHandler() {
+        return new SmartKettleEventGlobalHandler();
     }
 }
