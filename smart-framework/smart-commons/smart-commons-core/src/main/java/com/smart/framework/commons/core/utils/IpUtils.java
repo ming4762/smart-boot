@@ -3,11 +3,13 @@ package com.smart.framework.commons.core.utils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
-import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import java.net.*;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.util.*;
 
 
@@ -58,38 +60,36 @@ public class IpUtils {
     }
 
     public static String getIpAddr(HttpServletRequest request) {
+        if (request == null) {
+            return null;
+        }
         String ip = null;
-        try {
-            ip = request.getHeader("x-forwarded-for");
-            boolean ipIsNull = !StringUtils.hasText(ip);
-            if (ipIsNull || UNKNOWN.equalsIgnoreCase(ip)) {
-                ip = request.getHeader("Proxy-Client-IP");
-            }
-            if (ipIsNull || ip.isEmpty() || UNKNOWN.equalsIgnoreCase(ip)) {
-                ip = request.getHeader("WL-Proxy-Client-IP");
-            }
-            if (ipIsNull || UNKNOWN.equalsIgnoreCase(ip)) {
-                ip = request.getHeader("HTTP_CLIENT_IP");
-            }
-            if (ipIsNull || UNKNOWN.equalsIgnoreCase(ip)) {
-                ip = request.getHeader("HTTP_X_FORWARDED_FOR");
-            }
-            if (ipIsNull || UNKNOWN.equalsIgnoreCase(ip)) {
-                List<String> realLocalIpList = getRealLocalIpList();
-                if (!realLocalIpList.isEmpty()) {
-                    ip = realLocalIpList.getFirst();
+        // 常用代理头
+        String[] headers = {
+                "X-Forwarded-For",
+                "Proxy-Client-IP",
+                "WL-Proxy-Client-IP",
+                "HTTP_CLIENT_IP",
+                "HTTP_X_FORWARDED_FOR"
+        };
+        for (String header : headers) {
+            ip = request.getHeader(header);
+            if (ip != null && !ip.isEmpty() && !UNKNOWN.equalsIgnoreCase(ip)) {
+                // 多级代理时取第一个有效 IP
+                if (ip.contains(",")) {
+                    ip = ip.split(",")[0].trim();
                 }
-            }
-        } catch (Exception e) {
-            log.error("IPUtils ERROR ", e);
-        }
-        // 对于通过多个代理的情况，分割出第一个 IP
-        if (ip != null && ip.length() > 15) {
-            if (ip.contains(SEPARATOR)) {
-                ip = ip.substring(0, ip.indexOf(SEPARATOR));
+                return ip;
             }
         }
-        return LOCALHOST_IPV6.equals(ip) ? LOCALHOST_IP : ip;
+        // fallback：request.getRemoteAddr()
+        ip = request.getRemoteAddr();
+
+        // 本地 IPv6 转换成 IPv4
+        if (LOCALHOST_IPV6.equals(ip)) {
+            ip = LOCALHOST_IP;
+        }
+        return ip;
     }
 
 
