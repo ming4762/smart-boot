@@ -2,6 +2,7 @@ package com.smart.module.api.file;
 
 import com.smart.module.api.file.bo.FileDownloadResult;
 import com.smart.module.api.file.bo.FileHandlerResult;
+import com.smart.module.api.file.dto.FilenameDownloadParameter;
 import com.smart.module.api.file.dto.RemoteFileSaveParameter;
 import org.springframework.lang.NonNull;
 import org.springframework.util.CollectionUtils;
@@ -28,11 +29,10 @@ public interface SmartFileApi {
 
     /**
      * 下载文件
-     * @param fileStorageCode 文件存储器代码
-     * @param filename 文件名
+     * @param parameter 文件名下载参数
      * @return 下载内容
      */
-    FileDownloadResult download(@NonNull String fileStorageCode, @NonNull String filename);
+    FileDownloadResult download(@NonNull FilenameDownloadParameter parameter);
 
     /**
      * 批量删除文件信息

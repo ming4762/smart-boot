@@ -4,6 +4,7 @@ import com.smart.module.api.file.SmartFileApi;
 import com.smart.module.api.file.bo.FileDownloadResult;
 import com.smart.module.api.file.bo.FileHandlerResult;
 import com.smart.module.api.file.constants.SmartFileApiUrlConstants;
+import com.smart.module.api.file.dto.FilenameDownloadParameter;
 import com.smart.module.api.file.dto.RemoteFileSaveParameter;
 import com.smart.module.file.api.local.LocalSmartFileApi;
 import jakarta.servlet.http.HttpServletResponse;
@@ -58,13 +59,13 @@ public class RemoteSmartFileApiController implements SmartFileApi {
     /**
      * 下载文件
      *
-     * @param fileStorageCode 文件存储器代码
-     * @param filename        文件名
+     * @param parameter 文件名下载参数
      * @return 下载内容
      */
     @Override
-    public FileDownloadResult download(@NonNull String fileStorageCode, @NonNull String filename) {
-        FileDownloadResult downloadResult = this.smartFileApi.download(fileStorageCode, filename);
+    @PostMapping(SmartFileApiUrlConstants.DOWNLOAD_FILE_BY_NAME)
+    public FileDownloadResult download(@NonNull FilenameDownloadParameter parameter) {
+        FileDownloadResult downloadResult = this.smartFileApi.download(parameter);
         this.doDownload(downloadResult);
         return null;
     }

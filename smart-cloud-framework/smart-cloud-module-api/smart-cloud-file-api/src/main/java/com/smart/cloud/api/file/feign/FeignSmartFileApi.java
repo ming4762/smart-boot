@@ -4,6 +4,7 @@ import com.smart.cloud.api.file.feign.fallback.FeignSmartFileApiFallback;
 import com.smart.cloud.common.core.constants.CloudServiceNameConstants;
 import com.smart.module.api.file.bo.FileHandlerResult;
 import com.smart.module.api.file.constants.SmartFileApiUrlConstants;
+import com.smart.module.api.file.dto.FilenameDownloadParameter;
 import com.smart.module.api.file.dto.RemoteFileSaveParameter;
 import feign.Response;
 import lombok.NonNull;
@@ -33,12 +34,11 @@ public interface FeignSmartFileApi {
      /**
      * 下载文件
      *
-     * @param fileStorageCode 文件存储器代码
-     * @param filename        文件名
+     * @param parameter 文件名下载参数
      * @return 下载内容
      */
     @PostMapping(SmartFileApiUrlConstants.DOWNLOAD_FILE_BY_NAME)
-    Response download(@NonNull String fileStorageCode, @NonNull String filename);
+    Response download(@NonNull FilenameDownloadParameter parameter);
 
 
     /**

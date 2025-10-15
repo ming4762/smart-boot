@@ -3,6 +3,7 @@ package com.smart.cloud.api.file.feign;
 import com.smart.module.api.file.SmartFileApi;
 import com.smart.module.api.file.bo.FileDownloadResult;
 import com.smart.module.api.file.bo.FileHandlerResult;
+import com.smart.module.api.file.dto.FilenameDownloadParameter;
 import com.smart.module.api.file.dto.RemoteFileSaveParameter;
 import feign.Response;
 import lombok.NonNull;
@@ -36,13 +37,12 @@ public class RemoteSmartFileApi implements SmartFileApi {
     /**
      * 下载文件
      *
-     * @param fileStorageCode 文件存储器代码
-     * @param filename        文件名
+     * @param parameter 文件名下载参数
      * @return 下载内容
      */
     @Override
-    public FileDownloadResult download(@NonNull String fileStorageCode, @NonNull String filename) {
-        Response response = this.feignSmartFileApi.download(fileStorageCode, filename);
+    public FileDownloadResult download(@NonNull FilenameDownloadParameter parameter) {
+        Response response = this.feignSmartFileApi.download(parameter);
         return this.buildFileDownloadResult(response);
     }
 
