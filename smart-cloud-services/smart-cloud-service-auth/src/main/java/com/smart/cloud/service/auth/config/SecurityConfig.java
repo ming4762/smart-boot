@@ -37,7 +37,7 @@ public class SecurityConfig extends AuthWebSecurityConfigurerAdapter {
                     .logout(AbstractHttpConfigurer::disable)
                 // JWT配置
                 .sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .with(AuthJwtSecurityConfigurer.jwt(), Customizer.withDefaults())
+                .with(AuthJwtSecurityConfigurer.jwt(), configurer -> configurer.jwtAuth(false))
                 .with(AuthCaptchaSecurityConfigurer.captcha(), Customizer.withDefaults());
         return httpSecurity.build();
     }
