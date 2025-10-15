@@ -86,7 +86,8 @@ public class IpUtils {
         ip = request.getRemoteAddr();
 
         // 本地 IPv6 转换成 IPv4
-        if (LOCALHOST_IPV6.equals(ip)) {
+        // // 如果是容器网桥 IP (通常 172.16.x.x / 172.17.x.x / 172.18.x.x)
+        if (ip.startsWith("172.") || LOCALHOST_IPV6.equals(ip)) {
             ip = LOCALHOST_IP;
         }
         return ip;
