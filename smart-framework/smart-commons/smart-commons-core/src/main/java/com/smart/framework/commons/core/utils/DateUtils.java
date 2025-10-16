@@ -26,21 +26,23 @@ public final class DateUtils {
 
     private static final Pattern YYYY_MM_DD = Pattern.compile("^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$");
 
-    private static final Pattern YYYY_M_D = Pattern.compile("^[0-9]{4}-(0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01]).*$");
+    private static final Pattern YYYY_M_D = Pattern.compile("^\\d{4}-(0?[1-9]|1[0-2])-(0?[1-9]|[12]\\d|3[01]).*");
 
-    private static final Pattern YY_MM_DD = Pattern.compile("^([0-9]{2})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])(.*)?$");
+    private static final Pattern YY_MM_DD = Pattern.compile("^\\d{2}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]).*");
 
-    private static final Pattern YY_M_D = Pattern.compile("^[0-9]{2}-[0-9]{1}-[0-9]+.*||^[0-9]{2}-[0-9]+-[0-9]{1}.*");
+    public static final Pattern YY_M_D = Pattern.compile("^\\d{2}-(0?[1-9]|1[0-2])-(0?[1-9]|[12]\\d|3[01]).*");
 
-    private static final Pattern HH = Pattern.compile("^[0-9]{4}-[0-9]{2}-[0-9]{2}.*");
+    // 时间匹配
+    public static final Pattern HH = Pattern.compile("^\\d{4}-\\d{2}-\\d{2}.*");
 
-    private static final Pattern HH_MM = Pattern.compile(".*[ ][0-9]{2}:[0-9]{2}");
+    public static final Pattern HH_MM = Pattern.compile(".* \\d{2}:\\d{2}");
 
-    private static final Pattern HH_MM_SS = Pattern.compile(".*[ ][0-9]{2}:[0-9]{2}:[0-9]{2}");
+    public static final Pattern HH_MM_SS = Pattern.compile(".* \\d{2}:\\d{2}:\\d{2}");
 
-    private static final Pattern HH_MM_SS_SSS = Pattern.compile(".*[ ][0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{0,3}");
+    public static final Pattern HH_MM_SS_SSS = Pattern.compile(".* \\d{2}:\\d{2}:\\d{2}:\\d{1,3}");
 
-    private static final Pattern YYYY_MM_DD_HH_MM_SS_SSS_Z = Pattern.compile("^(?:19|20)\\d{2}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])T([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)(\\.\\d{1,3})?Z$");
+    // ISO instant 格式
+    public static final Pattern YYYY_MM_DD_HH_MM_SS_SSS_Z = Pattern.compile("^(?:19|20)\\d{2}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])T([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)(\\.\\d{1,3})?Z$");
 
     private static final DateTimeFormatter ISO_INSTANT_DATE_TIME_FORMATTER = DateTimeFormatter.ISO_INSTANT;
 
@@ -109,47 +111,51 @@ public final class DateUtils {
      */
     @Nullable
     public static ZonedDateTime convertDate(String dateStr) {
-        boolean isTime = false;
         if (!org.springframework.util.StringUtils.hasText(dateStr)) {
             return null;
         }
         if (dateStr.contains(CST_DATE_STR)) {
             return ZonedDateTime.parse(dateStr);
         }
-        String dateDealStr = dateStr.replace("年", "-").replace("月", "-").replace("日", "")
-                .replace("/", "-").replace("\\.", "-").trim();
-        String dateFormatStr = "";
+        String dateDealStr = dateStr.replace("年", "-")
+                .replace("月", "-")
+                .replace("日", "")
+                .replace("/", "-")
+                .replace("\\.", "-")
+                .trim();
+        // 先处理 ISO-8601 带时区
+        if (YYYY_MM_DD_HH_MM_SS_SSS_Z.matcher(dateDealStr).matches()) {
+            return ZonedDateTime.ofInstant(Instant.parse(dateDealStr), ZoneId.of("UTC"));
+        }
+        String pattern = null;
+        boolean hasTime = false;
         // 确定日期个税
         if (YYYY_MM_DD.matcher(dateDealStr).matches()) {
-            dateFormatStr = "yyyy-MM-dd";
+            pattern = "yyyy-MM-dd";
         } else if (YYYY_M_D.matcher(dateDealStr).matches()) {
-            dateFormatStr = "yyyy-M-d";
+            pattern = "yyyy-M-d";
         } else if (YY_MM_DD.matcher(dateDealStr).matches()) {
-            dateFormatStr = "yy-MM-dd";
+            pattern = "yy-MM-dd";
         } else if (YY_M_D.matcher(dateDealStr).matches()) {
-            dateFormatStr = "yy-M-d";
+            pattern = "yy-M-d";
         }
 
         //确定时间格式
         if(HH_MM.matcher(dateDealStr).matches()){
-            isTime = true;
-            dateFormatStr += " HH:mm";
+            hasTime = true;
+            pattern += " HH:mm";
         }else if(HH_MM_SS.matcher(dateDealStr).matches()){
-            isTime = true;
-            dateFormatStr += " HH:mm:ss";
+            hasTime = true;
+            pattern += " HH:mm:ss";
         }else if(HH_MM_SS_SSS.matcher(dateDealStr).matches()){
-            isTime = true;
-            dateFormatStr += " HH:mm:ss:sss";
+            hasTime = true;
+            pattern += " HH:mm:ss:sss";
         }
 
-        if (YYYY_MM_DD_HH_MM_SS_SSS_Z.matcher(dateDealStr).matches()) {
-            dateDealStr = dateDealStr.replace("Z", " UTC");
-            dateFormatStr = "yyyy-MM-dd'T'HH:mm:ss.SSS Z";
-        }
-        if (StringUtils.hasText(dateFormatStr)) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateFormatStr);
-            if (isTime) {
-                return ZonedDateTime.parse(dateDealStr, formatter);
+        if (StringUtils.hasText(pattern)) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+            if (hasTime) {
+                return LocalDateTime.parse(dateDealStr, formatter).atZone(ZoneId.systemDefault());
             } else {
                 return LocalDate.parse(dateDealStr, formatter).atStartOfDay().atZone(ZoneId.systemDefault());
             }

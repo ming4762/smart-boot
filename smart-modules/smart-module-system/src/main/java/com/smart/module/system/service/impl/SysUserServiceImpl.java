@@ -93,7 +93,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
     private final SysParameterApi sysParameterApi;
 
     @Override
-    public List<? extends SysUserPO> list(@NonNull QueryWrapper<SysUserPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
+    public List<SysUserPO> list(@NonNull QueryWrapper<SysUserPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
         UserListDTO userListParameter = (UserListDTO) parameter;
         List<Long> deptIdList = userListParameter.getDeptIdList();
         if (!CollectionUtils.isEmpty(deptIdList)) {
@@ -113,7 +113,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
                 queryWrapper.apply("user_id in (select M.user_id from sys_tenant_user M where M.tenant_id = {0} and M.use_yn = {1})", userListParameter.getTenantId(), userListParameter.getUseYn());
             }
         }
-        List<? extends SysUserPO> userList = super.list(queryWrapper, parameter, paging);
+        List<SysUserPO> userList = super.list(queryWrapper, parameter, paging);
         if (CollectionUtils.isEmpty(userList)) {
             return new ArrayList<>(0);
         }
@@ -130,7 +130,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
             // 查询账户信息
             this.queryUserAccount(AuthUtils.getNonNullCurrentTenantId(), voList);
         }
-        return voList;
+        return voList.stream().map(SysUserPO.class::cast).toList();
     }
 
     /**

@@ -111,7 +111,7 @@ public class MonitorClientHttpTraceServiceImpl extends BaseServiceImpl<MonitorCl
     }
 
     @Override
-    public List<? extends MonitorClientHttpTracePO> list(@NonNull QueryWrapper<MonitorClientHttpTracePO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
+    public List<MonitorClientHttpTracePO> list(@NonNull QueryWrapper<MonitorClientHttpTracePO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
         if (Boolean.TRUE.equals(parameter.getParameter().get(CrudCommonEnum.ASSIGN_FIELD.name()))) {
             queryWrapper.lambda().select(
                     MonitorClientHttpTracePO :: getId,

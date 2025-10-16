@@ -22,7 +22,7 @@ public class DocumentTemplateServiceImpl extends BaseServiceImpl<DocumentTemplat
     private static final List<String> EXCLUDE_FIELDS = Lists.newArrayList("data");
 
     @Override
-    public List<? extends DocumentTemplatePO> list(@NonNull QueryWrapper<DocumentTemplatePO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
+    public List<DocumentTemplatePO> list(@NonNull QueryWrapper<DocumentTemplatePO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
         queryWrapper.lambda()
                 .select(DocumentTemplatePO.class, field -> !EXCLUDE_FIELDS.contains(field.getProperty()));
         return super.list(queryWrapper, parameter, paging);

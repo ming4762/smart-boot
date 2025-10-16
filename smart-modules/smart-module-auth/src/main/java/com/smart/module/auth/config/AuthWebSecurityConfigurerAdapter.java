@@ -29,10 +29,5 @@ public class AuthWebSecurityConfigurerAdapter {
                         .exceptionHandling(
                                 configurer -> configurer.authenticationEntryPoint(new RestAuthenticationEntryPoint())
                                                         .accessDeniedHandler(new AuthAccessDeniedHandler()));
-//        this.ignore(httpSecurity);
-//        // 开发模式不拦截
-//        if (BooleanUtils.isTrue(this.authProperties.getDevelopment())) {
-//            httpSecurity.authorizeHttpRequests(registry -> registry.anyRequest().permitAll());
-//        }
     }
 }

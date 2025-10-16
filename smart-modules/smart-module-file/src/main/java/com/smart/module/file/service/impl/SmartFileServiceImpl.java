@@ -39,7 +39,7 @@ public class SmartFileServiceImpl extends BaseServiceImpl<SmartFileMapper, Smart
     }
 
     @Override
-    public List<? extends SmartFilePO> list(@NonNull QueryWrapper<SmartFilePO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
+    public List<SmartFilePO> list(@NonNull QueryWrapper<SmartFilePO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
         SmartTableInfo tableInfo = this.getTableInfo();
         // 排除已过期未删除数据
         String expireTimeColumn = tableInfo.getTableFiled(SmartFilePO::getExpireTime).getColumn();
@@ -47,7 +47,7 @@ public class SmartFileServiceImpl extends BaseServiceImpl<SmartFileMapper, Smart
                 query -> query.isNull(expireTimeColumn)
                         .or(wrapper -> wrapper.ge(expireTimeColumn, ZonedDateTime.now()))
         );
-        List<? extends SmartFilePO> dataList = super.list(queryWrapper, parameter, paging);
+        List<SmartFilePO> dataList = super.list(queryWrapper, parameter, paging);
         if (Boolean.TRUE.equals(parameter.getParameter().get(CrudCommonEnum.WITH_ALL.name()))) {
             Set<Long> fileStorageIds = dataList.stream().map(SmartFilePO::getFileStorageId).collect(Collectors.toSet());
             if (!CollectionUtils.isEmpty(fileStorageIds)) {
@@ -58,7 +58,7 @@ public class SmartFileServiceImpl extends BaseServiceImpl<SmartFileMapper, Smart
                             SmartFileListVO vo = new SmartFileListVO();
                             BeanUtils.copyProperties(item, vo);
                             vo.setFileStorage(fileStorageMap.get(vo.getFileStorageId()));
-                            return vo;
+                            return (SmartFilePO) vo;
                         }).toList();
             }
         }

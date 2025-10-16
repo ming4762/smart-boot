@@ -38,7 +38,7 @@ public class MonitorApplicationServiceImpl extends BaseServiceImpl<MonitorApplic
 
     @NonNull
     @Override
-    public List<? extends MonitorApplicationPO> list(@NonNull QueryWrapper<MonitorApplicationPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
+    public List<MonitorApplicationPO> list(@NonNull QueryWrapper<MonitorApplicationPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
         Boolean filterUser = (Boolean) parameter.getParameter().get(CrudCommonEnum.FILTER_BY_USER.name());
         if (Boolean.TRUE.equals(filterUser)) {
             // 绑定当前登录用户
@@ -57,7 +57,7 @@ public class MonitorApplicationServiceImpl extends BaseServiceImpl<MonitorApplic
                 }
             }
         }
-        List<? extends MonitorApplicationPO> data = super.list(queryWrapper, parameter, paging);
+        List<MonitorApplicationPO> data = super.list(queryWrapper, parameter, paging);
         if (CollectionUtils.isEmpty(data)) {
             return new ArrayList<>(0);
         }
@@ -69,7 +69,7 @@ public class MonitorApplicationServiceImpl extends BaseServiceImpl<MonitorApplic
         if (Boolean.TRUE.equals(parameter.getParameter().get(CrudCommonEnum.QUERY_CREATE_UPDATE_USER.name()))) {
             this.userSetterService.setCreateUpdateUser(voList);
         }
-        return voList;
+        return voList.stream().map(MonitorApplicationPO.class::cast).toList();
     }
 
     @Override

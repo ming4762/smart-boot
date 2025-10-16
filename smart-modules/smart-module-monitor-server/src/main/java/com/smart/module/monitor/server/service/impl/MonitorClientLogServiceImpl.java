@@ -32,7 +32,7 @@ public class MonitorClientLogServiceImpl extends BaseServiceImpl<MonitorClientLo
         this.monitorApplicationService = monitorApplicationService;
     }
     @Override
-    public List<? extends MonitorClientLogPO> list(@NonNull QueryWrapper<MonitorClientLogPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
+    public List<MonitorClientLogPO> list(@NonNull QueryWrapper<MonitorClientLogPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
         if (Boolean.TRUE.equals(parameter.getParameter().get(CrudCommonEnum.FILTER_BY_USER.name()))) {
             // 查询人员关联的客户端
             List<String> applicationCodeList = this.monitorApplicationService.listApplicationNameByUser(AuthUtils.getNonNullCurrentUserId());

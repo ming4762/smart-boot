@@ -90,7 +90,7 @@ public class BeanUtils {
      */
     public static Map<String, Object> deepBeanToMap(Object bean, int maxDepth, String... ignoreProperties) {
         if (bean == null) {
-            return null;
+            return Collections.emptyMap();
         }
         Assert.notNull(maxDepth, "maxDepth must not be null"); // Hutool Assert，可换成 Objects.requireNonNull
         IdentityHashMap<Object, Object> visited = new IdentityHashMap<>();
@@ -112,11 +112,7 @@ public class BeanUtils {
                                        int depth,
                                        int maxDepth,
                                        String[] ignoreProperties) {
-        if (value == null) {
-            return null;
-        }
-        // 基本类型 / 常见不可再拆分的类型 -> 直接返回
-        if (isSimpleValueType(value.getClass())) {
+        if (value == null || isSimpleValueType(value.getClass())) {
             return value;
         }
         // 循环引用检测
@@ -125,52 +121,78 @@ public class BeanUtils {
         }
         // 深度限制
         if (depth >= maxDepth) {
-            // 达到深度限制：把对象转换为字符串表示（或直接返回原对象，视需求）
             return value.toString();
         }
-        // Map -> 递归处理 value
-        if (value instanceof Map<?, ?> original) {
-            Map<Object, Object> result = new LinkedHashMap<>();
-            visited.put(value, Boolean.TRUE);
-            for (Map.Entry<?, ?> e : original.entrySet()) {
-                Object k = e.getKey();
-                Object v = e.getValue();
-                Object ck = (k == null) ? null : k.toString();
-                Object cv = convertValue(v, visited, depth + 1, maxDepth, ignoreProperties);
-                result.put(ck, cv);
-            }
-            visited.remove(value);
-            return result;
+
+        if (value instanceof Map<?, ?> map) {
+            return handleMap(map, visited, depth, maxDepth, ignoreProperties);
         }
-        // Collection -> 递归处理元素
         if (value instanceof Collection<?> coll) {
-            List<Object> list = new ArrayList<>(coll.size());
-            visited.put(value, Boolean.TRUE);
-            for (Object elem : coll) {
-                list.add(convertValue(elem, visited, depth + 1, maxDepth, ignoreProperties));
-            }
-            visited.remove(value);
-            return list;
+            return handleCollection(coll, visited, depth, maxDepth, ignoreProperties);
         }
-        // Array -> 转为 List 并递归
         if (value.getClass().isArray()) {
-            int len = Array.getLength(value);
-            List<Object> list = new ArrayList<>(len);
-            visited.put(value, Boolean.TRUE);
-            for (int i = 0; i < len; i++) {
-                list.add(convertValue(Array.get(value, i), visited, depth + 1, maxDepth, ignoreProperties));
-            }
-            visited.remove(value);
-            return list;
+            return handleArray(value, visited, depth, maxDepth, ignoreProperties);
         }
-        // 其他为 POJO（bean） -> 先用 Hutool beanToMap 转为 Map，然后对 Map 的值递归
-        visited.put(value, Boolean.TRUE);
-        Map<String, Object> map = BeanUtil.beanToMap(value, ignoreProperties);
+        return handlePojo(value, visited, depth, maxDepth, ignoreProperties);
+    }
+
+    private static Object handleMap(Map<?, ?> original,
+                                    IdentityHashMap<Object, Object> visited,
+                                    int depth,
+                                    int maxDepth,
+                                    String[] ignoreProperties) {
+        Map<Object, Object> result = new LinkedHashMap<>();
+        visited.put(original, Boolean.TRUE);
+        for (Map.Entry<?, ?> e : original.entrySet()) {
+            Object key = (e.getKey() == null) ? null : e.getKey().toString();
+            Object value = convertValue(e.getValue(), visited, depth + 1, maxDepth, ignoreProperties);
+            result.put(key, value);
+        }
+        visited.remove(original);
+        return result;
+    }
+
+    private static Object handleCollection(Collection<?> coll,
+                                           IdentityHashMap<Object, Object> visited,
+                                           int depth,
+                                           int maxDepth,
+                                           String[] ignoreProperties) {
+        List<Object> list = new ArrayList<>(coll.size());
+        visited.put(coll, Boolean.TRUE);
+        for (Object elem : coll) {
+            list.add(convertValue(elem, visited, depth + 1, maxDepth, ignoreProperties));
+        }
+        visited.remove(coll);
+        return list;
+    }
+
+    private static Object handleArray(Object array,
+                                      IdentityHashMap<Object, Object> visited,
+                                      int depth,
+                                      int maxDepth,
+                                      String[] ignoreProperties) {
+        int len = Array.getLength(array);
+        List<Object> list = new ArrayList<>(len);
+        visited.put(array, Boolean.TRUE);
+        for (int i = 0; i < len; i++) {
+            list.add(convertValue(Array.get(array, i), visited, depth + 1, maxDepth, ignoreProperties));
+        }
+        visited.remove(array);
+        return list;
+    }
+
+    private static Object handlePojo(Object pojo,
+                                     IdentityHashMap<Object, Object> visited,
+                                     int depth,
+                                     int maxDepth,
+                                     String[] ignoreProperties) {
+        visited.put(pojo, Boolean.TRUE);
+        Map<String, Object> map = BeanUtil.beanToMap(pojo, ignoreProperties);
         Map<String, Object> result = new LinkedHashMap<>();
         for (Map.Entry<String, Object> e : map.entrySet()) {
             result.put(e.getKey(), convertValue(e.getValue(), visited, depth + 1, maxDepth, ignoreProperties));
         }
-        visited.remove(value);
+        visited.remove(pojo);
         return result;
     }
 

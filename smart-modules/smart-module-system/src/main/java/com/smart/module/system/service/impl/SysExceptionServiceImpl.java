@@ -40,9 +40,9 @@ public class SysExceptionServiceImpl extends BaseServiceImpl<SysExceptionMapper,
     private final SysTenantService sysTenantService;
 
     @Override
-    public List<? extends SysExceptionPO> list(@NonNull QueryWrapper<SysExceptionPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
+    public List<SysExceptionPO> list(@NonNull QueryWrapper<SysExceptionPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
         queryWrapper.select(SysExceptionPO.class, field -> !"stackTrace".equals(field.getProperty()));
-        List<? extends SysExceptionPO> list = super.list(queryWrapper, parameter, paging);
+        List<SysExceptionPO> list = super.list(queryWrapper, parameter, paging);
         if (CollectionUtils.isEmpty(list)) {
             return list;
         }
@@ -56,7 +56,7 @@ public class SysExceptionServiceImpl extends BaseServiceImpl<SysExceptionMapper,
         this.queryResolvedUser(voList);
         // 查询租户信息
         this.queryTenant(voList);
-        return voList;
+        return voList.stream().map(SysExceptionPO.class::cast).toList();
     }
 
     private void queryResolvedUser(List<SysExceptionListVO> voList) {

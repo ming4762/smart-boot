@@ -47,11 +47,11 @@ public class DbConnectionServiceImpl extends BaseServiceImpl<DbConnectionMapper,
     }
 
     @Override
-    public List<? extends DbConnectionPO> list(@NonNull QueryWrapper<DbConnectionPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
+    public List<DbConnectionPO> list(@NonNull QueryWrapper<DbConnectionPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
         if (Objects.equals(parameter.getParameter().get(DbCrudEnum.LIST_BY_AUTH.name()), Boolean.TRUE)) {
             this.setAuthQuery(queryWrapper);
         }
-        List<? extends DbConnectionPO> connectionList = super.list(queryWrapper, parameter, paging);
+        List<DbConnectionPO> connectionList = super.list(queryWrapper, parameter, paging);
         // 创建VO类
         if (connectionList.isEmpty()) {
             return connectionList;
@@ -60,7 +60,7 @@ public class DbConnectionServiceImpl extends BaseServiceImpl<DbConnectionMapper,
                 .map(item -> {
                     DbConnectionResultVO vo = new DbConnectionResultVO();
                     BeanUtils.copyProperties(item, vo);
-                    return vo;
+                    return (DbConnectionPO)vo;
                 }).toList();
     }
 

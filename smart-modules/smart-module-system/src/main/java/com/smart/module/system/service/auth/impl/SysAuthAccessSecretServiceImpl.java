@@ -88,8 +88,8 @@ public class SysAuthAccessSecretServiceImpl extends BaseServiceImpl<SysAuthAcces
      * @return 查询结果
      */
     @Override
-    public List<? extends SysAuthAccessSecretPO> list(@NonNull QueryWrapper<SysAuthAccessSecretPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
-        List<? extends SysAuthAccessSecretPO> list = super.list(queryWrapper, parameter, paging);
+    public List<SysAuthAccessSecretPO> list(@NonNull QueryWrapper<SysAuthAccessSecretPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
+        List<SysAuthAccessSecretPO> list = super.list(queryWrapper, parameter, paging);
         if (CollectionUtils.isEmpty(list)) {
             return list;
         }
@@ -102,7 +102,7 @@ public class SysAuthAccessSecretServiceImpl extends BaseServiceImpl<SysAuthAcces
         if (Boolean.TRUE.equals(parameter.getParameter().get(CrudCommonEnum.WITH_ALL))) {
             this.sysTenantService.injectTenant(voList);
         }
-        return voList;
+        return voList.stream().map(SysAuthAccessSecretPO.class::cast).toList();
     }
 
     /**

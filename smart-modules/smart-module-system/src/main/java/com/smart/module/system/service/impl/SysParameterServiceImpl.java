@@ -45,8 +45,8 @@ public class SysParameterServiceImpl extends BaseServiceImpl<SysParameterMapper,
      * @return 查询结果
      */
     @Override
-    public List<? extends SysParameterPO> list(@NonNull QueryWrapper<SysParameterPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
-        List<? extends SysParameterPO> dataList = super.list(queryWrapper, parameter, paging);
+    public List<SysParameterPO> list(@NonNull QueryWrapper<SysParameterPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
+        List<SysParameterPO> dataList = super.list(queryWrapper, parameter, paging);
         if (CollectionUtils.isEmpty(dataList)) {
             return dataList;
         }
@@ -58,7 +58,7 @@ public class SysParameterServiceImpl extends BaseServiceImpl<SysParameterMapper,
                         return vo;
                     }).toList();
             this.queryCommonParameter(voList);
-            return voList;
+            return voList.stream().map(SysParameterPO.class::cast).toList();
         }
         return dataList;
     }

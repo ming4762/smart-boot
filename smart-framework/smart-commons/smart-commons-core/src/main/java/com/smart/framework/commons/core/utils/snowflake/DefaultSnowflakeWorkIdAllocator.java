@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 @Slf4j
 public class DefaultSnowflakeWorkIdAllocator extends AbstractSnowflakeWorkIdAllocator {
 
-    private static final Pattern PATTERN_HOSTNAME = Pattern.compile("^.*\\D+([0-9]+)$");
+    private static final Pattern PATTERN_HOSTNAME = Pattern.compile("^.*?\\D+(\\d+)$");
 
     /**
      * 分配WORK ID

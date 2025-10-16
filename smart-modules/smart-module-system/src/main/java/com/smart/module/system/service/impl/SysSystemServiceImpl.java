@@ -41,7 +41,7 @@ public class SysSystemServiceImpl extends BaseServiceImpl<SysSystemMapper, SysSy
      * @return 查询结果
      */
     @Override
-    public List<? extends SysSystemPO> list(@NonNull QueryWrapper<SysSystemPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
+    public List<SysSystemPO> list(@NonNull QueryWrapper<SysSystemPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
         // 判断是否需要根据人员过滤
         boolean isFilterUser = Boolean.TRUE.equals(parameter.getParameter().get(CrudCommonEnum.FILTER_BY_USER.name()));
         if (isFilterUser && !AuthUtils.isSuperAdmin()) {
