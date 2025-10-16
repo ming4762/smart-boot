@@ -19,7 +19,6 @@
         <module>smart-boot-starter-auth-cache-redis</module>
         <module>smart-boot-starter-auth-captcha</module>
         <module>smart-boot-starter-auth-jwt</module>
-        <module>smart-boot-starter-auth-saml2</module>
         <module>smart-boot-starter-auth-web</module>
         <module>smart-boot-starter-auth-sms</module>
         <module>smart-boot-starter-auth-wechat</module>
