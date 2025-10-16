@@ -63,14 +63,14 @@ public class WechatMessageController {
         }
         log.info("wechat message：{}", message);
         WechatMessageResultDTO result = JsonUtils.parse(JsonUtils.toJsonString(XmlUtils.xml2Map(message)), WechatMessageResultDTO.class);
-        if (WechatMsgTypeEnum.text.equals(result.getMsgType())) {
+        if (WechatMsgTypeEnum.TEXT.equals(result.getMsgType())) {
             // 发送消息事件
             WechatMessageEvent messageEvent = new WechatMessageEvent(this);
             BeanUtils.copyProperties(result, messageEvent);
             this.applicationEventPublisher.publishEvent(messageEvent);
             return "";
         }
-        if (WechatMsgTypeEnum.event.equals(result.getMsgType())) {
+        if (WechatMsgTypeEnum.EVENT.equals(result.getMsgType())) {
             // 事件
             if (WechatEventEnum.subscribe.equals(result.getEvent())) {
                 WechatSubscribeEvent subscribeEvent = new WechatSubscribeEvent(this);

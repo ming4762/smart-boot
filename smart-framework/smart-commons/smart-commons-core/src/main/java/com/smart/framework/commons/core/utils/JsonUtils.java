@@ -26,7 +26,6 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -55,7 +54,9 @@ public final class JsonUtils {
      */
     private static final String DEFAULT_TIME_FORMAT = "HH:mm:ss";
 
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static ObjectMapper objectMapper;
+
+    private static final ObjectMapper DEFAULT_OBJECT_MAPPER = new ObjectMapper();
 
     private JsonUtils() {
         throw new IllegalStateException("Utility class");
@@ -75,9 +76,13 @@ public final class JsonUtils {
         javaTimeModule.addSerializer(ZonedDateTime.class, new ZonedDateTimeSerializer(ISO_8601_FORMATTER));
 
         // 禁用 WRITE_DATES_AS_TIMESTAMPS，确保序列化为 ISO-8601 格式
-        OBJECT_MAPPER.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        DEFAULT_OBJECT_MAPPER.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
-        OBJECT_MAPPER.registerModule(javaTimeModule);
+        DEFAULT_OBJECT_MAPPER.registerModule(javaTimeModule);
+    }
+
+    public static void initObjectMapper(ObjectMapper initObjectMapper) {
+        objectMapper = initObjectMapper;
     }
 
     /**
@@ -87,7 +92,7 @@ public final class JsonUtils {
      */
     @SneakyThrows(JsonProcessingException.class)
     public static String toJsonString(Object object) {
-        return OBJECT_MAPPER.writeValueAsString(object);
+        return getObjectMapper().writeValueAsString(object);
     }
 
     /**
@@ -97,7 +102,7 @@ public final class JsonUtils {
      */
     @SneakyThrows(JsonProcessingException.class)
     public static Object parse(String json) {
-        return OBJECT_MAPPER.readValue(json, Object.class);
+        return getObjectMapper().readValue(json, Object.class);
     }
 
     /**
@@ -107,7 +112,7 @@ public final class JsonUtils {
      */
     @SneakyThrows(JsonProcessingException.class)
     public static <T>  T parse(String json, Class<T> clazz) {
-        return OBJECT_MAPPER.readValue(json, clazz);
+        return getObjectMapper().readValue(json, clazz);
     }
 
     /**
@@ -119,8 +124,8 @@ public final class JsonUtils {
      */
     @SneakyThrows(JsonProcessingException.class)
     public static <T> List<T> parseCollection(String json, Class<T> clazz) {
-        final JavaType javaType = OBJECT_MAPPER.getTypeFactory().constructCollectionType(List.class, clazz);
-        return OBJECT_MAPPER.readValue(json, javaType);
+        final JavaType javaType = getObjectMapper().getTypeFactory().constructCollectionType(List.class, clazz);
+        return getObjectMapper().readValue(json, javaType);
     }
 
     /**
@@ -133,7 +138,7 @@ public final class JsonUtils {
      */
     @SneakyThrows(JsonProcessingException.class)
     public static <T> T parse(String json, TypeReference<T> typeReference) {
-        return OBJECT_MAPPER.readValue(json, typeReference);
+        return getObjectMapper().readValue(json, typeReference);
     }
 
     /**
@@ -146,7 +151,7 @@ public final class JsonUtils {
         if (!StringUtils.hasText(json)) {
             return Map.of();
         }
-        JsonNode jsonNode = OBJECT_MAPPER.readTree(json);
+        JsonNode jsonNode = getObjectMapper().readTree(json);
         return flattenJson(jsonNode, "");
     }
 
@@ -163,9 +168,7 @@ public final class JsonUtils {
             flattenedMap.put(parentKey, jsonNode.asText());
             return flattenedMap;
         }
-        Iterator<Map.Entry<String, JsonNode>> fields = jsonNode.fields();
-        while (fields.hasNext()) {
-            Map.Entry<String, JsonNode> field = fields.next();
+        for (Map.Entry<String, JsonNode> field : jsonNode.properties()) {
             String key = field.getKey();
             JsonNode value = field.getValue();
             String newKey = parentKey.isEmpty() ? key : parentKey + "." + key;
@@ -184,27 +187,27 @@ public final class JsonUtils {
 
     @SneakyThrows({JsonProcessingException.class})
     public static JsonNode deepMerge(String ...jsons) {
+        ObjectMapper objectMapper1 = getObjectMapper();
         if (jsons.length == 0) {
-            return OBJECT_MAPPER.createObjectNode();
+            return objectMapper1.createObjectNode();
         }
         if (jsons.length == 1) {
-            return OBJECT_MAPPER.readTree(jsons[0]);
+            return objectMapper1.readTree(jsons[0]);
         } else {
-            JsonNode result = OBJECT_MAPPER.readTree(jsons[0]);
+            JsonNode result = objectMapper1.readTree(jsons[0]);
             for (int i = 1; i < jsons.length; i++) {
-                deepMerge(result, OBJECT_MAPPER.readTree(jsons[i]));
+                deepMerge(result, objectMapper1.readTree(jsons[i]));
             }
             return result;
         }
     }
 
     public static ObjectMapper getObjectMapper() {
-        return OBJECT_MAPPER;
+       return objectMapper != null ? objectMapper : DEFAULT_OBJECT_MAPPER;
     }
 
     private static void deepMerge(JsonNode target, JsonNode source) {
-        for (Iterator<Map.Entry<String, JsonNode>> it = source.fields(); it.hasNext(); ) {
-            Map.Entry<String, JsonNode> field = it.next();
+        for (Map.Entry<String, JsonNode> field : source.properties()) {
             String fieldName = field.getKey();
             JsonNode jsonNode = field.getValue();
 
