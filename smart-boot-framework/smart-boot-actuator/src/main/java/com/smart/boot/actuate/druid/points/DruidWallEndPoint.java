@@ -23,8 +23,8 @@ public class DruidWallEndPoint {
     public Map<String, Object> handler(@Selector String datasourceName) {
         final List<Map<String, Object>> result = DruidUtils.getWallStat(datasourceName);
         if (result.isEmpty()) {
-            return new HashMap<>(0);
+            return HashMap.newHashMap(0);
         }
-        return result.get(0) == null ? new HashMap<>(0) : result.get(0);
+        return result.getFirst() == null ? HashMap.newHashMap(0) : result.getFirst();
     }
 }

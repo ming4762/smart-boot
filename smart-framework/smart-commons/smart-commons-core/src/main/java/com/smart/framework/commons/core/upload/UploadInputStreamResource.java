@@ -53,4 +53,16 @@ public class UploadInputStreamResource extends InputStreamResource {
     public String getFilename() {
         return this.filename;
     }
+
+
+    @Override
+    public boolean equals(Object other) {
+        return super.equals(other) && this.filename.equals(((UploadInputStreamResource) other).filename);
+    }
+
+
+    @Override
+    public int hashCode() {
+        return super.hashCode() * 31 + this.filename.hashCode();
+    }
 }

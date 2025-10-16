@@ -72,13 +72,13 @@ public class WechatMessageController {
         }
         if (WechatMsgTypeEnum.EVENT.equals(result.getMsgType())) {
             // 事件
-            if (WechatEventEnum.subscribe.equals(result.getEvent())) {
+            if (WechatEventEnum.SUBSCRIBE.equals(result.getEvent())) {
                 WechatSubscribeEvent subscribeEvent = new WechatSubscribeEvent(this);
                 BeanUtils.copyProperties(result, subscribeEvent);
                 this.applicationEventPublisher.publishEvent(subscribeEvent);
                 return "";
             }
-            if (WechatEventEnum.unsubscribe.equals(result.getEvent())) {
+            if (WechatEventEnum.UNSUBSCRIBE.equals(result.getEvent())) {
                 WechatUnSubscribeEvent unSubscribeEvent = new WechatUnSubscribeEvent(this);
                 BeanUtils.copyProperties(result, unSubscribeEvent);
                 this.applicationEventPublisher.publishEvent(unSubscribeEvent);

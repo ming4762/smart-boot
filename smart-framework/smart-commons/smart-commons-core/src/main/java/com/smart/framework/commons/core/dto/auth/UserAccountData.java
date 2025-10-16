@@ -22,8 +22,8 @@ public class UserAccountData implements Serializable {
     private static final long serialVersionUID = -3632192598130979878L;
 
     public UserAccountData() {
-        this.roleCodes = new HashSet<>(0);
-        this.permissions = new HashSet<>(0);
+        this.roleCodes = HashSet.newHashSet(0);
+        this.permissions = HashSet.newHashSet(0);
     }
 
     /**

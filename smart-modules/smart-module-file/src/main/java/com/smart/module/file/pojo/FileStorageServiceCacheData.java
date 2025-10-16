@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serializable;
-
 /**
  * @author shizhongming
  * 2025/6/19 21:18
@@ -15,7 +13,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @AllArgsConstructor
-public class FileStorageServiceCacheData implements Serializable {
+public class FileStorageServiceCacheData {
 
 
     private Long id;

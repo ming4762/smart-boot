@@ -49,7 +49,7 @@ public final class ValidatorUtils {
      * @return 验证成功返回true，验证失败返回false
      */
     public static boolean checkIdCard(String idCard) {
-        String regex = "[1-9]\\d{13,16}[a-zA-Z0-9]{1}";
+        String regex = "^[1-9]\\d{14}(\\d{2}[0-9Xx])?$";
         return Pattern.matches(regex,idCard);
     }
 

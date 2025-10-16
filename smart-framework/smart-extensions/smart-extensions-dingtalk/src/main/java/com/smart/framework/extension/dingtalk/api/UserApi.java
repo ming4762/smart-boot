@@ -59,7 +59,7 @@ public class UserApi extends AbstractDingtalkApi {
         if (CollectionUtils.isEmpty(mobiles)) {
             return Map.of();
         }
-        Map<String, GetUserByMobileResult> result = new HashMap<>(mobiles.size());
+        Map<String, GetUserByMobileResult> result = HashMap.newHashMap(mobiles.size());
         mobiles.forEach(mobile -> result.put(mobile, this.getByMobile(mobile, accessTokenParameter)));
         return result;
     }

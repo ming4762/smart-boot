@@ -2,7 +2,6 @@ package com.smart.module.system.model.tenant;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.smart.framework.crud.annotation.TableUseYnField;
 import com.smart.framework.crud.model.BaseModelDeleteUserTime;

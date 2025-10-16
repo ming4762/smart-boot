@@ -2,8 +2,6 @@ package com.smart.framework.extension.wechat.message.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.smart.framework.commons.core.json.BaseEnumJsonConverter;
 import com.smart.framework.extension.wechat.constants.WechatEventEnum;
 import com.smart.framework.extension.wechat.constants.WechatMsgTypeEnum;
 import lombok.Getter;

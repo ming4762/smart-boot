@@ -17,8 +17,10 @@ import java.util.List;
 public class DbGeneratorDocumentCreator {
 
     private static final String TYPE_STRING = "String";
-
     private static final String TYPE_BOOLEAN = "Boolean";
+    private static final String TYPE_OBJECT = "Object";
+    private static final String TYPE_INTEGER = "Integer";
+
 
     private DbGeneratorDocumentCreator() {
     }
@@ -30,32 +32,32 @@ public class DbGeneratorDocumentCreator {
                 new DocumentVO("packages", "包名", TYPE_STRING, null, null, false),
                 new DocumentVO("extPackages", "ext包名", TYPE_STRING, null, null, true),
                 new DocumentVO("controllerBasePath", "controller请求路径", TYPE_STRING, null, null, true),
-                new DocumentVO("mainTable", "表配置", "Object", null, null, false, createTableDocument()),
+                new DocumentVO("mainTable", "表配置", TYPE_OBJECT, null, null, false, createTableDocument()),
                 new DocumentVO("addendumTableList", "附表配置，请参考表配置", "List", null, null, true)
         );
     }
 
     private static List<DocumentVO> createTableDocument() {
         return Lists.newArrayList(
-                new DocumentVO("configName", "配置名称", "String", null, null, false),
+                new DocumentVO("configName", "配置名称", TYPE_STRING, null, null, false),
 
-                new DocumentVO("idField", "主键字段配置信息", "Object", null, null, true, createPageConfigDocument()),
+                new DocumentVO("idField", "主键字段配置信息", TYPE_OBJECT, null, null, true, createPageConfigDocument()),
 
-                new DocumentVO("className", "类名", "String", null, null, false),
-                new DocumentVO("tableName", "数据库表名称", "String", null, null, false),
-                new DocumentVO("type", "数据库类型", "String", null, null, false),
+                new DocumentVO("className", "类名", TYPE_STRING, null, null, false),
+                new DocumentVO("tableName", "数据库表名称", TYPE_STRING, null, null, false),
+                new DocumentVO("type", "数据库类型", TYPE_STRING, null, null, false),
                 new DocumentVO("showCheckbox", "是否显示复选框", TYPE_BOOLEAN, null, null, false),
                 new DocumentVO("page", "是否分页", TYPE_BOOLEAN, null, null, false),
                 new DocumentVO("invented", "是否是虚拟表格", TYPE_BOOLEAN, null, null, false),
                 new DocumentVO("formColNum", "表单列数", "Int", null, null, false),
                 new DocumentVO("searchColNum", "搜索表单列数", "Int", null, null, false),
-                new DocumentVO("remark", "备注", "String", null, null, true),
-                new DocumentVO("remarks", "数据库表备注", "String", null, null, true),
+                new DocumentVO("remark", "备注", TYPE_STRING, null, null, true),
+                new DocumentVO("remarks", "数据库表备注", TYPE_STRING, null, null, true),
                 new DocumentVO("columnSort", "列顺序是否可配置", TYPE_BOOLEAN, null, null, false),
                 new DocumentVO("rowButtonType", "行按钮类型", "Enum", Lists.newArrayList("NONE：无行按钮", "SINGLE：单个按钮", "MORE：下拉按钮", "TEXT：文本按钮"), null, false),
 
                 new DocumentVO("hasId", "数据库表是否有主键", TYPE_BOOLEAN, Lists.newArrayList("true", "false"), "false", false),
-                new DocumentVO("relatedColumn", "关联字段（用户select-table等）", "String", null, null, true),
+                new DocumentVO("relatedColumn", "关联字段（用户select-table等）", TYPE_STRING, null, null, true),
                 new DocumentVO("modelClassImportList", "引入的类型", "List<String>", null, null, false),
                 new DocumentVO("codePageConfigList", "页面配置信息", "List<Object>", null, null, false, createPageConfigDocument()),
                 new DocumentVO("codeFormConfigList", "表单配置信息", "List<Object>", null, null, false, createFormConfigDocument()),
@@ -64,7 +66,7 @@ public class DbGeneratorDocumentCreator {
                 new DocumentVO("rightButtonList", "右侧按钮配置信息", "List<String>", null, null, false),
                 new DocumentVO("rowButtonList", "行按钮配置信息", "List<String>", null, null, false),
 
-                new DocumentVO("i18nPrefix", "UI国际化前缀", "String", null, null, false)
+                new DocumentVO("i18nPrefix", "UI国际化前缀", TYPE_STRING, null, null, false)
         );
     }
 
@@ -74,19 +76,19 @@ public class DbGeneratorDocumentCreator {
      */
     private static List<DocumentVO> createPageConfigDocument() {
         List<DocumentVO> documentList = Lists.newArrayList(
-                new DocumentVO("idAnnotation", "是否使用ID注解（mybatis）", "Boolean", null, "false", false),
-                new DocumentVO("remarks", "表备注", "String", null, null, true),
-                new DocumentVO("title", "标题", "String", null, null, false),
-                new DocumentVO("sortable", "是否可排序", "Boolean", null, "false", false),
-                new DocumentVO("fixed", "冻结列", "String", Lists.newArrayList("right", "left"), null, true),
+                new DocumentVO("idAnnotation", "是否使用ID注解（mybatis）", TYPE_BOOLEAN, null, "false", false),
+                new DocumentVO("remarks", "表备注", TYPE_STRING, null, null, true),
+                new DocumentVO("title", "标题", TYPE_STRING, null, null, false),
+                new DocumentVO("sortable", "是否可排序", TYPE_BOOLEAN, null, "false", false),
+                new DocumentVO("fixed", "冻结列", TYPE_STRING, Lists.newArrayList("right", "left"), null, true),
                 new DocumentVO("width", "列宽度", "number", null, null, false),
-                new DocumentVO("align", "列对齐方式", "String", Lists.newArrayList("left", "center", "right"), null, false),
+                new DocumentVO("align", "列对齐方式", TYPE_STRING, Lists.newArrayList("left", "center", "right"), null, false),
 
-                new DocumentVO("resizable", "列宽度是否可调", "Boolean", null, "false", false),
-                new DocumentVO("visible", "是否渲染到页面", "Boolean", null, null, false),
-                new DocumentVO("hidden", "是否隐藏", "Boolean", null, null, false),
-                new DocumentVO("editable", "是否可编辑", "Boolean", null, null, false),
-                new DocumentVO("format", "格式化", "String", null, null, true)
+                new DocumentVO("resizable", "列宽度是否可调", TYPE_BOOLEAN, null, "false", false),
+                new DocumentVO("visible", "是否渲染到页面", TYPE_BOOLEAN, null, null, false),
+                new DocumentVO("hidden", "是否隐藏", TYPE_BOOLEAN, null, null, false),
+                new DocumentVO("editable", "是否可编辑", TYPE_BOOLEAN, null, null, false),
+                new DocumentVO("format", "格式化", TYPE_STRING, null, null, true)
         );
         documentList.addAll(createConfigCommonDocument());
         return documentList;
@@ -98,13 +100,13 @@ public class DbGeneratorDocumentCreator {
      */
     private static List<DocumentVO> createFormRuleDocument() {
         return Lists.newArrayList(
-                new DocumentVO("ruleType", "验证类型", "String", Arrays.stream(RuleTypeEnum.values()).map(Enum::toString).toList(), null, false),
+                new DocumentVO("ruleType", "验证类型", TYPE_STRING, Arrays.stream(RuleTypeEnum.values()).map(Enum::toString).toList(), null, false),
                 new DocumentVO("ruleTrigger", "验证时机", "List", Arrays.stream(RuleTriggerEnum.values()).map(Enum::toString).toList(), null, false),
                 new DocumentVO("len", "长度", "Long", null, null, true),
                 new DocumentVO("max", "最大值", "Long", null, null, true),
                 new DocumentVO("min", "最小值）", "Long", null, null, true),
-                new DocumentVO("message", "验证失败内容", "String", null, null, false),
-                new DocumentVO("pattern", "正则表达式验证", "String", null, null, true)
+                new DocumentVO("message", "验证失败内容", TYPE_STRING, null, null, false),
+                new DocumentVO("pattern", "正则表达式验证", TYPE_STRING, null, null, true)
         );
     }
 
@@ -114,7 +116,7 @@ public class DbGeneratorDocumentCreator {
      */
     private static List<DocumentVO> createFormConfigDocument() {
         List<DocumentVO> documentList = Lists.newArrayList(
-                new DocumentVO("selectTable", "下拉表格配置，参考表格配置信息", "Object", null, null, true),
+                new DocumentVO("selectTable", "下拉表格配置，参考表格配置信息", TYPE_OBJECT, null, null, true),
                 new DocumentVO("ruleList", "验证规则", "List", null, null, false, createFormRuleDocument())
         );
         documentList.addAll(createFormConfigCommonDocument());
@@ -127,8 +129,8 @@ public class DbGeneratorDocumentCreator {
      */
     private static List<DocumentVO> createSearchConfigDocument() {
         List<DocumentVO> documentList = Lists.newArrayList(
-                new DocumentVO("selectTable", "下拉表格配置，参考表格配置信息", "Object", null, null, true),
-                new DocumentVO("searchSymbol", "搜索标识", "String", null, "=", false)
+                new DocumentVO("selectTable", "下拉表格配置，参考表格配置信息", TYPE_OBJECT, null, null, true),
+                new DocumentVO("searchSymbol", "搜索标识", TYPE_STRING, null, "=", false)
         );
         documentList.addAll(createFormConfigCommonDocument());
         return documentList;
@@ -141,23 +143,23 @@ public class DbGeneratorDocumentCreator {
      */
     private static List<DocumentVO> createFormConfigCommonDocument() {
         List<DocumentVO> documentList = Lists.newArrayList(
-                new DocumentVO("autoValidate", "是否使用自动校验", "Boolean", null, null, true),
-                new DocumentVO("remarks", "数据库列备注", "String", null, null, false),
-                new DocumentVO("title", "标题", "String", null, null, false),
-                new DocumentVO("readonly", "是否只读", "Boolean", null, "false", false),
-                new DocumentVO("hidden", "是否隐藏", "Boolean", null, null, false),
+                new DocumentVO("autoValidate", "是否使用自动校验", TYPE_BOOLEAN, null, null, true),
+                new DocumentVO("remarks", "数据库列备注", TYPE_STRING, null, null, false),
+                new DocumentVO("title", "标题", TYPE_STRING, null, null, false),
+                new DocumentVO("readonly", "是否只读", TYPE_BOOLEAN, null, "false", false),
+                new DocumentVO("hidden", "是否隐藏", TYPE_BOOLEAN, null, null, false),
 
-                new DocumentVO("controlType", "控件类型", "String", Arrays.stream(FromControlTypeEnum.values()).map(Enum::name).toList(), null, false),
-                new DocumentVO("seq", "序号", "Integer", null, null, false),
+                new DocumentVO("controlType", "控件类型", TYPE_STRING, Arrays.stream(FromControlTypeEnum.values()).map(Enum::name).toList(), null, false),
+                new DocumentVO("seq", "序号", TYPE_INTEGER, null, null, false),
 
-                new DocumentVO("useTableSearch", "是否查询数据库", "Boolean", null, "false", true),
-                new DocumentVO("tableName", "查询数据库表名", "String", null, null, true),
-                new DocumentVO("keyColumnName", "查询数据库key列", "String", null, null, true),
-                new DocumentVO("valueColumnName", "查询数据库value列", "String", null, null, true),
-                new DocumentVO("tableWhere", "查询条件", "String", null, null, true),
+                new DocumentVO("useTableSearch", "是否查询数据库", TYPE_BOOLEAN, null, "false", true),
+                new DocumentVO("tableName", "查询数据库表名", TYPE_STRING, null, null, true),
+                new DocumentVO("keyColumnName", "查询数据库key列", TYPE_STRING, null, null, true),
+                new DocumentVO("valueColumnName", "查询数据库value列", TYPE_STRING, null, null, true),
+                new DocumentVO("tableWhere", "查询条件", TYPE_STRING, null, null, true),
 
-                new DocumentVO("visible", "是否渲染", "Boolean", null, "true", false),
-                new DocumentVO("used", "是否作为表单项", "Boolean", null, "true", false)
+                new DocumentVO("visible", "是否渲染", TYPE_BOOLEAN, null, "true", false),
+                new DocumentVO("used", "是否作为表单项", TYPE_BOOLEAN, null, "true", false)
         );
         documentList.addAll(createConfigCommonDocument());
         return documentList;
@@ -165,10 +167,10 @@ public class DbGeneratorDocumentCreator {
 
     private static List<DocumentVO> createConfigCommonDocument() {
         return Lists.newArrayList(
-                new DocumentVO("columnName", "数据库列名称", "String", null, null, false),
-                new DocumentVO("javaType", "Java类型（限定名）", "String", null, null, false),
-                new DocumentVO("simpleJavaType", "Java类型（简称）", "String", null, null, false),
-                new DocumentVO("javaProperty", "java属性名", "String", null, null, false)
+                new DocumentVO("columnName", "数据库列名称", TYPE_STRING, null, null, false),
+                new DocumentVO("javaType", "Java类型（限定名）", TYPE_STRING, null, null, false),
+                new DocumentVO("simpleJavaType", "Java类型（简称）", TYPE_STRING, null, null, false),
+                new DocumentVO("javaProperty", "java属性名", TYPE_STRING, null, null, false)
         );
     }
 

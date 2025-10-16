@@ -2,6 +2,7 @@ package com.smart.framework.tool.database.pojo.bo;
 
 import com.smart.framework.commons.core.utils.StringUtils;
 import com.smart.framework.tool.database.pojo.dbo.TableViewDO;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
  */
 @Getter
 @ToString
+@EqualsAndHashCode(callSuper = true)
 public class TableViewBO extends TableViewDO {
 
     private String className;
