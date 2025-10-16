@@ -65,10 +65,10 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
                 .authenticationProvider(this.getRestAuthenticationProvider())
                 // 添加登录 登出过滤器
                 .addFilterAfter(this.createJwtFilterChainProxy(builder), BasicAuthenticationFilter.class)
-                .addFilterBefore(this.postProcess(new JwtRefreshTokenLoginFilter(authProperties.getRefreshTokenUrl())), SmartAuthenticationFilter.class);
+                .addFilterAfter(this.postProcess(new JwtRefreshTokenLoginFilter(authProperties.getRefreshTokenUrl())), ExceptionTranslationFilter.class);
         if (Boolean.TRUE.equals(this.serviceProvider.jwtAuth)) {
             // 添加认证过滤器
-            builder.addFilterAfter(this.postProcess(new SmartAuthenticationFilter(authProperties.getIgnores(), authProperties.getDevelopment())), ExceptionTranslationFilter.class);
+            builder.addFilterAfter(this.postProcess(new SmartAuthenticationFilter(authProperties.getIgnores(), authProperties.getDevelopment())), JwtRefreshTokenLoginFilter.class);
         }
     }
 
