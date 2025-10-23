@@ -68,6 +68,12 @@ public interface FeignSmartFileApi {
     @PostMapping(value = SmartFileApiUrlConstants.SAVE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     FileHandlerResult save(RemoteFileSaveParameter parameter);
 
+    /**
+     * 列表文件地址
+     *
+     * @param idList 文件ID列表
+     * @return 文件地址列表
+     */
     @PostMapping(SmartFileApiUrlConstants.LIST_ADDRESS)
     List<String> listAddress(List<Long> idList);
 

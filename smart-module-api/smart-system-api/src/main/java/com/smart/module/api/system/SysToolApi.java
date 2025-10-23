@@ -106,6 +106,13 @@ public interface SysToolApi {
         return this.saveChangeLog(remoteChangeLogSaveParameter);
     }
 
+    /**
+     * 确定操作类型
+     * @param beforeData 原数据
+     * @param afterData 修改后的数据
+     * @param operateType 操作类型
+     * @return 操作类型
+     */
     private SmartChangeLogEnum determineOperateType(Object beforeData, Object afterData, SmartChangeLogEnum operateType) {
         if (operateType != null) {
             return operateType;
@@ -119,6 +126,16 @@ public interface SysToolApi {
         return SmartChangeLogEnum.UPDATE;
     }
 
+    /**
+     * 构建修改记录详情列表
+     * @param beforeData 原数据
+     * @param afterData 修改后的数据
+     * @param clazz 类型
+     * @param fieldList 保存的字段列表，null则保存所有
+     * @param excludeList 排除的字段列表
+     * @param ignoreAfterNull 是否忽略修改为null
+     * @return 修改记录详情列表
+     */
     private List<RemoteChangeLogSaveParameter.Detail> buildDetailList(
             Object beforeData, Object afterData, Class<?> clazz,
             Set<String> fieldList, Set<String> excludeList, boolean ignoreAfterNull) {

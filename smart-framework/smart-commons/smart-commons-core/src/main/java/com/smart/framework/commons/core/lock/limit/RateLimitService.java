@@ -16,6 +16,7 @@ public interface RateLimitService {
      * 判断是否限流
      * @param key 限流的key
      * @param limit 每秒访问次数
+     * @param unit 时间单位
      * @return true：未限制，false限制
      */
     boolean acquire(@NonNull String key, long limit, @NonNull ChronoUnit unit);

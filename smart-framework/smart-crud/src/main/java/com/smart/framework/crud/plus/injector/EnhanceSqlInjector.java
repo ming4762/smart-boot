@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.core.injector.methods.*;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.toolkit.GlobalConfigUtils;
 import com.smart.framework.crud.plus.injector.methods.SmartDelete;
-import com.smart.framework.crud.plus.injector.methods.SmartDeleteBatchByIds;
 import com.smart.framework.crud.plus.injector.methods.SmartDeleteById;
 import com.smart.framework.crud.plus.injector.methods.SmartDeleteByIds;
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +45,6 @@ public class EnhanceSqlInjector extends AbstractSqlInjector {
                 .add(new SelectList());
         if (tableInfo.havePK()) {
             builder.add(new SmartDeleteById())
-                    .add(new SmartDeleteBatchByIds())
                     .add(new SmartDeleteByIds())
                     .add(new UpdateById())
                     .add(new SelectById())

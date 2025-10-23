@@ -17,6 +17,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 public class AuthAkSkCreateTokenDTO implements Serializable {
 
     @NonNull

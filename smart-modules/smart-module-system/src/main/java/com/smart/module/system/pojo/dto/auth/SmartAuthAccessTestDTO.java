@@ -3,6 +3,7 @@ package com.smart.module.system.pojo.dto.auth;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serializable;
 
@@ -14,6 +15,7 @@ import java.io.Serializable;
  */
 @Getter
 @Setter
+@ToString
 public class SmartAuthAccessTestDTO implements Serializable {
 
     private String queryParameter;

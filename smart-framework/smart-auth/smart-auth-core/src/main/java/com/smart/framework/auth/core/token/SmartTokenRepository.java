@@ -47,6 +47,7 @@ public interface SmartTokenRepository {
      * 设置用户缓存数据
      * @param attributeName 属性名称
      * @param attributeValue 属性值
+     * @return 是否设置成功
      */
     boolean setAttribute(String attributeName, Object attributeValue);
 

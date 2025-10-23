@@ -32,7 +32,9 @@ public final class DateUtils {
 
     public static final Pattern YY_M_D = Pattern.compile("^\\d{2}-(0?[1-9]|1[0-2])-(0?[1-9]|[12]\\d|3[01]).*");
 
-    // 时间匹配
+    /**
+     * 时间匹配
+     */
     public static final Pattern HH = Pattern.compile("^\\d{4}-\\d{2}-\\d{2}.*");
 
     public static final Pattern HH_MM = Pattern.compile(".* \\d{2}:\\d{2}");
@@ -41,7 +43,9 @@ public final class DateUtils {
 
     public static final Pattern HH_MM_SS_SSS = Pattern.compile(".* \\d{2}:\\d{2}:\\d{2}:\\d{1,3}");
 
-    // ISO instant 格式
+    /**
+     * ISO instant 格式
+     */
     public static final Pattern YYYY_MM_DD_HH_MM_SS_SSS_Z = Pattern.compile("^(?:19|20)\\d{2}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])T([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)(\\.\\d{1,3})?Z$");
 
     private static final DateTimeFormatter ISO_INSTANT_DATE_TIME_FORMATTER = DateTimeFormatter.ISO_INSTANT;

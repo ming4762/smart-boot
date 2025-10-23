@@ -34,12 +34,18 @@ public class IpUtils {
      * 注意：这只是偏好，不作为必须条件。
      */
     private static final List<String> PREFERRED_IF_PREFIX = List.of(
-            "en",   // macOS / some Linux
-            "eth",  // Linux
-            "enp",  // new Linux naming
-            "ens",  // another Linux
-            "wlan", // Windows/Linux wifi
-            "wl"    // some wifi names
+            // macOS / some Linux
+            "en",
+            // Linux
+            "eth",
+            // new Linux naming
+            "enp",
+            // another Linux
+            "ens",
+            // Windows/Linux wifi
+            "wlan",
+            // some wifi names
+            "wl"
     );
 
     private IpUtils() {

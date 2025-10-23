@@ -25,6 +25,7 @@ public interface SysUserAccountService extends BaseService<SysUserAccountPO> {
 
     /**
      * 批量创建账号
+     * @param tenantId 租户ID
      * @param userIdList 用户ID列表
      * @return 是否创建成功
      */

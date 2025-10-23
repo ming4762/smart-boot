@@ -16,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 public class DbGenerateMapperBySqlTemplateVO implements Serializable {
 
     private String packageName;

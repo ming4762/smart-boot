@@ -4,6 +4,7 @@ import com.smart.module.api.system.dto.SysTenantDTO;
 import com.smart.module.system.inject.SysTenantInject;
 import com.smart.module.system.model.SysParameterTenantPO;
 import lombok.Getter;
+import lombok.ToString;
 
 /**
  *
@@ -12,6 +13,7 @@ import lombok.Getter;
  * @since 5.0.0
  */
 @Getter
+@ToString(callSuper = true)
 public class SysParameterTenantListVO extends SysParameterTenantPO implements SysTenantInject {
 
     private SysTenantDTO tenant;
