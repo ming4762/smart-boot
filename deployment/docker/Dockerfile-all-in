@@ -4,10 +4,12 @@ FROM maven:3.9.9-eclipse-temurin-21 AS builder
 WORKDIR /build
 
 # 声明必传参数
+ARG ROOT_MODULE
 ARG MODULE
 ARG PROFILE
 
 # 必传检查
+RUN if [ -z "$ROOT_MODULE" ]; then echo "Error: ROOT_MODULE argument is required" && exit 1; fi
 RUN if [ -z "$MODULE" ]; then echo "Error: MODULE argument is required" && exit 1; fi
 RUN if [ -z "$PROFILE" ]; then echo "Error: PROFILE argument is required" && exit 1; fi
 
@@ -15,8 +17,8 @@ RUN if [ -z "$PROFILE" ]; then echo "Error: PROFILE argument is required" && exi
 COPY . /build
 
 # ---- 构建指定模块及依赖 ----
-RUN mvn -B clean package -pl smart-services/${MODULE} -am -P${PROFILE} -Dmaven.test.skip=true -Dautoconfig.skip \
-    && cp smart-services/${MODULE}/target/${MODULE}.jar /build/app.jar
+RUN mvn -B clean package -pl ${ROOT_MODULE}/${MODULE} -am -P${PROFILE} -Dmaven.test.skip=true -Dautoconfig.skip \
+    && cp ${ROOT_MODULE}/${MODULE}/target/${MODULE}.jar /build/app.jar
 
 # ---- 第二阶段：运行 ----
 FROM openjdk:21-oracle
