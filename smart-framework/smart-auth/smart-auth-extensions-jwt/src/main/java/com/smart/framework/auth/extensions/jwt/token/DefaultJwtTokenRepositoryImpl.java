@@ -17,6 +17,7 @@ import com.smart.framework.commons.core.i18n.I18nUtils;
 import com.smart.framework.commons.core.utils.BeanUtils;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.util.CollectionUtils;
 
@@ -33,6 +34,7 @@ import java.util.stream.Stream;
  * @since 5.0.0
  */
 @RequiredArgsConstructor
+@Slf4j
 public class DefaultJwtTokenRepositoryImpl implements JwtTokenRepository {
 
     private static final String JWT_PERMISSION_KEY = "permissions";
@@ -127,6 +129,11 @@ public class DefaultJwtTokenRepositoryImpl implements JwtTokenRepository {
     public String applyToken(String refreshToken) {
         // 解析refresh token
         RestUserDetails userDetails = this.jwtResolver.resolver(refreshToken);
+        if (userDetails == null) {
+            // 刷新token已过期
+            log.warn("Refresh token expired, refreshToken: {}", refreshToken);
+            throw new CredentialsExpiredException(I18nUtils.get(AuthI18nMessage.ERROR_TOKEN_EXPIRE));
+        }
         // 获取缓存的用户数据
         String refreshTokenKey = this.getRefreshTokenKey(userDetails.getUsername(), userDetails.getUserTenant().getTenantId(), refreshToken);
         Map<String, Object> cachedData = this.authCache.get(refreshTokenKey);
