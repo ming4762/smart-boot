@@ -11,7 +11,11 @@ public enum ButtonListEnum {
     SEARCH,
     RESET,
     ADD,
+    /**
+     * EXCEL导入/导出
+     */
     EXCEL_IMPORT,
+    EXCEL_EXPORT,
     DOWNLOAD,
     DOWNLOAD_ALL,
     COLUMN_SETTING,
@@ -26,4 +30,8 @@ public enum ButtonListEnum {
     REFRESH,
     SHOW_SEARCH,
     SIZE_SETTING,
+    /**
+     * 打印
+     */
+    PRINT,
 }
