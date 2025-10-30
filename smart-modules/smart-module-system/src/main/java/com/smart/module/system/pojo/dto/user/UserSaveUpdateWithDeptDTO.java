@@ -49,6 +49,11 @@ public class UserSaveUpdateWithDeptDTO implements Serializable {
      */
     private String mobile;
 
+     /**
+     * 时区
+     */
+    private String timezone;
+
     /**
      * 序号
      */

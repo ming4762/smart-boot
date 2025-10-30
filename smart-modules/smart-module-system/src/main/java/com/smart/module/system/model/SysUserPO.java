@@ -60,6 +60,11 @@ public class SysUserPO extends BaseModelDeleteUserTime implements BaseUser {
      */
     private String mobile;
 
+     /**
+     * 用户时区
+     */
+    private String timezone;
+
 
     /**
      * 是否系统内置

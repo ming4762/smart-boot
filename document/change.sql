@@ -38,3 +38,8 @@ create index idx_sys_parameter_tenant_tenant_id
 -- 删除sys_parameter的parameter字段，改为从sys_parameter_tenant获取
 alter table sys_parameter
     drop column parameter;
+
+-- 2025-10-30
+-- 用户表添加时区字段
+alter table sys_user
+    add timezone varchar(20) null comment '用户时区' after mobile;

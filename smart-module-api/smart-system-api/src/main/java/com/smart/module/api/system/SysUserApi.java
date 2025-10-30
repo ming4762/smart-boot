@@ -7,6 +7,7 @@ import com.smart.module.api.system.dto.UserAccountLockDTO;
 import com.smart.module.api.system.parameter.RemoteSysUserListParameter;
 import com.smart.module.api.system.parameter.SysUserDeptParameter;
 import org.springframework.lang.Nullable;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -25,11 +26,37 @@ public interface SysUserApi {
     List<SysUserDTO> listUserByUsername(List<String> usernameList);
 
     /**
+     * 通过用户名查询用户
+     * @param username 用户名
+     * @return 用户
+     */
+    default SysUserDTO getUserByUsername(String username) {
+        List<SysUserDTO> userList = listUserByUsername(List.of(username));
+        if (CollectionUtils.isEmpty(userList)) {
+            return null;
+        }
+        return userList.getFirst();
+    }
+
+    /**
      * 通过ID查询用户
      * @param userIdList 用户ID列表
      * @return List
      */
     List<SysUserDTO> listUserById(List<Long> userIdList);
+
+    /**
+     * 通过ID查询用户
+     * @param userId 用户ID
+     * @return 用户
+     */
+    default SysUserDTO getUserById(Long userId) {
+        List<SysUserDTO> userList = listUserById(List.of(userId));
+        if (CollectionUtils.isEmpty(userList)) {
+            return null;
+        }
+        return userList.getFirst();
+    }
 
     /**
      * 锁定账户
