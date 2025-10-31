@@ -19,7 +19,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 
 import java.util.*;
 
@@ -59,7 +59,7 @@ public class SmartAuthWechatAppConfigurer<H extends HttpSecurityBuilder<H>> exte
     private FilterChainProxy createLoginFilter() {
         List<SecurityFilterChain> chains = new ArrayList<>(1);
         chains.add(
-                new DefaultSecurityFilterChain(new AntPathRequestMatcher(this.serviceProvider.loginUrl), this.createWechatAppLoginFilter())
+                new DefaultSecurityFilterChain(PathPatternRequestMatcher.withDefaults().matcher(this.serviceProvider.loginUrl), this.createWechatAppLoginFilter())
         );
         return new FilterChainProxy(chains);
     }
