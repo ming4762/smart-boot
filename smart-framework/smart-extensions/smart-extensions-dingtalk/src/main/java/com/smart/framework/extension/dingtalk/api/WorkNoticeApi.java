@@ -11,7 +11,6 @@ import com.smart.framework.commons.core.utils.JsonUtils;
 import com.smart.framework.commons.validate.utils.ValidatorUtils;
 import com.smart.framework.extension.dingtalk.constants.url.DingTalkWorkNoticeApiUrlEnum;
 import com.smart.framework.extension.dingtalk.pojo.dto.WorkNoticeAsyncSendResult;
-import com.smart.framework.extension.dingtalk.pojo.parameter.AppKeySecretParameter;
 import com.smart.framework.extension.dingtalk.pojo.parameter.WorkNoticeAsyncSendParameter;
 import com.smart.framework.extension.dingtalk.pojo.parameter.message.*;
 import com.taobao.api.ApiException;
@@ -39,7 +38,7 @@ public class WorkNoticeApi extends AbstractDingtalkApi {
      * @return 工作通知发送结果
      */
     @SneakyThrows(ApiException.class)
-    public WorkNoticeAsyncSendResult syncSend(WorkNoticeAsyncSendParameter parameter, AppKeySecretParameter accessTokenParameter) {
+    public WorkNoticeAsyncSendResult syncSend(WorkNoticeAsyncSendParameter parameter) {
         // 校验参数
         ValidatorUtils.validate(parameter);
         // 获取token
@@ -106,7 +105,7 @@ public class WorkNoticeApi extends AbstractDingtalkApi {
 
         request.setMsg(message);
 
-        OapiMessageCorpconversationAsyncsendV2Response response = client.execute(request, this.accessSecureApi.getInnerAppAccessToken(accessTokenParameter).getAccessToken());
+        OapiMessageCorpconversationAsyncsendV2Response response = client.execute(request, this.accessSecureApi.getInnerAppAccessToken());
         this.validateResponse(response);
         log.info("发送钉钉工作通知成功，响应信息：{}", response.getBody());
         return JsonUtils.parse(response.getBody(), WorkNoticeAsyncSendResult.class);
@@ -119,12 +118,12 @@ public class WorkNoticeApi extends AbstractDingtalkApi {
      * @return 是否撤回成功
      */
     @SneakyThrows(ApiException.class)
-    public boolean recall(Long agentId, Long taskId, AppKeySecretParameter accessTokenParameter) {
+    public boolean recall(Long agentId, Long taskId) {
         DingTalkClient client = this.getOldClient(DingTalkWorkNoticeApiUrlEnum.RECALL);
         OapiMessageCorpconversationRecallRequest request = new OapiMessageCorpconversationRecallRequest();
         request.setAgentId(agentId);
         request.setMsgTaskId(taskId);
-        OapiMessageCorpconversationRecallResponse response = client.execute(request, this.accessSecureApi.getInnerAppAccessToken(accessTokenParameter).getAccessToken());
+        OapiMessageCorpconversationRecallResponse response = client.execute(request, this.accessSecureApi.getInnerAppAccessToken());
         this.validateResponse(response);
 
         log.info("撤回钉钉工作通知成功，agentId={}, taskId={}，响应信息：{}", agentId, taskId, response.getBody());
@@ -135,16 +134,15 @@ public class WorkNoticeApi extends AbstractDingtalkApi {
      * 获取工作通知发送结果
      * @param agentId 发送消息时使用的微应用的AgentID
      * @param taskId 发送消息时钉钉返回的任务ID
-     * @param accessTokenParameter 获取access token参数
      * @return 发送结果
      */
     @SneakyThrows(ApiException.class)
-    public OapiMessageCorpconversationGetsendresultResponse.AsyncSendResult getSendResult(Long agentId, Long taskId, AppKeySecretParameter accessTokenParameter) {
+    public OapiMessageCorpconversationGetsendresultResponse.AsyncSendResult getSendResult(Long agentId, Long taskId) {
         DingTalkClient client = this.getOldClient(DingTalkWorkNoticeApiUrlEnum.GET_SEND_RESULT);
         OapiMessageCorpconversationGetsendresultRequest request = new OapiMessageCorpconversationGetsendresultRequest();
         request.setAgentId(agentId);
         request.setTaskId(taskId);
-        OapiMessageCorpconversationGetsendresultResponse response = client.execute(request, this.accessSecureApi.getInnerAppAccessToken(accessTokenParameter).getAccessToken());
+        OapiMessageCorpconversationGetsendresultResponse response = client.execute(request, this.accessSecureApi.getInnerAppAccessToken());
         this.validateResponse(response);
 
         return response.getSendResult();

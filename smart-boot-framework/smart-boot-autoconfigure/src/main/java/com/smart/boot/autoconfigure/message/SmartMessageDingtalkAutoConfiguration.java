@@ -1,7 +1,6 @@
 package com.smart.boot.autoconfigure.message;
 
-import com.smart.framework.extension.dingtalk.api.UserApi;
-import com.smart.framework.extension.dingtalk.api.WorkNoticeApi;
+import com.smart.framework.extension.dingtalk.DingtalkApi;
 import com.smart.framework.message.dingtalk.sender.SmartDingtalkWorkNoticeSender;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
@@ -20,7 +19,7 @@ public class SmartMessageDingtalkAutoConfiguration {
      * @return SmartDingdingWorkNoticeSender
      */
     @Bean
-    public SmartDingtalkWorkNoticeSender dingdingWorkNoticeSender(WorkNoticeApi workNoticeApi, UserApi userApi) {
-        return new SmartDingtalkWorkNoticeSender(workNoticeApi, userApi);
+    public SmartDingtalkWorkNoticeSender dingdingWorkNoticeSender(DingtalkApi dingtalkApi) {
+        return new SmartDingtalkWorkNoticeSender(dingtalkApi);
     }
 }

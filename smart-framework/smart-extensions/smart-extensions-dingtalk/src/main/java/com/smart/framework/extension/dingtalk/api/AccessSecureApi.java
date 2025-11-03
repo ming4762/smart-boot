@@ -3,16 +3,16 @@ package com.smart.framework.extension.dingtalk.api;
 import com.aliyun.dingtalkoauth2_1_0.Client;
 import com.aliyun.dingtalkoauth2_1_0.models.*;
 import com.aliyun.tea.TeaException;
-import com.smart.framework.commons.core.cache.CacheService;
+import com.smart.framework.extension.dingtalk.client.SmartDingtalkClient;
+import com.smart.framework.extension.dingtalk.client.SmartDingtalkClientHolder;
+import com.smart.framework.extension.dingtalk.constants.DingtalkClientTypeEnum;
 import com.smart.framework.extension.dingtalk.constants.DingtalkGrantTypeEnum;
 import com.smart.framework.extension.dingtalk.exception.DingtalkApiException;
-import com.smart.framework.extension.dingtalk.pojo.dto.GetAccessTokenResult;
-import com.smart.framework.extension.dingtalk.pojo.parameter.AppKeySecretParameter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
-import java.time.Duration;
-import java.time.ZonedDateTime;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
 
 /**
  * 认证服务类
@@ -23,57 +23,63 @@ import java.time.ZonedDateTime;
 @RequiredArgsConstructor
 public class AccessSecureApi extends AbstractDingtalkApi {
 
-    /**
-     * token过期时间减200S，防止token过期
-     */
-    private static final Duration ACCESS_TOKEN_EXPIRES_DURATION = Duration.ofSeconds(200);
-    private static final String KEY_PREFIX = "dingtalk_access_token_";
-
-    private final CacheService cacheService;
+    private final SmartDingtalkClientHolder smartDingtalkClientHolder;
 
     /**
      * 获取应用内部access token
-     * @param parameter 参数
      * @return token
      */
     @SneakyThrows(Exception.class)
-    public GetAccessTokenResult getInnerAppAccessToken(AppKeySecretParameter parameter) {
-        GetAccessTokenResult accessTokenResult = this.cacheService.get(this.getCacheKey(parameter.getAppKey()));
-        if (accessTokenResult != null) {
-            return accessTokenResult;
+    public String getInnerAppAccessToken() {
+        SmartDingtalkClient smartDingtalkClient = this.smartDingtalkClientHolder.getClient();
+        if (!DingtalkClientTypeEnum.INNER.equals(smartDingtalkClient.getClientType())) {
+            throw new DingtalkApiException("当前正在使用的钉钉应用[{}]不是企业内部应用", smartDingtalkClient.getClientId());
         }
-        Client client = this.createAuthClient();
-        // 请求获取access token
-        GetAccessTokenRequest accessTokenRequest = new GetAccessTokenRequest()
-                .setAppKey(parameter.getAppKey())
-                .setAppSecret(parameter.getAppSecret());
+        if (!smartDingtalkClient.isAccessTokenExpired() && smartDingtalkClient.getAccessToken() != null) {
+            return smartDingtalkClient.getAccessToken();
+        }
 
-        GetAccessTokenResponse response = client.getAccessToken(accessTokenRequest);
-        GetAccessTokenResponseBody body = response.getBody();
+        Lock lock = smartDingtalkClient.getAccessTokenLock();
+        boolean locked = false;
+        try {
+            do {
+                locked = lock.tryLock(100, TimeUnit.MILLISECONDS);
+                if (!smartDingtalkClient.isAccessTokenExpired() && smartDingtalkClient.getAccessToken() != null) {
+                    return smartDingtalkClient.getAccessToken();
+                }
+            } while (!locked);
+            // 执行API调用
+            Client client = this.createAuthClient();
+            // 请求获取access token
+            GetAccessTokenRequest accessTokenRequest = new GetAccessTokenRequest()
+                    .setAppKey(smartDingtalkClient.getClientId())
+                    .setAppSecret(smartDingtalkClient.getClientSecret());
 
-        // 计算有效期
-        Duration duration = Duration.ofSeconds(body.getExpireIn()).minus(ACCESS_TOKEN_EXPIRES_DURATION);
-        ZonedDateTime expireAt = ZonedDateTime.now().plus(duration);
-
-        GetAccessTokenResult result = new GetAccessTokenResult(body.accessToken, expireAt);
-        // 设置缓存
-        this.cacheService.put(this.getCacheKey(parameter.getAppKey()), result, duration);
-
-        return result;
+            GetAccessTokenResponse response = client.getAccessToken(accessTokenRequest);
+            GetAccessTokenResponseBody body = response.getBody();
+            // 更新应用token
+            smartDingtalkClient.updateAccessToken(body.accessToken, body.expireIn);
+            return body.accessToken;
+        } finally {
+            if (locked) {
+                lock.unlock();
+            }
+        }
     }
 
     /**
      * 通过授权码获取用户的access token
      * @param authCode 授权码
-     * @param parameter 参数
      * @return token
      */
     @SneakyThrows(Exception.class)
-    public GetUserTokenResponseBody getUserAccessTokenByAuthCode(String authCode, AppKeySecretParameter parameter) {
+    public GetUserTokenResponseBody getUserAccessTokenByAuthCode(String authCode) {
+        SmartDingtalkClient smartDingtalkClient = this.smartDingtalkClientHolder.getClient();
+
         Client client = this.createAuthClient();
         GetUserTokenRequest getUserTokenRequest = new GetUserTokenRequest()
-                .setClientId(parameter.getAppKey())
-                .setClientSecret(parameter.getAppSecret())
+                .setClientId(smartDingtalkClient.getClientId())
+                .setClientSecret(smartDingtalkClient.getClientSecret())
                 .setCode(authCode)
                 .setGrantType(DingtalkGrantTypeEnum.AUTHORIZATION_CODE.getGrantType());
         try {
@@ -87,15 +93,15 @@ public class AccessSecureApi extends AbstractDingtalkApi {
     /**
      * 通过刷新token获取用户的access token
      * @param refreshToken 刷新token
-     * @param parameter 参数
      * @return token
      */
     @SneakyThrows(Exception.class)
-    public GetUserTokenResponseBody getUserAccessTokenByRefreshToken(String refreshToken, AppKeySecretParameter parameter) {
+    public GetUserTokenResponseBody getUserAccessTokenByRefreshToken(String refreshToken) {
+        SmartDingtalkClient smartDingtalkClient = this.smartDingtalkClientHolder.getClient();
         Client client = this.createAuthClient();
         GetUserTokenRequest getUserTokenRequest = new GetUserTokenRequest()
-                .setClientId(parameter.getAppKey())
-                .setClientSecret(parameter.getAppSecret())
+                .setClientId(smartDingtalkClient.getClientId())
+                .setClientSecret(smartDingtalkClient.getClientSecret())
                 .setRefreshToken(refreshToken)
                 .setGrantType(DingtalkGrantTypeEnum.REFRESH_TOKEN.getGrantType());
         try {
@@ -104,9 +110,5 @@ public class AccessSecureApi extends AbstractDingtalkApi {
         } catch (TeaException e) {
             throw new DingtalkApiException(e.getMessage(), e);
         }
-    }
-
-    private String getCacheKey(String key) {
-        return KEY_PREFIX + key;
     }
 }

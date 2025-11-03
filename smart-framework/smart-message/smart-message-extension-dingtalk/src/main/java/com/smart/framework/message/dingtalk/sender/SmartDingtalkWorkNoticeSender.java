@@ -1,11 +1,9 @@
 package com.smart.framework.message.dingtalk.sender;
 
 import com.smart.framework.commons.core.utils.JsonUtils;
-import com.smart.framework.extension.dingtalk.api.UserApi;
-import com.smart.framework.extension.dingtalk.api.WorkNoticeApi;
+import com.smart.framework.extension.dingtalk.DingtalkApi;
 import com.smart.framework.extension.dingtalk.constants.DingtalkMessageTypeEnum;
 import com.smart.framework.extension.dingtalk.pojo.dto.WorkNoticeAsyncSendResult;
-import com.smart.framework.extension.dingtalk.pojo.parameter.AppKeySecretParameter;
 import com.smart.framework.extension.dingtalk.pojo.parameter.WorkNoticeAsyncSendParameter;
 import com.smart.framework.extension.dingtalk.pojo.parameter.message.MarkdownMessageParameter;
 import com.smart.framework.extension.dingtalk.pojo.parameter.message.TextMessageParameter;
@@ -37,8 +35,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SmartDingtalkWorkNoticeSender implements SmartMessageSender {
 
-    private final WorkNoticeApi workNoticeApi;
-    private final UserApi userApi;
+    private final DingtalkApi dingtalkApi;
 
     /**
      * 获取支持的一级通道信息
@@ -73,7 +70,9 @@ public class SmartDingtalkWorkNoticeSender implements SmartMessageSender {
     @Override
     public MessageSendResult send(@Nullable String channelProperties, List<SmartMessageToUserDTO> toUserList, RemoteMessageSendParameter parameter) {
         SmartMessageDingtalkChannelProperties properties = JsonUtils.parse(channelProperties, SmartMessageDingtalkChannelProperties.class);
-        AppKeySecretParameter tokenParameter = new AppKeySecretParameter(properties.getAppKey(), properties.getAppSecret());
+        // 切换到指定应用
+        dingtalkApi.switchover(properties.getAppKey());
+
         String noMobileUsers = toUserList.stream()
                 .filter(item -> !StringUtils.hasText(item.getMobile()))
                 .map(SmartMessageToUserDTO::getFullName)
@@ -83,7 +82,7 @@ public class SmartDingtalkWorkNoticeSender implements SmartMessageSender {
         }
         List<String> userIdList = toUserList.stream()
                 .filter(item -> StringUtils.hasText(item.getMobile()))
-                .map(item -> userApi.getByMobile(item.getMobile(), tokenParameter).getUserId())
+                .map(item -> dingtalkApi.userApi().getByMobile(item.getMobile()).getUserId())
                 .toList();
         if (CollectionUtils.isEmpty(userIdList)) {
             log.warn("没有需要发送的用户");
@@ -100,7 +99,7 @@ public class SmartDingtalkWorkNoticeSender implements SmartMessageSender {
                                 : new TextMessageParameter(parameter.getContent())
                         )
                 .build();
-        WorkNoticeAsyncSendResult result = this.workNoticeApi.syncSend(sendParameter, tokenParameter);
+        WorkNoticeAsyncSendResult result = this.dingtalkApi.workNoticeApi().syncSend(sendParameter);
         DingtalkWorkNoticeSendResult sendResult = new DingtalkWorkNoticeSendResult();
         sendResult.setTaskId(result.getTaskId());
         return sendResult;

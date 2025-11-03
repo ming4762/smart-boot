@@ -50,7 +50,7 @@
         <aliyun.oss.version>3.18.3</aliyun.oss.version>
         <knife4j-openapi3.version>4.5.0</knife4j-openapi3.version>
         <qiniu.version>7.19.0</qiniu.version>
-        <wx-java.version>4.7.7-20250808.182223</wx-java.version>
+        <wx-java.version>4.7.0</wx-java.version>
         <aliyun.dysmsapi.version>3.1.0</aliyun.dysmsapi.version>
         <tencentcloud.sdk.version>3.1.1281</tencentcloud.sdk.version>
         <tianai-captcha.version>1.5.2</tianai-captcha.version>

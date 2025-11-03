@@ -8,7 +8,6 @@ import com.dingtalk.api.request.OapiV2UserGetbymobileRequest;
 import com.dingtalk.api.response.OapiV2UserGetbymobileResponse;
 import com.smart.framework.extension.dingtalk.constants.url.DingTalkUserApiUrlEnum;
 import com.smart.framework.extension.dingtalk.pojo.dto.GetUserByMobileResult;
-import com.smart.framework.extension.dingtalk.pojo.parameter.AppKeySecretParameter;
 import com.taobao.api.ApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -38,11 +37,11 @@ public class UserApi extends AbstractDingtalkApi {
      * @return 用户信息
      */
     @SneakyThrows(ApiException.class)
-    public GetUserByMobileResult getByMobile(String mobile, AppKeySecretParameter accessTokenParameter) {
+    public GetUserByMobileResult getByMobile(String mobile) {
         Assert.notNull(mobile, "mobile must not be null");
         OapiV2UserGetbymobileRequest request = new OapiV2UserGetbymobileRequest();
         request.setMobile(mobile);
-        OapiV2UserGetbymobileResponse response = this.getOldClient(DingTalkUserApiUrlEnum.GET_BY_MOBILE).execute(request, this.accessSecureApi.getInnerAppAccessToken(accessTokenParameter).getAccessToken());
+        OapiV2UserGetbymobileResponse response = this.getOldClient(DingTalkUserApiUrlEnum.GET_BY_MOBILE).execute(request, this.accessSecureApi.getInnerAppAccessToken());
         this.validateResponse(response);
         GetUserByMobileResult result = new GetUserByMobileResult(response.getResult().getUserid());
         result.setRequestId(response.getRequestId());
@@ -52,15 +51,14 @@ public class UserApi extends AbstractDingtalkApi {
     /**
      * 批量通过手机号获取用户信息
      * @param mobiles 手机号
-     * @param accessTokenParameter token信息
      * @return 用户信息
      */
-    public Map<String, GetUserByMobileResult> batchGetByMobile(List<String> mobiles, AppKeySecretParameter accessTokenParameter) {
+    public Map<String, GetUserByMobileResult> batchGetByMobile(List<String> mobiles) {
         if (CollectionUtils.isEmpty(mobiles)) {
             return Map.of();
         }
         Map<String, GetUserByMobileResult> result = HashMap.newHashMap(mobiles.size());
-        mobiles.forEach(mobile -> result.put(mobile, this.getByMobile(mobile, accessTokenParameter)));
+        mobiles.forEach(mobile -> result.put(mobile, this.getByMobile(mobile)));
         return result;
     }
 
