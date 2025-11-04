@@ -2,6 +2,8 @@ package com.smart.module.message.api.local;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.smart.framework.commons.core.exception.SystemException;
+import com.smart.framework.crud.plus.tenant.SmartTenantControl;
+import com.smart.framework.crud.plus.tenant.SmartTenantIgnoreData;
 import com.smart.framework.message.core.constants.SmartMessageChannelType1Enum;
 import com.smart.framework.message.core.constants.SmartMessageChannelType2Enum;
 import com.smart.framework.message.core.event.SmartMessageSendEvent;
@@ -23,6 +25,7 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.mapping.SqlCommandType;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Primary;
@@ -96,40 +99,43 @@ public class LocalSmartMessageApi implements SmartMessageApi {
         if (CollectionUtils.isEmpty(parameter.getMessageChannelCodeList())) {
             throw new SmartMessageException("未指定发送通道");
         }
-        // 查询消息通道
-        Map<String, SmartMessageChannelPO> messageChannelMap = this.getValidateMessageChannel(new HashSet<>(parameter.getMessageChannelCodeList()));
+        // 忽略租户查询条件
+        try (SmartTenantIgnoreData ignored = SmartTenantControl.ignoreAll(List.of(SqlCommandType.SELECT), null)) {
+           // 查询消息通道
+           Map<String, SmartMessageChannelPO> messageChannelMap = this.getValidateMessageChannel(new HashSet<>(parameter.getMessageChannelCodeList()));
 
-        // 转换模板
-        if (StringUtils.hasText(parameter.getTemplateCode()) && !StringUtils.hasText(parameter.getContent())) {
-            parameter.setContent(this.getTemplateContent(parameter.getTemplateCode(), parameter.getTemplateData()));
-        }
-        // 查询用户信息
-        List<SmartMessageToUserDTO> toUserList = CollectionUtils.isEmpty(parameter.getToUserIds()) ?
-                List.of() :
-                this.sysUserApi.listUserById(new ArrayList<>(parameter.getToUserIds())).stream()
-                        .map(item -> {
-                            SmartMessageToUserDTO dto = new SmartMessageToUserDTO();
-                            BeanUtils.copyProperties(item, dto);
-                            return dto;
-                        }).toList();
+           // 转换模板
+           if (StringUtils.hasText(parameter.getTemplateCode()) && !StringUtils.hasText(parameter.getContent())) {
+               parameter.setContent(this.getTemplateContent(parameter.getTemplateCode(), parameter.getTemplateData()));
+           }
+           // 查询用户信息
+           List<SmartMessageToUserDTO> toUserList = CollectionUtils.isEmpty(parameter.getToUserIds()) ?
+                   List.of() :
+                   this.sysUserApi.listUserById(new ArrayList<>(parameter.getToUserIds())).stream()
+                           .map(item -> {
+                               SmartMessageToUserDTO dto = new SmartMessageToUserDTO();
+                               BeanUtils.copyProperties(item, dto);
+                               return dto;
+                           }).toList();
 
-        List<MessageSendResult> resultList = new ArrayList<>(messageChannelMap.size());
-        messageChannelMap.values().forEach(channel -> {
-            SmartMessageChannelType1Enum channelType1 = channel.getChannelType1();
-            SmartMessageChannelType2Enum channelType2 = channel.getChannelType2();
-            String channelSenderKey = Stream.of(channelType1, channelType2)
-                    .filter(Objects::nonNull)
-                    .map(Enum::name)
-                    .collect(Collectors.joining());
-            SmartMessageSender smartMessageSender = smartMessageSenderMap.get(channelSenderKey);
-            if (smartMessageSender == null) {
-                throw new SmartMessageException("不支持的通道类型：" + channelSenderKey);
-            }
-            MessageSendResult sendResult = smartMessageSender.send(channel.getChannelProperties(), toUserList, parameter);
-            resultList.add(sendResult);
-        });
-        this.applicationContext.publishEvent(new SmartMessageSendEvent(parameter, resultList, this));
-        return resultList;
+           List<MessageSendResult> resultList = new ArrayList<>(messageChannelMap.size());
+           messageChannelMap.values().forEach(channel -> {
+               SmartMessageChannelType1Enum channelType1 = channel.getChannelType1();
+               SmartMessageChannelType2Enum channelType2 = channel.getChannelType2();
+               String channelSenderKey = Stream.of(channelType1, channelType2)
+                       .filter(Objects::nonNull)
+                       .map(Enum::name)
+                       .collect(Collectors.joining());
+               SmartMessageSender smartMessageSender = smartMessageSenderMap.get(channelSenderKey);
+               if (smartMessageSender == null) {
+                   throw new SmartMessageException("不支持的通道类型：" + channelSenderKey);
+               }
+               MessageSendResult sendResult = smartMessageSender.send(channel.getChannelProperties(), toUserList, parameter);
+               resultList.add(sendResult);
+           });
+           this.applicationContext.publishEvent(new SmartMessageSendEvent(parameter, resultList, this));
+           return resultList;
+       }
     }
 
     @SneakyThrows({IOException.class, TemplateException.class})

@@ -88,7 +88,7 @@ public class SmartDingtalkWorkNoticeSender implements SmartMessageSender {
             log.warn("没有需要发送的用户");
             return null;
         }
-        boolean isMarkdown = Boolean.TRUE.equals(parameter.getIsMarkdown());
+        boolean isMarkdown = this.isMarkdown(parameter);
         WorkNoticeAsyncSendParameter sendParameter = WorkNoticeAsyncSendParameter.builder()
                 .agentId(properties.getAgentId())
                 .userIdList(userIdList)

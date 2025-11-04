@@ -6,6 +6,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.beans.FeatureDescriptor;
 import java.lang.reflect.Array;
@@ -25,6 +26,19 @@ public class BeanUtils {
     private static final String CLASS_NAME = "class";
 
     private static final int DEFAULT_MAX_DEPTH = 100;
+
+    private static final List<Class<?>> DEEP_MAP_IGNORE_CLASS_LIST = Arrays.asList(
+            CharSequence.class,
+            Number.class,
+            Date.class,
+            Temporal.class,
+            Enum.class,
+            UUID.class,
+            URI.class,
+            URL.class,
+            Locale.class,
+            MultipartFile.class
+    );
 
     private BeanUtils() {
         throw new IllegalStateException("Utility class");
@@ -104,6 +118,62 @@ public class BeanUtils {
             Map<String, Object> wrapper = new LinkedHashMap<>();
             wrapper.put("value", converted);
             return wrapper;
+        }
+    }
+
+    public static Map<String, Object> flattenBean(Object bean) {
+        if (bean == null) {
+            return Collections.emptyMap();
+        }
+        // 深度转换为嵌套 map
+        Map<String, Object> nestedMap = deepBeanToMap(bean);
+        // 展开嵌套 map
+        Map<String, Object> flatMap = LinkedHashMap.newLinkedHashMap(10);
+        buildFlatMap("", nestedMap, flatMap);
+        return flatMap;
+    }
+
+    private static void buildFlatMap(String prefix, Object current, Map<String, Object> flatMap) {
+        if (current == null) {
+            return;
+        }
+        if (current instanceof Map<?, ?> map) {
+            flattenMap(prefix, map, flatMap);
+            return;
+        }
+        if (current instanceof Collection<?> coll) {
+            flattenIterable(prefix, coll, flatMap);
+            return;
+        }
+        if (current.getClass().isArray()) {
+            flattenArray(prefix, current, flatMap);
+            return;
+        }
+        // 基本类型或简单对象
+        flatMap.put(prefix, current);
+    }
+
+    private static void flattenMap(String prefix, Map<?, ?> map, Map<String, Object> flatMap) {
+        for (Map.Entry<?, ?> entry : map.entrySet()) {
+            String key = entry.getKey() == null ? "null" : entry.getKey().toString();
+            String newKey = prefix.isEmpty() ? key : prefix + "." + key;
+            buildFlatMap(newKey, entry.getValue(), flatMap);
+        }
+    }
+
+    private static void flattenIterable(String prefix, Collection<?> coll, Map<String, Object> flatMap) {
+        int index = 0;
+        for (Object item : coll) {
+            String newKey = prefix + "[" + index++ + "]";
+            buildFlatMap(newKey, item, flatMap);
+        }
+    }
+
+    private static void flattenArray(String prefix, Object array, Map<String, Object> flatMap) {
+        int len = Array.getLength(array);
+        for (int i = 0; i < len; i++) {
+            String newKey = prefix + "." + i;
+            buildFlatMap(newKey, Array.get(array, i), flatMap);
         }
     }
 
@@ -214,28 +284,8 @@ public class BeanUtils {
         if (CharSequence.class.isAssignableFrom(clazz)) {
             return true;
         }
-        if (Number.class.isAssignableFrom(clazz)) {
-            return true;
-        }
-        if (Date.class.isAssignableFrom(clazz)) {
-            return true;
-        }
-        if (Temporal.class.isAssignableFrom(clazz)) {
-            return true;
-        } // java.time.*
-        if (Enum.class.isAssignableFrom(clazz)) {
-            return true;
-        }
-        if (UUID.class.isAssignableFrom(clazz)) {
-            return true;
-        }
-        if (URI.class.isAssignableFrom(clazz)) {
-            return true;
-        }
-        if (URL.class.isAssignableFrom(clazz)) {
-            return true;
-        }
-        if (Locale.class.isAssignableFrom(clazz)) {
+        boolean matched = DEEP_MAP_IGNORE_CLASS_LIST.stream().anyMatch(item -> item.isAssignableFrom(clazz));
+        if (matched) {
             return true;
         }
         return clazz.equals(Class.class);

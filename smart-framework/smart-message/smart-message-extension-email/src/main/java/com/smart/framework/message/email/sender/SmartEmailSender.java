@@ -9,6 +9,7 @@ import com.smart.framework.message.core.service.SmartMessageSender;
 import com.smart.framework.message.email.SmartMessageEmailChannelProperties;
 import com.smart.framework.message.email.dto.EmailMessageSendResult;
 import com.smart.module.api.message.dto.MessageSendResult;
+import com.smart.module.api.message.parameter.RemoteEmailSendParameter;
 import com.smart.module.api.message.parameter.RemoteMessageSendParameter;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -20,9 +21,11 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -69,16 +72,27 @@ public class SmartEmailSender implements SmartMessageSender {
 
         List<String> toList = this.getToList(toUserList, parameter);
 
-        helper.setFrom(parameter.getEmailSendParameter().getFrom());
+        RemoteEmailSendParameter emailSendParameter = parameter.getEmailSendParameter();
+
+        helper.setFrom(emailSendParameter.getFrom());
         helper.setTo(toList.toArray(String[]::new));
         helper.setSubject(parameter.getTitle());
-        helper.setText(parameter.getContent());
+        // TODO: markdown 消息需要特殊处理,markdown转为html
+        helper.setText(parameter.getContent(), this.isHtml(parameter));
         // 设置抄送人
-        if (!CollectionUtils.isEmpty(parameter.getEmailSendParameter().getCcList())) {
-            helper.setCc(parameter.getEmailSendParameter().getCcList().toArray(String[]::new));
+        if (!CollectionUtils.isEmpty(emailSendParameter.getCcList())) {
+            helper.setCc(emailSendParameter.getCcList().toArray(String[]::new));
+        }
+        // 发送附件
+        if (!CollectionUtils.isEmpty(emailSendParameter.getAttachmentList())) {
+            for (MultipartFile attachment : emailSendParameter.getAttachmentList()) {
+                helper.addAttachment(Objects.requireNonNullElse(attachment.getOriginalFilename(), "attachment"), attachment);
+            }
         }
         javaMailSender.send(mimeMessage);
-        return new EmailMessageSendResult();
+        EmailMessageSendResult result = new EmailMessageSendResult();
+        result.setSuccess(true);
+        return result;
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.smart.framework.commons.core.upload;
 
+import com.smart.framework.commons.core.io.NamedInputStreamResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -9,7 +10,9 @@ import java.io.InputStream;
 /**
  * @author zhongming4762
  * 2023/8/10 19:37
+ * @deprecated 请使用 {@link NamedInputStreamResource} 替代
  */
+@Deprecated
 public class UploadInputStreamResource extends InputStreamResource {
 
     private final String filename;

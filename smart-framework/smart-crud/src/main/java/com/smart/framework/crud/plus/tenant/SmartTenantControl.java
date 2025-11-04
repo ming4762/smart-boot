@@ -1,11 +1,10 @@
 package com.smart.framework.crud.plus.tenant;
 
+import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.smart.framework.commons.core.exception.SystemException;
 import com.smart.framework.crud.plus.metadata.SmartTableInfo;
 import com.smart.framework.crud.plus.metadata.TableTenantFieldInfo;
 import com.smart.framework.crud.utils.CrudUtils;
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.springframework.lang.Nullable;
 
@@ -26,6 +25,11 @@ public final class SmartTenantControl {
     }
 
     /**
+     * 忽略所有租户的key
+     */
+    private static final String IGNORE_ALL_KEY = "SMART_TENANT_IGNORE_ALL_KEY";
+
+    /**
      * 忽略租户的信息
      */
     private static final ThreadLocal<Map<String, SmartTenantIgnoreData>> THREAD_IGNORE_LOCAL = ThreadLocal.withInitial(ConcurrentHashMap::new);
@@ -40,8 +44,10 @@ public final class SmartTenantControl {
      * @param ignoreCommandList 忽略的命令
      * @param platformTenantIgnoreCommandList 平台管理租户忽略的命令
      */
-    public static void ignore(String tableName, @Nullable List<SqlCommandType> ignoreCommandList, @Nullable List<SqlCommandType> platformTenantIgnoreCommandList) {
-        THREAD_IGNORE_LOCAL.get().put(tableName, new SmartTenantIgnoreData(tableName, ignoreCommandList, platformTenantIgnoreCommandList));
+    public static SmartTenantIgnoreData ignore(String tableName, @Nullable List<SqlCommandType> ignoreCommandList, @Nullable List<SqlCommandType> platformTenantIgnoreCommandList) {
+        SmartTenantIgnoreData smartTenantIgnoreData = new SmartTenantIgnoreData(tableName, ignoreCommandList, platformTenantIgnoreCommandList);
+        THREAD_IGNORE_LOCAL.get().put(tableName, smartTenantIgnoreData);
+        return smartTenantIgnoreData;
     }
 
     /**
@@ -50,9 +56,18 @@ public final class SmartTenantControl {
      * @param ignoreCommandList 忽略的命令
      * @param platformTenantIgnoreCommandList 平台管理租户忽略的命令
      */
-    public static void ignore(Class<?> tableClass, @Nullable List<SqlCommandType> ignoreCommandList, @Nullable List<SqlCommandType> platformTenantIgnoreCommandList) {
+    public static SmartTenantIgnoreData ignore(Class<?> tableClass, @Nullable List<SqlCommandType> ignoreCommandList, @Nullable List<SqlCommandType> platformTenantIgnoreCommandList) {
         String tableName = CrudUtils.getTableName(tableClass);
-        ignore(tableName, ignoreCommandList, platformTenantIgnoreCommandList);
+        return ignore(tableName, ignoreCommandList, platformTenantIgnoreCommandList);
+    }
+
+    /**
+     * 忽略所有租户的信息
+     * @param ignoreCommandList 忽略的命令
+     * @param platformTenantIgnoreCommandList 平台管理租户忽略的命令
+     */
+    public static SmartTenantIgnoreData ignoreAll(@Nullable List<SqlCommandType> ignoreCommandList, @Nullable List<SqlCommandType> platformTenantIgnoreCommandList) {
+        return ignore(IGNORE_ALL_KEY, ignoreCommandList, platformTenantIgnoreCommandList);
     }
 
     /**
@@ -61,6 +76,22 @@ public final class SmartTenantControl {
      */
     public static void restIgnore(String tableName) {
         THREAD_IGNORE_LOCAL.get().remove(tableName);
+    }
+
+    /**
+     * 重置忽略租户的信息
+     * @param tableClass 表类
+     */
+    public static void restIgnore(Class<?> tableClass) {
+        String tableName = CrudUtils.getTableName(tableClass);
+        restIgnore(tableName);
+    }
+
+    /**
+     * 重置忽略所有租户的信息
+     */
+    public static void restIgnoreAll() {
+        restIgnore(IGNORE_ALL_KEY);
     }
 
     /**
@@ -81,11 +112,39 @@ public final class SmartTenantControl {
     }
 
     /**
+     * 切换租户字段
+     * @param tableClass 表类
+     * @param column 租户字段
+     */
+    public static void switchTenantField(Class<?> tableClass, SFunction<?, ?> column) {
+        String tableName = CrudUtils.getTableName(tableClass);
+        String tenantField = CrudUtils.getJavaProperty(column);
+        switchTenantField(tableName, tenantField);
+    }
+
+    /**
      * 重置租户字段
      * @param tableName 表名
      */
     public static void restTenantField(String tableName) {
         THREAD_FIELD_LOCAL.get().remove(tableName);
+    }
+
+     /**
+     * 重置租户字段
+     * @param tableClass 表类
+     */
+    public static void restTenantField(Class<?> tableClass) {
+        String tableName = CrudUtils.getTableName(tableClass);
+        restTenantField(tableName);
+    }
+
+    /**
+     * 清除threadLocal
+     */
+    public static void clear() {
+        THREAD_IGNORE_LOCAL.remove();
+        THREAD_FIELD_LOCAL.remove();
     }
 
     /**
@@ -106,28 +165,11 @@ public final class SmartTenantControl {
         return THREAD_IGNORE_LOCAL.get().get(tableName);
     }
 
-    /**
-     * 清除threadLocal
+     /**
+     * 获取忽略所有租户的信息
+     * @return 忽略所有租户的信息
      */
-    public static void clear() {
-        THREAD_IGNORE_LOCAL.remove();
-        THREAD_FIELD_LOCAL.remove();
-    }
-
-    /**
-     * 忽略租户的信息
-     */
-    @Getter
-    @Setter
-    public static class SmartTenantIgnoreData {
-        private List<SqlCommandType> ignoreCommandList;
-        private String tableName;
-        private List<SqlCommandType> platformTenantIgnoreCommandList;
-
-        private SmartTenantIgnoreData(String tableName, List<SqlCommandType> ignoreCommandList, List<SqlCommandType> platformTenantIgnoreCommandList) {
-            this.tableName = tableName;
-            this.ignoreCommandList = ignoreCommandList == null ? List.of() : ignoreCommandList;
-            this.platformTenantIgnoreCommandList = platformTenantIgnoreCommandList == null? List.of() : platformTenantIgnoreCommandList;
-        }
+    static SmartTenantIgnoreData getIgnoreAll() {
+        return getIgnore(IGNORE_ALL_KEY);
     }
 }

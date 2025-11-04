@@ -47,6 +47,8 @@ public class SmartMessageWebSocketSender implements SmartMessageSender {
     @Override
     public MessageSendResult send(@Nullable String channelProperties, List<SmartMessageToUserDTO> toUserList, RemoteMessageSendParameter parameter) {
         toUserList.forEach(item -> webSocket.pushMessage(item.getUserId(), parameter.getContent()));
-        return new WebsocketMessageSendResult();
+        WebsocketMessageSendResult result = new WebsocketMessageSendResult();
+        result.setSuccess(true);
+        return result;
     }
 }

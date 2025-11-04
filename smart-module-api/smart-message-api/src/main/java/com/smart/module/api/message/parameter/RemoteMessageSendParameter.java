@@ -1,9 +1,9 @@
 package com.smart.module.api.message.parameter;
 
 import com.smart.module.api.message.constants.MessagePriorityEnum;
+import com.smart.module.api.message.constants.SmartMessageContentTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.io.Serial;
@@ -23,10 +23,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RemoteMessageSendParameter implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 488223451300400617L;
+public class RemoteMessageSendParameter {
 
     /**
      * 标记发送消息的ID
@@ -50,10 +47,10 @@ public class RemoteMessageSendParameter implements Serializable {
     private String templateCode;
 
     @Schema(description = "模板数据")
-    private transient Object templateData;
+    private Object templateData;
 
-    @Schema(description = "是否是markdown消息")
-    private Boolean isMarkdown;
+    @Schema(description = "消息类型")
+    private SmartMessageContentTypeEnum contentType;
 
     @Schema(description = "优先级")
     private MessagePriorityEnum priority;
@@ -65,7 +62,7 @@ public class RemoteMessageSendParameter implements Serializable {
     private SmsSendParameter smsSendParameter;
 
     @Schema(description = "邮件发送参数")
-    private EmailSendParameter emailSendParameter;
+    private RemoteEmailSendParameter emailSendParameter;
 
     @Getter
     @Setter
@@ -113,30 +110,5 @@ public class RemoteMessageSendParameter implements Serializable {
          * business_data - 业务数据
          */
         private String businessData;
-    }
-
-    @Getter
-    @Setter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Builder
-    public static class EmailSendParameter implements Serializable {
-
-        @Serial
-        private static final long serialVersionUID = 318050930526481815L;
-
-        /**
-         * 发件人
-         */
-        @NotNull
-        private String from;
-        /**
-         * 收件人列表
-         */
-        private List<String> toList;
-        /**
-         * 抄送列表
-         */
-        private List<String> ccList;
     }
 }

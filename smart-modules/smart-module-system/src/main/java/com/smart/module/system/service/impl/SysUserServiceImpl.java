@@ -22,6 +22,7 @@ import com.smart.framework.crud.constants.CrudCommonEnum;
 import com.smart.framework.crud.constants.ModelPropertyEnum;
 import com.smart.framework.crud.parameter.SetUseYnParameter;
 import com.smart.framework.crud.plus.tenant.SmartTenantControl;
+import com.smart.framework.crud.plus.tenant.SmartTenantIgnoreData;
 import com.smart.framework.crud.query.PageSortQuery;
 import com.smart.framework.crud.service.BaseServiceImpl;
 import com.smart.framework.crud.service.UserSetterService;
@@ -166,22 +167,29 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         if (user == null) {
             return null;
         }
-        SysUserWithDeptDTO vo = new SysUserWithDeptDTO();
-        BeanUtils.copyProperties(user, vo);
-        // 查询部门信息
-        LambdaQueryWrapper<SysUserDeptPO> queryWrapper = Wrappers.lambdaQuery(SysUserDeptPO.class)
-                .select(SysUserDeptPO::getDeptId, SysUserDeptPO::getUserId)
-                .eq(SysUserDeptPO::getUserId, userId)
-                .eq(SysUserDeptPO::getIdent, UserDeptIdentEnum.USER_DEPT);
-        if (tenantId != null && AuthUtils.isPlatformTenant()) {
-            SmartTenantControl.ignore(SysUserDeptPO.class, null, List.of(SqlCommandType.SELECT));
-            queryWrapper.eq(SysUserDeptPO::getTenantId, tenantId);
+        SmartTenantIgnoreData smartTenantIgnoreData = null;
+        try {
+            SysUserWithDeptDTO vo = new SysUserWithDeptDTO();
+            BeanUtils.copyProperties(user, vo);
+            // 查询部门信息
+            LambdaQueryWrapper<SysUserDeptPO> queryWrapper = Wrappers.lambdaQuery(SysUserDeptPO.class)
+                    .select(SysUserDeptPO::getDeptId, SysUserDeptPO::getUserId)
+                    .eq(SysUserDeptPO::getUserId, userId)
+                    .eq(SysUserDeptPO::getIdent, UserDeptIdentEnum.USER_DEPT);
+            if (tenantId != null && AuthUtils.isPlatformTenant()) {
+                smartTenantIgnoreData = SmartTenantControl.ignore(SysUserDeptPO.class, null, List.of(SqlCommandType.SELECT));
+                queryWrapper.eq(SysUserDeptPO::getTenantId, tenantId);
+            }
+            Set<Long> deptIds = this.sysUserDeptService.list(queryWrapper).stream()
+                    .map(SysUserDeptPO::getDeptId)
+                    .collect(Collectors.toSet());
+            vo.setDeptIdList(new ArrayList<>(deptIds));
+            return vo;
+        } finally {
+            if (smartTenantIgnoreData != null) {
+                smartTenantIgnoreData.close();
+            }
         }
-        Set<Long> deptIds = this.sysUserDeptService.list(queryWrapper).stream()
-                .map(SysUserDeptPO::getDeptId)
-                .collect(Collectors.toSet());
-        vo.setDeptIdList(new ArrayList<>(deptIds));
-        return vo;
     }
 
     /**
