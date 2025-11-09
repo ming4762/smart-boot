@@ -11,6 +11,7 @@ import com.smart.framework.extension.dingtalk.exception.DingtalkApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 
@@ -58,7 +59,7 @@ public class AccessSecureApi extends AbstractDingtalkApi {
             GetAccessTokenResponse response = client.getAccessToken(accessTokenRequest);
             GetAccessTokenResponseBody body = response.getBody();
             // 更新应用token
-            smartDingtalkClient.updateAccessToken(body.accessToken, body.expireIn);
+            smartDingtalkClient.updateAccessToken(body.accessToken, Duration.ofSeconds(body.expireIn));
             return body.accessToken;
         } finally {
             if (locked) {

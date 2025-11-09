@@ -46,13 +46,13 @@ public class RemoteSystemAuthUserApiFallback implements FallbackFactory<RemoteSy
             }
 
             @Override
-            public AuthUserDTO getByAppOpenid(WechatUserQueryParameter parameter) {
+            public AuthUserDTO getByWehchatAppOpenid(WechatUserQueryParameter parameter) {
                 this.errorLog();
                 return null;
             }
 
             @Override
-            public AuthUserDTO getByUnionid(WechatUserQueryParameter parameter) {
+            public AuthUserDTO getByWechatUnionid(WechatUserQueryParameter parameter) {
                 this.errorLog();
                 return null;
             }

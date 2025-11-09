@@ -81,4 +81,14 @@ public class SysUserPO extends BaseModelDeleteUserTime implements BaseUser {
 
     @TableUseYnField
     private Boolean useYn;
+
+     /**
+     * 钉钉用户的unionId
+     */
+    private String dingtalkUnionId;
+
+    /**
+     * 微信用户的unionid
+     */
+    private String wechatUnionId;
 }

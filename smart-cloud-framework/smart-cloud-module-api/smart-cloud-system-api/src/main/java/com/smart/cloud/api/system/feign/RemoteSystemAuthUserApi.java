@@ -62,7 +62,7 @@ public interface RemoteSystemAuthUserApi extends SystemAuthUserApi {
      */
     @Override
     @PostMapping(SystemApiUrlConstants.WECHAT_GET_BY_APP_OPENID)
-    AuthUserDTO getByAppOpenid(WechatUserQueryParameter parameter);
+    AuthUserDTO getByWehchatAppOpenid(WechatUserQueryParameter parameter);
 
     /**
      * 通过unionid获取用户信息
@@ -72,7 +72,7 @@ public interface RemoteSystemAuthUserApi extends SystemAuthUserApi {
      */
     @Override
     @PostMapping(SystemApiUrlConstants.WECHAT_GET_BY_APP_UNIONID)
-    AuthUserDTO getByUnionid(WechatUserQueryParameter parameter);
+    AuthUserDTO getByWechatUnionid(WechatUserQueryParameter parameter);
 
     /**
      * 结果用户账户

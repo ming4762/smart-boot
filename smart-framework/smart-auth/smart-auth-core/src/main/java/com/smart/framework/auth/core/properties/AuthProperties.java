@@ -1,11 +1,13 @@
 package com.smart.framework.auth.core.properties;
 
+import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.util.Assert;
+import org.springframework.validation.annotation.Validated;
 
 import java.time.Duration;
 import java.util.List;
@@ -18,6 +20,7 @@ import java.util.List;
 @Getter
 @Setter
 @ConfigurationProperties("smart.auth")
+@Validated
 public class AuthProperties implements InitializingBean {
 
     /**
@@ -89,6 +92,15 @@ public class AuthProperties implements InitializingBean {
      * access secret模式配置
      */
     private AuthAccessSecretProperties accessSecret = new AuthAccessSecretProperties();
+
+    /**
+     * 钉钉认证配置
+     */
+    @Valid
+    @NestedConfigurationProperty
+    private AuthDingtalkProperties dingtalk;
+
+
 
     @Override
     public void afterPropertiesSet() {

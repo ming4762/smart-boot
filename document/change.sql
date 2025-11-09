@@ -43,3 +43,10 @@ alter table sys_parameter
 -- 用户表添加时区字段
 alter table sys_user
     add timezone varchar(20) null comment '用户时区' after mobile;
+
+-- 2025-11-07
+-- 用户表添加钉钉用户和微信用户unionid字段
+alter table sys_user
+    add dingtalk_union_id varchar(100) null comment '钉钉用户的unionId' after timezone;
+alter table sys_user
+    add wechat_union_id varchar(100) null comment '微信用户的unionid' after dingtalk_union_id;

@@ -3,6 +3,7 @@ package com.smart.module.api.system;
 import com.smart.framework.commons.core.dto.auth.UserAccountData;
 import com.smart.module.api.system.dto.AuthUserDTO;
 import com.smart.module.api.system.dto.QueryUserAccountDTO;
+import com.smart.module.api.system.parameter.DingtalkUserQueryParameter;
 import com.smart.module.api.system.parameter.UserAccountUnLockParameter;
 import com.smart.module.api.system.parameter.WechatUserQueryParameter;
 import lombok.NonNull;
@@ -47,7 +48,7 @@ public interface SystemAuthUserApi {
      * @param parameter 参数
      * @return AuthUser
      */
-    default AuthUserDTO getByAppOpenid(WechatUserQueryParameter parameter) {
+    default AuthUserDTO getByWehchatAppOpenid(WechatUserQueryParameter parameter) {
         return null;
     }
 
@@ -56,7 +57,7 @@ public interface SystemAuthUserApi {
      * @param parameter 参数
      * @return AuthUser
      */
-    default AuthUserDTO getByUnionid(WechatUserQueryParameter parameter) {
+    default AuthUserDTO getByWechatUnionid(WechatUserQueryParameter parameter) {
         return null;
     }
 
@@ -66,4 +67,31 @@ public interface SystemAuthUserApi {
      * @return 是否结果成功
      */
     boolean unlockAccount(UserAccountUnLockParameter parameter);
+
+     /**
+     * 通过钉钉openid获取用户信息
+     * @param parameter 参数
+     * @return AuthUser
+     */
+    default AuthUserDTO getByDingtalkOpenId(DingtalkUserQueryParameter parameter) {
+        return null;
+    }
+
+     /**
+     * 通过钉钉unionid获取用户信息
+     * @param parameter 参数
+     * @return AuthUser
+     */
+    default AuthUserDTO getByDingtalkUnionId(DingtalkUserQueryParameter parameter) {
+        return null;
+    }
+
+     /**
+     * 通过钉钉手机号获取用户信息
+     * @param parameter 参数
+     * @return AuthUser
+     */
+    default AuthUserDTO getByDingtalkMobile(DingtalkUserQueryParameter parameter) {
+        return null;
+    }
 }

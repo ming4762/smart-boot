@@ -361,4 +361,24 @@ public class RedisServiceImpl extends AbstractCacheService implements RedisServi
         RKeys keys = this.redissonClient.getKeys();
         keys.rename(oldKey, newKey);
     }
+
+    /**
+     * 获取缓存过期时间
+     *
+     * @param key key
+     * @return 过期时间，null代表无限大
+     */
+    @Override
+    public Duration getExpire(@NonNull String key) {
+        RBucket<Object> bucket = this.redissonClient.getBucket(this.getCachedKey(key));
+        long remainTimeToLive = bucket.remainTimeToLive();
+        if (remainTimeToLive == -1) {
+            // 永不过期
+            return null;
+        }
+        if (remainTimeToLive == -2) {
+            return Duration.ZERO;
+        }
+        return Duration.ofMillis(remainTimeToLive);
+    }
 }

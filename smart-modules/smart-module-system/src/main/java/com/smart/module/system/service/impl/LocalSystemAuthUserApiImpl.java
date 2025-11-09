@@ -1,10 +1,12 @@
 package com.smart.module.system.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.smart.framework.commons.core.dto.auth.UserAccountData;
 import com.smart.module.api.system.SystemAuthUserApi;
 import com.smart.module.api.system.dto.AuthUserDTO;
 import com.smart.module.api.system.dto.QueryUserAccountDTO;
+import com.smart.module.api.system.parameter.DingtalkUserQueryParameter;
 import com.smart.module.api.system.parameter.UserAccountUnLockParameter;
 import com.smart.module.api.system.parameter.WechatUserQueryParameter;
 import com.smart.module.system.model.SysUserPO;
@@ -39,14 +41,7 @@ public class LocalSystemAuthUserApiImpl implements SystemAuthUserApi {
     @Override
     public AuthUserDTO getByUsername(@NonNull String username) {
         final SysUserPO user = this.sysUserService.getOne(
-                new QueryWrapper<SysUserPO>().lambda()
-                        .select(
-                                SysUserPO :: getUserId,
-                                SysUserPO :: getUsername,
-                                SysUserPO :: getFullName,
-                                SysUserPO :: getPassword,
-                                SysUserPO :: getMobile
-                        )
+                this.buildCommonQuery()
                         .eq(SysUserPO :: getUsername, username)
         );
         if (Objects.isNull(user)) {
@@ -67,6 +62,7 @@ public class LocalSystemAuthUserApiImpl implements SystemAuthUserApi {
                 .password(user.getPassword())
                 .fullName(user.getFullName())
                 .mobile(user.getMobile())
+                .useYn(user.getUseYn())
                 .build();
     }
 
@@ -74,14 +70,7 @@ public class LocalSystemAuthUserApiImpl implements SystemAuthUserApi {
     @Override
     public AuthUserDTO getByMobile(@NonNull String mobile) {
         final SysUserPO sysUser = this.sysUserService.getOne(
-                new QueryWrapper<SysUserPO>().lambda()
-                        .select(
-                                SysUserPO :: getUserId,
-                                SysUserPO :: getUsername,
-                                SysUserPO :: getFullName,
-                                SysUserPO :: getPassword,
-                                SysUserPO :: getMobile
-                        )
+                this.buildCommonQuery()
                         .eq(SysUserPO :: getMobile, mobile)
         );
         if (sysUser == null) {
@@ -107,7 +96,7 @@ public class LocalSystemAuthUserApiImpl implements SystemAuthUserApi {
      * @return AuthUser
      */
     @Override
-    public AuthUserDTO getByAppOpenid(WechatUserQueryParameter parameter) {
+    public AuthUserDTO getByWehchatAppOpenid(WechatUserQueryParameter parameter) {
         return null;
     }
 
@@ -118,8 +107,15 @@ public class LocalSystemAuthUserApiImpl implements SystemAuthUserApi {
      * @return AuthUser
      */
     @Override
-    public AuthUserDTO getByUnionid(WechatUserQueryParameter parameter) {
-        return null;
+    public AuthUserDTO getByWechatUnionid(WechatUserQueryParameter parameter) {
+        SysUserPO sysUser = this.sysUserService.getOne(
+                this.buildCommonQuery()
+                        .eq(SysUserPO::getWechatUnionId, parameter.getUnionid())
+        );
+        if (sysUser == null) {
+            return null;
+        }
+        return this.createAuthUser(sysUser);
     }
 
     /**
@@ -131,5 +127,61 @@ public class LocalSystemAuthUserApiImpl implements SystemAuthUserApi {
     @Override
     public boolean unlockAccount(UserAccountUnLockParameter parameter) {
         return this.sysUserAccountService.unlock(parameter.getUserId(), parameter.getAccountStatus());
+    }
+
+    /**
+     * 通过钉钉openid获取用户信息
+     *
+     * @param parameter 参数
+     * @return AuthUser
+     */
+    @Override
+    public AuthUserDTO getByDingtalkOpenId(DingtalkUserQueryParameter parameter) {
+        throw new UnsupportedOperationException("getByDingtalkOpenId not supported");
+    }
+
+    /**
+     * 通过钉钉unionid获取用户信息
+     *
+     * @param parameter 参数
+     * @return AuthUser
+     */
+    @Override
+    public AuthUserDTO getByDingtalkUnionId(DingtalkUserQueryParameter parameter) {
+        SysUserPO sysUser = this.sysUserService.getOne(
+                this.buildCommonQuery()
+                        .eq(SysUserPO::getDingtalkUnionId, parameter.getUnionId())
+        );
+        if (sysUser == null) {
+            return null;
+        }
+        return this.createAuthUser(sysUser);
+    }
+
+    /**
+     * 通过钉钉手机号获取用户信息
+     *
+     * @param parameter 参数
+     * @return AuthUser
+     */
+    @Override
+    public AuthUserDTO getByDingtalkMobile(DingtalkUserQueryParameter parameter) {
+        return this.getByMobile(parameter.getMobile());
+    }
+
+    /**
+     * 构建公共查询
+     * @return LambdaQueryWrapper
+     */
+    protected LambdaQueryWrapper<SysUserPO> buildCommonQuery() {
+        return Wrappers.lambdaQuery(SysUserPO.class)
+                .select(
+                        SysUserPO::getUserId,
+                        SysUserPO::getUsername,
+                        SysUserPO::getFullName,
+                        SysUserPO::getPassword,
+                        SysUserPO::getMobile,
+                        SysUserPO::getUseYn
+                );
     }
 }

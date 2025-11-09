@@ -2,6 +2,7 @@ package com.smart.framework.extension.dingtalk.client;
 
 import com.smart.framework.extension.dingtalk.constants.DingtalkClientTypeEnum;
 
+import java.time.Duration;
 import java.util.concurrent.locks.Lock;
 
 /**
@@ -43,9 +44,9 @@ public interface SmartDingtalkClient {
     /**
      * 更新应用token
      * @param accessToken 新的应用token
-     * @param expiresIn 应用token的过期时间，单位秒
+     * @param expireIn 应用token的有效期
      */
-    void updateAccessToken(String accessToken, long expiresIn);
+    void updateAccessToken(String accessToken, Duration expireIn);
 
      /**
       * 获取应用token的锁

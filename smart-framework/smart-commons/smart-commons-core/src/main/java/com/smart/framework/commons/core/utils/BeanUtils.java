@@ -121,6 +121,12 @@ public class BeanUtils {
         }
     }
 
+    /**
+     * 扁平化bean，将嵌套的bean转换为扁平的map，键为属性路径，值为属性值
+     * 例如：{@code {"a.b.c": 123, "a.b.d": "hello"}}
+     * @param bean 要扁平化的bean
+     * @return 扁平化后的map
+     */
     public static Map<String, Object> flattenBean(Object bean) {
         if (bean == null) {
             return Collections.emptyMap();
