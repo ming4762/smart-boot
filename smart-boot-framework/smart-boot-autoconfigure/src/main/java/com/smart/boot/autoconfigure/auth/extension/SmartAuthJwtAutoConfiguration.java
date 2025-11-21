@@ -70,7 +70,7 @@ public class SmartAuthJwtAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean(JwtDecoder.class)
-    public JwtDecoder jwtDecoder(AuthProperties authProperties) throws IOException {
+    public JwtDecoder smartJwtDecoder(AuthProperties authProperties) throws IOException {
         InputStream pubKeyInputStream = this.getKeyInputStream(authProperties.getJwt().getPublicKey());
         try (pubKeyInputStream) {
             return NimbusJwtDecoder.withPublicKey((RSAPublicKey) RsaUtils.generaPublicKey(pubKeyInputStream)).build();

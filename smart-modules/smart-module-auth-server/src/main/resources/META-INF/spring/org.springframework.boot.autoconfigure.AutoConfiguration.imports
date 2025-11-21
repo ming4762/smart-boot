@@ -1,0 +1,2 @@
+com.smart.module.auth.server.SmartAuthServerManagerAutoConfiguration
+com.smart.module.auth.server.SmartAuthServerSsoAutoConfiguration

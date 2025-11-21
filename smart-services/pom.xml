@@ -15,6 +15,8 @@
 
 	<modules>
 		<module>smart-service-ai-dify</module>
+        <module>smart-service-auth-server-manager</module>
+        <module>smart-service-auth-server-sso</module>
 		<module>smart-service-system</module>
 	</modules>
 

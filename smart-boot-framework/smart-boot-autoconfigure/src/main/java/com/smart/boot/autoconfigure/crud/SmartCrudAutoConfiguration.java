@@ -9,6 +9,7 @@ import com.smart.framework.crud.plus.fill.impl.CreateUpdateMetaObjectFill;
 import com.smart.framework.crud.plus.fill.impl.LogicDeleteMetaObjectFill;
 import com.smart.framework.crud.service.BaseService;
 import com.smart.module.api.crud.SmartCrudUserApi;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -29,7 +30,6 @@ import java.util.List;
         MybatisInterceptorAddConfiguration.class,
         MybatisPlusEnhanceConfiguration.class,
         SmartDesensitizeAutoConfiguration.class,
-        SmartDataPermissionAutoConfiguration.class,
         SmartPageHelperAutoConfiguration.class
 })
 public class SmartCrudAutoConfiguration {
@@ -62,7 +62,7 @@ public class SmartCrudAutoConfiguration {
      * @return CreateUpdateMetaObjectFill
      */
     @Bean
-    public CreateUpdateMetaObjectFill createUpdateMetaObjectFill(SmartCrudUserApi smartCrudUserApi) {
+    public CreateUpdateMetaObjectFill createUpdateMetaObjectFill(ObjectProvider<SmartCrudUserApi> smartCrudUserApi) {
         return new CreateUpdateMetaObjectFill(smartCrudUserApi);
     }
 
@@ -72,7 +72,7 @@ public class SmartCrudAutoConfiguration {
      * @return LogicDeleteMetaObjectFill
      */
     @Bean
-    public LogicDeleteMetaObjectFill logicDeleteMetaObjectFill(SmartCrudUserApi smartCrudUserApi) {
+    public LogicDeleteMetaObjectFill logicDeleteMetaObjectFill(ObjectProvider<SmartCrudUserApi> smartCrudUserApi) {
         return new LogicDeleteMetaObjectFill(smartCrudUserApi);
     }
 
@@ -82,7 +82,7 @@ public class SmartCrudAutoConfiguration {
      * @return CreateDeptMetaObjectFill
      */
     @Bean
-    public CreateDeptMetaObjectFill createDeptMetaObjectFill(SmartCrudUserApi smartCrudUserApi) {
+    public CreateDeptMetaObjectFill createDeptMetaObjectFill(ObjectProvider<SmartCrudUserApi> smartCrudUserApi) {
         return new CreateDeptMetaObjectFill(smartCrudUserApi);
     }
 }

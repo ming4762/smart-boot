@@ -1,4 +1,4 @@
-package com.smart.boot.autoconfigure.crud;
+package com.smart.boot.autoconfigure.crud.config;
 
 import com.baomidou.mybatisplus.extension.plugins.handler.DataPermissionHandler;
 import com.baomidou.mybatisplus.extension.plugins.inner.DataPermissionInterceptor;
@@ -21,7 +21,7 @@ import org.springframework.context.annotation.Configuration;
  * @since 5.0.0
  */
 @Configuration(proxyBeanMethods = false)
-public class SmartDataPermissionAutoConfiguration {
+public class SmartDataPermissionConfiguration {
 
     /**
      * 创建数据权限处理器

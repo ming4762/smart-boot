@@ -5,8 +5,10 @@ import com.smart.framework.crud.plus.fill.SmartMetaObjectFill;
 import com.smart.module.api.crud.SmartCrudUserApi;
 import com.smart.module.api.crud.module.UserDeptData;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.reflection.MetaObject;
+import org.springframework.beans.factory.ObjectProvider;
 
 /**
  * 创建部门元对象填充器
@@ -15,9 +17,10 @@ import org.apache.ibatis.reflection.MetaObject;
  * @since 5.0.0
  */
 @RequiredArgsConstructor
+@Slf4j
 public class CreateDeptMetaObjectFill implements SmartMetaObjectFill {
 
-    private final SmartCrudUserApi smartCrudUserApi;
+    private final ObjectProvider<SmartCrudUserApi> smartCrudUserApiObjectProvider;
 
     /**
      * 插入元对象字段填充（用于插入时对公共字段的填充）
@@ -31,7 +34,12 @@ public class CreateDeptMetaObjectFill implements SmartMetaObjectFill {
             return;
         }
         if (metaObject.hasSetter(ModelPropertyEnum.DEPT_ID.getName()) || metaObject.hasSetter(ModelPropertyEnum.DEPT_NAME.getName())) {
-            UserDeptData currentDept = this.smartCrudUserApi.getCurrentDept();
+            SmartCrudUserApi smartCrudUserApi = this.smartCrudUserApiObjectProvider.getIfAvailable();
+            if (smartCrudUserApi == null) {
+                log.warn("SmartCrudUserApi is not available, can not fill dept info");
+                return;
+            }
+            UserDeptData currentDept = smartCrudUserApi.getCurrentDept();
             if (currentDept != null) {
                 this.strictInsertFill(metaObject, ModelPropertyEnum.DEPT_ID.getName(), currentDept::getDeptId, Long.class);
                 this.strictInsertFill(metaObject, ModelPropertyEnum.DEPT_NAME.getName(), currentDept::getDeptName, String.class);

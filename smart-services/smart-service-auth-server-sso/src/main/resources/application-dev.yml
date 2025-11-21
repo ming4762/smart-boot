@@ -1,0 +1,57 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 110MB
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    druid:
+      filter:
+        wall:
+          enabled: true
+        stat:
+          enabled: true
+          slow-sql-millis: 1000
+      web-stat-filter:
+        enabled: true
+      stat-view-servlet:
+        enabled: true
+        login-username: root
+        login-password: root
+        deny:
+      filter-class-names: stat,wall
+    url: jdbc:mysql://localhost:3306/smart-system?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: ming8858*
+    name: smart-system
+  data:
+    redis:
+      host: localhost
+
+logging:
+  level:
+    root: info
+    com.smart: debug
+    com.smart.framework.crud.plus.inner: info
+    com.smart.framework.crud.datapermission.interceptor: info
+    org.springframework.security: trace
+
+management:
+  endpoint:
+    #    开启shutdown端点
+    shutdown:
+      access: unrestricted
+    health:
+      show-details: always
+    logfile:
+      access: unrestricted
+    env:
+      access: unrestricted
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  health:
+    mail:
+      enabled: false
