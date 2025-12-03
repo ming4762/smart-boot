@@ -19,7 +19,7 @@ public class UrlAuthenticationSecurityConfigurer extends SecurityConfigurerAdapt
     }
 
     @Override
-    public void configure(HttpSecurity builder) throws Exception {
+    public void configure(HttpSecurity builder) {
         UrlAuthorizationManager authorizationManager = new UrlAuthorizationManager();
         this.postProcess(authorizationManager);
         builder.authorizeHttpRequests(request -> request.anyRequest().access(authorizationManager));

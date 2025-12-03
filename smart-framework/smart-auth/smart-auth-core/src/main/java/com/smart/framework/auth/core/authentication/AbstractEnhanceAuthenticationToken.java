@@ -9,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 
 import java.io.Serial;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author zhongming4762
@@ -41,7 +42,7 @@ public class AbstractEnhanceAuthenticationToken extends AbstractAuthenticationTo
     }
 
     public AbstractEnhanceAuthenticationToken(AuthTypeEnum authType, Object credentials, Object principal) {
-        super(null);
+        super(List.of());
         this.authType = authType;
         this.principal = principal;
         this.credentials = credentials;

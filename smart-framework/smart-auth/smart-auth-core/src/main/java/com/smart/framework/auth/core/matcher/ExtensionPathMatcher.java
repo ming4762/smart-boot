@@ -4,7 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
 import org.springframework.lang.Nullable;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import java.util.Objects;
@@ -48,8 +48,8 @@ public class ExtensionPathMatcher implements RequestMatcher {
             return true;
         }
         // 验证路径
-        AntPathRequestMatcher matcher = new AntPathRequestMatcher(this.pattern, request.getMethod());
-        return matcher.matches(request);
+        PathPatternRequestMatcher requestMatcher = PathPatternRequestMatcher.pathPattern(HttpMethod.valueOf(request.getMethod()), this.pattern);
+        return requestMatcher.matches(request);
     }
 
 

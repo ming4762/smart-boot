@@ -12,7 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 
 import java.time.ZonedDateTime;
 
@@ -63,7 +63,7 @@ public class SmartAuthPersistentTokenRememberMeServices extends PersistentTokenB
 
     @Override
     public Authentication autoLogin(HttpServletRequest request, HttpServletResponse response) {
-        AntPathRequestMatcher requestMatcher = new AntPathRequestMatcher(REMEMBER_ME_LOG_URL);
+        PathPatternRequestMatcher requestMatcher = PathPatternRequestMatcher.pathPattern(REMEMBER_ME_LOG_URL);
         if (!requestMatcher.matches(request)) {
             return null;
         }

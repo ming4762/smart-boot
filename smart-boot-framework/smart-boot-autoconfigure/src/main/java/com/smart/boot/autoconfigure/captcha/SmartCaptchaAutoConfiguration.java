@@ -50,9 +50,4 @@ public class SmartCaptchaAutoConfiguration {
     public CaptchaResourceLoader captchaResourceLoader(SmartCaptchaProperties smartCaptchaProperties, ResourceStore resourceStore) {
         return new CaptchaResourceLoader(resourceStore, smartCaptchaProperties.getImage().getResourceList());
     }
-
-    @Bean
-    public static SmartCaptchaImagePropertiesBeanPostProcessor smartCaptchaImagePropertiesBeanPostProcessor() {
-        return new SmartCaptchaImagePropertiesBeanPostProcessor();
-    }
 }

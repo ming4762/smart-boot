@@ -8,12 +8,13 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.mvc.condition.PatternsRequestCondition;
+import org.springframework.web.servlet.mvc.condition.PathPatternsRequestCondition;
 import org.springframework.web.servlet.mvc.condition.RequestMethodsRequestCondition;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+import org.springframework.web.util.pattern.PathPattern;
 
 import java.util.*;
 
@@ -47,8 +48,8 @@ public class DefaultUrlMappingProvider extends AbstractBeanNameProvider implemen
         for (Map.Entry<String, List<UrlMapping>> entry : this.urlMappings.entrySet()) {
             String uri = entry.getKey();
             List<UrlMapping> urlMappingList = entry.getValue();
-            AntPathRequestMatcher antPathMatcher = new AntPathRequestMatcher(uri);
-            if (!antPathMatcher.matches(request)) {
+            PathPatternRequestMatcher pathPatternMatcher = PathPatternRequestMatcher.pathPattern(uri);
+            if (!pathPatternMatcher.matches(request)) {
                 continue;
             }
             // 获取对应的请求
@@ -87,29 +88,31 @@ public class DefaultUrlMappingProvider extends AbstractBeanNameProvider implemen
         Map<RequestMappingInfo, HandlerMethod> handlerMethods = mapping.getHandlerMethods();
 
         handlerMethods.forEach((requestMappingInfo, handlerMethod) -> {
-            PatternsRequestCondition condition = requestMappingInfo.getPatternsCondition();
-            if (condition != null) {
-                // 获取当前 key 下的获取所有URL
-                Set<String> urls = condition.getPatterns();
-                RequestMethodsRequestCondition method = requestMappingInfo.getMethodsCondition();
-                urls.forEach(s -> {
-                    if (method.getMethods().isEmpty()) {
-                        UrlMapping urlMapping = new UrlMapping();
-                        urlMapping.setRequestMethod(null);
-                        urlMapping.setHandlerMethod(handlerMethod);
-                        this.addMapping(s, urlMapping);
-                    } else {
-                        List<UrlMapping> urlMappingList = method.getMethods().stream()
-                                .map(requestMethod -> {
-                                    UrlMapping urlMapping = new UrlMapping();
-                                    urlMapping.setRequestMethod(requestMethod);
-                                    urlMapping.setHandlerMethod(handlerMethod);
-                                    return urlMapping;
-                                }).toList();
-                        this.addMapping(s, urlMappingList);
-                    }
-                });
+            PathPatternsRequestCondition pathPatternsCondition = requestMappingInfo.getPathPatternsCondition();
+            if (pathPatternsCondition == null) {
+                return;
             }
+            Set<PathPattern> patterns = pathPatternsCondition.getPatterns();
+            // 获取当前 key 下的获取所有URL
+            RequestMethodsRequestCondition method = requestMappingInfo.getMethodsCondition();
+            patterns.forEach(pathPattern -> {
+                String s = pathPattern.getPatternString();
+                if (method.getMethods().isEmpty()) {
+                    UrlMapping urlMapping = new UrlMapping();
+                    urlMapping.setRequestMethod(null);
+                    urlMapping.setHandlerMethod(handlerMethod);
+                    this.addMapping(s, urlMapping);
+                } else {
+                    List<UrlMapping> urlMappingList = method.getMethods().stream()
+                            .map(requestMethod -> {
+                                UrlMapping urlMapping = new UrlMapping();
+                                urlMapping.setRequestMethod(requestMethod);
+                                urlMapping.setHandlerMethod(handlerMethod);
+                                return urlMapping;
+                            }).toList();
+                    this.addMapping(s, urlMappingList);
+                }
+            });
         });
     }
 

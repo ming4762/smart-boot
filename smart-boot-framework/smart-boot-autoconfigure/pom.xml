@@ -333,12 +333,6 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>cloud.tianai.captcha</groupId>
-            <artifactId>tianai-captcha-springboot-starter</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
             <groupId>com.smart</groupId>
             <artifactId>smart-druid-enhance</artifactId>
             <version>${project.version}</version>
@@ -365,7 +359,17 @@
         <dependency>
             <groupId>com.smart</groupId>
             <artifactId>smart-ai-langchain4j</artifactId>
-            <version>5.0.0-SNAPSHOT</version>
+            <version>${project.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-webmvc</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-mail</artifactId>
             <optional>true</optional>
         </dependency>
     </dependencies>

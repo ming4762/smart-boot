@@ -18,7 +18,7 @@ public class BaseEnumJsonModule extends SimpleModule {
     public BaseEnumJsonModule() {
         super("BaseEnumJsonModule");
         // 注册 BaseEnum 序列化器
-        addSerializer(BaseEnum.class, new BaseEnumJsonConverter.Serializer());
+        addSerializer((Class) BaseEnum.class, new BaseEnumJsonConverter.Serializer());
 
         setDeserializerModifier(new BeanDeserializerModifier() {
 

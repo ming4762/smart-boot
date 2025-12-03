@@ -8,8 +8,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.mail.MailSenderAutoConfiguration;
-import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration;
+import org.springframework.boot.mail.autoconfigure.MailSenderAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -32,7 +31,6 @@ import java.nio.charset.StandardCharsets;
 @AutoConfigureAfter({
         MonitorServerAutoConfiguration.class,
         MailSenderAutoConfiguration.class,
-        ThymeleafAutoConfiguration.class
 })
 public class MonitorServerMailNotifyAutoConfiguration {
 

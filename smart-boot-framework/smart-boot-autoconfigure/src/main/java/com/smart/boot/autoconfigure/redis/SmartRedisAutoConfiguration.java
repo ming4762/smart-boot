@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +26,7 @@ import org.springframework.context.annotation.Configuration;
  * 2020/1/17 8:45 下午
  */
 @Configuration(proxyBeanMethods = false)
-@AutoConfigureBefore({RedisAutoConfiguration.class, SnowflakeWorkIdAllocatorConfiguration.class})
+@AutoConfigureBefore({SnowflakeWorkIdAllocatorConfiguration.class})
 @ConditionalOnClass(RedisService.class)
 @EnableConfigurationProperties({ SmartCacheProperties.class })
 public class SmartRedisAutoConfiguration {

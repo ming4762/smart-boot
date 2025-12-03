@@ -21,10 +21,6 @@
             <artifactId>smart-extensions-captcha</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>cloud.tianai.captcha</groupId>
-            <artifactId>tianai-captcha-springboot-starter</artifactId>
-        </dependency>
     </dependencies>
 
 </project>

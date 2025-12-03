@@ -1,6 +1,5 @@
 package com.smart.cloud.service.gateway;
 
-import com.smart.cloud.starter.feign.config.EnabledSyncFeign;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -12,7 +11,6 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  */
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnabledSyncFeign
 public class SmartCloudGatewayApplication {
 
     public static void main(String[] args) {

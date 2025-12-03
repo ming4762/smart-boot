@@ -5,15 +5,14 @@ import com.smart.framework.auth.common.userdetails.RestUserDetails;
 import com.smart.framework.auth.core.beans.UrlMappingProvider;
 import com.smart.framework.commons.core.beans.AbstractBeanNameProvider;
 import com.smart.framework.commons.core.dto.auth.Permission;
-import com.smart.framework.commons.core.http.HttpMethod;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -43,8 +42,8 @@ public class DefaultUrlAuthenticationProviderImpl extends AbstractBeanNameProvid
         if (!CollectionUtils.isEmpty(permissionList)) {
             for (Permission permission : permissionList) {
                 if (org.springframework.util.StringUtils.hasText(permission.getUrl())) {
-                    AntPathRequestMatcher antPathMatcher = new AntPathRequestMatcher(permission.getUrl(), Optional.ofNullable(permission.getMethod()).map(HttpMethod::name).orElse(null));
-                    if (antPathMatcher.matches(request)) {
+                    PathPatternRequestMatcher requestMatcher = PathPatternRequestMatcher.pathPattern(HttpMethod.valueOf(permission.getMethod().name()), permission.getUrl());
+                    if (requestMatcher.matches(request)) {
                         hasPermission = true;
                         break;
                     }

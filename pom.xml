@@ -16,11 +16,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <spring-boot.version>3.5.6</spring-boot.version>
-        <spring-cloud.version>2025.0.0</spring-cloud.version>
-        <spring-cloud-alibaba.version>2023.0.3.3</spring-cloud-alibaba.version>
+        <spring-boot.version>4.0.0</spring-boot.version>
+        <spring-cloud.version>2025.1.0</spring-cloud.version>
+        <spring-cloud-alibaba.version>2025.0.0.0</spring-cloud-alibaba.version>
 
-        <guava.version>33.4.8-jre</guava.version>
+        <guava.version>33.5.0-jre</guava.version>
         <commons-collections4.version>4.4</commons-collections4.version>
         <commons-beanutils.version>1.11.0</commons-beanutils.version>
         <spring-security-saml2.version>1.0.10.RELEASE</spring-security-saml2.version>
@@ -30,7 +30,7 @@
         <pagehelper.version>6.1.1</pagehelper.version>
         <pagehelper-starter.version>2.1.1</pagehelper-starter.version>
 
-        <mybatis-plus.version>3.5.12</mybatis-plus.version>
+        <mybatis-plus.version>3.5.15</mybatis-plus.version>
         <jodconverter.version>4.4.11</jodconverter.version>
         <google.zxing.version>3.5.3</google.zxing.version>
         <!--    TODO:大版本升级3.0.0    -->

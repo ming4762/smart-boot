@@ -8,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * SMS认证信息
@@ -32,7 +33,7 @@ public class SmsAuthenticationToken extends AbstractAuthenticationToken {
     private final Serializable credentials;
 
     public SmsAuthenticationToken(Serializable principal, Serializable credentials) {
-        super(null);
+        super(List.of());
         this.principal = principal;
         this.credentials = credentials;
     }
