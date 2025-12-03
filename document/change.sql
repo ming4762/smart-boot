@@ -50,3 +50,38 @@ alter table sys_user
     add dingtalk_union_id varchar(100) null comment '钉钉用户的unionId' after timezone;
 alter table sys_user
     add wechat_union_id varchar(100) null comment '微信用户的unionid' after dingtalk_union_id;
+
+-- 2025-11-20
+-- 添加oauth2客户端
+-- auto-generated definition
+create table oauth2_client
+(
+    id                            bigint               not null comment '主键'
+        primary key,
+    client_id                     varchar(255)         not null comment '客户端id',
+    client_name                   varchar(255)         not null comment '客户端名称',
+    client_secret                 varchar(255)         not null comment '客户端密钥',
+    client_secret_expire          datetime             null comment '密钥过期时间, null表示永不过期',
+    client_authentication_methods varchar(255)         not null comment '客户端认证方式,以逗号分隔, client_secret_basic, client_secret_post, client_secret_jwt',
+    authorization_grant_types     varchar(255)         not null comment '授权类型,以逗号分隔, authorization_code, client_credentials, refresh_token',
+    redirect_uri                  varchar(500)         not null comment '重定向uri,以逗号分隔',
+    post_logout_redirect_uri      varchar(500)         null comment '注销后重定向uri,以逗号分隔',
+    scopes                        varchar(255)         not null comment '作用域,以逗号分隔',
+    client_settings               json                 null comment '客户端设置',
+    token_settings                json                 null comment '令牌设置',
+    remark                        varchar(255)         null comment '备注',
+    use_yn                        tinyint(1) default 1 not null,
+    create_user_id                bigint               null,
+    create_by                     varchar(255)         null,
+    create_time                   datetime             null,
+    update_user_id                bigint               null,
+    update_by                     varchar(255)         null,
+    update_time                   datetime             null,
+    delete_yn                     tinyint(1) default 0 not null,
+    delete_key                    bigint     default 0 not null,
+    delete_user_id                bigint               null,
+    delete_by                     varchar(255)         null,
+    delete_time                   datetime             null
+)
+    comment 'oauth2客户端';
+

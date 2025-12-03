@@ -1,5 +1,6 @@
 package com.smart.module.auth.server.sso.client;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.smart.framework.commons.core.utils.JsonUtils;
 import com.smart.module.auth.server.manager.model.Oauth2ClientPO;
 import com.smart.module.auth.server.manager.service.Oauth2ClientService;
@@ -14,10 +15,7 @@ import org.springframework.util.StringUtils;
 
 import java.time.ZoneId;
 import java.time.chrono.ChronoZonedDateTime;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -84,10 +82,14 @@ public class SmartDbRegisteredClientRepositoryImpl implements RegisteredClientRe
                 .postLogoutRedirectUris(uris -> uris.addAll(postLogoutRedirectUris))
                 .scopes(scopes -> scopes.addAll(dbScopes));
         if (StringUtils.hasText(oauth2Client.getClientSettings())) {
-            clientBuilder.clientSettings(JsonUtils.parse(oauth2Client.getClientSettings(), ClientSettings.class));
+            Map<String, Object> clientSettings = JsonUtils.parse(oauth2Client.getClientSettings(), new TypeReference<>() {
+            });
+            clientBuilder.clientSettings(ClientSettings.withSettings(clientSettings).build());
         }
         if (StringUtils.hasText(oauth2Client.getTokenSettings())) {
-            clientBuilder.tokenSettings(JsonUtils.parse(oauth2Client.getTokenSettings(), TokenSettings.class));
+            Map<String, Object> tokenSettings = JsonUtils.parse(oauth2Client.getTokenSettings(), new TypeReference<>() {
+            });
+            clientBuilder.tokenSettings(TokenSettings.withSettings(tokenSettings).build());
         }
         return clientBuilder.build();
     }
