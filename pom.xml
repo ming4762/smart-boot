@@ -21,7 +21,7 @@
         <spring-cloud-alibaba.version>2023.0.3.3</spring-cloud-alibaba.version>
 
         <guava.version>33.4.8-jre</guava.version>
-        <commons-collections4.version>4.4</commons-collections4.version>
+        <commons-collections4.version>4.5.0</commons-collections4.version>
         <commons-beanutils.version>1.11.0</commons-beanutils.version>
         <spring-security-saml2.version>1.0.10.RELEASE</spring-security-saml2.version>
         <swagger-annotations.version>2.2.34</swagger-annotations.version>
