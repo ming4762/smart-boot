@@ -45,7 +45,7 @@
         <scannotation.version>1.0.3</scannotation.version>
         <nimbus-jose-jwt.version>10.4.2</nimbus-jose-jwt.version>
         <truelicense.version>1.33</truelicense.version>
-        <minio.version>8.5.17</minio.version>
+        <minio.version>8.6.0</minio.version>
         <hutool.version>5.8.40</hutool.version>
         <aliyun.oss.version>3.18.3</aliyun.oss.version>
         <knife4j-openapi3.version>4.5.0</knife4j-openapi3.version>
