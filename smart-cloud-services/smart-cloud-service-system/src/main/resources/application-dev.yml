@@ -20,13 +20,13 @@ management:
   endpoint:
     #    开启shutdown端点
     shutdown:
-      enabled: true
+      access: none
     health:
       show-details: always
     logfile:
-      enabled: true
+      access: unrestricted
     env:
-      enabled: true
+      access: unrestricted
   endpoints:
     web:
       exposure:
