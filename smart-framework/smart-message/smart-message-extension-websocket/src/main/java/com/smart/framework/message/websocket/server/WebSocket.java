@@ -43,8 +43,8 @@ public class WebSocket {
      */
     @OnClose
     public void onClose(@PathParam("userId") Long userId) {
-        try {
-            WEBSOCKET_SESSION_POOL.remove(userId);
+        Session session = WEBSOCKET_SESSION_POOL.remove(userId);
+        try (session) {
             log.info("【websocket消息】断开连接，用户ID：{}，总连接数：{}", userId, WEBSOCKET_SESSION_POOL.size());
         } catch (Exception e) {
             log.error(e.getMessage(), e);

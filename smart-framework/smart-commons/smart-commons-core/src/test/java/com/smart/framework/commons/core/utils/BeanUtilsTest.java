@@ -3,11 +3,9 @@ package com.smart.framework.commons.core.utils;
 import lombok.Data;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
+import org.springframework.mock.web.MockMultipartFile;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -30,6 +28,20 @@ class BeanUtilsTest {
     @Data
     static class NestedBean {
         private String value;
+        private List<String> tags;
+        // 可以是 MultipartFile 模拟
+        private Object file;
+    }
+
+    @Data
+    static class ComplexBean {
+        private String name;
+        private int age;
+        private NestedBean nested;
+        private Map<String, Object> extra;
+        private List<NestedBean> nestedList;
+        // 可以是 MultipartFile 模拟
+        private Object file;
     }
 
     // 测试copyProperties方法
@@ -112,5 +124,99 @@ class BeanUtilsTest {
         // 验证嵌套Map是否被正确转换
         Map<?, ?> convertedNested = (Map<?, ?>) result.get("nested");
         assertEquals("innerValue", convertedNested.get("innerKey"));
+    }
+
+    @Test
+    void flattenBean_shouldFlattenSimpleNestedObject() {
+        NestedBean nested = new NestedBean();
+        nested.setValue("nestedVal");
+        ComplexBean bean = new ComplexBean();
+        bean.setName("Alice");
+        bean.setAge(25);
+        bean.setNested(nested);
+
+        Map<String, Object> flat = BeanUtils.flattenBean(bean);
+
+        assertEquals("Alice", flat.get("name"));
+        assertEquals(25, flat.get("age"));
+        assertEquals("nestedVal", flat.get("nested.value"));
+    }
+
+    @Test
+    void flattenBean_shouldFlattenListAndMap() {
+        NestedBean nested1 = new NestedBean();
+        nested1.setValue("n1");
+        NestedBean nested2 = new NestedBean();
+        nested2.setValue("n2");
+
+        Map<String, Object> extra = new HashMap<>();
+        extra.put("key1", "value1");
+        extra.put("key2", Arrays.asList("a", "b"));
+
+        ComplexBean bean = new ComplexBean();
+        bean.setNestedList(Arrays.asList(nested1, nested2));
+        bean.setExtra(extra);
+
+        Map<String, Object> flat = BeanUtils.flattenBean(bean);
+
+        // List 索引展开
+        assertEquals("n1", flat.get("nestedList[0].value"));
+        assertEquals("n2", flat.get("nestedList[1].value"));
+
+        // Map 展开
+        assertEquals("value1", flat.get("extra.key1"));
+        assertEquals("a", flat.get("extra.key2[0]"));
+        assertEquals("b", flat.get("extra.key2[1]"));
+    }
+
+    @Test
+    void flattenBean_shouldHandleMultipartFile() {
+        // 使用 Spring MockMultipartFile 模拟文件
+        MockMultipartFile file1 = new MockMultipartFile("file1", "test1.txt", "text/plain", "content".getBytes());
+        MockMultipartFile file2 = new MockMultipartFile("file2", "test2.txt", "text/plain", "content".getBytes());
+        MockMultipartFile file3 = new MockMultipartFile("file3", "test3.txt", "text/plain", "content".getBytes());
+        ComplexBean bean = new ComplexBean();
+        bean.setFile(file1);
+
+        NestedBean nested1 = new NestedBean();
+        nested1.setValue("n1");
+        nested1.setFile(file2);
+        NestedBean nested2 = new NestedBean();
+        nested2.setValue("n2");
+        nested2.setFile(file3);
+        bean.setNestedList(List.of(nested1, nested2));
+
+        Map<String, Object> flat = BeanUtils.flattenBean(bean);
+
+        assertTrue(flat.containsKey("file"));
+        Object value = flat.get("file");
+        // 保留原对象引用
+        assertSame(file1, value);
+
+        assertSame(file2, flat.get("nestedList[0].file"));
+        assertSame(file3, flat.get("nestedList[1].file"));
+    }
+
+    @Test
+    void flattenBean_shouldHandleComplexNestedStructure() {
+        NestedBean nested = new NestedBean();
+        nested.setValue("val");
+        nested.setTags(Arrays.asList("tag1", "tag2"));
+
+        Map<String, Object> extra = new HashMap<>();
+        extra.put("innerMap", Map.of("k", "v"));
+
+        ComplexBean bean = new ComplexBean();
+        bean.setName("Bob");
+        bean.setNested(nested);
+        bean.setExtra(extra);
+
+        Map<String, Object> flat = BeanUtils.flattenBean(bean);
+
+        assertEquals("Bob", flat.get("name"));
+        assertEquals("val", flat.get("nested.value"));
+        assertEquals("tag1", flat.get("nested.tags[0]"));
+        assertEquals("tag2", flat.get("nested.tags[1]"));
+        assertEquals("v", flat.get("extra.innerMap.k"));
     }
 }

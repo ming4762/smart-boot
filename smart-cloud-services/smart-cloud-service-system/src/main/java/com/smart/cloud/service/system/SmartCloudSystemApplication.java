@@ -1,5 +1,6 @@
 package com.smart.cloud.service.system;
 
+import com.smart.framework.commons.core.spring.EnableApplicationContext;
 import com.smart.framework.commons.core.spring.EnabledCustomObjectMapper;
 import com.smart.framework.commons.core.validate.EnableGlobalValidator;
 import com.smart.framework.crud.spring.EnableMybatisPlusTenant;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableGlobalValidator
 @EnabledCustomObjectMapper
 @EnableMybatisPlusTenant
+@EnableApplicationContext
 public class SmartCloudSystemApplication {
 
     public static void main(String[] args) {

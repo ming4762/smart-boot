@@ -11,6 +11,7 @@ import com.smart.module.api.file.bo.FileDownloadResult;
 import com.smart.module.api.file.bo.FileHandlerResult;
 import com.smart.module.api.file.dto.FileSaveParameter;
 import com.smart.module.file.model.SmartFilePO;
+import com.smart.module.file.model.SmartFileStoragePO;
 import com.smart.module.file.pojo.FileStorageServiceCacheData;
 import com.smart.module.file.pojo.bo.SysFileBO;
 import com.smart.module.file.service.SmartFileService;
@@ -150,6 +151,36 @@ public class DefaultFileServiceImpl implements FileService {
     @Override
     public FileDownloadResult download(@NonNull Long id) {
         SmartFilePO sysFileData = this.sysFileService.getById(id);
+        return this.doDownload(sysFileData);
+    }
+
+    /**
+     * 下载文件
+     *
+     * @param fileStorageCode 文件存储器代码
+     * @param filename        文件名
+     * @return 下载内容
+     */
+    @Override
+    public FileDownloadResult download(@NonNull String fileStorageCode, @NonNull String filename) {
+        SmartFileStoragePO fileStorage = this.smartFileStorageService.getByCode(fileStorageCode);
+        if (fileStorage == null) {
+            throw new SmartFileException("文件存储器不存在，文件存储器代码：" + fileStorageCode);
+        }
+        SmartFilePO sysFileData = this.sysFileService.lambdaQuery()
+                .eq(SmartFilePO::getFileStorageId, fileStorage.getId())
+                .eq(SmartFilePO::getFilename, filename)
+                .one();
+        return this.doDownload(sysFileData);
+    }
+
+    /**
+     * 执行下载文件
+     *
+     * @param sysFileData 文件信息
+     * @return 下载内容
+     */
+    private FileDownloadResult doDownload(SmartFilePO sysFileData) {
         if (sysFileData == null) {
             return null;
         }

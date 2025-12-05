@@ -1,17 +1,27 @@
 package com.smart.framework.extension.wechat.constants;
 
+import com.smart.framework.commons.core.json.BaseEnum;
+import lombok.Getter;
+
 /**
  * @author zhongming4762
  * 2023/4/7
  */
-public enum WechatMsgTypeEnum {
+@Getter
+public enum WechatMsgTypeEnum implements BaseEnum<String> {
     /**
      * 消息
      */
-    text,
+    TEXT("text"),
 
     /**
      * 事件
      */
-    event,
+    EVENT("event");
+
+    private final String value;
+
+     WechatMsgTypeEnum(String value) {
+        this.value = value;
+    }
 }

@@ -1,16 +1,15 @@
 package com.smart.framework.auth.extensions.wechat;
 
+import com.smart.framework.auth.core.config.SmartSecurityConfigurerAdapter;
 import com.smart.framework.auth.core.wechat.WechatAuthConfigProvider;
 import com.smart.framework.auth.extensions.wechat.authentication.WechatAuthenticationProvider;
 import com.smart.framework.auth.extensions.wechat.filter.WechatAppLoginFilter;
 import com.smart.framework.auth.extensions.wechat.provider.WechatLoginProvider;
 import com.smart.framework.auth.extensions.wechat.userdetails.WechatUserDetailService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
 import org.springframework.security.web.DefaultSecurityFilterChain;
@@ -19,18 +18,20 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author zhongming4762
  * 2023/4/3
  */
 @Slf4j
-public class SmartAuthWechatAppConfigurer<H extends HttpSecurityBuilder<H>> extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, H> {
+public class SmartAuthWechatAppConfigurer<H extends HttpSecurityBuilder<H>> extends SmartSecurityConfigurerAdapter<H> {
 
-    private static final String DEFAULT_LOGIN_URL = "/wechat/auth/appLogin";
+    private static final String DEFAULT_LOGIN_URL = "auth/auth/appLogin";
 
     public static <H extends HttpSecurityBuilder<H>> SmartAuthWechatAppConfigurer<H> wechatApp() {
         return new SmartAuthWechatAppConfigurer<>();
@@ -59,7 +60,7 @@ public class SmartAuthWechatAppConfigurer<H extends HttpSecurityBuilder<H>> exte
     private FilterChainProxy createLoginFilter() {
         List<SecurityFilterChain> chains = new ArrayList<>(1);
         chains.add(
-                new DefaultSecurityFilterChain(new AntPathRequestMatcher(this.serviceProvider.loginUrl), this.createWechatAppLoginFilter())
+                new DefaultSecurityFilterChain(PathPatternRequestMatcher.withDefaults().matcher(this.serviceProvider.loginUrl), this.createWechatAppLoginFilter())
         );
         return new FilterChainProxy(chains);
     }
@@ -80,19 +81,6 @@ public class SmartAuthWechatAppConfigurer<H extends HttpSecurityBuilder<H>> exte
         loginFilter.setAuthenticationFailureHandler(this.getBean(AuthenticationFailureHandler.class, this.serviceProvider.authenticationFailureHandler));
         loginFilter.setAuthenticationSuccessHandler(this.getBean(AuthenticationSuccessHandler.class, this.serviceProvider.authenticationSuccessHandler));
         return loginFilter;
-    }
-
-    private <T> T getBean(Class<T> clazz, T t) {
-        if (Objects.nonNull(t)) {
-            return t;
-        }
-        ApplicationContext applicationContext = this.getBuilder().getSharedObject(ApplicationContext.class);
-        try {
-            return Optional.ofNullable(applicationContext).map(item -> item.getBean(clazz)).orElse(null);
-        } catch (NoSuchBeanDefinitionException e) {
-            log.warn("获取bean发生错误: " + e.getMessage());
-            return null;
-        }
     }
 
     public SmartAuthWechatAppConfigurer<H> loginUrl(String loginUrl) {

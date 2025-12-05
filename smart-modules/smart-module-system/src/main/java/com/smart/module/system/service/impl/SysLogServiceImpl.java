@@ -42,12 +42,12 @@ public class SysLogServiceImpl extends BaseServiceImpl<SysLogMapper, SysLogPO> i
     private final SysTenantService sysTenantService;
 
     @Override
-    public List<? extends SysLogPO> list(@NonNull QueryWrapper<SysLogPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
+    public List<SysLogPO> list(@NonNull QueryWrapper<SysLogPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
         queryWrapper.select(SysLogPO.class, field -> !LIST_NO_SELECT_FIELDS.contains(field.getProperty()));
         if (!AuthUtils.isPlatformTenant()) {
             queryWrapper.lambda().eq(SysLogPO::getTenantId, AuthUtils.getNonNullCurrentTenantId());
         }
-        List<? extends SysLogPO> sysLogList = super.list(queryWrapper, parameter, paging);
+        List<SysLogPO> sysLogList = super.list(queryWrapper, parameter, paging);
         if (CollectionUtils.isEmpty(sysLogList)) {
             return Lists.newArrayList();
         }
@@ -62,7 +62,7 @@ public class SysLogServiceImpl extends BaseServiceImpl<SysLogMapper, SysLogPO> i
         if (Boolean.TRUE.equals(parameter.getParameter().get(SystemConstantEnum.LIST_WITH_TENANT))) {
             this.queryTenant(logVoList);
         }
-        return logVoList;
+        return logVoList.stream().map(SysLogPO.class::cast).toList();
     }
 
     private void queryTenant(List<SysLogListVO> logVoList) {

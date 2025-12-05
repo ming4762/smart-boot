@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
@@ -12,6 +13,8 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.ZonedDateTimeSerializer;
 import com.smart.framework.commons.core.constants.DateTimePatternEnum;
+import com.smart.framework.commons.core.json.BaseEnumJsonModule;
+import com.smart.framework.commons.core.utils.JsonUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -61,6 +64,13 @@ public class CustomObjectMapperConfigurer implements WebMvcConfigurer {
         javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ISO_DATE.withZone(ZoneId.systemDefault())));
         javaTimeModule.addDeserializer(LocalTime.class, new LocalTimeDeserializer(DateTimeFormatter.ISO_TIME.withZone(ZoneId.systemDefault())));
         objectMapper.registerModule(javaTimeModule);
+
+        // 注册BaseEnum模块
+        SimpleModule baseEnumModule = new BaseEnumJsonModule();
+        objectMapper.registerModule(baseEnumModule);
+
+        // 初始化JsonUtils
+        JsonUtils.initObjectMapper(objectMapper);
 
         return objectMapper;
     }

@@ -4,28 +4,27 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.smart.framework.crud.constants.CrudCommonEnum;
-import com.smart.framework.crud.query.PageSortQuery;
 import com.smart.framework.crud.service.BaseServiceImpl;
-import com.smart.framework.crud.service.UserSetterService;
 import com.smart.module.system.mapper.SysUserGroupMapper;
 import com.smart.module.system.model.SysUserGroupPO;
 import com.smart.module.system.model.SysUserGroupUserPO;
 import com.smart.module.system.model.SysUserPO;
 import com.smart.module.system.pojo.dto.UserGroupUserSaveDTO;
 import com.smart.module.system.pojo.dto.UserUserGroupSaveDTO;
-import com.smart.module.system.pojo.vo.SysUserGroupListVO;
 import com.smart.module.system.service.SysUserGroupService;
 import com.smart.module.system.service.SysUserGroupUserService;
 import com.smart.module.system.service.SysUserService;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -34,37 +33,12 @@ import java.util.stream.Collectors;
  * 2020/1/24 3:05 下午
  */
 @Service
+@RequiredArgsConstructor
 public class SysUserGroupServiceImpl extends BaseServiceImpl<SysUserGroupMapper, SysUserGroupPO> implements SysUserGroupService {
 
     private final SysUserGroupUserService sysUserGroupUserService;
 
     private final SysUserService sysUserService;
-
-    private final UserSetterService userSetterService;
-
-    public SysUserGroupServiceImpl(SysUserGroupUserService sysUserGroupUserService, SysUserService sysUserService, UserSetterService userSetterService) {
-        this.sysUserGroupUserService = sysUserGroupUserService;
-        this.sysUserService = sysUserService;
-        this.userSetterService = userSetterService;
-    }
-
-    @Override
-    public List<? extends SysUserGroupPO> list(@NonNull QueryWrapper<SysUserGroupPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
-        List<? extends SysUserGroupPO> userGroupList = super.list(queryWrapper, parameter, paging);
-        if (CollectionUtils.isEmpty(userGroupList)) {
-            return new ArrayList<>(0);
-        }
-        List<SysUserGroupListVO> voList = userGroupList.stream()
-                .map(item -> {
-                    SysUserGroupListVO vo = new SysUserGroupListVO();
-                    BeanUtils.copyProperties(item, vo);
-                    return vo;
-                }).toList();
-        if (Boolean.TRUE.equals(parameter.getParameter().get(CrudCommonEnum.QUERY_CREATE_UPDATE_USER.name()))) {
-            this.userSetterService.setCreateUpdateUser(voList);
-        }
-        return voList;
-    }
 
     /**
      * 重写批量删除

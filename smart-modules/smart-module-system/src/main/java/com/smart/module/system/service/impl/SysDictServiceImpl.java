@@ -45,7 +45,7 @@ public class SysDictServiceImpl extends BaseServiceImpl<SysDictMapper, SysDictPO
      * @return 查询结果
      */
     @Override
-    public List<? extends SysDictPO> list(@NonNull QueryWrapper<SysDictPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
+    public List<SysDictPO> list(@NonNull QueryWrapper<SysDictPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
         if (Boolean.TRUE.equals(parameter.getParameter().get(SystemConstantEnum.LIST_FILTER_TENANT))) {
             queryWrapper.lambda()
                     .and(query -> {
@@ -55,7 +55,7 @@ public class SysDictServiceImpl extends BaseServiceImpl<SysDictMapper, SysDictPO
                         }
                     });
         }
-        List<? extends SysDictPO> dataList = super.list(queryWrapper, parameter, paging);
+        List<SysDictPO> dataList = super.list(queryWrapper, parameter, paging);
         if (CollectionUtils.isEmpty(dataList)) {
             return dataList;
         }
@@ -69,7 +69,7 @@ public class SysDictServiceImpl extends BaseServiceImpl<SysDictMapper, SysDictPO
             this.queryTenant(voList);
         }
 
-        return voList;
+        return voList.stream().map(SysDictPO.class::cast).toList();
     }
 
     /**

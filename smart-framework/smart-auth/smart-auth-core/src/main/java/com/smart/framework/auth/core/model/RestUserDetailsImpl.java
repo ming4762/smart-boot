@@ -44,6 +44,8 @@ public class RestUserDetailsImpl implements RestUserDetails, Serializable {
 
     private String locale;
 
+    private Boolean enabled;
+
     @Builder.Default
     private Set<PermissionGrantedAuthority> permissions = HashSet.newHashSet(0);
 
@@ -174,7 +176,7 @@ public class RestUserDetailsImpl implements RestUserDetails, Serializable {
     @Override
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public boolean isEnabled() {
-        return true;
+        return !Boolean.FALSE.equals(this.enabled);
     }
 
 }

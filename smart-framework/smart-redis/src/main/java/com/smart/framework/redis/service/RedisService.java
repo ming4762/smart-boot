@@ -102,6 +102,7 @@ public interface RedisService extends CacheService {
     /**
      * 根据key删除hash内的所有元素
      * @param key key
+     * @return 是否删除成功
      */
     boolean hashDelete(String key);
 
@@ -109,6 +110,7 @@ public interface RedisService extends CacheService {
      * 设置hash的过期时间
      * @param key key
      * @param timeout 过期时间
+     * @return 是否设置成功
      */
     boolean hashExpire(String key, Duration timeout);
 
@@ -178,5 +180,9 @@ public interface RedisService extends CacheService {
      */
     RLock getLock(String key);
 
+     /**
+     * 获取redisson client
+     * @return redisson client
+     */
     RedissonClient getRedissonClient();
 }

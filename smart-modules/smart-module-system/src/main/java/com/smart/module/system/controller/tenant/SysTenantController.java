@@ -11,6 +11,7 @@ import com.smart.framework.commons.core.utils.EnumUtils;
 import com.smart.framework.crud.controller.BaseController;
 import com.smart.framework.crud.parameter.SetUseYnParameter;
 import com.smart.framework.crud.plus.tenant.SmartTenantControl;
+import com.smart.framework.crud.plus.tenant.SmartTenantIgnoreData;
 import com.smart.framework.crud.query.IdParameter;
 import com.smart.framework.crud.query.PageSortQuery;
 import com.smart.framework.crud.utils.CrudPageHelper;
@@ -188,8 +189,10 @@ public class SysTenantController extends BaseController<SysTenantService, SysTen
     @Operation(summary = "根据ID查询角色")
     public Result<SysRolePO> getRoleById(@RequestBody IdParameter id) {
         // 平台租户忽略查询租户条件
-        SmartTenantControl.ignore(SysRolePO.class, null, List.of(SqlCommandType.SELECT));
-        return Result.success(this.sysRoleService.getById(id.getId()));
+        try (SmartTenantIgnoreData ignoreData = SmartTenantControl.ignore(SysRolePO.class, null, List.of(SqlCommandType.SELECT))) {
+            return Result.success(this.sysRoleService.getById(id.getId()));
+        }
+
     }
 
     @PostMapping("saveTenantUser")
@@ -204,13 +207,15 @@ public class SysTenantController extends BaseController<SysTenantService, SysTen
     public Result<List<SysDeptPO>> listDeptByTenant(@RequestBody IdParameter tenantId) {
         this.validatePlatformTenant("非平台管理租户无权限查看其他租户部门");
         // 忽略租户条件
-        SmartTenantControl.ignore(SysDeptPO.class, null, List.of(SqlCommandType.SELECT));
-        return Result.success(
-                this.sysDeptService.lambdaQuery()
-                        .select(SysDeptPO::getDeptId, SysDeptPO::getDeptName, SysDeptPO::getParentId, SysDeptPO::getDeptCode)
-                        .eq(SysDeptPO::getTenantId, tenantId.getId())
-                        .list()
-        );
+        try (SmartTenantIgnoreData ignoreData = SmartTenantControl.ignore(SysDeptPO.class, null, List.of(SqlCommandType.SELECT))) {
+            return Result.success(
+                    this.sysDeptService.lambdaQuery()
+                            .select(SysDeptPO::getDeptId, SysDeptPO::getDeptName, SysDeptPO::getParentId, SysDeptPO::getDeptCode)
+                            .eq(SysDeptPO::getTenantId, tenantId.getId())
+                            .list()
+            );
+        }
+
     }
 
     private void validatePlatformTenant(String message) {

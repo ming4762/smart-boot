@@ -89,7 +89,7 @@ public abstract class BaseQueryController<K extends BaseService<T>, T extends Ba
      * @param parameter 参数
      * @return 查询结果
      */
-    public List<? extends T> listData(@NonNull PageSortQuery parameter) {
+    public List<T> listData(@NonNull PageSortQuery parameter) {
         final QueryWrapper<T> queryWrapper = CrudUtils.createQueryWrapperFromParameters(parameter.getParameter(), this.getEntityClass());
         // 设置查询字段
         if (!parameter.getPropertyList().isEmpty()) {

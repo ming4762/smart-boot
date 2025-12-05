@@ -42,7 +42,7 @@ public class SysCategoryServiceImpl extends BaseServiceImpl<SysCategoryMapper, S
      * @return 查询结果
      */
     @Override
-    public List<? extends SysCategoryPO> list(@NonNull QueryWrapper<SysCategoryPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
+    public List<SysCategoryPO> list(@NonNull QueryWrapper<SysCategoryPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
         if (Boolean.TRUE.equals(parameter.getParameter().get(SystemConstantEnum.LIST_FILTER_TENANT))) {
             queryWrapper.lambda()
                     .and(query -> {

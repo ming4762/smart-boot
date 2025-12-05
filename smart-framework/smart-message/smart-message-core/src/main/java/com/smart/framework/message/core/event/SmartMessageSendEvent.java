@@ -1,6 +1,6 @@
 package com.smart.framework.message.core.event;
 
-import com.smart.module.api.message.dto.MessageSendDTO;
+import com.smart.module.api.message.dto.MessageSendResult;
 import com.smart.module.api.message.parameter.RemoteMessageSendParameter;
 import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
@@ -21,9 +21,9 @@ public class SmartMessageSendEvent extends ApplicationEvent {
 
     private final RemoteMessageSendParameter sendParameter;
 
-    private final List<MessageSendDTO> sendResult;
+    private final List<MessageSendResult> sendResult;
 
-    public SmartMessageSendEvent(RemoteMessageSendParameter sendParameter, List<MessageSendDTO> sendResult, Object source) {
+    public SmartMessageSendEvent(RemoteMessageSendParameter sendParameter, List<MessageSendResult> sendResult, Object source) {
         super(source);
         this.sendParameter = sendParameter;
         this.sendResult = sendResult;

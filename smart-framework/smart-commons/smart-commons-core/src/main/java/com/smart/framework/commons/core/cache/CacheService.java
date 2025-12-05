@@ -173,4 +173,12 @@ public interface CacheService {
      * @param newKey 新key
      */
     void rename(String oldKey, String newKey);
+
+    /**
+     * 获取缓存过期时间
+     * @param key key
+     * @return 过期时间，null代表无限大
+     */
+    @Nullable
+    Duration getExpire(@NonNull String key);
 }

@@ -3,6 +3,7 @@ package com.smart.framework.kettle.core.service;
 import com.smart.framework.commons.core.data.Tree;
 import com.smart.framework.kettle.core.KettleActuator;
 import com.smart.framework.kettle.core.KettleProperties;
+import com.smart.framework.kettle.core.listener.SmartKettleGlobalAgentListener;
 import com.smart.framework.kettle.core.log.KettleLogController;
 import com.smart.framework.kettle.core.model.RepositoryDirectoryData;
 import com.smart.framework.kettle.core.parameter.BasicExecuteParameter;
@@ -12,13 +13,10 @@ import com.smart.framework.kettle.core.repository.pool.KettleDatabaseRepositoryP
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.pentaho.di.job.Job;
-import org.pentaho.di.job.JobListener;
 import org.pentaho.di.job.JobMeta;
 import org.pentaho.di.repository.kdr.KettleDatabaseRepository;
 import org.pentaho.di.trans.Trans;
-import org.pentaho.di.trans.TransListener;
 import org.pentaho.di.trans.TransMeta;
-import org.pentaho.di.trans.TransStoppedListener;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -27,9 +25,6 @@ import org.springframework.util.Assert;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -45,20 +40,7 @@ public class KettleServiceImpl implements KettleService, ApplicationContextAware
     private final KettleLogController kettleLogController;
     private final KettleProperties kettleProperties;
 
-    /**
-     * trans事件列表
-     */
-    private List<TransListener> transListenerList = new ArrayList<>(0);
-
-    /**
-     * trans top 事件列表
-     */
-    private List<TransStoppedListener> transStoppedListenerList = new ArrayList<>(0);
-
-    /**
-     * job 事件列表
-     */
-    private List<JobListener> jobListenerList = new ArrayList<>(0);
+    private ApplicationContext applicationContext;
 
     /**
      * 执行资源库转换
@@ -190,7 +172,7 @@ public class KettleServiceImpl implements KettleService, ApplicationContextAware
             if (beforeHandler != null) {
                 beforeHandler.accept(job1);
             }
-            this.jobListenerList.forEach(job1 :: addJobListener);
+            job1.addJobListener(this.createListener());
         });
     }
 
@@ -206,10 +188,15 @@ public class KettleServiceImpl implements KettleService, ApplicationContextAware
             if (beforeHandler != null) {
                 beforeHandler.accept(trans1);
             }
-            // 添加转换事件
-            this.transListenerList.forEach(trans1::addTransListener);
-            this.transStoppedListenerList.forEach(trans1 :: addTransStoppedListener);
+            // 添加转换事件监听器
+            SmartKettleGlobalAgentListener listener = this.createListener();
+            trans1.addTransListener(listener);
+            trans1.addTransStoppedListener(listener);
         });
+    }
+
+    private SmartKettleGlobalAgentListener createListener() {
+        return new SmartKettleGlobalAgentListener(this.applicationContext);
     }
 
     @Override
@@ -247,14 +234,6 @@ public class KettleServiceImpl implements KettleService, ApplicationContextAware
 
     @Override
     public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
-        this.transListenerList = Arrays.stream(applicationContext.getBeanNamesForType(TransListener.class))
-                .map(item -> applicationContext.getBean(item, TransListener.class))
-                .toList();
-        this.transStoppedListenerList = Arrays.stream(applicationContext.getBeanNamesForType(TransStoppedListener.class))
-                .map(item -> applicationContext.getBean(item, TransStoppedListener.class))
-                .toList();
-        this.jobListenerList = Arrays.stream(applicationContext.getBeanNamesForType(JobListener.class))
-                .map(item -> applicationContext.getBean(item, JobListener.class))
-                .toList();
+        this.applicationContext = applicationContext;
     }
 }

@@ -47,9 +47,18 @@ public interface SystemApiUrlConstants {
     String PARAMETER_GET = "/remote/system/parameter/get";
     String PARAMETER_BATCH_GET = "/remote/system/parameter/batchGet";
 
+    /**
+     * 通过微信appid和openid获取用户信息
+     */
     String WECHAT_GET_BY_APP_OPENID = "/remote/system/wechat/getByAppOpenid";
-
     String WECHAT_GET_BY_APP_UNIONID = "/remote/system/wechat/getByUnionid";
+
+    /**
+     * 通过钉钉获取用户信息
+     */
+    String DINGTALK_GET_USER_BY_APP_OPENID = "/remote/system/dingtalk/getUserByAppOpenid";
+    String DINGTALK_GET_USER_BY_APP_UNIONID = "/remote/system/dingtalk/getUserByUnionid";
+    String DINGTALK_GET_USER_BY_APP_MOBILE = "/remote/system/dingtalk/getUserByAppMobile";
 
     /**
      * 数据字典

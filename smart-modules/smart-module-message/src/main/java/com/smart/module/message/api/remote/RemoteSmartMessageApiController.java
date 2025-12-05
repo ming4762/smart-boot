@@ -1,12 +1,14 @@
 package com.smart.module.message.api.remote;
 
-import com.smart.module.message.api.local.LocalSmartMessageApi;
 import com.smart.module.api.message.SmartMessageApi;
 import com.smart.module.api.message.constants.SmartMessageApiUrlConstants;
-import com.smart.module.api.message.dto.MessageSendDTO;
-import com.smart.module.api.message.dto.SmsSendDTO;
+import com.smart.module.api.message.dto.MessageSendResult;
+import com.smart.module.api.message.dto.SmsSendResult;
 import com.smart.module.api.message.parameter.RemoteMessageSendParameter;
 import com.smart.module.api.message.parameter.RemoteSmsSendParameter;
+import com.smart.module.message.api.local.LocalSmartMessageApi;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,13 +23,10 @@ import java.util.List;
  */
 @RestController
 @RequestMapping
+@RequiredArgsConstructor
 public class RemoteSmartMessageApiController implements SmartMessageApi {
 
     private final LocalSmartMessageApi localSmartMessageApi;
-
-    public RemoteSmartMessageApiController(LocalSmartMessageApi localSmartMessageApi) {
-        this.localSmartMessageApi = localSmartMessageApi;
-    }
 
     /**
      * 发送短信
@@ -37,7 +36,7 @@ public class RemoteSmartMessageApiController implements SmartMessageApi {
      */
     @Override
     @PostMapping(SmartMessageApiUrlConstants.SMS_SEND)
-    public SmsSendDTO sendSms(@RequestBody RemoteSmsSendParameter parameter) {
+    public SmsSendResult sendSms(@RequestBody RemoteSmsSendParameter parameter) {
         return this.localSmartMessageApi.sendSms(parameter);
     }
 
@@ -48,8 +47,8 @@ public class RemoteSmartMessageApiController implements SmartMessageApi {
      * @return 消息发送结果
      */
     @Override
-    @PostMapping(SmartMessageApiUrlConstants.SEND)
-    public List<MessageSendDTO> send(RemoteMessageSendParameter parameter) {
-        return List.of();
+    @PostMapping(value = SmartMessageApiUrlConstants.SEND, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public List<MessageSendResult> send(RemoteMessageSendParameter parameter) {
+        return this.localSmartMessageApi.send(parameter);
     }
 }

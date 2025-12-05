@@ -42,13 +42,13 @@ public class SysTenantSubscribeServiceImpl extends BaseServiceImpl<SysTenantSubs
      * @return 查询结果
      */
     @Override
-    public List<? extends SysTenantSubscribePO> list(@NonNull QueryWrapper<SysTenantSubscribePO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
+    public List<SysTenantSubscribePO> list(@NonNull QueryWrapper<SysTenantSubscribePO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
         SysTenantSubscribeListDTO dto = (SysTenantSubscribeListDTO) parameter;
         if (dto.getTenantId() != null) {
             queryWrapper.lambda()
                     .eq(SysTenantSubscribePO::getTenantId, dto.getTenantId());
         }
-        List<? extends SysTenantSubscribePO> list = super.list(queryWrapper, parameter, paging);
+        List<SysTenantSubscribePO> list = super.list(queryWrapper, parameter, paging);
         if (CollectionUtils.isEmpty(list)) {
             return list;
         }
@@ -60,7 +60,7 @@ public class SysTenantSubscribeServiceImpl extends BaseServiceImpl<SysTenantSubs
         if (Boolean.TRUE.equals(parameter.getParameter().get(SystemConstantEnum.TENANT_SUBSCRIBE_LIST_WITH_PACKAGE.name()))) {
             this.queryPackage(voList);
         }
-        return voList;
+        return voList.stream().map(SysTenantSubscribePO.class::cast).toList();
     }
 
     /**

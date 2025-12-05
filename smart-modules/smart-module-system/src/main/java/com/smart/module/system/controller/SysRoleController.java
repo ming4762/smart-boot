@@ -10,6 +10,7 @@ import com.smart.framework.commons.core.message.Result;
 import com.smart.framework.crud.controller.BaseController;
 import com.smart.framework.crud.datapermission.handler.SmartDataPermissionMapperHolder;
 import com.smart.framework.crud.plus.tenant.SmartTenantControl;
+import com.smart.framework.crud.plus.tenant.SmartTenantIgnoreData;
 import com.smart.framework.crud.query.IdParameter;
 import com.smart.framework.crud.query.PageSortQuery;
 import com.smart.framework.crud.utils.CrudPageHelper;
@@ -169,16 +170,17 @@ public class SysRoleController extends BaseController<SysRoleService, SysRolePO>
     @PostMapping("listRoleByTenantId")
     public Result<PageData<SysRolePO>> listRoleByTenantId(@RequestBody @Valid RoleListByTenantIdDTO parameter) {
         // 平台租户忽略查询租户条件
-        SmartTenantControl.ignore(SysRolePO.class, null, List.of(SqlCommandType.SELECT));
-        // 设置分页
-        Page<SysRolePO> page = this.doPage(parameter);
-        CrudPageHelper.setPage(page);
-        // 查询数据
-        this.service.lambdaQuery()
-                .eq(SysRolePO::getTenantId, parameter.getTenantId())
-                .list();
-        return Result.success(
-                new PageData<>(page.getResult(), page.getTotal())
-        );
+        try (SmartTenantIgnoreData ignore = SmartTenantControl.ignore(SysRolePO.class, null, List.of(SqlCommandType.SELECT))) {
+            // 设置分页
+            Page<SysRolePO> page = this.doPage(parameter);
+            CrudPageHelper.setPage(page);
+            // 查询数据
+            this.service.lambdaQuery()
+                    .eq(SysRolePO::getTenantId, parameter.getTenantId())
+                    .list();
+            return Result.success(
+                    new PageData<>(page.getResult(), page.getTotal())
+            );
+        }
     }
 }

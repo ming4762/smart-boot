@@ -6,6 +6,8 @@ import java.lang.annotation.*;
 
 /**
  * 逻辑删除注解
+ * @author zhongming4762
+ * 2024/4/21
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})

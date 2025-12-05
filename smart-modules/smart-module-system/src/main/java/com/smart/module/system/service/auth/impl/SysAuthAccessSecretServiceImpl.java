@@ -88,8 +88,8 @@ public class SysAuthAccessSecretServiceImpl extends BaseServiceImpl<SysAuthAcces
      * @return 查询结果
      */
     @Override
-    public List<? extends SysAuthAccessSecretPO> list(@NonNull QueryWrapper<SysAuthAccessSecretPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
-        List<? extends SysAuthAccessSecretPO> list = super.list(queryWrapper, parameter, paging);
+    public List<SysAuthAccessSecretPO> list(@NonNull QueryWrapper<SysAuthAccessSecretPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
+        List<SysAuthAccessSecretPO> list = super.list(queryWrapper, parameter, paging);
         if (CollectionUtils.isEmpty(list)) {
             return list;
         }
@@ -102,7 +102,7 @@ public class SysAuthAccessSecretServiceImpl extends BaseServiceImpl<SysAuthAcces
         if (Boolean.TRUE.equals(parameter.getParameter().get(CrudCommonEnum.WITH_ALL))) {
             this.sysTenantService.injectTenant(voList);
         }
-        return voList;
+        return voList.stream().map(SysAuthAccessSecretPO.class::cast).toList();
     }
 
     /**
@@ -172,11 +172,12 @@ public class SysAuthAccessSecretServiceImpl extends BaseServiceImpl<SysAuthAcces
      */
     public String getBaseUrl(HttpServletRequest request) {
         // 获取协议 http 或 https
-        String scheme = request.getScheme(); // http
+        // 注意：这只是偏好，不作为必须条件。
+        String scheme = request.getScheme();
         // 获取主机名
-        String serverName = request.getServerName(); // localhost
+        String serverName = request.getServerName();
         // 获取端口
-        int serverPort = request.getServerPort(); // 5666
+        int serverPort = request.getServerPort();
 
         // 拼接成完整的 base URL
         return scheme + "://" + serverName + (serverPort == 80 || serverPort == 443 ? "" : ":" + serverPort);

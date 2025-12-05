@@ -33,4 +33,9 @@ public class AuthUserDTO implements Serializable {
 
     private String password;
 
+     /**
+      * 是否启用
+      */
+    private Boolean useYn;
+
 }

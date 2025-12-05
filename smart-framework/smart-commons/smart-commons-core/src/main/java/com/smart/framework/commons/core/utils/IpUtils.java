@@ -3,11 +3,13 @@ package com.smart.framework.commons.core.utils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
-import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import java.net.*;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.util.*;
 
 
@@ -32,12 +34,18 @@ public class IpUtils {
      * 注意：这只是偏好，不作为必须条件。
      */
     private static final List<String> PREFERRED_IF_PREFIX = List.of(
-            "en",   // macOS / some Linux
-            "eth",  // Linux
-            "enp",  // new Linux naming
-            "ens",  // another Linux
-            "wlan", // Windows/Linux wifi
-            "wl"    // some wifi names
+            // macOS / some Linux
+            "en",
+            // Linux
+            "eth",
+            // new Linux naming
+            "enp",
+            // another Linux
+            "ens",
+            // Windows/Linux wifi
+            "wlan",
+            // some wifi names
+            "wl"
     );
 
     private IpUtils() {
@@ -58,38 +66,37 @@ public class IpUtils {
     }
 
     public static String getIpAddr(HttpServletRequest request) {
+        if (request == null) {
+            return null;
+        }
         String ip = null;
-        try {
-            ip = request.getHeader("x-forwarded-for");
-            boolean ipIsNull = !StringUtils.hasText(ip);
-            if (ipIsNull || UNKNOWN.equalsIgnoreCase(ip)) {
-                ip = request.getHeader("Proxy-Client-IP");
-            }
-            if (ipIsNull || ip.isEmpty() || UNKNOWN.equalsIgnoreCase(ip)) {
-                ip = request.getHeader("WL-Proxy-Client-IP");
-            }
-            if (ipIsNull || UNKNOWN.equalsIgnoreCase(ip)) {
-                ip = request.getHeader("HTTP_CLIENT_IP");
-            }
-            if (ipIsNull || UNKNOWN.equalsIgnoreCase(ip)) {
-                ip = request.getHeader("HTTP_X_FORWARDED_FOR");
-            }
-            if (ipIsNull || UNKNOWN.equalsIgnoreCase(ip)) {
-                List<String> realLocalIpList = getRealLocalIpList();
-                if (!realLocalIpList.isEmpty()) {
-                    ip = realLocalIpList.getFirst();
+        // 常用代理头
+        String[] headers = {
+                "X-Forwarded-For",
+                "Proxy-Client-IP",
+                "WL-Proxy-Client-IP",
+                "HTTP_CLIENT_IP",
+                "HTTP_X_FORWARDED_FOR"
+        };
+        for (String header : headers) {
+            ip = request.getHeader(header);
+            if (ip != null && !ip.isEmpty() && !UNKNOWN.equalsIgnoreCase(ip)) {
+                // 多级代理时取第一个有效 IP
+                if (ip.contains(",")) {
+                    ip = ip.split(",")[0].trim();
                 }
-            }
-        } catch (Exception e) {
-            log.error("IPUtils ERROR ", e);
-        }
-        // 对于通过多个代理的情况，分割出第一个 IP
-        if (ip != null && ip.length() > 15) {
-            if (ip.contains(SEPARATOR)) {
-                ip = ip.substring(0, ip.indexOf(SEPARATOR));
+                return ip;
             }
         }
-        return LOCALHOST_IPV6.equals(ip) ? LOCALHOST_IP : ip;
+        // fallback：request.getRemoteAddr()
+        ip = request.getRemoteAddr();
+
+        // 本地 IPv6 转换成 IPv4
+        // // 如果是容器网桥 IP (通常 172.16.x.x / 172.17.x.x / 172.18.x.x)
+        if (ip.startsWith("172.") || LOCALHOST_IPV6.equals(ip)) {
+            ip = LOCALHOST_IP;
+        }
+        return ip;
     }
 
 
@@ -123,57 +130,68 @@ public class IpUtils {
      */
     @NonNull
     public static List<String> getRealLocalIpList() {
-        // 有优先匹配接口名字或 site-local 的地址
-        List<String> preferred = new ArrayList<>();
-        // 其它可用 IPv4 地址（非 loopback/link-local）
-        List<String> fallback = new ArrayList<>();
         try {
+            List<String> preferred = new ArrayList<>();
+            List<String> fallback = new ArrayList<>();
             Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
             while (networkInterfaces.hasMoreElements()) {
-                NetworkInterface networkInterface = networkInterfaces.nextElement();
-                // 去除回环接口，子接口，未运行接口
-                if (networkInterface.isLoopback() || networkInterface.isVirtual() || !networkInterface.isUp()) {
-                    continue;
-                }
-
-                String name = networkInterface.getName() != null ? networkInterface.getName() : "";
-                String display = networkInterface.getDisplayName() != null ? networkInterface.getDisplayName() : "";
-
-                boolean prefName = PREFERRED_IF_PREFIX.stream()
-                        .anyMatch(prefix -> name.startsWith(prefix) || display.startsWith(prefix));
-
-                Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
-                while (inetAddresses.hasMoreElements()) {
-                    InetAddress inetAddress = inetAddresses.nextElement();
-                    if (!(inetAddress instanceof Inet4Address)) {
-                        continue;
-                    }
-                    if (inetAddress.isLoopbackAddress() || inetAddress.isLinkLocalAddress()) {
-                        continue;
-                    }
-                    String ip = inetAddress.getHostAddress();
-                    if (inetAddress.isSiteLocalAddress() || prefName) {
-                        if (!preferred.contains(ip)) {
-                            preferred.add(ip);
-                        }
-                    } else {
-                        if (!fallback.contains(ip)) {
-                            fallback.add(ip);
-                        }
-                    }
-                }
+                processNetworkInterface(networkInterfaces.nextElement(), preferred, fallback);
+            }
+            if (!preferred.isEmpty()) {
+                return preferred;
+            }
+            if (!fallback.isEmpty()) {
+                return fallback;
             }
         } catch (SocketException e) {
             log.error(e.getMessage(), e);
-            return Collections.emptyList();
         }
-        if (!preferred.isEmpty()) {
-            return preferred;
-        }
-        if (!fallback.isEmpty()) {
-            return fallback;
-        }
-        // 最后没有结果，返回空列表
         return Collections.emptyList();
+    }
+
+    private static void processNetworkInterface(NetworkInterface networkInterface,
+                                                List<String> preferred,
+                                                List<String> fallback) throws SocketException {
+        if (!isUsableInterface(networkInterface)) {
+            return;
+        }
+        boolean prefName = isPreferredInterface(networkInterface);
+        Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
+        while (inetAddresses.hasMoreElements()) {
+            processInetAddress(inetAddresses.nextElement(), prefName, preferred, fallback);
+        }
+    }
+
+    private static boolean isUsableInterface(NetworkInterface networkInterface) throws SocketException {
+        return !networkInterface.isLoopback() && !networkInterface.isVirtual() && networkInterface.isUp();
+    }
+
+    private static boolean isPreferredInterface(NetworkInterface networkInterface) {
+        String name = networkInterface.getName() != null ? networkInterface.getName() : "";
+        String display = networkInterface.getDisplayName() != null ? networkInterface.getDisplayName() : "";
+        return PREFERRED_IF_PREFIX.stream().anyMatch(prefix -> name.startsWith(prefix) || display.startsWith(prefix));
+    }
+
+    private static void processInetAddress(InetAddress inetAddress,
+                                           boolean prefName,
+                                           List<String> preferred,
+                                           List<String> fallback) {
+        if (!(inetAddress instanceof Inet4Address)) {
+            return;
+        }
+        if (inetAddress.isLoopbackAddress() || inetAddress.isLinkLocalAddress()) {
+            return;
+        }
+
+        String ip = inetAddress.getHostAddress();
+        if (inetAddress.isSiteLocalAddress() || prefName) {
+            if (!preferred.contains(ip)) {
+                preferred.add(ip);
+            }
+        } else {
+            if (!fallback.contains(ip)) {
+                fallback.add(ip);
+            }
+        }
     }
 }

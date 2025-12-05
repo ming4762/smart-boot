@@ -35,25 +35,11 @@
 			<groupId>com.smart</groupId>
 			<artifactId>smart-boot-starter-auth-jwt</artifactId>
 		</dependency>
-<!--		<dependency>-->
-<!--			<groupId>com.smart</groupId>-->
-<!--			<artifactId>smart-boot-starter-auth-web</artifactId>-->
-<!--		</dependency>-->
 		<dependency>
 			<groupId>com.smart</groupId>
 			<artifactId>smart-boot-starter-auth-cache-redis</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>com.smart</groupId>
-			<artifactId>smart-boot-starter-auth-sms</artifactId>
-		</dependency>
 
-		<!--	短信登录支持	-->
-<!--		<dependency>-->
-<!--			<groupId>com.smart</groupId>-->
-<!--			<artifactId>smart-boot-starter-auth-sms</artifactId>-->
-<!--			<version>${project.version}</version>-->
-<!--		</dependency>-->
 
 		<!--	基础支持：国际化、异常处理	-->
 		<dependency>
@@ -65,10 +51,6 @@
 			<groupId>com.smart</groupId>
 			<artifactId>smart-boot-starter-druid</artifactId>
 		</dependency>
-<!--		<dependency>-->
-<!--			<groupId>com.alibaba</groupId>-->
-<!--			<artifactId>druid-spring-boot-3-starter</artifactId>-->
-<!--		</dependency>-->
 
 		<!--	消息支持	-->
 		<dependency>
@@ -80,13 +62,6 @@
 			<groupId>com.smart</groupId>
 			<artifactId>smart-boot-starter-message-websocket</artifactId>
 		</dependency>
-
-		<!--	阿里云短信支持	-->
-<!--		<dependency>-->
-<!--			<groupId>com.smart</groupId>-->
-<!--			<artifactId>smart-sms-extensions-aliyun</artifactId>-->
-<!--			<version>${project.version}</version>-->
-<!--		</dependency>-->
 
 		<!--	代码生成器	-->
 		<dependency>
@@ -105,42 +80,9 @@
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 
-		<!--	系统监控服务端	-->
-<!--		<dependency>-->
-<!--			<groupId>com.smart</groupId>-->
-<!--			<artifactId>smart-monitor-starter-server</artifactId>-->
-<!--			<version>${project.parent.version}</version>-->
-<!--		</dependency>-->
-		<!--	系统监控端点扩展	-->
-<!--		<dependency>-->
-<!--			<groupId>com.smart</groupId>-->
-<!--			<artifactId>redis-actuator-spring-boot-starter</artifactId>-->
-<!--			<version>${project.parent.version}</version>-->
-<!--		</dependency>-->
-<!--		<dependency>-->
-<!--			<groupId>com.smart</groupId>-->
-<!--			<artifactId>druid-actuator-spring-boot-starter</artifactId>-->
-<!--			<version>${project.parent.version}</version>-->
-<!--		</dependency>-->
-
-		<!--	license客户端	-->
-<!--		<dependency>-->
-<!--			<groupId>com.smart</groupId>-->
-<!--			<artifactId>smart-license-client-starter</artifactId>-->
-<!--			<version>${project.version}</version>-->
-<!--		</dependency>-->
-
-		<dependency>
-			<groupId>com.smart</groupId>
-			<artifactId>smart-boot-starter-file-disk</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>com.smart</groupId>
 			<artifactId>smart-boot-starter-file-aliyun</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.smart</groupId>
-			<artifactId>smart-boot-starter-file-minio</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.smart</groupId>
@@ -161,6 +103,10 @@
 			<artifactId>spring-boot-starter-webflux</artifactId>
 		</dependency>
 
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-tracing-bridge-brave</artifactId>
+        </dependency>
 	</dependencies>
 
 	<repositories>

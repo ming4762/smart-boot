@@ -15,6 +15,7 @@
 
 	<modules>
 		<module>smart-module-auth</module>
+		<module>smart-module-auth-server</module>
 		<module>smart-module-code</module>
 		<module>smart-module-document</module>
 		<module>smart-module-file</module>

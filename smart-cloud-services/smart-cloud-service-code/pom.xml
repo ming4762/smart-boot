@@ -83,6 +83,10 @@
             <version>${project.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-boot-starter-redis</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

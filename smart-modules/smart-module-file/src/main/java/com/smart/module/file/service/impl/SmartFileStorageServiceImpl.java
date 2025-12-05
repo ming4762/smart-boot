@@ -63,7 +63,7 @@ public class SmartFileStorageServiceImpl extends BaseServiceImpl<SmartFileStorag
      * @return 查询结果
      */
     @Override
-    public List<? extends SmartFileStoragePO> list(@NonNull QueryWrapper<SmartFileStoragePO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
+    public List<SmartFileStoragePO> list(@NonNull QueryWrapper<SmartFileStoragePO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
         queryWrapper.lambda()
                 .select(SmartFileStoragePO.class, tableInfo ->
                         !tableInfo.getProperty().equals(CrudUtils.getJavaProperty(SmartFileStoragePO::getPrivateKey))

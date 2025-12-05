@@ -4,8 +4,11 @@ import com.smart.framework.commons.core.utils.Base64Utils;
 import lombok.SneakyThrows;
 
 import javax.crypto.Cipher;
+import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
 
 /**
  * @author shizhongming
@@ -19,6 +22,9 @@ public class AesUtils {
     }
 
     private static final String ALGORITHM = "AES";
+    private static final String TRANSFORMATION = "AES/GCM/NoPadding";
+    private static final int IV_SIZE = 12;
+    private static final int TAG_BIT_LENGTH = 128;
 
     /**
      * AES加密
@@ -28,13 +34,18 @@ public class AesUtils {
      */
     @SneakyThrows(Exception.class)
     public static String encrypt(String data, String key) {
-        SecretKeySpec secretKeySpec = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), ALGORITHM);
-        Cipher cipher = Cipher.getInstance(ALGORITHM);
-        cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
-
-        byte[] bytes = cipher.doFinal(data.getBytes(StandardCharsets.UTF_8));
-
-        return Base64Utils.encode(bytes);
+        byte[] keyBytes = key.getBytes(StandardCharsets.UTF_8);
+        SecretKeySpec secretKey = new SecretKeySpec(keyBytes, ALGORITHM);
+        byte[] iv = new byte[IV_SIZE];
+        new SecureRandom().nextBytes(iv);
+        Cipher cipher = Cipher.getInstance(TRANSFORMATION);
+        GCMParameterSpec spec = new GCMParameterSpec(TAG_BIT_LENGTH, iv);
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey, spec);
+        byte[] encrypted = cipher.doFinal(data.getBytes(StandardCharsets.UTF_8));
+        ByteBuffer byteBuffer = ByteBuffer.allocate(iv.length + encrypted.length);
+        byteBuffer.put(iv);
+        byteBuffer.put(encrypted);
+        return Base64Utils.encode(byteBuffer.array());
     }
 
     /**
@@ -45,11 +56,20 @@ public class AesUtils {
      */
     @SneakyThrows(Exception.class)
     public static String decrypt(String data, String key) {
-        SecretKeySpec secretKeySpec = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), ALGORITHM);
-        Cipher cipher = Cipher.getInstance(ALGORITHM);
-        cipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
-        byte[] decodedData = Base64Utils.decode(data);
-        byte[] originalData = cipher.doFinal(decodedData);
-        return new String(originalData, StandardCharsets.UTF_8);
+        byte[] cipherMessage = Base64Utils.decode(data);
+        ByteBuffer byteBuffer = ByteBuffer.wrap(cipherMessage);
+        byte[] iv = new byte[IV_SIZE];
+        byteBuffer.get(iv);
+
+        byte[] cipherText = new byte[byteBuffer.remaining()];
+        byteBuffer.get(cipherText);
+
+        SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), ALGORITHM);
+        Cipher cipher = Cipher.getInstance(TRANSFORMATION);
+        GCMParameterSpec spec = new GCMParameterSpec(TAG_BIT_LENGTH, iv);
+        cipher.init(Cipher.DECRYPT_MODE, secretKey, spec);
+
+        byte[] decrypted = cipher.doFinal(cipherText);
+        return new String(decrypted, StandardCharsets.UTF_8);
     }
 }

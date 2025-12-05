@@ -10,6 +10,7 @@ import com.smart.module.api.auth.AuthApi;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -34,9 +35,11 @@ public class TempTokenValidateInterceptor implements HandlerInterceptor {
      */
     private static final String TEMP_TOKEN_KEY = "access-token";
 
-    @Autowired
-    @Lazy
-    private AuthApi authApi;
+    private final ObjectProvider<AuthApi> authApi;
+
+    public TempTokenValidateInterceptor(@Autowired @Lazy ObjectProvider<AuthApi> authApi) {
+        this.authApi = authApi;
+    }
 
     @Override
     public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) throws IOException {
@@ -71,7 +74,7 @@ public class TempTokenValidateInterceptor implements HandlerInterceptor {
             return message;
         }
         // 从缓存中获取信息
-        Object authCache = this.authApi.getAuthCache(token);
+        Object authCache = this.authApi.getObject().getAuthCache(token);
         final TempTokenData data = authCache == null ? null : JsonUtils.parse(JsonUtils.toJsonString(authCache), TempTokenData.class);
         if (Objects.isNull(data)) {
             message = "Temp Token validate fail，token is expire";
@@ -91,7 +94,7 @@ public class TempTokenValidateInterceptor implements HandlerInterceptor {
         }
         if (!org.springframework.util.StringUtils.hasText(message) && Boolean.TRUE.equals(data.getOnce())) {
             // 验证成功且token只使用一次，则删除token
-            this.authApi.removeAuthCache(token);
+            this.authApi.getObject().removeAuthCache(token);
         }
         return message;
     }

@@ -5,9 +5,11 @@ import com.smart.module.api.system.SystemAuthUserApi;
 import com.smart.module.api.system.constants.SystemApiUrlConstants;
 import com.smart.module.api.system.dto.AuthUserDTO;
 import com.smart.module.api.system.dto.QueryUserAccountDTO;
+import com.smart.module.api.system.parameter.DingtalkUserQueryParameter;
 import com.smart.module.api.system.parameter.UserAccountUnLockParameter;
 import com.smart.module.api.system.parameter.WechatUserQueryParameter;
 import com.smart.module.system.service.impl.LocalSystemAuthUserApiImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,13 +23,10 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping
+@RequiredArgsConstructor
 public class RemoteSystemAuthUserApiController implements SystemAuthUserApi {
 
-    private final LocalSystemAuthUserApiImpl systemAuthUserApi;
-
-    public RemoteSystemAuthUserApiController(LocalSystemAuthUserApiImpl systemAuthUserApi) {
-        this.systemAuthUserApi = systemAuthUserApi;
-    }
+    private final LocalSystemAuthUserApiImpl localSystemAuthUserApi;
 
     /**
      * 通过用户名查询用户
@@ -37,7 +36,7 @@ public class RemoteSystemAuthUserApiController implements SystemAuthUserApi {
     @PostMapping(SystemApiUrlConstants.GET_AUTH_USER_BY_USERNAME)
     @Override
     public AuthUserDTO getByUsername(@NonNull @RequestBody String username) {
-        return this.systemAuthUserApi.getByUsername(username);
+        return this.localSystemAuthUserApi.getByUsername(username);
     }
 
     /**
@@ -48,7 +47,7 @@ public class RemoteSystemAuthUserApiController implements SystemAuthUserApi {
     @PostMapping(SystemApiUrlConstants.GET_AUTH_USER_BY_PHONE)
     @Override
     public AuthUserDTO getByMobile(@NonNull@RequestBody String mobile) {
-        return this.systemAuthUserApi.getByMobile(mobile);
+        return this.localSystemAuthUserApi.getByMobile(mobile);
     }
 
     /**
@@ -59,7 +58,7 @@ public class RemoteSystemAuthUserApiController implements SystemAuthUserApi {
     @PostMapping(SystemApiUrlConstants.QUERY_ROLE_PERMISSION)
     @Override
     public UserAccountData queryUserAccount(@NonNull @RequestBody QueryUserAccountDTO parameter) {
-        return this.systemAuthUserApi.queryUserAccount(parameter);
+        return this.localSystemAuthUserApi.queryUserAccount(parameter);
     }
 
     /**
@@ -70,8 +69,8 @@ public class RemoteSystemAuthUserApiController implements SystemAuthUserApi {
      */
     @Override
     @PostMapping(SystemApiUrlConstants.WECHAT_GET_BY_APP_OPENID)
-    public AuthUserDTO getByAppOpenid(WechatUserQueryParameter parameter) {
-        return SystemAuthUserApi.super.getByAppOpenid(parameter);
+    public AuthUserDTO getByWehchatAppOpenid(@RequestBody WechatUserQueryParameter parameter) {
+        return SystemAuthUserApi.super.getByWehchatAppOpenid(parameter);
     }
 
     /**
@@ -82,8 +81,8 @@ public class RemoteSystemAuthUserApiController implements SystemAuthUserApi {
      */
     @Override
     @PostMapping(SystemApiUrlConstants.WECHAT_GET_BY_APP_UNIONID)
-    public AuthUserDTO getByUnionid(WechatUserQueryParameter parameter) {
-        return SystemAuthUserApi.super.getByUnionid(parameter);
+    public AuthUserDTO getByWechatUnionid(@RequestBody WechatUserQueryParameter parameter) {
+        return SystemAuthUserApi.super.getByWechatUnionid(parameter);
     }
 
     /**
@@ -95,6 +94,42 @@ public class RemoteSystemAuthUserApiController implements SystemAuthUserApi {
     @Override
     @PostMapping(SystemApiUrlConstants.USER_ACCOUNT_UNLOCK)
     public boolean unlockAccount(@RequestBody UserAccountUnLockParameter parameter) {
-        return this.systemAuthUserApi.unlockAccount(parameter);
+        return this.localSystemAuthUserApi.unlockAccount(parameter);
+    }
+
+    /**
+     * 通过钉钉openid获取用户信息
+     *
+     * @param parameter 参数
+     * @return AuthUser
+     */
+    @Override
+     @PostMapping(SystemApiUrlConstants.DINGTALK_GET_USER_BY_APP_OPENID)
+    public AuthUserDTO getByDingtalkOpenId(@RequestBody DingtalkUserQueryParameter parameter) {
+        return this.localSystemAuthUserApi.getByDingtalkOpenId(parameter);
+    }
+
+    /**
+     * 通过钉钉unionid获取用户信息
+     *
+     * @param parameter 参数
+     * @return AuthUser
+     */
+    @Override
+    @PostMapping(SystemApiUrlConstants.DINGTALK_GET_USER_BY_APP_UNIONID)
+    public AuthUserDTO getByDingtalkUnionId(@RequestBody DingtalkUserQueryParameter parameter) {
+        return this.localSystemAuthUserApi.getByDingtalkUnionId(parameter);
+    }
+
+    /**
+     * 通过钉钉手机号获取用户信息
+     *
+     * @param parameter 参数
+     * @return AuthUser
+     */
+    @Override
+    @PostMapping(SystemApiUrlConstants.DINGTALK_GET_USER_BY_APP_MOBILE)
+    public AuthUserDTO getByDingtalkMobile(@RequestBody DingtalkUserQueryParameter parameter) {
+        return this.localSystemAuthUserApi.getByDingtalkMobile(parameter);
     }
 }

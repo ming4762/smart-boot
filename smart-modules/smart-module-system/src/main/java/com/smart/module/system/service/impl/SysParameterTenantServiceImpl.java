@@ -39,14 +39,14 @@ public class SysParameterTenantServiceImpl extends BaseServiceImpl<SysParameterT
      * @return 查询结果
      */
     @Override
-    public List<? extends SysParameterTenantPO> list(@NonNull QueryWrapper<SysParameterTenantPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
+    public List<SysParameterTenantPO> list(@NonNull QueryWrapper<SysParameterTenantPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
         // 非平台管理租户添加数据权限过滤
         if (!AuthUtils.isPlatformTenant()) {
             Long currentTenantId = AuthUtils.getCurrentTenantId();
             List<Long> tenantIds = currentTenantId == null ? List.of(SysParameterTenantPO.COMMON_PARAMETER_TENANT_ID) : List.of(SysParameterTenantPO.COMMON_PARAMETER_TENANT_ID, currentTenantId);
             queryWrapper.lambda().in(SysParameterTenantPO::getTenantId, tenantIds);
         }
-        List<? extends SysParameterTenantPO> dataList = super.list(queryWrapper, parameter, paging);
+        List<SysParameterTenantPO> dataList = super.list(queryWrapper, parameter, paging);
         if (CollectionUtils.isEmpty(dataList)) {
             return dataList;
         }
@@ -58,7 +58,7 @@ public class SysParameterTenantServiceImpl extends BaseServiceImpl<SysParameterT
                         return vo;
                     }).toList();
             this.sysTenantService.getObject().injectTenant(voList);
-            return voList;
+            return voList.stream().map(SysParameterTenantPO.class::cast).toList();
         }
         return dataList;
     }

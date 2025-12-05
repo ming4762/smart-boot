@@ -239,4 +239,29 @@ public class GuavaCacheServiceImpl extends AbstractCacheService implements Guava
             this.cache.invalidate(oldCachedKey);
         }
     }
+
+    /**
+     * 获取缓存过期时间
+     *
+     * @param key key
+     * @return 过期时间，null代表无限大
+     */
+    @Override
+    public Duration getExpire(@NonNull String key) {
+        String cachedKey = this.getCachedKey(key);
+        CacheObject<Object> cacheObject = this.cache.getIfPresent(cachedKey);
+        if (cacheObject == null) {
+            return Duration.ZERO;
+        }
+        if (cacheObject.getTimeout() == null) {
+            return null;
+        }
+        Instant expire = cacheObject.getOperationTime().plus(cacheObject.getTimeout());
+        Instant now = Instant.now();
+        if (expire.isBefore(now)) {
+            // 已过期，但是还未清理
+            return Duration.ZERO;
+        }
+        return Duration.between(now, expire);
+    }
 }

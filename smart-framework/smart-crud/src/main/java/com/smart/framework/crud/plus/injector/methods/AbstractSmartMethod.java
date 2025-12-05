@@ -26,12 +26,23 @@ public interface AbstractSmartMethod {
     /**
      * 获取设置 逻辑删除key SQL
      * @param tableInfo table info
+     * @param prefix 前缀
+     * @param ignoreIf 是否忽略if
      * @return SQL
      */
     default String sqlLogicDeleteFieldSet(TableInfo tableInfo, final String prefix, boolean ignoreIf) {
         return this.sqlLogicDeleteFieldCommonSet(tableInfo, prefix, ignoreIf, true, true);
     }
 
+    /**
+     * 获取设置 逻辑删除key SQL
+     * @param tableInfo table info
+     * @param prefix 前缀
+     * @param ignoreIf 是否忽略if
+     * @param hasCommonField 是否有公共字段
+     * @param hasFillField 是否有填充字段
+     * @return SQL
+     */
     default String sqlLogicDeleteFieldCommonSet(TableInfo tableInfo, final String prefix, boolean ignoreIf, boolean hasCommonField, boolean hasFillField) {
         SmartTableInfo smartTableInfo = CrudUtils.getTableInfo(tableInfo.getEntityType());
         TableLogicDeleteInfo logicDeleteInfo = Objects.requireNonNull(smartTableInfo.getLogicDeleteInfo());

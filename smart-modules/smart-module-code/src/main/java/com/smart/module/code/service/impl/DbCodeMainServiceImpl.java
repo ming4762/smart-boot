@@ -69,14 +69,9 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
     private final DbExecutorProvider dbExecutorProvider;
 
     @Override
-    public List<? extends DbCodeMainPO> list(@NonNull QueryWrapper<DbCodeMainPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
-        // 设置权限，超级管理员可以查看所有，普通用户只能查看自己的
-//        if (!AuthUtils.isSuperAdmin()) {
-//            queryWrapper.lambda()
-//                    .eq(DbCodeMainPO :: getCreateUserId, AuthUtils.getNonNullCurrentUserId());
-//        }
+    public List<DbCodeMainPO> list(@NonNull QueryWrapper<DbCodeMainPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
         // 执行查询
-        final List<? extends DbCodeMainPO> dbCodeMainList = super.list(queryWrapper, parameter, paging);
+        final List<DbCodeMainPO> dbCodeMainList = super.list(queryWrapper, parameter, paging);
         if (CollectionUtils.isEmpty(dbCodeMainList)) {
             return dbCodeMainList;
         }
@@ -90,7 +85,7 @@ public class DbCodeMainServiceImpl extends BaseServiceImpl<DbCodeMainMapper, DbC
 
         // 设置连接信息
         this.setConnection(voList);
-        return voList;
+        return voList.stream().map(DbCodeMainPO.class::cast).toList();
     }
 
 

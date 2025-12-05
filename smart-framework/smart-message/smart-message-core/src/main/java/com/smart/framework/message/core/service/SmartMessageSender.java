@@ -3,7 +3,8 @@ package com.smart.framework.message.core.service;
 import com.smart.framework.message.core.constants.SmartMessageChannelType1Enum;
 import com.smart.framework.message.core.constants.SmartMessageChannelType2Enum;
 import com.smart.framework.message.core.pojo.dto.SmartMessageToUserDTO;
-import com.smart.module.api.message.dto.MessageSendDTO;
+import com.smart.module.api.message.constants.SmartMessageContentTypeEnum;
+import com.smart.module.api.message.dto.MessageSendResult;
 import com.smart.module.api.message.parameter.RemoteMessageSendParameter;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -40,5 +41,23 @@ public interface SmartMessageSender {
      * @param parameter 消息发送参数
      * @return 消息发送结果
      */
-    MessageSendDTO send(@Nullable String channelProperties, List<SmartMessageToUserDTO> toUserList, RemoteMessageSendParameter parameter);
+    MessageSendResult send(@Nullable String channelProperties, List<SmartMessageToUserDTO> toUserList, RemoteMessageSendParameter parameter);
+
+    /**
+     * 是否是HTML消息
+     * @param parameter 消息发送参数
+     * @return 是否是HTML消息
+     */
+    default boolean isHtml(RemoteMessageSendParameter parameter) {
+        return SmartMessageContentTypeEnum.HTML.equals(parameter.getContentType());
+    }
+
+    /**
+     * 是否是Markdown消息
+     * @param parameter 消息发送参数
+     * @return 是否是Markdown消息
+     */
+    default boolean isMarkdown(RemoteMessageSendParameter parameter) {
+        return SmartMessageContentTypeEnum.MARKDOWN.equals(parameter.getContentType());
+    }
 }

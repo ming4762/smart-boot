@@ -20,7 +20,11 @@ public class SysListTenantFunctionDTO implements Serializable {
     @Serial
     private static final long serialVersionUID = -7739408761596992755L;
 
-    private ZonedDateTime now = ZonedDateTime.now();
+    private ZonedDateTime now;
 
     private Long tenantId;
+
+    public SysListTenantFunctionDTO() {
+        this.now = ZonedDateTime.now();
+    }
 }

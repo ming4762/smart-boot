@@ -99,4 +99,12 @@ public interface FileService {
      * @return 访问地址列表
      */
     List<String> listAddress(List<Long> idList);
+
+    /**
+     * 下载文件
+     * @param fileStorageCode 文件存储器代码
+     * @param filename 文件名
+     * @return 下载内容
+     */
+    FileDownloadResult download(@NonNull String fileStorageCode, @NonNull String filename);
 }

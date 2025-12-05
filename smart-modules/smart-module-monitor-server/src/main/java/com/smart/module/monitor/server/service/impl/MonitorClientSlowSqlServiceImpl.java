@@ -104,7 +104,7 @@ public class MonitorClientSlowSqlServiceImpl extends BaseServiceImpl<MonitorClie
     }
 
     @Override
-    public List<? extends MonitorClientSlowSqlPO> list(@NonNull QueryWrapper<MonitorClientSlowSqlPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
+    public List<MonitorClientSlowSqlPO> list(@NonNull QueryWrapper<MonitorClientSlowSqlPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
         if (Boolean.TRUE.equals(parameter.getParameter().get(CrudCommonEnum.FILTER_BY_USER.name()))) {
             // 查询人员关联的APP
             List<String> appNameList = this.monitorApplicationService.listApplicationNameByUser(AuthUtils.getNonNullCurrentUserId());

@@ -59,7 +59,8 @@ public class JsonSignerUtils {
             }
             return arrayNode;
         } else {
-            return node; // 基本类型直接返回
+            // 基本类型直接返回
+            return node;
         }
     }
 }

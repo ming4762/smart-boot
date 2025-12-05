@@ -87,44 +87,68 @@ public interface SysToolApi {
             throw new SystemException("记录日志错误，原数据和修改后数据不能同时为空");
         }
         // 设置修改记录类型
-        if (parameter.getOperateType() == null) {
-            if (beforeData == null) {
-                parameter.setOperateType(SmartChangeLogEnum.CREATE);
-            } else if (afterData == null) {
-                parameter.setOperateType(SmartChangeLogEnum.DELETE);
-            } else {
-                parameter.setOperateType(SmartChangeLogEnum.UPDATE);
-            }
-        }
+        parameter.setOperateType(determineOperateType(beforeData, afterData, parameter.getOperateType()));
 
-        Class<?> aClass = Optional.ofNullable(beforeData).orElse(afterData).getClass();
+        Class<?> clazz = Optional.ofNullable(beforeData).orElse(afterData).getClass();
         RemoteChangeLogSaveParameter remoteChangeLogSaveParameter = new RemoteChangeLogSaveParameter();
         BeanUtils.copyProperties(parameter, remoteChangeLogSaveParameter);
         // 删除和新增操作不保存详细修改记录
         if (SmartChangeLogEnum.UPDATE.equals(parameter.getOperateType()) || this.isSaveCreateDetail(parameter)) {
-            Set<Field> fields = HashSet.newHashSet(16);
-            ReflectUtils.getAllFields(aClass, fields);
-            Set<String> finalExcludeList = excludeList;
-            List<RemoteChangeLogSaveParameter.Detail> detailList = fields.stream()
-                    .filter(item -> {
-                        if (CollectionUtils.isEmpty(fieldList)) {
-                            return true;
-                        }
-                        return fieldList.contains(item.getName());
-                    }).filter(item -> {
-                        if (CollectionUtils.isEmpty(finalExcludeList)) {
-                            return true;
-                        }
-                        return !finalExcludeList.contains(item.getName());
-                    }).map(field -> this.getDetail(parameter.getIgnoreAfterNull(), aClass, field, beforeData, afterData)).filter(Objects::nonNull)
-                    .toList();
+            List<RemoteChangeLogSaveParameter.Detail> detailList =
+                    buildDetailList(beforeData, afterData, clazz, fieldList, excludeList, parameter.getIgnoreAfterNull());
+
             remoteChangeLogSaveParameter.setDetailList(detailList);
+
             if (CollectionUtils.isEmpty(detailList)) {
-                // 没有修改内容，直接返回
                 return true;
             }
         }
         return this.saveChangeLog(remoteChangeLogSaveParameter);
+    }
+
+    /**
+     * 确定操作类型
+     * @param beforeData 原数据
+     * @param afterData 修改后的数据
+     * @param operateType 操作类型
+     * @return 操作类型
+     */
+    private SmartChangeLogEnum determineOperateType(Object beforeData, Object afterData, SmartChangeLogEnum operateType) {
+        if (operateType != null) {
+            return operateType;
+        }
+        if (beforeData == null) {
+            return SmartChangeLogEnum.CREATE;
+        }
+        if (afterData == null) {
+            return SmartChangeLogEnum.DELETE;
+        }
+        return SmartChangeLogEnum.UPDATE;
+    }
+
+    /**
+     * 构建修改记录详情列表
+     * @param beforeData 原数据
+     * @param afterData 修改后的数据
+     * @param clazz 类型
+     * @param fieldList 保存的字段列表，null则保存所有
+     * @param excludeList 排除的字段列表
+     * @param ignoreAfterNull 是否忽略修改为null
+     * @return 修改记录详情列表
+     */
+    private List<RemoteChangeLogSaveParameter.Detail> buildDetailList(
+            Object beforeData, Object afterData, Class<?> clazz,
+            Set<String> fieldList, Set<String> excludeList, boolean ignoreAfterNull) {
+
+        Set<Field> fields = HashSet.newHashSet(16);
+        ReflectUtils.getAllFields(clazz, fields);
+
+        return fields.stream()
+                .filter(f -> CollectionUtils.isEmpty(fieldList) || fieldList.contains(f.getName()))
+                .filter(f -> CollectionUtils.isEmpty(excludeList) || !excludeList.contains(f.getName()))
+                .map(f -> this.getDetail(ignoreAfterNull, clazz, f, beforeData, afterData))
+                .filter(Objects::nonNull)
+                .toList();
     }
 
     /**

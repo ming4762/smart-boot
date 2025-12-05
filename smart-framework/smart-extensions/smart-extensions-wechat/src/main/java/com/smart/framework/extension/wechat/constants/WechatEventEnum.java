@@ -1,16 +1,26 @@
 package com.smart.framework.extension.wechat.constants;
 
+import com.smart.framework.commons.core.json.BaseEnum;
+import lombok.Getter;
+
 /**
  * @author zhongming4762
  * 2023/4/7
  */
-public enum WechatEventEnum {
+@Getter
+public enum WechatEventEnum implements BaseEnum<String> {
     /**
      * 关注
      */
-    subscribe,
+    SUBSCRIBE("subscribe"),
     /**
      * 取消关注
      */
-    unsubscribe,
+    UNSUBSCRIBE("unsubscribe");
+
+    private final String value;
+
+    WechatEventEnum(String value) {
+        this.value = value;
+    }
 }

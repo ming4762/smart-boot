@@ -1,10 +1,12 @@
 package com.smart.boot.autoconfigure.dingtalk;
 
-import com.smart.framework.commons.core.cache.CacheService;
+import com.smart.framework.extension.dingtalk.BaseDingtalkApiImpl;
 import com.smart.framework.extension.dingtalk.DingtalkApi;
 import com.smart.framework.extension.dingtalk.api.AccessSecureApi;
 import com.smart.framework.extension.dingtalk.api.UserApi;
 import com.smart.framework.extension.dingtalk.api.WorkNoticeApi;
+import com.smart.framework.extension.dingtalk.client.SmartDingtalkClientHolder;
+import com.smart.framework.extension.dingtalk.client.impl.DefaultSmartDingtalkClientHolderImpl;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -21,8 +23,8 @@ public class SmartDingtalkAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public AccessSecureApi dingtalkAccessSecureApi(CacheService cacheService) {
-        return new AccessSecureApi(cacheService);
+    public AccessSecureApi dingtalkAccessSecureApi(SmartDingtalkClientHolder smartDingtalkClientHolder) {
+        return new AccessSecureApi(smartDingtalkClientHolder);
     }
 
     @Bean
@@ -38,7 +40,13 @@ public class SmartDingtalkAutoConfiguration {
     }
 
     @Bean
-    public DingtalkApi dingtalkApi() {
-        return new DingtalkApi();
+    public DingtalkApi dingtalkApi(SmartDingtalkClientHolder smartDingtalkClientHolder) {
+        return new BaseDingtalkApiImpl(smartDingtalkClientHolder);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public SmartDingtalkClientHolder smartDingtalkClientHolder() {
+        return new DefaultSmartDingtalkClientHolderImpl();
     }
 }

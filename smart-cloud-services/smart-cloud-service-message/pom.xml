@@ -111,6 +111,20 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-boot-starter-redis</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-boot-starter-message-email</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-boot-starter-message-dingtalk</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

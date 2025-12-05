@@ -2,11 +2,15 @@ package com.smart.boot.autoconfigure.redis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smart.boot.autoconfigure.cache.SmartCacheProperties;
+import com.smart.boot.autoconfigure.common.SmartWorkIdProperties;
+import com.smart.boot.autoconfigure.common.SnowflakeWorkIdAllocatorConfiguration;
 import com.smart.boot.autoconfigure.redis.customizer.JacksonRedissonAutoConfigurationCustomizer;
 import com.smart.framework.commons.core.lock.limit.RateLimitService;
+import com.smart.framework.commons.core.utils.snowflake.SnowflakeWorkIdAllocator;
 import com.smart.framework.redis.service.RedisRateLimitServiceImpl;
 import com.smart.framework.redis.service.RedisService;
 import com.smart.framework.redis.service.RedisServiceImpl;
+import com.smart.framework.redis.snowflake.RedisSnowflakeWorkIdAllocator;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
@@ -23,9 +27,9 @@ import org.springframework.context.annotation.Configuration;
  * 2020/1/17 8:45 下午
  */
 @Configuration(proxyBeanMethods = false)
-@AutoConfigureBefore(RedisAutoConfiguration.class)
+@AutoConfigureBefore({RedisAutoConfiguration.class, SnowflakeWorkIdAllocatorConfiguration.class})
 @ConditionalOnClass(RedisService.class)
-@EnableConfigurationProperties(SmartCacheProperties.class)
+@EnableConfigurationProperties({ SmartCacheProperties.class })
 public class SmartRedisAutoConfiguration {
 
     @Bean("redisService")
@@ -47,5 +51,15 @@ public class SmartRedisAutoConfiguration {
 //    @Bean
     public JacksonRedissonAutoConfigurationCustomizer jacksonRedissonAutoConfigurationCustomizer(@Autowired(required = false) ObjectMapper objectMapper) {
         return new JacksonRedissonAutoConfigurationCustomizer(objectMapper);
+    }
+    /**
+     * 雪花算法工作ID分配器
+     * @param redisService redis服务
+     * @return SnowflakeWorkIdAllocator
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    public SnowflakeWorkIdAllocator redisSnowflakeWorkIdAllocator(SmartWorkIdProperties properties, RedisService redisService) {
+        return new RedisSnowflakeWorkIdAllocator(properties.getRedis().getWorkspace(), redisService);
     }
 }

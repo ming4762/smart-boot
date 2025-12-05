@@ -75,8 +75,8 @@ public class SmartAuthSecretKeyServiceImpl extends BaseServiceImpl<SmartAuthSecr
     }
 
     @Override
-    public List<? extends SmartAuthSecretKeyPO> list(@NonNull QueryWrapper<SmartAuthSecretKeyPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
-        List<? extends SmartAuthSecretKeyPO> list = super.list(queryWrapper, parameter, paging);
+    public List<SmartAuthSecretKeyPO> list(@NonNull QueryWrapper<SmartAuthSecretKeyPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
+        List<SmartAuthSecretKeyPO> list = super.list(queryWrapper, parameter, paging);
         if (CollectionUtils.isEmpty(list)) {
             return list;
         }
@@ -90,7 +90,7 @@ public class SmartAuthSecretKeyServiceImpl extends BaseServiceImpl<SmartAuthSecr
                             SmartAuthSecretKeyListVO vo = new SmartAuthSecretKeyListVO();
                             BeanUtils.copyProperties(item, vo);
                             vo.setFileStorage(fileStorageMap.get(item.getFileStorageId()));
-                            return vo;
+                            return (SmartAuthSecretKeyPO) vo;
                         }).toList();
             }
         }

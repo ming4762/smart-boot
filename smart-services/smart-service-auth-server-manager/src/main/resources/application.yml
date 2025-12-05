@@ -1,0 +1,9 @@
+server:
+  port: 7085
+  max-http-request-header-size: 100KB
+
+spring:
+  application:
+    name: smart-boot-auth-server-manager
+  profiles:
+    active: dev

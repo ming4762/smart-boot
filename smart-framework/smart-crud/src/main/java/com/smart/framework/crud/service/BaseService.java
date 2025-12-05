@@ -24,7 +24,7 @@ public interface BaseService<T extends BaseModel> extends IService<T> {
      * @param paging 是否分页
      * @return 查询结果
      */
-    List<? extends T> list(@NonNull QueryWrapper<T> queryWrapper, @NonNull PageSortQuery parameter, boolean paging);
+    List<T> list(@NonNull QueryWrapper<T> queryWrapper, @NonNull PageSortQuery parameter, boolean paging);
 
     /**
      * 设置启停状态

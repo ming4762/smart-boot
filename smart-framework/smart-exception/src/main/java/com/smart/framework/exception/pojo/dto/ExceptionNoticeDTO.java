@@ -14,6 +14,7 @@ import org.springframework.lang.NonNull;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 public class ExceptionNoticeDTO {
 
     @NonNull

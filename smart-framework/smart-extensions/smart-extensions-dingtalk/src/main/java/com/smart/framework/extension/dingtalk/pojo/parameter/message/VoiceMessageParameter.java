@@ -2,6 +2,7 @@ package com.smart.framework.extension.dingtalk.pojo.parameter.message;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -15,6 +16,7 @@ import java.io.Serial;
  */
 @Getter
 @RequiredArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class VoiceMessageParameter extends AbstractMessageParameter {
 
     @Serial

@@ -1,18 +1,14 @@
 package com.smart.module.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.smart.framework.crud.constants.CrudCommonEnum;
-import com.smart.framework.crud.query.PageSortQuery;
 import com.smart.framework.crud.service.BaseServiceImpl;
-import com.smart.framework.crud.service.UserSetterService;
 import com.smart.module.system.mapper.SysI18nMapper;
 import com.smart.module.system.model.SysI18nItemPO;
 import com.smart.module.system.model.SysI18nPO;
 import com.smart.module.system.pojo.dbo.I18nCodeValueBO;
-import com.smart.module.system.pojo.vo.SysI18nUserVO;
 import com.smart.module.system.service.SysI18nItemService;
 import com.smart.module.system.service.SysI18nService;
-import org.springframework.beans.BeanUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,31 +26,10 @@ import java.util.stream.Collectors;
  * @since 1.0.7
  */
 @Service
+@RequiredArgsConstructor
 public class SysI18nServiceImpl extends BaseServiceImpl<SysI18nMapper, SysI18nPO> implements SysI18nService {
 
-    private final UserSetterService userSetterService;
-
     private final SysI18nItemService sysI18nItemService;
-
-    public SysI18nServiceImpl(UserSetterService userSetterService, SysI18nItemService sysI18nItemService) {
-        this.userSetterService = userSetterService;
-        this.sysI18nItemService = sysI18nItemService;
-    }
-
-    @Override
-    public List<? extends SysI18nPO> list(@NonNull QueryWrapper<SysI18nPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
-        List<? extends SysI18nPO> i18nList = super.list(queryWrapper, parameter, paging);
-
-        List<SysI18nUserVO> voList = i18nList.stream().map(item -> {
-            SysI18nUserVO vo = new SysI18nUserVO();
-            BeanUtils.copyProperties(item, vo);
-            return vo;
-        }).toList();
-        if (Boolean.TRUE.equals(parameter.getParameter().get(CrudCommonEnum.QUERY_CREATE_UPDATE_USER.name()))) {
-            this.userSetterService.setCreateUpdateUser(voList);
-        }
-        return voList;
-    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)

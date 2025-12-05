@@ -1,0 +1,9 @@
+server:
+  port: 7080
+  max-http-request-header-size: 100KB
+
+spring:
+  application:
+    name: smart-boot-auth-server-sso
+  profiles:
+    active: dev

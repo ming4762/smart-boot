@@ -10,25 +10,16 @@ import org.springframework.core.convert.support.GenericConversionService;
  */
 public class ClaimConversionService extends GenericConversionService {
 
-    private static volatile ClaimConversionService sharedInstance;
-
     private ClaimConversionService() {
         addConverters(this);
     }
 
+    private static class Holder {
+        private static final ClaimConversionService INSTANCE = new ClaimConversionService();
+    }
 
     public static ClaimConversionService getSharedInstance() {
-        ClaimConversionService sharedInstance = ClaimConversionService.sharedInstance;
-        if (sharedInstance == null) {
-            synchronized (ClaimConversionService.class) {
-                sharedInstance = ClaimConversionService.sharedInstance;
-                if (sharedInstance == null) {
-                    sharedInstance = new ClaimConversionService();
-                    ClaimConversionService.sharedInstance = sharedInstance;
-                }
-            }
-        }
-        return sharedInstance;
+        return Holder.INSTANCE;
     }
 
     public static void addConverters(ConverterRegistry converterRegistry) {

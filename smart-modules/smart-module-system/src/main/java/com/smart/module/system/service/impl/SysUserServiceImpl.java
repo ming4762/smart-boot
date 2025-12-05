@@ -22,6 +22,7 @@ import com.smart.framework.crud.constants.CrudCommonEnum;
 import com.smart.framework.crud.constants.ModelPropertyEnum;
 import com.smart.framework.crud.parameter.SetUseYnParameter;
 import com.smart.framework.crud.plus.tenant.SmartTenantControl;
+import com.smart.framework.crud.plus.tenant.SmartTenantIgnoreData;
 import com.smart.framework.crud.query.PageSortQuery;
 import com.smart.framework.crud.service.BaseServiceImpl;
 import com.smart.framework.crud.service.UserSetterService;
@@ -93,7 +94,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
     private final SysParameterApi sysParameterApi;
 
     @Override
-    public List<? extends SysUserPO> list(@NonNull QueryWrapper<SysUserPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
+    public List<SysUserPO> list(@NonNull QueryWrapper<SysUserPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
         UserListDTO userListParameter = (UserListDTO) parameter;
         List<Long> deptIdList = userListParameter.getDeptIdList();
         if (!CollectionUtils.isEmpty(deptIdList)) {
@@ -113,7 +114,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
                 queryWrapper.apply("user_id in (select M.user_id from sys_tenant_user M where M.tenant_id = {0} and M.use_yn = {1})", userListParameter.getTenantId(), userListParameter.getUseYn());
             }
         }
-        List<? extends SysUserPO> userList = super.list(queryWrapper, parameter, paging);
+        List<SysUserPO> userList = super.list(queryWrapper, parameter, paging);
         if (CollectionUtils.isEmpty(userList)) {
             return new ArrayList<>(0);
         }
@@ -130,7 +131,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
             // 查询账户信息
             this.queryUserAccount(AuthUtils.getNonNullCurrentTenantId(), voList);
         }
-        return voList;
+        return voList.stream().map(SysUserPO.class::cast).toList();
     }
 
     /**
@@ -166,22 +167,29 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         if (user == null) {
             return null;
         }
-        SysUserWithDeptDTO vo = new SysUserWithDeptDTO();
-        BeanUtils.copyProperties(user, vo);
-        // 查询部门信息
-        LambdaQueryWrapper<SysUserDeptPO> queryWrapper = Wrappers.lambdaQuery(SysUserDeptPO.class)
-                .select(SysUserDeptPO::getDeptId, SysUserDeptPO::getUserId)
-                .eq(SysUserDeptPO::getUserId, userId)
-                .eq(SysUserDeptPO::getIdent, UserDeptIdentEnum.USER_DEPT);
-        if (tenantId != null && AuthUtils.isPlatformTenant()) {
-            SmartTenantControl.ignore(SysUserDeptPO.class, null, List.of(SqlCommandType.SELECT));
-            queryWrapper.eq(SysUserDeptPO::getTenantId, tenantId);
+        SmartTenantIgnoreData smartTenantIgnoreData = null;
+        try {
+            SysUserWithDeptDTO vo = new SysUserWithDeptDTO();
+            BeanUtils.copyProperties(user, vo);
+            // 查询部门信息
+            LambdaQueryWrapper<SysUserDeptPO> queryWrapper = Wrappers.lambdaQuery(SysUserDeptPO.class)
+                    .select(SysUserDeptPO::getDeptId, SysUserDeptPO::getUserId)
+                    .eq(SysUserDeptPO::getUserId, userId)
+                    .eq(SysUserDeptPO::getIdent, UserDeptIdentEnum.USER_DEPT);
+            if (tenantId != null && AuthUtils.isPlatformTenant()) {
+                smartTenantIgnoreData = SmartTenantControl.ignore(SysUserDeptPO.class, null, List.of(SqlCommandType.SELECT));
+                queryWrapper.eq(SysUserDeptPO::getTenantId, tenantId);
+            }
+            Set<Long> deptIds = this.sysUserDeptService.list(queryWrapper).stream()
+                    .map(SysUserDeptPO::getDeptId)
+                    .collect(Collectors.toSet());
+            vo.setDeptIdList(new ArrayList<>(deptIds));
+            return vo;
+        } finally {
+            if (smartTenantIgnoreData != null) {
+                smartTenantIgnoreData.close();
+            }
         }
-        Set<Long> deptIds = this.sysUserDeptService.list(queryWrapper).stream()
-                .map(SysUserDeptPO::getDeptId)
-                .collect(Collectors.toSet());
-        vo.setDeptIdList(new ArrayList<>(deptIds));
-        return vo;
     }
 
     /**

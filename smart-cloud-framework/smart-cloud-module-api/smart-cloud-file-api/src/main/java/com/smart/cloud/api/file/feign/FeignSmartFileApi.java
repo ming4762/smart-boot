@@ -4,6 +4,7 @@ import com.smart.cloud.api.file.feign.fallback.FeignSmartFileApiFallback;
 import com.smart.cloud.common.core.constants.CloudServiceNameConstants;
 import com.smart.module.api.file.bo.FileHandlerResult;
 import com.smart.module.api.file.constants.SmartFileApiUrlConstants;
+import com.smart.module.api.file.dto.FilenameDownloadParameter;
 import com.smart.module.api.file.dto.RemoteFileSaveParameter;
 import feign.Response;
 import lombok.NonNull;
@@ -29,6 +30,16 @@ public interface FeignSmartFileApi {
      */
     @PostMapping(SmartFileApiUrlConstants.DOWNLOAD_FILE)
     Response download(@NonNull Long id);
+
+     /**
+     * 下载文件
+     *
+     * @param parameter 文件名下载参数
+     * @return 下载内容
+     */
+    @PostMapping(SmartFileApiUrlConstants.DOWNLOAD_FILE_BY_NAME)
+    Response download(@NonNull FilenameDownloadParameter parameter);
+
 
     /**
      * 批量删除文件信息
@@ -57,6 +68,12 @@ public interface FeignSmartFileApi {
     @PostMapping(value = SmartFileApiUrlConstants.SAVE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     FileHandlerResult save(RemoteFileSaveParameter parameter);
 
+    /**
+     * 列表文件地址
+     *
+     * @param idList 文件ID列表
+     * @return 文件地址列表
+     */
     @PostMapping(SmartFileApiUrlConstants.LIST_ADDRESS)
     List<String> listAddress(List<Long> idList);
 

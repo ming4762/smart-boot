@@ -1,5 +1,6 @@
 package com.smart.framework.extension.dingtalk.pojo.parameter.message;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -12,6 +13,7 @@ import java.io.Serial;
  */
 @Getter
 @RequiredArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class TextMessageParameter extends AbstractMessageParameter {
     @Serial
     private static final long serialVersionUID = -8098042658186157742L;

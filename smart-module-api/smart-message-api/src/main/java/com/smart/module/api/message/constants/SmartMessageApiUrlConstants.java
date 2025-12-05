@@ -16,4 +16,11 @@ public interface SmartMessageApiUrlConstants {
      * 发送消息接口
      */
     String SEND = "/remote/message/send";
+
+    /**
+     * 消息发送参数json字符串参数名
+     * 附件文件列表参数名
+     */
+    String KEY_PARAMETER_JSON = "parameterJson";
+    String KEY_ATTACHMENTS = "attachments";
 }

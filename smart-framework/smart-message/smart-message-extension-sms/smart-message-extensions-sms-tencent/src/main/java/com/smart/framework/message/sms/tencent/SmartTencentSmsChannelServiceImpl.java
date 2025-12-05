@@ -6,8 +6,9 @@ import com.smart.framework.message.core.constants.SmartMessageChannelType1Enum;
 import com.smart.framework.message.core.constants.SmartMessageChannelType2Enum;
 import com.smart.framework.message.core.exception.SmartSmsException;
 import com.smart.framework.message.core.pojo.dto.SmartMessageToUserDTO;
-import com.smart.module.api.message.dto.MessageSendDTO;
-import com.smart.module.api.message.dto.SmsSendDTO;
+import com.smart.module.api.message.constants.SmartSmsChannelEnum;
+import com.smart.module.api.message.dto.MessageSendResult;
+import com.smart.module.api.message.dto.SmsSendResult;
 import com.smart.module.api.message.parameter.RemoteMessageSendParameter;
 import com.tencentcloudapi.common.Credential;
 import com.tencentcloudapi.common.exception.TencentCloudSDKException;
@@ -91,7 +92,7 @@ public class SmartTencentSmsChannelServiceImpl implements SmartTencentSmsChannel
      * @return 消息发送结果
      */
     @Override
-    public MessageSendDTO send(@Nullable String channelProperties, List<SmartMessageToUserDTO> toUserList, RemoteMessageSendParameter parameter) {
+    public MessageSendResult send(@Nullable String channelProperties, List<SmartMessageToUserDTO> toUserList, RemoteMessageSendParameter parameter) {
         RemoteMessageSendParameter.SmsSendParameter smsSendParameter = parameter.getSmsSendParameter();
         if (smsSendParameter == null) {
             throw new SmartSmsException("smsSendParameter is null");
@@ -133,9 +134,13 @@ public class SmartTencentSmsChannelServiceImpl implements SmartTencentSmsChannel
         try {
             SendSmsResponse smsResponse = clientCache.getClient().SendSms(request);
 
-            SmsSendDTO smsSendResult = new SmsSendDTO(smsResponse.getRequestId(), JsonUtils.toJsonString(smsResponse), null, null, null);
-            return MessageSendDTO.builder()
-                    .smsSendResult(smsSendResult)
+            return SmsSendResult.builder()
+                    .requestId(smsResponse.getRequestId())
+                    .responseData(JsonUtils.toJsonString(smsResponse))
+                    // TODO：待赋值
+                    .channelId(null)
+                    .channelCode(null)
+                    .channelType(SmartSmsChannelEnum.SMS_TENCENT)
                     .build();
         } catch (TencentCloudSDKException e) {
             throw new SmartSmsException(e);

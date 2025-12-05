@@ -41,15 +41,15 @@ public class YamlUtils {
      */
     public static Map<String, Object> readInOneLayer(Reader reader) {
         Map<String, Object> data = read(reader);
-        Map<String, Object> result = new HashMap<>(8);
+        Map<String, Object> result = HashMap.newHashMap(8);
         convertInOneLayer(data, "", result);
         return result;
     }
 
-    private static void convertInOneLayer(Map<String, Object> data, String parentKey, Map<String, Object> result) {
+    private static void convertInOneLayer(Map<?, ?> data, String parentKey, Map<String, Object> result) {
         data.forEach((key, value) -> {
-            String nextKey = StringUtils.hasText(parentKey) ? key : String.join(".", parentKey, key);
-            if (value instanceof Map mapData) {
+            String nextKey = StringUtils.hasText(parentKey) ? (String) key : String.join(".", parentKey, (String) key);
+            if (value instanceof Map<?, ?> mapData) {
                 // 继续执行
                 convertInOneLayer(mapData, nextKey, result);
             } else {

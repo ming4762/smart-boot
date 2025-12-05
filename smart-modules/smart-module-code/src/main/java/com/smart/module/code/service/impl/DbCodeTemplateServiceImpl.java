@@ -34,13 +34,15 @@ public class DbCodeTemplateServiceImpl extends BaseServiceImpl<DbCodeTemplateMap
 
     @Override
     @Transactional(rollbackFor = Exception.class, readOnly = true)
-    public List<? extends DbCodeTemplatePO> list(@NonNull QueryWrapper<DbCodeTemplatePO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
+    public List<DbCodeTemplatePO> list(@NonNull QueryWrapper<DbCodeTemplatePO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
         queryWrapper.select(DbCodeTemplatePO.class, field -> !"template".equals(field.getProperty()));
         // 设置查询权限
         // 1、判断是否是超级管理员
         List<? extends DbCodeTemplatePO> list = super.list(queryWrapper, parameter, paging);
         // 转换为VO
-        return BeanUtils.copyProperties(list, DbCodeTemplateListVO.class);
+        return BeanUtils.copyProperties(list, DbCodeTemplateListVO.class).stream()
+                .map(DbCodeTemplatePO.class::cast)
+                .toList();
     }
 
 
@@ -61,4 +63,6 @@ public class DbCodeTemplateServiceImpl extends BaseServiceImpl<DbCodeTemplateMap
         // 保存数据
         return true;
     }
+
+
 }

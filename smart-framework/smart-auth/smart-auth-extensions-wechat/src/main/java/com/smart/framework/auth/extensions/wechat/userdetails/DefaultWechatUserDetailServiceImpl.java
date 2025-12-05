@@ -30,7 +30,7 @@ public class DefaultWechatUserDetailServiceImpl implements WechatUserDetailServi
      */
     @Override
     public RestUserDetails loadUserByAppOpenid(AuthTypeEnum authType, String appid, String openid) throws AuthenticationException {
-        AuthUserDTO user = this.systemAuthUserApi.getByAppOpenid(
+        AuthUserDTO user = this.systemAuthUserApi.getByWehchatAppOpenid(
                 WechatUserQueryParameter.builder()
                         .appid(appid)
                         .openid(openid)
@@ -50,7 +50,7 @@ public class DefaultWechatUserDetailServiceImpl implements WechatUserDetailServi
      */
     @Override
     public RestUserDetails loadUserByUnionid(AuthTypeEnum authType, String appid, String unionid) throws AuthenticationException {
-        AuthUserDTO user = this.systemAuthUserApi.getByUnionid(
+        AuthUserDTO user = this.systemAuthUserApi.getByWechatUnionid(
                 WechatUserQueryParameter.builder()
                         .appid(appid)
                         .unionid(unionid)

@@ -1,0 +1,51 @@
+logging:
+  level:
+    root: info
+    com.smart: debug
+    com.smart.framework.crud.plus.inner: info
+
+management:
+  endpoint:
+    #    开启shutdown端点
+    shutdown:
+      enabled: true
+    health:
+      show-details: always
+    logfile:
+      enabled: true
+    env:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  health:
+    mail:
+      enabled: false
+
+spring:
+  data:
+    redis:
+      host: 127.0.0.1
+
+smart:
+  auth:
+    bindIp: false
+    captcha:
+      type: TEXT_ARITHMETIC
+      text:
+        ignoreCase: true
+        length: 2
+    jwt:
+      permission-cache: true
+    ignores:
+      post:
+        - /auth/login
+        - /auth/logout
+        - /auth/refresh
+        - /auth/createCaptcha
+        - /remote/public/**
+
+feign:
+  sentinel:
+    enabled: true

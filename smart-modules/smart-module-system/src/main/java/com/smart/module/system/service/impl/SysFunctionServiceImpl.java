@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.smart.framework.auth.common.utils.AuthUtils;
 import com.smart.framework.commons.core.exception.SystemException;
-import com.smart.framework.crud.constants.CrudCommonEnum;
 import com.smart.framework.crud.model.CreateUpdateUserSetter;
 import com.smart.framework.crud.plus.metadata.SmartTableInfo;
 import com.smart.framework.crud.query.PageSortQuery;
@@ -19,14 +18,12 @@ import com.smart.module.system.model.SysFunctionPO;
 import com.smart.module.system.model.SysRoleFunctionPO;
 import com.smart.module.system.model.tenant.SysTenantPO;
 import com.smart.module.system.pojo.dto.tenant.SysListTenantFunctionDTO;
-import com.smart.module.system.pojo.vo.SysFunctionListVO;
 import com.smart.module.system.pojo.vo.function.SysFunctionVO;
 import com.smart.module.system.service.SysFunctionService;
 import com.smart.module.system.service.SysRoleFunctionService;
 import com.smart.module.system.service.tenant.SysTenantService;
 import com.smart.module.system.service.tenant.SysTenantUserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
@@ -91,7 +88,7 @@ public class SysFunctionServiceImpl extends BaseServiceImpl<SysFunctionMapper, S
     }
 
     @Override
-    public List<? extends SysFunctionPO> list(@NonNull QueryWrapper<SysFunctionPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
+    public List<SysFunctionPO> list(@NonNull QueryWrapper<SysFunctionPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
         if (Boolean.TRUE.equals(parameter.getParameter().get(SystemConstantEnum.LIST_FILTER_TENANT))) {
             // 需要根据租户套餐过滤
             SysListTenantFunctionDTO tenantParameter = new SysListTenantFunctionDTO();
@@ -102,18 +99,7 @@ public class SysFunctionServiceImpl extends BaseServiceImpl<SysFunctionMapper, S
             }
             queryWrapper.lambda().in(SysFunctionPO::getFunctionId, new HashSet<>(functionIds));
         }
-        List<? extends SysFunctionPO> functionList = super.list(queryWrapper, parameter, paging);
-        List<SysFunctionListVO> functionVoList = functionList.stream()
-                .map(item -> {
-                    SysFunctionListVO vo = new SysFunctionListVO();
-                    BeanUtils.copyProperties(item, vo);
-                    return vo;
-                }).toList();
-        if (Boolean.TRUE.equals(parameter.getParameter().get(CrudCommonEnum.QUERY_CREATE_UPDATE_USER.name()))) {
-            this.queryCreateUpdateUser(functionVoList);
-        }
-
-        return functionVoList;
+        return super.list(queryWrapper, parameter, paging);
     }
 
     /**

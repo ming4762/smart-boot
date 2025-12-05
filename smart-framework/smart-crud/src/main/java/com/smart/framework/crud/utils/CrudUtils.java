@@ -209,29 +209,42 @@ public final class CrudUtils {
 
     private static <T extends BaseModel> void createBaseQueryWrapperFromParameters(@NonNull Map<Serializable, Serializable> parameter, @NonNull Class<?> clazz, @NonNull Wrapper<T> queryWrapper) {
         SmartTableInfo tableInfo = getTableInfo(clazz);
-        for (Map.Entry<Serializable, Serializable> entry : parameter.entrySet()) {
-            Serializable keySer = entry.getKey();
-            if (!(keySer instanceof String key)) {
-                continue;
-            }
-            Serializable value = entry.getValue();
-            if (!key.contains(SEARCH_SYMBOL_SPLIT)) {
-                continue;
-            }
-            String[] keySplit = key.split(SEARCH_SYMBOL_SPLIT);
-            // 获取符号
-            final String symbol = keySplit.length > 1 ? keySplit[1] : null;
-            if (StringUtils.isBlank(symbol)) {
-                log.warn("参数无效，未找到符号，实体类：{}，key:{}", clazz.getName(), key);
-                continue;
-            }
-            TableFieldInfo tableFiled = tableInfo.getTableFiled(keySplit[0]);
-            if (tableFiled == null) {
-                log.warn("参数无效，未找到实体类对应属性：{}", keySplit[0]);
-                continue;
-            }
-            CrudUtils.dealValue(key, value, queryWrapper, symbol, tableFiled.getField(), tableFiled.getColumn());
+        parameter.entrySet().stream()
+                .map(entry -> convertToValidParam(entry, tableInfo, clazz))
+                .filter(Objects::nonNull)
+                .forEach(param -> CrudUtils.dealValue(
+                        param.key(),
+                        param.value(),
+                        queryWrapper,
+                        param.symbol(),
+                        param.field(),
+                        param.column()
+                ));
+    }
+
+    @Nullable
+    private static ValidParam convertToValidParam(Map.Entry<Serializable, Serializable> entry,
+                                                  SmartTableInfo tableInfo,
+                                                  Class<?> clazz) {
+        Serializable keySer = entry.getKey();
+        if (!(keySer instanceof String key)) {
+            return null;
         }
+        if (!key.contains(SEARCH_SYMBOL_SPLIT)) {
+            return null;
+        }
+        String[] keySplit = key.split(SEARCH_SYMBOL_SPLIT);
+        String symbol = keySplit.length > 1 ? keySplit[1] : null;
+        if (StringUtils.isBlank(symbol)) {
+            log.warn("参数无效，未找到符号，实体类：{}，key:{}", clazz.getName(), key);
+            return null;
+        }
+        TableFieldInfo tableFiled = tableInfo.getTableFiled(keySplit[0]);
+        if (tableFiled == null) {
+            log.warn("参数无效，未找到实体类对应属性：{}", keySplit[0]);
+            return null;
+        }
+        return new ValidParam(key, entry.getValue(), symbol, tableFiled.getField(), tableFiled.getColumn());
     }
 
     @SneakyThrows({IllegalAccessException.class, InvocationTargetException.class})
@@ -320,5 +333,7 @@ public final class CrudUtils {
         @SuppressWarnings("rawtypes")
         private Class[] parameterTypes;
     }
+
+    private record ValidParam(String key, Serializable value, String symbol, Field field, String column) {}
 
 }

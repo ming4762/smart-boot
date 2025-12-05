@@ -3,6 +3,7 @@ package com.smart.module.system.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.smart.framework.crud.plus.tenant.SmartTenantControl;
+import com.smart.framework.crud.plus.tenant.SmartTenantIgnoreData;
 import com.smart.framework.crud.service.BaseServiceImpl;
 import com.smart.module.system.mapper.SysRoleMapper;
 import com.smart.module.system.model.SysRoleDataPermissionPO;
@@ -94,10 +95,9 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRoleMapper, SysRolePO
         if (CollectionUtils.isEmpty(parameter.getUserIdList())) {
             return true;
         }
-        this.sysUserRoleService.saveBatch(
+        return this.sysUserRoleService.saveBatch(
                 parameter.getUserIdList().stream().map(item -> new SysUserRolePO(item, parameter.getRoleId(), true, null)).toList()
         );
-        return true;
     }
 
     /**
@@ -110,23 +110,23 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRoleMapper, SysRolePO
     @Transactional(rollbackFor = Exception.class)
     public boolean setRoleUserWithTenant(RoleSetUserWithTenantDTO parameter) {
         // 忽略租户条件
-        SmartTenantControl.ignore(SysUserRolePO.class, null, List.of(
+        try (SmartTenantIgnoreData ignore = SmartTenantControl.ignore(SysUserRolePO.class, null, List.of(
                 SqlCommandType.DELETE,
                 SqlCommandType.INSERT
-        ));
-        // 删除角色
-        this.sysUserRoleService.remove(
-                new QueryWrapper<SysUserRolePO>().lambda()
-                        .eq(SysUserRolePO :: getRoleId, parameter.getRoleId())
-                        .eq(SysUserRolePO::getTenantId, parameter.getTenantId())
-        );
-        if (CollectionUtils.isEmpty(parameter.getUserIdList())) {
-            return true;
+        ))) {
+            // 删除角色
+            this.sysUserRoleService.remove(
+                    new QueryWrapper<SysUserRolePO>().lambda()
+                            .eq(SysUserRolePO :: getRoleId, parameter.getRoleId())
+                            .eq(SysUserRolePO::getTenantId, parameter.getTenantId())
+            );
+            if (CollectionUtils.isEmpty(parameter.getUserIdList())) {
+                return true;
+            }
+            return this.sysUserRoleService.saveBatch(
+                    parameter.getUserIdList().stream().map(item -> new SysUserRolePO(item, parameter.getRoleId(), true, parameter.getTenantId())).toList()
+            );
         }
-        this.sysUserRoleService.saveBatch(
-                parameter.getUserIdList().stream().map(item -> new SysUserRolePO(item, parameter.getRoleId(), true, parameter.getTenantId())).toList()
-        );
-        return true;
     }
 
     /**

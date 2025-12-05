@@ -1,7 +1,10 @@
 package com.smart.framework.commons.core.utils;
 
+import com.smart.framework.commons.core.utils.snowflake.AbstractSnowflakeWorkIdAllocator;
 import com.smart.framework.commons.core.utils.snowflake.SnowflakeIdGenerator;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.function.Supplier;
 
 /**
  * @author shizhongming
@@ -15,19 +18,34 @@ public class SmartIdGenerator {
         throw new IllegalStateException("Utility class");
     }
 
-    private static final SnowflakeIdGenerator SNOWFLAKE_ID_GENERATOR = new SnowflakeIdGenerator(
-            5L,
-            16L,
-            SnowflakeIdGenerator.getWorkerId(),
-            1000L,
-            1L
-    );
+    private static SnowflakeIdGenerator snowflakeIdGenerator = null;
+
+    private static final long WORKER_ID_BITS = 5L;
+
+    private static final Supplier<SnowflakeIdGenerator> SNOWFLAKE_ID_GENERATOR_SUPPLIER = () -> {
+        if (snowflakeIdGenerator != null) {
+            return snowflakeIdGenerator;
+        }
+        AbstractSnowflakeWorkIdAllocator snowflakeWorkIdAllocator = ApplicationContextUtils.getBean(AbstractSnowflakeWorkIdAllocator.class);
+        if (snowflakeWorkIdAllocator == null) {
+            throw new IllegalArgumentException("SnowflakeWorkIdAllocator is null.");
+        }
+        snowflakeWorkIdAllocator.setWorkerIdBits(WORKER_ID_BITS);
+        snowflakeIdGenerator = new SnowflakeIdGenerator(
+                WORKER_ID_BITS,
+                21L - WORKER_ID_BITS,
+                1000L,
+                1L,
+                snowflakeWorkIdAllocator
+        );
+        return snowflakeIdGenerator;
+    };
 
     /**
      * 生成ID
      * @return ID
      */
     public static synchronized long nextId() {
-        return SNOWFLAKE_ID_GENERATOR.nextId();
+        return SNOWFLAKE_ID_GENERATOR_SUPPLIER.get().nextId();
     }
 }

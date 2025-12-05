@@ -29,7 +29,6 @@ public class SysTenantSaveUpdateDTO implements Serializable {
     private Long id;
     /**
      * 租户编号
-     * todo：国际化
      */
     @NotNull(message = "租户编码不能为空")
     private String tenantCode;

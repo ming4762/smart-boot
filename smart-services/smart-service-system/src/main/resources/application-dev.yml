@@ -21,8 +21,7 @@ spring:
         login-password: root
         deny:
       filter-class-names: stat,wall
-    url: jdbc:mysql://localhost:3308/smart-system?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
-#    url: jdbc:mysql://localhost:3308/smart-system?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://localhost:3306/smart-system?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: root
     password: ming8858*
     name: smart-system
@@ -41,13 +40,13 @@ management:
   endpoint:
     #    开启shutdown端点
     shutdown:
-      enabled: true
+      access: unrestricted
     health:
       show-details: always
     logfile:
-      enabled: true
+      access: unrestricted
     env:
-      enabled: true
+      access: unrestricted
   endpoints:
     web:
       exposure:
@@ -58,11 +57,11 @@ management:
 
 smart:
   cache:
-    prefix: ${spring.application.name}-
+    prefix: ${spring.application.name}-${spring.profiles.active}-
   log:
     path: D:\zhongming\Documents\01-workspace\06-temp\log
   auth:
-    prefix: ${spring.profiles.active}
+    prefix: smart-auth
     jwt:
       permission-cache: true
     sms:
@@ -93,6 +92,9 @@ smart:
     image:
       init-default-resource: true
       prefix: smart-captcha
+  snowflake-work-id:
+    redis:
+      workspace: smart-boot
 
 springdoc:
   swagger-ui:

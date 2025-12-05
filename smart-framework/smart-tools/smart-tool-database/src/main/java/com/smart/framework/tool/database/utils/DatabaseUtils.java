@@ -12,7 +12,8 @@ import com.smart.framework.tool.database.pojo.dto.SmartSelectWhere;
 import com.smart.framework.tool.database.pojo.dto.SmartSqlInfo;
 import lombok.SneakyThrows;
 import net.sf.jsqlparser.JSQLParserException;
-import net.sf.jsqlparser.expression.*;
+import net.sf.jsqlparser.expression.BinaryExpression;
+import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
 import net.sf.jsqlparser.expression.operators.conditional.OrExpression;
 import net.sf.jsqlparser.expression.operators.relational.*;
@@ -30,7 +31,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -60,45 +60,66 @@ public class DatabaseUtils {
      * @param <T> 实体类类型
      * @return 实体类实例
      */
-    @SneakyThrows({SQLException.class, NoSuchMethodException.class,
-            InstantiationException.class, IllegalAccessException.class, IllegalArgumentException.class, InvocationTargetException.class})
     @NonNull
-    public static <T> List<T> resultSetToModel(@NonNull ResultSet resultSet, @NonNull Class<T> clazz, @NonNull Map<String, Field> mapping) {
+    @SneakyThrows(Exception.class)
+    public static <T> List<T> resultSetToModel(@NonNull ResultSet resultSet,
+                                               @NonNull Class<T> clazz,
+                                               @NonNull Map<String, Field> mapping) {
+        final List<T> modelList = new LinkedList<>();
         final ResultSetMetaData metaData = resultSet.getMetaData();
         final int columnCount = metaData.getColumnCount();
-        final List<T> modelList = new LinkedList<>();
-        while (resultSet.next()) {
-            final T model = clazz.getDeclaredConstructor().newInstance();
-            for (int i=1; i<=columnCount; i++) {
-                final String name = metaData.getColumnName(i);
-                final Field field = mapping.get(name);
-                if (field != null) {
-                    Object value;
-                    final Class<?> aClass = field.getType();
-                    if (aClass == Date.class) {
-                        value = resultSet.getTimestamp(i);
-                    } else if (aClass == Short.class) {
-                        value = resultSet.getShort(i);
-                    } else {
-                        value = resultSet.getObject(i);
-                    }
-                    if (value instanceof Short) {
-                        value = Integer.valueOf(value.toString());
-                    }
-                    if (Objects.nonNull(value)) {
-                        // 判断类型是否一致，如果不一致 使用转换器进行转换
-                        if (!Objects.equals(field.getType(), value.getClass())) {
-                            // 执行转换
-                            value = convertValue(field, value);
-                        }
-                        PropertyUtils.setProperty(model, field.getName(), value);
-                    }
 
+        while (resultSet.next()) {
+            modelList.add(convertRowToModel(resultSet, clazz, mapping, metaData, columnCount));
+        }
+
+        return modelList;
+    }
+
+    @SneakyThrows(Exception.class)
+    private static <T> T convertRowToModel(ResultSet resultSet,
+                                           Class<T> clazz,
+                                           Map<String, Field> mapping,
+                                           ResultSetMetaData metaData,
+                                           int columnCount) {
+        final T model = clazz.getDeclaredConstructor().newInstance();
+
+        for (int i = 1; i <= columnCount; i++) {
+            String columnName = metaData.getColumnName(i);
+            Field field = mapping.get(columnName);
+            if (field != null) {
+                Object value = getColumnValue(resultSet, i, field);
+                if (value != null) {
+                    PropertyUtils.setProperty(model, field.getName(), value);
                 }
             }
-            modelList.add(model);
         }
-        return modelList;
+        return model;
+    }
+    @SneakyThrows(Exception.class)
+    private static Object getColumnValue(ResultSet resultSet, int index, Field field) {
+        Class<?> fieldType = field.getType();
+        Object value;
+
+        if (fieldType == Date.class) {
+            value = resultSet.getTimestamp(index);
+        } else if (fieldType == Short.class) {
+            value = resultSet.getShort(index);
+        } else {
+            value = resultSet.getObject(index);
+        }
+
+        // Short 类型特殊处理
+        if (value instanceof Short) {
+            value = Integer.valueOf(value.toString());
+        }
+
+        // 类型不一致，执行转换
+        if (value != null && !Objects.equals(fieldType, value.getClass())) {
+            value = convertValue(field, value);
+        }
+
+        return value;
     }
 
     /**

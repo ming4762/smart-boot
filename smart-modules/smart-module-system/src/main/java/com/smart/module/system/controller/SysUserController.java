@@ -13,6 +13,7 @@ import com.smart.framework.commons.core.message.Result;
 import com.smart.framework.commons.core.utils.TreeUtils;
 import com.smart.framework.crud.controller.BaseController;
 import com.smart.framework.crud.plus.tenant.SmartTenantControl;
+import com.smart.framework.crud.plus.tenant.SmartTenantIgnoreData;
 import com.smart.framework.crud.query.IdParameter;
 import com.smart.module.api.system.SystemAuthUserApi;
 import com.smart.module.api.system.parameter.UserAccountUnLockParameter;
@@ -253,11 +254,13 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
     @Operation(summary = "通过角色ID&租户ID查询用户信息")
     public Result<List<SysUserPO>> listUserByRoleTenant(@RequestBody @Valid ListUserByRoleTenantDTO parameter)   {
         // 忽略租户控制
-        SmartTenantControl.ignore(SysUserRolePO.class, null, List.of(SqlCommandType.SELECT));
-        if (parameter.getTenantId() == null) {
-            parameter.setTenantId(AuthUtils.getNonNullCurrentTenantId());
+        try (SmartTenantIgnoreData ignore = SmartTenantControl.ignore(SysUserRolePO.class, null, List.of(SqlCommandType.SELECT))) {
+            if (parameter.getTenantId() == null) {
+                parameter.setTenantId(AuthUtils.getNonNullCurrentTenantId());
+            }
+            return Result.success(this.service.listUserByRoleTenant(parameter));
         }
-        return Result.success(this.service.listUserByRoleTenant(parameter));
+
     }
 
     /**

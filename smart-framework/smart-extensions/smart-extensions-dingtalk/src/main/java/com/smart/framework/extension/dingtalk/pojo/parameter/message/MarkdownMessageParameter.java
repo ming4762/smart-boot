@@ -1,5 +1,6 @@
 package com.smart.framework.extension.dingtalk.pojo.parameter.message;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -13,6 +14,7 @@ import java.io.Serial;
  */
 @Getter
 @RequiredArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class MarkdownMessageParameter extends AbstractMessageParameter {
 
     @Serial

@@ -95,7 +95,11 @@ public class DefaultTenantLineHandlerImpl implements SmartTenantLineHandler {
         }
 
         // 从指定设置中获取
-        SmartTenantControl.SmartTenantIgnoreData ignoreData = SmartTenantControl.getIgnore(table);
+        SmartTenantIgnoreData ignoreData = SmartTenantControl.getIgnore(table);
+        // 如果指定的表没有配置忽略租户，那么就从忽略所有租户中获取
+        if (ignoreData == null) {
+            ignoreData = SmartTenantControl.getIgnoreAll();
+        }
         if (ignoreData != null) {
             return this.ignoreTable(
                     sqlCommandType,

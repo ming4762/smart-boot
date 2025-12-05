@@ -211,7 +211,7 @@ public class KettleActuator {
      * 初始化kettle环境
      */
     @SneakyThrows(KettleException.class)
-    public static void initKettle() {
+    public static synchronized void initKettle() {
         if (!KettleEnvironment.isInitialized()) {
             KettleEnvironment.init();
             EnvUtil.environmentInit();

@@ -2,6 +2,7 @@ package com.smart.cloud.api.file.feign.fallback;
 
 import com.smart.cloud.api.file.feign.FeignSmartFileApi;
 import com.smart.module.api.file.bo.FileHandlerResult;
+import com.smart.module.api.file.dto.FilenameDownloadParameter;
 import com.smart.module.api.file.dto.RemoteFileSaveParameter;
 import feign.Response;
 import lombok.NonNull;
@@ -31,6 +32,18 @@ public class FeignSmartFileApiFallback implements FallbackFactory<FeignSmartFile
 
             @Override
             public Response download(@NonNull Long id) {
+                this.errorLog();
+                return null;
+            }
+
+            /**
+             * 下载文件
+             *
+             * @param parameter 文件名下载参数
+             * @return 下载内容
+             */
+            @Override
+            public Response download(@NonNull FilenameDownloadParameter parameter) {
                 this.errorLog();
                 return null;
             }

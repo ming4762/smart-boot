@@ -1,6 +1,7 @@
 package com.smart.framework.tool.database.pojo.dbo;
 
 import com.smart.framework.tool.database.annotation.DatabaseField;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -15,6 +16,7 @@ import java.io.Serial;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode(callSuper = true)
 public class ImportKeyDO extends AbstractDatabaseBaseDO {
 
     @Serial

@@ -376,7 +376,7 @@ public class FileStorageMinioServiceImpl implements MinioService {
                 .object(this.getObject(parameter.getStorageStoreKey()))
                 .method(Method.GET);
         if (expiry != null) {
-            builder.expiry(Long.valueOf(expiry.getSeconds()).intValue());
+            builder.expiry((int) expiry.getSeconds());
         }
         GetPresignedObjectUrlArgs urlArgs = builder.build();
         String objectUrl = minioClientCache.getMinioClient().getPresignedObjectUrl(urlArgs);

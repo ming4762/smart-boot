@@ -1,25 +1,29 @@
 package com.smart.cloud.api.message.feign;
 
-import com.smart.cloud.api.message.feign.fallback.RemoteSmartMessageApiFallback;
-import com.smart.cloud.common.core.constants.CloudServiceNameConstants;
+import com.smart.framework.commons.core.utils.BeanUtils;
 import com.smart.module.api.message.SmartMessageApi;
-import com.smart.module.api.message.constants.SmartMessageApiUrlConstants;
-import com.smart.module.api.message.dto.MessageSendDTO;
-import com.smart.module.api.message.dto.SmsSendDTO;
+import com.smart.module.api.message.dto.MessageSendResult;
+import com.smart.module.api.message.dto.SmsSendResult;
 import com.smart.module.api.message.parameter.RemoteMessageSendParameter;
 import com.smart.module.api.message.parameter.RemoteSmsSendParameter;
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.PostMapping;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 消息模块远程调用接口
  * @author zhongming4762
  * 2023/6/6
  */
-@FeignClient(value = CloudServiceNameConstants.MESSAGE_SERVICE, fallbackFactory = RemoteSmartMessageApiFallback.class, contextId = "remoteSmartMessageApi")
-public interface RemoteSmartMessageApi extends SmartMessageApi {
+@Component
+@RequiredArgsConstructor
+public class RemoteSmartMessageApi implements SmartMessageApi {
+
+    private final FeignSmartMessageApi feignSmartMessageApi;
+
 
     /**
      * 发送短信
@@ -28,8 +32,9 @@ public interface RemoteSmartMessageApi extends SmartMessageApi {
      * @return 返回结果
      */
     @Override
-    @PostMapping(SmartMessageApiUrlConstants.SMS_SEND)
-    SmsSendDTO sendSms(RemoteSmsSendParameter parameter);
+    public SmsSendResult sendSms(RemoteSmsSendParameter parameter) {
+        return this.feignSmartMessageApi.sendSms(parameter);
+    }
 
     /**
      * 发送消息
@@ -38,6 +43,25 @@ public interface RemoteSmartMessageApi extends SmartMessageApi {
      * @return 消息发送结果
      */
     @Override
-    @PostMapping(SmartMessageApiUrlConstants.SEND)
-    List<MessageSendDTO> send(RemoteMessageSendParameter parameter);
+    public List<MessageSendResult> send(RemoteMessageSendParameter parameter) {
+        Map<String, Object> flattenBean = BeanUtils.flattenBean(parameter);
+        // 创建新的Map存储处理后的键值对
+        Map<String, Object> processedMap = HashMap.newHashMap(flattenBean.size());
+
+        for (Map.Entry<String, Object> entry : flattenBean.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+            // 跳过null值
+            if (value == null) {
+                continue;
+            }
+            // 如果是枚举类型，使用toString值
+            if (value instanceof Enum<?>) {
+                processedMap.put(key, value.toString());
+            } else {
+                processedMap.put(key, value);
+            }
+        }
+        return this.feignSmartMessageApi.send(processedMap);
+    }
 }

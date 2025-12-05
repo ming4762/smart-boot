@@ -11,8 +11,9 @@ import com.smart.framework.message.core.constants.SmartMessageChannelType1Enum;
 import com.smart.framework.message.core.constants.SmartMessageChannelType2Enum;
 import com.smart.framework.message.core.exception.SmartSmsException;
 import com.smart.framework.message.core.pojo.dto.SmartMessageToUserDTO;
-import com.smart.module.api.message.dto.MessageSendDTO;
-import com.smart.module.api.message.dto.SmsSendDTO;
+import com.smart.module.api.message.constants.SmartSmsChannelEnum;
+import com.smart.module.api.message.dto.MessageSendResult;
+import com.smart.module.api.message.dto.SmsSendResult;
 import com.smart.module.api.message.parameter.RemoteMessageSendParameter;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -106,7 +107,7 @@ public class SmartAliyunSmsChannelServiceImpl implements SmartAliyunSmsChannelSe
      * @return 消息发送结果
      */
     @Override
-    public MessageSendDTO send(@Nullable String channelProperties, List<SmartMessageToUserDTO> toUserList, RemoteMessageSendParameter parameter) {
+    public MessageSendResult send(@Nullable String channelProperties, List<SmartMessageToUserDTO> toUserList, RemoteMessageSendParameter parameter) {
         RemoteMessageSendParameter.SmsSendParameter smsSendParameter = parameter.getSmsSendParameter();
         if (smsSendParameter == null) {
             throw new SmartSmsException("smsSendParameter is null");
@@ -129,7 +130,8 @@ public class SmartAliyunSmsChannelServiceImpl implements SmartAliyunSmsChannelSe
         }
 
         // 获取客户端信息
-        Client client = this.getClientCache(channelProperties).getClient();
+        ClientCache clientCache = this.getClientCache(channelProperties);
+        Client client = clientCache.getClient();
         SendSmsRequest sendSmsRequest = new SendSmsRequest()
                 .setPhoneNumbers(
                         String.join(",", mobiles)
@@ -142,9 +144,13 @@ public class SmartAliyunSmsChannelServiceImpl implements SmartAliyunSmsChannelSe
         try {
             SendSmsResponse sendSmsResponse = client.sendSmsWithOptions(sendSmsRequest, new RuntimeOptions());
             if (SUCCESS_CODE.equals(sendSmsResponse.getBody().getCode())) {
-                SmsSendDTO smsSendResult = new SmsSendDTO(sendSmsResponse.getBody().getRequestId(), JsonUtils.toJsonString(sendSmsResponse), null, null, null);
-                return MessageSendDTO.builder()
-                        .smsSendResult(smsSendResult)
+                return SmsSendResult.builder()
+                        .requestId(sendSmsResponse.getBody().getRequestId())
+                        .responseData(JsonUtils.toJsonString(sendSmsResponse))
+                        // todo:未赋值
+                        .channelId(null)
+                        .channelCode(null)
+                        .channelType(SmartSmsChannelEnum.SMS_ALIYUN)
                         .build();
             }
             throw new SmartSmsException(JsonUtils.toJsonString(sendSmsResponse));

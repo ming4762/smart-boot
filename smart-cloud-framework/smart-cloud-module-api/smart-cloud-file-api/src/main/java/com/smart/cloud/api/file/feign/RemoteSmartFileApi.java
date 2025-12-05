@@ -3,6 +3,7 @@ package com.smart.cloud.api.file.feign;
 import com.smart.module.api.file.SmartFileApi;
 import com.smart.module.api.file.bo.FileDownloadResult;
 import com.smart.module.api.file.bo.FileHandlerResult;
+import com.smart.module.api.file.dto.FilenameDownloadParameter;
 import com.smart.module.api.file.dto.RemoteFileSaveParameter;
 import feign.Response;
 import lombok.NonNull;
@@ -27,12 +28,29 @@ public class RemoteSmartFileApi implements SmartFileApi {
         this.feignSmartFileApi = feignSmartFileApi;
     }
 
-    @SneakyThrows(IOException.class)
     @Override
     public FileDownloadResult download(@NonNull Long id) {
         Response response = this.feignSmartFileApi.download(id);
+        return this.buildFileDownloadResult(response);
+    }
+
+    /**
+     * 下载文件
+     *
+     * @param parameter 文件名下载参数
+     * @return 下载内容
+     */
+    @Override
+    public FileDownloadResult download(@NonNull FilenameDownloadParameter parameter) {
+        Response response = this.feignSmartFileApi.download(parameter);
+        return this.buildFileDownloadResult(response);
+    }
+
+    @SneakyThrows(IOException.class)
+    private FileDownloadResult buildFileDownloadResult(Response response) {
         FileDownloadResult result = new FileDownloadResult();
-        result.setFileId(id);
+        String fileId = response.headers().get(FILE_ID_HEADER).stream().findFirst().orElse(null);
+        result.setFileId(fileId == null ? null : Long.parseLong(fileId));
         result.setInputStream(response.body().asInputStream());
         Collection<String> strings = response.headers().get(HttpHeaders.CONTENT_DISPOSITION);
         String filename = strings.stream()

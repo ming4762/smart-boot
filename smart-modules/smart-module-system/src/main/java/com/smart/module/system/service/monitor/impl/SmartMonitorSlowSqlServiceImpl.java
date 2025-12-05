@@ -29,7 +29,7 @@ public class SmartMonitorSlowSqlServiceImpl extends BaseServiceImpl<SmartMonitor
      * @return 查询结果
      */
     @Override
-    public List<? extends SmartMonitorSlowSqlPO> list(@NonNull QueryWrapper<SmartMonitorSlowSqlPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
+    public List<SmartMonitorSlowSqlPO> list(@NonNull QueryWrapper<SmartMonitorSlowSqlPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
         // 排除字段
         List<String> excludeProperty = List.of(
                 CrudUtils.getJavaProperty(SmartMonitorSlowSqlPO::getParameter),

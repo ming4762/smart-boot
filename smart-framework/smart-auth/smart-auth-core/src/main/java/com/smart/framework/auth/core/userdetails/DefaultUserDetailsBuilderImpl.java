@@ -66,6 +66,7 @@ public class DefaultUserDetailsBuilderImpl implements UserDetailsBuilder {
                 .username(user.getUsername())
                 .fullName(user.getFullName())
                 .password(user.getPassword())
+                .enabled(Boolean.TRUE.equals(user.getUseYn()))
                 .loginFailTime(userAccount.getLoginFailTime())
                 .ipWhiteList(
                         Optional.ofNullable(userAccount.getIpWhiteList())

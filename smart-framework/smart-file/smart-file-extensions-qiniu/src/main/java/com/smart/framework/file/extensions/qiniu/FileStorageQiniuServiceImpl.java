@@ -75,7 +75,7 @@ public class FileStorageQiniuServiceImpl implements QiniuService {
     public void init(FileStorageInitProperties initProperties) {
         CLIENT_CACHE.computeIfAbsent(initProperties.getFileStorageId(), key -> {
             SmartFileStorageQiniuProperties properties = JsonUtils.parse(initProperties.getProperties(), SmartFileStorageQiniuProperties.class);
-            Configuration configuration = new Configuration();
+            Configuration configuration = Configuration.create();
             UploadManager uploadManager = new UploadManager(configuration);
             Auth auth = Auth.create(properties.getAccessKey(), properties.getSecretKey());
             String uploadToken = auth.uploadToken(properties.getBucketName());

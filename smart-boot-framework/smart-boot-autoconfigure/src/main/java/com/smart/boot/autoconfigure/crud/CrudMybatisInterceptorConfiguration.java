@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor;
 import com.smart.framework.crud.plus.inner.LogicDeleteFieldInjectInnerInterceptor;
 import com.smart.module.api.crud.SmartCrudUserApi;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -21,7 +22,7 @@ import java.util.List;
 public class CrudMybatisInterceptorConfiguration {
 
     @Bean
-    public LogicDeleteFieldInjectInnerInterceptor logicDeleteFieldInjectInnerInterceptor(SmartCrudUserApi smartCrudUserApi) {
+    public LogicDeleteFieldInjectInnerInterceptor logicDeleteFieldInjectInnerInterceptor(ObjectProvider<SmartCrudUserApi> smartCrudUserApi) {
         return new LogicDeleteFieldInjectInnerInterceptor(smartCrudUserApi);
     }
 

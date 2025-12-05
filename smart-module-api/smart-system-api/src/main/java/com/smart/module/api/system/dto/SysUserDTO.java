@@ -42,6 +42,10 @@ public class SysUserDTO implements Serializable {
      */
     private String mobile;
 
+     /**
+     * 用户时区
+     */
+    private String timezone;
 
     /**
      * 用户类型（10：系统用户，20：业务用户）

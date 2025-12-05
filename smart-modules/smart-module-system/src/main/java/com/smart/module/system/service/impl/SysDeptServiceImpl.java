@@ -43,27 +43,6 @@ public class SysDeptServiceImpl extends BaseServiceImpl<SysDeptMapper, SysDeptPO
     private final CommonMapper commonMapper;
     private final SysUserService sysUserService;
 
-
-    @Override
-    public List<? extends SysDeptPO> list(@NonNull QueryWrapper<SysDeptPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
-        var userList = super.list(queryWrapper, parameter, paging);
-        if (userList.isEmpty()) {
-            return userList;
-        }
-        // 转为volist
-        var voList = userList.stream()
-                .map(item -> {
-                    var vo = new SysDeptListVO();
-                    BeanUtils.copyProperties(item, vo);
-                    return vo;
-                }).toList();
-        if (Boolean.TRUE.equals(parameter.getParameter().get(CrudCommonEnum.QUERY_CREATE_UPDATE_USER.name()))) {
-            // 查询创建 修改人
-            this.userSetterService.setCreateUpdateUser(voList);
-        }
-        return voList;
-    }
-
     /**
      * 重写删除操作 删除下级
      * @param idList ID列表

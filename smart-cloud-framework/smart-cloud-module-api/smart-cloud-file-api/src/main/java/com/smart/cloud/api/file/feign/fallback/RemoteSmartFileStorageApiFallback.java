@@ -30,6 +30,18 @@ public class RemoteSmartFileStorageApiFallback implements FallbackFactory<Remote
                 this.errorLog();
                 return List.of();
             }
+
+            /**
+             * 通过代码查询列表
+             *
+             * @param codeList 代码列表
+             * @return 文件存储器列表
+             */
+            @Override
+            public List<SmartFileStorageListDTO> listByCode(Collection<String> codeList) {
+                this.errorLog();
+                return List.of();
+            }
         };
     }
 }

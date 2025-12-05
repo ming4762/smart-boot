@@ -15,6 +15,7 @@
 
 	<modules>
 		<module>smart-cloud-service-auth</module>
+        <module>smart-cloud-service-auth-server</module>
 		<module>smart-cloud-service-code</module>
 		<module>smart-cloud-service-file</module>
 		<module>smart-cloud-service-gateway</module>
@@ -26,7 +27,10 @@
 	</properties>
 
 	<dependencies>
-
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-tracing-bridge-brave</artifactId>
+        </dependency>
 	</dependencies>
 
 
