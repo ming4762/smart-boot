@@ -1,7 +1,6 @@
 package com.smart.framework.extension.captcha.handler;
 
 import cloud.tianai.captcha.application.ImageCaptchaApplication;
-import cloud.tianai.captcha.application.vo.CaptchaResponse;
 import cloud.tianai.captcha.application.vo.ImageCaptchaVO;
 import cloud.tianai.captcha.common.response.ApiResponse;
 import cloud.tianai.captcha.generator.common.model.dto.GenerateParam;
@@ -10,7 +9,6 @@ import com.smart.framework.commons.core.captcha.constants.CaptchaTypeEnum;
 import com.smart.framework.commons.core.captcha.dto.CaptchaGenerateDTO;
 import com.smart.framework.commons.core.captcha.dto.CaptchaGenerateParameter;
 import com.smart.framework.commons.core.captcha.dto.CaptchaValidateParameter;
-import com.smart.framework.commons.core.utils.DateUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 
@@ -49,15 +47,15 @@ public class SmartImageCaptchaHandlerImpl implements SmartCaptchaHandler {
         GenerateParam generateParam = new GenerateParam();
         generateParam.setType(parameter.getType().name());
         // TODO: 2024/3/6 待完善：失效时间未设置
-        CaptchaResponse<ImageCaptchaVO> captchaResponse = this.imageCaptchaApplication.generateCaptcha(generateParam);
-        ImageCaptchaVO captcha = captchaResponse.getCaptcha();
+        ApiResponse<ImageCaptchaVO> captchaResponse = this.imageCaptchaApplication.generateCaptcha(generateParam);
+        ImageCaptchaVO captcha = captchaResponse.getData();
 
         CaptchaGenerateDTO.ImageDTO imageDto = new CaptchaGenerateDTO.ImageDTO();
         BeanUtils.copyProperties(captcha, imageDto);
 
         imageDto.setType(CaptchaTypeEnum.valueOf(captcha.getType()));
         return CaptchaGenerateDTO.builder()
-                .key(captchaResponse.getId())
+                .key(captchaResponse.getData().getId())
                 .type(parameter.getType())
                 .image(imageDto)
                 .build();
@@ -91,8 +89,8 @@ public class SmartImageCaptchaHandlerImpl implements SmartCaptchaHandler {
         imageCaptchaTrack.setBgImageWidth(imageParameter.getBgImageWidth());
         imageCaptchaTrack.setTemplateImageWidth(imageParameter.getSliderImageWidth());
         imageCaptchaTrack.setTemplateImageHeight(imageParameter.getSliderImageHeight());
-        imageCaptchaTrack.setStartTime(DateUtils.zonedDateTimeToDate(imageParameter.getStartSlidingTime()));
-        imageCaptchaTrack.setStartTime(DateUtils.zonedDateTimeToDate(imageParameter.getEndSlidingTime()));
+        imageCaptchaTrack.setStartTime(imageParameter.getStartSlidingTime().toInstant().toEpochMilli());
+        imageCaptchaTrack.setStopTime(imageParameter.getEndSlidingTime().toInstant().toEpochMilli());
         imageCaptchaTrack.setTrackList(trackList);
         return imageCaptchaTrack;
     }
