@@ -70,7 +70,7 @@
         <jsqlparser.version>5.1</jsqlparser.version>
         <alibaba.transmittable.version>2.14.5</alibaba.transmittable.version>
         <pdfbox.version>3.0.5</pdfbox.version>
-        <bouncycastle.version>1.82</bouncycastle.version>
+        <bouncycastle.version>1.83</bouncycastle.version>
     </properties>
 
     <packaging>pom</packaging>
