@@ -7,10 +7,10 @@
 		<artifactId>smart-smc-interface</artifactId>
 		<version>5.0.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>smart-smc-interface-sdport-pay</artifactId>
+	<artifactId>smart-smc-interface-qingdaoport</artifactId>
 	<version>5.0.0-SNAPSHOT</version>
-	<name>smart-smc-interface-sdport-pay</name>
-	<description>SMC接口模块-山港云付</description>
+	<name>smart-smc-interface-qingdaoport</name>
+	<description>SMC接口模块-云港通</description>
 
 	<modules>
 
