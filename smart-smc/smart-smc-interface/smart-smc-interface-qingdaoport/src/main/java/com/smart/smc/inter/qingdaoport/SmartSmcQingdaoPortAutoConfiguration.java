@@ -5,6 +5,8 @@ import com.smart.smc.inter.qingdaoport.api.DefaultQingdaoPortApiImpl;
 import com.smart.smc.inter.qingdaoport.api.QingdaoPortApi;
 import com.smart.smc.inter.qingdaoport.api.ship.DefaultQingdaoPortShipApiImpl;
 import com.smart.smc.inter.qingdaoport.api.ship.QingdaoPortShipApi;
+import com.smart.smc.inter.qingdaoport.api.transfer.DefaultQingdaoPortTransferApiImpl;
+import com.smart.smc.inter.qingdaoport.api.transfer.QingdaoPortTransferApi;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -39,5 +41,17 @@ public class SmartSmcQingdaoPortAutoConfiguration {
     @ConditionalOnMissingBean
     public QingdaoPortShipApi qingdaoPortShipApi(SmartSmcQingdaoPortProperties portProperties, SysLogApi sysLogApi) {
         return new DefaultQingdaoPortShipApiImpl(portProperties, sysLogApi);
+    }
+
+    /**
+     * 云港通智能转运平台接口
+     * @param portProperties 云港通配置属性
+     * @param sysLogApi 系统日志接口
+     * @return 云港通智能转运平台接口
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    public QingdaoPortTransferApi qingdaoPortTransferApi(SmartSmcQingdaoPortProperties portProperties, SysLogApi sysLogApi) {
+        return new DefaultQingdaoPortTransferApiImpl(portProperties, sysLogApi);
     }
 }

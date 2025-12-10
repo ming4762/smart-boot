@@ -1,6 +1,7 @@
 package com.smart.smc.inter.qingdaoport.api;
 
 import com.smart.smc.inter.qingdaoport.api.ship.QingdaoPortShipApi;
+import com.smart.smc.inter.qingdaoport.api.transfer.QingdaoPortTransferApi;
 
 /**
  * 云港通接口
@@ -28,5 +29,11 @@ public interface QingdaoPortApi {
      * @return 船舶接口
      */
     QingdaoPortShipApi shipApi();
+
+     /**
+      * 智能转运平台接口
+      * @return 智能转运平台接口
+      */
+    QingdaoPortTransferApi transferApi();
 
 }

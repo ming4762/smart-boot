@@ -11,7 +11,7 @@ import lombok.Getter;
 @Getter
 public enum QingdaoPortUrlEnum {
     SHIP_PLAN("/gateway/prod/ship/shipPlan", "查询船舶计划"),
-    ;
+    TRANSFER("/gateway/prod/querySearch/transfer", "智能转运平台");
 
     private final String url;
 

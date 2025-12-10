@@ -1,6 +1,7 @@
 package com.smart.smc.inter.qingdaoport.api;
 
 import com.smart.smc.inter.qingdaoport.api.ship.QingdaoPortShipApi;
+import com.smart.smc.inter.qingdaoport.api.transfer.QingdaoPortTransferApi;
 import com.smart.smc.inter.qingdaoport.support.QingdaoPortCustomHolder;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -53,5 +54,15 @@ public class DefaultQingdaoPortApiImpl implements QingdaoPortApi, ApplicationCon
     @Override
     public QingdaoPortShipApi shipApi() {
         return this.applicationContext.getBean(QingdaoPortShipApi.class);
+    }
+
+    /**
+     * 智能转运平台接口
+     *
+     * @return 智能转运平台接口
+     */
+    @Override
+    public QingdaoPortTransferApi transferApi() {
+        return this.applicationContext.getBean(QingdaoPortTransferApi.class);
     }
 }
