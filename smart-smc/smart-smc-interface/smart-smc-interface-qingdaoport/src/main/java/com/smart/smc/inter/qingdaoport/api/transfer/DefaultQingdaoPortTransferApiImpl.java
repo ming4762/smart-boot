@@ -6,6 +6,7 @@ import com.smart.smc.inter.qingdaoport.SmartSmcQingdaoPortProperties;
 import com.smart.smc.inter.qingdaoport.api.QingdaoPortCommonApi;
 import com.smart.smc.inter.qingdaoport.constants.QingdaoPortUrlEnum;
 import com.smart.smc.inter.qingdaoport.dto.parameter.QingdaoPortTransferApplyPushParameter;
+import com.smart.smc.inter.qingdaoport.dto.parameter.QingdaoPortTransferDeleteParameter;
 import com.smart.smc.inter.qingdaoport.dto.parameter.QingdaoPortTransferImoQueryParameter;
 import com.smart.smc.inter.qingdaoport.dto.result.*;
 
@@ -73,6 +74,24 @@ public class DefaultQingdaoPortTransferApiImpl extends QingdaoPortCommonApi impl
                 QingdaoPortUrlEnum.TRANSFER,
                 parameter,
                 "mtcgs/transferapplypush",
+                true,
+                new TypeReference<>() {
+                }
+        );
+        return result.getData();
+    }
+
+     /**
+     * 删除转运申请
+     * @param parameter 删除参数
+     * @return 删除结果
+     */
+    @Override
+    public QingdaoPortTransferDeleteResult deleteTransferApply(QingdaoPortTransferDeleteParameter parameter) {
+        QingdaoPortObjectResult<QingdaoPortTransferDeleteResult> result = this.doRequest(
+                QingdaoPortUrlEnum.TRANSFER,
+                parameter,
+                "mtcgs/transfercontapush",
                 true,
                 new TypeReference<>() {
                 }

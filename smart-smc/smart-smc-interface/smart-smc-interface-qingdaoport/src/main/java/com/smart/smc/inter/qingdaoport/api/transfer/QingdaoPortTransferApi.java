@@ -1,8 +1,10 @@
 package com.smart.smc.inter.qingdaoport.api.transfer;
 
 import com.smart.smc.inter.qingdaoport.dto.parameter.QingdaoPortTransferApplyPushParameter;
+import com.smart.smc.inter.qingdaoport.dto.parameter.QingdaoPortTransferDeleteParameter;
 import com.smart.smc.inter.qingdaoport.dto.parameter.QingdaoPortTransferImoQueryParameter;
 import com.smart.smc.inter.qingdaoport.dto.result.QingdaoPortTransferApplyPushResult;
+import com.smart.smc.inter.qingdaoport.dto.result.QingdaoPortTransferDeleteResult;
 import com.smart.smc.inter.qingdaoport.dto.result.QingdaoPortTransferImoResult;
 import com.smart.smc.inter.qingdaoport.dto.result.QingdaoPortTransferParamQueryResult;
 
@@ -36,4 +38,10 @@ public interface QingdaoPortTransferApi {
      * @return 发送结果
      */
     QingdaoPortTransferApplyPushResult pushTransferApply(QingdaoPortTransferApplyPushParameter parameter);
+    /**
+     * 删除转运申请
+     * @param parameter 删除参数
+     * @return 删除结果
+     */
+    QingdaoPortTransferDeleteResult deleteTransferApply(QingdaoPortTransferDeleteParameter parameter);
 }
