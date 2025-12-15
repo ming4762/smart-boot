@@ -526,8 +526,9 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         return CrudUtils.partitionList(new ArrayList<>(functionIds), 900, ids -> this.sysFunctionService.lambdaQuery()
                 .in(SysFunctionPO::getFunctionId, ids)
                 .in(SysFunctionPO::getFunctionType, functionTypeList.stream().map(FunctionTypeEnum::getValue).toList())
-                .orderByAsc(SysFunctionPO :: getSeq)
-                .list());
+                .list()).stream()
+                .sorted(Comparator.comparing(SysFunctionPO::getSeq))
+                .toList();
     }
 
     /**
