@@ -106,7 +106,7 @@ public class RemoteSmartFileApiController implements SmartFileApi {
      * @return 文件信息
      */
     @Override
-    @PostMapping(SmartFileApiUrlConstants.SAVE)
+    @PostMapping(path = SmartFileApiUrlConstants.SAVE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public FileHandlerResult save(RemoteFileSaveParameter parameter) {
         return this.smartFileApi.save(parameter);
     }
