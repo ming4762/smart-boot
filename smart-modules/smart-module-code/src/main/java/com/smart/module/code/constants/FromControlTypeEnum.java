@@ -12,6 +12,8 @@ public enum FromControlTypeEnum {
      */
     INPUT,
     TEXTAREA,
+    // 文本域json格式
+    TEXTAREA_JSON,
     NUMBER,
     PASSWORD,
     SELECT,
