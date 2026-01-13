@@ -12,8 +12,7 @@ import lombok.Getter;
 @Getter
 public class SmartFeignBusinessException extends RuntimeException {
 
-    private final Object errorData;
-
+    private Object errorData;
 
     public SmartFeignBusinessException(Object errorData) {
         this.errorData = errorData;
@@ -23,4 +22,10 @@ public class SmartFeignBusinessException extends RuntimeException {
         super(message);
         this.errorData = errorData;
     }
+
+
+    public SmartFeignBusinessException(Throwable cause) {
+        super(cause);
+    }
+
 }

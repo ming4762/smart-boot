@@ -5,7 +5,6 @@ import com.smart.cloud.common.core.constants.CloudServiceNameConstants;
 import com.smart.module.api.file.bo.FileHandlerResult;
 import com.smart.module.api.file.constants.SmartFileApiUrlConstants;
 import com.smart.module.api.file.dto.FilenameDownloadParameter;
-import com.smart.module.api.file.dto.RemoteFileSaveParameter;
 import feign.Response;
 import lombok.NonNull;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author zhongming4762
@@ -66,7 +66,7 @@ public interface FeignSmartFileApi {
      * @return 文件信息
      */
     @PostMapping(value = SmartFileApiUrlConstants.SAVE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    FileHandlerResult save(RemoteFileSaveParameter parameter);
+    FileHandlerResult save(Map<String,Object> parameter);
 
     /**
      * 列表文件地址
