@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.smart.framework.auth.common.utils.AuthUtils;
 import com.smart.framework.commons.core.exception.SystemException;
+import com.smart.framework.commons.core.utils.BeanUtils;
+import com.smart.framework.commons.core.utils.SmartIdGenerator;
 import com.smart.framework.crud.model.CreateUpdateUserSetter;
 import com.smart.framework.crud.plus.metadata.SmartTableInfo;
 import com.smart.framework.crud.query.PageSortQuery;
@@ -16,11 +18,14 @@ import com.smart.module.system.mapper.CommonMapper;
 import com.smart.module.system.mapper.SysFunctionMapper;
 import com.smart.module.system.model.SysFunctionPO;
 import com.smart.module.system.model.SysRoleFunctionPO;
+import com.smart.module.system.model.micorapp.SysFunctionMicroFrontendPO;
 import com.smart.module.system.model.tenant.SysTenantPO;
 import com.smart.module.system.pojo.dto.tenant.SysListTenantFunctionDTO;
+import com.smart.module.system.pojo.parameter.function.SysFunctionSaveUpdateParameter;
 import com.smart.module.system.pojo.vo.function.SysFunctionVO;
 import com.smart.module.system.service.SysFunctionService;
 import com.smart.module.system.service.SysRoleFunctionService;
+import com.smart.module.system.service.microapp.SysFunctionMicroFrontendService;
 import com.smart.module.system.service.tenant.SysTenantService;
 import com.smart.module.system.service.tenant.SysTenantUserService;
 import lombok.RequiredArgsConstructor;
@@ -49,6 +54,7 @@ public class SysFunctionServiceImpl extends BaseServiceImpl<SysFunctionMapper, S
     private final SysRoleFunctionService sysRoleFunctionService;
     private final SysTenantUserService sysTenantUserService;
     private final ObjectProvider<SysTenantService> sysTenantService;
+    private final SysFunctionMicroFrontendService sysFunctionMicroFrontendService;
 
 
     @Override
@@ -142,20 +148,44 @@ public class SysFunctionServiceImpl extends BaseServiceImpl<SysFunctionMapper, S
         List<SysFunctionVO> voList = List.of(vo);
         this.queryCreateUpdateUser(voList);
         this.queryParent(voList);
+        // 查询微前端微应用
+        this.queryMicroFrontend(voList);
         return voList.getFirst();
     }
 
     /**
-     * TableId 注解存在更新记录，否插入一条记录
+     * 添加修改功能
      *
-     * @param entity 实体对象
+     * @param parameter 参数
      * @return boolean
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean saveOrUpdate(SysFunctionPO entity) {
-        boolean result = super.saveOrUpdate(entity);
-        this.updateHasChild(entity.getParentId());
+    public boolean saveUpdate(SysFunctionSaveUpdateParameter parameter) {
+        SysFunctionPO model = BeanUtils.copyProperties(parameter, SysFunctionPO.class);
+
+        boolean isAdd = this.isAdd(model);
+        if (isAdd) {
+            model.setFunctionId(SmartIdGenerator.nextId());
+        }
+        boolean isMicroFrontend = Boolean.TRUE.equals(parameter.getIsMicroFrontend());
+        if (!isAdd) {
+            // 删除微前端关系
+            this.sysFunctionMicroFrontendService.remove(
+                    Wrappers.lambdaQuery(SysFunctionMicroFrontendPO.class)
+                            .eq(SysFunctionMicroFrontendPO::getFunctionId, model.getFunctionId())
+            );
+        }
+        // 保存更新功能
+        boolean result = isAdd ? this.save(model) : this.updateById(model);
+        // 保存微前端关系
+        if (isMicroFrontend) {
+            SysFunctionMicroFrontendPO microFrontend = BeanUtils.copyProperties(parameter, SysFunctionMicroFrontendPO.class);
+            microFrontend.setFunctionId(model.getFunctionId());
+            this.sysFunctionMicroFrontendService.save(microFrontend);
+        }
+        // 更新上级是否有子节点
+        this.updateHasChild(model.getParentId());
         return result;
     }
 
@@ -213,6 +243,31 @@ public class SysFunctionServiceImpl extends BaseServiceImpl<SysFunctionMapper, S
             Long functionId = vo.getFunction().getParentId();
             if (parentMap.containsKey(functionId)) {
                 vo.setParent(parentMap.get(functionId));
+            }
+        }
+    }
+
+    /**
+     * 查询微前端微应用信息
+     * @param functionVoList voList
+     */
+    protected void queryMicroFrontend(List<SysFunctionVO> functionVoList) {
+        if (CollectionUtils.isEmpty(functionVoList)) {
+            return;
+        }
+        Set<Long> functionIds = functionVoList.stream().map(item -> item.getFunction().getFunctionId())
+                .collect(Collectors.toSet());
+
+        Map<Long, SysFunctionMicroFrontendPO> microFrontendMap = this.sysFunctionMicroFrontendService
+                .lambdaQuery()
+                .in(SysFunctionMicroFrontendPO::getFunctionId, functionIds)
+                .list().stream()
+                .collect(Collectors.toMap(SysFunctionMicroFrontendPO::getFunctionId, item -> item));
+
+        for (SysFunctionVO vo : functionVoList) {
+            Long functionId = vo.getFunction().getFunctionId();
+            if (microFrontendMap.containsKey(functionId)) {
+                vo.setMicroFrontend(microFrontendMap.get(functionId));
             }
         }
     }

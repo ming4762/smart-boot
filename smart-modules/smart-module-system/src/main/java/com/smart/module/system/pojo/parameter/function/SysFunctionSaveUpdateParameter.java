@@ -1,35 +1,26 @@
-package com.smart.module.system.model;
+package com.smart.module.system.pojo.parameter.function;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.smart.framework.commons.core.http.HttpMethod;
-import com.smart.framework.crud.annotation.TableUseYnField;
-import com.smart.framework.crud.model.BaseModelUserTime;
 import com.smart.module.system.constants.FunctionTypeEnum;
-import com.smart.module.system.mybatis.type.FunctionTypeTypeHandler;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
-import java.io.Serial;
+import java.io.Serializable;
 
 /**
- * @author jackson
- * 2020/1/27 12:13 下午
+ * 功能保存更新参数
+ * @author <a href="https://github.com/ming4762">ShiZhongMing</a>
+ * 2026-01-26 16:59
+ * @since 5.0.0
  */
-@TableName(value = "sys_function", autoResultMap = true)
 @Getter
 @Setter
-public class SysFunctionPO extends BaseModelUserTime {
+@ToString
+@EqualsAndHashCode
+public class SysFunctionSaveUpdateParameter implements Serializable {
 
-
-    @Serial
-    private static final long serialVersionUID = -4732658608405383250L;
-    /**
-     * 功能ID
-     */
-    @TableId(type = IdType.ASSIGN_ID)
     private Long functionId;
 
     /**
@@ -45,7 +36,6 @@ public class SysFunctionPO extends BaseModelUserTime {
     /**
      * 功能类型（10：目录 20：菜单 30：功能）
      */
-    @TableField(typeHandler = FunctionTypeTypeHandler.class)
     private FunctionTypeEnum functionType;
 
     /**
@@ -120,11 +110,28 @@ public class SysFunctionPO extends BaseModelUserTime {
      */
     private String meta;
 
-    private Boolean hasChild;
+     /**
+      * 微前端微应用ID
+      */
+    private Long microFrontendId;
 
-    @TableUseYnField
-    private Boolean useYn;
+    /**
+     * multi_instance_yn - 是否多实例
+     */
+    private Boolean multiInstanceYn;
 
-    private Boolean deleteYn;
+    /**
+     * route_linkage_yn - 是否联动路由，单实例模式才生效
+     */
+    private Boolean routeLinkageYn;
 
+    /**
+     * micro_frontend_url - 前端微应用地址，如果为null，则根据菜单URL生成
+     */
+    private String microFrontendUrl;
+
+    /**
+     * micro_frontend_config - 前端微应用配置
+     */
+    private String microFrontendConfig;
 }

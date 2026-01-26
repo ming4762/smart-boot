@@ -68,6 +68,21 @@ public class BeanUtils {
     }
 
     /**
+     * 拷贝对象
+     * @param source 源对象
+     * @param targetClass 目标类型
+     * @param <T> 目标类型
+     * @return 拷贝后的对象
+     */
+    @SneakyThrows({NoSuchMethodException.class, InstantiationException.class, IllegalAccessException.class,
+            IllegalArgumentException.class, InvocationTargetException.class})
+    public static <T> T copyProperties(Object source, Class<T> targetClass) {
+        T target = targetClass.getConstructor().newInstance();
+        BeanUtil.copyProperties(source, target);
+        return target;
+    }
+
+    /**
      * 浅层次bean转为map
      * @param object 需要转换的bean
      * @return 转换的map
