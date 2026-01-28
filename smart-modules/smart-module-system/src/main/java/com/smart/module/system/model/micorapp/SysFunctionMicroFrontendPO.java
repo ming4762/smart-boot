@@ -46,7 +46,7 @@ public class SysFunctionMicroFrontendPO extends BaseModelCreateUserTime {
     /**
     * micro_frontend_url - 前端微应用地址，如果为null，则根据菜单URL生成
     */
-    private String microFrontendUrl;
+    private String microFrontendPageUrl;
 
     /**
     * micro_frontend_config - 前端微应用配置

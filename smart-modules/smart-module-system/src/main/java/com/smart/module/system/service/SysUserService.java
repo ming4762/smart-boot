@@ -13,7 +13,7 @@ import com.smart.module.system.pojo.dbo.SysUserWthAccountBO;
 import com.smart.module.system.pojo.dto.user.ListUserByRoleTenantDTO;
 import com.smart.module.system.pojo.dto.user.UserSaveUpdateWithDeptDTO;
 import com.smart.module.system.pojo.dto.user.UserSetRoleDTO;
-import com.smart.module.system.pojo.vo.SysFunctionListVO;
+import com.smart.module.system.pojo.vo.function.SysFunctionUserMenuVO;
 import com.smart.module.system.pojo.vo.user.SysUserListVO;
 import com.smart.module.system.pojo.vo.user.SysUserWithDeptDTO;
 import jakarta.validation.Valid;
@@ -65,7 +65,7 @@ public interface SysUserService extends BaseService<SysUserPO> {
      * @return 菜单列表
      */
     @NonNull
-    List<SysFunctionListVO> listCurrentUserMenu(List<Locale> localeList);
+    List<SysFunctionUserMenuVO> listCurrentUserMenu(List<Locale> localeList);
 
     /**
      * 查询用户功能
@@ -80,7 +80,7 @@ public interface SysUserService extends BaseService<SysUserPO> {
      * @param localeList 语言
      * @return 菜单信息
      */
-    List<SysFunctionListVO> listUserFunctionWithLocale(List<FunctionTypeEnum> types, List<Locale> localeList);
+    List<SysFunctionUserMenuVO> listUserFunctionWithLocale(List<FunctionTypeEnum> types, List<Locale> localeList);
 
     /**
      * 设置角色

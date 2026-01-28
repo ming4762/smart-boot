@@ -22,7 +22,7 @@ import com.smart.module.system.constants.UserDeptIdentEnum;
 import com.smart.module.system.model.*;
 import com.smart.module.system.pojo.dto.user.*;
 import com.smart.module.system.pojo.parameter.common.SysTenantIdParameter;
-import com.smart.module.system.pojo.vo.SysFunctionListVO;
+import com.smart.module.system.pojo.vo.function.SysFunctionUserMenuVO;
 import com.smart.module.system.pojo.vo.user.SysUserListVO;
 import com.smart.module.system.pojo.vo.user.SysUserWithDeptDTO;
 import com.smart.module.system.service.SysUserAccountService;
@@ -182,7 +182,7 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
      */
     @Operation(summary = "查询用户菜单信息")
     @PostMapping("listUserMenu")
-    public Result<List<SysFunctionListVO>> listUserMenu(@RequestBody List<Locale> localeList) {
+    public Result<List<SysFunctionUserMenuVO>> listUserMenu(@RequestBody List<Locale> localeList) {
         return Result.success(this.service.listCurrentUserMenu(localeList));
     }
 
@@ -192,14 +192,14 @@ public class SysUserController extends BaseController<SysUserService, SysUserPO>
      */
     @Operation(summary = "查询用户菜单树")
     @PostMapping("listUserMenuTree")
-    public Result<List<Tree<SysFunctionPO>>> listUserMenuTree(@RequestBody List<Locale> localeList) {
-        final List<SysFunctionListVO> sysFunctionList = this.service.listCurrentUserMenu(localeList);
+    public Result<List<Tree<SysFunctionUserMenuVO>>> listUserMenuTree(@RequestBody List<Locale> localeList) {
+        final List<SysFunctionUserMenuVO> sysFunctionList = this.service.listCurrentUserMenu(localeList);
         if (CollectionUtils.isEmpty(sysFunctionList)) {
             return Result.success(Lists.newArrayList());
         }
         return Result.success(TreeUtils.buildList(
                 sysFunctionList.stream().map(item -> {
-                    final Tree<SysFunctionPO> tree = new Tree<>();
+                    final Tree<SysFunctionUserMenuVO> tree = new Tree<>();
                     tree.setId(item.getFunctionId());
                     tree.setData(item);
                     tree.setText(item.getFunctionName());

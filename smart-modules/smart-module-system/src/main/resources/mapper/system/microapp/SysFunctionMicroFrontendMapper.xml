@@ -42,7 +42,7 @@
         <!--   是否联动路由，单实例模式才生效      -->
         <result column="route_linkage_yn" property="routeLinkageYn" javaType="java.lang.Byte" jdbcType="TINYINT"/>
         <!--   前端微应用地址，如果为null，则根据菜单URL生成      -->
-        <result column="micro_frontend_url" property="microFrontendUrl" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result column="micro_frontend_page_url" property="microFrontendPageUrl" javaType="java.lang.String" jdbcType="VARCHAR"/>
         <!--   前端微应用配置      -->
         <result column="micro_frontend_config" property="microFrontendConfig" javaType="java.lang.String" jdbcType="VARCHAR"/>
         <!--   创建时间      -->
