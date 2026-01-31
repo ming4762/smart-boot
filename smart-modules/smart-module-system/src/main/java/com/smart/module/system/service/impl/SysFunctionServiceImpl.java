@@ -180,7 +180,7 @@ public class SysFunctionServiceImpl extends BaseServiceImpl<SysFunctionMapper, S
         boolean result = isAdd ? this.save(model) : this.updateById(model);
         // 保存微前端关系
         if (isMicroFrontend) {
-            SysFunctionMicroFrontendPO microFrontend = BeanUtils.copyProperties(parameter, SysFunctionMicroFrontendPO.class);
+            SysFunctionMicroFrontendPO microFrontend = BeanUtils.copyProperties(parameter.getMicroFrontend(), SysFunctionMicroFrontendPO.class);
             microFrontend.setFunctionId(model.getFunctionId());
             this.sysFunctionMicroFrontendService.save(microFrontend);
         }

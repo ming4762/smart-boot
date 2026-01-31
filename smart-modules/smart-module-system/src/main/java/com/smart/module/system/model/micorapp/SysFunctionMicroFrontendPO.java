@@ -44,6 +44,11 @@ public class SysFunctionMicroFrontendPO extends BaseModelCreateUserTime {
     private Boolean routeLinkageYn;
 
     /**
+    * preload_yn - 是否预加载
+    */
+    private  Boolean preloadYn;
+
+    /**
     * micro_frontend_url - 前端微应用地址，如果为null，则根据菜单URL生成
     */
     private String microFrontendPageUrl;

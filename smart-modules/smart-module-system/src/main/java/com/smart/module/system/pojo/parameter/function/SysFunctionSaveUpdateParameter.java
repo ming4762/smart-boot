@@ -110,28 +110,41 @@ public class SysFunctionSaveUpdateParameter implements Serializable {
      */
     private String meta;
 
-     /**
-      * 微前端微应用ID
-      */
-    private Long microFrontendId;
 
-    /**
-     * multi_instance_yn - 是否多实例
-     */
-    private Boolean multiInstanceYn;
+    private MicroFrontendParameter microFrontend;
 
-    /**
-     * route_linkage_yn - 是否联动路由，单实例模式才生效
-     */
-    private Boolean routeLinkageYn;
+    @Getter
+    @Setter
+    @ToString
+    public static class MicroFrontendParameter implements Serializable {
+        /**
+         * 微前端微应用ID
+         */
+        private Long microFrontendId;
 
-    /**
-     * micro_frontend_url - 前端微应用地址，如果为null，则根据菜单URL生成
-     */
-    private String microFrontendPageUrl;
+        /**
+         * multi_instance_yn - 是否多实例
+         */
+        private Boolean multiInstanceYn;
 
-    /**
-     * micro_frontend_config - 前端微应用配置
-     */
-    private String microFrontendConfig;
+        /**
+         * route_linkage_yn - 是否联动路由，单实例模式才生效
+         */
+        private Boolean routeLinkageYn;
+
+        /**
+         * preload_yn - 是否预加载
+         */
+        private  Boolean preloadYn;
+
+        /**
+         * micro_frontend_url - 前端微应用地址，如果为null，则根据菜单URL生成
+         */
+        private String microFrontendPageUrl;
+
+        /**
+         * micro_frontend_config - 前端微应用配置
+         */
+        private String microFrontendConfig;
+    }
 }
