@@ -20,17 +20,6 @@ public class CompositeJwtTokenRepository extends CompositeSmartTokenRepository i
     }
 
     /**
-     * 保存刷新token
-     *
-     * @param user 用户信息
-     * @return 是否保存成功
-     */
-    @Override
-    public String generateRefreshToken(RestUserDetails user) {
-        return this.forGet(repository -> ((JwtTokenRepository)repository).generateRefreshToken(user));
-    }
-
-    /**
      * 通过refreshToken申请token
      *
      * @param refreshToken refreshToken

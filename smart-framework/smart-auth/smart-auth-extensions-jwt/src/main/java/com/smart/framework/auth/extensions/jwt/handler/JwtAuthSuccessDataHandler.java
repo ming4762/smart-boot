@@ -44,16 +44,10 @@ public class JwtAuthSuccessDataHandler implements AuthSuccessDataHandler {
         }
         userDetails.setToken(jwt);
 
-        // 生成refresh token
-        String refreshToken = this.jwtTokenRepository.generateRefreshToken(userDetails);
-
-        if (!StringUtils.hasText(refreshToken)) {
-            throw new SystemException("生成refresh token失败");
-        }
         return LoginResult.builder()
                 .user(userDetails)
                 .token(userDetails.getToken())
-                .refreshToken(refreshToken)
+                .refreshToken(userDetails.getRefreshToken())
                 .roles(userDetails.getRoles())
                 .permissions(
                         Optional.of(userDetails.getPermissions())

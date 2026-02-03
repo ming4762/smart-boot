@@ -57,6 +57,13 @@ public interface RestUserDetails extends UserDetails {
      */
     String getToken();
 
+     /**
+     * 获取刷新token，jwt模式存在
+     * @return 刷新token
+     */
+    @Nullable
+    String getRefreshToken();
+
     /**
      * 获取区域信息
      * @return 区域信息
@@ -118,4 +125,10 @@ public interface RestUserDetails extends UserDetails {
      * @return 租户信息
      */
     UserTenantDTO getUserTenant();
+
+     /**
+     * JWT模式是否开启权限缓存
+     * @return JWT模式是否开启权限缓存
+     */
+    boolean isPermissionCache();
 }

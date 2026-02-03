@@ -13,13 +13,6 @@ import org.springframework.lang.NonNull;
 public interface JwtTokenRepository extends SmartTokenRepository {
 
     /**
-     * 保存刷新token
-     * @param user 用户信息
-     * @return 是否保存成功
-     */
-    String generateRefreshToken(RestUserDetails user);
-
-    /**
      * 通过refreshToken申请token
      * @param refreshToken refreshToken
      * @return token

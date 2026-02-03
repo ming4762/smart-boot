@@ -181,8 +181,8 @@ public class SmartAuthSecurityAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public UserDetailsBuilder userDetailsBuilder(SystemAuthUserApi systemAuthUserApi, CompositeSmartTokenRepository tokenRepository) {
-        return new DefaultUserDetailsBuilderImpl(systemAuthUserApi, tokenRepository);
+    public UserDetailsBuilder userDetailsBuilder(SystemAuthUserApi systemAuthUserApi, CompositeSmartTokenRepository tokenRepository, AuthProperties authProperties) {
+        return new DefaultUserDetailsBuilderImpl(systemAuthUserApi, tokenRepository, authProperties);
     }
 
     @Bean
