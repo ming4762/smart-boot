@@ -149,7 +149,7 @@ public class SmartAuthSecurityAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    public PersistentTokenRepository persistentTokenRepository(AuthCache<Object> authCache, AuthProperties authProperties) {
+    public PersistentTokenRepository persistentTokenRepository(AuthCache authCache, AuthProperties authProperties) {
         return new AuthCachePersistentTokenRepository(authCache, authProperties);
     }
 

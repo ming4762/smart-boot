@@ -119,7 +119,7 @@ public class SmartAuthJwtAutoConfiguration {
     }
 
     @Bean
-    public JwtTokenRepository jwtTokenRepository(AuthProperties authProperties, AuthCache<Object> authCache, JwtResolver jwtResolver) {
+    public JwtTokenRepository jwtTokenRepository(AuthProperties authProperties, AuthCache authCache, JwtResolver jwtResolver) {
         return new DefaultJwtTokenRepositoryImpl(authProperties, jwtResolver, authCache);
     }
 

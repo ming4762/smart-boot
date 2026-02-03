@@ -7,7 +7,7 @@ import org.springframework.lang.NonNull;
  * 2021/6/2 14:21
  * @since 1.0
  */
-public abstract class AbstractAuthCache<V> implements AuthCache<V> {
+public abstract class AbstractAuthCache implements AuthCache {
 
     public static final String SPLIT = ":";
 

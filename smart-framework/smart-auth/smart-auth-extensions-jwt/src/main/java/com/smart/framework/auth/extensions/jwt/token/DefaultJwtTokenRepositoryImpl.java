@@ -50,7 +50,7 @@ public class DefaultJwtTokenRepositoryImpl implements JwtTokenRepository {
 
     private final AuthProperties authProperties;
     private final JwtResolver jwtResolver;
-    private final AuthCache<Object> authCache;
+    private final AuthCache authCache;
 
     /**
      * 生成token
@@ -345,14 +345,14 @@ public class DefaultJwtTokenRepositoryImpl implements JwtTokenRepository {
         }
         String cachedKey = this.getTokenKey(userDetails.getUsername(), userDetails.getUserTenant().getTenantId(), token);
         // 添加权限信息
-        Set<Permission> permissionList = (Set<Permission>) this.authCache.get(cachedKey, JWT_PERMISSION_KEY);
+        Set<Permission> permissionList = this.authCache.get(cachedKey, JWT_PERMISSION_KEY);
         if (!CollectionUtils.isEmpty(permissionList)) {
             userDetails.setPermissions(
                     permissionList.stream().map(PermissionGrantedAuthority::new).collect(Collectors.toSet())
             );
         }
         // 添加角色信息
-        Set<AuthRole> roleList = (Set<AuthRole>) this.authCache.get(cachedKey, JWT_ROLE_KEY);
+        Set<AuthRole> roleList = this.authCache.get(cachedKey, JWT_ROLE_KEY);
         if (!CollectionUtils.isEmpty(roleList)) {
             userDetails.setRoles(
                     roleList.stream().map(RoleGrantedAuthority::new).collect(Collectors.toSet())

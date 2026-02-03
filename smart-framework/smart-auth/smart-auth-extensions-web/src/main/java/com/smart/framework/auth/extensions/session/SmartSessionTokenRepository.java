@@ -35,9 +35,9 @@ public class SmartSessionTokenRepository implements SmartTokenRepository, Sessio
     private SaveMode saveMode = SaveMode.ON_SET_ATTRIBUTE;
     private Duration defaultMaxInactiveInterval = Duration.ofSeconds(MapSession.DEFAULT_MAX_INACTIVE_INTERVAL_SECONDS);
 
-    private final AuthCache<Object> authCache;
+    private final AuthCache authCache;
 
-    public SmartSessionTokenRepository(AuthCache<Object> authCache) {
+    public SmartSessionTokenRepository(AuthCache authCache) {
         this.authCache = authCache;
     }
 

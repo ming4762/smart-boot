@@ -62,7 +62,7 @@ public class AuthAccessSecretAuthenticationFilter implements Filter {
 
     private final AccessSecretProvider accessSecretProvider;
 
-    private final AuthCache<Object> authCache;
+    private final AuthCache authCache;
 
     /**
      * 签名排除的key
@@ -73,7 +73,7 @@ public class AuthAccessSecretAuthenticationFilter implements Filter {
     ).toList();
 
 
-    public AuthAccessSecretAuthenticationFilter(AuthProperties authProperties, AccessSecretProvider accessSecretProvider, AuthCache<Object> authCache) {
+    public AuthAccessSecretAuthenticationFilter(AuthProperties authProperties, AccessSecretProvider accessSecretProvider, AuthCache authCache) {
         this.authProperties = authProperties;
         this.accessSecretProvider = accessSecretProvider;
         this.authCache = authCache;

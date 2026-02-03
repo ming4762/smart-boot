@@ -36,7 +36,7 @@ public class SmartAuthWebAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(SmartSessionTokenRepository.class)
     @Primary
-    public SmartSessionTokenRepository smartSessionTokenRepository(AuthCache<Object> authCache) {
+    public SmartSessionTokenRepository smartSessionTokenRepository(AuthCache authCache) {
         return new SmartSessionTokenRepository(authCache);
     }
 

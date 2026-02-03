@@ -45,7 +45,7 @@ public class LocalAuthApiImpl implements AuthApi {
 
     private final AuthProperties authProperties;
     private final CompositeSmartTokenRepository tokenRepository;
-    private final AuthCache<Object> authCache;
+    private final AuthCache authCache;
 
     /**
      * 通过token离线

@@ -25,12 +25,12 @@ public class JwtLogoutHandler implements SecurityLogoutHandler {
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        String token = TokenUtils.getToken(request);
-        if (StringUtils.isBlank(token)) {
+        String refreshToken = TokenUtils.getRefreshToken(request);
+        if (StringUtils.isBlank(refreshToken)) {
             throw new AuthException("token为null，无法登出");
         }
         try {
-            this.jwtTokenRepository.invalidateByToken(token);
+            this.jwtTokenRepository.invalidateByToken(refreshToken);
         } catch (AuthenticationException e) {
             log.warn("登出失败:{}", e.getMessage(), e);
         }

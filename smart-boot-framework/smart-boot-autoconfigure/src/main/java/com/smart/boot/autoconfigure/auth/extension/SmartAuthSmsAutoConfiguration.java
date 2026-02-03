@@ -33,7 +33,7 @@ public class SmartAuthSmsAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public SmsCreateValidateProvider smsCreateValidateProvider(AuthCache<Object> authCache, SmartMessageApi smartMessageApi, AuthProperties authProperties) {
+    public SmsCreateValidateProvider smsCreateValidateProvider(AuthCache authCache, SmartMessageApi smartMessageApi, AuthProperties authProperties) {
         return new DefaultSmsCreateValidateProviderImpl(authCache, smartMessageApi, authProperties);
     }
 

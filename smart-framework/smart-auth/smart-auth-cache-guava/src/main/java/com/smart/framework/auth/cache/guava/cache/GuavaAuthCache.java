@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  * TODO:未完成
  * 2020/9/11 9:40 下午
  */
-public class GuavaAuthCache extends AbstractAuthCache<Object> {
+public class GuavaAuthCache extends AbstractAuthCache {
 
     private final GuavaCacheService cacheService;
 
@@ -59,8 +59,8 @@ public class GuavaAuthCache extends AbstractAuthCache<Object> {
      * @param timeout 超时时间
      */
     @Override
-    public void putAll(String key, Map<String, Object> value, Duration timeout) {
-
+    public void putAll(@NonNull String key, @NonNull Map<String, Object> value, Duration timeout) {
+        this.cacheService.put(this.getKey(key), value, timeout);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class GuavaAuthCache extends AbstractAuthCache<Object> {
 
     @Nullable
     @Override
-    public Map<String, Object> get(@NonNull String key) {
+    public <R> Map<String, R> get(@NonNull String key) {
         return this.cacheService.get(this.getKey(key));
     }
 
@@ -81,7 +81,7 @@ public class GuavaAuthCache extends AbstractAuthCache<Object> {
      * @return value
      */
     @Override
-    public Object getValue(@NonNull String key) {
+    public <R> R getValue(@NonNull String key) {
         return null;
     }
 
@@ -93,7 +93,7 @@ public class GuavaAuthCache extends AbstractAuthCache<Object> {
      * @return value
      */
     @Override
-    public Object get(@NonNull String key, @NonNull String mapKey) {
+    public <R> R get(@NonNull String key, @NonNull String mapKey) {
         return null;
     }
 
@@ -117,9 +117,9 @@ public class GuavaAuthCache extends AbstractAuthCache<Object> {
      */
     @Override
     @NonNull
-    public List<Map<String, Object>> batchGet(@NonNull Collection<String> keys) {
+    public <R> List<Map<String, R>> batchGet(@NonNull Collection<String> keys) {
         var prefixKeys = keys.stream().map(this::getKey).collect(Collectors.toSet());
-        List<Map<String, Object>> cacheList = this.cacheService.batchGet(new ArrayList<>(prefixKeys));
+        List<Map<String, R>> cacheList = this.cacheService.batchGet(new ArrayList<>(prefixKeys));
         return cacheList == null ? Collections. emptyList() : cacheList;
     }
 
@@ -129,12 +129,12 @@ public class GuavaAuthCache extends AbstractAuthCache<Object> {
     }
 
     @Override
-    public List<Map<String, Object>> matchGet(@NonNull String matchKey) {
+    public <R> List<Map<String, R>> matchGet(@NonNull String matchKey) {
         List<String> keys = this.cacheService.matchKeys(this.getKey(matchKey));
         if (CollectionUtils.isEmpty(keys)) {
             return Collections.emptyList();
         }
-        List<Map<String, Object>> dataList = this.cacheService.batchGet(keys);
+        List<Map<String, R>> dataList = this.cacheService.batchGet(keys);
         if (CollectionUtils.isEmpty(dataList)) {
             return Collections. emptyList();
         }
@@ -156,7 +156,7 @@ public class GuavaAuthCache extends AbstractAuthCache<Object> {
      * @return 数据
      */
     @Override
-    public Map<String, Object> getAndRemove(@NonNull String key) {
+    public <R> Map<String, R> getAndRemove(@NonNull String key) {
         return this.cacheService.getAndRemove(key);
     }
 

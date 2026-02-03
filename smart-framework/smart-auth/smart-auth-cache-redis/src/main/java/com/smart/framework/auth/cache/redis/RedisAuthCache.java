@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * @author shizhongming
  * 2020/7/1 3:54 下午
  */
-public class RedisAuthCache extends AbstractAuthCache<Object> {
+public class RedisAuthCache extends AbstractAuthCache {
 
     private final RedisService cacheService;
 
@@ -78,7 +78,7 @@ public class RedisAuthCache extends AbstractAuthCache<Object> {
      */
     @Override
     @Nullable
-    public Map<String, Object> get(@NonNull String key) {
+    public <R> Map<String, R> get(@NonNull String key) {
         return this.cacheService.hashEntries(this.getKey(key));
     }
 
@@ -89,7 +89,7 @@ public class RedisAuthCache extends AbstractAuthCache<Object> {
      * @return value
      */
     @Override
-    public Object getValue(@NonNull String key) {
+    public <R> R getValue(@NonNull String key) {
         return this.cacheService.get(this.getKey(key));
     }
 
@@ -101,7 +101,7 @@ public class RedisAuthCache extends AbstractAuthCache<Object> {
      * @return value
      */
     @Override
-    public Object get(@NonNull String key, @NonNull String mapKey) {
+    public <R> R get(@NonNull String key, @NonNull String mapKey) {
         return this.cacheService.hashGet(this.getKey(key), mapKey);
     }
 
@@ -131,12 +131,12 @@ public class RedisAuthCache extends AbstractAuthCache<Object> {
      */
     @Override
     @NonNull
-    public List<Map<String, Object>> batchGet(@NonNull Collection<String> keys) {
+    public <R> List<Map<String, R>> batchGet(@NonNull Collection<String> keys) {
         if (CollectionUtils.isEmpty(keys)) {
             return Collections.emptyList();
         }
         return keys.stream()
-                .map(item -> this.cacheService.<String, Object>hashEntries(this.getKey(item)))
+                .map(item -> this.cacheService.<String, R>hashEntries(this.getKey(item)))
                 .toList();
     }
 
@@ -150,13 +150,13 @@ public class RedisAuthCache extends AbstractAuthCache<Object> {
     }
 
     @Override
-    public List<Map<String, Object>> matchGet(@NonNull String matchKey) {
+    public <R> List<Map<String, R>> matchGet(@NonNull String matchKey) {
         List<String> keys = this.cacheService.matchKeys(this.getKey(matchKey));
         if (CollectionUtils.isEmpty(keys)) {
             return Collections.emptyList();
         }
         return keys.stream()
-                .map(item -> this.cacheService.<String, Object>hashEntries(this.getKey(item)))
+                .map(item -> this.cacheService.<String, R>hashEntries(this.getKey(item)))
                 .toList();
     }
 
@@ -175,8 +175,8 @@ public class RedisAuthCache extends AbstractAuthCache<Object> {
      * @return 数据
      */
     @Override
-    public Map<String, Object> getAndRemove(@NonNull String key) {
-        Map<String, Object> data = this.cacheService.hashEntries(this.getKey(key));
+    public <R> Map<String, R> getAndRemove(@NonNull String key) {
+        Map<String, R> data = this.cacheService.hashEntries(this.getKey(key));
         this.cacheService.hashDelete(this.getKey(key));
         return data;
     }
