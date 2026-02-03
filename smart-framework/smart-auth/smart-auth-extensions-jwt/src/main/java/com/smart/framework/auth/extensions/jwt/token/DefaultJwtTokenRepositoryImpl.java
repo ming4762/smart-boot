@@ -9,6 +9,8 @@ import com.smart.framework.auth.core.properties.AuthProperties;
 import com.smart.framework.auth.core.service.AbstractAuthCache;
 import com.smart.framework.auth.core.service.AuthCache;
 import com.smart.framework.auth.core.token.TokenCacheData;
+import com.smart.framework.auth.extensions.jwt.data.JwtRefreshTokenPayload;
+import com.smart.framework.auth.extensions.jwt.data.JwtTokenResolverUser;
 import com.smart.framework.auth.extensions.jwt.resolver.JwtResolver;
 import com.smart.framework.commons.core.dto.auth.AuthRole;
 import com.smart.framework.commons.core.dto.auth.Permission;
@@ -43,6 +45,8 @@ public class DefaultJwtTokenRepositoryImpl implements JwtTokenRepository {
     private static final String TOKE_KEY_PREFIX = "jwt-token";
     private static final String REFRESH_TOKEN_KEY_PREFIX = "jwt-refresh-token";
     private static final String CACHED_TOKEN_LIST = "token-list";
+    // 缓存失效的token列表
+    private static final String CACHED_INVALID_TOKEN_LIST = "cached-invalid-token-list:";
 
     private final AuthProperties authProperties;
     private final JwtResolver jwtResolver;
@@ -259,10 +263,14 @@ public class DefaultJwtTokenRepositoryImpl implements JwtTokenRepository {
      * @return 是否失效成功
      */
     protected boolean doInvalidateByToken(String token) {
-        RestUserDetails userDetails = this.jwtResolver.resolverToken(token);
-        if (userDetails == null) {
+        JwtTokenResolverUser user = this.jwtResolver.resolverToken(token);
+        if (user == null) {
             return false;
         }
+        // 缓存失效的token
+        this.cachedInvalidateToken(user);
+
+        RestUserDetailsImpl userDetails = user.restUserDetails();
         // 移除刷新token缓存
         String refreshTokenKey = this.getRefreshTokenKey(userDetails.getUsername(), userDetails.getUserTenant().getTenantId(), userDetails.getRefreshToken());
         this.authCache.remove(refreshTokenKey);
@@ -273,6 +281,27 @@ public class DefaultJwtTokenRepositoryImpl implements JwtTokenRepository {
         String cachedKey = this.getTokenKey(userDetails.getUsername(), userDetails.getUserTenant().getTenantId(), token);
         this.authCache.remove(cachedKey);
         return true;
+    }
+
+    /**
+     * 缓存失效的token
+     * 有效期为token剩余有效期
+     * 防止主动失效的token可以正常访问系统
+     * @param user 用户信息
+     */
+    private void cachedInvalidateToken(JwtTokenResolverUser user) {
+        String token = user.restUserDetails().getToken();
+        Duration tokenDuration = Duration.between(Instant.now(), user.expiresAt());
+        this.authCache.put(CACHED_INVALID_TOKEN_LIST + token, tokenDuration, tokenDuration);
+    }
+
+    /**
+     * 校验token是否失效
+     * @param token token
+     * @return 是否失效
+     */
+    private boolean isTokenInInvalidCache(String token) {
+        return this.authCache.getValue(CACHED_INVALID_TOKEN_LIST + token) != null;
     }
 
     /**
@@ -301,10 +330,15 @@ public class DefaultJwtTokenRepositoryImpl implements JwtTokenRepository {
      */
     @Override
     public RestUserDetails getUserByToken(String token) {
-        RestUserDetailsImpl userDetails = (RestUserDetailsImpl) this.jwtResolver.resolverToken(token);
-        if (userDetails == null) {
+        JwtTokenResolverUser user = this.jwtResolver.resolverToken(token);
+        if (user == null) {
             return null;
         }
+        // 校验token是否在失效列表
+        if (this.isTokenInInvalidCache(token)) {
+            return null;
+        }
+        RestUserDetailsImpl userDetails = user.restUserDetails();
         // 注入权限角色信息
         if (!userDetails.isPermissionCache()) {
             return userDetails;

@@ -1,4 +1,4 @@
-package com.smart.framework.auth.extensions.jwt.token;
+package com.smart.framework.auth.extensions.jwt.data;
 
 import com.smart.framework.auth.common.userdetails.RestUserDetails;
 import com.smart.framework.commons.core.dto.auth.UserTenantDTO;
@@ -11,7 +11,7 @@ import com.smart.framework.commons.core.dto.auth.UserTenantDTO;
  */
 public record JwtRefreshTokenPayload(String username, UserTenantDTO userTenant) {
 
-    static JwtRefreshTokenPayload createByUser(RestUserDetails user) {
+    public static JwtRefreshTokenPayload createByUser(RestUserDetails user) {
         return new JwtRefreshTokenPayload(user.getUsername(), user.getUserTenant());
     }
 }

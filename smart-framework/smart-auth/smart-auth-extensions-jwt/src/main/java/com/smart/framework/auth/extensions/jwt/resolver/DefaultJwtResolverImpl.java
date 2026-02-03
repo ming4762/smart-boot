@@ -1,8 +1,8 @@
 package com.smart.framework.auth.extensions.jwt.resolver;
 
-import com.smart.framework.auth.common.userdetails.RestUserDetails;
 import com.smart.framework.auth.core.model.RestUserDetailsImpl;
-import com.smart.framework.auth.extensions.jwt.token.JwtRefreshTokenPayload;
+import com.smart.framework.auth.extensions.jwt.data.JwtRefreshTokenPayload;
+import com.smart.framework.auth.extensions.jwt.data.JwtTokenResolverUser;
 import com.smart.framework.commons.core.utils.JsonUtils;
 import com.smart.framework.commons.jwt.Jwt;
 import com.smart.framework.commons.jwt.JwtDecoder;
@@ -40,15 +40,19 @@ public class DefaultJwtResolverImpl implements JwtResolver {
 
     /**
      * 解析jwt token，获取用户信息
+     *
      * @param jwtStr jwt
      * @return 用户信息
      */
     @Override
-    public RestUserDetails resolverToken(@NonNull String jwtStr) {
-        String userStr = this.resolverJwtUserPayload(jwtStr);
-        RestUserDetailsImpl userDetails = JsonUtils.parse(userStr, RestUserDetailsImpl.class);
+    public JwtTokenResolverUser resolverToken(@NonNull String jwtStr) {
+        JwtTokenResolverData data = this.resolverJwtUserPayload(jwtStr);
+        if (data == null) {
+            return null;
+        }
+        RestUserDetailsImpl userDetails = JsonUtils.parse(data.userData, RestUserDetailsImpl.class);
         userDetails.setToken(jwtStr);
-        return userDetails;
+        return new JwtTokenResolverUser(userDetails, data.issuedAt, data.expiresAt);
     }
 
     /**
@@ -59,20 +63,27 @@ public class DefaultJwtResolverImpl implements JwtResolver {
      */
     @Override
     public JwtRefreshTokenPayload resolverRefreshToken(@NonNull String refreshToken) {
-        String userStr = this.resolverJwtUserPayload(refreshToken);
-        return JsonUtils.parse(userStr, JwtRefreshTokenPayload.class);
+        JwtTokenResolverData data = this.resolverJwtUserPayload(refreshToken);
+        if (data == null) {
+            return null;
+        }
+        return JsonUtils.parse(data.userData, JwtRefreshTokenPayload.class);
     }
 
     /**
      * 获取jwt载荷信息-用户信息
+     *
      * @param jwtStr jwt字符串
      * @return 用户信息字符串
      */
-    private String resolverJwtUserPayload(String jwtStr) {
+    private JwtTokenResolverData resolverJwtUserPayload(String jwtStr) {
         try {
             Jwt jwt = this.jwtDecoder.decode(jwtStr);
             Map<String, Object> claims = jwt.getClaims();
-            return (String) claims.get(USER_KEY);
+            return new JwtTokenResolverData(
+                    (String) claims.get(USER_KEY),
+                    jwt.getIssuedAt(),
+                    jwt.getExpiresAt());
         } catch (JwtExpiredException e) {
             log.error("jwt已过期:{}", e.getMessage());
             return null;
@@ -81,9 +92,10 @@ public class DefaultJwtResolverImpl implements JwtResolver {
 
     /**
      * 创建JWT
-     * @param userId 用户ID
+     *
+     * @param userId    用户ID
      * @param effective 有效时间
-     * @param payload 载荷信息
+     * @param payload   载荷信息
      * @return jwt字符串
      */
     @Override
@@ -103,7 +115,6 @@ public class DefaultJwtResolverImpl implements JwtResolver {
     }
 
 
-
     @Override
     public int getOrder() {
         return Integer.MIN_VALUE;
@@ -117,5 +128,11 @@ public class DefaultJwtResolverImpl implements JwtResolver {
     @Autowired
     public void setJwtEncoder(JwtEncoder jwtEncoder) {
         this.jwtEncoder = jwtEncoder;
+    }
+
+    private record JwtTokenResolverData(
+            String userData,
+            Instant issuedAt,
+            Instant expiresAt) {
     }
 }
