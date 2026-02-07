@@ -28,14 +28,14 @@ public class JxlsFormatFunction {
 
     /**
      * 格式化时间
-     * @param ZonedDateTime 时间
+     * @param zonedDateTime 时间
      * @param formatter 格式化参数
      * @return 格式化后的时间
      */
-    public String formatZonedDateTime(ZonedDateTime ZonedDateTime, String formatter) {
-        if (ZonedDateTime == null) {
+    public String formatZonedDateTime(ZonedDateTime zonedDateTime, String formatter) {
+        if (zonedDateTime == null) {
             return "";
         }
-        return DateUtils.format(ZonedDateTime, formatter);
+        return DateUtils.format(zonedDateTime, formatter);
     }
 }

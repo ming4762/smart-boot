@@ -27,6 +27,7 @@
 			<artifactId>aliyun-sdk-oss</artifactId>
 		</dependency>
 
+        <!--    TODO:阿里云OSS依赖这个包进行文件本地加密，但是该包过老，改为服务端加密    -->
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcprov-jdk15on</artifactId>
