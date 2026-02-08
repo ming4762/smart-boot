@@ -2,12 +2,10 @@ package com.smart.framework.crud.datapermission.handler;
 
 import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.extension.plugins.handler.MultiDataPermissionHandler;
-import com.github.pagehelper.Page;
 import com.smart.framework.commons.core.utils.BeanUtils;
 import com.smart.framework.crud.datapermission.aspect.DataPermissionContextHolder;
 import com.smart.framework.crud.datapermission.exception.SmartDataPermissionException;
 import com.smart.framework.crud.plus.metadata.SmartTableInfo;
-import com.smart.framework.crud.utils.CrudPageHelper;
 import com.smart.framework.crud.utils.CrudUtils;
 import com.smart.module.api.crud.SmartCrudDataPermissionApi;
 import com.smart.module.api.crud.constants.DataPermissionScopeEnum;
@@ -355,19 +353,7 @@ public class SmartDataPermissionHandler implements MultiDataPermissionHandler {
      * @return 用户部门列表
      */
     private List<Long> getUserDeptList() {
-        return SmartDataContextHolder.getUserDeptList(() -> {
-            Page<Object> localPage = CrudPageHelper.getLocalPage();
-            try {
-                if (localPage != null) {
-                    CrudPageHelper.clearPage();
-                }
-                return this.smartCrudDataPermissionApi.getUserDeptList();
-            } finally {
-                if (localPage != null) {
-                    CrudPageHelper.setPage(localPage);
-                }
-            }
-        });
+        return SmartDataContextHolder.getUserDeptList(this.smartCrudDataPermissionApi::getUserDeptList);
     }
 
     /**

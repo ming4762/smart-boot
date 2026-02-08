@@ -69,6 +69,8 @@ public final class CrudUtils {
 
     private static final String SEARCH_SYMBOL_SPLIT = "@";
 
+    private static final String SORT_ASC = "ASC";
+
     private static final Map<Class<?>, SmartTableInfo> SMART_TABLE_INFO_CACHE = new ConcurrentHashMap<>();
 
     public static String getTableName(Class<?> clazz) {
@@ -136,13 +138,13 @@ public final class CrudUtils {
         final List<Sort> sortList = new LinkedList<>();
         for (int i=0; i<sortNameList.length; i++) {
             final String name = sortNameList[i].trim();
-            final String order = sortOrderList.size() > i ? sortOrderList.get(i).trim() : "asc";
+            final boolean asc = sortOrderList.size() <= i || SORT_ASC.equalsIgnoreCase(sortOrderList.get(i).trim());
             // 获取数据库字段
             final String dbName = tableInfo.getTableFiled(name).getColumn();
             if (StringUtils.isEmpty(dbName)) {
                 log.warn("未找到排序字段对应的数据库字段：{}，该排序属性被忽略", name);
             } else {
-                sortList.add(new Sort(name, order, dbName));
+                sortList.add(new Sort(name, asc, dbName));
             }
         }
         return sortList;

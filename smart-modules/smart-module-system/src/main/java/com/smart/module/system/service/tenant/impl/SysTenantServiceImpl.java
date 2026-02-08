@@ -9,6 +9,7 @@ import com.smart.framework.commons.core.utils.SmartIdGenerator;
 import com.smart.framework.crud.plus.metadata.SmartTableInfo;
 import com.smart.framework.crud.query.IdParameter;
 import com.smart.framework.crud.service.BaseServiceImpl;
+import com.smart.framework.crud.utils.CrudPageHelper;
 import com.smart.framework.crud.utils.CrudUtils;
 import com.smart.module.api.system.dto.SysTenantDTO;
 import com.smart.module.system.inject.SysTenantInject;
@@ -85,7 +86,10 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
         }
         TableFieldInfo tableFiled = tableInfo.getTableFiled(SysTenantUserPO::getTenantId);
         queryWrapper.eq("B." + tableFiled.getColumn(), parameter.getTenantId());
-        return this.sysTenantUserMapper.listTenantUser(queryWrapper);
+        if (CrudPageHelper.exists()) {
+            return this.sysTenantUserMapper.listTenantUser(CrudPageHelper.get(), queryWrapper);
+        }
+        return this.sysTenantUserMapper.listTenantUser(null, queryWrapper);
     }
 
     /**
@@ -98,6 +102,9 @@ public class SysTenantServiceImpl extends BaseServiceImpl<SysTenantMapper, SysTe
     public List<SysUserPO> listNoBindUser(SysTenantListNoBindUserDTO parameter) {
         QueryWrapper<SysUserPO> queryWrapper = CrudUtils.createQueryWrapperFromParameters(parameter.getParameter(), SysUserPO.class);
         queryWrapper.apply("user_id not in (select M.user_id from sys_tenant_user M where M.tenant_id = {0})", parameter.getTenantId());
+        if (CrudPageHelper.exists()) {
+            return this.sysUserService.list(CrudPageHelper.get(), queryWrapper);
+        }
         return this.sysUserService.list(queryWrapper);
     }
 

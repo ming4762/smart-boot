@@ -112,7 +112,7 @@ public class Result<T> implements Serializable {
      * @return 分页数据
      */
     public static <T> Result<PageData<T>> success(@NonNull List<T> rows, Long total) {
-        return Result.success(new PageData<>(rows, total));
+        return Result.success(PageData.of(rows, total));
     }
 
 

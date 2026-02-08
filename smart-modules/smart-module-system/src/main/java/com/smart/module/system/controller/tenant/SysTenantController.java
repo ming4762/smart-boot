@@ -1,6 +1,6 @@
 package com.smart.module.system.controller.tenant;
 
-import com.github.pagehelper.Page;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.smart.framework.auth.common.utils.AuthUtils;
 import com.smart.framework.commons.core.dto.common.LabelValueData;
 import com.smart.framework.commons.core.log.Log;
@@ -61,7 +61,6 @@ public class SysTenantController extends BaseController<SysTenantService, SysTen
     @Override
     @PostMapping("list")
     @Operation(summary = "查询角色列表（支持分页、实体类属性查询）")
-    @PreAuthorize("hasPermission('sys:tenant:manager', 'query')")
     public Result<Object> list(@RequestBody @NonNull PageSortQuery parameter) {
         return super.list(parameter);
     }
@@ -124,18 +123,16 @@ public class SysTenantController extends BaseController<SysTenantService, SysTen
     @PostMapping("listTenantUser")
     public Result<PageData<SysTenantUserListDO>> listTenantUser(@RequestBody SysTenantUserListDTO parameter) {
         Page<SysTenantUserListDO> page = this.doPage(parameter);
-        CrudPageHelper.setPage(page);
-        this.service.listTenantUser(parameter);
-        return Result.success(new PageData<>(page.getResult(), page.getTotal()));
+        List<SysTenantUserListDO> dataList = CrudPageHelper.withPage(page, () -> this.service.listTenantUser(parameter));
+        return Result.success(PageData.of(dataList, page.getTotal()));
     }
 
     @Operation(summary = "查询未绑定租户的用户")
     @PostMapping("listNoBindUser")
     public Result<PageData<SysUserPO>> listNoBindUser(@RequestBody @Valid SysTenantListNoBindUserDTO parameter) {
         Page<SysUserPO> page = this.doPage(parameter);
-        CrudPageHelper.setPage(page);
-        this.service.listNoBindUser(parameter);
-        return Result.success(new PageData<>(page.getResult(), page.getTotal()));
+        List<SysUserPO> dataList = CrudPageHelper.withPage(page, () -> this.service.listNoBindUser(parameter));
+        return Result.success(PageData.of(dataList, page.getTotal()));
     }
 
     @Operation(summary = "绑定用户")

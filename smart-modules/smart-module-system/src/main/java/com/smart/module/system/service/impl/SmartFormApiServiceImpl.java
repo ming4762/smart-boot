@@ -69,7 +69,7 @@ public class SmartFormApiServiceImpl implements SmartFormApiService {
                 // 处理排序
                 List<Sort> sortList = CrudUtils.analysisOrder(pageSortQuery.getSortName(), pageSortQuery.getSortOrder(), clazz);
                 for (Sort sort : sortList) {
-                    queryWrapper.orderBy(true, StringUtils.endsWithIgnoreCase(sort.getOrder(), "asc"), sort.getDbName());
+                    queryWrapper.orderBy(true, sort.asc(), sort.dbName());
                 }
             }
         }
