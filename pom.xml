@@ -27,8 +27,6 @@
         <swagger-annotations.version>2.2.34</swagger-annotations.version>
         <commons-io.version>2.17.0</commons-io.version>
         <jsch.version>0.1.55</jsch.version>
-        <pagehelper.version>6.1.1</pagehelper.version>
-        <pagehelper-starter.version>2.1.1</pagehelper-starter.version>
 
         <mybatis-plus.version>3.5.15</mybatis-plus.version>
         <jodconverter.version>4.4.11</jodconverter.version>
@@ -209,17 +207,6 @@
                 <groupId>com.jcraft</groupId>
                 <artifactId>jsch</artifactId>
                 <version>${jsch.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.github.pagehelper</groupId>
-                <artifactId>pagehelper-spring-boot-starter</artifactId>
-                <version>${pagehelper-starter.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.pagehelper</groupId>
-                <artifactId>pagehelper</artifactId>
-                <version>${pagehelper.version}</version>
             </dependency>
 
             <!--mybatis-plus支持-->

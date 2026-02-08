@@ -1,6 +1,6 @@
 package com.smart.module.message.controller;
 
-import com.github.pagehelper.Page;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.smart.framework.commons.core.message.PageData;
 import com.smart.framework.commons.core.message.Result;
 import com.smart.framework.crud.controller.BaseController;
@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 /**
  * @author shizhongming
  * 2023/1/20 14:15
@@ -30,11 +28,9 @@ public class SmartMessageSystemSendController extends BaseController<SmartMessag
     @PostMapping("pageCurrentUserMessage")
     @Operation(summary = "查询当前人员消息")
     public Result<PageData<SmartMessageSendMessageDO>> pageCurrentUserMessage(@RequestBody SmartMessageSendParameter parameter) {
-        try (Page<SmartMessageSystemSendPO> page = this.doPage(parameter)) {
-            CrudPageHelper.setPage(page);
-            List<SmartMessageSendMessageDO> dataList = this.service.listCurrentSendMessage(parameter);
-            return Result.success(new PageData<>(dataList, page.getTotal()));
-        }
+        Page<SmartMessageSendMessageDO> page = this.doPage(parameter);
+        CrudPageHelper.withPage(page, () -> this.service.listCurrentSendMessage(parameter));
+        return Result.success(PageData.of(page.getRecords(), page.getTotal()));
     }
 
     @PostMapping("markAsRead")

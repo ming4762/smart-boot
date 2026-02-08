@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.toolkit.Assert;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.github.pagehelper.Page;
 import com.google.common.collect.Lists;
 import com.smart.framework.commons.core.exception.SystemException;
 import com.smart.framework.crud.mapper.CrudBaseMapper;
@@ -18,7 +17,6 @@ import com.smart.framework.crud.plus.metadata.SmartTableInfo;
 import com.smart.framework.crud.query.PageSortQuery;
 import com.smart.framework.crud.utils.CrudPageHelper;
 import com.smart.framework.crud.utils.CrudUtils;
-import com.smart.framework.crud.utils.PageCache;
 import org.springframework.lang.NonNull;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -31,8 +29,6 @@ import java.util.*;
  * 2020/1/10 9:51 下午
  */
 public abstract class BaseServiceImpl<K extends CrudBaseMapper<T>, T extends BaseModel> extends ServiceImpl<K, T> implements BaseService<T> {
-
-    private static final String SORT_ASC = "ASC";
 
     /**
      * 重写批量删除方法，如果ID只有一个调用removeById方法
@@ -80,15 +76,10 @@ public abstract class BaseServiceImpl<K extends CrudBaseMapper<T>, T extends Bas
         if (!paging && org.apache.commons.lang3.StringUtils.isNotBlank(parameter.getSortName())) {
             this.analysisOrder(queryWrapper, parameter.getSortName(), parameter.getSortOrder());
         }
-        try {
-            final Page<?> page = PageCache.get();
-            if (page != null) {
-                CrudPageHelper.setPage(page);
-            }
-            return super.list(queryWrapper);
-        } finally {
-            PageCache.clear();
+        if (CrudPageHelper.exists()) {
+            return super.list(CrudPageHelper.get(), queryWrapper);
         }
+        return super.list(queryWrapper);
     }
 
     /**
@@ -158,10 +149,10 @@ public abstract class BaseServiceImpl<K extends CrudBaseMapper<T>, T extends Bas
         final List<Sort> sortList = CrudUtils.analysisOrder(sortName, sortOrder, clazz);
         if (!sortList.isEmpty()) {
             sortList.forEach(sort -> {
-                if (SORT_ASC.equalsIgnoreCase(sort.getOrder())) {
-                    queryWrapper.orderByAsc(sort.getDbName());
+                if (sort.asc()) {
+                    queryWrapper.orderByAsc(sort.dbName());
                 } else {
-                    queryWrapper.orderByDesc(sort.getDbName());
+                    queryWrapper.orderByDesc(sort.dbName());
                 }
             });
         }

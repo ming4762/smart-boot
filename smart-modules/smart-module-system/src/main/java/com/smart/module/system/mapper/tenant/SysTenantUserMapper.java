@@ -2,6 +2,7 @@ package com.smart.module.system.mapper.tenant;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.smart.framework.crud.mapper.CrudBaseMapper;
 import com.smart.module.system.model.tenant.SysTenantUserPO;
 import com.smart.module.system.pojo.dbo.tenant.SysTenantListByUserDO;
@@ -25,7 +26,7 @@ public interface SysTenantUserMapper extends CrudBaseMapper<SysTenantUserPO> {
      * @param parameter 参数
      * @return 用户列表
      */
-    List<SysTenantUserListDO> listTenantUser(@Param(Constants.WRAPPER)Wrapper<SysTenantUserPO> parameter);
+    List<SysTenantUserListDO> listTenantUser(Page<SysTenantUserListDO> page, @Param(Constants.WRAPPER)Wrapper<SysTenantUserPO> parameter);
 
     /**
      * 根据用户ID查询满足条件的租户

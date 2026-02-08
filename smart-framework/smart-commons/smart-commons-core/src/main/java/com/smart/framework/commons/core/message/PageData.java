@@ -1,6 +1,5 @@
 package com.smart.framework.commons.core.message;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +12,6 @@ import java.util.List;
  * @author shizhongming
  * 2020/1/12 8:30 下午
  */
-@AllArgsConstructor
 @Getter
 @Setter
 public final class PageData<T> implements Serializable {
@@ -24,5 +22,18 @@ public final class PageData<T> implements Serializable {
     private transient List<T> rows;
 
     private long total;
+
+    private PageData() {
+        // do nothing
+    }
+
+    private PageData(List<T> rows, long total) {
+        this.rows = rows;
+        this.total = total;
+    }
+
+    public static <T> PageData<T> of(List<T> rows, long total) {
+        return new PageData<>(rows, total);
+    }
 
 }

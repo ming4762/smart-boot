@@ -2,8 +2,9 @@ package com.smart.framework.crud.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.core.toolkit.reflect.GenericTypeUtils;
-import com.github.pagehelper.Page;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.smart.framework.commons.core.constants.LabelValueEnum;
 import com.smart.framework.commons.core.dto.common.LabelValueData;
 import com.smart.framework.commons.core.message.PageData;
@@ -16,7 +17,7 @@ import com.smart.framework.crud.query.ClassParameter;
 import com.smart.framework.crud.query.PageSortQuery;
 import com.smart.framework.crud.service.BaseService;
 import com.smart.framework.crud.utils.CrudUtils;
-import com.smart.framework.crud.utils.PageCache;
+import com.smart.framework.crud.utils.CrudPageHelper;
 import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.SneakyThrows;
@@ -25,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -34,7 +34,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * 基础查询controller
@@ -73,13 +72,12 @@ public abstract class BaseQueryController<K extends BaseService<T>, T extends Ba
      */
     public Result<Object> list(@NonNull PageSortQuery parameter, boolean isPickOmit) {
         final Page<T> page = this.doPage(parameter);
-        PageCache.set(page);
-        List<?> data = this.listData(parameter);
+        List<?> data = CrudPageHelper.withPage(page, () -> this.listData(parameter));
         if (isPickOmit) {
             data = this.pickOmitByPropertyExclude(data, parameter);
         }
         if (page != null) {
-            return Result.success(new PageData<>(data, page.getTotal()));
+            return Result.success(PageData.of(data, page.getTotal()));
         }
         return Result.success(data);
     }
@@ -103,7 +101,7 @@ public abstract class BaseQueryController<K extends BaseService<T>, T extends Ba
         if (org.apache.commons.lang3.StringUtils.isNotBlank(keyword)) {
             this.addKeyword(queryWrapper, keyword);
         }
-        return this.service.list(queryWrapper, parameter, false);
+        return this.service.list(queryWrapper, parameter, CrudPageHelper.exists());
     }
 
     /**
@@ -183,41 +181,30 @@ public abstract class BaseQueryController<K extends BaseService<T>, T extends Ba
      * @return 分页信息
      */
     protected <P> Page<P> doPage(@NonNull PageSortQuery parameter) {
-        return this.createPage(parameter.getLimit(), parameter.getOffset(), parameter.getPage(), parameter.getSortName(), parameter.getSortOrder());
+        return this.createPage(parameter.getPageSize(), parameter.getCurrentPage(), parameter.getSortName(), parameter.getSortOrder());
     }
 
 
     /**
      * 创建分页
-     * @param limit 分页条数
-     * @param offset 开始记录
-     * @param pageNum 页数（优先级高）
+     * @param pageSize 分页条数
+     * @param currentPage 页数（优先级高）
      * @param sortName 排序字段
      * @param sortOrder 排序方向
      * @return 分页信息
      */
     @Nullable
-    private <P> Page<P> createPage(@Nullable Integer limit, @Nullable Integer offset, @Nullable Integer pageNum, @Nullable String sortName, @Nullable String sortOrder) {
-        Page<P> page = null;
-        if (Objects.nonNull(limit)) {
-            // 解析排序字段
-            final String orderMessage = this.analysisOrder(sortName, sortOrder);
-            // 进行分页
-            if (Objects.nonNull(pageNum)) {
-                page = new Page<>(pageNum, limit, true);
-            } else {
-                if (ObjectUtils.isEmpty(offset)) {
-                    offset = 0;
-                }
-                page = new Page<>(new int[]{offset, limit}, true);
-            }
-            if (StringUtils.hasLength(orderMessage)) {
-                page.setOrderBy(orderMessage);
-            }
+    private <P> Page<P> createPage(@Nullable Integer pageSize, @Nullable Integer currentPage, @Nullable String sortName, @Nullable String sortOrder) {
+        if (pageSize == null) {
+            return null;
+        }
+        Page<P> page = Page.of(Objects.requireNonNullElse(currentPage, 1), pageSize);
+        List<OrderItem> orderItemList = this.analysisOrder(sortName, sortOrder);
+        if (Objects.nonNull(orderItemList)) {
+            page.setOrders(orderItemList);
         }
         return page;
     }
-
 
     /**
      * 解析排序字段
@@ -226,18 +213,22 @@ public abstract class BaseQueryController<K extends BaseService<T>, T extends Ba
      * @return 排序信息
      */
     @Nullable
-    protected String analysisOrder(@Nullable String sortName, @Nullable String sortOrder) {
-        if (StringUtils.hasLength(sortName)) {
-            final List<Sort> sortList = CrudUtils.analysisOrder(sortName, sortOrder, this.getEntityClass());
-            if (sortList.isEmpty()) {
-                return null;
-            }
-            return sortList
-                    .stream()
-                    .map(sort -> String.format("%s %s", sort.getDbName(), sort.getOrder()))
-                    .collect(Collectors.joining(","));
+    protected List<OrderItem> analysisOrder(@Nullable String sortName, @Nullable String sortOrder) {
+        if (!StringUtils.hasLength(sortName)) {
+            return null;
         }
-        return null;
+        final List<Sort> sortList = CrudUtils.analysisOrder(sortName, sortOrder, this.getEntityClass());
+        if (sortList.isEmpty()) {
+            return null;
+        }
+        return sortList
+                .stream()
+                .map(item -> {
+                    OrderItem orderItem = new OrderItem();
+                    orderItem.setColumn(item.dbName());
+                    orderItem.setAsc(item.asc());
+                    return orderItem;
+                }).toList();
     }
 
 
