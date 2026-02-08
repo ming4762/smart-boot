@@ -18,6 +18,7 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * 租户切换拦截器
@@ -46,8 +47,8 @@ public class SmartAuthTenantChangeFilter extends AbstractAuthenticationProcessin
         Long tenantId = Long.valueOf(tenantStr);
 
         // 获取当前登录用户
-        RestUserDetails currentUser = AuthUtils.getCurrentUser();
-        if (currentUser == null) {
+        RestUserDetails originalUser = AuthUtils.getCurrentUser();
+        if (originalUser == null) {
             // TODO:国际化
             throw new BadCredentialsException("用户未登录，无法切换租户");
         }
@@ -61,16 +62,16 @@ public class SmartAuthTenantChangeFilter extends AbstractAuthenticationProcessin
 
         // 构建登录token
         RestUsernamePasswordAuthenticationToken loginToken = new RestUsernamePasswordAuthenticationToken(
-                currentUser.getUsername(),
-                currentUser.getPassword(),
-                currentUser.getBindIp(),
+                originalUser.getUsername(),
+                originalUser.getPassword(),
+                originalUser.getBindIp(),
                 IpUtils.getIpAddr(request),
-                currentUser.getLoginType()
+                originalUser.getLoginType()
         );
         // 执行登录
         Authentication authenticate = this.getAuthenticationManager().authenticate(loginToken);
         // 移除原有token
-        this.authApi.offlineByToken(currentUser.getToken());
+        this.authApi.offlineByToken(Objects.requireNonNullElse(originalUser.getRefreshToken(), originalUser.getToken()));
         return authenticate;
     }
 }
