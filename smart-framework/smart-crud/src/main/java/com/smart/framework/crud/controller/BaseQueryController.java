@@ -72,7 +72,12 @@ public abstract class BaseQueryController<K extends BaseService<T>, T extends Ba
      */
     public Result<Object> list(@NonNull PageSortQuery parameter, boolean isPickOmit) {
         final Page<T> page = this.doPage(parameter);
-        List<?> data = CrudPageHelper.withPage(page, () -> this.listData(parameter));
+        List<?> data;
+        if (page == null) {
+            data = this.listData(parameter);
+        } else {
+            data = CrudPageHelper.withPage(page, () -> this.listData(parameter));
+        }
         if (isPickOmit) {
             data = this.pickOmitByPropertyExclude(data, parameter);
         }
