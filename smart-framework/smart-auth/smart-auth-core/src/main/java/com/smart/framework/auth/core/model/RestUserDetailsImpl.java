@@ -10,6 +10,7 @@ import com.smart.framework.commons.core.dto.auth.AuthRole;
 import com.smart.framework.commons.core.dto.auth.Permission;
 import com.smart.framework.commons.core.dto.auth.UserTenantDTO;
 import lombok.*;
+import org.springframework.lang.Nullable;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -41,6 +42,11 @@ public class RestUserDetailsImpl implements RestUserDetails, Serializable {
     private String fullName;
 
     private String token;
+
+    /**
+     * 刷新token，jwt模式存在
+     */
+    private String refreshToken;
 
     private String locale;
 
@@ -88,6 +94,13 @@ public class RestUserDetailsImpl implements RestUserDetails, Serializable {
     @Getter
     @JsonProperty(access = JsonProperty.Access.READ_WRITE)
     private Boolean accountNonLocked;
+
+    /**
+     * 是否开启权限缓存
+     * JWT模式下是否开启权限缓存
+     */
+    @Getter
+    private Boolean permissionCache;
 
     @Override
     @JsonIgnore
@@ -139,6 +152,17 @@ public class RestUserDetailsImpl implements RestUserDetails, Serializable {
         return this.token;
     }
 
+    /**
+     * 获取刷新token，jwt模式存在
+     * @return 刷新token
+     */
+    @Override
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Nullable
+    public String getRefreshToken() {
+        return this.refreshToken;
+    }
+
     @Override
     public String getLocale() {
         return this.locale;
@@ -179,4 +203,13 @@ public class RestUserDetailsImpl implements RestUserDetails, Serializable {
         return !Boolean.FALSE.equals(this.enabled);
     }
 
+    /**
+     * JWT模式是否开启权限缓存
+     *
+     * @return JWT模式是否开启权限缓存
+     */
+    @Override
+    public boolean isPermissionCache() {
+        return Boolean.TRUE.equals(this.permissionCache);
+    }
 }

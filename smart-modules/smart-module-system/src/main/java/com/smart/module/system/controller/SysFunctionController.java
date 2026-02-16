@@ -9,10 +9,12 @@ import com.smart.framework.crud.controller.BaseController;
 import com.smart.framework.crud.query.IdParameter;
 import com.smart.framework.crud.query.PageSortQuery;
 import com.smart.module.system.model.SysFunctionPO;
+import com.smart.module.system.pojo.parameter.function.SysFunctionSaveUpdateParameter;
 import com.smart.module.system.pojo.vo.function.SysFunctionVO;
 import com.smart.module.system.service.SysFunctionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.CollectionUtils;
@@ -55,13 +57,12 @@ public class SysFunctionController extends BaseController<SysFunctionService, Sy
         return Result.success(this.service.getUserAndParentById(id));
     }
 
-    @Override
     @PostMapping("saveUpdate")
     @Operation(summary = "添加修改功能")
     @Log(value = "添加保存功能", type = LogOperationTypeEnum.UPDATE)
     @PreAuthorize("hasPermission('sys:function', 'save') or hasPermission('sys:function', 'update')")
-    public Result<Boolean> saveUpdate(@RequestBody SysFunctionPO model) {
-        return Result.success(this.service.saveOrUpdate(model));
+    public Result<Boolean> saveUpdate(@RequestBody @Valid SysFunctionSaveUpdateParameter parameter) {
+        return Result.success(this.service.saveUpdate(parameter));
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.smart.module.system.pojo.vo.function;
 import com.smart.framework.crud.model.BaseUser;
 import com.smart.framework.crud.model.CreateUpdateUserSetter;
 import com.smart.module.system.model.SysFunctionPO;
+import com.smart.module.system.model.micorapp.SysFunctionMicroFrontendPO;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -29,6 +30,11 @@ public class SysFunctionVO implements CreateUpdateUserSetter, Serializable {
     private BaseUser updateUser;
 
     private SysFunctionPO parent;
+
+    /**
+     * 微前端微应用
+     */
+    private SysFunctionMicroFrontendPO microFrontend;
 
     @Override
     public Long getCreateUserId() {

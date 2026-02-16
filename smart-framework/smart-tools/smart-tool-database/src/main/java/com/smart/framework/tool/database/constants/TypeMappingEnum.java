@@ -93,7 +93,10 @@ public enum TypeMappingEnum {
 
     TIME_WITH_TIMEZONE(2013, Date.class),
 
-    TIMESTAMP_WITH_TIMEZONE(2014, Date.class)
+    TIMESTAMP_WITH_TIMEZONE(2014, Date.class),
+
+    // todo：json类型不是标准的类型,java.sql.JDBCType中并没有定义
+    JSON(2015, String.class)
     ;
 
     private final Integer dataType;

@@ -37,6 +37,8 @@ import com.smart.module.system.mapper.SysUserGroupUserMapper;
 import com.smart.module.system.mapper.SysUserMapper;
 import com.smart.module.system.mapper.tenant.SysTenantMapper;
 import com.smart.module.system.model.*;
+import com.smart.module.system.model.micorapp.SysFunctionMicroFrontendPO;
+import com.smart.module.system.model.micorapp.SysMicroFrontendPO;
 import com.smart.module.system.model.tenant.SysTenantPO;
 import com.smart.module.system.model.tenant.SysTenantUserPO;
 import com.smart.module.system.pojo.dbo.SysUserWthAccountBO;
@@ -44,10 +46,12 @@ import com.smart.module.system.pojo.dbo.tenant.SysTenantListByUserDO;
 import com.smart.module.system.pojo.dto.tenant.SysListTenantFunctionDTO;
 import com.smart.module.system.pojo.dto.tenant.SysListTenantRoleFunctionDTO;
 import com.smart.module.system.pojo.dto.user.*;
-import com.smart.module.system.pojo.vo.SysFunctionListVO;
+import com.smart.module.system.pojo.vo.function.SysFunctionUserMenuVO;
 import com.smart.module.system.pojo.vo.user.SysUserListVO;
 import com.smart.module.system.pojo.vo.user.SysUserWithDeptDTO;
 import com.smart.module.system.service.*;
+import com.smart.module.system.service.microapp.SysFunctionMicroFrontendService;
+import com.smart.module.system.service.microapp.SysMicroFrontendService;
 import com.smart.module.system.service.tenant.SysTenantUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -92,6 +96,8 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
     private final SysTenantUserService sysTenantUserService;
     private final SysTenantMapper sysTenantMapper;
     private final SysParameterApi sysParameterApi;
+    private final SysFunctionMicroFrontendService sysFunctionMicroFrontendService;
+    private final SysMicroFrontendService sysMicroFrontendService;
 
     @Override
     public List<SysUserPO> list(@NonNull QueryWrapper<SysUserPO> queryWrapper, @NonNull PageSortQuery parameter, boolean paging) {
@@ -410,13 +416,72 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
     @NonNull
     @Override
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public List<SysFunctionListVO> listCurrentUserMenu(List<Locale> localeList) {
+    public List<SysFunctionUserMenuVO> listCurrentUserMenu(List<Locale> localeList) {
         // 获取当前用户的角色信息
         final RestUserDetails userDetails = AuthUtils.getCurrentUser();
         if (Objects.isNull(userDetails)) {
             return Lists.newArrayList();
         }
-        return this.listUserFunctionWithLocale(List.of(FunctionTypeEnum.CATALOG, FunctionTypeEnum.MENU), localeList);
+        List<SysFunctionUserMenuVO> menuList = this.listUserFunctionWithLocale(List.of(FunctionTypeEnum.CATALOG, FunctionTypeEnum.MENU), localeList);
+        return this.queryFunctionMicroFrontend(menuList);
+    }
+
+    /**
+     * 查询用户菜单中包含的微应用前端功能
+     * @param functionList 菜单列表
+     */
+    private List<SysFunctionUserMenuVO> queryFunctionMicroFrontend(List<SysFunctionUserMenuVO> functionList) {
+        if (CollectionUtils.isEmpty(functionList)) {
+            return functionList;
+        }
+        List<Long> microFrontendFunctionIdList = functionList.stream()
+                .filter(item -> Boolean.TRUE.equals(item.getIsMicroFrontend()))
+                .map(SysFunctionPO::getFunctionId)
+                .toList();
+        if (CollectionUtils.isEmpty(microFrontendFunctionIdList)) {
+            return functionList;
+        }
+        // 查询微前端关联关系
+        List<SysFunctionMicroFrontendPO> functionMicroFrontendList = this.sysFunctionMicroFrontendService.lambdaQuery()
+                .in(SysFunctionMicroFrontendPO::getFunctionId, microFrontendFunctionIdList)
+                .list();
+        if (CollectionUtils.isEmpty(functionMicroFrontendList)) {
+            return functionList;
+        }
+        Set<Long> microFrontendIds = functionMicroFrontendList.stream()
+                .map(SysFunctionMicroFrontendPO::getMicroFrontendId)
+                .collect(Collectors.toSet());
+        Map<Long, SysMicroFrontendPO> microFrontendMap = this.sysMicroFrontendService.lambdaQuery()
+                .in(SysMicroFrontendPO::getId, microFrontendIds)
+                .eq(SysMicroFrontendPO::getUseYn, Boolean.TRUE)
+                .list().stream()
+                .collect(Collectors.toMap(SysMicroFrontendPO::getId, item -> item));
+        if (CollectionUtils.isEmpty(functionMicroFrontendList)) {
+            return functionList;
+        }
+        Map<Long, SysFunctionMicroFrontendPO> functionMicroFrontendMap = functionMicroFrontendList.stream()
+                .collect(Collectors.toMap(SysFunctionMicroFrontendPO::getFunctionId, item -> item));
+
+        return functionList.stream()
+                .map(function -> {
+                    if (!Boolean.TRUE.equals(function.getIsMicroFrontend())) {
+                        return function;
+                    }
+                    SysFunctionMicroFrontendPO sysFunctionMicroFrontend = functionMicroFrontendMap.get(function.getFunctionId());
+                    if (sysFunctionMicroFrontend == null) {
+                        log.warn("查询用户菜单中包含的微应用前端功能时，未查询到微前端关联关系，functionId={}", function.getFunctionId());
+                        return function;
+                    }
+                    SysMicroFrontendPO microFrontend = microFrontendMap.get(sysFunctionMicroFrontend.getMicroFrontendId());
+                    if (microFrontend == null) {
+                        log.warn("查询用户菜单中包含的微应用前端功能时，未查询到微应用前端信息，microFrontendId={}", sysFunctionMicroFrontend.getMicroFrontendId());
+                        return function;
+                    }
+                    // 设置微应用相关信息
+                    function.setFunctionMicroFrontend(sysFunctionMicroFrontend);
+                    function.setMicroFrontend(microFrontend);
+                    return function;
+                }).toList();
     }
 
     /**
@@ -526,8 +591,9 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
         return CrudUtils.partitionList(new ArrayList<>(functionIds), 900, ids -> this.sysFunctionService.lambdaQuery()
                 .in(SysFunctionPO::getFunctionId, ids)
                 .in(SysFunctionPO::getFunctionType, functionTypeList.stream().map(FunctionTypeEnum::getValue).toList())
-                .orderByAsc(SysFunctionPO :: getSeq)
-                .list());
+                .list()).stream()
+                .sorted(Comparator.comparing(SysFunctionPO::getSeq))
+                .toList();
     }
 
     /**
@@ -585,13 +651,13 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserMapper, SysUserPO
 
     @Override
     @Transactional(readOnly = true, rollbackFor = Exception.class)
-    public List<SysFunctionListVO> listUserFunctionWithLocale(List<FunctionTypeEnum> types, List<Locale> localeList) {
+    public List<SysFunctionUserMenuVO> listUserFunctionWithLocale(List<FunctionTypeEnum> types, List<Locale> localeList) {
         List<SysFunctionPO> functionList = this.listUserFunction(types);
         if (CollectionUtils.isEmpty(functionList)) {
             return new ArrayList<>(0);
         }
         return functionList.stream().map(item -> {
-            SysFunctionListVO vo = new SysFunctionListVO();
+            SysFunctionUserMenuVO vo = new SysFunctionUserMenuVO();
             BeanUtils.copyProperties(item, vo);
             // 获取国际化信息
             if (!CollectionUtils.isEmpty(localeList) && StringUtils.isNotBlank(item.getI18nCode())) {

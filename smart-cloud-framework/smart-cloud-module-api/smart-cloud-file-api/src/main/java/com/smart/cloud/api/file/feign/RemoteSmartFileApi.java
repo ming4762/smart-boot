@@ -1,5 +1,6 @@
 package com.smart.cloud.api.file.feign;
 
+import com.smart.framework.commons.core.utils.BeanUtils;
 import com.smart.module.api.file.SmartFileApi;
 import com.smart.module.api.file.bo.FileDownloadResult;
 import com.smart.module.api.file.bo.FileHandlerResult;
@@ -14,7 +15,9 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author zhongming4762
@@ -68,7 +71,26 @@ public class RemoteSmartFileApi implements SmartFileApi {
 
     @Override
     public FileHandlerResult save(RemoteFileSaveParameter parameter) {
-        return this.feignSmartFileApi.save(parameter);
+        Map<String, Object> flattenBean = BeanUtils.flattenBean(parameter);
+        // 创建新的Map存储处理后的键值对
+        Map<String, Object> processedMap = HashMap.newHashMap(flattenBean.size());
+
+        for (Map.Entry<String, Object> entry : flattenBean.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+            // 跳过null值
+            if (value == null) {
+                continue;
+            }
+            // 如果是枚举类型，使用toString值
+            if (value instanceof Enum<?>) {
+                processedMap.put(key, value.toString());
+            } else {
+                processedMap.put(key, value);
+            }
+        }
+        return this.feignSmartFileApi.save(processedMap);
+
     }
 
     /**

@@ -7,6 +7,7 @@ import com.smart.framework.crud.plus.tenant.DefaultTenantLineHandlerImpl;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 
 /**
  * 租户自动配置功能
@@ -25,6 +26,7 @@ public class MybatisPlusTenantConfigurer {
 
     @Bean
     @ConditionalOnMissingBean
+    @Order(0)
     public TenantLineInnerInterceptor tenantLineInnerInterceptor(SmartTenantLineHandler smartTenantLineHandler) {
         return new SmartTenantLineInnerInterceptor(smartTenantLineHandler);
     }

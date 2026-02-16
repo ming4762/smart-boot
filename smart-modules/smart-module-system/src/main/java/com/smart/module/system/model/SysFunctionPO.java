@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.smart.framework.commons.core.http.HttpMethod;
+import com.smart.framework.crud.annotation.TableUseYnField;
 import com.smart.framework.crud.model.BaseModelUserTime;
 import com.smart.module.system.constants.FunctionTypeEnum;
 import com.smart.module.system.mybatis.type.FunctionTypeTypeHandler;
@@ -78,6 +79,11 @@ public class SysFunctionPO extends BaseModelUserTime {
     private Boolean isMenu;
 
     /**
+     * 是否微前端微应用
+     */
+    private Boolean isMicroFrontend;
+
+    /**
      * 外链菜单打开方式 0/内部打开 1/外部打开
      */
     private Boolean internalOrExternal;
@@ -116,6 +122,7 @@ public class SysFunctionPO extends BaseModelUserTime {
 
     private Boolean hasChild;
 
+    @TableUseYnField
     private Boolean useYn;
 
     private Boolean deleteYn;

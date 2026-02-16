@@ -8,7 +8,9 @@ import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 
 /**
  * @author ShiZhongMing
@@ -16,6 +18,7 @@ import org.springframework.security.core.Authentication;
  * @since 3.0.0
  */
 @RequiredArgsConstructor
+@Slf4j
 public class JwtLogoutHandler implements SecurityLogoutHandler {
 
     private final JwtTokenRepository jwtTokenRepository;
@@ -24,8 +27,12 @@ public class JwtLogoutHandler implements SecurityLogoutHandler {
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         String refreshToken = TokenUtils.getRefreshToken(request);
         if (StringUtils.isBlank(refreshToken)) {
-            throw new AuthException("refreshToken为null，无法登出");
+            throw new AuthException("token为null，无法登出");
         }
-        this.jwtTokenRepository.invalidateByToken(refreshToken);
+        try {
+            this.jwtTokenRepository.invalidateByToken(refreshToken);
+        } catch (AuthenticationException e) {
+            log.warn("登出失败:{}", e.getMessage(), e);
+        }
     }
 }

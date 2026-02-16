@@ -1,7 +1,7 @@
 package com.smart.boot.autoconfigure.captcha;
 
 import cloud.tianai.captcha.application.ImageCaptchaApplication;
-import cloud.tianai.captcha.resource.ResourceStore;
+import cloud.tianai.captcha.resource.impl.LocalMemoryResourceStore;
 import com.smart.framework.commons.core.cache.CacheService;
 import com.smart.framework.extension.captcha.handler.SmartCaptchaHandler;
 import com.smart.framework.extension.captcha.handler.SmartImageCaptchaHandlerImpl;
@@ -47,7 +47,7 @@ public class SmartCaptchaAutoConfiguration {
     }
 
     @Bean
-    public CaptchaResourceLoader captchaResourceLoader(SmartCaptchaProperties smartCaptchaProperties, ResourceStore resourceStore) {
+    public CaptchaResourceLoader captchaResourceLoader(SmartCaptchaProperties smartCaptchaProperties, LocalMemoryResourceStore resourceStore) {
         return new CaptchaResourceLoader(resourceStore, smartCaptchaProperties.getImage().getResourceList());
     }
 }

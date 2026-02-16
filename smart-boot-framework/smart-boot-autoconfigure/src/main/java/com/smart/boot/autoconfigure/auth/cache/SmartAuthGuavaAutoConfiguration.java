@@ -25,7 +25,7 @@ public class SmartAuthGuavaAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean(AuthCache.class)
-    public AuthCache<Object> guavaAuthCache(AuthProperties authProperties, GuavaCacheService cacheService) {
+    public AuthCache guavaAuthCache(AuthProperties authProperties, GuavaCacheService cacheService) {
         return new GuavaAuthCache(authProperties.getPrefix(), cacheService);
     }
 }

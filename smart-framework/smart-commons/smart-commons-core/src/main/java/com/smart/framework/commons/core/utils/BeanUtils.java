@@ -1,6 +1,7 @@
 package com.smart.framework.commons.core.utils;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import lombok.SneakyThrows;
 import org.springframework.lang.NonNull;
 import org.springframework.util.Assert;
@@ -64,6 +65,21 @@ public class BeanUtils {
             targetList.add(target);
         }
         return targetList;
+    }
+
+    /**
+     * 拷贝对象
+     * @param source 源对象
+     * @param targetClass 目标类型
+     * @param <T> 目标类型
+     * @return 拷贝后的对象
+     */
+    @SneakyThrows({NoSuchMethodException.class, InstantiationException.class, IllegalAccessException.class,
+            IllegalArgumentException.class, InvocationTargetException.class})
+    public static <T> T copyProperties(Object source, Class<T> targetClass) {
+        T target = targetClass.getConstructor().newInstance();
+        BeanUtil.copyProperties(source, target);
+        return target;
     }
 
     /**
@@ -263,7 +279,14 @@ public class BeanUtils {
                                      int maxDepth,
                                      String[] ignoreProperties) {
         visited.put(pojo, Boolean.TRUE);
-        Map<String, Object> map = BeanUtil.beanToMap(pojo, ignoreProperties);
+        Map<String, Object> map = BeanUtil.beanToMap(pojo, new HashMap<>(),
+                CopyOptions.create()
+                        .setIgnoreProperties(ignoreProperties)
+                        .setIgnoreNullValue(false)
+                        .setTransientSupport(false)
+                        .setFieldValueEditor((name, value) -> value)
+        );
+
         Map<String, Object> result = new LinkedHashMap<>();
         for (Map.Entry<String, Object> e : map.entrySet()) {
             result.put(e.getKey(), convertValue(e.getValue(), visited, depth + 1, maxDepth, ignoreProperties));

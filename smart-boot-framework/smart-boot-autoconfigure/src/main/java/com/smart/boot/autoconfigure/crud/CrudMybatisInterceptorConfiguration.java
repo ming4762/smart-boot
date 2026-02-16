@@ -10,6 +10,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 
 import java.util.List;
 
@@ -22,6 +23,7 @@ import java.util.List;
 public class CrudMybatisInterceptorConfiguration {
 
     @Bean
+    @Order(0)
     public LogicDeleteFieldInjectInnerInterceptor logicDeleteFieldInjectInnerInterceptor(ObjectProvider<SmartCrudUserApi> smartCrudUserApi) {
         return new LogicDeleteFieldInjectInnerInterceptor(smartCrudUserApi);
     }

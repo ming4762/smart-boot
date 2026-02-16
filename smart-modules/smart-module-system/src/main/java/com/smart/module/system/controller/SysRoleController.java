@@ -1,7 +1,7 @@
 package com.smart.module.system.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.github.pagehelper.Page;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.smart.framework.auth.common.annotation.NonUrlCheck;
 import com.smart.framework.commons.core.log.Log;
 import com.smart.framework.commons.core.log.LogOperationTypeEnum;
@@ -173,14 +173,13 @@ public class SysRoleController extends BaseController<SysRoleService, SysRolePO>
         try (SmartTenantIgnoreData ignore = SmartTenantControl.ignore(SysRolePO.class, null, List.of(SqlCommandType.SELECT))) {
             // 设置分页
             Page<SysRolePO> page = this.doPage(parameter);
-            CrudPageHelper.setPage(page);
-            // 查询数据
-            this.service.lambdaQuery()
-                    .eq(SysRolePO::getTenantId, parameter.getTenantId())
-                    .list();
-            return Result.success(
-                    new PageData<>(page.getResult(), page.getTotal())
+            List<SysRolePO> dataList = CrudPageHelper.withPage(page, () ->
+                    // 查询数据
+                    this.service.lambdaQuery()
+                            .eq(SysRolePO::getTenantId, parameter.getTenantId())
+                            .list()
             );
+            return Result.success(PageData.of(dataList, page.getTotal()));
         }
     }
 }

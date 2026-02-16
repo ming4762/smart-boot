@@ -14,7 +14,7 @@ import java.util.Set;
  * @author shizhongming
  * 2020/7/1 1:59 下午
  */
-public interface AuthCache<V> {
+public interface AuthCache {
 
     /**
      * 添加缓存
@@ -22,7 +22,7 @@ public interface AuthCache<V> {
      * @param mapKey mapKey
      * @param value value
      */
-    void putMap(@NonNull String key, @NonNull String mapKey, @NonNull V value);
+    void putMap(@NonNull String key, @NonNull String mapKey, @NonNull Object value);
 
     /**
      * 添加缓存
@@ -30,7 +30,7 @@ public interface AuthCache<V> {
      * @param value value
      * @param timeout 超时时间
      */
-    void put(@NonNull String key, @NonNull V value, Duration timeout);
+    void put(@NonNull String key, @NonNull Object value, Duration timeout);
 
     /**
      * 添加缓存
@@ -38,7 +38,7 @@ public interface AuthCache<V> {
      * @param value value
      * @param timeout 超时时间
      */
-    void putAll(@NonNull String key, @NonNull Map<String, V> value, Duration timeout);
+    void putAll(@NonNull String key, @NonNull Map<String, Object> value, Duration timeout);
 
     /**
      * 设置超时时间
@@ -53,14 +53,14 @@ public interface AuthCache<V> {
      * @return value
      */
     @Nullable
-    Map<String, V> get(@NonNull String key);
+    <R> Map<String, R> get(@NonNull String key);
 
     /**
      * 获取缓存内容
      * @param key key
      * @return value
      */
-    V getValue(@NonNull String key);
+    <R> R getValue(@NonNull String key);
 
     /**
      * 获取缓存内容
@@ -69,7 +69,7 @@ public interface AuthCache<V> {
      * @return value
      */
     @Nullable
-    V get(@NonNull String key, @NonNull String mapKey);
+    <R> R get(@NonNull String key, @NonNull String mapKey);
 
     /**
      * 删除缓存
@@ -90,7 +90,7 @@ public interface AuthCache<V> {
      * @return 获取的缓存
      */
     @NonNull
-    List<Map<String, V>> batchGet(@NonNull Collection<String> keys);
+    <R> List<Map<String, R>> batchGet(@NonNull Collection<String> keys);
 
     /**
      * 匹配删除
@@ -103,7 +103,7 @@ public interface AuthCache<V> {
      * @param matchKey 匹配的key
      * @return 匹配结果
      */
-    List<Map<String, V>> matchGet(@NonNull String matchKey);
+    <R> List<Map<String, R>> matchGet(@NonNull String matchKey);
 
     /**
      * 匹配获取key
@@ -117,7 +117,7 @@ public interface AuthCache<V> {
      * @param key key
      * @return 数据
      */
-    Map<String, V> getAndRemove(@NonNull String key);
+    <R> Map<String, R> getAndRemove(@NonNull String key);
 
     /**
      * 重命名

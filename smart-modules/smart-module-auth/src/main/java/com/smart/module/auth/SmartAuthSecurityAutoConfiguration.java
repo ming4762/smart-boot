@@ -149,7 +149,7 @@ public class SmartAuthSecurityAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    public PersistentTokenRepository persistentTokenRepository(AuthCache<Object> authCache, AuthProperties authProperties) {
+    public PersistentTokenRepository persistentTokenRepository(AuthCache authCache, AuthProperties authProperties) {
         return new AuthCachePersistentTokenRepository(authCache, authProperties);
     }
 
@@ -181,8 +181,8 @@ public class SmartAuthSecurityAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public UserDetailsBuilder userDetailsBuilder(SystemAuthUserApi systemAuthUserApi, CompositeSmartTokenRepository tokenRepository) {
-        return new DefaultUserDetailsBuilderImpl(systemAuthUserApi, tokenRepository);
+    public UserDetailsBuilder userDetailsBuilder(SystemAuthUserApi systemAuthUserApi, CompositeSmartTokenRepository tokenRepository, AuthProperties authProperties) {
+        return new DefaultUserDetailsBuilderImpl(systemAuthUserApi, tokenRepository, authProperties);
     }
 
     @Bean

@@ -25,7 +25,7 @@ public class AuthCachePersistentTokenRepository implements PersistentTokenReposi
 
     private static final String CACHE_KEY_PREFIX = "remember-me:";
 
-    private final AuthCache<Object> authCache;
+    private final AuthCache authCache;
     private final AuthProperties authProperties;
 
     @Override

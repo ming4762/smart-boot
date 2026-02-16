@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smart.module.system.mapper.microapp.SysFunctionMicroFrontendMapper">
+    <sql id="columnList">
+        <!--   id 主键  索引   -->
+        id,
+        <!--   functionId      -->
+        function_id,
+        <!--   microFrontendId      -->
+        micro_frontend_id,
+        <!--   是否多实例      -->
+        multi_instance_yn,
+        <!--   是否联动路由，单实例模式才生效      -->
+        route_linkage_yn,
+        <!--   前端微应用地址，如果为null，则根据菜单URL生成      -->
+        micro_frontend_url,
+        <!--   前端微应用配置      -->
+        micro_frontend_config,
+        <!--   创建时间      -->
+        create_time,
+        <!--   创建人      -->
+        create_by,
+        <!--   创建人ID      -->
+        create_user_id,
+        <!--   更新时间      -->
+        update_time,
+        <!--   更新人      -->
+        update_by,
+        <!--   更新人ID      -->
+        update_user_id
+    </sql>
+
+    <resultMap id="commonResultMap" type="com.smart.module.system.model.micorapp.SysFunctionMicroFrontendPO">
+        <!--   id 主键  索引   -->
+        <id column="id" property="id" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   functionId      -->
+        <result column="function_id" property="functionId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   microFrontendId      -->
+        <result column="micro_frontend_id" property="microFrontendId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   是否多实例      -->
+        <result column="multi_instance_yn" property="multiInstanceYn" javaType="java.lang.Byte" jdbcType="TINYINT"/>
+        <!--   是否联动路由，单实例模式才生效      -->
+        <result column="route_linkage_yn" property="routeLinkageYn" javaType="java.lang.Byte" jdbcType="TINYINT"/>
+        <!--   前端微应用地址，如果为null，则根据菜单URL生成      -->
+        <result column="micro_frontend_page_url" property="microFrontendPageUrl" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   前端微应用配置      -->
+        <result column="micro_frontend_config" property="microFrontendConfig" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   创建时间      -->
+        <result column="create_time" property="createTime" javaType="java.time.ZonedDateTime" jdbcType="DATE"/>
+        <!--   创建人      -->
+        <result column="create_by" property="createBy" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   创建人ID      -->
+        <result column="create_user_id" property="createUserId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+        <!--   更新时间      -->
+        <result column="update_time" property="updateTime" javaType="java.time.ZonedDateTime" jdbcType="DATE"/>
+        <!--   更新人      -->
+        <result column="update_by" property="updateBy" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <!--   更新人ID      -->
+        <result column="update_user_id" property="updateUserId" javaType="java.lang.Long" jdbcType="BIGINT"/>
+    </resultMap>
+</mapper>

@@ -1,6 +1,7 @@
 package com.smart.framework.auth.extensions.jwt.resolver;
 
-import com.smart.framework.auth.common.userdetails.RestUserDetails;
+import com.smart.framework.auth.extensions.jwt.data.JwtRefreshTokenPayload;
+import com.smart.framework.auth.extensions.jwt.data.JwtTokenResolverUser;
 import org.springframework.core.Ordered;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -20,14 +21,21 @@ public interface JwtResolver extends Ordered {
      * @param jwt jwt
      * @return 解析结果
      */
-    RestUserDetails resolver(@NonNull String jwt);
+    JwtTokenResolverUser resolverToken(@NonNull String jwt);
+
+    /**
+     * 解析刷新token
+     * @param refreshToken 刷新token
+     * @return 解析结果
+     */
+    JwtRefreshTokenPayload resolverRefreshToken(@NonNull String refreshToken);
 
     /**
      * 创建JWT
-     * @param userDetails 用户信息
+     * @param userId 用户ID
      * @param effective 有效时间
      * @param payload 载荷信息
      * @return jwt字符串
      */
-    String create(@NonNull RestUserDetails userDetails, @NonNull Duration effective, @Nullable Object payload);
+    String create(@NonNull Long userId, @NonNull Duration effective, @Nullable Object payload);
 }

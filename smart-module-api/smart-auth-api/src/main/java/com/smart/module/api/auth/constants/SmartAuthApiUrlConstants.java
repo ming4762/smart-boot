@@ -10,7 +10,7 @@ public interface SmartAuthApiUrlConstants {
     /**
      * 用户离线，通过token
      */
-    String OFFLINE_BY_TOKEN = "/remote/auth/getByUsername";
+    String OFFLINE_BY_TOKEN = "/remote/auth/offlineByToken";
 
     /**
      * 用户离线，通过username

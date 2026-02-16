@@ -283,9 +283,14 @@ public class FileStorageMinioServiceImpl implements MinioService {
             XmlParserException.class
     })
     public List<Bucket> listBuckets(FileStorageCommonParameter parameter, ListBucketsArgs args) {
-        return this.getMinioClientCache(parameter.getFileStorageId())
+        Iterable<Result<Bucket>> results = this.getMinioClientCache(parameter.getFileStorageId())
                 .getMinioClient()
                 .listBuckets(args);
+        List<Bucket> resultList = new ArrayList<>(10);
+        while (results.iterator().hasNext()) {
+            resultList.add(results.iterator().next().get());
+        }
+        return resultList;
     }
 
     /**

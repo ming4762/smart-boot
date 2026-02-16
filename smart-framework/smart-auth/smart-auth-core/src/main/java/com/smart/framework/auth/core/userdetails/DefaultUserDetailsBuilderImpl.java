@@ -8,6 +8,7 @@ import com.smart.framework.auth.core.i18n.AuthI18nMessage;
 import com.smart.framework.auth.core.model.PermissionGrantedAuthority;
 import com.smart.framework.auth.core.model.RestUserDetailsImpl;
 import com.smart.framework.auth.core.model.RoleGrantedAuthority;
+import com.smart.framework.auth.core.properties.AuthProperties;
 import com.smart.framework.auth.core.token.CompositeSmartTokenRepository;
 import com.smart.framework.auth.core.token.TokenCacheData;
 import com.smart.framework.commons.core.dto.auth.MaxConnectionsPolicyEnum;
@@ -38,6 +39,7 @@ public class DefaultUserDetailsBuilderImpl implements UserDetailsBuilder {
 
     private final SystemAuthUserApi systemAuthUserApi;
     private final CompositeSmartTokenRepository tokenRepository;
+    private final AuthProperties authProperties;
 
     /**
      * 构建 RestUserDetails
@@ -78,6 +80,8 @@ public class DefaultUserDetailsBuilderImpl implements UserDetailsBuilder {
                                 ).orElse(new ArrayList<>(0))
                 )
                 .accountNonLocked(UserAccountStatusEnum.NORMAL.equals(userAccount.getAccountStatus()))
+                // 设置JWT模式下是否开启权限缓存
+                .permissionCache(Boolean.TRUE.equals(this.authProperties.getJwt().getPermissionCache()))
                 .build();
 
         // 设置账户锁定状态
