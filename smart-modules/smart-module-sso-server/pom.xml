@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.smart</groupId>
+		<artifactId>smart-modules</artifactId>
+		<version>5.0.0-SNAPSHOT</version>
+	</parent>
+	<artifactId>smart-module-sso-server</artifactId>
+	<name>smart-module-sso-server</name>
+	<description>sso服务端管理功能</description>
+	<packaging>pom</packaging>
+
+	<modules>
+		<module>smart-module-sso-server-auth</module>
+		<module>smart-module-sso-server-common</module>
+		<module>smart-module-sso-server-manager</module>
+	</modules>
+
+	<properties>
+	</properties>
+
+	<dependencies>
+
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-boot-starter-crud</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-oauth2-authorization-server</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+	</dependencies>
+
+
+</project>
