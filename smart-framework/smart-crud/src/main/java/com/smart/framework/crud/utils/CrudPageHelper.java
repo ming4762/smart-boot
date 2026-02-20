@@ -32,6 +32,6 @@ public class CrudPageHelper {
      * 是否存在 Page（防御性）
      */
     public static boolean exists() {
-        return PAGE_SCOPED_VALUE.isBound();
+        return PAGE_SCOPED_VALUE.get() != null;
     }
 }
