@@ -1,5 +1,6 @@
 package com.smart.module.system.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.smart.framework.crud.service.BaseService;
 import com.smart.module.system.model.SysUserGroupPO;
 import com.smart.module.system.model.SysUserPO;
@@ -46,4 +47,21 @@ public interface SysUserGroupService extends BaseService<SysUserGroupPO> {
      * @return 结果
      */
     boolean saveUserGroupByUserId(@NonNull UserUserGroupSaveDTO parameter);
+
+     /**
+      * 查询用户组ID包含的未绑定用户集合
+      * @param groupIds 用户组ID
+      * @param queryWrapper 查询条件
+      * @return 用户组ID包含的未绑定用户集合
+      */
+    @NonNull
+    List<SysUserPO> listNoBindUserByIds(@NonNull Collection<Long> groupIds, @NonNull QueryWrapper<SysUserPO> queryWrapper);
+
+    /**
+     * 解绑用户组的用户
+     * @param groupId 用户组ID
+     * @param userIdList 用户ID列表
+     * @return 是否解绑成功
+     */
+    boolean unBindUser(@org.jspecify.annotations.NonNull Long groupId, @org.jspecify.annotations.NonNull List<Long> userIdList);
 }
