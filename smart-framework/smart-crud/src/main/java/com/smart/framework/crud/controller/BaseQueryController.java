@@ -2,7 +2,6 @@ package com.smart.framework.crud.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.core.toolkit.reflect.GenericTypeUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.smart.framework.commons.core.constants.LabelValueEnum;
@@ -11,29 +10,25 @@ import com.smart.framework.commons.core.message.PageData;
 import com.smart.framework.commons.core.message.Result;
 import com.smart.framework.commons.core.utils.EnumUtils;
 import com.smart.framework.crud.model.BaseModel;
-import com.smart.framework.crud.model.Sort;
 import com.smart.framework.crud.plus.metadata.SmartTableInfo;
 import com.smart.framework.crud.query.ClassParameter;
 import com.smart.framework.crud.query.PageSortQuery;
 import com.smart.framework.crud.service.BaseService;
-import com.smart.framework.crud.utils.CrudUtils;
 import com.smart.framework.crud.utils.CrudPageHelper;
+import com.smart.framework.crud.utils.CrudUtils;
 import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * 基础查询controller
@@ -93,15 +88,11 @@ public abstract class BaseQueryController<K extends BaseService<T>, T extends Ba
      * @return 查询结果
      */
     public List<T> listData(@NonNull PageSortQuery parameter) {
-        final QueryWrapper<T> queryWrapper = CrudUtils.createQueryWrapperFromParameters(parameter.getParameter(), this.getEntityClass());
-        // 设置查询字段
-        if (!parameter.getPropertyList().isEmpty()) {
-            CrudUtils.setQueryField(parameter.getPropertyList(), this.getEntityClass(), queryWrapper);
-        }
-        // 排除的查询字典
-        if (!CollectionUtils.isEmpty(parameter.getExcludePropertyList())) {
-            queryWrapper.select(this.getEntityClass(), fieldInfo -> !parameter.getExcludePropertyList().contains(fieldInfo.getProperty()));
-        }
+        final QueryWrapper<T> queryWrapper = CrudUtils.createQueryWrapperFromParameters(
+                parameter.getParameter(),
+                this.getEntityClass(),
+                parameter.getPropertyList(),
+                parameter.getExcludePropertyList());
         String keyword = parameter.getKeyword();
         if (org.apache.commons.lang3.StringUtils.isNotBlank(keyword)) {
             this.addKeyword(queryWrapper, keyword);
@@ -186,56 +177,8 @@ public abstract class BaseQueryController<K extends BaseService<T>, T extends Ba
      * @return 分页信息
      */
     protected <P> Page<P> doPage(@NonNull PageSortQuery parameter) {
-        return this.createPage(parameter.getPageSize(), parameter.getCurrentPage(), parameter.getSortName(), parameter.getSortOrder());
+        return CrudPageHelper.createPage(this.getEntityClass(), parameter);
     }
-
-
-    /**
-     * 创建分页
-     * @param pageSize 分页条数
-     * @param currentPage 页数（优先级高）
-     * @param sortName 排序字段
-     * @param sortOrder 排序方向
-     * @return 分页信息
-     */
-    @Nullable
-    private <P> Page<P> createPage(@Nullable Integer pageSize, @Nullable Integer currentPage, @Nullable String sortName, @Nullable String sortOrder) {
-        if (pageSize == null) {
-            return null;
-        }
-        Page<P> page = Page.of(Objects.requireNonNullElse(currentPage, 1), pageSize);
-        List<OrderItem> orderItemList = this.analysisOrder(sortName, sortOrder);
-        if (Objects.nonNull(orderItemList)) {
-            page.setOrders(orderItemList);
-        }
-        return page;
-    }
-
-    /**
-     * 解析排序字段
-     * @param sortName 排序名字
-     * @param sortOrder 排序方向
-     * @return 排序信息
-     */
-    @Nullable
-    protected List<OrderItem> analysisOrder(@Nullable String sortName, @Nullable String sortOrder) {
-        if (!StringUtils.hasLength(sortName)) {
-            return null;
-        }
-        final List<Sort> sortList = CrudUtils.analysisOrder(sortName, sortOrder, this.getEntityClass());
-        if (sortList.isEmpty()) {
-            return null;
-        }
-        return sortList
-                .stream()
-                .map(item -> {
-                    OrderItem orderItem = new OrderItem();
-                    orderItem.setColumn(item.dbName());
-                    orderItem.setAsc(item.asc());
-                    return orderItem;
-                }).toList();
-    }
-
 
     /**
      * 添加关键字查询

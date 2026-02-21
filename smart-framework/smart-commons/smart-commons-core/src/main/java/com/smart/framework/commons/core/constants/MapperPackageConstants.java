@@ -49,7 +49,7 @@ public final class MapperPackageConstants {
     public static final String MODULE_KETTLE = "com.smart.module.kettle.manager.mapper";
 
     /**
-     * 认证服务端模块 mapper扫描路径
+     * 单点登录管理端模块 mapper扫描路径
      */
-    public static final String MODULE_AUTH_SERVER_MANAGER = "com.smart.module.auth.server.manager.mapper";
+    public static final String MODULE_SSO_SERVER_MANAGER = "com.smart.module.sso.server.common.manager.mapper";
 }

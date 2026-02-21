@@ -4,6 +4,7 @@ import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 查询用户参数
@@ -26,4 +27,6 @@ public class RemoteSysUserListParameter implements Serializable {
     private String username;
 
     private String fullName;
+
+    private List<Long> userIdList;
 }
