@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.*;
 import com.smart.framework.crud.annotation.TableUseYnField;
 import com.smart.framework.crud.model.BaseModelDeleteUserTime;
 import com.smart.framework.crud.mybatis.handler.StringSplitTypeHandler;
+import com.smart.module.sso.server.common.manager.constants.SsoOauth2ClientTypeEnum;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,6 +36,11 @@ public class SsoOauth2ClientPO extends BaseModelDeleteUserTime {
     * client_name - 客户端名称
     */
     private String clientName;
+
+    /**
+     * 客户端类型:PUBLIC 公开，PRIVATE私有的，公开应用可以被所有用户访问
+     */
+    private SsoOauth2ClientTypeEnum clientType;
 
     /**
     * client_secret - 客户端密钥

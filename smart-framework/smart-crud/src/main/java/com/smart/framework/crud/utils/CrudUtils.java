@@ -14,6 +14,7 @@ import com.google.common.collect.Lists;
 import com.smart.framework.crud.model.BaseModel;
 import com.smart.framework.crud.model.Sort;
 import com.smart.framework.crud.plus.metadata.SmartTableInfo;
+import com.smart.framework.crud.query.PageSortQuery;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -175,6 +176,22 @@ public final class CrudUtils {
     }
 
     /**
+     * 根据分页查询参数创建QueryWrapper
+     * @param parameter 分页查询参数
+     * @param clazz 实体类class
+     * @return 查询参数
+     * @param <T> 实体类泛型
+     */
+    public static <T extends BaseModel> QueryWrapper<T> createQueryWrapperFromParameters(@NonNull PageSortQuery parameter, @NonNull Class<?> clazz) {
+        return createQueryWrapperFromParameters(
+                parameter.getParameter(),
+                clazz,
+                parameter.getPropertyList(),
+                parameter.getExcludePropertyList()
+        );
+    }
+
+    /**
      * 从参数创建QueryWrapper
      * @param parameter 参数
      * @param clazz 实体类class
@@ -183,8 +200,31 @@ public final class CrudUtils {
      */
     @NonNull
     public static <T extends BaseModel> QueryWrapper<T> createQueryWrapperFromParameters(@NonNull Map<Serializable, Serializable> parameter, @NonNull Class<?> clazz) {
+        return createQueryWrapperFromParameters(parameter, clazz, null, null);
+    }
+
+    /**
+     * 从参数创建QueryWrapper
+     * @param parameter 参数
+     * @param clazz 实体类class
+     * @param propertyList 查询的字段
+     * @param excludePropertyList 排除的字段
+     * @return 查询参数
+     */
+    @org.jspecify.annotations.NonNull
+    public static <T extends BaseModel> QueryWrapper<T> createQueryWrapperFromParameters(
+            @NonNull Map<Serializable, Serializable> parameter,
+            @NonNull Class<?> clazz,
+            @Nullable List<String> propertyList,
+            List<String> excludePropertyList) {
         final QueryWrapper<T> queryWrapper = new QueryWrapper<>();
         createBaseQueryWrapperFromParameters(parameter, clazz, queryWrapper);
+        if (!CollectionUtils.isEmpty(propertyList)) {
+            setQueryField(propertyList, clazz, queryWrapper);
+        }
+        if (!CollectionUtils.isEmpty(excludePropertyList)) {
+            queryWrapper.select((Class<T>) clazz, fieldInfo -> !excludePropertyList.contains(fieldInfo.getProperty()));
+        }
         return queryWrapper;
     }
 

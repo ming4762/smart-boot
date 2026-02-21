@@ -1,6 +1,8 @@
 package com.smart.service.auth.server.manager.config;
 
 import com.alibaba.druid.spring.boot3.autoconfigure.DruidDataSourceBuilder;
+import com.baomidou.mybatisplus.annotation.DbType;
+import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.smart.framework.commons.core.constants.MapperPackageConstants;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -8,6 +10,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.annotation.Order;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -42,5 +45,14 @@ public class MybatisConfig {
     @Primary
     public DataSourceTransactionManager systemDataSourceTransactionManager(@Qualifier("systemDatasource") DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
+    }
+
+    /**
+     * 添加分页插件
+     */
+    @Bean
+    @Order(Integer.MAX_VALUE)
+    public PaginationInnerInterceptor paginationInnerInterceptor() {
+        return new PaginationInnerInterceptor(DbType.MYSQL);
     }
 }

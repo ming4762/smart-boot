@@ -23,17 +23,6 @@
 
 	<dependencies>
 
-        <dependency>
-            <groupId>com.smart</groupId>
-            <artifactId>smart-boot-starter-crud</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-oauth2-authorization-server</artifactId>
-            <optional>true</optional>
-        </dependency>
-
 	</dependencies>
 
 

@@ -116,7 +116,7 @@ public class SysUserGroupController extends BaseController<SysUserGroupService, 
     @PostMapping("listNoBindUser")
     @Operation(summary = "通过用户组ID查询未绑定用户列表")
     public Result<PageData<SysUserPO>> listNoBindUser(@RequestBody @Valid IdPageSortQuery parameter) {
-        QueryWrapper<SysUserPO> queryWrapper = CrudUtils.createQueryWrapperFromParameters(parameter.getParameter(), SysUserPO.class);
+        QueryWrapper<SysUserPO> queryWrapper = CrudUtils.createQueryWrapperFromParameters(parameter, SysUserPO.class);
         Page<SysUserPO> page = this.doPage(parameter);
         Long id = parameter.getId();
         List<SysUserPO> userList = CrudPageHelper.withPage(page, () -> this.service.listNoBindUserByIds(List.of(id), queryWrapper));

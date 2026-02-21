@@ -1,14 +1,26 @@
 package com.smart.module.sso.server.mananger.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.smart.framework.commons.core.log.Log;
 import com.smart.framework.commons.core.log.LogOperationTypeEnum;
+import com.smart.framework.commons.core.message.PageData;
 import com.smart.framework.commons.core.message.Result;
 import com.smart.framework.crud.controller.BaseController;
 import com.smart.framework.crud.parameter.SetUseYnParameter;
+import com.smart.framework.crud.query.IdPageSortQuery;
 import com.smart.framework.crud.query.PageSortQuery;
+import com.smart.framework.crud.utils.CrudPageHelper;
+import com.smart.framework.crud.utils.CrudUtils;
+import com.smart.module.api.system.dto.SysUserDTO;
 import com.smart.module.sso.server.common.manager.model.SsoOauth2ClientPO;
-import com.smart.module.sso.server.common.manager.service.SsoOauth2ClientService;
 import com.smart.module.sso.server.mananger.pojo.dto.SsoOauth2ClientSaveUpdateDTO;
+import com.smart.module.sso.server.mananger.pojo.parameter.SsoClientBindUserParameter;
+import com.smart.module.sso.server.mananger.pojo.parameter.SsoClientUserUseYnParameter;
+import com.smart.module.sso.server.mananger.pojo.parameter.SsoListClientUserParameter;
+import com.smart.module.sso.server.mananger.pojo.vo.SsoClientUserVO;
+import com.smart.module.sso.server.mananger.service.SsoOauth2ClientService;
+import com.smart.module.system.model.SysUserPO;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
@@ -84,5 +96,40 @@ public class SsoOauth2ClientController extends BaseController<SsoOauth2ClientSer
     @PreAuthorize("hasPermission('sso:oauth2:client', 'setUseYn')")
     public Result<Boolean> setUseYn(@RequestBody @Valid SetUseYnParameter parameter) {
         return super.setUseYn(parameter);
+    }
+
+    @Operation(summary = "查询客户端对应的用户")
+    @PostMapping("listClientUser")
+    public Result<PageData<SsoClientUserVO>> listClientUser(@RequestBody @NonNull SsoListClientUserParameter parameter) {
+        Page<SysUserPO> page = CrudPageHelper.createPage(SysUserPO.class, parameter);
+        QueryWrapper<SysUserPO> queryWrapper = CrudUtils.createQueryWrapperFromParameters(parameter, SysUserPO.class);
+        List<SsoClientUserVO> dataList = CrudPageHelper.withPage(page, () -> this.service.listClientUser(parameter, queryWrapper));
+        return Result.success(PageData.of(dataList, page.getTotal()));
+    }
+
+    @Operation(summary = "查询未绑定用户列表")
+    @PostMapping("listUnBindUser")
+    public Result<PageData<SysUserDTO>> listUnBindUser(@RequestBody @Valid IdPageSortQuery parameter) {
+        QueryWrapper<SysUserPO> queryWrapper = CrudUtils.createQueryWrapperFromParameters(parameter, SysUserPO.class);
+        Page<SysUserPO> page = this.doPage(parameter);
+        Long clientId = parameter.getId();
+        List<SysUserDTO> userList = CrudPageHelper.withPage(page, () -> this.service.listUnBindUser(clientId, queryWrapper));
+        return Result.success(PageData.of(userList, page.getTotal()));
+    }
+
+    @Operation(summary = "查询未绑定用户列表")
+    @PostMapping("bindUser")
+    @Log(value = "绑定用户到oauth2客户端", type = LogOperationTypeEnum.UPDATE)
+//    @PreAuthorize("hasPermission('sso:clientUser', 'update')")
+    public Result<Boolean> bindUser(@RequestBody @Valid SsoClientBindUserParameter parameter) {
+        return Result.success(this.service.bindUser(parameter));
+    }
+
+    @Operation(summary = "设置客户端用户启用状态")
+    @PostMapping("setBindUserUseYn")
+    @Log(value = "设置客户端用户启用状态", type = LogOperationTypeEnum.UPDATE)
+//    @PreAuthorize("hasPermission('sso:clientUser', 'update')")
+    public Result<Boolean> setBindUserUseYn(@RequestBody @Valid SsoClientUserUseYnParameter parameter) {
+        return Result.success(this.service.setBindUserUseYn(parameter));
     }
 }

@@ -15,6 +15,7 @@ import com.smart.module.system.service.SmartFormApiService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 
@@ -62,7 +63,7 @@ public class SmartFormApiServiceImpl implements SmartFormApiService {
         PageSortQuery pageSortQuery = parameter.getQueryParameter();
         if (pageSortQuery != null) {
             queryWrapper = CrudUtils.createQueryWrapperFromParameters(
-                    pageSortQuery.getParameter() == null ? HashMap.newHashMap(0) : pageSortQuery.getParameter(),
+                    pageSortQuery.getParameter() == null ? new HashMap<Serializable, Serializable>() : pageSortQuery.getParameter(),
                     clazz
             );
             if (StringUtils.isNotBlank(pageSortQuery.getSortName())) {
