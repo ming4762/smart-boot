@@ -5,6 +5,7 @@ import com.smart.framework.crud.service.BaseService;
 import com.smart.module.api.system.dto.SysUserDTO;
 import com.smart.module.sso.server.common.manager.model.SsoOauth2ClientPO;
 import com.smart.module.sso.server.mananger.pojo.parameter.SsoClientBindUserParameter;
+import com.smart.module.sso.server.mananger.pojo.parameter.SsoClientUnBindUserParameter;
 import com.smart.module.sso.server.mananger.pojo.parameter.SsoClientUserUseYnParameter;
 import com.smart.module.sso.server.mananger.pojo.parameter.SsoListClientUserParameter;
 import com.smart.module.sso.server.mananger.pojo.vo.SsoClientUserVO;
@@ -64,4 +65,11 @@ public interface SsoOauth2ClientService extends BaseService<SsoOauth2ClientPO> {
      * @return 是否设置成功
      */
     boolean setBindUserUseYn(SsoClientUserUseYnParameter parameter);
+
+    /**
+     * 解绑用户与oauth2客户端
+     * @param parameter 解绑用户参数
+     * @return 是否解绑成功
+     */
+    boolean unBindUser(SsoClientUnBindUserParameter parameter);
 }

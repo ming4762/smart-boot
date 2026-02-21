@@ -16,6 +16,7 @@ import com.smart.module.api.system.dto.SysUserDTO;
 import com.smart.module.sso.server.common.manager.model.SsoOauth2ClientPO;
 import com.smart.module.sso.server.mananger.pojo.dto.SsoOauth2ClientSaveUpdateDTO;
 import com.smart.module.sso.server.mananger.pojo.parameter.SsoClientBindUserParameter;
+import com.smart.module.sso.server.mananger.pojo.parameter.SsoClientUnBindUserParameter;
 import com.smart.module.sso.server.mananger.pojo.parameter.SsoClientUserUseYnParameter;
 import com.smart.module.sso.server.mananger.pojo.parameter.SsoListClientUserParameter;
 import com.smart.module.sso.server.mananger.pojo.vo.SsoClientUserVO;
@@ -117,12 +118,20 @@ public class SsoOauth2ClientController extends BaseController<SsoOauth2ClientSer
         return Result.success(PageData.of(userList, page.getTotal()));
     }
 
-    @Operation(summary = "查询未绑定用户列表")
+    @Operation(summary = "绑定用户到客户端")
     @PostMapping("bindUser")
     @Log(value = "绑定用户到oauth2客户端", type = LogOperationTypeEnum.UPDATE)
 //    @PreAuthorize("hasPermission('sso:clientUser', 'update')")
     public Result<Boolean> bindUser(@RequestBody @Valid SsoClientBindUserParameter parameter) {
         return Result.success(this.service.bindUser(parameter));
+    }
+
+    @Operation(summary = "解绑用户到客户端")
+    @PostMapping("unBindUser")
+    @Log(value = "解绑用户与oauth2客户端", type = LogOperationTypeEnum.UPDATE)
+//    @PreAuthorize("hasPermission('sso:clientUser', 'update')")
+    public Result<Boolean> unBindUser(@RequestBody @Valid SsoClientUnBindUserParameter parameter) {
+        return Result.success(this.service.unBindUser(parameter));
     }
 
     @Operation(summary = "设置客户端用户启用状态")

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.smart.framework.commons.core.utils.JsonUtils;
 import com.smart.module.sso.server.auth.SmartSsoServerAuthProperties;
 import com.smart.module.sso.server.common.manager.model.SsoOauth2ClientPO;
-import com.smart.module.sso.server.common.manager.service.SsoOauth2ClientService;
+import com.smart.module.sso.server.common.manager.repository.SsoOauth2ClientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
@@ -31,25 +31,39 @@ import java.util.stream.Collectors;
 public class SmartDbRegisteredClientRepositoryImpl implements RegisteredClientRepository {
 
     private final SmartSsoServerAuthProperties ssoServerAuthProperties;
-    private final SsoOauth2ClientService oauth2ClientService;
+    private final SsoOauth2ClientRepository oauth2ClientRepository;
 
     @Override
     public void save(RegisteredClient registeredClient) {
         SsoOauth2ClientPO oauth2Client = this.registeredClientToOauth2Client(registeredClient);
-        this.oauth2ClientService.saveOrUpdate(oauth2Client);
+        this.oauth2ClientRepository.saveOrUpdate(oauth2Client);
     }
 
 
     @Override
     public RegisteredClient findById(String id) {
-        SsoOauth2ClientPO oauth2Client = this.oauth2ClientService.getByIdInUse(Long.valueOf(id));
+        SsoOauth2ClientPO oauth2Client = this.oauth2ClientRepository.getById(Long.valueOf(id));
+        if (oauth2Client == null) {
+            return null;
+        }
+        if (!Boolean.TRUE.equals(oauth2Client.getUseYn())) {
+            return null;
+        }
         return this.oauth2ClientToRegisteredClient(oauth2Client);
     }
 
 
     @Override
     public RegisteredClient findByClientId(String clientId) {
-        SsoOauth2ClientPO oauth2Client = this.oauth2ClientService.getByClientId(clientId);
+        SsoOauth2ClientPO oauth2Client = this.oauth2ClientRepository.lambdaQuery()
+                .eq(SsoOauth2ClientPO::getClientId, clientId)
+                .one();
+        if (oauth2Client == null) {
+            return null;
+        }
+        if (!Boolean.TRUE.equals(oauth2Client.getUseYn())) {
+            return null;
+        }
         return this.oauth2ClientToRegisteredClient(oauth2Client);
     }
 

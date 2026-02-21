@@ -12,6 +12,7 @@ import com.smart.module.sso.server.common.manager.mapper.SsoOauth2ClientMapper;
 import com.smart.module.sso.server.common.manager.model.SsoOauth2ClientPO;
 import com.smart.module.sso.server.common.manager.model.SsoOauth2ClientUserPO;
 import com.smart.module.sso.server.mananger.pojo.parameter.SsoClientBindUserParameter;
+import com.smart.module.sso.server.mananger.pojo.parameter.SsoClientUnBindUserParameter;
 import com.smart.module.sso.server.mananger.pojo.parameter.SsoClientUserUseYnParameter;
 import com.smart.module.sso.server.mananger.pojo.parameter.SsoListClientUserParameter;
 import com.smart.module.sso.server.mananger.pojo.vo.SsoClientUserVO;
@@ -169,6 +170,22 @@ public class SsoOauth2ClientServiceImpl extends BaseServiceImpl<SsoOauth2ClientM
         return this.ssoOauth2ClientUserService.update(
                 new UpdateWrapper<SsoOauth2ClientUserPO>().lambda()
                         .set(SsoOauth2ClientUserPO::getUseYn, parameter.getUseYn())
+                        .eq(SsoOauth2ClientUserPO::getClientId, parameter.getClientId())
+                        .in(SsoOauth2ClientUserPO::getUserId, parameter.getUserIdList())
+        );
+    }
+
+    /**
+     * 解绑用户与oauth2客户端
+     *
+     * @param parameter 解绑用户参数
+     * @return 是否解绑成功
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean unBindUser(SsoClientUnBindUserParameter parameter) {
+        return this.ssoOauth2ClientUserService.remove(
+                new QueryWrapper<SsoOauth2ClientUserPO>().lambda()
                         .eq(SsoOauth2ClientUserPO::getClientId, parameter.getClientId())
                         .in(SsoOauth2ClientUserPO::getUserId, parameter.getUserIdList())
         );

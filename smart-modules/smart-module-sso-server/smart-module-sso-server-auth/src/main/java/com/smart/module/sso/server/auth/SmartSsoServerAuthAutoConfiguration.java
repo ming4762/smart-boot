@@ -1,6 +1,7 @@
 package com.smart.module.sso.server.auth;
 
 import com.smart.module.sso.server.auth.client.SmartDbRegisteredClientRepositoryImpl;
+import com.smart.module.sso.server.common.manager.repository.SsoOauth2ClientRepository;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -23,7 +24,7 @@ public class SmartSsoServerAuthAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(RegisteredClientRepository.class)
-    public SmartDbRegisteredClientRepositoryImpl smartDbRegisteredClientRepositoryImpl(SmartSsoServerAuthProperties ssoServerAuthProperties, SsoOauth2ClientService oauth2ClientService) {
-        return new SmartDbRegisteredClientRepositoryImpl(ssoServerAuthProperties, oauth2ClientService);
+    public SmartDbRegisteredClientRepositoryImpl smartDbRegisteredClientRepositoryImpl(SmartSsoServerAuthProperties ssoServerAuthProperties, SsoOauth2ClientRepository oauth2ClientRepository) {
+        return new SmartDbRegisteredClientRepositoryImpl(ssoServerAuthProperties, oauth2ClientRepository);
     }
 }
