@@ -12,6 +12,7 @@ import org.springframework.security.oauth2.server.authorization.client.Registere
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -34,6 +35,7 @@ public class SmartDbRegisteredClientRepositoryImpl implements RegisteredClientRe
     private final SsoOauth2ClientRepository oauth2ClientRepository;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void save(RegisteredClient registeredClient) {
         SsoOauth2ClientPO oauth2Client = this.registeredClientToOauth2Client(registeredClient);
         this.oauth2ClientRepository.saveOrUpdate(oauth2Client);

@@ -21,6 +21,11 @@
 			<version>${project.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.smart</groupId>
+			<artifactId>smart-module-system</artifactId>
+		</dependency>
+
 	</dependencies>
 
 

@@ -44,8 +44,12 @@ public class RedisAuthCache extends AbstractAuthCache {
      * @param timeout 超时时间
      */
     @Override
-    public void put(@NonNull String key, @NonNull Object value, Duration timeout) {
-        this.cacheService.put(this.getKey(key), value, timeout);
+    public void put(@NonNull String key, @NonNull Object value, @org.jspecify.annotations.Nullable Duration timeout) {
+        if (timeout == null) {
+            this.cacheService.put(this.getKey(key), value);
+        } else {
+            this.cacheService.put(this.getKey(key), value, timeout);
+        }
     }
 
     /**
