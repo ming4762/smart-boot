@@ -1,10 +1,10 @@
 package com.smart.service.system.config;
 
 import com.smart.auth.extensions.access.secret.AuthAccessSecretSecurityConfigurer;
+import com.smart.framework.auth.common.constants.AuthDomainConstants;
 import com.smart.framework.auth.core.properties.AuthProperties;
 import com.smart.framework.auth.core.remember.SmartAuthPersistentTokenRememberMeServices;
 import com.smart.framework.auth.extensions.jwt.AuthJwtSecurityConfigurer;
-import com.smart.framework.auth.extensions.sms.AuthSmsSecurityConfigurer;
 import com.smart.module.auth.config.AuthCaptchaSecurityConfigurer;
 import com.smart.module.auth.config.AuthTenantSecurityConfigurer;
 import com.smart.module.auth.config.AuthWebSecurityConfigurerAdapter;
@@ -62,11 +62,11 @@ public class SecurityConfig extends AuthWebSecurityConfigurerAdapter {
 //                .with(AuthWebSecurityConfigurer.web(), Customizer.withDefaults())
                 // JWT配置
                 .sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .with(AuthJwtSecurityConfigurer.jwt(), Customizer.withDefaults())
+                .with(AuthJwtSecurityConfigurer.jwt(), jwt -> jwt.authDomain(AuthDomainConstants.AUTH_DOMAIN_ADMIN))
                 // 验证码配置
                 .with(AuthCaptchaSecurityConfigurer.captcha(), Customizer.withDefaults())
                 // 短信登录支持
-                .with(AuthSmsSecurityConfigurer.sms(), Customizer.withDefaults())
+//                .with(AuthSmsSecurityConfigurer.sms(), Customizer.withDefaults())
                 // 租户支持
                 .with(AuthTenantSecurityConfigurer.tenant(), Customizer.withDefaults());
         return httpSecurity.build();

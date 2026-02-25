@@ -58,6 +58,11 @@ public class RestUserDetailsImpl implements RestUserDetails, Serializable {
     @Builder.Default
     private Set<RoleGrantedAuthority> roles = HashSet.newHashSet(0);
 
+    /**
+     * 权限域列表
+     */
+    private Set<String> authDomains;
+
     @Getter
     private ZonedDateTime loginTime;
 
@@ -139,6 +144,17 @@ public class RestUserDetailsImpl implements RestUserDetails, Serializable {
         return this.permissions.stream()
                 .map(PermissionGrantedAuthority::getPermission)
                 .collect(Collectors.toSet());
+    }
+
+    /**
+     * 获取权限域
+     *
+     * @return 权限域列表
+     */
+    @Override
+    public Set<String> getAuthDomains() {
+        return Optional.ofNullable(this.authDomains)
+                .orElse(Set.of());
     }
 
     @Override

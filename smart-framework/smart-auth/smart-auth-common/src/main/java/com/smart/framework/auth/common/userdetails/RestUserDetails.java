@@ -46,6 +46,12 @@ public interface RestUserDetails extends UserDetails {
     Set<Permission> getPermissions();
 
     /**
+     * 获取权限域
+     * @return 权限域列表
+     */
+    Set<String> getAuthDomains();
+
+    /**
      * 设置token
      * @param token token
      */

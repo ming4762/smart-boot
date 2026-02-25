@@ -16,9 +16,11 @@ import org.springframework.security.core.userdetails.UserDetailsChecker;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 登录管理
@@ -70,6 +72,10 @@ public class RestAuthenticationProvider extends AbstractUserDetailsAuthenticatio
         user.setBindIp(token.getBindIp());
         user.setLoginIp(token.getLoginIp());
         user.setLoginTime(ZonedDateTime.now());
+        // 设置权限域
+        if (StringUtils.hasText(token.getAuthDomain())) {
+            user.setAuthDomains(Set.of(token.getAuthDomain()));
+        }
         return user;
     }
 

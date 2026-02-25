@@ -5,8 +5,10 @@ import com.smart.framework.auth.core.model.LoginParameter;
 import com.smart.framework.commons.core.utils.IpUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.Setter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+import org.springframework.util.StringUtils;
 
 /**
  * JWT登录拦截器
@@ -16,6 +18,8 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 public class WebLoginFilter extends AbstractAuthenticationProcessingFilter {
 
     private final Boolean bindIp;
+    @Setter
+    private String authDomain;
 
     public WebLoginFilter(String loginUrl, Boolean bindIp) {
         super(loginUrl);
@@ -27,6 +31,9 @@ public class WebLoginFilter extends AbstractAuthenticationProcessingFilter {
         // 创建请求参数
         final LoginParameter loginParameter = LoginParameter.create(httpServletRequest);
         final RestUsernamePasswordAuthenticationToken authenticationToken = new RestUsernamePasswordAuthenticationToken(loginParameter.getUsername(), loginParameter.getPassword(), this.bindIp, IpUtils.getIpAddr(httpServletRequest), loginParameter.getLoginType());
+        if (StringUtils.hasText(this.authDomain)) {
+            authenticationToken.setAuthDomain(this.authDomain);
+        }
         return this.getAuthenticationManager().authenticate(authenticationToken);
     }
 }

@@ -99,6 +99,8 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
         final List<SecurityFilterChain> chains = Lists.newArrayList();
         // 创建登录过滤器
         final WebLoginFilter webLoginFilter = this.createWebLoginFilter(builder, this.getLoginUrl(), authProperties.getBindIp());
+        // 设置权限域
+        webLoginFilter.setAuthDomain(this.serviceProvider.authDomain);
         webLoginFilter.setAuthenticationFailureHandler(this.getBean(AuthenticationFailureHandler.class, this.serviceProvider.authenticationFailureHandler));
         chains.add(new DefaultSecurityFilterChain(PathPatternRequestMatcher.withDefaults().matcher(this.getLoginUrl()), webLoginFilter));
 
@@ -198,6 +200,11 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
         return this;
     }
 
+    public AuthJwtSecurityConfigurer<H> authDomain(String authDomain) {
+        this.serviceProvider.authDomain = authDomain;
+        return this;
+    }
+
     /**
      * 服务配置类
      */
@@ -219,6 +226,11 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
         private LogoutSuccessHandler logoutSuccessHandler;
 
         private Boolean rememberMe;
+
+        /**
+        * 权限域
+         */
+        private String authDomain;
 
 
         public ServiceProvider() {

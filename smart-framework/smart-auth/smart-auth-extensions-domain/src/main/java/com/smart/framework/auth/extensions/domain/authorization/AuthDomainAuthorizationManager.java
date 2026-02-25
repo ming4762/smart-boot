@@ -1,0 +1,88 @@
+package com.smart.framework.auth.extensions.domain.authorization;
+
+import com.smart.framework.auth.common.annotation.AuthDomain;
+import com.smart.framework.auth.common.constants.AuthDomainConstants;
+import com.smart.framework.auth.common.userdetails.RestUserDetails;
+import com.smart.framework.auth.core.properties.AuthProperties;
+import com.smart.framework.auth.core.utils.AuthCheckUtils;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.aopalliance.intercept.MethodInvocation;
+import org.jspecify.annotations.Nullable;
+import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.security.authorization.AuthorizationDecision;
+import org.springframework.security.authorization.AuthorizationManager;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.function.Supplier;
+
+/**
+ * 领域权限验证
+ * @author <a href="https://github.com/ming4762">ShiZhongMing</a>
+ * 2026-02-25 09:58
+ * @since 5.0.0
+ */
+@RequiredArgsConstructor
+@Slf4j
+public class AuthDomainAuthorizationManager implements AuthorizationManager<MethodInvocation> {
+
+    private final AuthProperties authProperties;
+
+    @Override
+    public @Nullable AuthorizationDecision check(Supplier<Authentication> authentication, MethodInvocation methodInvocation) {
+        if (this.ignore()) {
+            return new AuthorizationDecision(true);
+        }
+        RestUserDetails restUserDetails = (RestUserDetails) authentication.get().getPrincipal();
+        Set<String> authDomains = restUserDetails.getAuthDomains();
+        // 查询接口所需权限域，如果未配置默认ADMIN
+        List<String> requiredAuthDomains = Optional.ofNullable(this.findAuthDomain(methodInvocation))
+                .map(AuthDomain::value)
+                .map(Arrays::asList)
+                .orElse(List.of(AuthDomainConstants.AUTH_DOMAIN_ADMIN));
+        // 判断是否有交集，有交集代表授权
+        boolean granted = !Collections.disjoint(authDomains, requiredAuthDomains);
+        if (!granted) {
+            log.warn("用户 {} 无权限访问接口 {}，所需权限域 {}，当前权限域 {}",
+                    restUserDetails.getUsername(), this.getMethodName(methodInvocation), requiredAuthDomains, authDomains);
+        }
+        return new AuthorizationDecision(granted);
+    }
+
+    /**
+     * 查找方法上的AuthDomain注解
+     * 如果方法上没有AuthDomain注解，则查找类上的AuthDomain注解
+     * @param methodInvocation 方法调用
+     * @return AuthDomain注解
+     */
+    private AuthDomain findAuthDomain(MethodInvocation methodInvocation) {
+        Method method = methodInvocation.getMethod();
+        AuthDomain annotation = AnnotationUtils.getAnnotation(method, AuthDomain.class);
+        if (annotation != null) {
+            return annotation;
+        }
+        return AnnotationUtils.getAnnotation(methodInvocation.getThis().getClass(), AuthDomain.class);
+    }
+
+    /**
+     * 是否需要检查权限
+     * @return 是否需要检查权限
+     */
+    protected boolean ignore() {
+        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (requestAttributes == null) {
+            return true;
+        }
+        HttpServletRequest request = requestAttributes.getRequest();
+        return AuthCheckUtils.checkIgnores(request, this.authProperties.getIgnores());
+    }
+
+    protected String getMethodName(MethodInvocation methodInvocation) {
+        return methodInvocation.getThis().getClass().getName() + "#" +methodInvocation.getMethod().getName();
+    }
+}

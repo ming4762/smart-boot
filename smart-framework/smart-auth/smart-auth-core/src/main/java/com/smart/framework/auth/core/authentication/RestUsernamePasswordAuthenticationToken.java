@@ -3,6 +3,7 @@ package com.smart.framework.auth.core.authentication;
 import com.smart.framework.auth.common.constants.LoginTypeEnum;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -24,6 +25,9 @@ public class RestUsernamePasswordAuthenticationToken extends UsernamePasswordAut
     private final String loginIp;
 
     private final LoginTypeEnum loginType;
+
+    @Setter
+    private String authDomain;
 
     public RestUsernamePasswordAuthenticationToken(Object principal, Object credentials, Boolean bindIp, String loginIp, LoginTypeEnum loginType) {
         super(principal, credentials);

@@ -642,7 +642,12 @@
                 <artifactId>smart-boot-starter-auth-wechat</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            
+            <dependency>
+                <groupId>com.smart</groupId>
+                <artifactId>smart-boot-starter-auth-domain</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>com.smart</groupId>
                 <artifactId>smart-boot-starter-captcha</artifactId>

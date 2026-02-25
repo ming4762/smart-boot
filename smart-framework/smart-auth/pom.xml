@@ -20,6 +20,7 @@
         <module>smart-auth-core</module>
         <module>smart-auth-extensions-access-secret</module>
         <module>smart-auth-extensions-dingtalk</module>
+        <module>smart-auth-extensions-domain</module>
         <module>smart-auth-extensions-jwt</module>
         <module>smart-auth-extensions-web</module>
         <module>smart-auth-extensions-sms</module>
