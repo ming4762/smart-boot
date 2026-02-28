@@ -19,6 +19,7 @@
 		<module>smart-message-extension-email</module>
 		<module>smart-message-extension-sms</module>
 		<module>smart-message-extension-websocket</module>
+		<module>smart-message-extension-wechat</module>
 	</modules>
 
 	<properties>

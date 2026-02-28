@@ -7,9 +7,8 @@
 		<artifactId>smart-message</artifactId>
 		<version>5.0.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>smart-message-extension-dingtalk</artifactId>
-	<version>5.0.0-SNAPSHOT</version>
-	<name>smart-message-extension-dingtalk</name>
+	<artifactId>smart-message-extension-wechat</artifactId>
+	<name>smart-message-extension-wechat</name>
 	<description>钉钉消息模块</description>
 
 	<properties>
@@ -18,12 +17,12 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.smart</groupId>
-			<artifactId>smart-extensions-dingtalk</artifactId>
-			<version>${project.version}</version>
+			<artifactId>smart-message-core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.smart</groupId>
-			<artifactId>smart-message-core</artifactId>
+			<artifactId>smart-extensions-wechat</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 </project>

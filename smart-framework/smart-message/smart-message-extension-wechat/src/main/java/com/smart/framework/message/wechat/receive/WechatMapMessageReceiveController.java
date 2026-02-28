@@ -1,18 +1,21 @@
-package com.smart.framework.extension.wechat.message;
+package com.smart.framework.message.wechat.receive;
 
 import com.smart.framework.commons.core.utils.JsonUtils;
 import com.smart.framework.extension.wechat.constants.WechatEventEnum;
 import com.smart.framework.extension.wechat.constants.WechatMsgTypeEnum;
-import com.smart.framework.extension.wechat.message.dto.WechatMessageCheckDTO;
-import com.smart.framework.extension.wechat.message.dto.WechatMessageResultDTO;
-import com.smart.framework.extension.wechat.message.event.WechatCommonEvent;
-import com.smart.framework.extension.wechat.message.event.WechatMessageEvent;
-import com.smart.framework.extension.wechat.message.event.WechatSubscribeEvent;
-import com.smart.framework.extension.wechat.message.event.WechatUnSubscribeEvent;
+import com.smart.framework.extension.wechat.event.message.WechatMessageCommonEvent;
+import com.smart.framework.extension.wechat.event.message.WechatMessageSubscribeEvent;
+import com.smart.framework.extension.wechat.event.message.WechatMessageTextEvent;
+import com.smart.framework.extension.wechat.event.message.WechatMessageUnSubscribeEvent;
+import com.smart.framework.extension.wechat.pojo.dto.WechatMessageCheckDTO;
+import com.smart.framework.extension.wechat.pojo.dto.WechatMessageResultDTO;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.util.XmlUtils;
 import me.chanjar.weixin.mp.api.WxMpService;
-import org.springframework.context.ApplicationEventPublisher;
+import org.jspecify.annotations.NonNull;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -20,17 +23,16 @@ import org.springframework.web.bind.annotation.*;
  * @author zhongming4762
  * 2023/4/7
  */
-@RequestMapping("public/wechat/message")
+@RequestMapping("public/wechat/message/map/receive")
 @Slf4j
 @RestController
-public class WechatMessageController {
+public class WechatMapMessageReceiveController implements ApplicationContextAware {
 
-    private final ApplicationEventPublisher applicationEventPublisher;
+    private ApplicationContext applicationContext;
 
     private final WxMpService wxMpService;
 
-    public WechatMessageController(ApplicationEventPublisher applicationEventPublisher, WxMpService wxMpService) {
-        this.applicationEventPublisher = applicationEventPublisher;
+    public WechatMapMessageReceiveController(WxMpService wxMpService) {
         this.wxMpService = wxMpService;
     }
 
@@ -72,30 +74,33 @@ public class WechatMessageController {
         WechatMessageResultDTO result = JsonUtils.parse(JsonUtils.toJsonString(XmlUtils.xml2Map(message)), WechatMessageResultDTO.class);
         if (WechatMsgTypeEnum.TEXT.equals(result.getMsgType())) {
             // 发送消息事件
-            WechatMessageEvent messageEvent = new WechatMessageEvent(this);
-            messageEvent.setMessage(result);
-            this.applicationEventPublisher.publishEvent(messageEvent);
+            WechatMessageTextEvent messageEvent = new WechatMessageTextEvent(this, result);
+            this.applicationContext.publishEvent(messageEvent);
             return "";
         }
         if (WechatMsgTypeEnum.EVENT.equals(result.getMsgType())) {
             // 事件
             if (WechatEventEnum.SUBSCRIBE.equals(result.getEvent())) {
-                WechatSubscribeEvent subscribeEvent = new WechatSubscribeEvent(this);
-                subscribeEvent.setMessage(result);
-                this.applicationEventPublisher.publishEvent(subscribeEvent);
+                WechatMessageSubscribeEvent subscribeEvent = new WechatMessageSubscribeEvent(this, result);
+                this.applicationContext.publishEvent(subscribeEvent);
                 return "";
             }
             if (WechatEventEnum.UNSUBSCRIBE.equals(result.getEvent())) {
-                WechatUnSubscribeEvent unSubscribeEvent = new WechatUnSubscribeEvent(this);
-                unSubscribeEvent.setMessage(result);
-                this.applicationEventPublisher.publishEvent(unSubscribeEvent);
+                WechatMessageUnSubscribeEvent unSubscribeEvent = new WechatMessageUnSubscribeEvent(this, result);
+                this.applicationContext.publishEvent(unSubscribeEvent);
                 return "";
             }
-            WechatCommonEvent commonEvent = new WechatCommonEvent(this);
-            commonEvent.setMessage(result);
-            this.applicationEventPublisher.publishEvent(commonEvent);
+            WechatMessageCommonEvent commonEvent = new WechatMessageCommonEvent(this, result);
+            this.applicationContext.publishEvent(commonEvent);
             return "";
         }
-        return false;
+        log.warn("wechat message type not support：{}", result.getMsgType());
+        return "";
+    }
+
+
+    @Override
+    public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
     }
 }

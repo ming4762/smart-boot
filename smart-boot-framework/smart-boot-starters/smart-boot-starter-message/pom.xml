@@ -19,6 +19,7 @@
         <module>smart-boot-starter-message-sms-aliyun</module>
         <module>smart-boot-starter-message-sms-tencent</module>
         <module>smart-boot-starter-message-websocket</module>
+        <module>smart-boot-starter-message-wechat</module>
     </modules>
 
     <properties>

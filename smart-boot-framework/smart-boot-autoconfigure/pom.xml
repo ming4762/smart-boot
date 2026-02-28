@@ -260,6 +260,12 @@
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-message-extension-wechat</artifactId>
+            <version>${project.version}</version>
+            <optional>true</optional>
+        </dependency>
 
         <!--    文档工具    -->
         <dependency>

@@ -1,4 +1,4 @@
-package com.smart.framework.extension.wechat.message.dto;
+package com.smart.framework.extension.wechat.pojo.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
