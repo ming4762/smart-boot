@@ -29,15 +29,15 @@ import java.util.List;
  * 2023/4/3
  */
 @Slf4j
-public class SmartAuthWechatAppConfigurer<H extends HttpSecurityBuilder<H>> extends SmartSecurityConfigurerAdapter<H> {
+public class AuthWechatAppConfigurer<H extends HttpSecurityBuilder<H>> extends SmartSecurityConfigurerAdapter<H> {
 
-    private static final String DEFAULT_LOGIN_URL = "auth/auth/appLogin";
+    private static final String DEFAULT_LOGIN_URL = "auth/wechat/appLogin";
 
-    public static <H extends HttpSecurityBuilder<H>> SmartAuthWechatAppConfigurer<H> wechatApp() {
-        return new SmartAuthWechatAppConfigurer<>();
+    public static <H extends HttpSecurityBuilder<H>> AuthWechatAppConfigurer<H> wechatApp() {
+        return new AuthWechatAppConfigurer<>();
     }
 
-    public H config(Customizer<SmartAuthWechatAppConfigurer<H>> customizer) {
+    public H config(Customizer<AuthWechatAppConfigurer<H>> customizer) {
         customizer.customize(this);
         return this.getBuilder();
     }
@@ -83,17 +83,17 @@ public class SmartAuthWechatAppConfigurer<H extends HttpSecurityBuilder<H>> exte
         return loginFilter;
     }
 
-    public SmartAuthWechatAppConfigurer<H> loginUrl(String loginUrl) {
+    public AuthWechatAppConfigurer<H> loginUrl(String loginUrl) {
         this.serviceProvider.loginUrl = loginUrl;
         return this;
     }
 
-    public SmartAuthWechatAppConfigurer<H> authenticationSuccessHandler(AuthenticationSuccessHandler authenticationSuccessHandler) {
+    public AuthWechatAppConfigurer<H> authenticationSuccessHandler(AuthenticationSuccessHandler authenticationSuccessHandler) {
         this.serviceProvider.authenticationSuccessHandler = authenticationSuccessHandler;
         return this;
     }
 
-    public SmartAuthWechatAppConfigurer<H> authenticationFailureHandler(AuthenticationFailureHandler authenticationFailureHandler) {
+    public AuthWechatAppConfigurer<H> authenticationFailureHandler(AuthenticationFailureHandler authenticationFailureHandler) {
         this.serviceProvider.authenticationFailureHandler = authenticationFailureHandler;
         return this;
     }

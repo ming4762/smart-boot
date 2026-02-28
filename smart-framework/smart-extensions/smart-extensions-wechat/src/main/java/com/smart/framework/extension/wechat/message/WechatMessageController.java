@@ -5,13 +5,13 @@ import com.smart.framework.extension.wechat.constants.WechatEventEnum;
 import com.smart.framework.extension.wechat.constants.WechatMsgTypeEnum;
 import com.smart.framework.extension.wechat.message.dto.WechatMessageCheckDTO;
 import com.smart.framework.extension.wechat.message.dto.WechatMessageResultDTO;
+import com.smart.framework.extension.wechat.message.event.WechatCommonEvent;
 import com.smart.framework.extension.wechat.message.event.WechatMessageEvent;
 import com.smart.framework.extension.wechat.message.event.WechatSubscribeEvent;
 import com.smart.framework.extension.wechat.message.event.WechatUnSubscribeEvent;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.util.XmlUtils;
 import me.chanjar.weixin.mp.api.WxMpService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,7 +49,14 @@ public class WechatMessageController {
     }
 
     private boolean doCheck(WechatMessageCheckDTO parameter) {
-        return this.wxMpService.checkSignature(parameter.getTimestamp(), parameter.getNonce(), parameter.getSignature());
+        log.info("wechat message check：{}", JsonUtils.toJsonString(parameter));
+        boolean result = this.wxMpService.checkSignature(parameter.getTimestamp(), parameter.getNonce(), parameter.getSignature());
+        if (result) {
+            log.info("wechat message check success");
+        } else {
+            log.warn("wechat message check fail");
+        }
+        return result;
     }
 
     /**
@@ -66,7 +73,7 @@ public class WechatMessageController {
         if (WechatMsgTypeEnum.TEXT.equals(result.getMsgType())) {
             // 发送消息事件
             WechatMessageEvent messageEvent = new WechatMessageEvent(this);
-            BeanUtils.copyProperties(result, messageEvent);
+            messageEvent.setMessage(result);
             this.applicationEventPublisher.publishEvent(messageEvent);
             return "";
         }
@@ -74,16 +81,20 @@ public class WechatMessageController {
             // 事件
             if (WechatEventEnum.SUBSCRIBE.equals(result.getEvent())) {
                 WechatSubscribeEvent subscribeEvent = new WechatSubscribeEvent(this);
-                BeanUtils.copyProperties(result, subscribeEvent);
+                subscribeEvent.setMessage(result);
                 this.applicationEventPublisher.publishEvent(subscribeEvent);
                 return "";
             }
             if (WechatEventEnum.UNSUBSCRIBE.equals(result.getEvent())) {
                 WechatUnSubscribeEvent unSubscribeEvent = new WechatUnSubscribeEvent(this);
-                BeanUtils.copyProperties(result, unSubscribeEvent);
+                unSubscribeEvent.setMessage(result);
                 this.applicationEventPublisher.publishEvent(unSubscribeEvent);
                 return "";
             }
+            WechatCommonEvent commonEvent = new WechatCommonEvent(this);
+            commonEvent.setMessage(result);
+            this.applicationEventPublisher.publishEvent(commonEvent);
+            return "";
         }
         return false;
     }

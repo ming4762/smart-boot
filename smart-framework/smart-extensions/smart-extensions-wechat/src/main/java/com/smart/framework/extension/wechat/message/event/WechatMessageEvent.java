@@ -1,5 +1,6 @@
 package com.smart.framework.extension.wechat.message.event;
 
+import com.smart.framework.extension.wechat.message.dto.WechatMessageResultDTO;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.context.ApplicationEvent;
@@ -13,15 +14,7 @@ import org.springframework.context.ApplicationEvent;
 @Setter
 public class WechatMessageEvent extends ApplicationEvent {
 
-    private String toUserName;
-
-    private String fromUserName;
-
-    private String createTime;
-
-    private String content;
-
-    private String msgId;
+    private WechatMessageResultDTO message;
 
     public WechatMessageEvent(Object source) {
         super(source);

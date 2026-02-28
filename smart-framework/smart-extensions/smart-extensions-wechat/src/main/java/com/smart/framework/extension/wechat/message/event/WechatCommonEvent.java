@@ -6,17 +6,18 @@ import lombok.Setter;
 import org.springframework.context.ApplicationEvent;
 
 /**
- * 公众号取消关注事件
- * @author zhongming4762
- * 2023/4/7
+ * 微信通用事件
+ * @author <a href="https://github.com/ming4762">ShiZhongMing</a>
+ * 2026-02-27 23:07
+ * @since 5.0.0
  */
 @Getter
 @Setter
-public class WechatUnSubscribeEvent extends ApplicationEvent {
+public class WechatCommonEvent  extends ApplicationEvent {
 
     private WechatMessageResultDTO message;
 
-    public WechatUnSubscribeEvent(Object source) {
+    public WechatCommonEvent(Object source) {
         super(source);
     }
 }
