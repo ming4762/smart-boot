@@ -10,7 +10,7 @@ import org.springframework.context.ApplicationEvent;
  */
 public abstract class AbstractWechatEvent extends ApplicationEvent {
 
-    public AbstractWechatEvent(Object source) {
+    protected AbstractWechatEvent(Object source) {
         super(source);
     }
 }

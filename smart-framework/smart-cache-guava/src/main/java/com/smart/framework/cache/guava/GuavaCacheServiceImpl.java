@@ -14,6 +14,8 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 /**
@@ -263,5 +265,16 @@ public class GuavaCacheServiceImpl extends AbstractCacheService implements Guava
             return Duration.ZERO;
         }
         return Duration.between(now, expire);
+    }
+
+    /**
+     * 获取缓存锁
+     *
+     * @param key key
+     * @return 锁
+     */
+    @Override
+    public Lock getLock(@org.jspecify.annotations.NonNull String key) {
+        return new ReentrantLock();
     }
 }

@@ -3,12 +3,14 @@ package com.smart.framework.auth.extensions.wechat.provider;
 import com.smart.framework.auth.common.constants.AuthTypeEnum;
 import com.smart.framework.auth.core.wechat.WechatAuthConfigProvider;
 import com.smart.framework.auth.extensions.wechat.model.WechatMpQrcodeResult;
+import com.smart.framework.commons.core.utils.SmartIdGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpQrcodeService;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpQrCodeTicket;
+import org.jspecify.annotations.Nullable;
 import org.springframework.util.StringUtils;
 
 import java.time.Duration;
@@ -25,6 +27,7 @@ public class DefaultWechatMpQrcodeCreateProviderImpl implements WechatMpQrcodeCr
     private static final String SCENE = "MP_QRCODE_LOGIN";
 
     private final WxMpService wxMpService;
+    @Nullable
     private final WechatAuthConfigProvider wechatAuthConfigProvider;
 
     /**
@@ -36,7 +39,7 @@ public class DefaultWechatMpQrcodeCreateProviderImpl implements WechatMpQrcodeCr
     @SneakyThrows({WxErrorException.class})
     @Override
     public WechatMpQrcodeResult createQrcode(String appid) {
-        if (appid == null) {
+        if (appid == null && this.wechatAuthConfigProvider != null) {
             appid = this.wechatAuthConfigProvider.getDefaultAppid(AuthTypeEnum.WECHAT_MP_QRCODE);
         }
         if (StringUtils.hasText(appid)) {
@@ -44,12 +47,13 @@ public class DefaultWechatMpQrcodeCreateProviderImpl implements WechatMpQrcodeCr
         }
         WxMpQrcodeService qrcodeService = this.wxMpService.getQrcodeService();
         long expireSeconds = Duration.ofMinutes(20).getSeconds();
-        WxMpQrCodeTicket qrCodeTicket = qrcodeService.qrCodeCreateTmpTicket(SCENE, (int) expireSeconds);
+        String scene = SCENE + SmartIdGenerator.nextId();
+        WxMpQrCodeTicket qrCodeTicket = qrcodeService.qrCodeCreateTmpTicket(scene, (int) expireSeconds);
         String qrcodeUrl = qrcodeService.qrCodePictureUrl(qrCodeTicket.getTicket());
         return WechatMpQrcodeResult.builder()
                 .ticket(qrCodeTicket.getTicket())
                 .url(qrcodeUrl)
-                .scene(SCENE)
+                .scene(scene)
                 .expireSeconds(expireSeconds)
                 .build();
     }

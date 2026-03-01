@@ -12,6 +12,7 @@ import com.smart.framework.auth.extensions.wechat.userdetails.DefaultWechatUserD
 import com.smart.framework.auth.extensions.wechat.userdetails.WechatUserDetailService;
 import com.smart.module.api.system.SystemAuthUserApi;
 import me.chanjar.weixin.mp.api.WxMpService;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -44,7 +45,7 @@ public class SmartAuthWechatAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnBean(WxMpService.class)
-    public WechatMpQrcodeCreateProvider defaultWechatMpQrcodeCreateProvider(WxMpService wxMpService, WechatAuthConfigProvider wechatAuthConfigProvider) {
-        return new DefaultWechatMpQrcodeCreateProviderImpl(wxMpService, wechatAuthConfigProvider);
+    public WechatMpQrcodeCreateProvider defaultWechatMpQrcodeCreateProvider(WxMpService wxMpService, ObjectProvider<WechatAuthConfigProvider> wechatAuthConfigProvider) {
+        return new DefaultWechatMpQrcodeCreateProviderImpl(wxMpService, wechatAuthConfigProvider.getIfAvailable());
     }
 }

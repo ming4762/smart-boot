@@ -1,8 +1,7 @@
 package com.smart.framework.extension.wechat.model;
 
 import lombok.*;
-
-import java.io.Serializable;
+import lombok.experimental.SuperBuilder;
 
 /**
  * 微信公众号配置信息
@@ -13,20 +12,7 @@ import java.io.Serializable;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class WechatMpConfig implements Serializable {
+@SuperBuilder
+public class WechatMpConfig extends AbstractWechatConfig {
 
-    /**
-     * 设置微信公众号的appid
-     */
-    private String appid;
-
-    /**
-     * 设置微信公众号的Secret
-     */
-    private String secret;
-
-    private String token;
-
-    private String aesKey;
 }

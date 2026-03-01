@@ -1,6 +1,6 @@
 package com.smart.framework.extension.wechat.event.message;
 
-import com.smart.framework.extension.wechat.message.event.AbstractWechatEvent;
+import com.smart.framework.extension.wechat.event.AbstractWechatEvent;
 import com.smart.framework.extension.wechat.pojo.dto.WechatMessageResultDTO;
 import lombok.Getter;
 
@@ -15,7 +15,7 @@ public abstract class AbstractWechatMessageEvent extends AbstractWechatEvent {
 
     private final WechatMessageResultDTO message;
 
-    AbstractWechatMessageEvent(Object source, WechatMessageResultDTO message) {
+    protected AbstractWechatMessageEvent(Object source, WechatMessageResultDTO message) {
         super(source);
         this.message = message;
     }
