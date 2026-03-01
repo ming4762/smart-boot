@@ -381,6 +381,13 @@
             <artifactId>spring-security-oauth2-authorization-server</artifactId>
             <optional>true</optional>
         </dependency>
+
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-rocketmq</artifactId>
+            <version>${project.version}</version>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
 </project>

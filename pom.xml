@@ -69,6 +69,8 @@
         <alibaba.transmittable.version>2.14.5</alibaba.transmittable.version>
         <pdfbox.version>3.0.5</pdfbox.version>
         <bouncycastle.version>1.82</bouncycastle.version>
+        <rocketmq.starter.version>2.3.5</rocketmq.starter.version>
+        <rocketmq.version>5.4.0</rocketmq.version>
     </properties>
 
     <packaging>pom</packaging>
@@ -545,6 +547,21 @@
                 <artifactId>bcpkix-jdk18on</artifactId>
                 <version>${bouncycastle.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.rocketmq</groupId>
+                <artifactId>rocketmq-client</artifactId>
+                <version>${rocketmq.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.rocketmq</groupId>
+                <artifactId>rocketmq-spring-boot-starter</artifactId>
+                <version>${rocketmq.starter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.rocketmq</groupId>
+                <artifactId>rocketmq-spring-boot</artifactId>
+                <version>${rocketmq.starter.version}</version>
+            </dependency>
 
             <!--      smart-boot      -->
             <dependency>
@@ -779,6 +796,12 @@
                 <artifactId>smart-boot-starter-message-websocket</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.smart</groupId>
+                <artifactId>smart-boot-starter-message-wechat</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>com.smart</groupId>
                 <artifactId>smart-boot-starter-monitor-client</artifactId>

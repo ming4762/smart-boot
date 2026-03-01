@@ -32,6 +32,7 @@
         <module>smart-message</module>
         <module>smart-monitor</module>
         <module>smart-redis</module>
+        <module>smart-rocketmq</module>
         <module>smart-tools</module>
     </modules>
 

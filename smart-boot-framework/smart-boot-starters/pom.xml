@@ -36,6 +36,7 @@
         <module>smart-boot-starter-monitor-server</module>
         <module>smart-boot-starter-monitor-client</module>
         <module>smart-boot-starter-redis</module>
+        <module>smart-boot-starter-rocketmq</module>
         <module>smart-boot-starter-tool-database</module>
         <module>smart-boot-starter-wechat</module>
         <module>smart-boot-starter-xxl</module>
