@@ -5,11 +5,13 @@ import com.smart.framework.auth.common.constants.AuthDomainConstants;
 import com.smart.framework.auth.common.userdetails.RestUserDetails;
 import com.smart.framework.auth.core.properties.AuthProperties;
 import com.smart.framework.auth.core.utils.AuthCheckUtils;
+import com.smart.framework.commons.core.exception.SystemException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInvocation;
 import org.jspecify.annotations.Nullable;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.AuthorizationManager;
@@ -31,7 +33,7 @@ import java.util.function.Supplier;
 @Slf4j
 public class AuthDomainAuthorizationManager implements AuthorizationManager<MethodInvocation> {
 
-    private final AuthProperties authProperties;
+    private final ObjectProvider<AuthProperties> authPropertiesProvider;
 
     @Override
     public @Nullable AuthorizationDecision check(Supplier<Authentication> authentication, MethodInvocation methodInvocation) {
@@ -79,7 +81,11 @@ public class AuthDomainAuthorizationManager implements AuthorizationManager<Meth
             return true;
         }
         HttpServletRequest request = requestAttributes.getRequest();
-        return AuthCheckUtils.checkIgnores(request, this.authProperties.getIgnores());
+        AuthProperties authProperties = this.authPropertiesProvider.getIfAvailable();
+        if (authProperties == null) {
+            throw new SystemException("获取AuthProperties失败");
+        }
+        return AuthCheckUtils.checkIgnores(request, authProperties.getIgnores());
     }
 
     protected String getMethodName(MethodInvocation methodInvocation) {

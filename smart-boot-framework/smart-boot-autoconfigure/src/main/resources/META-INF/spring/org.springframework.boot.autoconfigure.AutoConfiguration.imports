@@ -24,6 +24,7 @@ com.smart.boot.autoconfigure.auth.extension.SmartAuthWechatAutoConfiguration
 com.smart.boot.autoconfigure.auth.extension.SmartAuthWebAutoConfiguration
 com.smart.boot.autoconfigure.auth.domain.SmartAuthDomainAutoConfiguration
 com.smart.boot.autoconfigure.wechat.SmartWechatMiniappAutoconfiguration
+com.smart.boot.autoconfigure.captcha.SmartCaptchaAutoConfiguration
 
 com.smart.boot.autoconfigure.wechat.SmartWechatAutoConfiguration
 com.smart.boot.autoconfigure.xxl.SmartXxlExecutorAutoConfiguration

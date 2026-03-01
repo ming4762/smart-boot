@@ -13,7 +13,7 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
  * @author zhongming4762
  * 2023/4/3
  */
-public class WechatAppLoginFilter extends AbstractAuthenticationProcessingFilter {
+public class WechatMiniappLoginFilter extends AbstractAuthenticationProcessingFilter {
 
     private static final String CODE_PARAMETER = "code";
 
@@ -22,7 +22,7 @@ public class WechatAppLoginFilter extends AbstractAuthenticationProcessingFilter
     /**
      * @param defaultFilterProcessesUrl the default value for <tt>filterProcessesUrl</tt>.
      */
-    public WechatAppLoginFilter(String defaultFilterProcessesUrl) {
+    public WechatMiniappLoginFilter(String defaultFilterProcessesUrl) {
         super(defaultFilterProcessesUrl);
     }
 

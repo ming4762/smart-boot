@@ -1,6 +1,7 @@
 package com.smart.framework.auth.extensions.wechat.provider;
 
 import com.smart.framework.auth.common.constants.AuthTypeEnum;
+import com.smart.framework.auth.core.service.AuthCache;
 import com.smart.framework.auth.core.wechat.WechatAuthConfigProvider;
 import com.smart.framework.auth.extensions.wechat.model.WechatMpQrcodeResult;
 import com.smart.framework.commons.core.utils.SmartIdGenerator;
@@ -21,14 +22,20 @@ import java.time.Duration;
  * 2026-02-27 16:38
  * @since 5.0.0
  */
-@RequiredArgsConstructor
 public class DefaultWechatMpQrcodeCreateProviderImpl implements WechatMpQrcodeCreateProvider {
 
     private static final String SCENE = "MP_QRCODE_LOGIN";
 
     private final WxMpService wxMpService;
+    private final AuthCache authCache;
     @Nullable
     private final WechatAuthConfigProvider wechatAuthConfigProvider;
+
+    public DefaultWechatMpQrcodeCreateProviderImpl(WxMpService wxMpService, AuthCache authCache, @Nullable WechatAuthConfigProvider wechatAuthConfigProvider) {
+        this.wxMpService = wxMpService;
+        this.authCache = authCache;
+        this.wechatAuthConfigProvider = wechatAuthConfigProvider;
+    }
 
     /**
      * 生成ORCODE
@@ -46,8 +53,12 @@ public class DefaultWechatMpQrcodeCreateProviderImpl implements WechatMpQrcodeCr
             this.wxMpService.switchoverTo(appid);
         }
         WxMpQrcodeService qrcodeService = this.wxMpService.getQrcodeService();
-        long expireSeconds = Duration.ofMinutes(20).getSeconds();
+        Duration duration = Duration.ofMinutes(20);
+        long expireSeconds = duration.getSeconds();
         String scene = SCENE + SmartIdGenerator.nextId();
+        // 缓存二维码场景值，用于后续校验
+        this.authCache.put(scene, scene, duration);
+        // 生成二维码
         WxMpQrCodeTicket qrCodeTicket = qrcodeService.qrCodeCreateTmpTicket(scene, (int) expireSeconds);
         String qrcodeUrl = qrcodeService.qrCodePictureUrl(qrCodeTicket.getTicket());
         return WechatMpQrcodeResult.builder()

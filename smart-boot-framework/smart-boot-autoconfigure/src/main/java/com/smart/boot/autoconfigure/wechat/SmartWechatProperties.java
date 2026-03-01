@@ -25,12 +25,12 @@ public class SmartWechatProperties implements Serializable {
     /**
      * 小程序配置
      */
-    private MinappProperties minapp;
+    private MinappProperties minapp = new MinappProperties();
 
     /**
      * 公众号配置
      */
-    private MpProperties mp;
+    private MpProperties mp = new MpProperties();
 
     @Getter
     @Setter

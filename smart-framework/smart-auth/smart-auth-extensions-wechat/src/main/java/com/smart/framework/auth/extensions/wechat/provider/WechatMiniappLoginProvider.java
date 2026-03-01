@@ -17,12 +17,12 @@ import org.springframework.security.authentication.AuthenticationServiceExceptio
  * 2023/4/3
  */
 @Slf4j
-public class WechatAppLoginProvider implements WechatLoginProvider {
+public class WechatMiniappLoginProvider implements WechatLoginProvider {
 
     private final WxMaService wxMaService;
 
 
-    public WechatAppLoginProvider(WxMaService wxMaService) {
+    public WechatMiniappLoginProvider(WxMaService wxMaService) {
         this.wxMaService = wxMaService;
     }
 

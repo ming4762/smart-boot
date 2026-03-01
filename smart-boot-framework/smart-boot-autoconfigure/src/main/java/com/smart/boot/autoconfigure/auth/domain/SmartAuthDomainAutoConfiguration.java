@@ -4,6 +4,7 @@ import com.smart.framework.auth.core.properties.AuthProperties;
 import com.smart.framework.auth.extensions.domain.authorization.AuthDomainAuthorizationManager;
 import org.springframework.aop.Advisor;
 import org.springframework.aop.support.annotation.AnnotationMatchingPointcut;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -22,12 +23,14 @@ import org.springframework.stereotype.Controller;
  */
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnClass(AuthDomainAuthorizationManager.class)
+@Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 public class SmartAuthDomainAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(AuthDomainAuthorizationManager.class)
-    public AuthDomainAuthorizationManager authDomainAuthorizationManager(AuthProperties authProperties) {
-        return new AuthDomainAuthorizationManager(authProperties);
+    @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
+    public AuthDomainAuthorizationManager authDomainAuthorizationManager(ObjectProvider<AuthProperties> authPropertiesObjectProvider) {
+        return new AuthDomainAuthorizationManager(authPropertiesObjectProvider);
     }
 
     /**

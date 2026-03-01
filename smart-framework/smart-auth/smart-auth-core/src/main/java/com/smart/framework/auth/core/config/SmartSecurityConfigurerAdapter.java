@@ -26,6 +26,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * @author shizhongming
@@ -56,6 +57,10 @@ public class SmartSecurityConfigurerAdapter<H extends HttpSecurityBuilder<H>> ex
 
     protected <T> T getBean(Class<T> clazz) {
         return this.getBean(clazz, null);
+    }
+
+    protected <T> T getBeanOrElse(Class<T> clazz, Supplier<T> supplier) {
+        return Optional.ofNullable(this.getBean(clazz)).orElseGet(supplier);
     }
 
     /**
