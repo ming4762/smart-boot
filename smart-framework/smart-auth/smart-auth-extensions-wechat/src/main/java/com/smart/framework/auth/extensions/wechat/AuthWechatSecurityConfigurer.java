@@ -8,10 +8,8 @@ import com.smart.framework.auth.core.wechat.WechatAuthConfigProvider;
 import com.smart.framework.auth.extensions.wechat.authentication.WechatAuthenticationProvider;
 import com.smart.framework.auth.extensions.wechat.filter.WechatMiniappLoginFilter;
 import com.smart.framework.auth.extensions.wechat.filter.WechatMpQrCodeCreateFilter;
-import com.smart.framework.auth.extensions.wechat.provider.DefaultWechatMpQrcodeCreateProviderImpl;
-import com.smart.framework.auth.extensions.wechat.provider.WechatLoginProvider;
-import com.smart.framework.auth.extensions.wechat.provider.WechatMiniappLoginProvider;
-import com.smart.framework.auth.extensions.wechat.provider.WechatMpQrcodeCreateProvider;
+import com.smart.framework.auth.extensions.wechat.filter.WechatMpQrCodeLoginFilter;
+import com.smart.framework.auth.extensions.wechat.provider.*;
 import com.smart.framework.auth.extensions.wechat.userdetails.WechatUserDetailService;
 import com.smart.framework.commons.core.exception.SystemException;
 import lombok.Getter;
@@ -42,9 +40,15 @@ public class AuthWechatSecurityConfigurer<H extends HttpSecurityBuilder<H>> exte
 
     private static final String BASE_URL = "/auth/wechat";
 
+    private static final List<Class<? extends WechatLoginProvider>> EXCLUDE_LOGIN_PROVIDER_CLASSES = Lists.newArrayList(
+            WechatMiniappLoginProvider.class,
+            WechatMpQrcodeLoginProvider.class
+    );
+
     private AuthWechatSecurityConfigurer() {}
 
     private final ServiceProvider serviceProvider = new ServiceProvider();
+
 
     /**
      * 微信登录配置
@@ -61,7 +65,7 @@ public class AuthWechatSecurityConfigurer<H extends HttpSecurityBuilder<H>> exte
      */
     public MpQrcodeConfig mpQrcode() {
         MpQrcodeConfig qrcodeConfig = new MpQrcodeConfig();
-        this.serviceProvider.qrcodeConfig = qrcodeConfig;
+        this.serviceProvider.mpQrcodeConfig = qrcodeConfig;
         return qrcodeConfig;
     }
 
@@ -77,14 +81,14 @@ public class AuthWechatSecurityConfigurer<H extends HttpSecurityBuilder<H>> exte
 
     @Override
     public void configure(H builder) {
-        builder
-                .authenticationProvider(this.createAuthenticationProvider());
-        if (this.serviceProvider.getQrcodeConfig() != null) {
+        if (this.supportQrcode()) {
             this.configureQrcode(builder);
         }
-        if (this.serviceProvider.getMiniappConfig() != null) {
+        if (this.supportMiniapp()) {
             this.configureMiniapp(builder);
         }
+        builder
+                .authenticationProvider(this.createAuthenticationProvider());
     }
 
     private WechatAuthenticationProvider createAuthenticationProvider() {
@@ -92,8 +96,8 @@ public class AuthWechatSecurityConfigurer<H extends HttpSecurityBuilder<H>> exte
         List<WechatLoginProvider> wechatLoginProviderList = Arrays.stream(applicationContext.getBeanNamesForType(WechatLoginProvider.class))
                 .map(item -> {
                     WechatLoginProvider loginProvider = applicationContext.getBean(item, WechatLoginProvider.class);
-                    // WechatMiniappLoginProvider手动创建，排除掉
-                    if (loginProvider instanceof WechatMiniappLoginProvider) {
+                    // 排除掉手动创建的登录器
+                    if (EXCLUDE_LOGIN_PROVIDER_CLASSES.contains(loginProvider.getClass())) {
                         return null;
                     }
                     return loginProvider;
@@ -103,9 +107,24 @@ public class AuthWechatSecurityConfigurer<H extends HttpSecurityBuilder<H>> exte
         WechatAuthConfigProvider wechatAuthConfigProvider = this.getBean(WechatAuthConfigProvider.class);
 
         ArrayList<WechatLoginProvider> wechatLoginProviders = new ArrayList<>(wechatLoginProviderList);
-        wechatLoginProviders.add(this.getWechatMiniappLoginProvider());
+        // 添加小程序登录器
+        if (this.supportMiniapp()) {
+            wechatLoginProviders.add(this.getWechatMiniappLoginProvider());
+        }
+        // 添加服务号二维码登录器
+        if (this.supportQrcode()) {
+            wechatLoginProviders.add(this.getWechatMpQrcodeLoginProvider());
+        }
 
         return new WechatAuthenticationProvider(wechatLoginProviders, wechatUserDetailService, wechatAuthConfigProvider);
+    }
+
+    private boolean supportMiniapp() {
+        return this.serviceProvider.getMiniappConfig() != null;
+    }
+
+    private boolean supportQrcode() {
+        return this.serviceProvider.getMpQrcodeConfig() != null;
     }
 
     // -------------- 微信小程序登录 ----------------------
@@ -139,14 +158,12 @@ public class AuthWechatSecurityConfigurer<H extends HttpSecurityBuilder<H>> exte
         return loginFilter;
     }
 
-    private WechatMiniappLoginProvider getWechatMiniappLoginProvider() {
-        return this.getBeanOrElse(WechatMiniappLoginProvider.class, () -> {
-            WxMaService maService = this.getBean(WxMaService.class);
-            if (maService == null) {
-                throw new SystemException("WxMaService Bean未创建");
-            }
-            return new WechatMiniappLoginProvider(maService);
-        });
+    /**
+     * 创建微信服务号二维码登录拦截器
+     * @return 微信服务号二维码登录拦截器
+     */
+    private WechatMpQrcodeLoginProvider getWechatMpQrcodeLoginProvider() {
+        return this.getBeanOrElse(WechatMpQrcodeLoginProvider.class, WechatMpQrcodeLoginProvider::new);
     }
 
     // -------------- 微信服务号二维码登录 ------------------
@@ -168,6 +185,7 @@ public class AuthWechatSecurityConfigurer<H extends HttpSecurityBuilder<H>> exte
     private FilterChainProxy createQrcodeLoginFilterChainProxy() {
         List<SecurityFilterChain> chains = Lists.newArrayList();
         chains.add(createQrcodeCreateFilter());
+        chains.add(createQrLoginFilter());
         return new FilterChainProxy(chains);
     }
 
@@ -178,7 +196,19 @@ public class AuthWechatSecurityConfigurer<H extends HttpSecurityBuilder<H>> exte
     protected DefaultSecurityFilterChain createQrcodeCreateFilter() {
         WechatMpQrCodeCreateFilter filter = new WechatMpQrCodeCreateFilter(this.getWechatMpQrcodeCreateProvider());
         return new DefaultSecurityFilterChain(
-                PathPatternRequestMatcher.withDefaults().matcher(this.serviceProvider.getQrcodeConfig().getCreateUrl()),
+                PathPatternRequestMatcher.withDefaults().matcher(this.serviceProvider.getMpQrcodeConfig().getCreateUrl()),
+                filter
+        );
+    }
+
+    /**
+     * 创建服务号二维码登录拦截器
+     * @return 二维码登录拦截器
+     */
+    private DefaultSecurityFilterChain createQrLoginFilter() {
+        WechatMpQrCodeLoginFilter filter = new WechatMpQrCodeLoginFilter(this.serviceProvider.getMpQrcodeConfig().getLoginUrl(), this.getBean(AuthCache.class));
+        return new DefaultSecurityFilterChain(
+                PathPatternRequestMatcher.withDefaults().matcher(this.serviceProvider.getMpQrcodeConfig().getLoginUrl()),
                 filter
         );
     }
@@ -199,12 +229,22 @@ public class AuthWechatSecurityConfigurer<H extends HttpSecurityBuilder<H>> exte
         );
     }
 
+    private WechatMiniappLoginProvider getWechatMiniappLoginProvider() {
+        return this.getBeanOrElse(WechatMiniappLoginProvider.class, () -> {
+            WxMaService maService = this.getBean(WxMaService.class);
+            if (maService == null) {
+                throw new SystemException("WxMaService Bean未创建");
+            }
+            return new WechatMiniappLoginProvider(maService);
+        });
+    }
+
     // --------------------------------------------------------
 
     @Getter
     private class ServiceProvider {
         // 微信服务号二维码登录配置
-        private MpQrcodeConfig qrcodeConfig;
+        private MpQrcodeConfig mpQrcodeConfig;
         // 微信小程序登录配置
         private MiniappConfig miniappConfig;
     }

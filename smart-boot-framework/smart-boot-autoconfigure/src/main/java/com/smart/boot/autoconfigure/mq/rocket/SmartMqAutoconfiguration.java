@@ -4,6 +4,7 @@ import com.smart.framework.rocketmq.producer.SmartMqProducer;
 import com.smart.framework.rocketmq.producer.SmartMqProducerRocketImpl;
 import org.apache.rocketmq.spring.autoconfigure.RocketMQAutoConfiguration;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -19,7 +20,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties(SmartMqProperties.class)
 @ConditionalOnClass(SmartMqProducer.class)
-@ConditionalOnBean(RocketMQAutoConfiguration.class)
+@ConditionalOnBean(RocketMQTemplate.class)
+@AutoConfigureAfter(RocketMQAutoConfiguration.class)
 public class SmartMqAutoconfiguration {
 
     @Bean

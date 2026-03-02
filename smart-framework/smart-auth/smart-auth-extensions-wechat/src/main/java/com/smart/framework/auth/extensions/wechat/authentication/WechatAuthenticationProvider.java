@@ -56,7 +56,7 @@ public class WechatAuthenticationProvider implements AuthenticationProvider {
             throw new AuthenticationServiceException(I18nUtils.get(AuthI18nMessage.WECHAT_APP_APPID_NOT_CONFIG));
         }
         try {
-            loginResult = wechatLoginProvider.login(appid, (String) token.getCredentials());
+            loginResult = wechatLoginProvider.login(appid, token.getCredentials());
         } catch (Exception e) {
             throw new AuthenticationServiceException(e.getMessage(), e);
         }
@@ -76,7 +76,7 @@ public class WechatAuthenticationProvider implements AuthenticationProvider {
             // 微信用户未绑定
             throw new WechatNotBoundException(loginResult, I18nUtils.get(AuthI18nMessage.WECHAT_USER_NOT_BOND));
         }
-        WechatAuthenticationToken authenticationToken = new WechatAuthenticationToken(AuthTypeEnum.WECHAT_APP, token.getAppid(), credentials, userDetails, userDetails.getAuthorities());
+        WechatAuthenticationToken authenticationToken = new WechatAuthenticationToken(AuthTypeEnum.WECHAT_MINIAPP, token.getAppid(), credentials, userDetails, userDetails.getAuthorities());
         authenticationToken.setDetails(userDetails);
         return authenticationToken;
     }

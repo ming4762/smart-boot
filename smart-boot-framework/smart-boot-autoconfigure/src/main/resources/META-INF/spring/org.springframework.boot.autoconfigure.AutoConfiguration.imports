@@ -40,6 +40,7 @@ com.smart.boot.autoconfigure.message.SmartMessageEmailAutoConfiguration
 com.smart.boot.autoconfigure.message.SmartMessageWebSocketAutoConfiguration
 com.smart.boot.autoconfigure.message.SmartSmsAliyunAutoConfiguration
 com.smart.boot.autoconfigure.message.SmartSmsTencentAutoConfiguration
+com.smart.boot.autoconfigure.message.SmartMessageWechatAutoConfiguration
 
 com.smart.boot.autoconfigure.document.DocumentCodeZxingAutoConfiguration
 com.smart.boot.autoconfigure.document.DocumentConvertJodAutoConfiguration

@@ -28,7 +28,7 @@ public class WechatMiniappLoginFilter extends AbstractAuthenticationProcessingFi
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        WechatAuthenticationToken token = new WechatAuthenticationToken(AuthTypeEnum.WECHAT_APP, request.getParameter(APPID_PARAMETER), request.getParameter(CODE_PARAMETER));
+        WechatAuthenticationToken token = new WechatAuthenticationToken(AuthTypeEnum.WECHAT_MINIAPP, request.getParameter(APPID_PARAMETER), request.getParameter(CODE_PARAMETER));
         return this.getAuthenticationManager().authenticate(token);
     }
 }

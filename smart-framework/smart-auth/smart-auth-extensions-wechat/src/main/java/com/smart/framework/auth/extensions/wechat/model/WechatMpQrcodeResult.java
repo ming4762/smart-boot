@@ -17,8 +17,6 @@ import java.io.Serializable;
 @Builder
 public class WechatMpQrcodeResult implements Serializable {
 
-    private String ticket;
-
     private String url;
 
     private String scene;

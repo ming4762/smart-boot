@@ -28,7 +28,8 @@ public class WechatMiniappLoginProvider implements WechatLoginProvider {
 
     @SneakyThrows(WxErrorException.class)
     @Override
-    public WechatLoginResult login(String appid, String code) {
+    public WechatLoginResult login(String appid, Object credentials) {
+        String code = (String) credentials;
         if (!this.wxMaService.switchover(appid)) {
             throw new AuthenticationServiceException(I18nUtils.get(AuthI18nMessage.WECHAT_APP_CONFIG_NOT_FOUND_APPID, (Object) appid));
         }
@@ -43,6 +44,6 @@ public class WechatMiniappLoginProvider implements WechatLoginProvider {
 
     @Override
     public AuthTypeEnum supportLoginType() {
-        return AuthTypeEnum.WECHAT_APP;
+        return AuthTypeEnum.WECHAT_MINIAPP;
     }
 }

@@ -142,6 +142,17 @@ public final class JsonUtils {
     }
 
     /**
+     * json转对象
+     * @param json json字符串
+     * @param javaType 泛型对象
+     * @return 实体
+     */
+    @SneakyThrows(JsonProcessingException.class)
+    public static <T> T parse(String json, JavaType javaType) {
+        return getObjectMapper().readValue(json, javaType);
+    }
+
+    /**
      * 将json压扁转为map
      * @param json json
      * @return map

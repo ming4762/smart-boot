@@ -17,6 +17,9 @@ import java.io.Serializable;
 @ConfigurationProperties("smart.mq")
 public class SmartMqProperties implements Serializable {
 
+    /**
+     * MQ topic前缀，用于区分不同环境
+     */
     private String prefix = "";
 
 }

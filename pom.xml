@@ -878,6 +878,11 @@
                 <artifactId>smart-boot-starter-ai-langchain4j</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.smart</groupId>
+                <artifactId>smart-boot-starter-rocketmq</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

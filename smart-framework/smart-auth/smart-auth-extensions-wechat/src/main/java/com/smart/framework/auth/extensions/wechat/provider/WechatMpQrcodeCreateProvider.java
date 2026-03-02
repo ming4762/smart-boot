@@ -12,8 +12,8 @@ public interface WechatMpQrcodeCreateProvider {
 
     /**
      * 生成ORCODE
-     * @param appid appid
+     * @param appId appId
      * @return ORCODE
      */
-    WechatMpQrcodeResult createQrcode(String appid);
+    WechatMpQrcodeResult createQrcode(String appId);
 }

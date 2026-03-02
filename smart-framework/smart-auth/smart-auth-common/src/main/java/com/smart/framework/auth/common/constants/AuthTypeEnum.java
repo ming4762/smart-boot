@@ -23,7 +23,7 @@ public enum AuthTypeEnum {
     /**
      * 微信小程序登录
      */
-    WECHAT_APP,
+    WECHAT_MINIAPP,
 
     /**
      * 微信服务号扫码登录

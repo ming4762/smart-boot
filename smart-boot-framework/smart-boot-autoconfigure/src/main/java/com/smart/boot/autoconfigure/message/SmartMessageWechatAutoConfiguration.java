@@ -1,9 +1,12 @@
 package com.smart.boot.autoconfigure.message;
 
 import com.smart.boot.autoconfigure.wechat.SmartWechatMpAutoconfiguration;
+import com.smart.framework.message.wechat.mq.WechatMessageEventMqProducer;
 import com.smart.framework.message.wechat.receive.WechatMapMessageReceiveController;
+import com.smart.framework.rocketmq.producer.SmartMqProducer;
 import me.chanjar.weixin.mp.api.WxMpService;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,5 +23,11 @@ public class SmartMessageWechatAutoConfiguration {
     @Bean
     public WechatMapMessageReceiveController wechatMapMessageReceiveController(WxMpService wxMpService) {
         return new WechatMapMessageReceiveController(wxMpService);
+    }
+
+    @Bean
+    @ConditionalOnBean(SmartMqProducer.class)
+    public WechatMessageEventMqProducer wechatMessageEventMqProducer(SmartMqProducer smartMqProducer) {
+        return new WechatMessageEventMqProducer(smartMqProducer);
     }
 }

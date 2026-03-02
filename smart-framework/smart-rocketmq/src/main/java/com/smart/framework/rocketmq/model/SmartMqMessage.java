@@ -1,7 +1,9 @@
 package com.smart.framework.rocketmq.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -14,6 +16,8 @@ import java.util.UUID;
  */
 @Builder
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class SmartMqMessage<T extends Serializable> implements Serializable {
 
     @Builder.Default

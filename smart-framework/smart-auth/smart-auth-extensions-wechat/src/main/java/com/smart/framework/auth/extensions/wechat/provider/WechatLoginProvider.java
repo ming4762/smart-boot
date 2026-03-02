@@ -13,10 +13,10 @@ public interface WechatLoginProvider {
     /**
      * 微信登录
      * @param appid appid
-     * @param code code
+     * @param credentials 认证信息
      * @return 登录结果
      */
-    WechatLoginResult login(String appid, String code);
+    WechatLoginResult login(String appid, Object credentials);
 
     /**
      * 获取支持的登录类型

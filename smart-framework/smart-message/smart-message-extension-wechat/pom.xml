@@ -24,5 +24,10 @@
 			<artifactId>smart-extensions-wechat</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.smart</groupId>
+			<artifactId>smart-rocketmq</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 	</dependencies>
 </project>

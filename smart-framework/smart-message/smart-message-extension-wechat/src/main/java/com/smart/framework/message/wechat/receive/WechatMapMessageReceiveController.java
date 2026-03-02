@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
  * @author zhongming4762
  * 2023/4/7
  */
-@RequestMapping("public/wechat/message/map/receive")
+@RequestMapping("public/wechat/message/mp/receive")
 @Slf4j
 @RestController
 public class WechatMapMessageReceiveController implements ApplicationContextAware {
