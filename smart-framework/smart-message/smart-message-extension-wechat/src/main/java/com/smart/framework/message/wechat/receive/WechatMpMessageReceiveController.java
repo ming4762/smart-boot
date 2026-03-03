@@ -26,13 +26,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("public/wechat/message/mp/receive")
 @Slf4j
 @RestController
-public class WechatMapMessageReceiveController implements ApplicationContextAware {
+public class WechatMpMessageReceiveController implements ApplicationContextAware {
 
     private ApplicationContext applicationContext;
 
     private final WxMpService wxMpService;
 
-    public WechatMapMessageReceiveController(WxMpService wxMpService) {
+    public WechatMpMessageReceiveController(WxMpService wxMpService) {
         this.wxMpService = wxMpService;
     }
 

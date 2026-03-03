@@ -7,6 +7,7 @@ import com.smart.framework.extension.wechat.config.DefaultSmartWechatConfigStora
 import com.smart.framework.extension.wechat.config.SmartWechatConfigStorageCreator;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +22,7 @@ import org.springframework.context.annotation.Import;
 @EnableConfigurationProperties(SmartWechatProperties.class)
 @Import({SmartWechatMpAutoconfiguration.class, SmartWechatMpAutoconfiguration.class})
 @AutoConfigureAfter({ SmartRedisAutoConfiguration.class, GuavaCacheAutoConfiguration.class })
+@ConditionalOnClass(SmartWechatConfigStorageCreator.class)
 public class SmartWechatAutoConfiguration {
 
     /**

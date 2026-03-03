@@ -31,7 +31,6 @@ public class WechatAuthEventNotice implements AuthEventHandler {
      *
      * @param event 事件
      */
-    @SneakyThrows(WxErrorException.class)
     @Override
     public void handleLoginSuccess(AuthenticationSuccessEvent event) {
         RestUserDetails user = (RestUserDetails) event.getAuthentication().getPrincipal();

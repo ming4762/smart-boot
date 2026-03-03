@@ -36,17 +36,6 @@ public class SmartAuthWechatAutoConfiguration {
     }
 
     /**
-     * 微信登录扫码MQ消息监控器
-     * @return 微信登录扫码MQ消息监控器
-     */
-    @Bean
-    @ConditionalOnClass(SmartBaseConsumer.class)
-    @ConditionalOnBean(RocketMQTemplate.class)
-    public WechatLoginScanMqMonitor wechatLoginScanMqMonitor(AuthCache authCache) {
-        return new WechatLoginScanMqMonitor(authCache);
-    }
-
-    /**
      * 微信登录扫码Spring事件监控器
      * @return 微信登录扫码Spring事件监控器
      */
@@ -55,5 +44,19 @@ public class SmartAuthWechatAutoConfiguration {
     @ConditionalOnMissingBean(WechatLoginScanMqMonitor.class)
     public WechatLoginScanSpringEventMonitor wechatLoginScanSpringEventMonitor(AuthCache authCache) {
         return new WechatLoginScanSpringEventMonitor(authCache);
+    }
+
+    @ConditionalOnClass(SmartBaseConsumer.class)
+    @ConditionalOnBean(RocketMQTemplate.class)
+    @Configuration
+    public static class SmartWechatAuthMqAutoConfiguration {
+        /**
+         * 微信登录扫码MQ消息监控器
+         * @return 微信登录扫码MQ消息监控器
+         */
+        @Bean
+        public WechatLoginScanMqMonitor wechatLoginScanMqMonitor(AuthCache authCache) {
+            return new WechatLoginScanMqMonitor(authCache);
+        }
     }
 }
