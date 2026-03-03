@@ -1,15 +1,19 @@
 package com.smart.framework.auth.extensions.wechat.authentication;
 
 import com.smart.framework.auth.common.constants.AuthTypeEnum;
-import com.smart.framework.auth.core.i18n.AuthI18nMessage;
 import com.smart.framework.auth.common.userdetails.RestUserDetails;
+import com.smart.framework.auth.core.authentication.checker.RestUserDetailsChecker;
+import com.smart.framework.auth.core.i18n.AuthI18nMessage;
+import com.smart.framework.auth.core.model.RestUserDetailsImpl;
 import com.smart.framework.auth.core.wechat.WechatAuthConfigProvider;
 import com.smart.framework.auth.extensions.wechat.exception.WechatNotBoundException;
 import com.smart.framework.auth.extensions.wechat.model.WechatAppLoginResult;
 import com.smart.framework.auth.extensions.wechat.model.WechatLoginResult;
 import com.smart.framework.auth.extensions.wechat.provider.WechatLoginProvider;
+import com.smart.framework.auth.extensions.wechat.userdetails.RestUserWechatExtraData;
 import com.smart.framework.auth.extensions.wechat.userdetails.WechatUserDetailService;
 import com.smart.framework.commons.core.i18n.I18nUtils;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -32,11 +36,15 @@ public class WechatAuthenticationProvider implements AuthenticationProvider {
 
     private final WechatAuthConfigProvider wechatAuthConfigProvider;
 
+    @Setter
+    private RestUserDetailsChecker restUserDetailsChecker;
+
     public WechatAuthenticationProvider(List<WechatLoginProvider> wechatLoginProviderList, WechatUserDetailService userDetailService, WechatAuthConfigProvider wechatAuthConfigProvider) {
         this.wechatLoginProviderMap = wechatLoginProviderList.stream()
                 .collect(Collectors.toMap(WechatLoginProvider::supportLoginType, item -> item));
         this.userDetailService = userDetailService;
         this.wechatAuthConfigProvider = wechatAuthConfigProvider;
+        this.restUserDetailsChecker = new RestUserDetailsChecker();
     }
 
     @Override
@@ -76,7 +84,17 @@ public class WechatAuthenticationProvider implements AuthenticationProvider {
             // 微信用户未绑定
             throw new WechatNotBoundException(loginResult, I18nUtils.get(AuthI18nMessage.WECHAT_USER_NOT_BOND));
         }
-        WechatAuthenticationToken authenticationToken = new WechatAuthenticationToken(AuthTypeEnum.WECHAT_MINIAPP, token.getAppid(), credentials, userDetails, userDetails.getAuthorities());
+        RestUserDetailsImpl restUserDetails = (RestUserDetailsImpl) userDetails;
+        restUserDetails.setAuthType(token.getAuthType());
+        // 设置额外信息
+        RestUserWechatExtraData extraData = RestUserWechatExtraData.builder()
+                .appid(appid)
+                .openid(loginResult.getOpenid())
+                .unionid(loginResult.getUnionid())
+                .build();
+        restUserDetails.setExtra(extraData);
+        this.restUserDetailsChecker.check(userDetails);
+        WechatAuthenticationToken authenticationToken = new WechatAuthenticationToken(token.getAuthType(), token.getAppid(), credentials, userDetails, userDetails.getAuthorities());
         authenticationToken.setDetails(userDetails);
         return authenticationToken;
     }

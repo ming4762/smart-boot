@@ -4,20 +4,21 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.smart.framework.auth.common.utils.AuthUtils;
 import com.smart.framework.commons.core.dto.auth.UserAccountStatusEnum;
 import com.smart.module.api.system.SysUserApi;
-import com.smart.module.api.system.dto.AccountLoginFailTimeUpdateDTO;
-import com.smart.module.api.system.dto.SysDeptDTO;
-import com.smart.module.api.system.dto.SysUserDTO;
-import com.smart.module.api.system.dto.UserAccountLockDTO;
+import com.smart.module.api.system.dto.*;
 import com.smart.module.api.system.parameter.RemoteSysUserListParameter;
 import com.smart.module.api.system.parameter.SysUserDeptParameter;
+import com.smart.module.api.system.parameter.SysUserThirdAccountParameter;
 import com.smart.module.system.model.SysUserAccountPO;
 import com.smart.module.system.model.SysUserPO;
+import com.smart.module.system.model.SysUserThirdAccountPO;
 import com.smart.module.system.service.SysDeptService;
 import com.smart.module.system.service.SysUserAccountService;
 import com.smart.module.system.service.SysUserService;
+import com.smart.module.system.service.SysUserThirdAccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -43,6 +44,7 @@ public class LocalSysUserApi implements SysUserApi {
     private final SysUserService sysUserService;
     private final SysUserAccountService sysUserAccountService;
     private final SysDeptService sysDeptService;
+    private final SysUserThirdAccountService sysUserThirdAccountService;
 
 
     /**
@@ -221,5 +223,29 @@ public class LocalSysUserApi implements SysUserApi {
                     BeanUtils.copyProperties(item, dto);
                     return dto;
                 }).toList();
+    }
+
+    /**
+     * 查询用户第三方账号列表
+     *
+     * @param parameter 参数
+     * @return 用户第三方账号列表
+     */
+    @Override
+    public List<SysUserThirdAccountDTO> listUserThirdAccount(SysUserThirdAccountParameter parameter) {
+        LambdaQueryChainWrapper<SysUserThirdAccountPO> lambdaQueryChainWrapper = this.sysUserThirdAccountService.lambdaQuery()
+                .in(SysUserThirdAccountPO::getUserId, parameter.getUserIdList());
+        if (parameter.getPlatformType() != null) {
+            lambdaQueryChainWrapper.eq(SysUserThirdAccountPO::getPlatformType, parameter.getPlatformType());
+        }
+        if (parameter.getPlatformSubType() != null) {
+            lambdaQueryChainWrapper.eq(SysUserThirdAccountPO::getPlatformSubType, parameter.getPlatformSubType());
+        }
+        if (StringUtils.hasText(parameter.getAppid())) {
+            lambdaQueryChainWrapper.eq(SysUserThirdAccountPO::getAppid, parameter.getAppid());
+        }
+        return lambdaQueryChainWrapper.list().stream()
+                .map(item -> com.smart.framework.commons.core.utils.BeanUtils.copyProperties(item, SysUserThirdAccountDTO.class))
+                .toList();
     }
 }

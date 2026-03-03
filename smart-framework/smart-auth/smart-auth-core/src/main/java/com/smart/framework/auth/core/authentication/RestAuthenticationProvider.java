@@ -2,6 +2,7 @@ package com.smart.framework.auth.core.authentication;
 
 import com.smart.framework.auth.common.constants.AuthTypeEnum;
 import com.smart.framework.auth.common.userdetails.RestUserDetails;
+import com.smart.framework.auth.core.authentication.checker.RestUserDetailsChecker;
 import com.smart.framework.auth.core.exception.IpBindAuthenticationException;
 import com.smart.framework.auth.core.exception.LoginInfoMissAuthenticationException;
 import com.smart.framework.auth.core.exception.RestUsernameNotFoundException;
@@ -9,10 +10,10 @@ import com.smart.framework.auth.core.i18n.AuthI18nMessage;
 import com.smart.framework.auth.core.model.RestUserDetailsImpl;
 import com.smart.framework.commons.core.i18n.I18nUtils;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.security.authentication.*;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsChecker;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
@@ -37,7 +38,7 @@ public class RestAuthenticationProvider extends AbstractUserDetailsAuthenticatio
 
     public RestAuthenticationProvider(UserDetailsService restUserDetailsService) {
         this.restUserDetailsService = restUserDetailsService;
-        this.setPreAuthenticationChecks(new RestPreUserDetailsChecker());
+        this.setPreAuthenticationChecks(new RestUserDetailsChecker());
     }
 
     @Override
@@ -82,24 +83,5 @@ public class RestAuthenticationProvider extends AbstractUserDetailsAuthenticatio
     @Override
     public boolean supports(Class<?> authentication) {
         return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
-    }
-
-    /**
-     * 验证用户状态
-     */
-    private static class RestPreUserDetailsChecker implements UserDetailsChecker {
-
-        @Override
-        public void check(UserDetails user) {
-            if (!user.isAccountNonLocked()) {
-                throw new LockedException(I18nUtils.get(AuthI18nMessage.ACCOUNT_LOCKED));
-            }
-            if (!user.isEnabled()) {
-                throw new DisabledException(I18nUtils.get(AuthI18nMessage.ACCOUNT_DISABLED));
-            }
-            if (!user.isAccountNonExpired()) {
-                throw new AccountExpiredException(I18nUtils.get(AuthI18nMessage.ACCOUNT_EXPIRED));
-            }
-        }
     }
 }

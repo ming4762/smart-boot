@@ -55,7 +55,7 @@ public class AuthEventLockedHandler implements AuthEventHandler {
             return;
         }
         if (event.getException() instanceof BadCredentialsException) {
-            Object details = event.getAuthentication().getDetails();
+            Object details = event.getAuthentication().getPrincipal();
             if (details instanceof RestUserDetails restUserDetails) {
                 this.sysUserApi.updateLoginFailTime(new AccountLoginFailTimeUpdateDTO(restUserDetails.getUsername(), 1L, restUserDetails.getUserTenant().getTenantId()));
             } else {

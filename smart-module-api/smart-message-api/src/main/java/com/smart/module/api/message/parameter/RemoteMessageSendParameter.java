@@ -64,6 +64,9 @@ public class RemoteMessageSendParameter {
     @Schema(description = "邮件发送参数")
     private RemoteEmailSendParameter emailSendParameter;
 
+    @Schema(description = "微信服务号模板消息发送参数")
+    private RemoteWechatMpTemplateParameter wechatMpTemplateParameter;
+
     @Getter
     @Setter
     @AllArgsConstructor

@@ -33,5 +33,9 @@ public enum AuthTypeEnum {
     /**
      * 钉钉登录
      */
-    DINGTALK
+    DINGTALK,
+    /**
+     * 短信登录
+     */
+    SMS
 }

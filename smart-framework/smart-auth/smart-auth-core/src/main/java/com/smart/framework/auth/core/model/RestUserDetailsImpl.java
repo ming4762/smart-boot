@@ -93,6 +93,9 @@ public class RestUserDetailsImpl implements RestUserDetails, Serializable {
     @Getter
     private UserTenantDTO userTenant;
 
+    @Getter
+    private Serializable extra;
+
     /**
      * 账户是否锁定
      */

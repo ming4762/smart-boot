@@ -16,6 +16,7 @@ import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
  */
 @RocketMQMessageListener(
         topic = SmartMqDestinationConstants.WECHAT_EVENT,
+        selectorExpression = SmartMqDestinationConstants.WECHAT_EVENT_MESSAGE_TAG,
         consumerGroup = "smart-auth-wechat-login-scan"
 )
 @Slf4j

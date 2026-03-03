@@ -91,4 +91,9 @@ public interface SystemApiUrlConstants {
     String TENANT_LIST_BY_ID = "/remote/system/tenant/listTenantById";
     String TENANT_LIST_BY_CODE = "/remote/system/tenant/listTenantByCode";
 
+    /**
+     * 查询用户第三方账号列表
+     */
+    String LIST_USER_THIRD_ACCOUNT = "/remote/system/user/listUserThirdAccount";
+
 }

@@ -26,6 +26,11 @@ public class WechatMpQrcodeCacheData implements Serializable {
     private String openId;
 
     /**
+     * 微信公众号ID
+     */
+    private String mpId;
+
+    /**
      * 微信服务号AppID
      */
     private String appid;

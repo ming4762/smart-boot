@@ -9,9 +9,12 @@ import com.smart.module.api.system.dto.QueryUserAccountDTO;
 import com.smart.module.api.system.parameter.DingtalkUserQueryParameter;
 import com.smart.module.api.system.parameter.UserAccountUnLockParameter;
 import com.smart.module.api.system.parameter.WechatUserQueryParameter;
+import com.smart.module.system.constants.SysThirdPlatformTypeEnum;
 import com.smart.module.system.model.SysUserPO;
+import com.smart.module.system.model.SysUserThirdAccountPO;
 import com.smart.module.system.service.SysUserAccountService;
 import com.smart.module.system.service.SysUserService;
+import com.smart.module.system.service.SysUserThirdAccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.lang.NonNull;
@@ -32,6 +35,7 @@ public class LocalSystemAuthUserApiImpl implements SystemAuthUserApi {
 
     private final SysUserService sysUserService;
     private final SysUserAccountService sysUserAccountService;
+    private final SysUserThirdAccountService sysUserThirdAccountService;
 
     /**
      * 通过用户名查询用户
@@ -97,7 +101,16 @@ public class LocalSystemAuthUserApiImpl implements SystemAuthUserApi {
      */
     @Override
     public AuthUserDTO getByWehchatAppOpenid(WechatUserQueryParameter parameter) {
-        return null;
+        SysUserThirdAccountPO userThirdAccount = this.sysUserThirdAccountService.lambdaQuery()
+                .eq(SysUserThirdAccountPO::getPlatformType, SysThirdPlatformTypeEnum.WECHAT)
+                .eq(SysUserThirdAccountPO::getOpenid, parameter.getOpenid())
+                .eq(SysUserThirdAccountPO::getAppid, parameter.getAppid())
+                .one();
+        if (Objects.isNull(userThirdAccount)) {
+            return null;
+        }
+        SysUserPO sysUser = this.sysUserService.getById(userThirdAccount.getUserId());
+        return this.createAuthUser(sysUser);
     }
 
     /**

@@ -3,14 +3,11 @@ package com.smart.boot.autoconfigure.wechat;
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.api.impl.WxMaServiceImpl;
 import cn.binarywang.wx.miniapp.config.WxMaConfig;
-import cn.binarywang.wx.miniapp.config.impl.WxMaDefaultConfigImpl;
-import com.smart.framework.commons.core.cache.CacheService;
-import com.smart.framework.extension.wechat.cache.SmartWechatMaCacheServiceConfigImpl;
+import com.smart.framework.extension.wechat.config.SmartWechatConfigStorageCreator;
 import com.smart.framework.extension.wechat.model.WechatMiniappConfig;
 import com.smart.framework.extension.wechat.provider.DefaultWechatAppConfigPropertiesProvider;
 import com.smart.framework.extension.wechat.provider.WechatminiAppConfigProvider;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -19,7 +16,6 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -40,9 +36,9 @@ public class SmartWechatMiniappAutoconfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public WxMaService wxMaService(SmartWechatProperties properties,
-                                   WechatminiAppConfigProvider configProvider,
-                                   ObjectProvider<CacheService> cacheServiceObjectProvider
+    public WxMaService wxMaService(
+            WechatminiAppConfigProvider configProvider,
+            SmartWechatConfigStorageCreator configStorageCreator
     ) {
         List<WechatMiniappConfig> configList = configProvider.get();
         if (CollectionUtils.isEmpty(configList)) {
@@ -51,28 +47,12 @@ public class SmartWechatMiniappAutoconfiguration {
         }
         WxMaService wxMaService = new WxMaServiceImpl();
         if (!CollectionUtils.isEmpty(configList)) {
-            wxMaService.setMultiConfigs(this.createWxMpConfigStorageMap(properties.getKeyPrefix(), configList, cacheServiceObjectProvider));
+            wxMaService.setMultiConfigs(
+                    configList.stream()
+                            .map(configStorageCreator::createMiniappConfigStorage)
+                            .collect(Collectors.toMap(WxMaConfig::getAppid, a -> a))
+            );
         }
         return wxMaService;
-    }
-
-    private Map<String, WxMaConfig> createWxMpConfigStorageMap(String keyPrefix, List<WechatMiniappConfig> configList, ObjectProvider<CacheService> cacheServiceObjectProvider) {
-        return configList.stream()
-                .map(a -> {
-                    WxMaDefaultConfigImpl config;
-                    CacheService cacheService = cacheServiceObjectProvider.getIfAvailable();
-                    if (cacheService != null) {
-                        config = new SmartWechatMaCacheServiceConfigImpl(cacheService, keyPrefix);
-                    } else {
-                        config = new WxMaDefaultConfigImpl();
-                    }
-                    config.setAppid(a.getAppid());
-                    config.setSecret(a.getSecret());
-                    config.setToken(a.getToken());
-                    config.setAesKey(a.getAesKey());
-                    config.setMsgDataFormat(a.getMsgDataFormat());
-                    return config;
-                })
-                .collect(Collectors.toMap(WxMaDefaultConfigImpl::getAppid, a -> a, (o, n) -> o));
     }
 }

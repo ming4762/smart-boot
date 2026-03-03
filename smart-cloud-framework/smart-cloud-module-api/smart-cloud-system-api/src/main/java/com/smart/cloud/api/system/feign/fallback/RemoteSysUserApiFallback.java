@@ -1,12 +1,11 @@
 package com.smart.cloud.api.system.feign.fallback;
 
 import com.smart.cloud.api.system.feign.RemoteSysUserApi;
-import com.smart.module.api.system.dto.AccountLoginFailTimeUpdateDTO;
-import com.smart.module.api.system.dto.SysDeptDTO;
-import com.smart.module.api.system.dto.SysUserDTO;
-import com.smart.module.api.system.dto.UserAccountLockDTO;
+import com.smart.framework.commons.core.exception.SystemException;
+import com.smart.module.api.system.dto.*;
 import com.smart.module.api.system.parameter.RemoteSysUserListParameter;
 import com.smart.module.api.system.parameter.SysUserDeptParameter;
+import com.smart.module.api.system.parameter.SysUserThirdAccountParameter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;
@@ -69,6 +68,17 @@ public class RemoteSysUserApiFallback implements FallbackFactory<RemoteSysUserAp
             public List<SysDeptDTO> listUserDeptWithChildren(SysUserDeptParameter parameter) {
                 this.errorLog();
                 return List.of();
+            }
+
+            /**
+             * 查询用户第三方账号列表
+             *
+             * @param parameter 参数
+             * @return 用户第三方账号列表
+             */
+            @Override
+            public List<SysUserThirdAccountDTO> listUserThirdAccount(SysUserThirdAccountParameter parameter) {
+                throw new SystemException("查询用户第三方账号列表失败");
             }
         };
     }

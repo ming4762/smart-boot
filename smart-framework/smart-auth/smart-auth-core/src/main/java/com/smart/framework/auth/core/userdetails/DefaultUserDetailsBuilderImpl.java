@@ -52,6 +52,17 @@ public class DefaultUserDetailsBuilderImpl implements UserDetailsBuilder {
         if (user == null) {
             return null;
         }
+        boolean enabled = Boolean.TRUE.equals(user.getUseYn());
+        RestUserDetailsImpl.RestUserDetailsImplBuilder userDetailsImplBuilder = RestUserDetailsImpl.builder()
+                .userId(user.getUserId())
+                .username(user.getUsername())
+                .fullName(user.getFullName())
+                .password(user.getPassword())
+                .enabled(enabled);
+        if (!enabled) {
+            // 如果用户已停用，直接返回，提升性能
+            return userDetailsImplBuilder.build();
+        }
         UserAccountData userAccountData = this.systemAuthUserApi.queryUserAccount(new QueryUserAccountDTO(user.getUserId(), SmartTenantHolder.getTenantId()));
         if (userAccountData == null) {
             return null;
@@ -63,12 +74,7 @@ public class DefaultUserDetailsBuilderImpl implements UserDetailsBuilder {
         }
         UserAccountDTO userAccount = userAccountData.getAccount();
 
-        RestUserDetailsImpl restUserDetails = RestUserDetailsImpl.builder()
-                .userId(user.getUserId())
-                .username(user.getUsername())
-                .fullName(user.getFullName())
-                .password(user.getPassword())
-                .enabled(Boolean.TRUE.equals(user.getUseYn()))
+        RestUserDetailsImpl restUserDetails = userDetailsImplBuilder
                 .loginFailTime(userAccount.getLoginFailTime())
                 .ipWhiteList(
                         Optional.ofNullable(userAccount.getIpWhiteList())

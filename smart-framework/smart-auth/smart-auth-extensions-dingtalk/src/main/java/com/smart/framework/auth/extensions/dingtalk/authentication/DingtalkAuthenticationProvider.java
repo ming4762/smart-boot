@@ -2,7 +2,7 @@ package com.smart.framework.auth.extensions.dingtalk.authentication;
 
 import com.aliyun.dingtalkcontact_1_0.models.GetUserResponseBody;
 import com.aliyun.dingtalkoauth2_1_0.models.GetUserTokenResponseBody;
-import com.smart.framework.auth.common.userdetails.RestUserDetails;
+import com.smart.framework.auth.core.model.RestUserDetailsImpl;
 import com.smart.framework.auth.core.properties.AuthDingtalkProperties;
 import com.smart.framework.auth.extensions.dingtalk.exception.DingtalkNotBoundException;
 import com.smart.framework.auth.extensions.dingtalk.userdetails.DingtalkUserDetailService;
@@ -42,10 +42,11 @@ public class DingtalkAuthenticationProvider implements AuthenticationProvider {
         GetUserResponseBody userByUserToken = this.dingtalkApi.userApi().getUserByUserToken(userAccessTokenByAuthCode.getAccessToken());
         // 钉钉用户唯一ID
         String unionId = userByUserToken.getUnionId();
-        RestUserDetails restUserDetails = this.dingtalkUserDetailService.loadUserByUnionId(unionId);
+        RestUserDetailsImpl restUserDetails = (RestUserDetailsImpl) this.dingtalkUserDetailService.loadUserByUnionId(unionId);
         if (restUserDetails == null) {
             throw new DingtalkNotBoundException("钉钉用户未绑定", userByUserToken);
         }
+        restUserDetails.setAuthType(token.getAuthType());
         DingtalkAuthenticationToken authenticationToken = new DingtalkAuthenticationToken(corpId, code, restUserDetails, restUserDetails.getAuthorities());
         authenticationToken.setDetails(restUserDetails);
         return authenticationToken;

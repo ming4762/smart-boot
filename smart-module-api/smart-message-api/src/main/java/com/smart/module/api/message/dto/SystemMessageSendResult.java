@@ -1,6 +1,5 @@
-package com.smart.module.message.pojo.dto;
+package com.smart.module.api.message.dto;
 
-import com.smart.module.api.message.dto.MessageSendResult;
 import lombok.Getter;
 import lombok.Setter;
 

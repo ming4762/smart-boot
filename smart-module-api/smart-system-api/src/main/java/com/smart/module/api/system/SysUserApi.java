@@ -1,11 +1,9 @@
 package com.smart.module.api.system;
 
-import com.smart.module.api.system.dto.AccountLoginFailTimeUpdateDTO;
-import com.smart.module.api.system.dto.SysDeptDTO;
-import com.smart.module.api.system.dto.SysUserDTO;
-import com.smart.module.api.system.dto.UserAccountLockDTO;
+import com.smart.module.api.system.dto.*;
 import com.smart.module.api.system.parameter.RemoteSysUserListParameter;
 import com.smart.module.api.system.parameter.SysUserDeptParameter;
+import com.smart.module.api.system.parameter.SysUserThirdAccountParameter;
 import org.springframework.lang.Nullable;
 import org.springframework.util.CollectionUtils;
 
@@ -37,6 +35,7 @@ public interface SysUserApi {
         }
         return userList.getFirst();
     }
+
 
     /**
      * 通过ID查询用户
@@ -92,4 +91,11 @@ public interface SysUserApi {
      * @return 用户部门及子部门列表
      */
     List<SysDeptDTO> listUserDeptWithChildren(SysUserDeptParameter parameter);
+
+    /**
+     * 查询用户第三方账号列表
+     * @param parameter 参数
+     * @return 用户第三方账号列表
+     */
+    List<SysUserThirdAccountDTO> listUserThirdAccount(SysUserThirdAccountParameter parameter);
 }

@@ -44,4 +44,9 @@ public interface AuthEventHandler extends Ordered {
     default void handleChangeTenant(AuthenticationTenantChangeEvent event) {
         // Do Nothing
     }
+
+    @Override
+    default int getOrder() {
+        return 0;
+    }
 }
