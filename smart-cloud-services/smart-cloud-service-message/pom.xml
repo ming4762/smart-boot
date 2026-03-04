@@ -125,6 +125,11 @@
             <groupId>com.smart</groupId>
             <artifactId>smart-boot-starter-message-dingtalk</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-boot-starter-message-wechat</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

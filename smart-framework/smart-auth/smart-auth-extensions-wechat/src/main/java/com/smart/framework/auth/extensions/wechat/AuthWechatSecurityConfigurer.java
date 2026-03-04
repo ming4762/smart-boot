@@ -207,6 +207,11 @@ public class AuthWechatSecurityConfigurer<H extends HttpSecurityBuilder<H>> exte
      */
     private DefaultSecurityFilterChain createQrLoginFilter() {
         WechatMpQrCodeLoginFilter filter = new WechatMpQrCodeLoginFilter(this.serviceProvider.getMpQrcodeConfig().getLoginUrl(), this.getBean(AuthCache.class));
+        filter.setAuthenticationManager(this.getBuilder().getSharedObject(AuthenticationManager.class));
+        // 设置登录成功handler
+        filter.setAuthenticationSuccessHandler(this.getBean(AuthenticationSuccessHandler.class));
+        // 设置登录失败handler
+        filter.setAuthenticationFailureHandler(this.getBean(AuthenticationFailureHandler.class));
         return new DefaultSecurityFilterChain(
                 PathPatternRequestMatcher.withDefaults().matcher(this.serviceProvider.getMpQrcodeConfig().getLoginUrl()),
                 filter

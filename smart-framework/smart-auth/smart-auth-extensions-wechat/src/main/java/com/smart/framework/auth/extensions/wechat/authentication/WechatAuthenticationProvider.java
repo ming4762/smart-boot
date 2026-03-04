@@ -82,7 +82,7 @@ public class WechatAuthenticationProvider implements AuthenticationProvider {
         }
         if (userDetails == null) {
             // 微信用户未绑定
-            throw new WechatNotBoundException(loginResult, I18nUtils.get(AuthI18nMessage.WECHAT_USER_NOT_BOND));
+            throw new WechatNotBoundException(appid, loginResult);
         }
         RestUserDetailsImpl restUserDetails = (RestUserDetailsImpl) userDetails;
         restUserDetails.setAuthType(token.getAuthType());

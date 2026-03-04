@@ -1,5 +1,6 @@
 package com.smart.framework.auth.core.handler;
 
+import com.smart.framework.auth.common.exception.AuthHttpStatusException;
 import com.smart.framework.commons.core.message.Result;
 import com.smart.framework.commons.core.utils.RestJsonWriter;
 import jakarta.servlet.ServletException;
@@ -23,6 +24,10 @@ public class AuthLoginFailureHandler implements AuthenticationFailureHandler {
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         log.error("登录时发生错误: {}", exception.getMessage(), exception);
+        if (exception instanceof AuthHttpStatusException authHttpStatusException) {
+            RestJsonWriter.writeJson(response, Result.ofStatus(authHttpStatusException.getHttpStatus()));
+            return;
+        }
         RestJsonWriter.writeJson(response, Result.failure(HttpStatus.UNAUTHORIZED.value(), exception.getMessage()));
     }
 }

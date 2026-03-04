@@ -38,7 +38,7 @@ public class AuthProperties implements InitializingBean {
     /**
      * 认证缓存前缀
      */
-    private String prefix = "smart-session:";
+    private String prefix = "smart-session";
 
     /**
      * 登录是否绑定IP
