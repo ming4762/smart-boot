@@ -64,7 +64,7 @@ com.smart.boot.autoconfigure.ai.langchain4j.SmartAiLangchain4jOpenAiAutoConfigur
 com.smart.boot.autoconfigure.druid.SmartDruidAutoConfiguration
 
 com.smart.boot.autoconfigure.common.SnowflakeWorkIdAllocatorConfiguration
-
+com.smart.boot.autoconfigure.common.SmartTimezoneAutoconfiguration
 com.smart.boot.autoconfigure.common.SmartTraceAutoConfiguration
 
 com.smart.boot.autoconfigure.mq.rocket.SmartMqAutoconfiguration
