@@ -44,6 +44,11 @@ public class SmartMessageTemplatePO extends BaseModelUserTime {
     private String templateContent;
 
     /**
+     * extra_data - 额外数据
+     */
+    private String extraData;
+
+    /**
     * delete_yn - deleteYn
     */
     private Boolean deleteYn;

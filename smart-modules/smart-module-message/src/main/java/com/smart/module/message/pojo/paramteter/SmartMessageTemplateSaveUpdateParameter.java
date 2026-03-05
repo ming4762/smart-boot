@@ -19,10 +19,6 @@ import java.io.Serializable;
 @Schema(description = "消息模板保存参数")
 public class SmartMessageTemplateSaveUpdateParameter implements Serializable {
 
-
-    /**
-    * 
-    */
     private Long id;
     /**
     * 模板编码
@@ -39,9 +35,10 @@ public class SmartMessageTemplateSaveUpdateParameter implements Serializable {
     */
     @NotNull(message = "模板内容不能为空")
     private String templateContent;
+
     /**
-    * 
-    */
-    private Boolean useYn;
+     * 额外数据
+     */
+    private String extraData;
 
 }
