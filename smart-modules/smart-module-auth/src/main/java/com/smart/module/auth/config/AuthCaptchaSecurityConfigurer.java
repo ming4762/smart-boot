@@ -1,7 +1,6 @@
 package com.smart.module.auth.config;
 
 import com.smart.framework.auth.core.config.SmartSecurityConfigurerAdapter;
-import com.smart.framework.auth.core.properties.AuthProperties;
 import com.smart.module.api.auth.AuthCaptchaApi;
 import com.smart.module.auth.filter.AuthCaptchaFilter;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +15,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
  * @since 2.0.0
  */
 @Slf4j
-public class AuthCaptchaSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends SmartSecurityConfigurerAdapter<H> {
+public class AuthCaptchaSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends SmartSecurityConfigurerAdapter<H, AuthCaptchaSecurityConfigurer<H>> {
 
     private AuthCaptchaSecurityConfigurer() {}
 
@@ -32,10 +31,9 @@ public class AuthCaptchaSecurityConfigurer<H extends HttpSecurityBuilder<H>> ext
 
     @Override
     public void configure(H builder) {
-        AuthProperties authProperties = this.getBean(AuthProperties.class);
         builder.addFilterBefore(new AuthCaptchaFilter(
-                authProperties.getLoginUrl(),
-                this.getBean(AuthProperties.class),
+                this.getSharedCaptchaLoginUrls(builder),
+                this.getAuthProperties(),
                 this.getBean(AuthCaptchaApi.class)
                 ), BasicAuthenticationFilter.class);
     }

@@ -1,6 +1,7 @@
 package com.smart.module.auth.config;
 
 import com.smart.framework.auth.core.config.SmartSecurityConfigurerAdapter;
+import com.smart.framework.auth.core.constants.DefaultAuthUrlEnum;
 import com.smart.framework.auth.core.tenant.filter.SmartAuthTenantInjectFilter;
 import com.smart.module.api.auth.AuthApi;
 import com.smart.module.auth.filter.SmartAuthTenantChangeFilter;
@@ -22,7 +23,7 @@ import org.springframework.security.web.context.SecurityContextRepository;
  * @since 2.0.0
  */
 @Slf4j
-public class AuthTenantSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends SmartSecurityConfigurerAdapter<H> {
+public class AuthTenantSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends SmartSecurityConfigurerAdapter<H, AuthTenantSecurityConfigurer<H>> {
 
     private final ServiceProvider serviceProvider = new ServiceProvider();
 
@@ -48,9 +49,9 @@ public class AuthTenantSecurityConfigurer<H extends HttpSecurityBuilder<H>> exte
     public void configure(H builder) {
         SmartAuthTenantChangeFilter filter = new SmartAuthTenantChangeFilter(this.serviceProvider.tenantChangeUrl, this.getBean(AuthApi.class));
         filter.setAuthenticationManager(this.getBuilder().getSharedObject(AuthenticationManager.class));
-        filter.setAuthenticationSuccessHandler(this.getBean(AuthenticationSuccessHandler.class));
+        filter.setAuthenticationSuccessHandler(builder.getSharedObject(AuthenticationSuccessHandler.class));
         // 设置登录失败handler
-        filter.setAuthenticationFailureHandler(this.getBean(AuthenticationFailureHandler.class));
+        filter.setAuthenticationFailureHandler(builder.getSharedObject(AuthenticationFailureHandler.class));
         filter.setSecurityContextRepository(builder.getSharedObject(SecurityContextRepository.class));
 
         builder.addFilterAfter(new SmartAuthTenantInjectFilter(), SecurityContextHolderFilter.class)
@@ -66,7 +67,7 @@ public class AuthTenantSecurityConfigurer<H extends HttpSecurityBuilder<H>> exte
         private String tenantChangeUrl;
 
         private ServiceProvider() {
-            this.tenantChangeUrl = "/auth/tenant/change";
+            this.tenantChangeUrl = DefaultAuthUrlEnum.TENANT_CHANGE.getUrl();
         }
     }
 

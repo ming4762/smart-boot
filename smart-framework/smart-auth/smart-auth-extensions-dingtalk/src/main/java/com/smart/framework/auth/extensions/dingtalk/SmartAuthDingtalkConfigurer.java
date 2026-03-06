@@ -18,6 +18,7 @@ import org.springframework.security.web.servlet.util.matcher.PathPatternRequestM
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 钉钉登录配置器
@@ -25,7 +26,7 @@ import java.util.List;
  * 2025/10/31 14:11
  * @since 5.0.0
  */
-public class SmartAuthDingtalkConfigurer<H extends HttpSecurityBuilder<H>> extends SmartSecurityConfigurerAdapter<H> {
+public class SmartAuthDingtalkConfigurer<H extends HttpSecurityBuilder<H>> extends SmartSecurityConfigurerAdapter<H, SmartAuthDingtalkConfigurer<H>> {
 
     private final ServiceProvider serviceProvider = new ServiceProvider();
 
@@ -38,7 +39,7 @@ public class SmartAuthDingtalkConfigurer<H extends HttpSecurityBuilder<H>> exten
     public void configure(H builder) {
         builder
                 .authenticationProvider(this.createDingtalkAuthenticationProvider())
-                .addFilterBefore(this.createLoginFilter(), BasicAuthenticationFilter.class);
+                .addFilterBefore(this.createLoginFilter(builder), BasicAuthenticationFilter.class);
     }
 
     /**
@@ -61,12 +62,12 @@ public class SmartAuthDingtalkConfigurer<H extends HttpSecurityBuilder<H>> exten
      * 创建钉钉登录过滤器
      * @return FilterChainProxy
      */
-    private FilterChainProxy createLoginFilter() {
+    private FilterChainProxy createLoginFilter(H builder) {
         List<SecurityFilterChain> chains = new ArrayList<>(1);
         DingtalkLoginFilter loginFilter = new DingtalkLoginFilter(this.serviceProvider.loginUrl);
         loginFilter.setAuthenticationManager(this.getBuilder().getSharedObject(AuthenticationManager.class));
-        loginFilter.setAuthenticationFailureHandler(this.getBean(AuthenticationFailureHandler.class, this.serviceProvider.authenticationFailureHandler));
-        loginFilter.setAuthenticationSuccessHandler(this.getBean(AuthenticationSuccessHandler.class, this.serviceProvider.authenticationSuccessHandler));
+        loginFilter.setAuthenticationFailureHandler(Objects.requireNonNullElseGet(this.serviceProvider.authenticationFailureHandler, () -> builder.getSharedObject(AuthenticationFailureHandler.class)));
+        loginFilter.setAuthenticationSuccessHandler(Objects.requireNonNullElseGet(this.serviceProvider.authenticationSuccessHandler, () -> builder.getSharedObject(AuthenticationSuccessHandler.class)));
         chains.add(
                 new DefaultSecurityFilterChain(PathPatternRequestMatcher.withDefaults().matcher(this.serviceProvider.loginUrl), loginFilter)
         );

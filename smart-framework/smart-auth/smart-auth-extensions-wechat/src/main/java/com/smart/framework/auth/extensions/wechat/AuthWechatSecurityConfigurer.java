@@ -36,7 +36,7 @@ import java.util.Objects;
  * 2026-03-01 20:19
  * @since 5.0.0
  */
-public class AuthWechatSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends SmartSecurityConfigurerAdapter<H> {
+public class AuthWechatSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends SmartSecurityConfigurerAdapter<H, AuthWechatSecurityConfigurer<H>> {
 
     private static final String BASE_URL = "/auth/wechat";
 
@@ -173,7 +173,7 @@ public class AuthWechatSecurityConfigurer<H extends HttpSecurityBuilder<H>> exte
      */
     private void configureQrcode(H builder) {
         builder.addFilterBefore(
-                this.createQrcodeLoginFilterChainProxy(),
+                this.createQrcodeLoginFilterChainProxy(builder),
                 BasicAuthenticationFilter.class
         );
     }
@@ -182,10 +182,10 @@ public class AuthWechatSecurityConfigurer<H extends HttpSecurityBuilder<H>> exte
      * 创建过滤器链
      * @return 过滤器链代理
      */
-    private FilterChainProxy createQrcodeLoginFilterChainProxy() {
+    private FilterChainProxy createQrcodeLoginFilterChainProxy(H builder) {
         List<SecurityFilterChain> chains = Lists.newArrayList();
         chains.add(createQrcodeCreateFilter());
-        chains.add(createQrLoginFilter());
+        chains.add(createQrLoginFilter(builder));
         return new FilterChainProxy(chains);
     }
 
@@ -205,13 +205,13 @@ public class AuthWechatSecurityConfigurer<H extends HttpSecurityBuilder<H>> exte
      * 创建服务号二维码登录拦截器
      * @return 二维码登录拦截器
      */
-    private DefaultSecurityFilterChain createQrLoginFilter() {
+    private DefaultSecurityFilterChain createQrLoginFilter(H builder) {
         WechatMpQrCodeLoginFilter filter = new WechatMpQrCodeLoginFilter(this.serviceProvider.getMpQrcodeConfig().getLoginUrl(), this.getBean(AuthCache.class));
         filter.setAuthenticationManager(this.getBuilder().getSharedObject(AuthenticationManager.class));
         // 设置登录成功handler
-        filter.setAuthenticationSuccessHandler(this.getBean(AuthenticationSuccessHandler.class));
+        filter.setAuthenticationSuccessHandler(builder.getSharedObject(AuthenticationSuccessHandler.class));
         // 设置登录失败handler
-        filter.setAuthenticationFailureHandler(this.getBean(AuthenticationFailureHandler.class));
+        filter.setAuthenticationFailureHandler(builder.getSharedObject(AuthenticationFailureHandler.class));
         return new DefaultSecurityFilterChain(
                 PathPatternRequestMatcher.withDefaults().matcher(this.serviceProvider.getMpQrcodeConfig().getLoginUrl()),
                 filter

@@ -56,7 +56,7 @@ public class AuthSmsSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
     public void configure(H builder) {
         builder
                 .authenticationProvider(this.getBean(SmsAuthenticationProvider.class, this.serviceProvider.authenticationProvider))
-                .addFilterBefore(this.createLoginFilter(), BasicAuthenticationFilter.class);
+                .addFilterBefore(this.createLoginFilter(builder), BasicAuthenticationFilter.class);
     }
 
     /**
@@ -65,11 +65,11 @@ public class AuthSmsSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
      * 2、创建登录拦截器
      * @return 拦截器链
      */
-    private FilterChainProxy createLoginFilter() {
+    private FilterChainProxy createLoginFilter(H builder) {
         final List<SecurityFilterChain> chains = Lists.newArrayList();
         // 添加验证码创建拦截器
         chains.add(new DefaultSecurityFilterChain(PathPatternRequestMatcher.withDefaults().matcher(this.getUrl(SMS_CREATE_CODE)), this.createSmsCodeCreateFilter()));
-        chains.add(new DefaultSecurityFilterChain(PathPatternRequestMatcher.withDefaults().matcher(this.getUrl(SMS_LOGIN)), this.createSmsLoginFilter()));
+        chains.add(new DefaultSecurityFilterChain(PathPatternRequestMatcher.withDefaults().matcher(this.getUrl(SMS_LOGIN)), this.createSmsLoginFilter(builder)));
         return new FilterChainProxy(chains);
     }
 
@@ -85,14 +85,14 @@ public class AuthSmsSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
      * 创建SMS登录拦截器
      * @return SMS登录拦截器
      */
-    protected SmsLoginFilter createSmsLoginFilter() {
+    protected SmsLoginFilter createSmsLoginFilter(H builder) {
         final SmsLoginFilter smsLoginFilter = new SmsLoginFilter(this.getUrl(SMS_LOGIN));
 
         smsLoginFilter.setAuthenticationManager(this.getBuilder().getSharedObject(AuthenticationManager.class));
         // 设置登录成功handler
-        smsLoginFilter.setAuthenticationSuccessHandler(this.getBean(AuthenticationSuccessHandler.class, this.serviceProvider.authenticationSuccessHandler));
+        smsLoginFilter.setAuthenticationSuccessHandler(Objects.requireNonNullElseGet(this.serviceProvider.authenticationSuccessHandler, () -> builder.getSharedObject(AuthenticationSuccessHandler.class)));
         // 设置登录失败handler
-        smsLoginFilter.setAuthenticationFailureHandler(this.getBean(AuthenticationFailureHandler.class, this.serviceProvider.authenticationFailureHandler));
+        smsLoginFilter.setAuthenticationFailureHandler(Objects.requireNonNullElseGet(this.serviceProvider.authenticationFailureHandler, () -> builder.getSharedObject(AuthenticationFailureHandler.class)));
         return smsLoginFilter;
     }
 
