@@ -35,6 +35,7 @@
         <module>smart-boot-starter-message</module>
         <module>smart-boot-starter-monitor-server</module>
         <module>smart-boot-starter-monitor-client</module>
+        <module>smart-boot-starter-n8n</module>
         <module>smart-boot-starter-redis</module>
         <module>smart-boot-starter-rocketmq</module>
         <module>smart-boot-starter-tool-database</module>

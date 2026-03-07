@@ -68,3 +68,4 @@ com.smart.boot.autoconfigure.common.SmartTimezoneAutoconfiguration
 com.smart.boot.autoconfigure.common.SmartTraceAutoConfiguration
 
 com.smart.boot.autoconfigure.mq.rocket.SmartMqAutoconfiguration
+com.smart.boot.autoconfigure.n8n.SmartN8nAutoConfiguration
