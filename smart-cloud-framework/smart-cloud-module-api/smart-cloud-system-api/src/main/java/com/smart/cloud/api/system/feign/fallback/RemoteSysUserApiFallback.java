@@ -31,7 +31,7 @@ public class RemoteSysUserApiFallback implements FallbackFactory<RemoteSysUserAp
             @Override
             public List<SysUserDTO> listUserByUsername(List<String> usernameList) {
                 this.errorLog();
-                return List.of();
+                throw new SystemException(cause);
             }
 
             @Override

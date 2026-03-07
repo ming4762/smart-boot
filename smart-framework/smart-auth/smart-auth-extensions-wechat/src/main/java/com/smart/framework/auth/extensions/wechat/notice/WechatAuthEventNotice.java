@@ -6,10 +6,7 @@ import com.smart.framework.auth.core.event.AuthEventHandler;
 import com.smart.module.api.message.SmartMessageApi;
 import com.smart.module.api.message.parameter.RemoteMessageSendParameter;
 import com.smart.module.api.message.parameter.RemoteWechatMpTemplateParameter;
-import com.smart.module.api.system.SysParameterApi;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
-import me.chanjar.weixin.common.error.WxErrorException;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 
 import java.util.Set;

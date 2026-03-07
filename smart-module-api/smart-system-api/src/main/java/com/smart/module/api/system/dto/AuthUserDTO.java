@@ -1,9 +1,11 @@
 package com.smart.module.api.system.dto;
 
+import com.smart.module.api.system.constants.SysUserAuthDomainEnum;
 import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 用户登录查询结果
@@ -38,4 +40,8 @@ public class AuthUserDTO implements Serializable {
       */
     private Boolean useYn;
 
+    /**
+     * 用户权限域
+     */
+    private List<SysUserAuthDomainEnum> authDomainList;
 }

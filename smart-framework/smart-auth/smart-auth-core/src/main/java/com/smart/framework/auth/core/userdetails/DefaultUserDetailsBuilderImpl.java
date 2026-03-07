@@ -24,6 +24,7 @@ import com.smart.module.api.system.parameter.UserAccountUnLockParameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.DisabledException;
+import org.springframework.util.CollectionUtils;
 
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -108,6 +109,9 @@ public class DefaultUserDetailsBuilderImpl implements UserDetailsBuilder {
 
         // 设置租户信息
         restUserDetails.setUserTenant(userAccountData.getTenant());
+        if (!CollectionUtils.isEmpty(user.getAuthDomainList())) {
+            restUserDetails.setAuthDomains(user.getAuthDomainList().stream().map(Enum::name).collect(Collectors.toSet()));
+        }
         return restUserDetails;
     }
 
