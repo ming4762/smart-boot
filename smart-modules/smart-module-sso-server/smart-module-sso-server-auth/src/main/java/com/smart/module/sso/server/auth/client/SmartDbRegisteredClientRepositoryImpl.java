@@ -58,7 +58,7 @@ public class SmartDbRegisteredClientRepositoryImpl implements RegisteredClientRe
     @Override
     public RegisteredClient findByClientId(String clientId) {
         SsoOauth2ClientPO oauth2Client = this.oauth2ClientRepository.lambdaQuery()
-                .eq(SsoOauth2ClientPO::getClientId, clientId)
+                .eq(SsoOauth2ClientPO::getClientCode, clientId)
                 .one();
         if (oauth2Client == null) {
             return null;
@@ -88,7 +88,7 @@ public class SmartDbRegisteredClientRepositoryImpl implements RegisteredClientRe
         Set<String> dbScopes = this.convertStrToList(oauth2Client.getScopes(), item -> item);
 
         RegisteredClient.Builder clientBuilder = RegisteredClient.withId(oauth2Client.getId().toString())
-                .clientId(oauth2Client.getClientId())
+                .clientId(oauth2Client.getClientCode())
                 .clientIdIssuedAt(Optional.ofNullable(oauth2Client.getCreateTime()).map(ChronoZonedDateTime::toInstant).orElse(null))
                 .clientSecret(Objects.requireNonNullElseGet(oauth2Client.getClientSecret(), this.ssoServerAuthProperties::getDefaultSecret))
                 .clientSecretExpiresAt(Optional.ofNullable(oauth2Client.getClientSecretExpire()).map(ChronoZonedDateTime::toInstant).orElse(null))
@@ -122,7 +122,7 @@ public class SmartDbRegisteredClientRepositoryImpl implements RegisteredClientRe
         }
         SsoOauth2ClientPO oauth2Client = new SsoOauth2ClientPO();
         oauth2Client.setId(Long.valueOf(registeredClient.getId()));
-        oauth2Client.setClientId(registeredClient.getClientId());
+        oauth2Client.setClientCode(registeredClient.getClientId());
         oauth2Client.setClientSecret(registeredClient.getClientSecret());
         oauth2Client.setClientSecretExpire(Optional.ofNullable(registeredClient.getClientSecretExpiresAt()).map(item -> item.atZone(ZoneId.systemDefault())).orElse(null));
         oauth2Client.setClientName(registeredClient.getClientName());

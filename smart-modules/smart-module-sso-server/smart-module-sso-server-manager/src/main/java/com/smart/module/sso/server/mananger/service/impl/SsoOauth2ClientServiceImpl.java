@@ -48,12 +48,12 @@ public class SsoOauth2ClientServiceImpl extends BaseServiceImpl<SsoOauth2ClientM
     /**
      * 根据clientId查询oauth2客户端
      *
-     * @param clientId 客户端ID
+     * @param clientCode 客户端编码
      * @return oauth2客户端
      */
     @Override
-    public SsoOauth2ClientPO getByClientId(String clientId) {
-        return this.lambdaQuery().eq(SsoOauth2ClientPO::getClientId, clientId)
+    public SsoOauth2ClientPO getByClientCode(String clientCode) {
+        return this.lambdaQuery().eq(SsoOauth2ClientPO::getClientCode, clientCode)
                 .eq(SsoOauth2ClientPO::getUseYn, Boolean.TRUE)
                 .one();
     }

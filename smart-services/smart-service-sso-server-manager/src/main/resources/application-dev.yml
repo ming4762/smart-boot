@@ -92,6 +92,3 @@ smart:
     image:
       init-default-resource: true
       prefix: smart-captcha
-  snowflake-work-id:
-    redis:
-      workspace: smart-boot-auth-server-manager

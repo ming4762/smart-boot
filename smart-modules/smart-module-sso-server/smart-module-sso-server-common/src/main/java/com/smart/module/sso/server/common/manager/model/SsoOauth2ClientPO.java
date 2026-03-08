@@ -30,7 +30,7 @@ public class SsoOauth2ClientPO extends BaseModelDeleteUserTime {
     /**
     * client_id - 客户端id
     */
-    private String clientId;
+    private String clientCode;
 
     /**
     * client_name - 客户端名称
@@ -108,5 +108,9 @@ public class SsoOauth2ClientPO extends BaseModelDeleteUserTime {
     */
     @TableLogic
     private Boolean deleteYn;
+
+    public boolean isPublic() {
+        return SsoOauth2ClientTypeEnum.PUBLIC.equals(this.clientType);
+    }
 
 }

@@ -43,4 +43,8 @@ public class SsoOauth2ClientUserPO extends BaseModelUserTime {
     * use_yn - 是否启用
     */
     private Boolean useYn;
+
+    public boolean isAllow() {
+        return SsoOauth2UserAccessStrategyEnum.ALLOW.equals(this.accessStrategy);
+    }
 }

@@ -1,0 +1,16 @@
+server:
+  port: 8080
+
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          oidc-client-test:
+            client-id: oidc-client-test
+            client-secret: secret
+            scope: openid,profile
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+        provider:
+          oidc-client-test:
+            issuer-uri: http://127.0.0.1:7080

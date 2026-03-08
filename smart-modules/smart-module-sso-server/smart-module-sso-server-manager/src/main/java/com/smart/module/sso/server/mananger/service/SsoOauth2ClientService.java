@@ -24,10 +24,10 @@ public interface SsoOauth2ClientService extends BaseService<SsoOauth2ClientPO> {
 
     /**
      * 根据clientId查询oauth2客户端
-     * @param clientId 客户端ID
+     * @param clientCode 客户端ID
      * @return oauth2客户端
      */
-    SsoOauth2ClientPO getByClientId(String clientId);
+    SsoOauth2ClientPO getByClientCode(String clientCode);
 
     /**
      * 根据id和useYn查询oauth2客户端
