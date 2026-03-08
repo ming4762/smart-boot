@@ -20,6 +20,8 @@
         <spring-cloud.version>2025.0.0</spring-cloud.version>
         <spring-cloud-alibaba.version>2023.0.3.3</spring-cloud-alibaba.version>
 
+        <server.port.prefix>808</server.port.prefix>
+
         <guava.version>33.4.8-jre</guava.version>
         <commons-collections4.version>4.5.0</commons-collections4.version>
         <commons-beanutils.version>1.11.0</commons-beanutils.version>
@@ -27,7 +29,6 @@
         <swagger-annotations.version>2.2.34</swagger-annotations.version>
         <commons-io.version>2.17.0</commons-io.version>
         <jsch.version>0.1.55</jsch.version>
-
         <mybatis-plus.version>3.5.15</mybatis-plus.version>
         <jodconverter.version>4.4.11</jodconverter.version>
         <google.zxing.version>3.5.3</google.zxing.version>
@@ -103,6 +104,13 @@
                 <nacos.namespace>dev</nacos.namespace>
                 <nacos.username>nacos</nacos.username>
                 <nacos.password>nacos</nacos.password>
+
+                <server.port.gateway>${server.port.prefix}0</server.port.gateway>
+                <server.port.system>${server.port.prefix}1</server.port.system>
+                <server.port.auth>${server.port.prefix}2</server.port.auth>
+                <server.port.file>${server.port.prefix}3</server.port.file>
+                <server.port.message>${server.port.prefix}4</server.port.message>
+                <server.port.code>${server.port.prefix}5</server.port.code>
             </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>
@@ -117,6 +125,13 @@
                 <nacos.namespace>pro</nacos.namespace>
                 <nacos.username>nacos</nacos.username>
                 <nacos.password>nacos</nacos.password>
+
+                <server.port.gateway>${server.port.prefix}0</server.port.gateway>
+                <server.port.system>${server.port.prefix}1</server.port.system>
+                <server.port.auth>${server.port.prefix}2</server.port.auth>
+                <server.port.file>${server.port.prefix}3</server.port.file>
+                <server.port.message>${server.port.prefix}4</server.port.message>
+                <server.port.code>${server.port.prefix}5</server.port.code>
             </properties>
         </profile>
     </profiles>
