@@ -78,7 +78,7 @@ public class AuthWebSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
             return authDomainConfig;
         }
         return Map.of(
-                AuthDomainConstants.AUTH_DOMAIN_ADMIN,
+                AuthDomainConstants.AUTH_DOMAIN_NONE,
                 SmartAuthDomainConfig.builder()
                         .loginUrl(DefaultAuthUrlEnum.LOGIN.getUrl())
                         .build()

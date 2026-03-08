@@ -1,7 +1,6 @@
 package com.smart.service.system.config;
 
 import com.smart.auth.extensions.access.secret.AuthAccessSecretSecurityConfigurer;
-import com.smart.framework.auth.common.constants.AuthDomainConstants;
 import com.smart.framework.auth.core.properties.AuthProperties;
 import com.smart.framework.auth.core.remember.SmartAuthPersistentTokenRememberMeServices;
 import com.smart.framework.auth.extensions.jwt.AuthJwtSecurityConfigurer;
@@ -62,7 +61,7 @@ public class SecurityConfig extends AuthWebSecurityConfigurerAdapter {
 //                .with(AuthWebSecurityConfigurer.web(), Customizer.withDefaults())
                 // JWT配置
                 .sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .with(AuthJwtSecurityConfigurer.jwt(), jwt -> jwt.authDomain(AuthDomainConstants.AUTH_DOMAIN_ADMIN))
+                .with(AuthJwtSecurityConfigurer.jwt(), Customizer.withDefaults())
                 // 验证码配置
                 .with(AuthCaptchaSecurityConfigurer.captcha(), Customizer.withDefaults())
                 // 短信登录支持

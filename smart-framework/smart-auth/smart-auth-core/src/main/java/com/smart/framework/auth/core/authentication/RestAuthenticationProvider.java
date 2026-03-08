@@ -1,6 +1,7 @@
 package com.smart.framework.auth.core.authentication;
 
 import com.smart.framework.auth.common.constants.AuthTypeEnum;
+import com.smart.framework.auth.common.exception.AuthException;
 import com.smart.framework.auth.common.userdetails.RestUserDetails;
 import com.smart.framework.auth.core.authentication.checker.RestUserDetailsChecker;
 import com.smart.framework.auth.core.exception.IpBindAuthenticationException;
@@ -68,15 +69,19 @@ public class RestAuthenticationProvider extends AbstractUserDetailsAuthenticatio
             throw new RestUsernameNotFoundException(I18nUtils.get(AuthI18nMessage.USER_NOT_FOUND_ERROR));
         }
         RestUsernamePasswordAuthenticationToken token = (RestUsernamePasswordAuthenticationToken) authentication;
+        if (StringUtils.hasText(token.getAuthDomain()) && !token.isNonAuthDomain()) {
+            // 校验权限域
+            Set<String> authDomains = user.getAuthDomains();
+            if (CollectionUtils.isEmpty(authDomains) || !authDomains.contains(token.getAuthDomain())) {
+                throw new AuthException(String.format("用户[%s]不在权限域[%s]内", username, token.getAuthDomain()));
+            }
+            user.setAuthDomains(Set.of(token.getAuthDomain()));
+        }
         user.setLoginType(token.getLoginType());
         user.setAuthType(AuthTypeEnum.USERNAME);
         user.setBindIp(token.getBindIp());
         user.setLoginIp(token.getLoginIp());
         user.setLoginTime(ZonedDateTime.now());
-        // 设置权限域
-        if (StringUtils.hasText(token.getAuthDomain())) {
-            user.setAuthDomains(Set.of(token.getAuthDomain()));
-        }
         return user;
     }
 

@@ -12,4 +12,9 @@ public interface AuthDomainConstants {
      * 管理端
      */
     String AUTH_DOMAIN_ADMIN = "ADMIN";
+
+    /**
+     * 无权限域
+     */
+    String AUTH_DOMAIN_NONE = "NONE";
 }

@@ -3,6 +3,7 @@ package com.smart.framework.auth.extensions.domain.authorization;
 import com.smart.framework.auth.common.annotation.AuthDomain;
 import com.smart.framework.auth.common.constants.AuthDomainConstants;
 import com.smart.framework.auth.common.userdetails.RestUserDetails;
+import com.smart.framework.auth.core.authentication.SmartAuthDomainAuthentication;
 import com.smart.framework.auth.core.properties.AuthProperties;
 import com.smart.framework.auth.core.utils.AuthCheckUtils;
 import com.smart.framework.commons.core.exception.SystemException;
@@ -36,11 +37,16 @@ public class AuthDomainAuthorizationManager implements AuthorizationManager<Meth
     private final ObjectProvider<AuthProperties> authPropertiesProvider;
 
     @Override
-    public @Nullable AuthorizationDecision check(Supplier<Authentication> authentication, MethodInvocation methodInvocation) {
+    public @Nullable AuthorizationDecision check(Supplier<Authentication> authenticationSupplier, MethodInvocation methodInvocation) {
         if (this.ignore()) {
             return new AuthorizationDecision(true);
         }
-        RestUserDetails restUserDetails = (RestUserDetails) authentication.get().getPrincipal();
+        Authentication authentication = authenticationSupplier.get();
+        if (authentication instanceof SmartAuthDomainAuthentication authDomainAuthentication && authDomainAuthentication.isNonAuthDomain()) {
+            // 没有启用认证域，默认授权
+            return new AuthorizationDecision(true);
+        }
+        RestUserDetails restUserDetails = (RestUserDetails) authentication.getPrincipal();
         Set<String> authDomains = restUserDetails.getAuthDomains();
         // 查询接口所需权限域，如果未配置默认ADMIN
         List<String> requiredAuthDomains = Optional.ofNullable(this.findAuthDomain(methodInvocation))

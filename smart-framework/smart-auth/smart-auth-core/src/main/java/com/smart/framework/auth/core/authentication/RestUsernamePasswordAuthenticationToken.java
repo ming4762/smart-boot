@@ -16,7 +16,7 @@ import java.util.Collection;
  */
 @Getter
 @EqualsAndHashCode(callSuper = true)
-public class RestUsernamePasswordAuthenticationToken extends UsernamePasswordAuthenticationToken {
+public class RestUsernamePasswordAuthenticationToken extends UsernamePasswordAuthenticationToken implements SmartAuthDomainAuthentication {
     @Serial
     private static final long serialVersionUID = 9144478025655110168L;
 
