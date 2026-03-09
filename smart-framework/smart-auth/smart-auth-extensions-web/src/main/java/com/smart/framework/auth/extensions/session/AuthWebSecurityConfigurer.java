@@ -80,7 +80,7 @@ public class AuthWebSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
         return Map.of(
                 AuthDomainConstants.AUTH_DOMAIN_NONE,
                 SmartAuthDomainConfig.builder()
-                        .loginUrl(DefaultAuthUrlEnum.LOGIN.getUrl())
+                        .loginUrl(DefaultAuthUrlEnum.WEB_LOGIN.getUrl())
                         .build()
         );
     }

@@ -1,17 +1,18 @@
 package com.smart.framework.auth.extensions.sms;
 
 import com.google.common.collect.Lists;
+import com.smart.framework.auth.common.constants.AuthDomainConstants;
+import com.smart.framework.auth.core.config.SmartAuthDomainConfig;
+import com.smart.framework.auth.core.config.SmartSecurityConfigurerAdapter;
+import com.smart.framework.auth.core.constants.DefaultAuthUrlEnum;
 import com.smart.framework.auth.extensions.sms.authentication.SmsAuthenticationProvider;
 import com.smart.framework.auth.extensions.sms.filter.SmsCodeCreateFilter;
 import com.smart.framework.auth.extensions.sms.filter.SmsLoginFilter;
 import com.smart.framework.auth.extensions.sms.provider.SmsCreateValidateProvider;
 import com.smart.module.api.auth.AuthCaptchaApi;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.FilterChainProxy;
@@ -20,22 +21,20 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * @author shizhongming
  * 2021/6/2 9:31 下午
  */
 @Slf4j
-public class AuthSmsSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, H> {
+public class AuthSmsSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends SmartSecurityConfigurerAdapter<H, AuthSmsSecurityConfigurer<H>> {
 
     private final ServiceProvider serviceProvider = new ServiceProvider();
-    private static final String SMS_CREATE_CODE = "createCode";
-
-    private static final String SMS_LOGIN = "login";
 
     private AuthSmsSecurityConfigurer() {}
 
@@ -68,8 +67,9 @@ public class AuthSmsSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
     private FilterChainProxy createLoginFilter(H builder) {
         final List<SecurityFilterChain> chains = Lists.newArrayList();
         // 添加验证码创建拦截器
-        chains.add(new DefaultSecurityFilterChain(PathPatternRequestMatcher.withDefaults().matcher(this.getUrl(SMS_CREATE_CODE)), this.createSmsCodeCreateFilter()));
-        chains.add(new DefaultSecurityFilterChain(PathPatternRequestMatcher.withDefaults().matcher(this.getUrl(SMS_LOGIN)), this.createSmsLoginFilter(builder)));
+        chains.add(new DefaultSecurityFilterChain(PathPatternRequestMatcher.withDefaults().matcher(DefaultAuthUrlEnum.SMS_CREATE_CODE.getUrl()), this.createSmsCodeCreateFilter()));
+        // 添加登录拦截器
+        chains.addAll(this.createSmsLoginFilter(builder));
         return new FilterChainProxy(chains);
     }
 
@@ -85,37 +85,41 @@ public class AuthSmsSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
      * 创建SMS登录拦截器
      * @return SMS登录拦截器
      */
-    protected SmsLoginFilter createSmsLoginFilter(H builder) {
-        final SmsLoginFilter smsLoginFilter = new SmsLoginFilter(this.getUrl(SMS_LOGIN));
+    protected List<DefaultSecurityFilterChain> createSmsLoginFilter(H builder) {
+        return this.getAuthDomainConfig().entrySet().stream()
+                .map(item -> {
+                    String authDomain = item.getKey();
+                    SmartAuthDomainConfig authDomainConfig = item.getValue();
+                    SmsLoginFilter smsLoginFilter = new SmsLoginFilter(authDomainConfig.getLoginUrl());
 
-        smsLoginFilter.setAuthenticationManager(this.getBuilder().getSharedObject(AuthenticationManager.class));
-        // 设置登录成功handler
-        smsLoginFilter.setAuthenticationSuccessHandler(Objects.requireNonNullElseGet(this.serviceProvider.authenticationSuccessHandler, () -> builder.getSharedObject(AuthenticationSuccessHandler.class)));
-        // 设置登录失败handler
-        smsLoginFilter.setAuthenticationFailureHandler(Objects.requireNonNullElseGet(this.serviceProvider.authenticationFailureHandler, () -> builder.getSharedObject(AuthenticationFailureHandler.class)));
-        return smsLoginFilter;
+                    smsLoginFilter.setAuthenticationManager(this.getBuilder().getSharedObject(AuthenticationManager.class));
+                    // 设置登录成功handler
+                    smsLoginFilter.setAuthenticationSuccessHandler(Objects.requireNonNullElseGet(this.serviceProvider.authenticationSuccessHandler, () -> builder.getSharedObject(AuthenticationSuccessHandler.class)));
+                    // 设置登录失败handler
+                    smsLoginFilter.setAuthenticationFailureHandler(Objects.requireNonNullElseGet(this.serviceProvider.authenticationFailureHandler, () -> builder.getSharedObject(AuthenticationFailureHandler.class)));
+
+                    smsLoginFilter.setAuthDomain(authDomain);
+                    return new DefaultSecurityFilterChain(PathPatternRequestMatcher.withDefaults().matcher(authDomainConfig.getLoginUrl()), smsLoginFilter);
+                }).toList();
     }
 
-    private String getUrl(String url) {
-        return this.serviceProvider.baseUrl + "/" + url;
-    }
-
-    private <T> T getBean(Class<T> clazz, T t) {
-        if (Objects.nonNull(t)) {
-            return t;
+    /**
+     * 获取权限域配置
+     *
+     * @return 获取权限域
+     */
+    @Override
+    protected Map<String, SmartAuthDomainConfig> getAuthDomainConfig() {
+        Map<String, SmartAuthDomainConfig> authDomainConfig = super.getAuthDomainConfig();
+        if (!CollectionUtils.isEmpty(authDomainConfig)) {
+            return authDomainConfig;
         }
-        ApplicationContext applicationContext = this.getBuilder().getSharedObject(ApplicationContext.class);
-        try {
-            return Optional.ofNullable(applicationContext).map(item -> item.getBean(clazz)).orElse(null);
-        } catch (NoSuchBeanDefinitionException e) {
-            log.warn("获取bean发生错误: " + e.getMessage());
-            return null;
-        }
-    }
-
-    public AuthSmsSecurityConfigurer<H> baseUrl(String baseUrl) {
-        this.serviceProvider.baseUrl = baseUrl;
-        return this;
+        return Map.of(
+                AuthDomainConstants.AUTH_DOMAIN_NONE,
+                SmartAuthDomainConfig.builder()
+                        .loginUrl(DefaultAuthUrlEnum.SMS_LOGIN.getUrl())
+                        .build()
+        );
     }
 
     public AuthSmsSecurityConfigurer<H> authenticationProvider(SmsAuthenticationProvider authenticationProvider) {
@@ -140,14 +144,8 @@ public class AuthSmsSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
 
         private SmsAuthenticationProvider authenticationProvider;
 
-        private String baseUrl;
-
         private AuthenticationSuccessHandler authenticationSuccessHandler;
 
         private AuthenticationFailureHandler authenticationFailureHandler;
-
-        public ServiceProvider() {
-            this.baseUrl = "/auth/sms";
-        }
     }
 }

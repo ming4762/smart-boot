@@ -10,10 +10,12 @@ import lombok.Getter;
  */
 @Getter
 public enum DefaultAuthUrlEnum {
-    LOGIN("/auth/login", "登录路径"),
-    LOGOUT("/auth/logout", "退出登录路径"),
-    REFRESH("/auth/refresh", "刷新令牌路径"),
-    TENANT_CHANGE("/auth/tenant/change", "切换租户")
+    WEB_LOGIN("/auth/login", "登录路径"),
+    WEB_LOGOUT("/auth/logout", "退出登录路径"),
+    TOKEN_REFRESH("/auth/refresh", "刷新令牌路径"),
+    TENANT_CHANGE("/auth/tenant/change", "切换租户"),
+    SMS_CREATE_CODE("/auth/sms/createCode", "短信登录创建验证码路径"),
+    SMS_LOGIN("/auth/sms/login", "短信登录路径")
     ;
 
 

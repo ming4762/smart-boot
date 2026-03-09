@@ -133,7 +133,7 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
      * @return 登出路径
      */
     private String getLogoutUrl() {
-        return DefaultAuthUrlEnum.LOGOUT.getUrl();
+        return DefaultAuthUrlEnum.WEB_LOGOUT.getUrl();
     }
 
     /**
@@ -142,7 +142,7 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
      * @return 刷新令牌路径
      */
     private String getRefreshTokenUrl() {
-        return DefaultAuthUrlEnum.REFRESH.getUrl();
+        return DefaultAuthUrlEnum.TOKEN_REFRESH.getUrl();
     }
 
     /**
@@ -159,7 +159,7 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
         return Map.of(
                 AuthDomainConstants.AUTH_DOMAIN_NONE,
                 SmartAuthDomainConfig.builder()
-                        .loginUrl(DefaultAuthUrlEnum.LOGIN.getUrl())
+                        .loginUrl(DefaultAuthUrlEnum.WEB_LOGIN.getUrl())
                         .build()
         );
     }
