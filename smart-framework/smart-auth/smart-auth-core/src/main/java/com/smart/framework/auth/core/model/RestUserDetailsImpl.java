@@ -59,9 +59,20 @@ public class RestUserDetailsImpl implements RestUserDetails, Serializable {
     private Set<RoleGrantedAuthority> roles = HashSet.newHashSet(0);
 
     /**
-     * 权限域列表
+     * 用户拥有的认证域列表
+     * 由 UserDetailsService.loadUserByUsername() 设置
+     * 不序列化到 JWT 中，避免泄露用户拥有的所有认证域信息
      */
-    private Set<String> authDomains;
+    @JsonIgnore
+    private Set<String> userAuthDomains;
+
+    /**
+     * 当前登录的认证域
+     * 登录时由认证提供者设置，表示用户当前会话所属的认证域
+     * 序列化到 JWT 中，用于授权校验
+     */
+    @Getter
+    private String currentAuthDomain;
 
     @Getter
     private ZonedDateTime loginTime;
@@ -150,13 +161,13 @@ public class RestUserDetailsImpl implements RestUserDetails, Serializable {
     }
 
     /**
-     * 获取权限域
+     * 获取用户拥有的认证域列表
      *
-     * @return 权限域列表
+     * @return 认证域列表
      */
     @Override
-    public Set<String> getAuthDomains() {
-        return Optional.ofNullable(this.authDomains)
+    public Set<String> getUserAuthDomains() {
+        return Optional.ofNullable(this.userAuthDomains)
                 .orElse(Set.of());
     }
 

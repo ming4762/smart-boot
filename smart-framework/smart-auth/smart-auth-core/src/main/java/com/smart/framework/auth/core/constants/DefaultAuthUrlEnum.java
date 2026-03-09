@@ -18,7 +18,8 @@ public enum DefaultAuthUrlEnum {
     SMS_LOGIN("/auth/sms/login", "短信登录路径"),
     WECHAT_MINIAPP_LOGIN("/auth/wechat/miniapp/login", "微信小程序登录路径"),
     WECHAT_MP_CREATE_QRCODE("/auth/wechat/mp/createQrcode", "微信公众号登录创建二维码路径"),
-    WECHAT_MP_LOGIN("/auth/wechat/mp/login", "微信公众号登录路径")
+    WECHAT_MP_LOGIN("/auth/wechat/mp/login", "微信公众号登录路径"),
+    DINGTALK_WEB_LOGIN("/auth/dingtalk/webLogin", "钉钉登录路径"),
     ;
 
 

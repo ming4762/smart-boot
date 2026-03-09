@@ -47,10 +47,18 @@ public interface RestUserDetails extends UserDetails {
     Set<Permission> getPermissions();
 
     /**
-     * 获取权限域
-     * @return 权限域列表
+     * 获取用户拥有的认证域列表
+     * @return 认证域列表
      */
-    Set<String> getAuthDomains();
+    Set<String> getUserAuthDomains();
+
+    /**
+     * 获取当前登录的认证域
+     * 登录时由认证提供者设置，表示用户当前会话所属的认证域
+     * @return 当前登录的认证域，未设置时返回 null
+     */
+    @Nullable
+    String getCurrentAuthDomain();
 
     /**
      * 设置token

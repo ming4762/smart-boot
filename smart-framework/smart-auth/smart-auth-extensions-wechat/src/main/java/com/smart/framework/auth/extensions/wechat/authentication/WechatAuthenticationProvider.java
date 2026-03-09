@@ -1,6 +1,8 @@
 package com.smart.framework.auth.extensions.wechat.authentication;
 
+import com.smart.framework.auth.common.constants.AuthDomainConstants;
 import com.smart.framework.auth.common.constants.AuthTypeEnum;
+import com.smart.framework.auth.common.exception.AuthException;
 import com.smart.framework.auth.common.userdetails.RestUserDetails;
 import com.smart.framework.auth.core.authentication.checker.RestUserDetailsChecker;
 import com.smart.framework.auth.core.i18n.AuthI18nMessage;
@@ -14,7 +16,8 @@ import com.smart.framework.auth.extensions.wechat.userdetails.RestUserWechatExtr
 import com.smart.framework.auth.extensions.wechat.userdetails.WechatUserDetailService;
 import com.smart.framework.commons.core.i18n.I18nUtils;
 import lombok.Setter;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
@@ -22,6 +25,7 @@ import org.springframework.security.core.AuthenticationException;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -74,7 +78,7 @@ public class WechatAuthenticationProvider implements AuthenticationProvider {
         }
         RestUserDetails userDetails = null;
         // 调用微信登录成功后，获取系统用户消息
-        if (StringUtils.isNotBlank(loginResult.getUnionid())) {
+        if (StringUtils.hasText(loginResult.getUnionid())) {
             userDetails = this.userDetailService.loadUserByUnionid(token.getAuthType(), appid, loginResult.getUnionid());
         }
         if (userDetails == null) {
@@ -86,6 +90,19 @@ public class WechatAuthenticationProvider implements AuthenticationProvider {
         }
         RestUserDetailsImpl restUserDetails = (RestUserDetailsImpl) userDetails;
         restUserDetails.setAuthType(token.getAuthType());
+
+        // 认证域校验
+        String authDomain = token.getAuthDomain();
+        if (StringUtils.hasText(authDomain) && !AuthDomainConstants.AUTH_DOMAIN_NONE.equals(authDomain)) {
+            // 校验用户是否拥有该认证域
+            Set<String> authDomains = restUserDetails.getUserAuthDomains();
+            if (CollectionUtils.isEmpty(authDomains) || !authDomains.contains(authDomain)) {
+                throw new AuthException(String.format("微信用户不在权限域[%s]内", authDomain));
+            }
+            // 设置当前登录的认证域
+            restUserDetails.setCurrentAuthDomain(authDomain);
+        }
+
         // 设置额外信息
         RestUserWechatExtraData extraData = RestUserWechatExtraData.builder()
                 .appid(appid)

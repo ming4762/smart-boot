@@ -70,12 +70,13 @@ public class RestAuthenticationProvider extends AbstractUserDetailsAuthenticatio
         }
         RestUsernamePasswordAuthenticationToken token = (RestUsernamePasswordAuthenticationToken) authentication;
         if (StringUtils.hasText(token.getAuthDomain()) && !token.isNonAuthDomain()) {
-            // 校验权限域
-            Set<String> authDomains = user.getAuthDomains();
+            // 校验用户是否拥有该认证域
+            Set<String> authDomains = user.getUserAuthDomains();
             if (CollectionUtils.isEmpty(authDomains) || !authDomains.contains(token.getAuthDomain())) {
                 throw new AuthException(String.format("用户[%s]不在权限域[%s]内", username, token.getAuthDomain()));
             }
-            user.setAuthDomains(Set.of(token.getAuthDomain()));
+            // 设置当前登录的认证域（不覆盖用户拥有的认证域列表）
+            user.setCurrentAuthDomain(token.getAuthDomain());
         }
         user.setLoginType(token.getLoginType());
         user.setAuthType(AuthTypeEnum.USERNAME);
