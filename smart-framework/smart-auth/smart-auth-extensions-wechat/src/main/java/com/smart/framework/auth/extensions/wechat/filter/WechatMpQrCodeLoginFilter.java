@@ -11,6 +11,7 @@ import com.smart.framework.commons.core.utils.RestJsonWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.Setter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
@@ -27,6 +28,9 @@ import java.io.IOException;
 public class WechatMpQrCodeLoginFilter extends AbstractAuthenticationProcessingFilter {
 
     private final AuthCache authCache;
+
+    @Setter
+    private String authDomain;
 
     public WechatMpQrCodeLoginFilter(String loginUrl, AuthCache authCache) {
         super(loginUrl);
@@ -56,6 +60,7 @@ public class WechatMpQrCodeLoginFilter extends AbstractAuthenticationProcessingF
                 cacheData.getAppid(),
                 cacheData.getOpenId()
         );
+        authenticationToken.setAuthDomain(this.authDomain);
         return this.getAuthenticationManager().authenticate(authenticationToken);
     }
 

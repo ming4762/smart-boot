@@ -15,7 +15,10 @@ public enum DefaultAuthUrlEnum {
     TOKEN_REFRESH("/auth/refresh", "刷新令牌路径"),
     TENANT_CHANGE("/auth/tenant/change", "切换租户"),
     SMS_CREATE_CODE("/auth/sms/createCode", "短信登录创建验证码路径"),
-    SMS_LOGIN("/auth/sms/login", "短信登录路径")
+    SMS_LOGIN("/auth/sms/login", "短信登录路径"),
+    WECHAT_MINIAPP_LOGIN("/auth/wechat/miniapp/login", "微信小程序登录路径"),
+    WECHAT_MP_CREATE_QRCODE("/auth/wechat/mp/createQrcode", "微信公众号登录创建二维码路径"),
+    WECHAT_MP_LOGIN("/auth/wechat/mp/login", "微信公众号登录路径")
     ;
 
 

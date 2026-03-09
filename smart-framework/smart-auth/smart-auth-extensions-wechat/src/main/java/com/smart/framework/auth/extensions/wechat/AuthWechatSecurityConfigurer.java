@@ -2,7 +2,10 @@ package com.smart.framework.auth.extensions.wechat;
 
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import com.google.common.collect.Lists;
+import com.smart.framework.auth.common.constants.AuthDomainConstants;
+import com.smart.framework.auth.core.config.SmartAuthDomainConfig;
 import com.smart.framework.auth.core.config.SmartSecurityConfigurerAdapter;
+import com.smart.framework.auth.core.constants.DefaultAuthUrlEnum;
 import com.smart.framework.auth.core.service.AuthCache;
 import com.smart.framework.auth.core.wechat.WechatAuthConfigProvider;
 import com.smart.framework.auth.extensions.wechat.authentication.WechatAuthenticationProvider;
@@ -14,6 +17,7 @@ import com.smart.framework.auth.extensions.wechat.userdetails.WechatUserDetailSe
 import com.smart.framework.commons.core.exception.SystemException;
 import lombok.Getter;
 import me.chanjar.weixin.mp.api.WxMpService;
+import org.jspecify.annotations.NonNull;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
@@ -24,11 +28,9 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
+import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * 微信登录配置类
@@ -37,8 +39,6 @@ import java.util.Objects;
  * @since 5.0.0
  */
 public class AuthWechatSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends SmartSecurityConfigurerAdapter<H, AuthWechatSecurityConfigurer<H>> {
-
-    private static final String BASE_URL = "/auth/wechat";
 
     private static final List<Class<? extends WechatLoginProvider>> EXCLUDE_LOGIN_PROVIDER_CLASSES = Lists.newArrayList(
             WechatMiniappLoginProvider.class,
@@ -139,10 +139,8 @@ public class AuthWechatSecurityConfigurer<H extends HttpSecurityBuilder<H>> exte
      * @return 微信小程序登录过滤器链代理
      */
     private FilterChainProxy createMiniappFilter() {
-        List<SecurityFilterChain> chains = new ArrayList<>(1);
-        chains.add(
-                new DefaultSecurityFilterChain(PathPatternRequestMatcher.withDefaults().matcher(this.serviceProvider.getMiniappConfig().getLoginUrl()), this.createMiniappLoginFilter())
-        );
+        List<SecurityFilterChain> chains = new ArrayList<>(10);
+        chains.addAll(this.createMiniappLoginFilter());
         return new FilterChainProxy(chains);
     }
 
@@ -150,12 +148,19 @@ public class AuthWechatSecurityConfigurer<H extends HttpSecurityBuilder<H>> exte
      * 创建微信小程序登录拦截器
      * @return 微信小程序登录拦截器
      */
-    private WechatMiniappLoginFilter createMiniappLoginFilter() {
-        WechatMiniappLoginFilter loginFilter = new WechatMiniappLoginFilter(this.serviceProvider.getMiniappConfig().getLoginUrl());
-        loginFilter.setAuthenticationManager(this.getBuilder().getSharedObject(AuthenticationManager.class));
-        loginFilter.setAuthenticationFailureHandler(this.getBean(AuthenticationFailureHandler.class));
-        loginFilter.setAuthenticationSuccessHandler(this.getBean(AuthenticationSuccessHandler.class));
-        return loginFilter;
+    private List<DefaultSecurityFilterChain> createMiniappLoginFilter() {
+        return this.serviceProvider.getMiniappConfig().getAuthDomainConfig().entrySet().stream()
+                .map(item -> {
+                    String authDomain = item.getKey();
+                    SmartAuthDomainConfig authDomainConfig = item.getValue();
+
+                    WechatMiniappLoginFilter loginFilter = new WechatMiniappLoginFilter(authDomainConfig.getLoginUrl());
+                    loginFilter.setAuthenticationManager(this.getBuilder().getSharedObject(AuthenticationManager.class));
+                    loginFilter.setAuthenticationFailureHandler(this.getBean(AuthenticationFailureHandler.class));
+                    loginFilter.setAuthenticationSuccessHandler(this.getBean(AuthenticationSuccessHandler.class));
+
+                    return new DefaultSecurityFilterChain(PathPatternRequestMatcher.withDefaults().matcher(authDomainConfig.getLoginUrl()), loginFilter);
+                }).toList();
     }
 
     /**
@@ -185,7 +190,7 @@ public class AuthWechatSecurityConfigurer<H extends HttpSecurityBuilder<H>> exte
     private FilterChainProxy createQrcodeLoginFilterChainProxy(H builder) {
         List<SecurityFilterChain> chains = Lists.newArrayList();
         chains.add(createQrcodeCreateFilter());
-        chains.add(createQrLoginFilter(builder));
+        chains.addAll(createQrLoginFilter(builder));
         return new FilterChainProxy(chains);
     }
 
@@ -205,17 +210,21 @@ public class AuthWechatSecurityConfigurer<H extends HttpSecurityBuilder<H>> exte
      * 创建服务号二维码登录拦截器
      * @return 二维码登录拦截器
      */
-    private DefaultSecurityFilterChain createQrLoginFilter(H builder) {
-        WechatMpQrCodeLoginFilter filter = new WechatMpQrCodeLoginFilter(this.serviceProvider.getMpQrcodeConfig().getLoginUrl(), this.getBean(AuthCache.class));
-        filter.setAuthenticationManager(this.getBuilder().getSharedObject(AuthenticationManager.class));
-        // 设置登录成功handler
-        filter.setAuthenticationSuccessHandler(builder.getSharedObject(AuthenticationSuccessHandler.class));
-        // 设置登录失败handler
-        filter.setAuthenticationFailureHandler(builder.getSharedObject(AuthenticationFailureHandler.class));
-        return new DefaultSecurityFilterChain(
-                PathPatternRequestMatcher.withDefaults().matcher(this.serviceProvider.getMpQrcodeConfig().getLoginUrl()),
-                filter
-        );
+    private List<DefaultSecurityFilterChain> createQrLoginFilter(H builder) {
+        return this.serviceProvider.getMpQrcodeConfig().getAuthDomainConfig().entrySet().stream()
+                .map(item -> {
+                    String authDomain = item.getKey();
+                    SmartAuthDomainConfig authDomainConfig = item.getValue();
+
+                    WechatMpQrCodeLoginFilter filter = new WechatMpQrCodeLoginFilter(authDomainConfig.getLoginUrl(), this.getBean(AuthCache.class));
+                    filter.setAuthDomain(authDomain);
+                    filter.setAuthenticationManager(this.getBuilder().getSharedObject(AuthenticationManager.class));
+                    // 设置登录成功handler
+                    filter.setAuthenticationSuccessHandler(builder.getSharedObject(AuthenticationSuccessHandler.class));
+                    // 设置登录失败handler
+                    filter.setAuthenticationFailureHandler(builder.getSharedObject(AuthenticationFailureHandler.class));
+                    return new DefaultSecurityFilterChain(PathPatternRequestMatcher.withDefaults().matcher(authDomainConfig.getLoginUrl()), filter);
+                }).toList();
     }
 
     private WechatMpQrcodeCreateProvider getWechatMpQrcodeCreateProvider() {
@@ -258,11 +267,10 @@ public class AuthWechatSecurityConfigurer<H extends HttpSecurityBuilder<H>> exte
      * 微信服务号二维码登录配置
      */
     @Getter
-    public class MpQrcodeConfig {
-        private static final String QRCODE_BASE_URL = BASE_URL + "/mp";
+    public class MpQrcodeConfig extends WechatCommonConfig<MpQrcodeConfig> {
 
-        private String createUrl = QRCODE_BASE_URL + "/createQrcode";
-        private String loginUrl = QRCODE_BASE_URL + "/login";
+        private String createUrl = DefaultAuthUrlEnum.WECHAT_MP_CREATE_QRCODE.getUrl();
+        private String loginUrl = DefaultAuthUrlEnum.WECHAT_MP_LOGIN.getUrl();
 
         public MpQrcodeConfig createUrl(String createUrl) {
             this.createUrl = createUrl;
@@ -277,16 +285,28 @@ public class AuthWechatSecurityConfigurer<H extends HttpSecurityBuilder<H>> exte
         public AuthWechatSecurityConfigurer<H> config() {
             return AuthWechatSecurityConfigurer.this;
         }
+
+        @Override
+        public Map<String, SmartAuthDomainConfig> getAuthDomainConfig() {
+            Map<String, SmartAuthDomainConfig> authDomainConfig = super.getAuthDomainConfig();
+            if (!CollectionUtils.isEmpty(authDomainConfig)) {
+                return authDomainConfig;
+            }
+            return Map.of(
+                    AuthDomainConstants.AUTH_DOMAIN_NONE,
+                    SmartAuthDomainConfig.builder()
+                            .loginUrl(this.loginUrl)
+                            .build()
+            );
+        }
     }
 
     /**
      * 微信小程序登录配置
      */
     @Getter
-    public class MiniappConfig {
-        private static final String MINIAPP_BASE_URL = BASE_URL + "/miniapp";
-
-        private String loginUrl = MINIAPP_BASE_URL + "/login";
+    public class MiniappConfig extends WechatCommonConfig<MiniappConfig> {
+        private String loginUrl = DefaultAuthUrlEnum.WECHAT_MINIAPP_LOGIN.getUrl();
 
         public MiniappConfig loginUrl(String loginUrl) {
             this.loginUrl = loginUrl;
@@ -295,6 +315,56 @@ public class AuthWechatSecurityConfigurer<H extends HttpSecurityBuilder<H>> exte
 
         public AuthWechatSecurityConfigurer<H> config() {
             return AuthWechatSecurityConfigurer.this;
+        }
+
+        @Override
+        public Map<String, SmartAuthDomainConfig> getAuthDomainConfig() {
+            Map<String, SmartAuthDomainConfig> authDomainConfig = super.getAuthDomainConfig();
+            if (!CollectionUtils.isEmpty(authDomainConfig)) {
+                return authDomainConfig;
+            }
+            return Map.of(
+                    AuthDomainConstants.AUTH_DOMAIN_NONE,
+                    SmartAuthDomainConfig.builder()
+                            .loginUrl(this.loginUrl)
+                            .build()
+            );
+        }
+    }
+
+    /**
+     * 通用
+     * @param <C>
+     */
+    private static class WechatCommonConfig<C extends WechatCommonConfig<C>> {
+        private final Map<String, SmartAuthDomainConfig> authDomainConfigList = HashMap.newHashMap(16);
+
+        /**
+         * 添加权限域配置
+         * @param authDomain 权限域
+         * @param authDomainConfig 权限域配置
+         * @return this
+         */
+        public C addAuthDomain(@NonNull String authDomain, @NonNull SmartAuthDomainConfig authDomainConfig) {
+            return this.addAuthDomain(Map.of(authDomain, authDomainConfig));
+        }
+
+        /**
+         * 添加权限域配置
+         * @param authDomainConfigMap 权限域配置
+         * @return this
+         */
+        public C addAuthDomain(@NonNull Map<String, SmartAuthDomainConfig> authDomainConfigMap) {
+            authDomainConfigList.putAll(authDomainConfigMap);
+            return (C) this;
+        }
+
+        /**
+         * 获取权限域配置
+         * @return 获取权限域
+         */
+        protected Map<String, SmartAuthDomainConfig> getAuthDomainConfig() {
+            return Collections.unmodifiableMap(authDomainConfigList);
         }
     }
 }
