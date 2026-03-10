@@ -37,7 +37,7 @@
         <jacob.version>1.20</jacob.version>
         <kettle.version>10.2.0.0-222</kettle.version>
         <xxl-job.version>3.2.0</xxl-job.version>
-        <druid.version>1.2.27</druid.version>
+        <druid.version>1.2.28</druid.version>
         <easy-captcha.version>1.6.2</easy-captcha.version>
         <ojdbc8.version>19.3.0.0</ojdbc8.version>
         <commons-vfs2.version>2.10.0</commons-vfs2.version>
@@ -479,6 +479,11 @@
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>druid-spring-boot-3-starter</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-4-starter</artifactId>
                 <version>${druid.version}</version>
             </dependency>
             <dependency>
