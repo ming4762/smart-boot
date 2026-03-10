@@ -2,6 +2,8 @@ package com.smart.boot.autoconfigure.wechat;
 
 import com.smart.boot.autoconfigure.guava.GuavaCacheAutoConfiguration;
 import com.smart.boot.autoconfigure.redis.SmartRedisAutoConfiguration;
+import com.smart.framework.auth.core.wechat.WechatAuthConfigProvider;
+import com.smart.framework.auth.extensions.wechat.provider.DefaultWechatAuthConfigProviderImpl;
 import com.smart.framework.commons.core.cache.CacheService;
 import com.smart.framework.extension.wechat.config.DefaultSmartWechatConfigStorageCreatorImpl;
 import com.smart.framework.extension.wechat.config.SmartWechatConfigStorageCreator;
@@ -38,5 +40,15 @@ public class SmartWechatAutoConfiguration {
             ObjectProvider<CacheService> cacheServiceObjectProvider
     ) {
         return new DefaultSmartWechatConfigStorageCreatorImpl(properties.getKeyPrefix(), cacheServiceObjectProvider);
+    }
+
+    /**
+     * 创建微信授权配置提供者
+     * @return 微信授权配置提供者
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    public WechatAuthConfigProvider wechatAuthConfigProvider() {
+        return new DefaultWechatAuthConfigProviderImpl();
     }
 }

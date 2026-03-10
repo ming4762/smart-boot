@@ -11,9 +11,8 @@ import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpQrcodeService;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpQrCodeTicket;
-import me.chanjar.weixin.mp.config.WxMpConfigStorage;
 import org.jspecify.annotations.Nullable;
-import org.springframework.util.StringUtils;
+import org.springframework.util.Assert;
 
 import java.time.Duration;
 
@@ -50,12 +49,9 @@ public class DefaultWechatMpQrcodeCreateProviderImpl implements WechatMpQrcodeCr
         if (appId == null && this.wechatAuthConfigProvider != null) {
             appId = this.wechatAuthConfigProvider.getDefaultAppid(AuthTypeEnum.WECHAT_MP_QRCODE);
         }
-        if (StringUtils.hasText(appId)) {
-            this.wxMpService.switchoverTo(appId);
-        } else {
-            WxMpConfigStorage wxMpConfigStorage = this.wxMpService.getWxMpConfigStorage();
-            appId = wxMpConfigStorage.getAppId();
-        }
+        Assert.notNull(appId, "appId must not be null");
+        this.wxMpService.switchoverTo(appId);
+
         WxMpQrcodeService qrcodeService = this.wxMpService.getQrcodeService();
         Duration duration = Duration.ofMinutes(20);
         long expireSeconds = duration.getSeconds();

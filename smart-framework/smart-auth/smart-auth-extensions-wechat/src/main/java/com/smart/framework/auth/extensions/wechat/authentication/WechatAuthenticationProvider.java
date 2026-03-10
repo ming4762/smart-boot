@@ -16,6 +16,7 @@ import com.smart.framework.auth.extensions.wechat.userdetails.RestUserWechatExtr
 import com.smart.framework.auth.extensions.wechat.userdetails.WechatUserDetailService;
 import com.smart.framework.commons.core.i18n.I18nUtils;
 import lombok.Setter;
+import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -62,6 +63,7 @@ public class WechatAuthenticationProvider implements AuthenticationProvider {
         WechatLoginResult loginResult;
         String appid = token.getAppid();
         if (appid == null) {
+            Assert.notNull(this.wechatAuthConfigProvider, "wechatAuthConfigProvider must not be null");
             appid = wechatAuthConfigProvider.getDefaultAppid(token.getAuthType());
         }
         if (appid == null) {

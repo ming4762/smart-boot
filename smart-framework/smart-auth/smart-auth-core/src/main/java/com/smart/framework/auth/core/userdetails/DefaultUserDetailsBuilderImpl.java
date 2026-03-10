@@ -110,7 +110,7 @@ public class DefaultUserDetailsBuilderImpl implements UserDetailsBuilder {
         // 设置租户信息
         restUserDetails.setUserTenant(userAccountData.getTenant());
         if (!CollectionUtils.isEmpty(user.getAuthDomainList())) {
-            restUserDetails.setAuthDomains(user.getAuthDomainList().stream().map(Enum::name).collect(Collectors.toSet()));
+            restUserDetails.setUserAuthDomains(user.getAuthDomainList().stream().map(Enum::name).collect(Collectors.toSet()));
         }
         return restUserDetails;
     }
