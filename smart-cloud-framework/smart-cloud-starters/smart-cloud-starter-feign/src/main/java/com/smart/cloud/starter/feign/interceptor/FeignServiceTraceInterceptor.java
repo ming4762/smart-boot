@@ -24,7 +24,7 @@ public class FeignServiceTraceInterceptor implements RequestInterceptor {
 
     @Override
     public void apply(RequestTemplate template) {
-        List<String> serviceList = SmartCloudUtils.getServiceTrace();
+        List<String> serviceList = SmartCloudUtils.getCloudServiceChain();
         List<String> headerListWithThis = new ArrayList<>(serviceList.size() + 1);
         headerListWithThis.addAll(serviceList);
         headerListWithThis.add(appName);

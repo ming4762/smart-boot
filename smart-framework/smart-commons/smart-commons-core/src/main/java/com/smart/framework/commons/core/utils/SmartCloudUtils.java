@@ -24,10 +24,10 @@ public class SmartCloudUtils {
     private static final String HEADER_SPLIT = ",";
 
     /**
-     * 获取服务追踪信息
-     * @return 服务追踪信息
+     * 获取服务调用链
+     * @return 服务调用链
      */
-    public static List<String> getServiceTrace() {
+    public static List<String> getCloudServiceChain() {
         HttpServletRequest request = Optional.ofNullable((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
                 .map(ServletRequestAttributes::getRequest)
                 .orElse(null);
