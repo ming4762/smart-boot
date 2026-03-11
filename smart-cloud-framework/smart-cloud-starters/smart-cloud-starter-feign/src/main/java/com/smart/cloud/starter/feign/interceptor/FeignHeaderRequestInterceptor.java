@@ -4,7 +4,6 @@ import com.smart.cloud.starter.feign.holder.ServerWebExchangeContextHolder;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -21,7 +20,6 @@ import java.util.stream.Collectors;
  * 2025/10/11 10:19
  * @since 5.0.0
  */
-@Configuration
 public class FeignHeaderRequestInterceptor implements RequestInterceptor {
 
     private static final List<String> REQUEST_HEADER_NAMES = Arrays.asList(
