@@ -3,7 +3,9 @@ package com.smart.module.system.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.common.collect.Lists;
 import com.smart.framework.auth.common.utils.AuthUtils;
+import com.smart.framework.commons.core.log.SysLogSaveDTO;
 import com.smart.framework.crud.constants.CrudCommonEnum;
+import com.smart.framework.crud.datapermission.handler.SmartDataPermissionController;
 import com.smart.framework.crud.query.PageSortQuery;
 import com.smart.framework.crud.service.BaseServiceImpl;
 import com.smart.framework.crud.service.UserSetterService;
@@ -19,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
@@ -89,5 +92,20 @@ public class SysLogServiceImpl extends BaseServiceImpl<SysLogMapper, SysLogPO> i
                 item.setTenant(tenantMap.get(item.getTenantId()));
             }
         });
+    }
+
+    /**
+     * 保存日志
+     *
+     * @param dto 日志信息
+     * @return 是否保存成功
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean saveLog(SysLogSaveDTO dto) {
+        SmartDataPermissionController.ignoreAll();
+        SysLogPO po = new SysLogPO();
+        BeanUtils.copyProperties(dto, po);
+        return this.save(po);
     }
 }

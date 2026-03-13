@@ -15,7 +15,6 @@ import com.smart.framework.auth.core.service.AuthCache;
 import com.smart.framework.auth.core.token.CompositeSmartTokenRepository;
 import com.smart.framework.auth.core.userdetails.DefaultUserDetailsBuilderImpl;
 import com.smart.framework.auth.core.userdetails.UserDetailsBuilder;
-import com.smart.module.api.system.SysLogApi;
 import com.smart.module.api.system.SysUserApi;
 import com.smart.module.api.system.SystemAuthUserApi;
 import com.smart.module.auth.config.AuthMethodSecurityConfig;
@@ -132,13 +131,13 @@ public class SmartAuthSecurityAutoConfiguration {
 
     /**
      * 创建登录日志处理器
-     * @param sysLogApi 日志API
+     * @param applicationEventPublisher 事件发布器
      * @return AuthEventLogHandler
      */
     @Bean
     @ConditionalOnMissingBean
-    public AuthEventLogHandler authEventLogHandler(SysLogApi sysLogApi) {
-        return new AuthEventLogHandler(sysLogApi);
+    public AuthEventLogHandler authEventLogHandler(ApplicationEventPublisher applicationEventPublisher) {
+        return new AuthEventLogHandler(applicationEventPublisher);
     }
 
     /**

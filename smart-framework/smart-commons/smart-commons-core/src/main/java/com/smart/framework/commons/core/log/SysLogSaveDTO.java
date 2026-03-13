@@ -1,15 +1,14 @@
-package com.smart.module.api.system.dto;
+package com.smart.framework.commons.core.log;
 
-import com.smart.framework.commons.core.log.LogOperationTypeEnum;
-import com.smart.framework.commons.core.log.LogSourceEnum;
 import lombok.*;
 
 import java.io.Serializable;
 
 /**
- * 日志保存DTO
- * @author zhongming4762
- * 2023/3/11
+ * 系统日志保存DTO
+ * @author <a href="https://github.com/ming4762">ShiZhongMing</a>
+ * 2026-03-13 19:28
+ * @since 1.0.0
  */
 @Getter
 @Setter

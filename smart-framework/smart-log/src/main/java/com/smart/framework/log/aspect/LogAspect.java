@@ -4,12 +4,12 @@ import com.smart.framework.commons.core.exception.BaseException;
 import com.smart.framework.commons.core.log.Log;
 import com.smart.framework.commons.core.log.LogIdentEnum;
 import com.smart.framework.commons.core.log.LogSourceEnum;
+import com.smart.framework.commons.core.log.SysLogSaveDTO;
 import com.smart.framework.commons.core.message.Result;
 import com.smart.framework.commons.core.utils.BeanUtils;
 import com.smart.framework.commons.core.utils.IpUtils;
 import com.smart.framework.commons.core.utils.JsonUtils;
 import com.smart.framework.log.handler.LogHandler;
-import com.smart.framework.log.model.SysLog;
 import com.smart.framework.log.utils.AopUtils;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
@@ -187,7 +187,7 @@ public final class LogAspect {
         final String className = point.getTarget().getClass().getName();
         final String methodName = signature.getName();
 
-        final SysLog sysLog = SysLog.builder()
+        final SysLogSaveDTO sysLog = SysLogSaveDTO.builder()
                 .operation(logAnnotation.value())
                 .useTime(time)
                 .method(String.join(".", className, methodName))

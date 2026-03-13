@@ -80,6 +80,11 @@
             <artifactId>logback-adapter</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-boot-starter-rocketmq</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

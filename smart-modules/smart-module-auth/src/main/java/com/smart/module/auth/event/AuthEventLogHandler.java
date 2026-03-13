@@ -1,15 +1,17 @@
 package com.smart.module.auth.event;
 
+import com.smart.framework.auth.common.constants.AuthTypeEnum;
+import com.smart.framework.auth.common.userdetails.RestUserDetails;
 import com.smart.framework.auth.core.authentication.AbstractEnhanceAuthenticationToken;
 import com.smart.framework.auth.core.authentication.RestUsernamePasswordAuthenticationToken;
-import com.smart.framework.auth.common.constants.AuthTypeEnum;
 import com.smart.framework.auth.core.event.AuthEventHandler;
-import com.smart.framework.auth.common.userdetails.RestUserDetails;
 import com.smart.framework.commons.core.http.HttpStatus;
 import com.smart.framework.commons.core.log.LogSourceEnum;
-import com.smart.module.api.system.SysLogApi;
+import com.smart.framework.commons.core.log.SmartSaveLogEvent;
+import com.smart.framework.commons.core.log.SysLogSaveDTO;
 import com.smart.module.api.system.constants.LogIdentEnum;
-import com.smart.module.api.system.dto.SysLogSaveDTO;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.event.AbstractAuthenticationFailureEvent;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
@@ -23,13 +25,10 @@ import java.util.Optional;
  * @author zhongming4762
  * 2023/6/7
  */
+@RequiredArgsConstructor
 public class AuthEventLogHandler implements AuthEventHandler {
 
-    private final SysLogApi sysLogApi;
-
-    public AuthEventLogHandler(SysLogApi sysLogApi) {
-        this.sysLogApi =sysLogApi;
-    }
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Override
     public int getOrder() {
@@ -55,7 +54,9 @@ public class AuthEventLogHandler implements AuthEventHandler {
                 .createBy(user.getFullName())
                 .tenantId(user.getUserTenant().getTenantId())
                 .build();
-        this.sysLogApi.saveLog(log);
+        SmartSaveLogEvent saveLogEvent = new SmartSaveLogEvent();
+        saveLogEvent.setLogData(log);
+        applicationEventPublisher.publishEvent(saveLogEvent);
     }
 
     /**
@@ -77,7 +78,9 @@ public class AuthEventLogHandler implements AuthEventHandler {
                 .createBy(user.getFullName())
                 .tenantId(user.getUserTenant().getTenantId())
                 .build();
-        this.sysLogApi.saveLog(sysLog);
+        SmartSaveLogEvent saveLogEvent = new SmartSaveLogEvent();
+        saveLogEvent.setLogData(sysLog);
+        applicationEventPublisher.publishEvent(saveLogEvent);
     }
 
     /**
@@ -106,6 +109,8 @@ public class AuthEventLogHandler implements AuthEventHandler {
                 .operation(authType == null ? null : authType.name())
                 .result(String.format("%s[%s],username:[%s]", exception.getClass().getSimpleName(), exception.getMessage(), token.getPrincipal()))
                 .build();
-        this.sysLogApi.saveLog(sysLog);
+        SmartSaveLogEvent saveLogEvent = new SmartSaveLogEvent();
+        saveLogEvent.setLogData(sysLog);
+        applicationEventPublisher.publishEvent(saveLogEvent);
     }
 }

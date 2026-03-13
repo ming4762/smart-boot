@@ -1,12 +1,12 @@
 package com.smart.cloud.starter.log.handler;
 
-import com.smart.cloud.api.system.feign.RemoteSysLogApi;
 import com.smart.framework.commons.core.log.Log;
+import com.smart.framework.commons.core.log.SmartSaveLogEvent;
+import com.smart.framework.commons.core.log.SysLogSaveDTO;
 import com.smart.framework.log.handler.LogHandler;
-import com.smart.framework.log.model.SysLog;
-import com.smart.module.api.system.dto.SysLogSaveDTO;
+import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.springframework.beans.BeanUtils;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -15,13 +15,10 @@ import org.springframework.lang.Nullable;
  * @author zhongming4762
  * 2023/3/11
  */
+@RequiredArgsConstructor
 public class RemoteLogHandler implements LogHandler {
 
-    private final RemoteSysLogApi logApi;
-
-    public RemoteLogHandler(RemoteSysLogApi logApi) {
-        this.logApi = logApi;
-    }
+   private final ApplicationEventPublisher applicationEventPublisher;
 
     /**
      * 保存日志
@@ -36,9 +33,10 @@ public class RemoteLogHandler implements LogHandler {
      * @return 是否保存成功
      */
     @Override
-    public boolean save(@NonNull SysLog sysLog, @NonNull ProceedingJoinPoint point, @NonNull Log logAnnotation, long time, int code, @Nullable Object result, @Nullable String errorMessage) {
-        SysLogSaveDTO parameter = new SysLogSaveDTO();
-        BeanUtils.copyProperties(sysLog, parameter);
-        return this.logApi.saveLog(parameter);
+    public boolean save(@NonNull SysLogSaveDTO sysLog, @NonNull ProceedingJoinPoint point, @NonNull Log logAnnotation, long time, int code, @Nullable Object result, @Nullable String errorMessage) {
+        SmartSaveLogEvent saveLogEvent = new SmartSaveLogEvent();
+        saveLogEvent.setLogData(sysLog);
+        applicationEventPublisher.publishEvent(saveLogEvent);
+        return true;
     }
 }

@@ -3,6 +3,7 @@ package com.smart.framework.i18n.config;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -27,6 +28,7 @@ public class ValidatorConfiguration implements WebMvcConfigurer {
     }
 
     @Bean
+    @Primary
     public Validator i18nValidator() {
         LocalValidatorFactoryBean validatorFactoryBean = new LocalValidatorFactoryBean();
         validatorFactoryBean.setValidationMessageSource(messageSource);

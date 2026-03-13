@@ -14,4 +14,8 @@ public interface SmartMqDestinationConstants {
     String WECHAT_EVENT = "smart-wechat";
 
     String WECHAT_EVENT_MESSAGE_TAG = "message";
+
+    String SMART_EVENT = "smart-boot-event";
+
+    String SMART_EVENT_TAG = "event";
 }

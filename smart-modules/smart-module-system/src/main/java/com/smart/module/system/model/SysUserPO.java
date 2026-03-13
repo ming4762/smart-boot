@@ -91,4 +91,9 @@ public class SysUserPO extends BaseModelDeleteUserTime implements BaseUser {
      * 微信用户的unionid
      */
     private String wechatUnionId;
+
+    /**
+     * 最后登录租户ID
+     */
+    private Long lastLoginTenantId;
 }

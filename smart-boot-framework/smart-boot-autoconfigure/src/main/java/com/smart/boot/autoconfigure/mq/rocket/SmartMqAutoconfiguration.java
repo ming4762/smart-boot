@@ -1,5 +1,7 @@
 package com.smart.boot.autoconfigure.mq.rocket;
 
+import com.smart.framework.rocketmq.event.SmartSpringEventConsumer;
+import com.smart.framework.rocketmq.event.SmartSpringEventProducer;
 import com.smart.framework.rocketmq.producer.SmartMqProducer;
 import com.smart.framework.rocketmq.producer.SmartMqProducerRocketImpl;
 import org.apache.rocketmq.spring.autoconfigure.RocketMQAutoConfiguration;
@@ -28,5 +30,15 @@ public class SmartMqAutoconfiguration {
     @ConditionalOnBean(RocketMQTemplate.class)
     public SmartMqProducer smartMqProducer(SmartMqProperties properties, RocketMQTemplate rocketMQTemplate) {
         return new SmartMqProducerRocketImpl(properties.getPrefix(), rocketMQTemplate);
+    }
+
+    @Bean
+    public SmartSpringEventProducer smartSpringEventProducer(SmartMqProperties properties, SmartMqProducer smartMqProducer) {
+        return new SmartSpringEventProducer(String.join(":", properties.getEventTopic(), properties.getEventTag()), smartMqProducer);
+    }
+
+    @Bean
+    public SmartSpringEventConsumer smartSpringEventConsumer() {
+        return new SmartSpringEventConsumer();
     }
 }

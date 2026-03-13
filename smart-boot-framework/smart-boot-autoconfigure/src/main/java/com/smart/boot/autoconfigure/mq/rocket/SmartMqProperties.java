@@ -1,5 +1,6 @@
 package com.smart.boot.autoconfigure.mq.rocket;
 
+import com.smart.framework.rocketmq.constants.SmartMqDestinationConstants;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -21,5 +22,8 @@ public class SmartMqProperties implements Serializable {
      * MQ topic前缀，用于区分不同环境
      */
     private String prefix = "";
+
+    private String eventTopic = SmartMqDestinationConstants.SMART_EVENT;
+    private String eventTag = SmartMqDestinationConstants.SMART_EVENT_TAG;
 
 }

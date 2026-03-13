@@ -61,15 +61,16 @@
             B.use_yn
         from sys_tenant A
         JOIN sys_tenant_user B ON A.id = B.tenant_id
-        WHERE user_id = #{userId}
+        JOIN sys_user U ON U.user_id = B.user_id
+        WHERE B.user_id = #{userId}
             AND A.delete_yn = 0
             AND A.use_yn = 1
             AND (
-                (A.expire_time is null AND A.expire_time Is null)
+                (A.expire_time is null AND A.effect_time is null)
                 OR
                 (A.effect_time &lt;= #{now} AND A.expire_time &gt;= #{now})
             )
-        order by case when B.default_yn = 1 then 1 else 2 end, A.seq
+        order by case when B.default_yn = 1 then 1 when A.id = U.last_login_tenant_id then 2 else 3 end, A.seq
     </select>
 
     <!--  根据租户角色查询功能ID  -->
