@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: @artifactId@
+    name: @cloud.application.name@message
   profiles:
     active: @profiles.active@
   cloud:

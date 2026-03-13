@@ -20,7 +20,10 @@
         <spring-cloud.version>2025.0.1</spring-cloud.version>
         <spring-cloud-alibaba.version>2023.0.3.3</spring-cloud-alibaba.version>
 
+        <!--    服务端口前缀，用于统一修改端口    -->
         <server.port.prefix>808</server.port.prefix>
+        <!--    微服务模式服务名前缀，用于统一修改服务名    -->
+        <cloud.application.name.prefix>smart-cloud-service-</cloud.application.name.prefix>
 
         <guava.version>33.4.8-jre</guava.version>
         <commons-collections4.version>4.5.0</commons-collections4.version>
@@ -105,6 +108,8 @@
                 <nacos.username>nacos</nacos.username>
                 <nacos.password>nacos</nacos.password>
 
+                <cloud.application.name>${cloud.application.name.prefix}</cloud.application.name>
+
                 <server.port.gateway>${server.port.prefix}0</server.port.gateway>
                 <server.port.system>${server.port.prefix}1</server.port.system>
                 <server.port.auth>${server.port.prefix}2</server.port.auth>
@@ -125,6 +130,8 @@
                 <nacos.namespace>pro</nacos.namespace>
                 <nacos.username>nacos</nacos.username>
                 <nacos.password>nacos</nacos.password>
+
+                <cloud.application.name>${cloud.application.name.prefix}</cloud.application.name>
 
                 <server.port.gateway>${server.port.prefix}0</server.port.gateway>
                 <server.port.system>${server.port.prefix}1</server.port.system>
