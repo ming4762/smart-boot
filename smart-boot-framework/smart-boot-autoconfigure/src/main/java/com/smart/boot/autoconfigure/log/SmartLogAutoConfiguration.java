@@ -6,6 +6,7 @@ import com.smart.framework.log.handler.LogHandler;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -32,7 +33,7 @@ public class SmartLogAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public LogHandler defaultLogHandler() {
-        return new DefaultLogHandler();
+    public LogHandler defaultLogHandler(ApplicationEventPublisher applicationEventPublisher) {
+        return new DefaultLogHandler(applicationEventPublisher);
     }
 }

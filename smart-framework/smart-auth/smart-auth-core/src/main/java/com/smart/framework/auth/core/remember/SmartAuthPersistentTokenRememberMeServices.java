@@ -2,7 +2,7 @@ package com.smart.framework.auth.core.remember;
 
 import com.smart.framework.auth.common.constants.AuthTypeEnum;
 import com.smart.framework.auth.common.constants.LoginTypeEnum;
-import com.smart.framework.auth.core.model.RestUserDetailsImpl;
+import com.smart.framework.auth.common.userdetails.RestUserDetailsImpl;
 import com.smart.framework.commons.core.utils.IpUtils;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

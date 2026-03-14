@@ -1,6 +1,5 @@
-package com.smart.framework.auth.core.model;
+package com.smart.framework.auth.common.userdetails;
 
-import com.smart.framework.auth.core.constants.GrantedAuthorityTypeEnum;
 import org.springframework.security.core.GrantedAuthority;
 
 /**

@@ -4,8 +4,10 @@ import com.smart.boot.autoconfigure.mq.rocket.SmartMqAutoconfiguration;
 import com.smart.boot.autoconfigure.wechat.SmartWechatMpAutoconfiguration;
 import com.smart.framework.auth.core.service.AuthCache;
 import com.smart.framework.auth.core.userdetails.UserDetailsBuilder;
+import com.smart.framework.auth.core.wechat.WechatAuthConfigProvider;
 import com.smart.framework.auth.extensions.wechat.AuthWechatSecurityConfigurer;
 import com.smart.framework.auth.extensions.wechat.listener.WechatLoginScanSpringEventListener;
+import com.smart.framework.auth.extensions.wechat.provider.DefaultWechatAuthConfigProviderImpl;
 import com.smart.framework.auth.extensions.wechat.userdetails.DefaultWechatUserDetailServiceImpl;
 import com.smart.framework.auth.extensions.wechat.userdetails.WechatUserDetailService;
 import com.smart.module.api.system.SystemAuthUserApi;
@@ -39,5 +41,16 @@ public class SmartAuthWechatAutoConfiguration {
     @ConditionalOnClass(WechatLoginScanSpringEventListener.class)
     public WechatLoginScanSpringEventListener wechatLoginScanSpringEventMonitor(AuthCache authCache) {
         return new WechatLoginScanSpringEventListener(authCache);
+    }
+
+
+    /**
+     * 创建微信授权配置提供者
+     * @return 微信授权配置提供者
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    public WechatAuthConfigProvider wechatAuthConfigProvider() {
+        return new DefaultWechatAuthConfigProviderImpl();
     }
 }

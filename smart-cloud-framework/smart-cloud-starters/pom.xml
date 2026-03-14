@@ -8,7 +8,6 @@
         <version>5.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>smart-cloud-starters</artifactId>
-    <version>5.0.0-SNAPSHOT</version>
     <name>smart-cloud-common</name>
     <description>通用模块</description>
     <packaging>pom</packaging>
@@ -18,7 +17,6 @@
         <module>smart-cloud-starter-exception</module>
         <module>smart-cloud-starter-feign</module>
         <module>smart-cloud-starter-i18n</module>
-        <module>smart-cloud-starter-log</module>
     </modules>
 
     <properties>

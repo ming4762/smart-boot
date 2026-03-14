@@ -1,10 +1,10 @@
 package com.smart.framework.auth.extensions.jwt.token;
 
+import com.smart.framework.auth.common.userdetails.PermissionGrantedAuthority;
 import com.smart.framework.auth.common.userdetails.RestUserDetails;
+import com.smart.framework.auth.common.userdetails.RestUserDetailsImpl;
+import com.smart.framework.auth.common.userdetails.RoleGrantedAuthority;
 import com.smart.framework.auth.core.i18n.AuthI18nMessage;
-import com.smart.framework.auth.core.model.PermissionGrantedAuthority;
-import com.smart.framework.auth.core.model.RestUserDetailsImpl;
-import com.smart.framework.auth.core.model.RoleGrantedAuthority;
 import com.smart.framework.auth.core.properties.AuthProperties;
 import com.smart.framework.auth.core.service.AbstractAuthCache;
 import com.smart.framework.auth.core.service.AuthCache;

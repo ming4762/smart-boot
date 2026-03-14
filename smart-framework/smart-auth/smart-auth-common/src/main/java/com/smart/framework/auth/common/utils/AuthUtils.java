@@ -1,10 +1,12 @@
 package com.smart.framework.auth.common.utils;
 
+import com.smart.framework.auth.common.authentication.SmartAuthRestUserDetailAuthentication;
 import com.smart.framework.auth.common.exception.AuthException;
 import com.smart.framework.auth.common.userdetails.RestUserDetails;
 import com.smart.framework.commons.core.dto.auth.UserTenantDTO;
 import com.smart.framework.commons.core.exception.SystemException;
 import com.smart.framework.commons.core.http.HttpStatus;
+import com.smart.framework.commons.core.tenant.SmartTenantHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -157,5 +159,13 @@ public final class AuthUtils {
      */
     public static Authentication getAuthentication() {
         return SecurityContextHolder.getContext().getAuthentication();
+    }
+
+    public static void setUser(RestUserDetails userDetails) {
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(new SmartAuthRestUserDetailAuthentication(userDetails));
+        SecurityContextHolder.setContext(context);
+
+        SmartTenantHolder.set(userDetails::getUserTenant);
     }
 }

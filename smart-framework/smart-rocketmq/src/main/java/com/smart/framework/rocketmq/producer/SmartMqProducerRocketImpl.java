@@ -1,5 +1,8 @@
 package com.smart.framework.rocketmq.producer;
 
+import com.smart.framework.auth.common.userdetails.RestUserDetails;
+import com.smart.framework.auth.common.utils.AuthUtils;
+import com.smart.framework.commons.core.utils.JsonUtils;
 import com.smart.framework.rocketmq.model.SmartMqMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +13,7 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 import java.time.Duration;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 /**
  * RocketMQ生产者实现类
@@ -34,7 +37,7 @@ public class SmartMqProducerRocketImpl implements SmartMqProducer {
      */
     @Override
     public SendResult syncSend(@NonNull String destination, @NonNull SmartMqMessage<?> message) {
-        return this.doSend(destination, message, () -> this.rocketMQTemplate.syncSend(this.getRealDestination(destination), message));
+        return this.doSend(destination, message, handlerMessage -> this.rocketMQTemplate.syncSend(this.getRealDestination(destination), handlerMessage));
     }
 
     /**
@@ -45,8 +48,8 @@ public class SmartMqProducerRocketImpl implements SmartMqProducer {
      */
     @Override
     public void asyncSend(@NonNull String destination, @NonNull SmartMqMessage<?> message, @NonNull SendCallback sendCallback) {
-        this.doSend(destination, message, () -> {
-            this.rocketMQTemplate.asyncSend(this.getRealDestination(destination), message, sendCallback);
+        this.doSend(destination, message, handlerMessage -> {
+            this.rocketMQTemplate.asyncSend(this.getRealDestination(destination), handlerMessage, sendCallback);
             return null;
         });
     }
@@ -61,7 +64,7 @@ public class SmartMqProducerRocketImpl implements SmartMqProducer {
      */
     @Override
     public SendResult syncSendDelay(@NonNull String destination, @NonNull SmartMqMessage<?> message, @NonNull Duration delayTime) {
-        return this.doSend(destination, message, () -> this.rocketMQTemplate.syncSendDelayTimeMills(this.getRealDestination(destination), message, delayTime.toMillis()));
+        return this.doSend(destination, message, handlerMessage -> this.rocketMQTemplate.syncSendDelayTimeMills(this.getRealDestination(destination), handlerMessage, delayTime.toMillis()));
     }
 
     /**
@@ -74,8 +77,8 @@ public class SmartMqProducerRocketImpl implements SmartMqProducer {
      */
     @Override
     public void asyncSendDelay(@NonNull String destination, @NonNull SmartMqMessage<?> message, @NonNull String hashKey, @NonNull SendCallback sendCallback) {
-        this.doSend(destination, message, () -> {
-            this.rocketMQTemplate.asyncSendOrderly(this.getRealDestination(destination), message, hashKey, sendCallback);
+        this.doSend(destination, message, handlerMessage -> {
+            this.rocketMQTemplate.asyncSendOrderly(this.getRealDestination(destination), handlerMessage, hashKey, sendCallback);
             return null;
         });
     }
@@ -90,7 +93,7 @@ public class SmartMqProducerRocketImpl implements SmartMqProducer {
      */
     @Override
     public SendResult syncSendOrderly(@NonNull String destination, @NonNull SmartMqMessage<?> message, @NonNull String hashKey) {
-        return this.doSend(destination, message, () -> this.rocketMQTemplate.syncSendOrderly(this.getRealDestination(destination), message, hashKey));
+        return this.doSend(destination, message, handlerMessage -> this.rocketMQTemplate.syncSendOrderly(this.getRealDestination(destination), handlerMessage, hashKey));
     }
 
     /**
@@ -103,16 +106,21 @@ public class SmartMqProducerRocketImpl implements SmartMqProducer {
      */
     @Override
     public void asyncSendOrderly(@NonNull String destination, @NonNull SmartMqMessage<?> message, @NonNull String hashKey, @NonNull SendCallback sendCallback) {
-        this.doSend(destination, message, () -> {
-            this.rocketMQTemplate.asyncSendOrderly(this.getRealDestination(destination), message, hashKey, sendCallback);
+        this.doSend(destination, message, handlerMessage -> {
+            this.rocketMQTemplate.asyncSendOrderly(this.getRealDestination(destination), handlerMessage, hashKey, sendCallback);
             return null;
         });
     }
 
     @Nullable
-    protected SendResult doSend(@NonNull String destination, @NonNull SmartMqMessage<?> message, @NonNull Supplier<SendResult> supplier) {
+    protected SendResult doSend(@NonNull String destination, @NonNull SmartMqMessage<?> message, @NonNull Function<SmartMqMessage<?>, SendResult> handler) {
         log.info("Sending message to destination: {}, businessMessageId: {}", destination, message.getMessageId());
-        SendResult sendResult = supplier.get();
+        // 填入用户信息
+        RestUserDetails currentUser = AuthUtils.getCurrentUser();
+        if (currentUser != null) {
+            message.setUserJson(JsonUtils.toJsonString(currentUser));
+        }
+        SendResult sendResult = handler.apply(message);
         if (sendResult != null) {
             log.info("Message sent successfully, mqMessageId: {}", sendResult.getMsgId());
         }

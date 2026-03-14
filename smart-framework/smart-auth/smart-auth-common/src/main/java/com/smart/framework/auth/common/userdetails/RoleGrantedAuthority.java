@@ -1,6 +1,5 @@
-package com.smart.framework.auth.core.model;
+package com.smart.framework.auth.common.userdetails;
 
-import com.smart.framework.auth.core.constants.GrantedAuthorityTypeEnum;
 import com.smart.framework.commons.core.dto.auth.AuthRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;

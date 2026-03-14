@@ -1,9 +1,6 @@
 package com.smart.framework.rocketmq.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -35,4 +32,10 @@ public class SmartMqMessage<T extends Serializable> implements Serializable {
      * 消息负载
      */
     private T payload;
+
+    /**
+     * 用户数据JSON
+     */
+    @Setter
+    private String userJson;
 }

@@ -4,7 +4,7 @@ import com.aliyun.dingtalkcontact_1_0.models.GetUserResponseBody;
 import com.aliyun.dingtalkoauth2_1_0.models.GetUserTokenResponseBody;
 import com.smart.framework.auth.common.constants.AuthDomainConstants;
 import com.smart.framework.auth.common.exception.AuthException;
-import com.smart.framework.auth.core.model.RestUserDetailsImpl;
+import com.smart.framework.auth.common.userdetails.RestUserDetailsImpl;
 import com.smart.framework.auth.core.properties.AuthDingtalkProperties;
 import com.smart.framework.auth.extensions.dingtalk.exception.DingtalkNotBoundException;
 import com.smart.framework.auth.extensions.dingtalk.userdetails.DingtalkUserDetailService;

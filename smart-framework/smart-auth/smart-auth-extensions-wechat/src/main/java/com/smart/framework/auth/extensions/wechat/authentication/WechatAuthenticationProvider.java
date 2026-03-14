@@ -4,9 +4,9 @@ import com.smart.framework.auth.common.constants.AuthDomainConstants;
 import com.smart.framework.auth.common.constants.AuthTypeEnum;
 import com.smart.framework.auth.common.exception.AuthException;
 import com.smart.framework.auth.common.userdetails.RestUserDetails;
+import com.smart.framework.auth.common.userdetails.RestUserDetailsImpl;
 import com.smart.framework.auth.core.authentication.checker.RestUserDetailsChecker;
 import com.smart.framework.auth.core.i18n.AuthI18nMessage;
-import com.smart.framework.auth.core.model.RestUserDetailsImpl;
 import com.smart.framework.auth.core.wechat.WechatAuthConfigProvider;
 import com.smart.framework.auth.extensions.wechat.exception.WechatNotBoundException;
 import com.smart.framework.auth.extensions.wechat.model.WechatAppLoginResult;
@@ -16,13 +16,13 @@ import com.smart.framework.auth.extensions.wechat.userdetails.RestUserWechatExtr
 import com.smart.framework.auth.extensions.wechat.userdetails.WechatUserDetailService;
 import com.smart.framework.commons.core.i18n.I18nUtils;
 import lombok.Setter;
-import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Map;

@@ -1,6 +1,8 @@
 package com.smart.framework.rocketmq.consumer;
 
 import com.fasterxml.jackson.databind.JavaType;
+import com.smart.framework.auth.common.userdetails.RestUserDetailsImpl;
+import com.smart.framework.auth.common.utils.AuthUtils;
 import com.smart.framework.commons.core.utils.JsonUtils;
 import com.smart.framework.rocketmq.exception.SmartMqException;
 import com.smart.framework.rocketmq.model.SmartMqMessage;
@@ -8,6 +10,7 @@ import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.GenericTypeResolver;
+import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 
@@ -50,6 +53,11 @@ public interface SmartBaseConsumer<T extends Serializable> extends RocketMQListe
         SmartMqMessage<T> message = JsonUtils.parse(messageStr, javaType);
         LOGGER.info("[MQ] 收到消息 messageId={} source={} class={}",
                 message.getMessageId(), message.getSource(), payloadClass.getName());
+        // 设置用户
+        String userJson = message.getUserJson();
+        if (StringUtils.hasText(userJson)) {
+            AuthUtils.setUser(JsonUtils.parse(userJson, RestUserDetailsImpl.class));
+        }
 
         try {
             // 幂等校验（子类可重写）

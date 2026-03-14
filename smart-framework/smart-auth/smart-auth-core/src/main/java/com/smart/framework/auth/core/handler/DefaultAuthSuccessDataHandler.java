@@ -1,7 +1,7 @@
 package com.smart.framework.auth.core.handler;
 
+import com.smart.framework.auth.common.userdetails.RestUserDetailsImpl;
 import com.smart.framework.auth.core.model.LoginResult;
-import com.smart.framework.auth.core.model.RestUserDetailsImpl;
 import com.smart.framework.commons.core.dto.auth.Permission;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

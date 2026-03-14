@@ -130,6 +130,11 @@
             <groupId>com.smart</groupId>
             <artifactId>smart-boot-starter-message-wechat</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-boot-starter-rocketmq</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
