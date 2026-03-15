@@ -1,7 +1,7 @@
 package com.smart.framework.rocketmq.event;
 
 import com.smart.framework.commons.core.constants.SmartEventTypeEnum;
-import com.smart.framework.commons.core.event.SmartCommonEvent;
+import com.smart.framework.commons.core.event.AbstractSmartCommonEvent;
 import com.smart.framework.commons.core.utils.JsonUtils;
 import com.smart.framework.rocketmq.model.SmartMqMessage;
 import com.smart.framework.rocketmq.producer.SmartMqProducer;
@@ -24,8 +24,8 @@ public class SmartSpringEventProducer {
     @Value("${spring.application.name}")
     private String applicationName;
 
-    @EventListener(SmartCommonEvent.class)
-    public void send(SmartCommonEvent event) {
+    @EventListener(AbstractSmartCommonEvent.class)
+    public void send(AbstractSmartCommonEvent event) {
         if (!event.isLocal()) {
             // 非本地消息，不处理，防止消息重复消费
             return;

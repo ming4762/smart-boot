@@ -1,6 +1,6 @@
 package com.smart.framework.commons.core.log;
 
-import com.smart.framework.commons.core.event.SmartCommonEvent;
+import com.smart.framework.commons.core.event.AbstractSmartCommonEvent;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +12,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class SmartSaveLogEvent extends SmartCommonEvent {
+public class SmartSaveLogEvent extends AbstractSmartCommonEvent {
 
     private SysLogSaveDTO logData;
 

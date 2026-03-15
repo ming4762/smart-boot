@@ -12,17 +12,17 @@ import org.springframework.context.ApplicationEvent;
  * @since 5.0.0
  */
 @Getter
-public abstract class SmartCommonEvent extends ApplicationEvent {
+public abstract class AbstractSmartCommonEvent extends ApplicationEvent {
 
     @Setter
     private SmartEventTypeEnum eventType;
 
-    protected SmartCommonEvent(Object source) {
+    protected AbstractSmartCommonEvent(Object source) {
         super(source);
         this.eventType = SmartEventTypeEnum.LOCAL;
     }
 
-    protected SmartCommonEvent() {
+    protected AbstractSmartCommonEvent() {
         this(SmartEventTypeEnum.LOCAL);
     }
 

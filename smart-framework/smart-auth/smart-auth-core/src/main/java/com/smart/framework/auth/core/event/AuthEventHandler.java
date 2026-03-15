@@ -1,5 +1,6 @@
 package com.smart.framework.auth.core.event;
 
+import com.smart.framework.auth.common.event.AuthenticationTenantChangeEvent;
 import org.springframework.core.Ordered;
 import org.springframework.security.authentication.event.AbstractAuthenticationFailureEvent;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;

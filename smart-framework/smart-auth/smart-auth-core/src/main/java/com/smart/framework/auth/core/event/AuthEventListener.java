@@ -1,5 +1,9 @@
 package com.smart.framework.auth.core.event;
 
+import com.smart.framework.auth.common.constants.AuthTypeEnum;
+import com.smart.framework.auth.common.event.*;
+import com.smart.framework.auth.core.authentication.AbstractEnhanceAuthenticationToken;
+import com.smart.framework.auth.core.authentication.RestUsernamePasswordAuthenticationToken;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -9,15 +13,11 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.event.AbstractAuthenticationFailureEvent;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.authentication.event.LogoutSuccessEvent;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.function.Consumer;
+import org.springframework.security.core.Authentication;
 
 /**
  * 登录事件监听器
+ * 将登录事件转为smart-event
  * @author ShiZhongMing
  * 2021/12/30
  * @since 1.0.7
@@ -25,11 +25,7 @@ import java.util.function.Consumer;
 @Slf4j
 public class AuthEventListener implements ApplicationContextAware {
 
-    private List<AuthEventHandler> handlerList;
-
-    public AuthEventListener() {
-        this.handlerList = new ArrayList<>(0);
-    }
+    private ApplicationContext applicationContext;
 
     /**
      * 登录失败日志
@@ -37,7 +33,21 @@ public class AuthEventListener implements ApplicationContextAware {
      */
     @EventListener(classes = AbstractAuthenticationFailureEvent.class)
     public void onLoginFail(AbstractAuthenticationFailureEvent event) {
-        this.handler(handler -> handler.handleLoginFail(event));
+        Authentication token = event.getAuthentication();
+        String loginIp = "";
+        AuthTypeEnum authType = null;
+        if (token instanceof RestUsernamePasswordAuthenticationToken restToken) {
+            loginIp = restToken.getLoginIp();
+            authType = AuthTypeEnum.USERNAME;
+        } else if (AbstractEnhanceAuthenticationToken.class.isAssignableFrom(token.getClass())) {
+            loginIp = ((AbstractEnhanceAuthenticationToken) token).getLoginIp();
+            authType = ((AbstractEnhanceAuthenticationToken) token).getAuthType();
+        }
+        SmartAuthAuthenticationFailureEvent failureEvent = new SmartAuthAuthenticationFailureEvent(event);
+        failureEvent.setLoginIp(loginIp);
+        failureEvent.setAuthType(authType);
+        failureEvent.setUsername(token.getPrincipal().toString());
+        this.applicationContext.publishEvent(failureEvent);
     }
 
     /**
@@ -46,7 +56,7 @@ public class AuthEventListener implements ApplicationContextAware {
      */
     @EventListener(classes = AuthenticationSuccessEvent.class)
     public void onLoginSuccess(AuthenticationSuccessEvent event) {
-        this.handler(handler -> handler.handleLoginSuccess(event));
+        this.applicationContext.publishEvent(new SmartAuthAuthenticationSuccessEvent(event));
     }
 
     /**
@@ -55,7 +65,7 @@ public class AuthEventListener implements ApplicationContextAware {
      */
     @EventListener(classes = LogoutSuccessEvent.class)
     public void onLogoutSuccess(LogoutSuccessEvent event) {
-        this.handler(handler -> handler.handleLogoutSuccess(event));
+        this.applicationContext.publishEvent(new SmartAuthLogoutSuccessEvent(event));
     }
 
     /**
@@ -64,24 +74,11 @@ public class AuthEventListener implements ApplicationContextAware {
      */
     @EventListener(classes = AuthenticationTenantChangeEvent.class)
     public void onTenantChange(AuthenticationTenantChangeEvent event) {
-        this.handler(handler -> handler.handleChangeTenant(event));
-    }
-
-    private void handler(Consumer<AuthEventHandler> handlerConsumer) {
-        for (AuthEventHandler handler : this.handlerList) {
-            try {
-                handlerConsumer.accept(handler);
-            } catch (Exception e) {
-                log.error("触发事件失败", e);
-            }
-        }
+        this.applicationContext.publishEvent(new SmartAuthTenantChangeEvent(event));
     }
 
     @Override
     public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
-        this.handlerList = Arrays.stream(applicationContext.getBeanNamesForType(AuthEventHandler.class))
-                .map(item -> applicationContext.getBean(item, AuthEventHandler.class))
-                .sorted(Comparator.comparing(AuthEventHandler::getOrder))
-                .toList();
+        this.applicationContext = applicationContext;
     }
 }

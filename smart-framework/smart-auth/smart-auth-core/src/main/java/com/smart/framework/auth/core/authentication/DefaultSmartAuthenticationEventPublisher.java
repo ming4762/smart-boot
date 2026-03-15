@@ -1,6 +1,6 @@
 package com.smart.framework.auth.core.authentication;
 
-import com.smart.framework.auth.core.event.AuthenticationTenantChangeEvent;
+import com.smart.framework.auth.common.event.AuthenticationTenantChangeEvent;
 import lombok.Setter;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.DefaultAuthenticationEventPublisher;

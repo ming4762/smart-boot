@@ -1,6 +1,7 @@
-package com.smart.framework.auth.core.event;
+package com.smart.framework.auth.common.event;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.authentication.event.AbstractAuthenticationEvent;
 import org.springframework.security.core.Authentication;
 
@@ -12,12 +13,17 @@ import java.io.Serial;
  * @since 3.0.0
  */
 @Getter
+@Setter
 public class AuthenticationTenantChangeEvent extends AbstractAuthenticationEvent {
 
     @Serial
     private static final long serialVersionUID = -8536618597852163992L;
 
-    private final Authentication oldAuthentication;
+    private Authentication oldAuthentication;
+
+    public AuthenticationTenantChangeEvent() {
+        super(null);
+    }
 
     public AuthenticationTenantChangeEvent(Authentication oldAuth, Authentication newAuth) {
         super(newAuth);

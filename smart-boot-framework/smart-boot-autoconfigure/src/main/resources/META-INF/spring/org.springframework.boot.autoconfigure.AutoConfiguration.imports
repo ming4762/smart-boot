@@ -66,6 +66,7 @@ com.smart.boot.autoconfigure.druid.SmartDruidAutoConfiguration
 com.smart.boot.autoconfigure.common.SnowflakeWorkIdAllocatorConfiguration
 com.smart.boot.autoconfigure.common.SmartTimezoneAutoconfiguration
 com.smart.boot.autoconfigure.common.SmartTraceAutoConfiguration
+com.smart.boot.autoconfigure.common.SmartEventAutoConfiguration
 
 com.smart.boot.autoconfigure.mq.rocket.SmartMqAutoconfiguration
 com.smart.boot.autoconfigure.n8n.SmartN8nAutoConfiguration
