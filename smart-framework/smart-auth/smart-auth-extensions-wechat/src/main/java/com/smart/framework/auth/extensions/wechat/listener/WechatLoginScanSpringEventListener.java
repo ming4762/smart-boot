@@ -2,11 +2,11 @@ package com.smart.framework.auth.extensions.wechat.listener;
 
 import com.smart.framework.auth.core.service.AuthCache;
 import com.smart.framework.auth.extensions.wechat.cache.WechatMpQrcodeCacheData;
+import com.smart.framework.commons.core.event.SmartEventHandler;
 import com.smart.framework.extension.wechat.event.message.AbstractWechatMessageEvent;
 import com.smart.framework.extension.wechat.pojo.dto.WechatMessageResultDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.event.EventListener;
 import org.springframework.util.StringUtils;
 
 import java.time.Duration;
@@ -20,12 +20,17 @@ import java.time.Duration;
  */
 @Slf4j
 @RequiredArgsConstructor
-public class WechatLoginScanSpringEventListener {
+public class WechatLoginScanSpringEventListener implements SmartEventHandler<AbstractWechatMessageEvent> {
 
     private final AuthCache authCache;
 
-    @EventListener(AbstractWechatMessageEvent.class)
-    public void onMessage(AbstractWechatMessageEvent event) {
+    /**
+     * 处理事件
+     *
+     * @param event 事件
+     */
+    @Override
+    public void handle(AbstractWechatMessageEvent event) {
         WechatMessageResultDTO message = event.getMessage();
 
         // 获取scene
