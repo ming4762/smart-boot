@@ -14,7 +14,6 @@
 
     <modules>
         <module>smart-cloud-starter-auth</module>
-        <module>smart-cloud-starter-exception</module>
         <module>smart-cloud-starter-feign</module>
         <module>smart-cloud-starter-i18n</module>
     </modules>

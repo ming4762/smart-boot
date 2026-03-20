@@ -872,11 +872,6 @@
             </dependency>
             <dependency>
                 <groupId>com.smart</groupId>
-                <artifactId>smart-cloud-starter-exception</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.smart</groupId>
                 <artifactId>smart-cloud-starter-feign</artifactId>
                 <version>${project.version}</version>
             </dependency>

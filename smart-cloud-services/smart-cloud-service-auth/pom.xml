@@ -65,12 +65,6 @@
 
         <dependency>
             <groupId>com.smart</groupId>
-            <artifactId>smart-cloud-starter-exception</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.smart</groupId>
             <artifactId>smart-cloud-starter-i18n</artifactId>
             <version>${project.version}</version>
         </dependency>
