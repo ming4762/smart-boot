@@ -1,5 +1,6 @@
 package com.smart.framework.file.extensions.ftp.service;
 
+import com.smart.framework.commons.core.file.AutoDeleteFileInputStream;
 import com.smart.framework.commons.core.utils.JsonUtils;
 import com.smart.framework.file.core.common.FileStorageServiceRegisterName;
 import com.smart.framework.file.core.exception.SmartFileException;
@@ -122,7 +123,7 @@ public class FileStorageFtpServiceImpl implements FileStorageService {
         File tempFile = File.createTempFile("smart-boot", "");
         try (FileOutputStream fileOutputStream = new FileOutputStream(tempFile)) {
             this.download(parameter, fileOutputStream);
-            return new FileInputStream(tempFile);
+            return new AutoDeleteFileInputStream(tempFile);
         }
     }
 

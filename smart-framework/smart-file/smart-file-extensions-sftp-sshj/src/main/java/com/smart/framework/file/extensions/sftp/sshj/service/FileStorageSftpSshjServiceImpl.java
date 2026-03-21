@@ -1,5 +1,6 @@
 package com.smart.framework.file.extensions.sftp.sshj.service;
 
+import com.smart.framework.commons.core.file.AutoDeleteFileInputStream;
 import com.smart.framework.commons.core.utils.JsonUtils;
 import com.smart.framework.file.core.common.FileStorageServiceRegisterName;
 import com.smart.framework.file.core.parameter.FileStorageDeleteParameter;
@@ -21,8 +22,8 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -40,7 +41,13 @@ public class FileStorageSftpSshjServiceImpl implements FileStorageService {
     private final GenericKeyedObjectPool<SmartFileStorageSftpSshjProperties, SmartSftpConnection> objectPool;
 
     public FileStorageSftpSshjServiceImpl() {
+        // todo: 配置项
         GenericKeyedObjectPoolConfig<SmartSftpConnection> poolConfig = new GenericKeyedObjectPoolConfig<>();
+        poolConfig.setMaxTotalPerKey(50);
+        poolConfig.setMaxIdlePerKey(10);
+        poolConfig.setMinIdlePerKey(5);
+        poolConfig.setMaxWait(Duration.ofSeconds(60));
+
         poolConfig.setTestOnBorrow(true);
         poolConfig.setTestOnReturn(true);
         poolConfig.setTestWhileIdle(true);
@@ -142,7 +149,7 @@ public class FileStorageSftpSshjServiceImpl implements FileStorageService {
             FileSystemFile fileSystemFile = new FileSystemFile(tempFile);
             sftpConnection.getSftp().get(diskFilePath.getFilePath(), fileSystemFile);
 
-            return new FileInputStream(tempFile);
+            return new AutoDeleteFileInputStream(tempFile);
         } finally {
             this.objectPool.returnObject(properties, sftpConnection);
         }
@@ -181,6 +188,7 @@ public class FileStorageSftpSshjServiceImpl implements FileStorageService {
             return;
         }
         this.objectPool.clear(this.getProperties(fileStorageId));
+        PROPERTIES_MAP.remove(fileStorageId);
     }
 
     private SmartFileStorageSftpSshjProperties getProperties(Long fileStorageId) {
