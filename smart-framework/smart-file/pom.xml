@@ -22,6 +22,7 @@
 		<module>smart-file-extensions-qiniu</module>
 		<module>smart-file-extensions-s3</module>
 		<module>smart-file-extensions-sftp</module>
+		<module>smart-file-extensions-sftp-sshj</module>
 	</modules>
 
 	<properties>

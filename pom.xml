@@ -75,6 +75,7 @@
         <bouncycastle.version>1.82</bouncycastle.version>
         <rocketmq.starter.version>2.3.5</rocketmq.starter.version>
         <rocketmq.version>5.4.0</rocketmq.version>
+        <sshj.version>0.40.0</sshj.version>
     </properties>
 
     <packaging>pom</packaging>
@@ -589,6 +590,11 @@
                 <artifactId>rocketmq-spring-boot</artifactId>
                 <version>${rocketmq.starter.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.hierynomus</groupId>
+                <artifactId>sshj</artifactId>
+                <version>${sshj.version}</version>
+            </dependency>
 
             <!--      smart-boot      -->
             <dependency>
@@ -750,6 +756,11 @@
             <dependency>
                 <groupId>com.smart</groupId>
                 <artifactId>smart-boot-starter-file-sftp</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.smart</groupId>
+                <artifactId>smart-boot-starter-file-sftp-sshj</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

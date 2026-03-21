@@ -10,6 +10,7 @@ com.smart.boot.autoconfigure.file.minio.SmartFileMinioAutoConfiguration
 com.smart.boot.autoconfigure.file.qiniu.SmartFileQiniuAutoConfiguration
 com.smart.boot.autoconfigure.file.s3.SmartFileS3AutoConfiguration
 com.smart.boot.autoconfigure.file.sftp.SmartNfsFileAutoConfiguration
+com.smart.boot.autoconfigure.file.sftp.SmartSftpSshjFileAutoConfiguration
 com.smart.boot.autoconfigure.redis.SmartRedisAutoConfiguration
 com.smart.boot.autoconfigure.guava.GuavaCacheAutoConfiguration
 com.smart.boot.autoconfigure.i18n.SmartI18nAutoConfiguration
