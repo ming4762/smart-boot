@@ -1,6 +1,9 @@
 package com.smart.framework.auth.extensions.dingtalk;
 
+import com.smart.framework.auth.common.constants.AuthDomainConstants;
+import com.smart.framework.auth.core.config.SmartAuthDomainConfig;
 import com.smart.framework.auth.core.config.SmartSecurityConfigurerAdapter;
+import com.smart.framework.auth.core.constants.DefaultAuthUrlEnum;
 import com.smart.framework.auth.core.properties.AuthDingtalkProperties;
 import com.smart.framework.auth.extensions.dingtalk.authentication.DingtalkAuthenticationProvider;
 import com.smart.framework.auth.extensions.dingtalk.filter.DingtalkLoginFilter;
@@ -15,9 +18,12 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * 钉钉登录配置器
@@ -25,7 +31,7 @@ import java.util.List;
  * 2025/10/31 14:11
  * @since 5.0.0
  */
-public class SmartAuthDingtalkConfigurer<H extends HttpSecurityBuilder<H>> extends SmartSecurityConfigurerAdapter<H> {
+public class SmartAuthDingtalkConfigurer<H extends HttpSecurityBuilder<H>> extends SmartSecurityConfigurerAdapter<H, SmartAuthDingtalkConfigurer<H>> {
 
     private final ServiceProvider serviceProvider = new ServiceProvider();
 
@@ -38,7 +44,7 @@ public class SmartAuthDingtalkConfigurer<H extends HttpSecurityBuilder<H>> exten
     public void configure(H builder) {
         builder
                 .authenticationProvider(this.createDingtalkAuthenticationProvider())
-                .addFilterBefore(this.createLoginFilter(), BasicAuthenticationFilter.class);
+                .addFilterBefore(this.createLoginFilter(builder), BasicAuthenticationFilter.class);
     }
 
     /**
@@ -61,26 +67,48 @@ public class SmartAuthDingtalkConfigurer<H extends HttpSecurityBuilder<H>> exten
      * 创建钉钉登录过滤器
      * @return FilterChainProxy
      */
-    private FilterChainProxy createLoginFilter() {
+    private FilterChainProxy createLoginFilter(H builder) {
         List<SecurityFilterChain> chains = new ArrayList<>(1);
-        DingtalkLoginFilter loginFilter = new DingtalkLoginFilter(this.serviceProvider.loginUrl);
-        loginFilter.setAuthenticationManager(this.getBuilder().getSharedObject(AuthenticationManager.class));
-        loginFilter.setAuthenticationFailureHandler(this.getBean(AuthenticationFailureHandler.class, this.serviceProvider.authenticationFailureHandler));
-        loginFilter.setAuthenticationSuccessHandler(this.getBean(AuthenticationSuccessHandler.class, this.serviceProvider.authenticationSuccessHandler));
-        chains.add(
-                new DefaultSecurityFilterChain(PathPatternRequestMatcher.withDefaults().matcher(this.serviceProvider.loginUrl), loginFilter)
-        );
+        chains.addAll(this.createSecurityFilterChain(builder));
         return new FilterChainProxy(chains);
     }
 
     /**
-     * 设置钉钉登录路径
-     * @param loginUrl 登录路径
-     * @return SmartAuthDingtalkConfigurer
+     * 创建单个安全过滤器链
+     * @param builder 构建器
+     * @return SecurityFilterChain
      */
-    public SmartAuthDingtalkConfigurer<H> loginUrl(String loginUrl) {
-        this.serviceProvider.loginUrl = loginUrl;
-        return this;
+    private List<DefaultSecurityFilterChain> createSecurityFilterChain(H builder) {
+        return this.getAuthDomainConfig().entrySet().stream().map(item -> {
+            String authDomain = item.getKey();
+            SmartAuthDomainConfig authDomainConfig = item.getValue();
+            DingtalkLoginFilter loginFilter = new DingtalkLoginFilter(authDomainConfig.getLoginUrl());
+            loginFilter.setAuthenticationManager(this.getBuilder().getSharedObject(AuthenticationManager.class));
+            loginFilter.setAuthenticationFailureHandler(Objects.requireNonNullElseGet(this.serviceProvider.authenticationFailureHandler, () -> builder.getSharedObject(AuthenticationFailureHandler.class)));
+            loginFilter.setAuthenticationSuccessHandler(Objects.requireNonNullElseGet(this.serviceProvider.authenticationSuccessHandler, () -> builder.getSharedObject(AuthenticationSuccessHandler.class)));
+            loginFilter.setAuthDomain(authDomain);
+            return new DefaultSecurityFilterChain(PathPatternRequestMatcher.withDefaults().matcher(authDomainConfig.getLoginUrl()), loginFilter);
+        }).toList();
+    }
+
+
+    /**
+     * 获取权限域配置
+     *
+     * @return 获取权限域
+     */
+    @Override
+    protected Map<String, SmartAuthDomainConfig> getAuthDomainConfig() {
+        Map<String, SmartAuthDomainConfig> authDomainConfig = super.getAuthDomainConfig();
+        if (!CollectionUtils.isEmpty(authDomainConfig)) {
+            return authDomainConfig;
+        }
+        return Map.of(
+                AuthDomainConstants.AUTH_DOMAIN_NONE,
+                SmartAuthDomainConfig.builder()
+                        .loginUrl(DefaultAuthUrlEnum.DINGTALK_WEB_LOGIN.getUrl())
+                        .build()
+        );
     }
 
     /**
@@ -103,17 +131,11 @@ public class SmartAuthDingtalkConfigurer<H extends HttpSecurityBuilder<H>> exten
     }
 
     private static class ServiceProvider {
-        private static final String DEFAULT_LOGIN_URL = "/auth/dingtalk/webLogin";
-
-        private String loginUrl;
 
         private AuthenticationSuccessHandler authenticationSuccessHandler;
 
         private AuthenticationFailureHandler authenticationFailureHandler;
 
-        public ServiceProvider() {
-            this.loginUrl = DEFAULT_LOGIN_URL;
-        }
     }
 
 }

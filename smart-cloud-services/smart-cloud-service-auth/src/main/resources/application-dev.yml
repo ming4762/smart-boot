@@ -23,12 +23,9 @@ management:
     mail:
       enabled: false
 
-spring:
-  data:
-    redis:
-      host: 127.0.0.1
-
 smart:
+  cache:
+    prefix: ${spring.application.name}-${spring.profiles.active}
   auth:
     bindIp: false
     captcha:
@@ -45,6 +42,7 @@ smart:
         - /auth/refresh
         - /auth/createCaptcha
         - /remote/public/**
+        - /auth/wechat/**
 
 feign:
   sentinel:

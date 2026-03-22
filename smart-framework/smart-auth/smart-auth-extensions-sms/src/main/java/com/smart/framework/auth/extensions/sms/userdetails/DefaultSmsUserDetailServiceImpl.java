@@ -1,11 +1,11 @@
 package com.smart.framework.auth.extensions.sms.userdetails;
 
+import com.smart.framework.auth.common.userdetails.RestUserDetails;
 import com.smart.framework.auth.core.userdetails.UserDetailsBuilder;
 import com.smart.module.api.system.SystemAuthUserApi;
 import com.smart.module.api.system.dto.AuthUserDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * @author zhongming4762
@@ -25,7 +25,7 @@ public class DefaultSmsUserDetailServiceImpl implements SmsUserDetailService {
      * @throws AuthenticationException 异常信息
      */
     @Override
-    public UserDetails loadUserByMobile(String mobile) throws AuthenticationException {
+    public RestUserDetails loadUserByMobile(String mobile) throws AuthenticationException {
         AuthUserDTO user = this.systemAuthUserApi.getByMobile(mobile);
         return userDetailsBuilder.buildUserDetails(user);
     }

@@ -4,6 +4,7 @@ import com.smart.framework.commons.core.log.Log;
 import com.smart.framework.commons.core.log.LogOperationTypeEnum;
 import com.smart.framework.commons.core.message.Result;
 import com.smart.framework.crud.controller.BaseController;
+import com.smart.framework.crud.parameter.SetUseYnParameter;
 import com.smart.framework.crud.query.PageSortQuery;
 import com.smart.module.message.model.SmartMessageTemplatePO;
 import com.smart.module.message.pojo.paramteter.SmartMessageTemplateSaveUpdateParameter;
@@ -68,5 +69,19 @@ public class SmartMessageTemplateController extends BaseController<SmartMessageT
     @PostMapping("getById")
     public Result<SmartMessageTemplatePO> getById(@RequestBody Serializable id) {
         return super.getById(id);
+    }
+
+    /**
+     * 设置启用停用
+     *
+     * @param parameter 参数
+     * @return 是否设置成功
+     */
+    @Override
+    @PostMapping("setUseYn")
+    @Log(value = "启用停用消息模板", type = LogOperationTypeEnum.UPDATE)
+    @PreAuthorize("hasPermission('smart:message:template', 'update')")
+    public Result<Boolean> setUseYn(@RequestBody @Valid SetUseYnParameter parameter) {
+        return super.setUseYn(parameter);
     }
 }

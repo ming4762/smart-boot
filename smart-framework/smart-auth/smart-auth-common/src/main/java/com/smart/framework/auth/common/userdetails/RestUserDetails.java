@@ -9,6 +9,7 @@ import lombok.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Set;
@@ -44,6 +45,20 @@ public interface RestUserDetails extends UserDetails {
      */
     @NonNull
     Set<Permission> getPermissions();
+
+    /**
+     * 获取用户拥有的认证域列表
+     * @return 认证域列表
+     */
+    Set<String> getUserAuthDomains();
+
+    /**
+     * 获取当前登录的认证域
+     * 登录时由认证提供者设置，表示用户当前会话所属的认证域
+     * @return 当前登录的认证域，未设置时返回 null
+     */
+    @Nullable
+    String getCurrentAuthDomain();
 
     /**
      * 设置token
@@ -131,4 +146,10 @@ public interface RestUserDetails extends UserDetails {
      * @return JWT模式是否开启权限缓存
      */
     boolean isPermissionCache();
+
+    /**
+     * 获取额外信息
+     * @return 额外信息
+     */
+    Serializable getExtra();
 }

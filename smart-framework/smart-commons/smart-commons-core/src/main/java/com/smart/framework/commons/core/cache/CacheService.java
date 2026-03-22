@@ -8,6 +8,7 @@ import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
 
 /**
  * 缓存服务
@@ -181,4 +182,11 @@ public interface CacheService {
      */
     @Nullable
     Duration getExpire(@NonNull String key);
+
+    /**
+     * 获取缓存锁
+     * @param key key
+     * @return 锁
+     */
+    Lock getLock(@NonNull String key);
 }

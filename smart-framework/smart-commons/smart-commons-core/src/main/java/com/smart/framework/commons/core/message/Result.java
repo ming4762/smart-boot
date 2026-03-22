@@ -245,10 +245,15 @@ public class Result<T> implements Serializable {
 
     public static <T> Result<T> ofStatus(IHttpStatus status, String message, T data) {
         String returnMessage = StringUtils.hasText(message) ? message : status.getMessage();
+        Result<T> result;
         if (Objects.equals(status.getCode(), HttpStatus.OK.getCode())) {
-            return success(status.getCode(), returnMessage, data);
+            result = success(status.getCode(), returnMessage, data);
         } else {
-            return failure(status.getCode(), returnMessage, data);
+            result = failure(status.getCode(), returnMessage, data);
         }
+        if (status.getSubCode() != null) {
+            result.setSubCode(status.getSubCode());
+        }
+        return result;
     }
 }

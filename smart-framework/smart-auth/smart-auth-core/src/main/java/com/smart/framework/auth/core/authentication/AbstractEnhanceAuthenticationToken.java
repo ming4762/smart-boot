@@ -16,7 +16,7 @@ import java.util.List;
  * 2023/4/6 10:21
  */
 @EqualsAndHashCode(callSuper = true)
-public class AbstractEnhanceAuthenticationToken extends AbstractAuthenticationToken {
+public class AbstractEnhanceAuthenticationToken extends AbstractAuthenticationToken implements SmartAuthDomainAuthentication {
     @Serial
     private static final long serialVersionUID = 5651300794057062163L;
 
@@ -27,6 +27,10 @@ public class AbstractEnhanceAuthenticationToken extends AbstractAuthenticationTo
     @Getter
     @Setter
     private String loginIp;
+
+    @Getter
+    @Setter
+    private String authDomain;
 
     /**
      * 登录方式

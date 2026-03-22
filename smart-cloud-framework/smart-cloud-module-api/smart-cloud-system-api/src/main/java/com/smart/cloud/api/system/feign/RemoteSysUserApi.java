@@ -4,12 +4,10 @@ import com.smart.cloud.api.system.feign.fallback.RemoteSysUserApiFallback;
 import com.smart.cloud.common.core.constants.CloudServiceNameConstants;
 import com.smart.module.api.system.SysUserApi;
 import com.smart.module.api.system.constants.SystemApiUrlConstants;
-import com.smart.module.api.system.dto.AccountLoginFailTimeUpdateDTO;
-import com.smart.module.api.system.dto.SysDeptDTO;
-import com.smart.module.api.system.dto.SysUserDTO;
-import com.smart.module.api.system.dto.UserAccountLockDTO;
+import com.smart.module.api.system.dto.*;
 import com.smart.module.api.system.parameter.RemoteSysUserListParameter;
 import com.smart.module.api.system.parameter.SysUserDeptParameter;
+import com.smart.module.api.system.parameter.SysUserThirdAccountParameter;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -91,4 +89,14 @@ public interface RemoteSysUserApi extends SysUserApi {
     @Override
     @PostMapping(SystemApiUrlConstants.QUERY_USER_DEPT_WITH_CHILDREN)
     List<SysDeptDTO> listUserDeptWithChildren(SysUserDeptParameter parameter);
+
+    /**
+     * 查询用户第三方账号列表
+     *
+     * @param parameter 参数
+     * @return 用户第三方账号列表
+     */
+    @Override
+    @PostMapping(SystemApiUrlConstants.LIST_USER_THIRD_ACCOUNT)
+    List<SysUserThirdAccountDTO> listUserThirdAccount(SysUserThirdAccountParameter parameter);
 }

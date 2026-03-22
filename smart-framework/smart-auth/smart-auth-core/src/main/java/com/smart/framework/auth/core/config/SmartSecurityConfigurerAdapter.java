@@ -5,8 +5,10 @@ import com.smart.framework.auth.core.filter.WebLoginFilter;
 import com.smart.framework.auth.core.matcher.ExtensionPathMatcher;
 import com.smart.framework.auth.core.properties.AuthIgnoreProperties;
 import com.smart.framework.auth.core.properties.AuthProperties;
+import com.smart.framework.auth.core.share.AuthSharedCaptchaLoginUrl;
 import com.smart.framework.auth.core.utils.AuthCheckUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,11 +23,11 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.security.web.context.SecurityContextRepository;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.util.CollectionUtils;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Supplier;
 
 /**
  * @author shizhongming
@@ -33,7 +35,37 @@ import java.util.Optional;
  * @since 3.0.0
  */
 @Slf4j
-public class SmartSecurityConfigurerAdapter<H extends HttpSecurityBuilder<H>> extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, H> {
+public class SmartSecurityConfigurerAdapter<H extends HttpSecurityBuilder<H>, C extends SmartSecurityConfigurerAdapter<H, C>> extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, H> {
+
+    private final Map<String, SmartAuthDomainConfig> authDomainConfigList = HashMap.newHashMap(16);
+
+    /**
+     * 添加权限域配置
+     * @param authDomain 权限域
+     * @param authDomainConfig 权限域配置
+     * @return this
+     */
+    public C addAuthDomain(@NonNull String authDomain, @NonNull SmartAuthDomainConfig authDomainConfig) {
+        return this.addAuthDomain(Map.of(authDomain, authDomainConfig));
+    }
+
+    /**
+     * 添加权限域配置
+     * @param authDomainConfigMap 权限域配置
+     * @return this
+     */
+    public C addAuthDomain(@NonNull Map<String, SmartAuthDomainConfig> authDomainConfigMap) {
+        authDomainConfigList.putAll(authDomainConfigMap);
+        return (C) this;
+    }
+
+    /**
+     * 获取权限域配置
+     * @return 获取权限域
+     */
+    protected Map<String, SmartAuthDomainConfig> getAuthDomainConfig() {
+        return Collections.unmodifiableMap(authDomainConfigList);
+    }
 
     /**
      * 从容器中获取类
@@ -56,6 +88,26 @@ public class SmartSecurityConfigurerAdapter<H extends HttpSecurityBuilder<H>> ex
 
     protected <T> T getBean(Class<T> clazz) {
         return this.getBean(clazz, null);
+    }
+
+    protected <T> T getBeanOrElse(Class<T> clazz, Supplier<T> supplier) {
+        return Optional.ofNullable(this.getBean(clazz)).orElseGet(supplier);
+    }
+
+    /**
+     * 创建登录过滤器
+     * @param builder build
+     * @return 登录过滤器
+     */
+    protected List<DefaultSecurityFilterChain> createWebLoginFilter(H builder) {
+        return this.getAuthDomainConfig().entrySet().stream()
+                .map(item -> {
+                    String authDomain = item.getKey();
+                    SmartAuthDomainConfig authDomainConfig = item.getValue();
+                    WebLoginFilter webLoginFilter = this.createWebLoginFilter(builder, authDomainConfig.getLoginUrl(), this.getAuthProperties().getBindIp());
+                    webLoginFilter.setAuthDomain(authDomain);
+                    return new DefaultSecurityFilterChain(PathPatternRequestMatcher.withDefaults().matcher(authDomainConfig.getLoginUrl()), webLoginFilter);
+                }).toList();
     }
 
     /**
@@ -82,6 +134,17 @@ public class SmartSecurityConfigurerAdapter<H extends HttpSecurityBuilder<H>> ex
             webLoginFilter.setRememberMeServices(rememberMeServices);
         }
         return this.postProcess(webLoginFilter);
+    }
+
+    @Override
+    public void init(H builder) throws Exception {
+        if (builder.getSharedObject(AuthenticationSuccessHandler.class) == null) {
+            builder.setSharedObject(AuthenticationSuccessHandler.class, this.getBean(AuthenticationSuccessHandler.class));
+        }
+        if (builder.getSharedObject(AuthenticationFailureHandler.class) == null) {
+            builder.setSharedObject(AuthenticationFailureHandler.class, this.getBean(AuthenticationFailureHandler.class));
+        }
+        super.init(builder);
     }
 
     /**
@@ -118,5 +181,35 @@ public class SmartSecurityConfigurerAdapter<H extends HttpSecurityBuilder<H>> ex
             request.requestMatchers(extensionPathMatchers.toArray(new ExtensionPathMatcher[0])).permitAll();
 
         };
+    }
+
+    /**
+     * 添加需要校验登录验证码的URL
+    * @param builder 构建器
+    * @param loginUrl 登录url
+     */
+    protected void addSharedCaptchaLoginUrl(H builder, String loginUrl) {
+        this.addSharedCaptchaLoginUrl(builder, Set.of(loginUrl));
+    }
+
+    /**
+     * 添加需要校验登录验证码的URL
+     * @param builder 构建器
+     * @param loginUrls 登录url
+     */
+    protected void addSharedCaptchaLoginUrl(H builder, Set<String> loginUrls) {
+        if (builder.getSharedObject(AuthSharedCaptchaLoginUrl.class) == null) {
+            builder.setSharedObject(AuthSharedCaptchaLoginUrl.class, new AuthSharedCaptchaLoginUrl());
+        }
+        builder.getSharedObject(AuthSharedCaptchaLoginUrl.class).getLoginUrls().addAll(loginUrls);
+    }
+
+    /**
+     * 获取需要校验登录验证码的URL
+     * @param builder build
+     * @return 需要校验登录验证码的URL
+     */
+    protected Set<String> getSharedCaptchaLoginUrls(H builder) {
+        return builder.getSharedObject(AuthSharedCaptchaLoginUrl.class).getLoginUrls();
     }
 }

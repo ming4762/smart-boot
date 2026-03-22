@@ -34,7 +34,7 @@
         <!--    异常处理    -->
         <dependency>
             <groupId>com.smart</groupId>
-            <artifactId>smart-cloud-starter-exception</artifactId>
+            <artifactId>smart-boot-starter-exception</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -98,6 +98,11 @@
         <dependency>
             <groupId>com.smart</groupId>
             <artifactId>smart-boot-starter-redis</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-boot-starter-rocketmq</artifactId>
         </dependency>
     </dependencies>
 

@@ -5,10 +5,11 @@ import com.smart.framework.exception.handler.ExceptionMessageHandler;
 import com.smart.framework.exception.handler.GlobalExceptionHandler;
 import com.smart.framework.exception.notice.AsyncNoticeHandler;
 import com.smart.framework.exception.notice.ConsoleExceptionNotice;
-import com.smart.framework.exception.notice.ExceptionNotice;
+import com.smart.framework.exception.notice.EventExceptionNotice;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -58,9 +59,13 @@ public class SmartExceptionAutoConfiguration {
      * @return 控制台异常通知
      */
     @Bean
-    @ConditionalOnMissingBean(ExceptionNotice.class)
     public ConsoleExceptionNotice consoleExceptionNotice() {
         return new ConsoleExceptionNotice();
+    }
+
+    @Bean
+    public EventExceptionNotice eventExceptionNotice(ApplicationEventPublisher applicationEventPublisher) {
+        return new EventExceptionNotice(applicationEventPublisher);
     }
 
 }

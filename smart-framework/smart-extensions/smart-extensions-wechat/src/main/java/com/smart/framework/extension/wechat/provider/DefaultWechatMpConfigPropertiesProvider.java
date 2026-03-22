@@ -19,7 +19,7 @@ public class DefaultWechatMpConfigPropertiesProvider implements WechatMpConfigPr
     /**
      * 获取微信小程序配置列表
      *
-     * @return WechatAppConfig 列表
+     * @return WechatMiniappConfig 列表
      */
     @Override
     public List<WechatMpConfig> get() {

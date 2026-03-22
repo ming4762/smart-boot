@@ -4,7 +4,6 @@ import com.smart.auth.extensions.access.secret.AuthAccessSecretSecurityConfigure
 import com.smart.framework.auth.core.properties.AuthProperties;
 import com.smart.framework.auth.core.remember.SmartAuthPersistentTokenRememberMeServices;
 import com.smart.framework.auth.extensions.jwt.AuthJwtSecurityConfigurer;
-import com.smart.framework.auth.extensions.sms.AuthSmsSecurityConfigurer;
 import com.smart.module.auth.config.AuthCaptchaSecurityConfigurer;
 import com.smart.module.auth.config.AuthTenantSecurityConfigurer;
 import com.smart.module.auth.config.AuthWebSecurityConfigurerAdapter;
@@ -66,7 +65,7 @@ public class SecurityConfig extends AuthWebSecurityConfigurerAdapter {
                 // 验证码配置
                 .with(AuthCaptchaSecurityConfigurer.captcha(), Customizer.withDefaults())
                 // 短信登录支持
-                .with(AuthSmsSecurityConfigurer.sms(), Customizer.withDefaults())
+//                .with(AuthSmsSecurityConfigurer.sms(), Customizer.withDefaults())
                 // 租户支持
                 .with(AuthTenantSecurityConfigurer.tenant(), Customizer.withDefaults());
         return httpSecurity.build();

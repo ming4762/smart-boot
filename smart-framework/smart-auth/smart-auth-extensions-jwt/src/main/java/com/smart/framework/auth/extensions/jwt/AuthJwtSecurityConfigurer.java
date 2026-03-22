@@ -1,9 +1,11 @@
 package com.smart.framework.auth.extensions.jwt;
 
 import com.google.common.collect.Lists;
+import com.smart.framework.auth.common.constants.AuthDomainConstants;
+import com.smart.framework.auth.core.config.SmartAuthDomainConfig;
 import com.smart.framework.auth.core.config.SmartSecurityConfigurerAdapter;
+import com.smart.framework.auth.core.constants.DefaultAuthUrlEnum;
 import com.smart.framework.auth.core.filter.SmartAuthenticationFilter;
-import com.smart.framework.auth.core.filter.WebLoginFilter;
 import com.smart.framework.auth.core.handler.SecurityLogoutHandler;
 import com.smart.framework.auth.core.properties.AuthProperties;
 import com.smart.framework.auth.extensions.jwt.filter.JwtRefreshTokenLoginFilter;
@@ -30,6 +32,9 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * JWT配置类
@@ -38,7 +43,7 @@ import java.util.List;
  * @since 1.0
  */
 @Slf4j
-public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends SmartSecurityConfigurerAdapter<H> {
+public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends SmartSecurityConfigurerAdapter<H, AuthJwtSecurityConfigurer<H>> {
 
     private final ServiceProvider serviceProvider = new ServiceProvider();
 
@@ -65,7 +70,7 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
                 .authenticationProvider(this.getRestAuthenticationProvider())
                 // 添加登录 登出过滤器
                 .addFilterAfter(this.createJwtFilterChainProxy(builder), BasicAuthenticationFilter.class)
-                .addFilterAfter(this.postProcess(new JwtRefreshTokenLoginFilter(authProperties.getRefreshTokenUrl())), ExceptionTranslationFilter.class);
+                .addFilterAfter(this.postProcess(new JwtRefreshTokenLoginFilter(this.getRefreshTokenUrl())), ExceptionTranslationFilter.class);
         if (Boolean.TRUE.equals(this.serviceProvider.jwtAuth)) {
             // 添加认证过滤器
             builder.addFilterAfter(this.postProcess(new SmartAuthenticationFilter(authProperties.getIgnores(), authProperties.getDevelopment())), JwtRefreshTokenLoginFilter.class);
@@ -77,17 +82,13 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
      * @param builder HttpSecurity
      */
     @Override
-    public void init(H builder) {
+    public void init(H builder) throws Exception {
+        super.init(builder);
         builder.setSharedObject(SecurityContextRepository.class, this.getBean(SecurityContextRepository.class));
         // 创建上下文
         AuthenticationManagerBuilder authenticationManagerBuilder = builder.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.parentAuthenticationManager(null);
-
-        AuthenticationSuccessHandler successHandler = this.getBean(AuthenticationSuccessHandler.class, this.serviceProvider.authenticationSuccessHandler);
-        builder.setSharedObject(AuthenticationSuccessHandler.class, successHandler);
-
-        AuthenticationFailureHandler authenticationFailureHandler = this.getBean(AuthenticationFailureHandler.class, null);
-        builder.setSharedObject(AuthenticationFailureHandler.class, authenticationFailureHandler);
+        this.addSharedCaptchaLoginUrl(builder, this.getLoginUrls());
     }
 
     /**
@@ -95,12 +96,9 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
      * @return 拦截器链
      */
     private FilterChainProxy createJwtFilterChainProxy(H builder) {
-        AuthProperties authProperties = this.getAuthProperties();
         final List<SecurityFilterChain> chains = Lists.newArrayList();
         // 创建登录过滤器
-        final WebLoginFilter webLoginFilter = this.createWebLoginFilter(builder, this.getLoginUrl(), authProperties.getBindIp());
-        webLoginFilter.setAuthenticationFailureHandler(this.getBean(AuthenticationFailureHandler.class, this.serviceProvider.authenticationFailureHandler));
-        chains.add(new DefaultSecurityFilterChain(PathPatternRequestMatcher.withDefaults().matcher(this.getLoginUrl()), webLoginFilter));
+        chains.addAll(this.createWebLoginFilter(builder));
 
         // 创建logout过滤器
         chains.add(new DefaultSecurityFilterChain(PathPatternRequestMatcher.withDefaults().matcher(this.getLogoutUrl()), this.jwtLogoutFilter(builder)));
@@ -131,16 +129,49 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
     }
 
     /**
-     * 获取登出地址
-     * @return 登出地址
+     * 获取登出路径
+     * @return 登出路径
      */
-    protected String getLogoutUrl() {
-        return this.getAuthProperties().getLogoutUrl();
+    private String getLogoutUrl() {
+        return DefaultAuthUrlEnum.WEB_LOGOUT.getUrl();
     }
 
+    /**
+      * 获取刷新令牌路径
+     *
+     * @return 刷新令牌路径
+     */
+    private String getRefreshTokenUrl() {
+        return DefaultAuthUrlEnum.TOKEN_REFRESH.getUrl();
+    }
 
-    private String getLoginUrl() {
-        return this.getAuthProperties().getLoginUrl();
+    /**
+     * 获取权限域配置
+     *
+     * @return 获取权限域
+     */
+    @Override
+    protected Map<String, SmartAuthDomainConfig> getAuthDomainConfig() {
+        Map<String, SmartAuthDomainConfig> authDomainConfig = super.getAuthDomainConfig();
+        if (!CollectionUtils.isEmpty(authDomainConfig)) {
+            return authDomainConfig;
+        }
+        return Map.of(
+                AuthDomainConstants.AUTH_DOMAIN_NONE,
+                SmartAuthDomainConfig.builder()
+                        .loginUrl(DefaultAuthUrlEnum.WEB_LOGIN.getUrl())
+                        .build()
+        );
+    }
+
+    /**
+     * 获取登录路径
+     * @return 登录路径
+     */
+    private Set<String> getLoginUrls() {
+        return this.getAuthDomainConfig().values().stream()
+                .map(SmartAuthDomainConfig::getLoginUrl)
+                .collect(Collectors.toSet());
     }
 
     /**
@@ -193,11 +224,6 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
         return this;
     }
 
-    public AuthJwtSecurityConfigurer<H> development(boolean development) {
-        this.serviceProvider.development = development;
-        return this;
-    }
-
     /**
      * 服务配置类
      */
@@ -207,8 +233,6 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
          * 是否使用jwt认证器
          */
         private Boolean jwtAuth;
-
-        private Boolean development;
 
         private AuthenticationSuccessHandler authenticationSuccessHandler;
 
@@ -220,11 +244,9 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
 
         private Boolean rememberMe;
 
-
         public ServiceProvider() {
             this.jwtAuth = true;
             this.logoutHandlerList = new ArrayList<>();
         }
     }
-
 }

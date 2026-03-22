@@ -1,8 +1,9 @@
 package com.smart.framework.auth.extensions.sms.authentication;
 
+import com.smart.framework.auth.common.constants.AuthTypeEnum;
+import com.smart.framework.auth.core.authentication.AbstractEnhanceAuthenticationToken;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.io.Serial;
@@ -18,41 +19,17 @@ import java.util.List;
  */
 @Getter
 @EqualsAndHashCode(callSuper = false)
-public class SmsAuthenticationToken extends AbstractAuthenticationToken {
+public class SmsAuthenticationToken extends AbstractEnhanceAuthenticationToken {
     @Serial
     private static final long serialVersionUID = -5507214988425089305L;
 
-    /**
-     * 登录的手机号
-     */
-    private final Serializable principal;
-
-    /**
-     * 验证码
-     */
-    private final Serializable credentials;
-
     public SmsAuthenticationToken(Serializable principal, Serializable credentials) {
-        super(List.of());
-        this.principal = principal;
-        this.credentials = credentials;
+        this(principal, credentials, List.of());
     }
 
     public SmsAuthenticationToken(Serializable principal, Serializable credentials,
                                   Collection<? extends GrantedAuthority> authorities) {
-        super(authorities);
-        this.principal = principal;
-        this.credentials = credentials;
-        super.setAuthenticated(true);
+        super(AuthTypeEnum.SMS, principal, credentials, authorities);
     }
 
-    @Override
-    public Object getCredentials() {
-        return this.credentials;
-    }
-
-    @Override
-    public Object getPrincipal() {
-        return this.principal;
-    }
 }

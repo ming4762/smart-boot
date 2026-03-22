@@ -1,9 +1,9 @@
 server:
-  port: 8080
+  port: @server.port.gateway@
 
 spring:
   application:
-    name: @artifactId@
+    name: @cloud.application.name@gateway
   profiles:
     active: @profiles.active@
   cloud:

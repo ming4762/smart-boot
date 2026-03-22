@@ -24,6 +24,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Set;
 
 /**
  * 验证码创建 验证拦截器
@@ -35,10 +36,10 @@ public class AuthCaptchaFilter extends OncePerRequestFilter {
 
     private final AuthProperties authProperties;
     private final AuthCaptchaApi authCaptchaApi;
-    private final String loginUrl;
+    private final Set<String> loginUrls;
 
-    public AuthCaptchaFilter(String loginUrl, AuthProperties authProperties, AuthCaptchaApi authCaptchaApi) {
-        this.loginUrl = loginUrl;
+    public AuthCaptchaFilter(Set<String> loginUrls, AuthProperties authProperties, AuthCaptchaApi authCaptchaApi) {
+        this.loginUrls = loginUrls;
         this.authCaptchaApi = authCaptchaApi;
         this.authProperties = authProperties;
     }
@@ -97,7 +98,7 @@ public class AuthCaptchaFilter extends OncePerRequestFilter {
     }
 
     private boolean isValidate(@NonNull HttpServletRequest request) {
-        return PathPatternRequestMatcher.withDefaults().matcher(this.loginUrl).matches(request);
+        return this.loginUrls.stream().anyMatch(url -> PathPatternRequestMatcher.withDefaults().matcher(url).matches(request));
     }
 
     @Override

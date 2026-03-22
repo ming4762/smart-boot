@@ -8,6 +8,7 @@ import com.qiniu.storage.DownloadUrl;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
+import com.smart.framework.commons.core.file.AutoDeleteFileInputStream;
 import com.smart.framework.commons.core.utils.JsonUtils;
 import com.smart.framework.commons.core.utils.RestUtils;
 import com.smart.framework.file.core.common.FileStorageServiceRegisterName;
@@ -243,12 +244,10 @@ public class FileStorageQiniuServiceImpl implements QiniuService {
     @Override
     public InputStream download(@NonNull FileStorageGetParameter parameter, String bucketName) {
         File tempFile = File.createTempFile("qiniu", null);
-        // 系统退出后删除临时文件
-        tempFile.deleteOnExit();
         // 写入临时文件
         try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(tempFile))) {
             this.download(parameter, outputStream);
-            return new FileInputStream(tempFile);
+            return new AutoDeleteFileInputStream(tempFile);
         }
     }
 

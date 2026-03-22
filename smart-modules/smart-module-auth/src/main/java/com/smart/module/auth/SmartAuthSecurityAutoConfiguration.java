@@ -15,12 +15,8 @@ import com.smart.framework.auth.core.service.AuthCache;
 import com.smart.framework.auth.core.token.CompositeSmartTokenRepository;
 import com.smart.framework.auth.core.userdetails.DefaultUserDetailsBuilderImpl;
 import com.smart.framework.auth.core.userdetails.UserDetailsBuilder;
-import com.smart.module.api.system.SysLogApi;
-import com.smart.module.api.system.SysUserApi;
 import com.smart.module.api.system.SystemAuthUserApi;
 import com.smart.module.auth.config.AuthMethodSecurityConfig;
-import com.smart.module.auth.event.AuthEventLockedHandler;
-import com.smart.module.auth.event.AuthEventLogHandler;
 import com.smart.module.auth.remember.AuthCachePersistentTokenRepository;
 import com.smart.module.auth.userdetails.RestUserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -117,28 +113,6 @@ public class SmartAuthSecurityAutoConfiguration {
     @ConditionalOnMissingBean
     public UrlAuthenticationProvider defaultUrlAuthenticationProviderImpl(UrlMappingProvider urlMappingProvider) {
         return new DefaultUrlAuthenticationProviderImpl(urlMappingProvider);
-    }
-
-    /**
-     * 创建登录失败锁定器
-     * @param sysUserApi SysUserApi
-     * @return AuthEventLockedHandler
-     */
-    @Bean
-    @ConditionalOnMissingBean
-    public AuthEventLockedHandler authEventLockedHandler(SysUserApi sysUserApi) {
-        return new AuthEventLockedHandler(sysUserApi);
-    }
-
-    /**
-     * 创建登录日志处理器
-     * @param sysLogApi 日志API
-     * @return AuthEventLogHandler
-     */
-    @Bean
-    @ConditionalOnMissingBean
-    public AuthEventLogHandler authEventLogHandler(SysLogApi sysLogApi) {
-        return new AuthEventLogHandler(sysLogApi);
     }
 
     /**

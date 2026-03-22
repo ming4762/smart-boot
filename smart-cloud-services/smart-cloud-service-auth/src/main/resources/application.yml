@@ -1,9 +1,9 @@
 server:
-  port: 8092
+  port: @server.port.auth@
 
 spring:
   application:
-    name: @artifactId@
+    name: @cloud.application.name@auth
   profiles:
     active: @profiles.active@
   cloud:

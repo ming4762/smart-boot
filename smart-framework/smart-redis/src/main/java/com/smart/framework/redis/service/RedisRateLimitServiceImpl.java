@@ -2,13 +2,13 @@ package com.smart.framework.redis.service;
 
 import com.smart.framework.commons.core.lock.limit.RateLimitService;
 import lombok.RequiredArgsConstructor;
-import org.redisson.api.RLock;
 import org.redisson.api.RRateLimiter;
 import org.redisson.api.RateType;
 import org.springframework.lang.NonNull;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
+import java.util.concurrent.locks.Lock;
 
 /**
  * @author ShiZhongMing
@@ -28,7 +28,7 @@ public class RedisRateLimitServiceImpl implements RateLimitService {
         RRateLimiter rateLimiter = this.redisService.getRateLimiter(key);
 
         // 加锁，避免并发删除
-        RLock lock = this.redisService.getLock(RATE_LIMIT_LOCK_KEY + key);
+        Lock lock = this.redisService.getLock(RATE_LIMIT_LOCK_KEY + key);
         lock.lock();
         try {
             if (this.isConfigChanged(key, limit, unit)) {

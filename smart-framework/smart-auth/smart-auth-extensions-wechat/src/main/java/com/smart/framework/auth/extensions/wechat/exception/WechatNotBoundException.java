@@ -1,19 +1,23 @@
 package com.smart.framework.auth.extensions.wechat.exception;
 
+import com.smart.framework.auth.common.exception.AuthHttpStatusException;
+import com.smart.framework.auth.extensions.wechat.constants.WechatLoginCodeEnum;
+import com.smart.framework.auth.extensions.wechat.model.WechatLoginResult;
 import lombok.Getter;
-import org.springframework.security.authentication.BadCredentialsException;
 
 /**
  * @author zhongming4762
  * 2023/4/6
  */
 @Getter
-public class WechatNotBoundException extends BadCredentialsException {
+public class WechatNotBoundException extends AuthHttpStatusException {
 
-    private final transient Object data;
+    private final WechatLoginResult data;
+    private final String appid;
 
-    public WechatNotBoundException(Object data, String msg) {
-        super(msg);
+    public WechatNotBoundException(String appid, WechatLoginResult data) {
+        super(WechatLoginCodeEnum.USER_NOT_BOUND);
         this.data = data;
+        this.appid = appid;
     }
 }

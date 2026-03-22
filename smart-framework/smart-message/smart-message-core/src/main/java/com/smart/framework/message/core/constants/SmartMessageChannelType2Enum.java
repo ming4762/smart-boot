@@ -18,6 +18,7 @@ public enum SmartMessageChannelType2Enum implements LabelValueEnum {
     SMS_ALIYUN("阿里云短信", SmartMessageChannelType1Enum.SMS),
     SMS_TENCENT("腾讯云短信", SmartMessageChannelType1Enum.SMS),
     DINGTALK_WORK_NOTICE("钉钉工作通知", SmartMessageChannelType1Enum.DINGTALK),
+    WECHAT_MP_TEMPLATE("微信服务号模板消息", SmartMessageChannelType1Enum.WECHAT),
     ;
 
     private final String remark;

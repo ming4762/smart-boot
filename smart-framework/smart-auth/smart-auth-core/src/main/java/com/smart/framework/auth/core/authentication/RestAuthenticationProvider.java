@@ -1,24 +1,28 @@
 package com.smart.framework.auth.core.authentication;
 
 import com.smart.framework.auth.common.constants.AuthTypeEnum;
+import com.smart.framework.auth.common.exception.AuthException;
 import com.smart.framework.auth.common.userdetails.RestUserDetails;
+import com.smart.framework.auth.common.userdetails.RestUserDetailsImpl;
+import com.smart.framework.auth.core.authentication.checker.RestUserDetailsChecker;
 import com.smart.framework.auth.core.exception.IpBindAuthenticationException;
 import com.smart.framework.auth.core.exception.LoginInfoMissAuthenticationException;
 import com.smart.framework.auth.core.exception.RestUsernameNotFoundException;
 import com.smart.framework.auth.core.i18n.AuthI18nMessage;
-import com.smart.framework.auth.core.model.RestUserDetailsImpl;
 import com.smart.framework.commons.core.i18n.I18nUtils;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.security.authentication.*;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsChecker;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 登录管理
@@ -35,7 +39,7 @@ public class RestAuthenticationProvider extends AbstractUserDetailsAuthenticatio
 
     public RestAuthenticationProvider(UserDetailsService restUserDetailsService) {
         this.restUserDetailsService = restUserDetailsService;
-        this.setPreAuthenticationChecks(new RestPreUserDetailsChecker());
+        this.setPreAuthenticationChecks(new RestUserDetailsChecker());
     }
 
     @Override
@@ -65,6 +69,15 @@ public class RestAuthenticationProvider extends AbstractUserDetailsAuthenticatio
             throw new RestUsernameNotFoundException(I18nUtils.get(AuthI18nMessage.USER_NOT_FOUND_ERROR));
         }
         RestUsernamePasswordAuthenticationToken token = (RestUsernamePasswordAuthenticationToken) authentication;
+        if (StringUtils.hasText(token.getAuthDomain()) && !token.isNonAuthDomain()) {
+            // 校验用户是否拥有该认证域
+            Set<String> authDomains = user.getUserAuthDomains();
+            if (CollectionUtils.isEmpty(authDomains) || !authDomains.contains(token.getAuthDomain())) {
+                throw new AuthException(String.format("用户[%s]不在权限域[%s]内", username, token.getAuthDomain()));
+            }
+            // 设置当前登录的认证域（不覆盖用户拥有的认证域列表）
+            user.setCurrentAuthDomain(token.getAuthDomain());
+        }
         user.setLoginType(token.getLoginType());
         user.setAuthType(AuthTypeEnum.USERNAME);
         user.setBindIp(token.getBindIp());
@@ -76,24 +89,5 @@ public class RestAuthenticationProvider extends AbstractUserDetailsAuthenticatio
     @Override
     public boolean supports(Class<?> authentication) {
         return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
-    }
-
-    /**
-     * 验证用户状态
-     */
-    private static class RestPreUserDetailsChecker implements UserDetailsChecker {
-
-        @Override
-        public void check(UserDetails user) {
-            if (!user.isAccountNonLocked()) {
-                throw new LockedException(I18nUtils.get(AuthI18nMessage.ACCOUNT_LOCKED));
-            }
-            if (!user.isEnabled()) {
-                throw new DisabledException(I18nUtils.get(AuthI18nMessage.ACCOUNT_DISABLED));
-            }
-            if (!user.isAccountNonExpired()) {
-                throw new AccountExpiredException(I18nUtils.get(AuthI18nMessage.ACCOUNT_EXPIRED));
-            }
-        }
     }
 }

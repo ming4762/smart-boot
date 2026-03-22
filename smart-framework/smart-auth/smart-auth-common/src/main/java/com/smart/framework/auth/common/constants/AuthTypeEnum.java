@@ -23,10 +23,19 @@ public enum AuthTypeEnum {
     /**
      * 微信小程序登录
      */
-    WECHAT_APP,
+    WECHAT_MINIAPP,
+
+    /**
+     * 微信服务号扫码登录
+     */
+    WECHAT_MP_QRCODE,
 
     /**
      * 钉钉登录
      */
-    DINGTALK
+    DINGTALK,
+    /**
+     * 短信登录
+     */
+    SMS
 }

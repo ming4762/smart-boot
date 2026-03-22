@@ -4,6 +4,7 @@ import com.smart.framework.auth.extensions.dingtalk.authentication.DingtalkAuthe
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.Setter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
@@ -21,6 +22,9 @@ public class DingtalkLoginFilter extends AbstractAuthenticationProcessingFilter 
 
     private static final String CODE_PARAMETER = "code";
 
+    @Setter
+    private String authDomain;
+
     /**
      * @param defaultFilterProcessesUrl the default value for <tt>filterProcessesUrl</tt>.
      */
@@ -35,6 +39,8 @@ public class DingtalkLoginFilter extends AbstractAuthenticationProcessingFilter 
         if (!StringUtils.hasText(code)) {
             throw new IllegalArgumentException("code must be not empty");
         }
-        return this.getAuthenticationManager().authenticate(new DingtalkAuthenticationToken(code));
+        DingtalkAuthenticationToken token = new DingtalkAuthenticationToken(code);
+        token.setAuthDomain(this.authDomain);
+        return this.getAuthenticationManager().authenticate(token);
     }
 }

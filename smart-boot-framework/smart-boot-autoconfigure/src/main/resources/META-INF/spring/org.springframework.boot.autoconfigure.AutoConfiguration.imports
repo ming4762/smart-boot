@@ -10,6 +10,7 @@ com.smart.boot.autoconfigure.file.minio.SmartFileMinioAutoConfiguration
 com.smart.boot.autoconfigure.file.qiniu.SmartFileQiniuAutoConfiguration
 com.smart.boot.autoconfigure.file.s3.SmartFileS3AutoConfiguration
 com.smart.boot.autoconfigure.file.sftp.SmartNfsFileAutoConfiguration
+com.smart.boot.autoconfigure.file.sftp.SmartSftpSshjFileAutoConfiguration
 com.smart.boot.autoconfigure.redis.SmartRedisAutoConfiguration
 com.smart.boot.autoconfigure.guava.GuavaCacheAutoConfiguration
 com.smart.boot.autoconfigure.i18n.SmartI18nAutoConfiguration
@@ -22,9 +23,11 @@ com.smart.boot.autoconfigure.auth.extension.SmartAuthAccessSecretAutoConfigurati
 com.smart.boot.autoconfigure.auth.extension.SmartAuthSmsAutoConfiguration
 com.smart.boot.autoconfigure.auth.extension.SmartAuthWechatAutoConfiguration
 com.smart.boot.autoconfigure.auth.extension.SmartAuthWebAutoConfiguration
-com.smart.boot.autoconfigure.wechat.SmartWechatAppAutoconfiguration
-com.smart.boot.autoconfigure.wechat.SmartWechatMpAutoconfiguration
+com.smart.boot.autoconfigure.auth.domain.SmartAuthDomainAutoConfiguration
+com.smart.boot.autoconfigure.wechat.SmartWechatMiniappAutoconfiguration
 com.smart.boot.autoconfigure.captcha.SmartCaptchaAutoConfiguration
+
+com.smart.boot.autoconfigure.wechat.SmartWechatAutoConfiguration
 com.smart.boot.autoconfigure.xxl.SmartXxlExecutorAutoConfiguration
 
 com.smart.boot.autoconfigure.tool.database.DatabaseMessageAutoConfiguration
@@ -38,6 +41,7 @@ com.smart.boot.autoconfigure.message.SmartMessageEmailAutoConfiguration
 com.smart.boot.autoconfigure.message.SmartMessageWebSocketAutoConfiguration
 com.smart.boot.autoconfigure.message.SmartSmsAliyunAutoConfiguration
 com.smart.boot.autoconfigure.message.SmartSmsTencentAutoConfiguration
+com.smart.boot.autoconfigure.message.SmartMessageWechatAutoConfiguration
 
 com.smart.boot.autoconfigure.document.DocumentCodeZxingAutoConfiguration
 com.smart.boot.autoconfigure.document.DocumentConvertJodAutoConfiguration
@@ -61,5 +65,9 @@ com.smart.boot.autoconfigure.ai.langchain4j.SmartAiLangchain4jOpenAiAutoConfigur
 com.smart.boot.autoconfigure.druid.SmartDruidAutoConfiguration
 
 com.smart.boot.autoconfigure.common.SnowflakeWorkIdAllocatorConfiguration
-
+com.smart.boot.autoconfigure.common.SmartTimezoneAutoconfiguration
 com.smart.boot.autoconfigure.common.SmartTraceAutoConfiguration
+com.smart.boot.autoconfigure.common.SmartEventAutoConfiguration
+
+com.smart.boot.autoconfigure.mq.rocket.SmartMqAutoconfiguration
+com.smart.boot.autoconfigure.n8n.SmartN8nAutoConfiguration

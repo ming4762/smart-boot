@@ -33,7 +33,7 @@
 
         <dependency>
             <groupId>com.smart</groupId>
-            <artifactId>smart-cloud-starter-exception</artifactId>
+            <artifactId>smart-boot-starter-exception</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

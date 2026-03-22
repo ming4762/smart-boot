@@ -1,5 +1,6 @@
 package com.smart.framework.commons.core.utils;
 
+import com.smart.framework.commons.core.timezone.SmartTimezoneContext;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
@@ -89,6 +90,29 @@ public final class DateUtils {
      */
     public static String format(@NonNull ZonedDateTime zonedDateTime, @NonNull String pattern) {
         return DateTimeFormatter.ofPattern(pattern).format(zonedDateTime);
+    }
+
+    /**
+     * 格式化时间,根据时区格式化
+     * @param zonedDateTime 时间
+     * @param pattern 格式
+     * @param zoneId 时区
+     * @return 时间字符串
+     */
+    public static String format(@NonNull ZonedDateTime zonedDateTime, @NonNull String pattern, @NonNull ZoneId zoneId) {
+        ZonedDateTime zonedIdTime = zonedDateTime.withZoneSameInstant(zoneId);
+        return DateTimeFormatter.ofPattern(pattern).withZone(zoneId).format(zonedIdTime);
+    }
+
+    /**
+     * 格式化时间,根据用户时区格式化
+     * @param zonedDateTime 时间
+     * @param pattern 格式
+     * @return 时间字符串
+     */
+    public static String formatWithUserTimezone(@NonNull ZonedDateTime zonedDateTime, @NonNull String pattern) {
+        ZoneId userTimezone = SmartTimezoneContext.get();
+        return format(zonedDateTime, pattern, userTimezone);
     }
 
     /**

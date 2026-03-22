@@ -1,13 +1,13 @@
 package com.smart.framework.auth.core.userdetails;
 
+import com.smart.framework.auth.common.userdetails.PermissionGrantedAuthority;
 import com.smart.framework.auth.common.userdetails.RestUserDetails;
+import com.smart.framework.auth.common.userdetails.RestUserDetailsImpl;
+import com.smart.framework.auth.common.userdetails.RoleGrantedAuthority;
 import com.smart.framework.auth.core.exception.LongTimeNoLoginLockedException;
 import com.smart.framework.auth.core.exception.MaxConnectionAuthenticationException;
 import com.smart.framework.auth.core.exception.PasswordNoLifeLockedException;
 import com.smart.framework.auth.core.i18n.AuthI18nMessage;
-import com.smart.framework.auth.core.model.PermissionGrantedAuthority;
-import com.smart.framework.auth.core.model.RestUserDetailsImpl;
-import com.smart.framework.auth.core.model.RoleGrantedAuthority;
 import com.smart.framework.auth.core.properties.AuthProperties;
 import com.smart.framework.auth.core.token.CompositeSmartTokenRepository;
 import com.smart.framework.auth.core.token.TokenCacheData;
@@ -24,6 +24,7 @@ import com.smart.module.api.system.parameter.UserAccountUnLockParameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.DisabledException;
+import org.springframework.util.CollectionUtils;
 
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -52,6 +53,17 @@ public class DefaultUserDetailsBuilderImpl implements UserDetailsBuilder {
         if (user == null) {
             return null;
         }
+        boolean enabled = Boolean.TRUE.equals(user.getUseYn());
+        RestUserDetailsImpl.RestUserDetailsImplBuilder userDetailsImplBuilder = RestUserDetailsImpl.builder()
+                .userId(user.getUserId())
+                .username(user.getUsername())
+                .fullName(user.getFullName())
+                .password(user.getPassword())
+                .enabled(enabled);
+        if (!enabled) {
+            // 如果用户已停用，直接返回，提升性能
+            return userDetailsImplBuilder.build();
+        }
         UserAccountData userAccountData = this.systemAuthUserApi.queryUserAccount(new QueryUserAccountDTO(user.getUserId(), SmartTenantHolder.getTenantId()));
         if (userAccountData == null) {
             return null;
@@ -63,12 +75,7 @@ public class DefaultUserDetailsBuilderImpl implements UserDetailsBuilder {
         }
         UserAccountDTO userAccount = userAccountData.getAccount();
 
-        RestUserDetailsImpl restUserDetails = RestUserDetailsImpl.builder()
-                .userId(user.getUserId())
-                .username(user.getUsername())
-                .fullName(user.getFullName())
-                .password(user.getPassword())
-                .enabled(Boolean.TRUE.equals(user.getUseYn()))
+        RestUserDetailsImpl restUserDetails = userDetailsImplBuilder
                 .loginFailTime(userAccount.getLoginFailTime())
                 .ipWhiteList(
                         Optional.ofNullable(userAccount.getIpWhiteList())
@@ -102,6 +109,9 @@ public class DefaultUserDetailsBuilderImpl implements UserDetailsBuilder {
 
         // 设置租户信息
         restUserDetails.setUserTenant(userAccountData.getTenant());
+        if (!CollectionUtils.isEmpty(user.getAuthDomainList())) {
+            restUserDetails.setUserAuthDomains(user.getAuthDomainList().stream().map(Enum::name).collect(Collectors.toSet()));
+        }
         return restUserDetails;
     }
 

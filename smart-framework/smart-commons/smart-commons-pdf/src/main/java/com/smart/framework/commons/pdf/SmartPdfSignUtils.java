@@ -1,5 +1,6 @@
 package com.smart.framework.commons.pdf;
 
+import com.smart.framework.commons.core.file.AutoDeleteFileInputStream;
 import com.smart.framework.commons.pdf.data.PdfSignatureData;
 import com.smart.framework.commons.pdf.data.PdfSignatureImageData;
 import com.smart.framework.commons.pdf.data.PdfSignatureValidationResult;
@@ -116,7 +117,7 @@ public class SmartPdfSignUtils {
         try (OutputStream outputStream = new FileOutputStream(tempFile)) {
             sign(pdfInputStream, keyStoreInputStream, keyStorePassword, pdfSignatureData, outputStream, imageData);
         }
-        return new FileInputStream(tempFile);
+        return new AutoDeleteFileInputStream(tempFile);
     }
 
     @SneakyThrows(Exception.class)

@@ -3,7 +3,6 @@ package com.smart.framework.redis.service;
 import com.smart.framework.commons.core.cache.CacheService;
 import com.smart.framework.redis.constants.RedisInfoParameterEnum;
 import com.smart.framework.redis.model.RedisKeySpace;
-import org.redisson.api.RLock;
 import org.redisson.api.RRateLimiter;
 import org.redisson.api.RedissonClient;
 import org.springframework.lang.NonNull;
@@ -172,13 +171,6 @@ public interface RedisService extends CacheService {
      * @return 限流器
      */
     RRateLimiter getRateLimiter(String key);
-
-    /**
-     * 获取锁
-     * @param key 锁key
-     * @return 锁
-     */
-    RLock getLock(String key);
 
      /**
      * 获取redisson client

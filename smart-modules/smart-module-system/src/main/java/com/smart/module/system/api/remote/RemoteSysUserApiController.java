@@ -2,13 +2,12 @@ package com.smart.module.system.api.remote;
 
 import com.smart.module.api.system.SysUserApi;
 import com.smart.module.api.system.constants.SystemApiUrlConstants;
-import com.smart.module.api.system.dto.AccountLoginFailTimeUpdateDTO;
-import com.smart.module.api.system.dto.SysDeptDTO;
-import com.smart.module.api.system.dto.SysUserDTO;
-import com.smart.module.api.system.dto.UserAccountLockDTO;
+import com.smart.module.api.system.dto.*;
 import com.smart.module.api.system.parameter.RemoteSysUserListParameter;
 import com.smart.module.api.system.parameter.SysUserDeptParameter;
+import com.smart.module.api.system.parameter.SysUserThirdAccountParameter;
 import com.smart.module.system.api.local.LocalSysUserApi;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -112,5 +111,17 @@ public class RemoteSysUserApiController implements SysUserApi {
     @PostMapping(SystemApiUrlConstants.QUERY_USER_DEPT_WITH_CHILDREN)
     public List<SysDeptDTO> listUserDeptWithChildren(SysUserDeptParameter parameter) {
         return this.localSysUserApi.listUserDeptWithChildren(parameter);
+    }
+
+    /**
+     * 查询用户第三方账号列表
+     *
+     * @param parameter 参数
+     * @return 用户第三方账号列表
+     */
+    @Override
+    @PostMapping(SystemApiUrlConstants.LIST_USER_THIRD_ACCOUNT)
+    public List<SysUserThirdAccountDTO> listUserThirdAccount(@RequestBody @Valid SysUserThirdAccountParameter parameter) {
+        return this.localSysUserApi.listUserThirdAccount(parameter);
     }
 }

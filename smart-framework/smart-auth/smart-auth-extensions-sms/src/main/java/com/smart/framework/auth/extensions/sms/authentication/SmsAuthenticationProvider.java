@@ -1,6 +1,7 @@
 package com.smart.framework.auth.extensions.sms.authentication;
 
-import com.smart.framework.auth.common.userdetails.RestUserDetails;
+import com.smart.framework.auth.common.constants.AuthTypeEnum;
+import com.smart.framework.auth.common.userdetails.RestUserDetailsImpl;
 import com.smart.framework.auth.core.i18n.AuthI18nMessage;
 import com.smart.framework.auth.extensions.sms.provider.SmsCreateValidateProvider;
 import com.smart.framework.auth.extensions.sms.userdetails.SmsUserDetailService;
@@ -43,10 +44,11 @@ public class SmsAuthenticationProvider implements AuthenticationProvider {
             throw new BadCredentialsException(I18nUtils.get(AuthI18nMessage.PHONE_CODE_ERROR));
         }
         // 通过手机号查询用户
-        final RestUserDetails restUserDetails = (RestUserDetails) this.smsUserDetailService.loadUserByMobile(phone);
+        final RestUserDetailsImpl restUserDetails = (RestUserDetailsImpl) this.smsUserDetailService.loadUserByMobile(phone);
         if (Objects.isNull(restUserDetails)) {
             throw new BadCredentialsException(I18nUtils.get(AuthI18nMessage.PHONE_CODE_ERROR));
         }
+        restUserDetails.setAuthType(AuthTypeEnum.SMS);
         // 鉴权成功
         final SmsAuthenticationToken token = new SmsAuthenticationToken(restUserDetails, code, restUserDetails.getAuthorities());
         token.setDetails(authentication.getDetails());

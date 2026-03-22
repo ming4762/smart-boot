@@ -38,7 +38,7 @@ public class SmartAuthenticationFilter extends OncePerRequestFilter {
             throw new CredentialsExpiredException(I18nUtils.get(AuthI18nMessage.ERROR_TOKEN_EXPIRE));
         }
         // 验证IP
-        if (Boolean.TRUE.equals(user.getBindIp()) && !org.apache.commons.codec.binary.StringUtils.equals(user.getLoginIp(), IpUtils.getIpAddr(request))) {
+        if (Boolean.TRUE.equals(user.getBindIp()) && !IpUtils.getIpAddr(request).equals(user.getLoginIp())) {
             throw new IpBindAuthenticationException(I18nUtils.get(AuthI18nMessage.ERROR_IP_VALIDATE));
         }
         filterChain.doFilter(request, response);

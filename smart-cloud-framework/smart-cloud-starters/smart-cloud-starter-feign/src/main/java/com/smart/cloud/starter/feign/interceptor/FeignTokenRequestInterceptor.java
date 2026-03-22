@@ -15,7 +15,6 @@ import java.util.Optional;
  * @author zhongming4762
  * 2023/3/10
  */
-@Configuration
 public class FeignTokenRequestInterceptor implements RequestInterceptor {
 
     @Override

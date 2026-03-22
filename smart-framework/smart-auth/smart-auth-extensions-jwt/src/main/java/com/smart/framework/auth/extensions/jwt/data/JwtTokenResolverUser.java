@@ -1,6 +1,6 @@
 package com.smart.framework.auth.extensions.jwt.data;
 
-import com.smart.framework.auth.core.model.RestUserDetailsImpl;
+import com.smart.framework.auth.common.userdetails.RestUserDetailsImpl;
 
 import java.time.Instant;
 

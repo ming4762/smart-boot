@@ -336,7 +336,7 @@ public class RedisServiceImpl extends AbstractCacheService implements RedisServi
      * @return 锁
      */
     @Override
-    public RLock getLock(String key) {
+    public RLock getLock(@NonNull String key) {
         return this.redissonClient.getLock(this.getCachedKey(key));
     }
 

@@ -1,6 +1,6 @@
 package com.smart.framework.auth.extensions.jwt.resolver;
 
-import com.smart.framework.auth.core.model.RestUserDetailsImpl;
+import com.smart.framework.auth.common.userdetails.RestUserDetailsImpl;
 import com.smart.framework.auth.extensions.jwt.data.JwtRefreshTokenPayload;
 import com.smart.framework.auth.extensions.jwt.data.JwtTokenResolverUser;
 import com.smart.framework.commons.core.utils.JsonUtils;

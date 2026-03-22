@@ -20,6 +20,11 @@
         <spring-cloud.version>2025.1.0</spring-cloud.version>
         <spring-cloud-alibaba.version>2025.0.0.0</spring-cloud-alibaba.version>
 
+        <!--    服务端口前缀，用于统一修改端口    -->
+        <server.port.prefix>808</server.port.prefix>
+        <!--    微服务模式服务名前缀，用于统一修改服务名    -->
+        <cloud.application.name.prefix>smart-cloud-service-</cloud.application.name.prefix>
+
         <guava.version>33.5.0-jre</guava.version>
         <commons-collections4.version>4.5.0</commons-collections4.version>
         <commons-beanutils.version>1.11.0</commons-beanutils.version>
@@ -27,8 +32,7 @@
         <swagger-annotations.version>2.2.34</swagger-annotations.version>
         <commons-io.version>2.17.0</commons-io.version>
         <jsch.version>0.1.55</jsch.version>
-
-        <mybatis-plus.version>3.5.15</mybatis-plus.version>
+        <mybatis-plus.version>3.5.16</mybatis-plus.version>
         <jodconverter.version>4.4.11</jodconverter.version>
         <google.zxing.version>3.5.3</google.zxing.version>
         <!--    TODO:大版本升级3.0.0    -->
@@ -36,7 +40,7 @@
         <jacob.version>1.20</jacob.version>
         <kettle.version>10.2.0.0-222</kettle.version>
         <xxl-job.version>3.2.0</xxl-job.version>
-        <druid.version>1.2.27</druid.version>
+        <druid.version>1.2.28</druid.version>
         <easy-captcha.version>1.6.2</easy-captcha.version>
         <ojdbc8.version>19.3.0.0</ojdbc8.version>
         <commons-vfs2.version>2.10.0</commons-vfs2.version>
@@ -48,7 +52,7 @@
         <aliyun.oss.version>3.18.3</aliyun.oss.version>
         <knife4j-openapi3.version>4.5.0</knife4j-openapi3.version>
         <qiniu.version>7.19.0</qiniu.version>
-        <wx-java.version>4.7.0</wx-java.version>
+        <wx-java.version>4.8.0</wx-java.version>
         <aliyun.dysmsapi.version>3.1.0</aliyun.dysmsapi.version>
         <tencentcloud.sdk.version>3.1.1281</tencentcloud.sdk.version>
         <tianai-captcha.version>1.5.3</tianai-captcha.version>
@@ -58,7 +62,7 @@
         <amazon.aws.version>2.5.31</amazon.aws.version>
         <dingtalk.server.new.version>2.2.33</dingtalk.server.new.version>
         <dingtalk.server.old.version>2.0.0</dingtalk.server.old.version>
-        <redisson.version>3.51.0</redisson.version>
+        <redisson.version>4.3.0</redisson.version>
         <libphonenumber.version>9.0.19</libphonenumber.version>
         <bcprov-jdk15on.version>1.70</bcprov-jdk15on.version>
         <grpc-netty.version>1.75.0</grpc-netty.version>
@@ -69,6 +73,9 @@
         <alibaba.transmittable.version>2.14.5</alibaba.transmittable.version>
         <pdfbox.version>3.0.5</pdfbox.version>
         <bouncycastle.version>1.82</bouncycastle.version>
+        <rocketmq.starter.version>2.3.5</rocketmq.starter.version>
+        <rocketmq.version>5.4.0</rocketmq.version>
+        <sshj.version>0.40.0</sshj.version>
     </properties>
 
     <packaging>pom</packaging>
@@ -101,6 +108,15 @@
                 <nacos.namespace>dev</nacos.namespace>
                 <nacos.username>nacos</nacos.username>
                 <nacos.password>nacos</nacos.password>
+
+                <cloud.application.name>${cloud.application.name.prefix}</cloud.application.name>
+
+                <server.port.gateway>${server.port.prefix}0</server.port.gateway>
+                <server.port.system>${server.port.prefix}1</server.port.system>
+                <server.port.auth>${server.port.prefix}2</server.port.auth>
+                <server.port.file>${server.port.prefix}3</server.port.file>
+                <server.port.message>${server.port.prefix}4</server.port.message>
+                <server.port.code>${server.port.prefix}5</server.port.code>
             </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>
@@ -115,6 +131,15 @@
                 <nacos.namespace>pro</nacos.namespace>
                 <nacos.username>nacos</nacos.username>
                 <nacos.password>nacos</nacos.password>
+
+                <cloud.application.name>${cloud.application.name.prefix}</cloud.application.name>
+
+                <server.port.gateway>${server.port.prefix}0</server.port.gateway>
+                <server.port.system>${server.port.prefix}1</server.port.system>
+                <server.port.auth>${server.port.prefix}2</server.port.auth>
+                <server.port.file>${server.port.prefix}3</server.port.file>
+                <server.port.message>${server.port.prefix}4</server.port.message>
+                <server.port.code>${server.port.prefix}5</server.port.code>
             </properties>
         </profile>
     </profiles>
@@ -465,6 +490,11 @@
                 <version>${druid.version}</version>
             </dependency>
             <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-4-starter</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.openjdk.nashorn</groupId>
                 <artifactId>nashorn-core</artifactId>
                 <version>${nashorn.version}</version>
@@ -544,6 +574,26 @@
                 <groupId>org.bouncycastle</groupId>
                 <artifactId>bcpkix-jdk18on</artifactId>
                 <version>${bouncycastle.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.rocketmq</groupId>
+                <artifactId>rocketmq-client</artifactId>
+                <version>${rocketmq.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.rocketmq</groupId>
+                <artifactId>rocketmq-spring-boot-starter</artifactId>
+                <version>${rocketmq.starter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.rocketmq</groupId>
+                <artifactId>rocketmq-spring-boot</artifactId>
+                <version>${rocketmq.starter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.hierynomus</groupId>
+                <artifactId>sshj</artifactId>
+                <version>${sshj.version}</version>
             </dependency>
 
             <!--      smart-boot      -->
@@ -642,7 +692,12 @@
                 <artifactId>smart-boot-starter-auth-wechat</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            
+            <dependency>
+                <groupId>com.smart</groupId>
+                <artifactId>smart-boot-starter-auth-domain</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>com.smart</groupId>
                 <artifactId>smart-boot-starter-captcha</artifactId>
@@ -701,6 +756,11 @@
             <dependency>
                 <groupId>com.smart</groupId>
                 <artifactId>smart-boot-starter-file-sftp</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.smart</groupId>
+                <artifactId>smart-boot-starter-file-sftp-sshj</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -776,6 +836,12 @@
             </dependency>
             <dependency>
                 <groupId>com.smart</groupId>
+                <artifactId>smart-boot-starter-message-wechat</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.smart</groupId>
                 <artifactId>smart-boot-starter-monitor-client</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -817,22 +883,12 @@
             </dependency>
             <dependency>
                 <groupId>com.smart</groupId>
-                <artifactId>smart-cloud-starter-exception</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.smart</groupId>
                 <artifactId>smart-cloud-starter-feign</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.smart</groupId>
                 <artifactId>smart-cloud-starter-i18n</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.smart</groupId>
-                <artifactId>smart-cloud-starter-log</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -848,6 +904,11 @@
             <dependency>
                 <groupId>com.smart</groupId>
                 <artifactId>smart-boot-starter-ai-langchain4j</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.smart</groupId>
+                <artifactId>smart-boot-starter-rocketmq</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

@@ -1,7 +1,7 @@
 package com.smart.framework.auth.extensions.sms.userdetails;
 
+import com.smart.framework.auth.common.userdetails.RestUserDetails;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * @author ShiZhongMing
@@ -16,5 +16,5 @@ public interface SmsUserDetailService {
      * @return 用户信息
      * @throws AuthenticationException 异常信息
      */
-    UserDetails loadUserByMobile(String mobile) throws AuthenticationException;
+    RestUserDetails loadUserByMobile(String mobile) throws AuthenticationException;
 }

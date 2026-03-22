@@ -2,6 +2,7 @@ package com.smart.cloud.service.auth.config;
 
 import com.smart.framework.auth.core.properties.AuthProperties;
 import com.smart.framework.auth.extensions.jwt.AuthJwtSecurityConfigurer;
+import com.smart.framework.auth.extensions.wechat.AuthWechatSecurityConfigurer;
 import com.smart.module.auth.config.AuthCaptchaSecurityConfigurer;
 import com.smart.module.auth.config.AuthWebSecurityConfigurerAdapter;
 import lombok.SneakyThrows;
@@ -38,6 +39,8 @@ public class SecurityConfig extends AuthWebSecurityConfigurerAdapter {
                 // JWT配置
                 .sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .with(AuthJwtSecurityConfigurer.jwt(), configurer -> configurer.jwtAuth(false))
+                // 微信服务号二维码扫码登录
+                .with(AuthWechatSecurityConfigurer.wechat(), config -> config.mpQrcode().config())
                 .with(AuthCaptchaSecurityConfigurer.captcha(), Customizer.withDefaults());
         return httpSecurity.build();
     }

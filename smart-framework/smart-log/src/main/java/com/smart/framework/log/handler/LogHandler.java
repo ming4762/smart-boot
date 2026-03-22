@@ -1,7 +1,7 @@
 package com.smart.framework.log.handler;
 
 import com.smart.framework.commons.core.log.Log;
-import com.smart.framework.log.model.SysLog;
+import com.smart.framework.commons.core.log.SysLogSaveDTO;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -24,5 +24,5 @@ public interface LogHandler {
      * @param errorMessage 错误信息
      * @return 是否保存成功
      */
-    boolean save(@NonNull SysLog sysLog, @NonNull ProceedingJoinPoint point, @NonNull Log logAnnotation, long time, int code, @Nullable Object result, @Nullable String errorMessage);
+    boolean save(@NonNull SysLogSaveDTO sysLog, @NonNull ProceedingJoinPoint point, @NonNull Log logAnnotation, long time, int code, @Nullable Object result, @Nullable String errorMessage);
 }

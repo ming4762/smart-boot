@@ -9,7 +9,7 @@
 	</parent>
 	<artifactId>smart-message-extension-dingtalk</artifactId>
 	<version>5.0.0-SNAPSHOT</version>
-	<name>smart-message-dingtalk</name>
+	<name>smart-message-extension-dingtalk</name>
 	<description>钉钉消息模块</description>
 
 	<properties>

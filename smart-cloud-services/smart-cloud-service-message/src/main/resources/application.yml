@@ -1,9 +1,9 @@
 server:
-  port: 8095
+  port: @server.port.message@
 
 spring:
   application:
-    name: @artifactId@
+    name: @cloud.application.name@message
   profiles:
     active: @profiles.active@
   cloud:

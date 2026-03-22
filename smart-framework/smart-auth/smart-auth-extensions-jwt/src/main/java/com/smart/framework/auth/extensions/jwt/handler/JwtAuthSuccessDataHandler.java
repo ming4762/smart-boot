@@ -1,8 +1,8 @@
 package com.smart.framework.auth.extensions.jwt.handler;
 
+import com.smart.framework.auth.common.userdetails.RestUserDetailsImpl;
 import com.smart.framework.auth.core.handler.AuthSuccessDataHandler;
 import com.smart.framework.auth.core.model.LoginResult;
-import com.smart.framework.auth.core.model.RestUserDetailsImpl;
 import com.smart.framework.auth.extensions.jwt.token.JwtTokenRepository;
 import com.smart.framework.commons.core.dto.auth.Permission;
 import com.smart.framework.commons.core.exception.SystemException;

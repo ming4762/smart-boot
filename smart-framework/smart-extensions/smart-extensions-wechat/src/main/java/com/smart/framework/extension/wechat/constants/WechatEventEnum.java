@@ -16,7 +16,9 @@ public enum WechatEventEnum implements BaseEnum<String> {
     /**
      * 取消关注
      */
-    UNSUBSCRIBE("unsubscribe");
+    UNSUBSCRIBE("unsubscribe"),
+
+    SCAN("scan");
 
     private final String value;
 

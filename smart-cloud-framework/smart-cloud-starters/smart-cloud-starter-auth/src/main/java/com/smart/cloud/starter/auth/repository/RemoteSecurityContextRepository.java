@@ -1,10 +1,10 @@
 package com.smart.cloud.starter.auth.repository;
 
+import com.smart.framework.auth.common.authentication.SmartAuthRestUserDetailAuthentication;
+import com.smart.framework.auth.common.userdetails.PermissionGrantedAuthority;
 import com.smart.framework.auth.common.userdetails.RestUserDetails;
-import com.smart.framework.auth.core.authentication.RestUsernamePasswordAuthenticationToken;
-import com.smart.framework.auth.core.model.PermissionGrantedAuthority;
-import com.smart.framework.auth.core.model.RestUserDetailsImpl;
-import com.smart.framework.auth.core.model.RoleGrantedAuthority;
+import com.smart.framework.auth.common.userdetails.RestUserDetailsImpl;
+import com.smart.framework.auth.common.userdetails.RoleGrantedAuthority;
 import com.smart.framework.auth.core.utils.TokenUtils;
 import com.smart.module.api.auth.AuthApi;
 import com.smart.module.api.auth.dto.AuthUserDetailsDTO;
@@ -15,7 +15,6 @@ import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.security.web.context.HttpRequestResponseHolder;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.util.CollectionUtils;
@@ -66,7 +65,7 @@ public class RemoteSecurityContextRepository implements SecurityContextRepositor
         this.clearCachedToken();
         if (cache.get(token) != null) {
             RestUserDetails userDetails = (RestUserDetails) Optional.ofNullable(cache.get(token)).map(Cache.ValueWrapper::get).orElse(null);
-            return this.generateSecurityContext(request, userDetails);
+            return this.generateSecurityContext(userDetails);
         }
         AuthUserDetailsDTO dto;
         try {
@@ -102,7 +101,7 @@ public class RemoteSecurityContextRepository implements SecurityContextRepositor
         cache.put(token, restUserDetails);
         this.setCachedToken(token);
 
-        return this.generateSecurityContext(request, restUserDetails);
+        return this.generateSecurityContext(restUserDetails);
     }
 
     private void setCachedToken(String token) {
@@ -146,9 +145,8 @@ public class RemoteSecurityContextRepository implements SecurityContextRepositor
         return Objects.requireNonNull(this.cacheManager.getCache(USER_CACHE_NAME));
     }
 
-    protected SecurityContext generateSecurityContext(HttpServletRequest request, RestUserDetails user) {
-        RestUsernamePasswordAuthenticationToken authentication = new RestUsernamePasswordAuthenticationToken(user, null, user.getAuthorities(), user.getBindIp(), user.getLoginIp(), user.getLoginType());
-        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+    protected SecurityContext generateSecurityContext(RestUserDetails user) {
+        SmartAuthRestUserDetailAuthentication authentication = new SmartAuthRestUserDetailAuthentication(user);
         SecurityContext securityContext = generateNewContext();
         securityContext.setAuthentication(authentication);
         return securityContext;
