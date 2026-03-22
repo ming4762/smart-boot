@@ -11,12 +11,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInvocation;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.AuthorizationManager;
+import org.springframework.security.authorization.AuthorizationResult;
 import org.springframework.security.core.Authentication;
+import org.springframework.util.Assert;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -35,33 +38,6 @@ import java.util.function.Supplier;
 public class AuthDomainAuthorizationManager implements AuthorizationManager<MethodInvocation> {
 
     private final ObjectProvider<AuthProperties> authPropertiesProvider;
-
-    @Override
-    public @Nullable AuthorizationDecision check(Supplier<Authentication> authenticationSupplier, MethodInvocation methodInvocation) {
-        if (this.ignore()) {
-            return new AuthorizationDecision(true);
-        }
-        Authentication authentication = authenticationSupplier.get();
-        if (authentication instanceof SmartAuthDomainAuthentication authDomainAuthentication && authDomainAuthentication.isNonAuthDomain()) {
-            // 没有启用认证域，默认授权
-            return new AuthorizationDecision(true);
-        }
-        RestUserDetails restUserDetails = (RestUserDetails) authentication.getPrincipal();
-        // 获取用户当前登录的认证域
-        String currentAuthDomain = restUserDetails.getCurrentAuthDomain();
-        // 查询接口所需权限域，如果未配置默认ADMIN
-        List<String> requiredAuthDomains = Optional.ofNullable(this.findAuthDomain(methodInvocation))
-                .map(AuthDomain::value)
-                .map(Arrays::asList)
-                .orElse(List.of(AuthDomainConstants.AUTH_DOMAIN_ADMIN));
-        // 判断当前登录的认证域是否在接口所需的认证域列表中
-        boolean granted = currentAuthDomain != null && requiredAuthDomains.contains(currentAuthDomain);
-        if (!granted) {
-            log.warn("用户 {} 无权限访问接口 {}，所需权限域 {}，当前登录权限域 {}",
-                    restUserDetails.getUsername(), this.getMethodName(methodInvocation), requiredAuthDomains, currentAuthDomain);
-        }
-        return new AuthorizationDecision(granted);
-    }
 
     /**
      * 查找方法上的AuthDomain注解
@@ -97,5 +73,36 @@ public class AuthDomainAuthorizationManager implements AuthorizationManager<Meth
 
     protected String getMethodName(MethodInvocation methodInvocation) {
         return methodInvocation.getThis().getClass().getName() + "#" +methodInvocation.getMethod().getName();
+    }
+
+    @Override
+    public @Nullable AuthorizationResult authorize(@NonNull Supplier<? extends @Nullable Authentication> authenticationSupplier, MethodInvocation methodInvocation) {
+        if (this.ignore()) {
+            return new AuthorizationDecision(true);
+        }
+        Authentication authentication = authenticationSupplier.get();
+        if (authentication == null) {
+            return new AuthorizationDecision(false);
+        }
+        if (authentication instanceof SmartAuthDomainAuthentication authDomainAuthentication && authDomainAuthentication.isNonAuthDomain()) {
+            // 没有启用认证域，默认授权
+            return new AuthorizationDecision(true);
+        }
+        RestUserDetails restUserDetails = (RestUserDetails) authentication.getPrincipal();
+        Assert.notNull(restUserDetails, "用户信息不存在");
+        // 获取用户当前登录的认证域
+        String currentAuthDomain = restUserDetails.getCurrentAuthDomain();
+        // 查询接口所需权限域，如果未配置默认ADMIN
+        List<String> requiredAuthDomains = Optional.ofNullable(this.findAuthDomain(methodInvocation))
+                .map(AuthDomain::value)
+                .map(Arrays::asList)
+                .orElse(List.of(AuthDomainConstants.AUTH_DOMAIN_ADMIN));
+        // 判断当前登录的认证域是否在接口所需的认证域列表中
+        boolean granted = currentAuthDomain != null && requiredAuthDomains.contains(currentAuthDomain);
+        if (!granted) {
+            log.warn("用户 {} 无权限访问接口 {}，所需权限域 {}，当前登录权限域 {}",
+                    restUserDetails.getUsername(), this.getMethodName(methodInvocation), requiredAuthDomains, currentAuthDomain);
+        }
+        return new AuthorizationDecision(granted);
     }
 }

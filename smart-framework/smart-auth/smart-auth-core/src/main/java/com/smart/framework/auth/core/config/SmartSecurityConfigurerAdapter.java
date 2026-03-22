@@ -137,7 +137,7 @@ public class SmartSecurityConfigurerAdapter<H extends HttpSecurityBuilder<H>, C 
     }
 
     @Override
-    public void init(H builder) throws Exception {
+    public void init(H builder) {
         if (builder.getSharedObject(AuthenticationSuccessHandler.class) == null) {
             builder.setSharedObject(AuthenticationSuccessHandler.class, this.getBean(AuthenticationSuccessHandler.class));
         }

@@ -82,7 +82,7 @@ public class AuthJwtSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
      * @param builder HttpSecurity
      */
     @Override
-    public void init(H builder) throws Exception {
+    public void init(H builder) {
         super.init(builder);
         builder.setSharedObject(SecurityContextRepository.class, this.getBean(SecurityContextRepository.class));
         // 创建上下文

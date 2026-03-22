@@ -1,7 +1,7 @@
 package com.smart.boot.autoconfigure.druid;
 
 import com.alibaba.druid.pool.DruidDataSource;
-import com.alibaba.druid.spring.boot3.autoconfigure.DruidDataSourceAutoConfigure;
+import com.alibaba.druid.spring.boot4.autoconfigure.DruidDataSourceAutoConfigure;
 import com.smart.framework.druid.filter.stat.EnhancedStatFilter;
 import com.smart.framework.druid.support.slow.Slf4jSlowSqlHandler;
 import com.smart.framework.druid.support.slow.SlowSqlHandler;

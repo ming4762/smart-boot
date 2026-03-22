@@ -42,7 +42,7 @@ public class AuthWebSecurityConfigurer<H extends HttpSecurityBuilder<H>> extends
     }
 
     @Override
-    public void init(H builder) throws Exception {
+    public void init(H builder) {
         super.init(builder);
         AuthenticationManagerBuilder authenticationManagerBuilder = builder.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.parentAuthenticationManager(null);
