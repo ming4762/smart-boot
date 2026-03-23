@@ -17,6 +17,11 @@ import org.springframework.context.annotation.Configuration;
 @Configuration(proxyBeanMethods = false)
 public class SmartTraceAutoConfiguration {
 
+    /**
+     * TODO： 找不到Tracer
+     * @param tracerProvider Tracer提供者
+     * @return ApplicationListener
+     */
     @Bean
     public ApplicationListener<ApplicationReadyEvent> traceListener(ObjectProvider<Tracer> tracerProvider) {
         return event -> {

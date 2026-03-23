@@ -2,7 +2,7 @@ package com.smart.framework.commons.core.trace;
 
 import io.micrometer.tracing.Span;
 import io.micrometer.tracing.Tracer;
-import lombok.Getter;
+import org.jspecify.annotations.Nullable;
 
 /**
  * 提供trace_id相关的工具类
@@ -16,8 +16,12 @@ public class SmartTraceUtils {
         throw new IllegalStateException("Utility class");
     }
 
-    @Getter
     private static Tracer tracer;
+
+    @Nullable
+    public static Tracer getTracer() {
+        return tracer;
+    }
 
     /**
      * 获取trace_id

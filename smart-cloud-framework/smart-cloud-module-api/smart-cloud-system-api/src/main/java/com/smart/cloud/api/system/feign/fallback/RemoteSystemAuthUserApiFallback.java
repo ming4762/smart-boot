@@ -1,6 +1,7 @@
 package com.smart.cloud.api.system.feign.fallback;
 
 import com.smart.cloud.api.system.feign.RemoteSystemAuthUserApi;
+import com.smart.cloud.common.core.exception.SmartFallbackException;
 import com.smart.framework.commons.core.dto.auth.UserAccountData;
 import com.smart.module.api.system.dto.AuthUserDTO;
 import com.smart.module.api.system.dto.QueryUserAccountDTO;
@@ -27,40 +28,41 @@ public class RemoteSystemAuthUserApiFallback implements FallbackFactory<RemoteSy
             private void errorLog() {
                 log.error("RemoteSystemAuthUserApiFallback", cause);
             }
+
             @Override
             public AuthUserDTO getByUsername(@NonNull String username) {
                 this.errorLog();
-                return null;
+                throw new SmartFallbackException(cause);
             }
 
             @Override
             public AuthUserDTO getByMobile(@NonNull String mobile) {
                 this.errorLog();
-                return null;
+                throw new SmartFallbackException(cause);
             }
 
             @Override
             public UserAccountData queryUserAccount(@NonNull QueryUserAccountDTO parameter) {
                 this.errorLog();
-                return null;
+                throw new SmartFallbackException(cause);
             }
 
             @Override
             public AuthUserDTO getByWehchatAppOpenid(WechatUserQueryParameter parameter) {
                 this.errorLog();
-                return null;
+                throw new SmartFallbackException(cause);
             }
 
             @Override
             public AuthUserDTO getByWechatUnionid(WechatUserQueryParameter parameter) {
                 this.errorLog();
-                return null;
+                throw new SmartFallbackException(cause);
             }
 
             @Override
             public boolean unlockAccount(UserAccountUnLockParameter parameter) {
                 this.errorLog();
-                return false;
+                throw new SmartFallbackException(cause);
             }
         };
     }

@@ -54,9 +54,9 @@ public class AsyncNoticeHandler implements ApplicationContextAware {
                 .map(ServletRequestAttributes::getRequest)
                 .map(item -> item.getHeader(HttpHeaders.AUTHORIZATION))
                 .orElse(null);
-        Span currentSpan = SmartTraceUtils.getTracer().currentSpan();
+        Span currentSpan = Optional.ofNullable(SmartTraceUtils.getTracer()).map(Tracer::currentSpan).orElse(null);
         TtlRunnable task = TtlRunnable.get(new DelegatingSecurityContextRunnable(() -> {
-            try (Tracer.SpanInScope ignore = SmartTraceUtils.getTracer().withSpan(currentSpan)) {
+            try (var _ = Optional.ofNullable(SmartTraceUtils.getTracer()).map(item -> item.withSpan(currentSpan)).orElse(null)) {
                 TokenHolder.set(token);
                 exceptionNoticeList.forEach(item -> {
                     try {
