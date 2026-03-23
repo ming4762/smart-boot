@@ -7,7 +7,7 @@ import com.smart.module.api.system.parameter.DingtalkUserQueryParameter;
 import com.smart.module.api.system.parameter.UserAccountUnLockParameter;
 import com.smart.module.api.system.parameter.WechatUserQueryParameter;
 import lombok.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * 获取认证用户的API

@@ -10,11 +10,8 @@ import com.smart.module.api.system.parameter.UserAccountUnLockParameter;
 import com.smart.module.api.system.parameter.WechatUserQueryParameter;
 import com.smart.module.system.service.impl.LocalSystemAuthUserApiImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.lang.NonNull;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.jspecify.annotations.NonNull;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 系统模块服务间调用接口
@@ -35,7 +32,7 @@ public class RemoteSystemAuthUserApiController implements SystemAuthUserApi {
      */
     @PostMapping(SystemApiUrlConstants.GET_AUTH_USER_BY_USERNAME)
     @Override
-    public AuthUserDTO getByUsername(@NonNull @RequestBody String username) {
+    public AuthUserDTO getByUsername(@NonNull @RequestParam("username") String username) {
         return this.localSystemAuthUserApi.getByUsername(username);
     }
 

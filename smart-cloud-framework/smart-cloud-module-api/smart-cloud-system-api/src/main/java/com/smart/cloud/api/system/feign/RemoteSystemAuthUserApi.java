@@ -10,9 +10,10 @@ import com.smart.module.api.system.dto.QueryUserAccountDTO;
 import com.smart.module.api.system.parameter.UserAccountUnLockParameter;
 import com.smart.module.api.system.parameter.WechatUserQueryParameter;
 import lombok.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * 系统模块认证用户远程调用接口
@@ -30,8 +31,8 @@ public interface RemoteSystemAuthUserApi extends SystemAuthUserApi {
      */
     @Nullable
     @Override
-    @PostMapping(SystemApiUrlConstants.GET_AUTH_USER_BY_USERNAME)
-    AuthUserDTO getByUsername(@NonNull String username);
+    @PostMapping(value = SystemApiUrlConstants.GET_AUTH_USER_BY_USERNAME)
+    AuthUserDTO getByUsername(@NonNull @RequestParam("username") String username);
 
     /**
      * 通过手机号查询用户

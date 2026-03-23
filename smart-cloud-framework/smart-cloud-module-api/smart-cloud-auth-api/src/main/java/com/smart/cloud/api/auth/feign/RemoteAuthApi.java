@@ -8,9 +8,10 @@ import com.smart.module.api.auth.constants.SmartAuthApiUrlConstants;
 import com.smart.module.api.auth.dto.AuthCacheDTO;
 import com.smart.module.api.auth.dto.AuthUserDetailsDTO;
 import com.smart.module.api.auth.dto.AuthenticationDTO;
+import org.jspecify.annotations.NonNull;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * 认证模块feign调用接口
@@ -29,7 +30,7 @@ public interface RemoteAuthApi extends AuthApi {
      */
     @Override
     @PostMapping(SmartAuthApiUrlConstants.OFFLINE_BY_TOKEN)
-    boolean offlineByToken(@NonNull String token);
+    boolean offlineByToken(@NonNull @RequestParam("token") String token);
 
     /**
      * 通过用户名离线
@@ -39,7 +40,7 @@ public interface RemoteAuthApi extends AuthApi {
      */
     @Override
     @PostMapping(SmartAuthApiUrlConstants.OFFLINE_BY_USERNAME)
-    boolean offlineByUsername(@NonNull String username);
+    boolean offlineByUsername(@NonNull @RequestParam("username") String username);
 
     /**
      * 通过token查询用户信息
@@ -49,7 +50,7 @@ public interface RemoteAuthApi extends AuthApi {
      */
     @Override
     @PostMapping(SmartAuthApiUrlConstants.GET_USER_DETAILS_BY_TOKEN)
-    AuthUserDetailsDTO getUserDetails(@NonNull String token);
+    AuthUserDetailsDTO getUserDetails(@NonNull @RequestParam("token") String token);
 
     /**
      * 用户鉴权
@@ -69,7 +70,7 @@ public interface RemoteAuthApi extends AuthApi {
      */
     @Override
     @PostMapping(SmartAuthApiUrlConstants.GET_AUTH_CACHE)
-    Object getAuthCache(@NonNull String key);
+    Object getAuthCache(@NonNull @RequestParam("key") String key);
 
     /**
      * 设置缓存信息
@@ -86,5 +87,5 @@ public interface RemoteAuthApi extends AuthApi {
      */
     @Override
     @PostMapping(SmartAuthApiUrlConstants.REMOVE_AUTH_CACHE)
-    void removeAuthCache(@NonNull String key);
+    void removeAuthCache(@NonNull @RequestParam("key") String key);
 }

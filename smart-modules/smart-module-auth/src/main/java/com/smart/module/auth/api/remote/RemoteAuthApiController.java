@@ -8,11 +8,8 @@ import com.smart.module.api.auth.dto.AuthUserDetailsDTO;
 import com.smart.module.api.auth.dto.AuthenticationDTO;
 import com.smart.module.auth.api.local.LocalAuthApiImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.lang.NonNull;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.jspecify.annotations.NonNull;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 认证模块远程调用接口
@@ -38,7 +35,7 @@ public class RemoteAuthApiController implements AuthApi {
      */
     @Override
     @PostMapping(SmartAuthApiUrlConstants.OFFLINE_BY_TOKEN)
-    public boolean offlineByToken(@RequestBody @NonNull String token) {
+    public boolean offlineByToken(@NonNull @RequestParam("token") String token) {
         return this.localAuthApi.offlineByToken(token);
     }
 
@@ -50,7 +47,7 @@ public class RemoteAuthApiController implements AuthApi {
      */
     @Override
     @PostMapping(SmartAuthApiUrlConstants.OFFLINE_BY_USERNAME)
-    public boolean offlineByUsername(@RequestBody @NonNull String username) {
+    public boolean offlineByUsername(@NonNull @RequestParam("username") String username) {
         return this.localAuthApi.offlineByUsername(username);
     }
 
@@ -62,7 +59,7 @@ public class RemoteAuthApiController implements AuthApi {
      */
     @Override
     @PostMapping(SmartAuthApiUrlConstants.GET_USER_DETAILS_BY_TOKEN)
-    public AuthUserDetailsDTO getUserDetails(@NonNull @RequestBody String token) {
+    public AuthUserDetailsDTO getUserDetails(@NonNull @RequestParam("token") String token) {
         try {
             return this.localAuthApi.getUserDetails(token);
         } catch (Exception e) {
@@ -92,7 +89,7 @@ public class RemoteAuthApiController implements AuthApi {
      */
     @Override
     @PostMapping(SmartAuthApiUrlConstants.GET_AUTH_CACHE)
-    public Object getAuthCache(@NonNull @RequestBody String key) {
+    public Object getAuthCache(@NonNull @RequestParam("key") String key) {
         return this.localAuthApi.getAuthCache(key);
     }
 
@@ -114,7 +111,7 @@ public class RemoteAuthApiController implements AuthApi {
      */
     @Override
     @PostMapping(SmartAuthApiUrlConstants.REMOVE_AUTH_CACHE)
-    public void removeAuthCache(@NonNull @RequestBody String key) {
+    public void removeAuthCache(@NonNull @RequestParam("key") String key) {
         this.localAuthApi.removeAuthCache(key);
     }
 }
