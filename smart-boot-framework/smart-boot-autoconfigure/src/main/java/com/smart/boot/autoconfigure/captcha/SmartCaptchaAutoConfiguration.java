@@ -1,14 +1,18 @@
 package com.smart.boot.autoconfigure.captcha;
 
 import cloud.tianai.captcha.application.ImageCaptchaApplication;
-import cloud.tianai.captcha.resource.impl.LocalMemoryResourceStore;
+import cloud.tianai.captcha.resource.CrudResourceStore;
+import cloud.tianai.captcha.spring.autoconfiguration.CacheStoreAutoConfiguration;
 import com.smart.framework.commons.core.cache.CacheService;
 import com.smart.framework.extension.captcha.handler.SmartCaptchaHandler;
 import com.smart.framework.extension.captcha.handler.SmartImageCaptchaHandlerImpl;
 import com.smart.framework.extension.captcha.handler.SmartTextCaptchaHandlerImpl;
 import com.smart.framework.extension.captcha.resource.CaptchaResourceLoader;
+import com.smart.framework.extension.captcha.resource.SmartRedisServiceResourceStore;
 import com.smart.framework.extension.captcha.service.DefaultSmartCaptchaServiceImpl;
 import com.smart.framework.extension.captcha.service.SmartCaptchaService;
+import com.smart.framework.redis.service.RedisService;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -26,6 +30,7 @@ import java.util.List;
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnClass(SmartCaptchaService.class)
 @EnableConfigurationProperties(SmartCaptchaProperties.class)
+@AutoConfigureBefore(CacheStoreAutoConfiguration.class)
 public class SmartCaptchaAutoConfiguration {
 
     @Bean
@@ -47,12 +52,27 @@ public class SmartCaptchaAutoConfiguration {
     }
 
     @Bean
-    public CaptchaResourceLoader captchaResourceLoader(SmartCaptchaProperties smartCaptchaProperties, LocalMemoryResourceStore resourceStore) {
+    public CaptchaResourceLoader captchaResourceLoader(SmartCaptchaProperties smartCaptchaProperties, CrudResourceStore resourceStore) {
         return new CaptchaResourceLoader(resourceStore, smartCaptchaProperties.getImage().getResourceList());
     }
 
     @Bean
     public static SmartCaptchaImagePropertiesBeanPostProcessor smartCaptchaImagePropertiesBeanPostProcessor() {
         return new SmartCaptchaImagePropertiesBeanPostProcessor();
+    }
+
+    @Configuration
+    @ConditionalOnClass(RedisService.class)
+    public static class SmartCaptchaRedisAutoConfiguration {
+
+        /**
+         * redis 验证码资源存储
+         * @param redisService redis服务
+         * @return 验证码资源存储
+         */
+        @Bean
+        public SmartRedisServiceResourceStore smartRedisServiceResourceStore(RedisService redisService) {
+            return new SmartRedisServiceResourceStore(redisService);
+        }
     }
 }
