@@ -1,6 +1,6 @@
 package com.smart.service.auth.server.manager.config;
 
-import com.alibaba.druid.spring.boot3.autoconfigure.DruidDataSourceBuilder;
+import com.alibaba.druid.spring.boot4.autoconfigure.DruidDataSourceBuilder;
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.smart.framework.commons.core.constants.MapperPackageConstants;

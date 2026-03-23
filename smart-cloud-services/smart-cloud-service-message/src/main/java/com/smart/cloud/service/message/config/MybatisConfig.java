@@ -1,6 +1,6 @@
 package com.smart.cloud.service.message.config;
 
-import com.alibaba.druid.spring.boot3.autoconfigure.DruidDataSourceBuilder;
+import com.alibaba.druid.spring.boot4.autoconfigure.DruidDataSourceBuilder;
 import com.smart.framework.commons.core.constants.MapperPackageConstants;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Qualifier;

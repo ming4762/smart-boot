@@ -2,7 +2,7 @@ package com.smart.boot.actuate.autoconfigure.druid;
 
 import com.alibaba.druid.filter.stat.StatFilter;
 import com.alibaba.druid.pool.DruidDataSource;
-import com.alibaba.druid.spring.boot3.autoconfigure.DruidDataSourceAutoConfigure;
+import com.alibaba.druid.spring.boot4.autoconfigure.DruidDataSourceAutoConfigure;
 import com.smart.boot.actuate.druid.SmartMonitorActuatorDruid;
 import com.smart.boot.actuate.druid.points.DruidSqlEndPoint;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
