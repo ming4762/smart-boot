@@ -18,7 +18,7 @@
 
         <spring-boot.version>4.0.4</spring-boot.version>
         <spring-cloud.version>2025.1.1</spring-cloud.version>
-        <spring-cloud-alibaba.version>2025.0.0.0</spring-cloud-alibaba.version>
+        <spring-cloud-alibaba.version>2025.1.0.0</spring-cloud-alibaba.version>
 
         <!--    服务端口前缀，用于统一修改端口    -->
         <server.port.prefix>808</server.port.prefix>
