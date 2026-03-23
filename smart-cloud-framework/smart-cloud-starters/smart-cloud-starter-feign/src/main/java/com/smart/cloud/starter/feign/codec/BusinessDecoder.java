@@ -66,15 +66,6 @@ public class BusinessDecoder extends ResponseEntityDecoder {
                 String errorMessage = err.get(DATA_KEY) == null ? (String) err.get(MESSAGE_KEY) : JsonUtils.toJsonString(err.get(DATA_KEY));
                 throw new SmartFeignBusinessException(errorMessage, err);
             }
-
-            // 响应成功，提取 data 字段进行转换
-            if (root.has(DATA_KEY) && !root.get(DATA_KEY).isNull()) {
-                JavaType javaType = objectMapper.getTypeFactory().constructType(type);
-                return objectMapper.convertValue(root.get(DATA_KEY), javaType);
-            } else {
-                // data 字段不存在或为 null，返回 null 或根据类型处理
-                return null;
-            }
         }
 
         JavaType javaType = objectMapper.getTypeFactory().constructType(type);
