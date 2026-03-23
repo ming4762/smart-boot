@@ -8,7 +8,6 @@
         <version>5.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>smart-boot-starter-captcha</artifactId>
-    <version>5.0.0-SNAPSHOT</version>
     <name>smart-boot-starter-captcha</name>
     <description>captcha starter</description>
 
@@ -20,6 +19,10 @@
             <groupId>com.smart</groupId>
             <artifactId>smart-extensions-captcha</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cloud.tianai.captcha</groupId>
+            <artifactId>tianai-captcha-springboot-starter</artifactId>
         </dependency>
     </dependencies>
 

@@ -1,7 +1,7 @@
 package com.smart.framework.extension.captcha.resource;
 
 import cloud.tianai.captcha.common.constant.CaptchaTypeConstant;
-import cloud.tianai.captcha.resource.impl.LocalMemoryResourceStore;
+import cloud.tianai.captcha.resource.CrudResourceStore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
@@ -27,7 +27,7 @@ public class CaptchaResourceLoader implements InitializingBean {
     private static final String CLASSPATH_PREFIX = "classpath";
     private static final String RESOURCE_PREFIX = "/**/*.{jpg,png}";
 
-    private final LocalMemoryResourceStore resourceStore;
+    private final CrudResourceStore resourceStore;
 
     private final List<String> resourceList;
 
