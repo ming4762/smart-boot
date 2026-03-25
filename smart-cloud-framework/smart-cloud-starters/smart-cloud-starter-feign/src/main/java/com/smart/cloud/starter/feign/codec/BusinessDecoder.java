@@ -29,13 +29,49 @@ import java.util.Map;
 public class BusinessDecoder extends ResponseEntityDecoder {
 
     private static final String CODE_KEY = "code";
-    private static final String SUCCESS_KEY = "success";
+//    private static final String SUCCESS_KEY = "success";
     private static final String DATA_KEY = "data";
     private static final String MESSAGE_KEY = "message";
+    private static final String ERROR_CODE = "500";
 
     public BusinessDecoder(Decoder decoder) {
         super(decoder);
     }
+
+//    @Override
+//    public Object decode(Response response, Type type) throws IOException, FeignException {
+//        // 判断是否是application/json类型，如果不是则调用父类的decode方法
+//        Collection<String> contentTypes = response.headers().get(HttpHeaders.CONTENT_TYPE);
+//        String contentType = contentTypes != null && !contentTypes.isEmpty() ? contentTypes.iterator().next() : "";
+//        if (!contentType.contains(MediaType.APPLICATION_JSON_VALUE)) {
+//            return super.decode(response, type);
+//        }
+//
+//        String string = Util.toString(response.body().asReader(StandardCharsets.UTF_8));
+//        ObjectMapper objectMapper = JsonUtils.getObjectMapper();
+//        JsonNode root = objectMapper.readTree(string);
+//        if (root.isArray()) {
+//            JavaType javaType = objectMapper.getTypeFactory().constructType(type);
+//            return objectMapper.convertValue(root, javaType);
+//        }
+//        if (root.isObject() && root.has(CODE_KEY)) {
+//            // 检查响应是否成功
+//            boolean success = true;
+//            if (root.has(SUCCESS_KEY)) {
+//                success = root.get(SUCCESS_KEY).asBoolean(true);
+//            }
+//
+//            if (!success) {
+//                // 业务异常，从统一响应格式中提取错误信息
+//                Map<?,?> err = objectMapper.convertValue(root, Map.class);
+//                String errorMessage = err.get(DATA_KEY) == null ? (String) err.get(MESSAGE_KEY) : JsonUtils.toJsonString(err.get(DATA_KEY));
+//                throw new SmartFeignBusinessException(errorMessage, err);
+//            }
+//        }
+//
+//        JavaType javaType = objectMapper.getTypeFactory().constructType(type);
+//        return objectMapper.convertValue(root, javaType);
+//    }
 
     @Override
     public Object decode(Response response, Type type) throws IOException, FeignException {
@@ -54,17 +90,11 @@ public class BusinessDecoder extends ResponseEntityDecoder {
             return objectMapper.convertValue(root, javaType);
         }
         if (root.isObject() && root.has(CODE_KEY)) {
-            // 检查响应是否成功
-            boolean success = true;
-            if (root.has(SUCCESS_KEY)) {
-                success = root.get(SUCCESS_KEY).asBoolean(true);
-            }
-
-            if (!success) {
-                // 业务异常，从统一响应格式中提取错误信息
+            String code = root.get(CODE_KEY).asText();
+            if (ERROR_CODE.equals(code)) {
+                // 系统异常
                 Map<?,?> err = objectMapper.convertValue(root, Map.class);
-                String errorMessage = err.get(DATA_KEY) == null ? (String) err.get(MESSAGE_KEY) : JsonUtils.toJsonString(err.get(DATA_KEY));
-                throw new SmartFeignBusinessException(errorMessage, err);
+                throw new SmartFeignBusinessException(err.get(DATA_KEY) == null ? (String) err.get(MESSAGE_KEY) : JsonUtils.toJsonString(err.get(DATA_KEY)), err);
             }
         }
 
