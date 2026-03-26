@@ -6,6 +6,7 @@ import com.smart.framework.auth.common.userdetails.RestUserDetails;
 import com.smart.framework.auth.common.userdetails.RestUserDetailsImpl;
 import com.smart.framework.auth.common.userdetails.RoleGrantedAuthority;
 import com.smart.framework.auth.core.utils.TokenUtils;
+import com.smart.framework.commons.core.exception.SystemException;
 import com.smart.module.api.auth.AuthApi;
 import com.smart.module.api.auth.dto.AuthUserDetailsDTO;
 import jakarta.servlet.http.HttpServletRequest;
@@ -72,7 +73,7 @@ public class RemoteSecurityContextRepository implements SecurityContextRepositor
             dto = this.authApi.getUserDetails(token);
         } catch (Exception e) {
             log.error("获取用户信息失败", e);
-            return this.generateNewContext();
+            throw new SystemException("获取用户信息失败:" + e.getMessage(), e);
         }
         if (dto == null || dto.getUserId() == null) {
             return this.generateNewContext();

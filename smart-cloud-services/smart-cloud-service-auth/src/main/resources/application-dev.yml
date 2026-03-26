@@ -1,3 +1,6 @@
+server:
+  max-http-request-header-size: 100KB
+
 logging:
   level:
     root: info

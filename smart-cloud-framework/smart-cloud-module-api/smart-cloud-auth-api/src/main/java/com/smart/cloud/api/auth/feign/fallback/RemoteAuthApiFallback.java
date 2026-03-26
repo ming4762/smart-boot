@@ -1,13 +1,14 @@
 package com.smart.cloud.api.auth.feign.fallback;
 
 import com.smart.cloud.api.auth.feign.RemoteAuthApi;
+import com.smart.cloud.common.core.exception.SmartFallbackException;
 import com.smart.framework.commons.core.message.Result;
 import com.smart.module.api.auth.dto.AuthCacheDTO;
 import com.smart.module.api.auth.dto.AuthUserDetailsDTO;
 import com.smart.module.api.auth.dto.AuthenticationDTO;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
 import org.springframework.cloud.openfeign.FallbackFactory;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 /**
@@ -28,42 +29,37 @@ public class RemoteAuthApiFallback implements FallbackFactory<RemoteAuthApi> {
 
             @Override
             public boolean offlineByToken(@NonNull String token) {
-                this.errorLog();
-                return false;
+                throw new SmartFallbackException(cause);
             }
 
             @Override
             public boolean offlineByUsername(@NonNull String username) {
-                this.errorLog();
-                return false;
+                throw new SmartFallbackException(cause);
             }
 
             @Override
             public AuthUserDetailsDTO getUserDetails(@NonNull String token) {
-                this.errorLog();
-                return null;
+                throw new SmartFallbackException(cause);
             }
 
             @Override
             public Result<Boolean> authenticate(AuthenticationDTO parameter) {
-                this.errorLog();
-                return null;
+                throw new SmartFallbackException(cause);
             }
 
             @Override
             public Object getAuthCache(@NonNull String key) {
-                this.errorLog();
-                return null;
+                throw new SmartFallbackException(cause);
             }
 
             @Override
             public void setAuthCache(@NonNull AuthCacheDTO parameter) {
-                this.errorLog();
+                throw new SmartFallbackException(cause);
             }
 
             @Override
             public void removeAuthCache(@NonNull String key) {
-                this.errorLog();
+                throw new SmartFallbackException(cause);
             }
         };
     }
