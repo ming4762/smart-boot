@@ -2,7 +2,7 @@ package com.smart.framework.n8n.service;
 
 import com.smart.framework.n8n.api.SmartN8nWebhookApi;
 import com.smart.framework.n8n.properties.SmartN8nProperties;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * N8n Service

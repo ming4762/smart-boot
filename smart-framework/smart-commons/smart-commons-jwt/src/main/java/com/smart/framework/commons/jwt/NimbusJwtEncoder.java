@@ -14,7 +14,7 @@ import com.smart.framework.commons.jwt.claim.JwtClaimsSet;
 import com.smart.framework.commons.jwt.exception.JwtEncodingException;
 import com.smart.framework.commons.jwt.header.HeaderNames;
 import com.smart.framework.commons.jwt.header.JwsHeader;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;

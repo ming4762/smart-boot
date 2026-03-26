@@ -5,7 +5,7 @@ import com.smart.framework.file.core.parameter.FileStorageGetParameter;
 import com.smart.framework.file.core.parameter.FileStorageSaveParameter;
 import com.smart.framework.file.core.pojo.dto.FileStorageSaveResult;
 import com.smart.framework.file.core.service.FileStorageService;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.io.InputStream;
 

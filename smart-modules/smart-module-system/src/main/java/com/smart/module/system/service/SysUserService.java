@@ -17,7 +17,7 @@ import com.smart.module.system.pojo.vo.function.SysFunctionUserMenuVO;
 import com.smart.module.system.pojo.vo.user.SysUserListVO;
 import com.smart.module.system.pojo.vo.user.SysUserWithDeptDTO;
 import jakarta.validation.Valid;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 import java.util.Locale;

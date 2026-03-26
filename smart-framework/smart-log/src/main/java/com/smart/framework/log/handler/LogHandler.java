@@ -3,8 +3,8 @@ package com.smart.framework.log.handler;
 import com.smart.framework.commons.core.log.Log;
 import com.smart.framework.commons.core.log.SysLogSaveDTO;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * 日志执行器

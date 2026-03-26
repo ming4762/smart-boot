@@ -3,10 +3,10 @@ package com.smart.boot.actuate.druid.points;
 import com.smart.boot.actuate.druid.constants.EndPointIdConstant;
 import com.smart.boot.actuate.druid.support.SlowSqlData;
 import com.smart.boot.actuate.druid.support.SlowSqlStore;
+import org.jspecify.annotations.Nullable;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 import org.springframework.boot.actuate.endpoint.annotation.Selector;
-import org.springframework.lang.Nullable;
 
 import java.util.List;
 

@@ -10,8 +10,8 @@ import com.smart.module.api.system.parameter.RemoteChangeLogListParameter;
 import com.smart.module.api.system.parameter.RemoteChangeLogSaveParameter;
 import com.smart.module.api.system.parameter.SerialCodeCreateParameter;
 import lombok.SneakyThrows;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.BeanUtils;
-import org.springframework.lang.Nullable;
 import org.springframework.util.CollectionUtils;
 
 import java.beans.PropertyDescriptor;

@@ -10,6 +10,7 @@ import com.smart.framework.auth.core.exception.LoginInfoMissAuthenticationExcept
 import com.smart.framework.auth.core.exception.RestUsernameNotFoundException;
 import com.smart.framework.auth.core.i18n.AuthI18nMessage;
 import com.smart.framework.commons.core.i18n.I18nUtils;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -59,7 +60,7 @@ public class RestAuthenticationProvider extends AbstractUserDetailsAuthenticatio
     }
 
     @Override
-    protected UserDetails retrieveUser(String username, UsernamePasswordAuthenticationToken authentication) {
+    protected UserDetails retrieveUser(@Nullable String username, UsernamePasswordAuthenticationToken authentication) {
         String password = (String) authentication.getCredentials();
         if (!org.springframework.util.StringUtils.hasText(username) || !org.springframework.util.StringUtils.hasText(password) || NONE_PROVIDED.equals(username)) {
             throw new LoginInfoMissAuthenticationException(I18nUtils.get(AuthI18nMessage.USERNAME_PASSWORD_NULL));

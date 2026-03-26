@@ -3,8 +3,8 @@ package com.smart.module.system.api.local;
 import com.smart.module.api.system.SysParameterApi;
 import com.smart.module.system.service.SysParameterService;
 import org.springframework.context.annotation.Primary;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

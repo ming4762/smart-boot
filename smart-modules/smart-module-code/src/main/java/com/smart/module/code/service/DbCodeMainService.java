@@ -7,7 +7,7 @@ import com.smart.module.code.pojo.dto.DbCreateCodeDTO;
 import com.smart.module.code.pojo.dto.DbGenerateMapperBySqlParameter;
 import com.smart.module.code.pojo.vo.DbCodeVO;
 import com.smart.module.code.pojo.vo.DbMainConfigVO;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 

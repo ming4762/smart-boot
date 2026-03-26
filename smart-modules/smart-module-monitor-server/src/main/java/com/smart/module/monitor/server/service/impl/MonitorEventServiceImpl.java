@@ -10,7 +10,7 @@ import com.smart.framework.monitor.server.event.store.MonitorEventStore;
 import com.smart.module.monitor.server.mapper.MonitorEventMapper;
 import com.smart.module.monitor.server.model.MonitorEventPO;
 import com.smart.module.monitor.server.service.MonitorEventService;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 

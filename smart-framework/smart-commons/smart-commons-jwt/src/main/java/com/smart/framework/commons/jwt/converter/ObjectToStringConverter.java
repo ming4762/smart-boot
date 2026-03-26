@@ -2,7 +2,7 @@ package com.smart.framework.commons.jwt.converter;
 
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.GenericConverter;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Collections;
 import java.util.Set;

@@ -2,7 +2,7 @@ package com.smart.module.system.service;
 
 import com.smart.framework.crud.service.BaseService;
 import com.smart.module.system.model.SysI18nPO;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Locale;
 import java.util.Map;

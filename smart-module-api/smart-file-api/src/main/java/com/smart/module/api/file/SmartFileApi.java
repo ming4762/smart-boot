@@ -4,7 +4,7 @@ import com.smart.module.api.file.bo.FileDownloadResult;
 import com.smart.module.api.file.bo.FileHandlerResult;
 import com.smart.module.api.file.dto.FilenameDownloadParameter;
 import com.smart.module.api.file.dto.RemoteFileSaveParameter;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;

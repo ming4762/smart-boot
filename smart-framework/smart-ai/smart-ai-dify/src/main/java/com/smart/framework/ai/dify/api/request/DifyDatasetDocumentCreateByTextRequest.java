@@ -6,7 +6,7 @@ import com.smart.framework.ai.dify.constants.DocumentIndexingTechniqueEnum;
 import com.smart.framework.ai.dify.constants.DocumentTypeEnum;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * 通过文本创建文档

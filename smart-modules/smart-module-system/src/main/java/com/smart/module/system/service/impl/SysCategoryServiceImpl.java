@@ -11,7 +11,7 @@ import com.smart.module.system.mapper.SysCategoryMapper;
 import com.smart.module.system.model.SysCategoryPO;
 import com.smart.module.system.service.SysCategoryService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;

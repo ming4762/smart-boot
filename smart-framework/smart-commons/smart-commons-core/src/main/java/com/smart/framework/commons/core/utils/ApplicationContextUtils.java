@@ -20,7 +20,7 @@ public class ApplicationContextUtils {
     public static <T> T getBean(Class<T> requiredType) {
         try {
             return applicationContext.getBean(requiredType);
-        } catch (NoSuchBeanDefinitionException e) {
+        } catch (NoSuchBeanDefinitionException _) {
             return null;
         }
     }
@@ -28,7 +28,7 @@ public class ApplicationContextUtils {
     public static <T> T getBean(String beanName, Class<T> requiredType) {
         try {
             return applicationContext.getBean(beanName, requiredType);
-        } catch (NoSuchBeanDefinitionException e) {
+        } catch (NoSuchBeanDefinitionException _) {
             return null;
         }
     }

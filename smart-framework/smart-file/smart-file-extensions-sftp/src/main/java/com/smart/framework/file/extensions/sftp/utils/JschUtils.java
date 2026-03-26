@@ -4,7 +4,7 @@ import com.jcraft.jsch.*;
 import com.smart.framework.file.core.properties.SmartFileStorageSftpProperties;
 import com.smart.framework.file.extensions.sftp.exception.SftpExceptionRuntimeException;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Arrays;
 import java.util.List;

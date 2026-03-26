@@ -1,7 +1,7 @@
 package com.smart.framework.exception.notice;
 
 import com.smart.framework.exception.pojo.dto.ExceptionNoticeDTO;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 

@@ -22,7 +22,7 @@ import org.pentaho.di.repository.RepositoryElementMetaInterface;
 import org.pentaho.di.repository.kdr.KettleDatabaseRepository;
 import org.pentaho.di.trans.Trans;
 import org.pentaho.di.trans.TransMeta;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.util.CollectionUtils;
 
 import java.io.InputStream;

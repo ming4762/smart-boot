@@ -4,7 +4,7 @@ import com.smart.framework.kettle.core.constants.DatabaseAccessEnum;
 import com.smart.framework.kettle.core.constants.DatabaseTypeEnum;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.io.Serial;
 import java.io.Serializable;

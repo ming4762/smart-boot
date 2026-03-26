@@ -2,8 +2,8 @@ package com.smart.module.system.service;
 
 import com.smart.framework.crud.service.BaseService;
 import com.smart.module.system.model.SysParameterPO;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;

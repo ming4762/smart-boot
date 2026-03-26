@@ -8,7 +8,7 @@ import com.smart.module.api.message.parameter.RemoteSmsSendParameter;
 import io.micrometer.common.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.time.Duration;
 import java.util.LinkedHashMap;

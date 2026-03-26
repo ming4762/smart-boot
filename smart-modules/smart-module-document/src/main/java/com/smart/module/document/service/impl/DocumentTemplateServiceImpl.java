@@ -7,7 +7,7 @@ import com.smart.framework.crud.service.BaseServiceImpl;
 import com.smart.module.document.mapper.DocumentTemplateMapper;
 import com.smart.module.document.model.DocumentTemplatePO;
 import com.smart.module.document.service.DocumentTemplateService;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

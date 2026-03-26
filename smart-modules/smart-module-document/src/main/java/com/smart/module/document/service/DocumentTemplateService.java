@@ -2,8 +2,8 @@ package com.smart.module.document.service;
 
 import com.smart.framework.crud.service.BaseService;
 import com.smart.module.document.model.DocumentTemplatePO;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author shizhongming

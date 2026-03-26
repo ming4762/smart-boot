@@ -2,7 +2,7 @@ package com.smart.framework.cache.guava.limit;
 
 import com.google.common.util.concurrent.RateLimiter;
 import com.smart.framework.commons.core.lock.limit.RateLimitService;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.time.temporal.ChronoUnit;
 import java.util.Map;

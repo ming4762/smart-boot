@@ -9,7 +9,7 @@ import com.smart.module.system.pojo.dbo.I18nCodeValueBO;
 import com.smart.module.system.service.SysI18nItemService;
 import com.smart.module.system.service.SysI18nService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;

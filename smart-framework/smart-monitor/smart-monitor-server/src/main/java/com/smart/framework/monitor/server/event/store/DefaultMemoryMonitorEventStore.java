@@ -3,7 +3,7 @@ package com.smart.framework.monitor.server.event.store;
 import com.smart.framework.monitor.server.event.EventCode;
 import com.smart.framework.monitor.server.event.MonitorEvent;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.springframework.util.StringUtils;
 
 import java.util.List;

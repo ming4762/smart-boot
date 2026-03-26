@@ -3,7 +3,7 @@ package com.smart.framework.exception.notice;
 import com.smart.framework.commons.core.exception.BusinessException;
 import com.smart.framework.commons.core.i18n.I18nException;
 import jakarta.validation.ConstraintViolationException;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;

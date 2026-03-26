@@ -5,8 +5,8 @@ import com.smart.framework.auth.common.constants.LoginTypeEnum;
 import com.smart.framework.commons.core.dto.auth.AuthRole;
 import com.smart.framework.commons.core.dto.auth.Permission;
 import com.smart.framework.commons.core.dto.auth.UserTenantDTO;
-import lombok.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;

@@ -1,7 +1,7 @@
 package com.smart.framework.auth.core.service;
 
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.time.Duration;
 import java.util.Collection;

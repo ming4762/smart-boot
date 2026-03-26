@@ -1,7 +1,7 @@
 package com.smart.framework.commons.core.utils;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;

@@ -17,7 +17,7 @@ import com.smart.framework.file.extensions.sftp.utils.JschUtils;
 import com.smart.module.api.file.constants.FileStorageTypeEnum;
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.io.IOException;
 import java.io.InputStream;

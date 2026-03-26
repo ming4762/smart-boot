@@ -1,6 +1,6 @@
 package com.smart.framework.auth.extensions.sms.provider;
 
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * @author ShiZhongMing

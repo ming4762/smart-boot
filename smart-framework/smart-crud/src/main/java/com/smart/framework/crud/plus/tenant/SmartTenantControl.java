@@ -6,7 +6,7 @@ import com.smart.framework.crud.plus.metadata.SmartTableInfo;
 import com.smart.framework.crud.plus.metadata.TableTenantFieldInfo;
 import com.smart.framework.crud.utils.CrudUtils;
 import org.apache.ibatis.mapping.SqlCommandType;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;

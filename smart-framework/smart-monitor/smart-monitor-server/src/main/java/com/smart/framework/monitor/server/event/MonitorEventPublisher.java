@@ -1,6 +1,6 @@
 package com.smart.framework.monitor.server.event;
 
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * 监控事件发布接口

@@ -1,7 +1,7 @@
 package com.smart.framework.i18n.source;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.context.MessageSource;
-import org.springframework.lang.Nullable;
 
 import java.util.Locale;
 import java.util.Map;

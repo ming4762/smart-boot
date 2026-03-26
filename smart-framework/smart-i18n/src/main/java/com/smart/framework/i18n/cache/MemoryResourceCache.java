@@ -1,6 +1,6 @@
 package com.smart.framework.i18n.cache;
 
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

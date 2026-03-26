@@ -5,7 +5,7 @@ import com.smart.framework.i18n.source.ReloadableMessageSource;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * 国际化工具类初始化

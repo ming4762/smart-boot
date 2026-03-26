@@ -1,7 +1,7 @@
 package com.smart.framework.commons.core.tenant;
 
 import com.smart.framework.commons.core.dto.auth.UserTenantDTO;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.function.Supplier;

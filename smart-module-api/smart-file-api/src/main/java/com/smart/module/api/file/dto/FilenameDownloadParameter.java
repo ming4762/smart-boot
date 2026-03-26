@@ -2,7 +2,7 @@ package com.smart.module.api.file.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.io.Serializable;
 

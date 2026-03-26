@@ -4,7 +4,7 @@ import com.smart.framework.monitor.server.common.constants.ClientStatusEnum;
 import com.smart.framework.monitor.server.common.model.ClientData;
 import com.smart.framework.monitor.server.common.model.ClientId;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.time.Instant;
 import java.util.ArrayList;

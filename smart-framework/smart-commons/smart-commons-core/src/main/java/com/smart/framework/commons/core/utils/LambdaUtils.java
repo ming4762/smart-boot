@@ -3,6 +3,8 @@ package com.smart.framework.commons.core.utils;
 import com.smart.framework.commons.core.exception.SystemException;
 import com.smart.framework.commons.core.utils.lambda.SFunction;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
 import java.lang.invoke.SerializedLambda;
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -35,9 +37,11 @@ public class LambdaUtils {
         SerializedLambda serializedLambda = LAMBDA_CACHE.computeIfAbsent(func.getClass().getName(), key -> {
             try {
                 Method writeReplace = func.getClass().getDeclaredMethod("writeReplace");
-                writeReplace.setAccessible(true);
-                return (SerializedLambda) writeReplace.invoke(func);
-            } catch (Exception e) {
+                // 使用 MethodHandles 获取访问权限，避免 setAccessible 警告
+                MethodHandles.Lookup lookup = MethodHandles.lookup();
+                MethodHandle methodHandle = lookup.unreflect(writeReplace);
+                return (SerializedLambda) methodHandle.invoke(func);
+            } catch (Throwable e) {
                 throw new SystemException(e);
             }
         });

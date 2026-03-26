@@ -2,8 +2,8 @@ package com.smart.framework.auth.cache.guava.cache;
 
 import com.smart.framework.auth.core.service.AbstractAuthCache;
 import com.smart.framework.cache.guava.GuavaCacheService;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.util.CollectionUtils;
 
 import java.time.Duration;

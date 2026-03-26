@@ -1,6 +1,6 @@
 package com.smart.framework.commons.core.utils;
 
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

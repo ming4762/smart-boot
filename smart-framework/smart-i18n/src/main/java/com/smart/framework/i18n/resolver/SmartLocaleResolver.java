@@ -2,7 +2,7 @@ package com.smart.framework.i18n.resolver;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.Ordered;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Locale;
 

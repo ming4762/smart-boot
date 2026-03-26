@@ -2,8 +2,8 @@ package com.smart.module.api.file.dto;
 
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;

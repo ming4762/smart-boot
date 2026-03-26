@@ -2,8 +2,8 @@ package com.smart.framework.monitor.server.client.repository;
 
 import com.smart.framework.monitor.server.common.model.ClientData;
 import com.smart.framework.monitor.server.common.model.ClientId;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;

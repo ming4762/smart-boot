@@ -506,7 +506,7 @@ public class MatcherHttpServletRequest implements HttpServletRequest {
      */
     @Override
     public void login(String username, String password) throws ServletException {
-
+        // do nothing
     }
 
     /**
@@ -517,7 +517,7 @@ public class MatcherHttpServletRequest implements HttpServletRequest {
      */
     @Override
     public void logout() throws ServletException {
-
+        // do nothing
     }
 
     /**

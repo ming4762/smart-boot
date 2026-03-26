@@ -12,7 +12,7 @@ import com.smart.module.monitor.server.pojo.vo.MonitorApplicationUserVO;
 import com.smart.module.monitor.server.service.MonitorApplicationService;
 import com.smart.module.monitor.server.service.MonitorUserGroupApplicationService;
 import org.springframework.beans.BeanUtils;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 

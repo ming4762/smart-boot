@@ -1,6 +1,6 @@
 package com.smart.framework.commons.jwt;
 
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * @author ShiZhongMing

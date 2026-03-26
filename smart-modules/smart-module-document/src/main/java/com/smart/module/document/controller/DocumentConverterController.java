@@ -71,7 +71,7 @@ public class DocumentConverterController {
             this.documentExcelService.fillSingleWithCode(templateStream, outputStream, parameter.getData());
             inputStream = new ByteArrayInputStream(outputStream.toByteArray());
             // 将excel转为PDF
-            this.documentConverterService.convert(inputStream, response.getOutputStream(), DocumentFormatEnum.xlsx, DocumentFormatEnum.pdf);
+            this.documentConverterService.convert(inputStream, response.getOutputStream(), DocumentFormatEnum.XLSX, DocumentFormatEnum.PDF);
         } finally {
             if (inputStream != null) {
                 inputStream.close();
@@ -97,7 +97,7 @@ public class DocumentConverterController {
             this.documentExcelService.fillMultiWithCode(templateStream, outputStream, parameter.getDataList(), parameter.getSheetNameList());
             inputStream = new ByteArrayInputStream(outputStream.toByteArray());
             // 将excel转为PDF
-            this.documentConverterService.convert(inputStream, response.getOutputStream(), DocumentFormatEnum.xlsx, DocumentFormatEnum.pdf);
+            this.documentConverterService.convert(inputStream, response.getOutputStream(), DocumentFormatEnum.XLSX, DocumentFormatEnum.PDF);
         } finally {
             if (inputStream != null) {
                 inputStream.close();
@@ -123,7 +123,7 @@ public class DocumentConverterController {
             this.excelService.fillExcel(templateStream, outputStream, parameter.getData());
             inputStream = new ByteArrayInputStream(outputStream.toByteArray());
             // 将excel转为PDF
-            this.documentConverterService.convert(inputStream, response.getOutputStream(), DocumentFormatEnum.xlsx, DocumentFormatEnum.pdf);
+            this.documentConverterService.convert(inputStream, response.getOutputStream(), DocumentFormatEnum.XLSX, DocumentFormatEnum.PDF);
         } finally {
             if (inputStream != null) {
                 inputStream.close();
@@ -140,7 +140,7 @@ public class DocumentConverterController {
     @PostMapping("convert")
     @Operation(summary = "转换文档")
     public void convert(@Valid DocumentConvertDTO parameter, HttpServletResponse response) {
-        if (parameter.getToFormat().equals(DocumentFormatEnum.pdf)) {
+        if (parameter.getToFormat().equals(DocumentFormatEnum.PDF)) {
             response.setContentType("application/pdf");
         }
         this.documentConverterService.convert(parameter.getFile().getInputStream(), response.getOutputStream(), parameter.getFromFormat(), parameter.getToFormat());

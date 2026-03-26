@@ -2,7 +2,7 @@ package com.smart.framework.auth.extensions.jwt.token;
 
 import com.smart.framework.auth.common.userdetails.RestUserDetails;
 import com.smart.framework.auth.core.token.SmartTokenRepository;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * jwt token存储器

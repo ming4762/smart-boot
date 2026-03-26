@@ -2,7 +2,7 @@ package com.smart.framework.commons.jwt.header;
 
 import com.smart.framework.commons.jwt.algorithm.JwaAlgorithm;
 import lombok.Getter;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.util.Assert;
 
 import java.util.Collections;

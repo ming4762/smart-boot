@@ -14,7 +14,7 @@ import com.smart.framework.monitor.server.event.domain.ClientRegisteredUpdateEve
 import com.smart.framework.monitor.server.monitor.StatusMonitorManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * 客户端处理器

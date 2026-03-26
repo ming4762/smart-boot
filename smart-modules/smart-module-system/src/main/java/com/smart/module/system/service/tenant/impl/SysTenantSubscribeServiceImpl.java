@@ -13,7 +13,7 @@ import com.smart.module.system.service.tenant.SysTenantPackageService;
 import com.smart.module.system.service.tenant.SysTenantSubscribeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 

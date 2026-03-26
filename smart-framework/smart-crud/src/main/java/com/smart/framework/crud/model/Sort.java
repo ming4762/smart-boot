@@ -1,6 +1,6 @@
 package com.smart.framework.crud.model;
 
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * 排序字段

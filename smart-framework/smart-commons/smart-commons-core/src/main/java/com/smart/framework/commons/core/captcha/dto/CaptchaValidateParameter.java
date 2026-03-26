@@ -3,7 +3,7 @@ package com.smart.framework.commons.core.captcha.dto;
 import com.smart.framework.commons.core.captcha.constants.CaptchaTrackTypeEnum;
 import com.smart.framework.commons.core.captcha.constants.CaptchaTypeEnum;
 import lombok.*;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.io.Serial;
 import java.io.Serializable;

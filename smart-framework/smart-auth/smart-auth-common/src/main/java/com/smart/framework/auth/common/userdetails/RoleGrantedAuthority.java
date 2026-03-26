@@ -4,7 +4,7 @@ import com.smart.framework.commons.core.dto.auth.AuthRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.io.Serial;
 

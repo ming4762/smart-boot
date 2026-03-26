@@ -7,7 +7,7 @@ import com.smart.framework.crud.utils.CrudUtils;
 import com.smart.module.system.mapper.monitor.SmartMonitorSlowSqlMapper;
 import com.smart.module.system.model.monitor.SmartMonitorSlowSqlPO;
 import com.smart.module.system.service.monitor.SmartMonitorSlowSqlService;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

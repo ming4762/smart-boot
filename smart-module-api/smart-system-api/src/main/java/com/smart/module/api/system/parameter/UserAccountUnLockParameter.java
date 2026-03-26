@@ -2,8 +2,8 @@ package com.smart.module.api.system.parameter;
 
 import com.smart.framework.commons.core.dto.auth.UserAccountStatusEnum;
 import lombok.*;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
 import java.io.Serializable;

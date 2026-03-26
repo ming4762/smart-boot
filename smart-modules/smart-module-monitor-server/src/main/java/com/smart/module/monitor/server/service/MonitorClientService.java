@@ -1,7 +1,7 @@
 package com.smart.module.monitor.server.service;
 
 import com.smart.framework.monitor.server.common.model.ClientData;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 

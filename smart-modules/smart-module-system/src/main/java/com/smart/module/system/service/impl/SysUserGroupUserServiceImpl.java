@@ -6,7 +6,7 @@ import com.smart.framework.crud.service.BaseServiceImpl;
 import com.smart.module.system.mapper.SysUserGroupUserMapper;
 import com.smart.module.system.model.SysUserGroupUserPO;
 import com.smart.module.system.service.SysUserGroupUserService;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 

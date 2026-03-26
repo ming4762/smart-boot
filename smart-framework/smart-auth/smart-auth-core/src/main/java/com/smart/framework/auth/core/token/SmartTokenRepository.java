@@ -1,7 +1,7 @@
 package com.smart.framework.auth.core.token;
 
 import com.smart.framework.auth.common.userdetails.RestUserDetails;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 

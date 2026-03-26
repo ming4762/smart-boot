@@ -7,7 +7,7 @@ import com.smart.module.code.constants.ButtonListEnum;
 import com.smart.module.code.mapper.DbCodeButtonConfigMapper;
 import com.smart.module.code.model.DbCodeButtonConfigPO;
 import com.smart.module.code.service.DbCodeButtonConfigService;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

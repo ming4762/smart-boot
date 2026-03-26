@@ -3,7 +3,7 @@ package org.springframework.cloud.openfeign;
 import com.smart.cloud.starter.feign.annotation.EnableSmartFeignClients;
 import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.core.type.AnnotationMetadata;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 

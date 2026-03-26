@@ -14,7 +14,7 @@ import com.smart.framework.commons.jwt.exception.JwtExpiredException;
 import com.smart.framework.commons.jwt.header.JwsHeader;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.time.Duration;
 import java.time.Instant;

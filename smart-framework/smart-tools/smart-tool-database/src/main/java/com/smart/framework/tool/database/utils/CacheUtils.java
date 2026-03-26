@@ -5,8 +5,8 @@ import com.smart.framework.tool.database.constants.TypeMappingEnum;
 import com.smart.framework.tool.database.converter.Converter;
 import com.smart.framework.tool.database.converter.StringConverter;
 import com.smart.framework.tool.database.pojo.dbo.AbstractDatabaseBaseDO;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;

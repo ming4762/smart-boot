@@ -1,7 +1,7 @@
 package com.smart.boot.actuate.druid.support;
 
 import com.alibaba.druid.proxy.jdbc.StatementProxy;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 

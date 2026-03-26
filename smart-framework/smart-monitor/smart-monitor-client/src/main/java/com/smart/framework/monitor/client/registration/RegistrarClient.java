@@ -1,7 +1,7 @@
 package com.smart.framework.monitor.client.registration;
 
 import com.smart.framework.monitor.core.model.Application;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * 执行注册接口

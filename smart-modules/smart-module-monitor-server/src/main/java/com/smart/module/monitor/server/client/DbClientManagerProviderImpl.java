@@ -7,7 +7,7 @@ import com.smart.framework.monitor.server.common.model.ClientManagerData;
 import com.smart.module.monitor.server.model.MonitorApplicationPO;
 import com.smart.module.monitor.server.service.MonitorApplicationService;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;

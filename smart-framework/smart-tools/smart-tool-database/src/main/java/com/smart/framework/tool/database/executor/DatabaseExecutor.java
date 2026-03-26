@@ -6,8 +6,8 @@ import com.smart.framework.tool.database.pojo.bo.TableViewBO;
 import com.smart.framework.tool.database.pojo.dbo.*;
 import com.smart.framework.tool.database.pojo.dto.SmartSelectSqlInfo;
 import com.smart.framework.tool.database.pool.model.DbConnectionConfig;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.sql.Connection;
 import java.sql.SQLException;

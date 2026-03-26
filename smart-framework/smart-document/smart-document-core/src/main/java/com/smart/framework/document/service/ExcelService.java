@@ -1,6 +1,6 @@
 package com.smart.framework.document.service;
 
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.io.IOException;
 import java.io.InputStream;

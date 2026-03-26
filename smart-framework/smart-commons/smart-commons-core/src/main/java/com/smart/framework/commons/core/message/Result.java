@@ -7,7 +7,7 @@ import com.smart.framework.commons.core.http.IHttpStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 

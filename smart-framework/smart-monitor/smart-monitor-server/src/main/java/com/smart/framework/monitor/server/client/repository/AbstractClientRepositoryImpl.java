@@ -2,7 +2,7 @@ package com.smart.framework.monitor.server.client.repository;
 
 import com.smart.framework.monitor.server.common.constants.ClientStatusEnum;
 import com.smart.framework.monitor.server.common.model.ClientData;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Collection;
 

@@ -5,7 +5,7 @@ import com.smart.framework.tool.database.converter.DbJavaTypeConverter;
 import com.smart.framework.tool.database.pojo.dbo.ColumnDO;
 import com.smart.framework.tool.database.pojo.dbo.TableViewDO;
 import com.smart.framework.tool.database.pool.model.DbConnectionConfig;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 

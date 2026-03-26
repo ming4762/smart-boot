@@ -6,7 +6,7 @@ import com.smart.boot.actuate.logback.appender.MemoryCacheLogAppender;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
 import org.springframework.context.ApplicationListener;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * @author ShiZhongMing

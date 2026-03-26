@@ -6,7 +6,7 @@ import com.smart.framework.crud.model.BaseModel;
 import com.smart.framework.crud.model.Sort;
 import com.smart.framework.crud.query.PageSortQuery;
 import org.jspecify.annotations.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.springframework.util.StringUtils;
 
 import java.util.List;

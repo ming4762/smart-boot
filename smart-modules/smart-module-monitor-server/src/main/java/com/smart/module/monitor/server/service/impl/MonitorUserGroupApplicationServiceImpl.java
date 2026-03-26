@@ -8,7 +8,7 @@ import com.smart.module.monitor.server.model.MonitorUserGroupApplicationPO;
 import com.smart.module.monitor.server.pojo.dto.MonitorApplicationSetUserGroupDTO;
 import com.smart.module.monitor.server.service.MonitorUserGroupApplicationService;
 import com.smart.module.system.service.SysUserGroupUserService;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;

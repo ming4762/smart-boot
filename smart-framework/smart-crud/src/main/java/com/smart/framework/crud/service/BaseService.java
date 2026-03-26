@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.smart.framework.crud.model.BaseModel;
 import com.smart.framework.crud.parameter.SetUseYnParameter;
 import com.smart.framework.crud.query.PageSortQuery;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 

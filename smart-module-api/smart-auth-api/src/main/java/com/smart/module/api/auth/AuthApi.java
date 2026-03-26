@@ -4,7 +4,7 @@ import com.smart.framework.commons.core.message.Result;
 import com.smart.module.api.auth.dto.AuthCacheDTO;
 import com.smart.module.api.auth.dto.AuthUserDetailsDTO;
 import com.smart.module.api.auth.dto.AuthenticationDTO;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * 认证模块API

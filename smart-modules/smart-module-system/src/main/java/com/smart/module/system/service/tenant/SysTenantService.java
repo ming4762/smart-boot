@@ -9,7 +9,7 @@ import com.smart.module.system.model.tenant.SysTenantPackagePO;
 import com.smart.module.system.pojo.dbo.tenant.SysTenantUserListDO;
 import com.smart.module.system.pojo.dto.tenant.*;
 import jakarta.validation.Valid;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 

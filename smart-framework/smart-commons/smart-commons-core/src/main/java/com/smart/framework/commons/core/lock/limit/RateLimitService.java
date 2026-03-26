@@ -1,6 +1,6 @@
 package com.smart.framework.commons.core.lock.limit;
 
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.time.temporal.ChronoUnit;
 

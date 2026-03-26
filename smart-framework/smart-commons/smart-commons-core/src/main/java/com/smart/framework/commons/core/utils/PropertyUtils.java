@@ -2,7 +2,7 @@ package com.smart.framework.commons.core.utils;
 
 import lombok.SneakyThrows;
 import org.springframework.beans.BeanUtils;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.lang.reflect.InvocationTargetException;
 

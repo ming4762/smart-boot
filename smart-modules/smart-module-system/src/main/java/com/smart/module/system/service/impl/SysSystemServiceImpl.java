@@ -12,7 +12,7 @@ import com.smart.module.system.model.SysSystemUserPO;
 import com.smart.module.system.pojo.dto.system.SystemSetUserDTO;
 import com.smart.module.system.service.SysSystemService;
 import com.smart.module.system.service.SysSystemUserService;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;

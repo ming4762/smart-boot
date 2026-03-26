@@ -1,7 +1,7 @@
 package com.smart.framework.exception.handler;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * 异常信息处理类

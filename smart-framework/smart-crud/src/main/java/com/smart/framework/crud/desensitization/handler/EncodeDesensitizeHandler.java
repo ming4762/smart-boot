@@ -1,7 +1,7 @@
 package com.smart.framework.crud.desensitization.handler;
 
 import com.smart.framework.commons.core.utils.auth.AesUtils;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.util.StringUtils;
 
 /**

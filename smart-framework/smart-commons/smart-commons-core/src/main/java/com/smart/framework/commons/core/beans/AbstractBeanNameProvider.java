@@ -1,7 +1,7 @@
 package com.smart.framework.commons.core.beans;
 
 import org.springframework.beans.factory.BeanNameAware;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * @author ShiZhongMing

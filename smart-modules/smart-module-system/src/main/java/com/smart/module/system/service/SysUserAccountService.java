@@ -3,7 +3,7 @@ package com.smart.module.system.service;
 import com.smart.framework.commons.core.dto.auth.UserAccountStatusEnum;
 import com.smart.framework.crud.service.BaseService;
 import com.smart.module.system.model.SysUserAccountPO;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 

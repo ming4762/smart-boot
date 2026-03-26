@@ -22,7 +22,7 @@ import com.smart.module.api.system.dto.AuthUserDTO;
 import com.smart.module.api.system.dto.QueryUserAccountDTO;
 import com.smart.module.api.system.parameter.UserAccountUnLockParameter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.util.CollectionUtils;
 

@@ -7,10 +7,10 @@ import com.alibaba.druid.sql.visitor.SchemaStatVisitor;
 import com.alibaba.druid.stat.DruidStatManagerFacade;
 import com.smart.boot.actuate.druid.constants.EndPointIdConstant;
 import com.smart.boot.actuate.druid.utils.DruidUtils;
+import org.jspecify.annotations.Nullable;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 import org.springframework.boot.actuate.endpoint.annotation.Selector;
-import org.springframework.lang.Nullable;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

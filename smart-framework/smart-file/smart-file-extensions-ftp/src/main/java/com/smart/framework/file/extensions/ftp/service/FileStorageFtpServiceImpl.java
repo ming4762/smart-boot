@@ -17,7 +17,7 @@ import com.smart.module.api.file.constants.FileStorageTypeEnum;
 import lombok.SneakyThrows;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

@@ -1,6 +1,6 @@
 package com.smart.framework.monitor.core.utils;
 
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.math.BigDecimal;
 import java.time.Instant;

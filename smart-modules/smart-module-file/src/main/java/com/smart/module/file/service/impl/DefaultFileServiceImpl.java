@@ -18,7 +18,7 @@ import com.smart.module.file.service.SmartFileService;
 import com.smart.module.file.service.SmartFileStorageService;
 import lombok.SneakyThrows;
 import org.springframework.beans.BeanUtils;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;

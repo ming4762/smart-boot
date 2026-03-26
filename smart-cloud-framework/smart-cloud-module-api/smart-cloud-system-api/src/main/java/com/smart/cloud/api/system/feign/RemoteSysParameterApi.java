@@ -4,9 +4,9 @@ import com.smart.cloud.api.system.feign.fallback.RemoteSysParameterApiFallback;
 import com.smart.cloud.common.core.constants.CloudServiceNameConstants;
 import com.smart.module.api.system.SysParameterApi;
 import com.smart.module.api.system.constants.SystemApiUrlConstants;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;

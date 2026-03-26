@@ -8,6 +8,7 @@ import com.smart.framework.commons.core.utils.JsonUtils;
 import com.smart.module.api.auth.dto.AuthenticationDTO;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.context.annotation.Lazy;
@@ -44,7 +45,7 @@ public class SmartAuthAccessGlobalFilter implements GlobalFilter, Ordered {
 
     @SneakyThrows(InterruptedException.class)
     @Override
-    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+    public @NonNull Mono<Void> filter(ServerWebExchange exchange, @NonNull GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
         // 获取请求路径
         String servicePath = request.getURI().getPath();

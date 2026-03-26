@@ -5,7 +5,7 @@ import com.smart.framework.crud.service.BaseServiceImpl;
 import com.smart.module.system.mapper.SysUserRoleMapper;
 import com.smart.module.system.model.SysUserRolePO;
 import com.smart.module.system.service.SysUserRoleService;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -8,7 +8,7 @@ import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import javax.sql.DataSource;
 import java.util.Arrays;

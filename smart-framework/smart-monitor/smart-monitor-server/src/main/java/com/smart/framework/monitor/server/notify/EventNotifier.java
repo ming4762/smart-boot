@@ -2,7 +2,7 @@ package com.smart.framework.monitor.server.notify;
 
 import com.smart.framework.monitor.server.event.MonitorEvent;
 import org.springframework.core.Ordered;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * 通知接口

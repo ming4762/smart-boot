@@ -5,8 +5,8 @@ import com.smart.framework.extension.dingtalk.client.SmartDingtalkClientHolder;
 import com.smart.framework.extension.dingtalk.client.SmartDingtalkClientIdHolder;
 import com.smart.framework.extension.dingtalk.exception.DingtalkApiException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

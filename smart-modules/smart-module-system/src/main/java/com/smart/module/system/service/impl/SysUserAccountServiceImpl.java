@@ -18,7 +18,7 @@ import com.smart.module.system.model.SysUserPO;
 import com.smart.module.system.service.SysParameterService;
 import com.smart.module.system.service.SysUserAccountService;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;

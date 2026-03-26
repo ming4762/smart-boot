@@ -17,7 +17,7 @@ import com.smart.framework.crud.plus.metadata.SmartTableInfo;
 import com.smart.framework.crud.query.PageSortQuery;
 import com.smart.framework.crud.utils.CrudPageHelper;
 import com.smart.framework.crud.utils.CrudUtils;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 

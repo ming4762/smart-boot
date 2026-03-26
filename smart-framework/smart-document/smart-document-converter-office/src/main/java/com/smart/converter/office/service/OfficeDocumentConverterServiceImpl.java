@@ -32,23 +32,23 @@ public class OfficeDocumentConverterServiceImpl implements DocumentConverterServ
      * 文档类型与转换器对象关系
      */
     private static final Map<DocumentFormatEnum, Class<? extends OfficeConverter>> FORMAT_ENUM_CLASS_MAP = ImmutableMap.<DocumentFormatEnum, Class<? extends OfficeConverter>>builder()
-            .put(DocumentFormatEnum.doc, WordConverter.class)
-            .put(DocumentFormatEnum.docx, WordConverter.class)
-            .put(DocumentFormatEnum.xls, ExcelConverter.class)
-            .put(DocumentFormatEnum.xlsx, ExcelConverter.class)
-            .put(DocumentFormatEnum.ppt, PowerPointConverter.class)
-            .put(DocumentFormatEnum.pptx, PowerPointConverter.class)
+            .put(DocumentFormatEnum.DOC, WordConverter.class)
+            .put(DocumentFormatEnum.DOCX, WordConverter.class)
+            .put(DocumentFormatEnum.XLS, ExcelConverter.class)
+            .put(DocumentFormatEnum.XLSX, ExcelConverter.class)
+            .put(DocumentFormatEnum.PPT, PowerPointConverter.class)
+            .put(DocumentFormatEnum.PPTX, PowerPointConverter.class)
             .build();
 
     private static final Map<DocumentFormatEnum, Map<Class<? extends OfficeConverter>, ConvertFileType>> FORMAT_ENUM_CONVERT_FILE_TYPE_MAP = ImmutableMap.<DocumentFormatEnum, Map<Class<? extends OfficeConverter>, ConvertFileType>>builder()
-            .put(DocumentFormatEnum.pdf, Map.of(
-                    WordConverter.class, WdSaveFormat.wdFormatPDF,
-                    ExcelConverter.class, XlFileFormat.xlTypePDF,
-                    PowerPointConverter.class, PpSaveAsFileType.ppSaveAsPDF
+            .put(DocumentFormatEnum.PDF, Map.of(
+                    WordConverter.class, WdSaveFormat.WD_FORMAT_PDF,
+                    ExcelConverter.class, XlFileFormat.XL_TYPE_PDF,
+                    PowerPointConverter.class, PpSaveAsFileType.PP_SAVE_AS_PDF
             ))
-            .put(DocumentFormatEnum.html, Map.of(
-                    WordConverter.class, WdSaveFormat.wdFormatHTML,
-                    ExcelConverter.class, XlFileFormat.xlHtml
+            .put(DocumentFormatEnum.HTML, Map.of(
+                    WordConverter.class, WdSaveFormat.WD_FORMAT_HTML,
+                    ExcelConverter.class, XlFileFormat.XL_HTML
             ))
             .build();
 

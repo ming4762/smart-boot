@@ -4,7 +4,7 @@ import com.smart.framework.commons.core.exception.BusinessException;
 import com.smart.framework.commons.core.message.Result;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author ShiZhongMing

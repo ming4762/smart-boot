@@ -2,7 +2,7 @@ package com.smart.module.api.auth.parameter;
 
 import com.smart.framework.commons.core.captcha.constants.CaptchaTypeEnum;
 import lombok.*;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.io.Serial;
 import java.io.Serializable;

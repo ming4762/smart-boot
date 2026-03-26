@@ -11,7 +11,7 @@ import com.smart.framework.tool.database.pool.model.DbConnectionConfig;
 import com.smart.module.code.pojo.dto.DatabaseTemplateModel;
 import com.smart.module.code.service.DbDictGeneratorService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.io.OutputStream;

@@ -2,8 +2,8 @@ package com.smart.framework.tool.database.converter;
 
 import com.smart.framework.tool.database.constants.TypeMappingEnum;
 import com.smart.framework.tool.database.pojo.bo.ColumnBO;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * DB类型转java类型转换器

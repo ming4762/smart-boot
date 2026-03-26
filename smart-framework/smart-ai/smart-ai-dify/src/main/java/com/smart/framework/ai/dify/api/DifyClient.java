@@ -4,7 +4,7 @@ import com.smart.framework.ai.dify.api.model.AbstractChatCompletionResponse;
 import com.smart.framework.ai.dify.api.request.*;
 import com.smart.framework.ai.dify.api.response.*;
 import org.springframework.core.io.Resource;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import reactor.core.publisher.Flux;
 
 import java.io.OutputStream;

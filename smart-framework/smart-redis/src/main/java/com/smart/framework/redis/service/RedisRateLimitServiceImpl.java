@@ -4,7 +4,7 @@ import com.smart.framework.commons.core.lock.limit.RateLimitService;
 import lombok.RequiredArgsConstructor;
 import org.redisson.api.RRateLimiter;
 import org.redisson.api.RateType;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;

@@ -9,7 +9,7 @@ import com.smart.module.api.auth.AuthCaptchaApi;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.filter.OncePerRequestFilter;
 

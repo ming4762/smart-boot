@@ -3,7 +3,7 @@ package com.smart.framework.commons.core.utils.auth;
 import com.smart.framework.commons.core.utils.Base64Utils;
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.OAEPParameterSpec;

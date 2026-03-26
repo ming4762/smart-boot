@@ -16,9 +16,9 @@ import com.smart.module.system.service.SysUserAccountService;
 import com.smart.module.system.service.SysUserService;
 import com.smart.module.system.service.SysUserThirdAccountService;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.context.annotation.Primary;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;

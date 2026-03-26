@@ -4,7 +4,7 @@ import com.smart.framework.crud.service.BaseService;
 import com.smart.module.system.model.SysFunctionPO;
 import com.smart.module.system.pojo.parameter.function.SysFunctionSaveUpdateParameter;
 import com.smart.module.system.pojo.vo.function.SysFunctionVO;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 

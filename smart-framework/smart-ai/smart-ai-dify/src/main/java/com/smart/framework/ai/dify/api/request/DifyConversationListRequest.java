@@ -3,7 +3,7 @@ package com.smart.framework.ai.dify.api.request;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * 获取会话列表参数

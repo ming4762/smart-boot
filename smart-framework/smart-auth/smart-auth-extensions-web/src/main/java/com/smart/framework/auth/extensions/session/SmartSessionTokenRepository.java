@@ -8,7 +8,7 @@ import com.smart.framework.auth.core.service.AuthCache;
 import com.smart.framework.auth.core.token.SmartTokenRepository;
 import com.smart.framework.auth.core.token.TokenCacheData;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.session.*;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;

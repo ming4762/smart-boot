@@ -2,7 +2,7 @@ package com.smart.framework.exception.processor;
 
 import com.smart.framework.commons.core.message.Result;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.springframework.validation.BindException;
 
 /**

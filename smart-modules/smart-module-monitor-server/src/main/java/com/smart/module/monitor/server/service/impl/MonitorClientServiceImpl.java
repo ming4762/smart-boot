@@ -4,7 +4,7 @@ import com.smart.framework.monitor.server.client.repository.ClientRepository;
 import com.smart.framework.monitor.server.common.model.ClientData;
 import com.smart.module.monitor.server.service.MonitorApplicationService;
 import com.smart.module.monitor.server.service.MonitorClientService;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

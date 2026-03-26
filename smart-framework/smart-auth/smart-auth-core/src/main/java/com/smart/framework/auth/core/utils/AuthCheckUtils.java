@@ -3,7 +3,7 @@ package com.smart.framework.auth.core.utils;
 import com.smart.framework.auth.core.matcher.ExtensionPathMatcher;
 import com.smart.framework.auth.core.properties.AuthIgnoreProperties;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;

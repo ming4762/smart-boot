@@ -2,8 +2,8 @@ package com.smart.framework.exception.processor;
 
 import com.smart.framework.commons.core.message.Result;
 import jakarta.servlet.http.HttpServletRequest;
+import org.jspecify.annotations.Nullable;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.lang.Nullable;
 
 /**
  * @author ShiZhongMing

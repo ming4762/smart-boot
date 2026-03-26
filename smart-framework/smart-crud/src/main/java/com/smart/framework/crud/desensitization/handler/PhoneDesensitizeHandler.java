@@ -1,7 +1,7 @@
 package com.smart.framework.crud.desensitization.handler;
 
 import com.smart.framework.commons.core.utils.DesensitizeUtils;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * 手机号脱敏处理器

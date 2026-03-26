@@ -3,8 +3,8 @@ package com.smart.framework.tool.database.converter;
 import com.smart.framework.tool.database.constants.TypeMappingEnum;
 import com.smart.framework.tool.database.pojo.bo.ColumnBO;
 import com.smart.framework.tool.database.utils.CacheUtils;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 

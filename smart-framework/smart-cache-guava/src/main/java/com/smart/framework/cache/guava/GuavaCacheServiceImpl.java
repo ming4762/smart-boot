@@ -6,7 +6,7 @@ import com.smart.framework.cache.guava.data.CacheObject;
 import com.smart.framework.commons.core.cache.AbstractCacheService;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.util.CollectionUtils;
 
@@ -117,7 +117,7 @@ public class GuavaCacheServiceImpl extends AbstractCacheService implements Guava
      * @param timeout 过期时间
      */
     @Override
-    public void batchExpire(@org.springframework.lang.NonNull Collection<String> keys, Duration timeout) {
+    public void batchExpire(@NonNull Collection<String> keys, Duration timeout) {
         keys.forEach(item -> this.expire(this.getCachedKey(item), timeout));
     }
 

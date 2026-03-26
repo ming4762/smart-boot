@@ -5,7 +5,7 @@ import com.smart.framework.commons.core.i18n.I18nUtils;
 import com.smart.framework.commons.core.message.Result;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author ShiZhongMing

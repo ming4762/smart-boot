@@ -11,7 +11,7 @@ import org.pentaho.di.core.database.DatabaseMeta;
 import org.pentaho.di.core.logging.BaseLogTable;
 import org.pentaho.di.job.JobMeta;
 import org.pentaho.di.trans.TransMeta;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.util.Assert;
 
 import java.util.Arrays;

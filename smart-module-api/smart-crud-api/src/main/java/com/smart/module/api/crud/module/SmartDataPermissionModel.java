@@ -2,7 +2,7 @@ package com.smart.module.api.crud.module;
 
 import com.smart.module.api.crud.constants.DataPermissionScopeEnum;
 import lombok.*;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
 import java.io.Serializable;

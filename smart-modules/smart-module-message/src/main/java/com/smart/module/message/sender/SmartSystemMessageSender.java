@@ -17,8 +17,8 @@ import com.smart.module.message.model.SmartMessageSystemPO;
 import com.smart.module.message.model.SmartMessageSystemSendPO;
 import com.smart.module.message.service.SmartMessageSystemSendService;
 import com.smart.module.message.service.SmartMessageSystemService;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 

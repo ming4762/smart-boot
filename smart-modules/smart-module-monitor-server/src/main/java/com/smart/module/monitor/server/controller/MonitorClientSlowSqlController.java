@@ -6,7 +6,7 @@ import com.smart.framework.crud.query.PageSortQuery;
 import com.smart.module.monitor.server.model.MonitorClientSlowSqlPO;
 import com.smart.module.monitor.server.service.MonitorClientSlowSqlService;
 import io.swagger.v3.oas.annotations.Operation;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

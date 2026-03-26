@@ -1,8 +1,8 @@
 package com.smart.framework.commons.core.utils;
 
 import com.smart.framework.commons.core.data.Tree;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.ArrayList;

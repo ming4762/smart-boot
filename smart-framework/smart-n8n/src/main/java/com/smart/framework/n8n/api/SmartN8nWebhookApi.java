@@ -10,7 +10,7 @@ import com.smart.framework.n8n.properties.SmartN8nProperties;
 import com.smart.framework.n8n.service.SmartN8nService;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.HashMap;

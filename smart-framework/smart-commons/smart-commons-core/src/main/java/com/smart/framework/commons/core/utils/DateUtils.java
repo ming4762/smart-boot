@@ -1,8 +1,8 @@
 package com.smart.framework.commons.core.utils;
 
 import com.smart.framework.commons.core.timezone.SmartTimezoneContext;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.util.StringUtils;
 
 import java.time.*;

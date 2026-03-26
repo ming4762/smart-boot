@@ -17,8 +17,8 @@ import com.smart.module.api.message.dto.MessageSendResult;
 import com.smart.module.api.message.parameter.RemoteMessageSendParameter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 

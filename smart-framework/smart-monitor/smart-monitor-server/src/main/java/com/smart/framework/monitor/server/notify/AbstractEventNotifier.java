@@ -1,7 +1,7 @@
 package com.smart.framework.monitor.server.notify;
 
 import com.smart.framework.monitor.server.event.MonitorEvent;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * @author ShiZhongMing

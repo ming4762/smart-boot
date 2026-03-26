@@ -16,7 +16,7 @@ import com.smart.module.file.mapper.SmartFileStorageMapper;
 import com.smart.module.file.model.SmartFileStoragePO;
 import com.smart.module.file.pojo.FileStorageServiceCacheData;
 import com.smart.module.file.service.SmartFileStorageService;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;

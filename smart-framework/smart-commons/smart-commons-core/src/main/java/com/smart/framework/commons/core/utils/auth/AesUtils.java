@@ -26,6 +26,8 @@ public class AesUtils {
     private static final int IV_SIZE = 12;
     private static final int TAG_BIT_LENGTH = 128;
 
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
+
     /**
      * AES加密
      * @param data 待加密数据
@@ -37,7 +39,7 @@ public class AesUtils {
         byte[] keyBytes = key.getBytes(StandardCharsets.UTF_8);
         SecretKeySpec secretKey = new SecretKeySpec(keyBytes, ALGORITHM);
         byte[] iv = new byte[IV_SIZE];
-        new SecureRandom().nextBytes(iv);
+        SECURE_RANDOM.nextBytes(iv);
         Cipher cipher = Cipher.getInstance(TRANSFORMATION);
         GCMParameterSpec spec = new GCMParameterSpec(TAG_BIT_LENGTH, iv);
         cipher.init(Cipher.ENCRYPT_MODE, secretKey, spec);

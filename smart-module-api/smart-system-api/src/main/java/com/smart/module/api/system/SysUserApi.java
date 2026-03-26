@@ -4,7 +4,7 @@ import com.smart.module.api.system.dto.*;
 import com.smart.module.api.system.parameter.RemoteSysUserListParameter;
 import com.smart.module.api.system.parameter.SysUserDeptParameter;
 import com.smart.module.api.system.parameter.SysUserThirdAccountParameter;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;

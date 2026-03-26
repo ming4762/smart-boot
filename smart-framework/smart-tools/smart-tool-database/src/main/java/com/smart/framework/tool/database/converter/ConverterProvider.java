@@ -1,6 +1,6 @@
 package com.smart.framework.tool.database.converter;
 
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 

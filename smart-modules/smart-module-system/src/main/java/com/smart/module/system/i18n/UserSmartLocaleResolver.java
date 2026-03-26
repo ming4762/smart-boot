@@ -5,7 +5,7 @@ import com.smart.framework.auth.common.utils.AuthUtils;
 import com.smart.framework.i18n.resolver.SmartLocaleResolver;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 
 import java.util.Locale;

@@ -1,7 +1,7 @@
 package com.smart.framework.extension.dingtalk.client;
 
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * 钉钉应用配置服务类持有者接口

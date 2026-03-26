@@ -1,7 +1,7 @@
 package com.smart.framework.exception.pojo.dto;
 
 import lombok.*;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * 异常通知DTO

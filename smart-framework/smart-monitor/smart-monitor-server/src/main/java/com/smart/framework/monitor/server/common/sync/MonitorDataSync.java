@@ -2,7 +2,7 @@ package com.smart.framework.monitor.server.common.sync;
 
 import com.smart.framework.monitor.server.common.model.ClientData;
 import org.springframework.core.Ordered;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * 监控数据同步接口

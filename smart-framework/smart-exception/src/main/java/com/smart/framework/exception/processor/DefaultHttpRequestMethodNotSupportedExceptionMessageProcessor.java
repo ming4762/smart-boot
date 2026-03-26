@@ -5,7 +5,7 @@ import com.smart.framework.commons.core.message.Result;
 import com.smart.framework.commons.core.utils.JsonUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 
 /**

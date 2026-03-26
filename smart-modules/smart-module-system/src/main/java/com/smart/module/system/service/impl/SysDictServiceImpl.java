@@ -16,7 +16,7 @@ import com.smart.module.system.service.SysDictService;
 import com.smart.module.system.service.tenant.SysTenantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;

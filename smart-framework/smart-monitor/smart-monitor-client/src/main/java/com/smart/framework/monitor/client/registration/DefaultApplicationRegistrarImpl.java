@@ -3,8 +3,8 @@ package com.smart.framework.monitor.client.registration;
 import com.smart.framework.monitor.client.application.ApplicationFactory;
 import com.smart.framework.monitor.core.model.Application;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.util.StringUtils;
 
 import java.util.List;

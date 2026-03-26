@@ -9,8 +9,8 @@ import org.jodconverter.core.document.DefaultDocumentFormatRegistry;
 import org.jodconverter.core.job.ConversionJobWithOptionalSourceFormatUnspecified;
 import org.jodconverter.core.job.ConversionJobWithSourceSpecified;
 import org.jodconverter.core.office.OfficeException;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -34,14 +34,14 @@ public class DocumentConverterServiceJodImpl implements DocumentConverterService
     @SneakyThrows(OfficeException.class)
     @Override
     public void convert(InputStream inputStream, OutputStream outputStream, @Nullable DocumentFormatEnum fromFormat, @NonNull DocumentFormatEnum toFormat) {
-        log.info("开始进行文档转换，转换源格式：{}，目标格式：{}", fromFormat == null ? "未知" : fromFormat.name(), toFormat.name());
+        log.info("开始进行文档转换，转换源格式：{}，目标格式：{}", fromFormat == null ? "未知" : fromFormat.getValue(), toFormat.getValue());
         long current = System.nanoTime();
         ConversionJobWithSourceSpecified formatUnspecified = documentConverter.convert(inputStream, false);
         if (fromFormat != null) {
-            formatUnspecified = ((ConversionJobWithOptionalSourceFormatUnspecified) formatUnspecified).as(Objects.requireNonNull(DefaultDocumentFormatRegistry.getFormatByExtension(fromFormat.name())));
+            formatUnspecified = ((ConversionJobWithOptionalSourceFormatUnspecified) formatUnspecified).as(Objects.requireNonNull(DefaultDocumentFormatRegistry.getFormatByExtension(fromFormat.getValue())));
         }
         formatUnspecified.to(outputStream, false)
-                .as(Objects.requireNonNull(DefaultDocumentFormatRegistry.getFormatByExtension(toFormat.name())))
+                .as(Objects.requireNonNull(DefaultDocumentFormatRegistry.getFormatByExtension(toFormat.getValue())))
                 .execute();
         log.info("文档转换结束，用时：{}ms", TimeUnit.MILLISECONDS.convert(System.nanoTime() - current, TimeUnit.NANOSECONDS));
     }

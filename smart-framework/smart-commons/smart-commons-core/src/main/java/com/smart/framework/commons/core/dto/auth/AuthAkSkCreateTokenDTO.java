@@ -2,7 +2,7 @@ package com.smart.framework.commons.core.dto.auth;
 
 import lombok.*;
 import org.springframework.http.HttpMethod;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.io.Serializable;
 

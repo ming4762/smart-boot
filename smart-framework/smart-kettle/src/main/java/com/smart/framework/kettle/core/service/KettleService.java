@@ -7,7 +7,7 @@ import com.smart.framework.kettle.core.parameter.TransExecuteParameter;
 import com.smart.framework.kettle.core.properties.KettleDatabaseRepositoryProperties;
 import org.pentaho.di.job.Job;
 import org.pentaho.di.trans.Trans;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.function.Consumer;
 

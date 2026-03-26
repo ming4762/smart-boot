@@ -1,9 +1,9 @@
 package com.smart.boot.actuate.web.exchanges;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 import org.springframework.boot.actuate.web.exchanges.HttpExchange;
 import org.springframework.boot.actuate.web.exchanges.HttpExchangesEndpoint;
-import org.springframework.lang.Nullable;
 
 import java.util.List;
 

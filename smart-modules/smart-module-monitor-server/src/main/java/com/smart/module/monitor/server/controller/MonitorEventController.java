@@ -7,7 +7,7 @@ import com.smart.framework.monitor.server.constants.BuiltInEventCodeEnum;
 import com.smart.module.monitor.server.model.MonitorEventPO;
 import com.smart.module.monitor.server.service.MonitorEventService;
 import io.swagger.v3.oas.annotations.Operation;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

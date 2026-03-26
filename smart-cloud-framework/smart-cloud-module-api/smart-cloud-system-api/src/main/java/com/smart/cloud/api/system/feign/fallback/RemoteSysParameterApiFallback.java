@@ -3,7 +3,7 @@ package com.smart.cloud.api.system.feign.fallback;
 import com.smart.cloud.api.system.feign.RemoteSysParameterApi;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.openfeign.FallbackFactory;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

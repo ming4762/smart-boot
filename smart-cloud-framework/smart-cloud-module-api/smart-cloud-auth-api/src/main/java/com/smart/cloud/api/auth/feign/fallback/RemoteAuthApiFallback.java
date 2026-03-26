@@ -7,7 +7,7 @@ import com.smart.module.api.auth.dto.AuthUserDetailsDTO;
 import com.smart.module.api.auth.dto.AuthenticationDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.openfeign.FallbackFactory;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 
 /**

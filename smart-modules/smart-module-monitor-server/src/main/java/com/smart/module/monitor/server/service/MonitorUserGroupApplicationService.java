@@ -3,7 +3,7 @@ package com.smart.module.monitor.server.service;
 import com.smart.framework.crud.service.BaseService;
 import com.smart.module.monitor.server.model.MonitorUserGroupApplicationPO;
 import com.smart.module.monitor.server.pojo.dto.MonitorApplicationSetUserGroupDTO;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 

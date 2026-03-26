@@ -1,7 +1,7 @@
 package com.smart.framework.kettle.core.log;
 
 import com.smart.framework.kettle.core.log.type.LogType;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.HashMap;
 import java.util.Map;

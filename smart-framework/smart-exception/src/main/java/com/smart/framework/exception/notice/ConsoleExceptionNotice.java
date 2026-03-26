@@ -2,7 +2,7 @@ package com.smart.framework.exception.notice;
 
 import com.smart.framework.exception.pojo.dto.ExceptionNoticeDTO;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * 控制台异常通知

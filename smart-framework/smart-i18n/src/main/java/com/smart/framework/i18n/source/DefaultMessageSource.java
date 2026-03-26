@@ -4,11 +4,11 @@ import com.smart.framework.i18n.cache.ResourceCache;
 import com.smart.framework.i18n.format.MessageFormat;
 import com.smart.framework.i18n.reader.ResourceReader;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.NoSuchMessageException;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 
 import java.io.IOException;
 import java.util.Locale;

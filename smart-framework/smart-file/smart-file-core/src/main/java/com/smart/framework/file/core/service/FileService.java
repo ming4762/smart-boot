@@ -5,7 +5,7 @@ import com.smart.module.api.file.bo.FileHandlerResult;
 import com.smart.module.api.file.dto.FileSaveParameter;
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 

@@ -1,7 +1,7 @@
 package com.smart.framework.commons.jwt.claim;
 
 import lombok.Getter;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.util.Assert;
 
 import java.time.Instant;

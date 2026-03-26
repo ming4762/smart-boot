@@ -3,8 +3,8 @@ package com.smart.framework.exception.processor;
 import com.smart.framework.commons.core.http.HttpStatus;
 import com.smart.framework.commons.core.message.Result;
 import jakarta.servlet.http.HttpServletRequest;
+import org.jspecify.annotations.Nullable;
 import org.springframework.context.MessageSourceResolvable;
-import org.springframework.lang.Nullable;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
 import java.util.stream.Collectors;

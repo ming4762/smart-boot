@@ -2,9 +2,9 @@ package com.smart.framework.auth.extensions.jwt.resolver;
 
 import com.smart.framework.auth.extensions.jwt.data.JwtRefreshTokenPayload;
 import com.smart.framework.auth.extensions.jwt.data.JwtTokenResolverUser;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.core.Ordered;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 
 import java.time.Duration;
 
