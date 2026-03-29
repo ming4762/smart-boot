@@ -1,4 +1,4 @@
-package com.smart.boot.autoconfigure.crud;
+package com.smart.boot.crud;
 
 import com.baomidou.mybatisplus.core.injector.ISqlInjector;
 import com.smart.framework.crud.plus.injector.EnhanceSqlInjector;

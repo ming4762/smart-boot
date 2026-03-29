@@ -1,7 +1,7 @@
-package com.smart.boot.autoconfigure.crud.annotation;
+package com.smart.boot.crud.annotation;
 
 
-import com.smart.boot.autoconfigure.crud.config.SmartDataPermissionConfiguration;
+import com.smart.boot.crud.config.SmartDataPermissionConfiguration;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.ElementType;

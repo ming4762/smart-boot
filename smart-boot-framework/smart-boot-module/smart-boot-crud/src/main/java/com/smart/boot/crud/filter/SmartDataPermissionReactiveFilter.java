@@ -1,4 +1,4 @@
-package com.smart.boot.autoconfigure.crud.filter;
+package com.smart.boot.crud.filter;
 
 import com.smart.framework.crud.datapermission.handler.SmartDataContextHolder;
 import com.smart.framework.crud.datapermission.handler.SmartDataPermissionController;

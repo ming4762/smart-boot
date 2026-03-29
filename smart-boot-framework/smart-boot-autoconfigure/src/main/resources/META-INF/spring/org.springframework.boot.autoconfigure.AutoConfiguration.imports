@@ -1,6 +1,3 @@
-com.smart.boot.autoconfigure.crud.SmartCrudAutoConfiguration
-com.smart.boot.autoconfigure.crud.SmartCrudTenantAutoConfiguration
-
 com.smart.boot.autoconfigure.exception.SmartExceptionAutoConfiguration
 com.smart.boot.autoconfigure.log.SmartLogAutoConfiguration
 com.smart.boot.autoconfigure.file.aliyun.SmartFileAliyunOssAutoConfiguration

@@ -1,0 +1,2 @@
+com.smart.boot.crud.SmartCrudAutoConfiguration
+com.smart.boot.crud.SmartCrudTenantAutoConfiguration

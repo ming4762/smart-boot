@@ -4,21 +4,16 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.smart</groupId>
-        <artifactId>smart-boot</artifactId>
+        <artifactId>smart-boot-framework</artifactId>
         <version>5.0.0-SNAPSHOT</version>
     </parent>
-    <artifactId>smart-boot-framework</artifactId>
-    <version>5.0.0-SNAPSHOT</version>
-    <name>smart-boot-framework</name>
-    <description>自动配置框架</description>
+    <artifactId>smart-boot-module</artifactId>
+    <name>smart-boot-module</name>
+    <description>smart-boot自动配置模块</description>
     <packaging>pom</packaging>
 
     <modules>
-        <module>smart-boot-actuator</module>
-        <module>smart-boot-autoconfigure</module>
-        <module>smart-boot-actuator-autoconfigure</module>
-        <module>smart-boot-module</module>
-        <module>smart-boot-starters</module>
+        <module>smart-boot-crud</module>
     </modules>
 
     <properties>

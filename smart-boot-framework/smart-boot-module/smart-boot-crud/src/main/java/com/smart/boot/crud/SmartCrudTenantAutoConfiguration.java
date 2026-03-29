@@ -1,8 +1,8 @@
-package com.smart.boot.autoconfigure.crud;
+package com.smart.boot.crud;
 
 import com.baomidou.mybatisplus.extension.plugins.inner.TenantLineInnerInterceptor;
-import com.smart.boot.autoconfigure.crud.filter.SmartTenantReactiveFilter;
-import com.smart.boot.autoconfigure.crud.filter.SmartTenantWebFilter;
+import com.smart.boot.crud.filter.SmartTenantReactiveFilter;
+import com.smart.boot.crud.filter.SmartTenantWebFilter;
 import com.smart.framework.crud.service.BaseService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;

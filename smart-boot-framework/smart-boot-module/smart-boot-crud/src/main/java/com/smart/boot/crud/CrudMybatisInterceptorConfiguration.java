@@ -1,4 +1,4 @@
-package com.smart.boot.autoconfigure.crud;
+package com.smart.boot.crud;
 
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor;

@@ -1,4 +1,4 @@
-package com.smart.boot.autoconfigure.crud;
+package com.smart.boot.crud;
 
 import com.smart.framework.commons.core.spring.EnableApplicationContext;
 import com.smart.framework.crud.desensitization.handler.*;
