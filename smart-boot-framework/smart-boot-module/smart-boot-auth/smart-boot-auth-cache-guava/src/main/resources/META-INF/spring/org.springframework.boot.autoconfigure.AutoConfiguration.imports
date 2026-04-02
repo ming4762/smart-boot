@@ -1,0 +1,2 @@
+com.smart.boot.auth.cache.guava.SmartAuthGuavaAutoConfiguration
+com.smart.boot.auth.cache.guava.oauth2.SmartAuthOauthGuavaAutoConfiguration

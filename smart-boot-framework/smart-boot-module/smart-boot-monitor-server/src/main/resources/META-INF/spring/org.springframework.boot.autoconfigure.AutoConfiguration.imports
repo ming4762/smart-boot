@@ -1,0 +1,4 @@
+com.smart.boot.monitor.server.MonitorDataSyncAutoConfiguration
+com.smart.boot.monitor.server.MonitorServerAutoConfiguration
+com.smart.boot.monitor.server.MonitorServerMailNotifyAutoConfiguration
+com.smart.boot.monitor.server.MonitorServerRedisClientRepositoryAutoConfiguration

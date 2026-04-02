@@ -89,7 +89,7 @@
         </dependency>
         <dependency>
             <groupId>com.smart</groupId>
-            <artifactId>smart-file-extensions-sftp</artifactId>
+            <artifactId>smart-file-extensions-sftp-jsch</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
@@ -191,7 +191,7 @@
         </dependency>
         <dependency>
             <groupId>com.smart</groupId>
-            <artifactId>smart-auth-extensions-access-secret</artifactId>
+            <artifactId>smart-auth-extensions-aksk</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>

@@ -1,0 +1,2 @@
+com.smart.boot.license.client.SmartLicenseClientAutoConfiguration
+com.smart.boot.license.client.SmartLicenseValidatorAutoConfiguration

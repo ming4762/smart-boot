@@ -21,6 +21,11 @@
             <artifactId>smart-file-extensions-aliyun-oss</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-boot-file-aliyun</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

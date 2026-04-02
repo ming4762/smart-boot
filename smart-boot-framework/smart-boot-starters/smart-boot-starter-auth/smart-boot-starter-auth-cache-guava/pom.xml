@@ -8,7 +8,6 @@
         <version>5.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>smart-boot-starter-auth-cache-guava</artifactId>
-    <version>5.0.0-SNAPSHOT</version>
     <name>smart-boot-starter-auth-cache-guava</name>
     <description>guava认证缓存</description>
 
@@ -24,6 +23,11 @@
         <dependency>
             <groupId>com.smart</groupId>
             <artifactId>smart-auth-cache-guava</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-boot-auth-cache-guava</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

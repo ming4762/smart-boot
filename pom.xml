@@ -659,7 +659,7 @@
             </dependency>
             <dependency>
                 <groupId>com.smart</groupId>
-                <artifactId>smart-boot-starter-auth-access-secret</artifactId>
+                <artifactId>smart-boot-starter-auth-aksk</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -760,7 +760,7 @@
             </dependency>
             <dependency>
                 <groupId>com.smart</groupId>
-                <artifactId>smart-boot-starter-file-sftp</artifactId>
+                <artifactId>smart-boot-starter-file-sftp-jsch</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

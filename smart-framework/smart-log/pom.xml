@@ -8,7 +8,6 @@
         <version>5.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>smart-log</artifactId>
-    <version>5.0.0-SNAPSHOT</version>
     <name>smart-log</name>
     <description>日志处理</description>
 

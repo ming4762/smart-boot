@@ -2,7 +2,7 @@ package com.smart.boot.actuate.autoconfigure.redis;
 
 import com.smart.boot.actuate.redis.SmartMonitorActuatorRedis;
 import com.smart.boot.actuate.redis.meter.RedisKeyMetrics;
-import com.smart.boot.autoconfigure.redis.SmartRedisAutoConfiguration;
+import com.smart.boot.redis.SmartRedisAutoConfiguration;
 import com.smart.framework.redis.service.RedisService;
 import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;

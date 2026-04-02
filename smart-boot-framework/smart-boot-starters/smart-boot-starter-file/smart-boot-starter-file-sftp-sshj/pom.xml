@@ -20,6 +20,11 @@
             <artifactId>smart-file-extensions-sftp-sshj</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-boot-file-sftp-sshj</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

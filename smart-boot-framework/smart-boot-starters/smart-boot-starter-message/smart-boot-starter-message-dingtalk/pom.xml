@@ -8,7 +8,6 @@
         <version>5.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>smart-boot-starter-message-dingtalk</artifactId>
-    <version>5.0.0-SNAPSHOT</version>
     <name>smart-boot-starter-message-dingtalk</name>
     <description>dingtalk消息通道</description>
 
@@ -20,6 +19,15 @@
             <groupId>com.smart</groupId>
             <artifactId>smart-message-extension-dingtalk</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-boot-message-dingtalk</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-boot-starter-dingtalk</artifactId>
         </dependency>
     </dependencies>
 

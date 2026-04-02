@@ -9,7 +9,6 @@
 	</parent>
 	<packaging>pom</packaging>
 	<artifactId>smart-file</artifactId>
-	<version>5.0.0-SNAPSHOT</version>
 	<name>smart-file</name>
 	<description>文件管理模块</description>
 
@@ -21,7 +20,7 @@
 		<module>smart-file-extensions-minio</module>
 		<module>smart-file-extensions-qiniu</module>
 		<module>smart-file-extensions-s3</module>
-		<module>smart-file-extensions-sftp</module>
+		<module>smart-file-extensions-sftp-jsch</module>
 		<module>smart-file-extensions-sftp-sshj</module>
 	</modules>
 

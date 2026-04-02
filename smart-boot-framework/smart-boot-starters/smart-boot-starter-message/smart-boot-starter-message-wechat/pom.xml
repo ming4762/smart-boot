@@ -25,6 +25,11 @@
             <groupId>com.smart</groupId>
             <artifactId>smart-boot-starter-wechat</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-boot-message-wechat</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

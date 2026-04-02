@@ -8,7 +8,6 @@
         <version>5.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>smart-boot-starters</artifactId>
-    <version>5.0.0-SNAPSHOT</version>
     <name>smart-boot-starters</name>
     <description>starters</description>
     <packaging>pom</packaging>

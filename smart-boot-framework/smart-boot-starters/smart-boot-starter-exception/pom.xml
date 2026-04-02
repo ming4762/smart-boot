@@ -8,7 +8,6 @@
         <version>5.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>smart-boot-starter-exception</artifactId>
-    <version>5.0.0-SNAPSHOT</version>
     <name>smart-boot-starter-exception</name>
     <description>异常处理启动器</description>
 
@@ -19,6 +18,11 @@
         <dependency>
             <groupId>com.smart</groupId>
             <artifactId>smart-exception</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-boot-exception</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

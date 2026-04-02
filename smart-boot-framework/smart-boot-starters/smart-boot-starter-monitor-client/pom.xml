@@ -8,7 +8,6 @@
         <version>5.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>smart-boot-starter-monitor-client</artifactId>
-    <version>5.0.0-SNAPSHOT</version>
     <name>smart-boot-starter-monitor-client</name>
     <description>monitor client starter</description>
 
@@ -20,6 +19,15 @@
             <groupId>com.smart</groupId>
             <artifactId>smart-monitor-client</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-boot-monitor-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
     </dependencies>
 

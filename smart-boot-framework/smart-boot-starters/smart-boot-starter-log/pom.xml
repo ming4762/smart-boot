@@ -8,7 +8,6 @@
         <version>5.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>smart-boot-starter-log</artifactId>
-    <version>5.0.0-SNAPSHOT</version>
     <name>smart-boot-starter-log</name>
     <description>切面日志启动器</description>
 
@@ -19,6 +18,11 @@
         <dependency>
             <groupId>com.smart</groupId>
             <artifactId>smart-log</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-boot-log</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

@@ -1,0 +1,2 @@
+com.smart.boot.auth.cache.redis.SmartAuthRedisAutoConfiguration
+com.smart.boot.auth.cache.redis.oauth2.SmartAuthOauthRedisAutoConfiguration

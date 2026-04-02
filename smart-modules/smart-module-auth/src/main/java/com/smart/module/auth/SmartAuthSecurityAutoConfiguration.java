@@ -1,5 +1,6 @@
 package com.smart.module.auth;
 
+import com.smart.boot.auth.common.SmartAuthCommonAutoConfiguration;
 import com.smart.framework.auth.core.authentication.AuthenticationFailureEventInitializer;
 import com.smart.framework.auth.core.authentication.DefaultSmartAuthenticationEventPublisher;
 import com.smart.framework.auth.core.authentication.MethodPermissionEvaluatorImpl;
@@ -20,6 +21,7 @@ import com.smart.module.auth.config.AuthMethodSecurityConfig;
 import com.smart.module.auth.remember.AuthCachePersistentTokenRepository;
 import com.smart.module.auth.userdetails.RestUserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -45,6 +47,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties(AuthProperties.class)
 @Import(AuthMethodSecurityConfig.class)
+@AutoConfigureAfter(SmartAuthCommonAutoConfiguration.class)
 @ComponentScan(basePackages = {"com.smart.module.auth.controller", "com.smart.module.auth.api"})
 public class SmartAuthSecurityAutoConfiguration {
 

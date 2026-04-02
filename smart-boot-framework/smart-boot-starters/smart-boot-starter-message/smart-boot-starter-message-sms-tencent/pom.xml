@@ -8,7 +8,6 @@
         <version>5.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>smart-boot-starter-message-sms-tencent</artifactId>
-    <version>5.0.0-SNAPSHOT</version>
     <name>smart-boot-starter-message-sms-tencent</name>
     <description>tencent 消息通道</description>
 
@@ -19,6 +18,11 @@
         <dependency>
             <groupId>com.smart</groupId>
             <artifactId>smart-message-extensions-sms-tencent</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-boot-message-sms-tencent</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

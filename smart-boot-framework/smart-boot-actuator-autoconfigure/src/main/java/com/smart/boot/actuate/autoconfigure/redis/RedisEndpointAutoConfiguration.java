@@ -2,7 +2,7 @@ package com.smart.boot.actuate.autoconfigure.redis;
 
 import com.smart.boot.actuate.redis.SmartMonitorActuatorRedis;
 import com.smart.boot.actuate.redis.points.RedisInfoEndPoint;
-import com.smart.boot.autoconfigure.redis.SmartRedisAutoConfiguration;
+import com.smart.boot.redis.SmartRedisAutoConfiguration;
 import com.smart.framework.redis.service.RedisService;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;

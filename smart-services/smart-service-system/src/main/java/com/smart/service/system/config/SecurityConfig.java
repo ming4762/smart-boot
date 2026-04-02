@@ -1,6 +1,6 @@
 package com.smart.service.system.config;
 
-import com.smart.auth.extensions.access.secret.AuthAccessSecretSecurityConfigurer;
+import com.smart.auth.extensions.aksk.AuthAkskSecurityConfigurer;
 import com.smart.framework.auth.core.properties.AuthProperties;
 import com.smart.framework.auth.core.remember.SmartAuthPersistentTokenRememberMeServices;
 import com.smart.framework.auth.extensions.jwt.AuthJwtSecurityConfigurer;
@@ -81,7 +81,7 @@ public class SecurityConfig extends AuthWebSecurityConfigurerAdapter {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .securityMatcher("/access/api/**")
-                .with(AuthAccessSecretSecurityConfigurer.build(), Customizer.withDefaults());
+                .with(AuthAkskSecurityConfigurer.build(), Customizer.withDefaults());
         return httpSecurity.build();
     }
 }

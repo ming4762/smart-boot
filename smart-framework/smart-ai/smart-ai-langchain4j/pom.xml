@@ -8,7 +8,6 @@
         <version>5.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>smart-ai-langchain4j</artifactId>
-    <version>5.0.0-SNAPSHOT</version>
     <name>smart-ai-langchain4j</name>
     <description>langchain4j客户端</description>
 

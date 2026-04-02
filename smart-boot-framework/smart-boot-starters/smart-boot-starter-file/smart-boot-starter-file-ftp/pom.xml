@@ -21,6 +21,11 @@
             <artifactId>smart-file-extensions-ftp</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-boot-file-ftp</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

@@ -21,6 +21,11 @@
             <artifactId>smart-file-extensions-disk</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-boot-file-disk</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

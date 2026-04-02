@@ -13,7 +13,33 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>smart-boot-ai</module>
+        <module>smart-boot-auth</module>
+        <module>smart-boot-guava</module>
+        <module>smart-boot-captcha</module>
         <module>smart-boot-crud</module>
+        <module>smart-boot-dingtalk</module>
+        <module>smart-boot-document</module>
+        <module>smart-boot-druid</module>
+        <module>smart-boot-exception</module>
+        <module>smart-boot-file</module>
+        <module>smart-boot-freemarker</module>
+        <module>smart-boot-i18n</module>
+        <module>smart-boot-kettle</module>
+        <module>smart-boot-license-client</module>
+        <module>smart-boot-license-server</module>
+        <module>smart-boot-log</module>
+        <module>smart-boot-message</module>
+        <module>smart-boot-monitor-client</module>
+        <module>smart-boot-monitor-server</module>
+        <module>smart-boot-n8n</module>
+        <module>smart-boot-redis</module>
+        <module>smart-boot-rocketmq</module>
+        <module>smart-boot-tool-database</module>
+        <module>smart-boot-wechat</module>
+        <module>smart-boot-xxl</module>
+
+        <module>smart-boot-demo</module>
     </modules>
 
     <properties>

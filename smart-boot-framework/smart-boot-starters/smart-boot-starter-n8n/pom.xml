@@ -20,6 +20,11 @@
             <artifactId>smart-n8n</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-boot-n8n</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

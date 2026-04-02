@@ -8,7 +8,6 @@
         <version>5.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>smart-boot-starter-druid</artifactId>
-    <version>5.0.0-SNAPSHOT</version>
     <name>smart-boot-starter-druid</name>
     <description>druid自动配置类</description>
 
@@ -23,6 +22,11 @@
         <dependency>
             <groupId>com.smart</groupId>
             <artifactId>smart-druid-enhance</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-boot-druid</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

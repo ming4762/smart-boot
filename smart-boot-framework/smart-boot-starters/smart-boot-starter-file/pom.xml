@@ -19,7 +19,7 @@
         <module>smart-boot-starter-file-minio</module>
         <module>smart-boot-starter-file-qiniu</module>
         <module>smart-boot-starter-file-s3</module>
-        <module>smart-boot-starter-file-sftp</module>
+        <module>smart-boot-starter-file-sftp-jsch</module>
         <module>smart-boot-starter-file-sftp-sshj</module>
     </modules>
 

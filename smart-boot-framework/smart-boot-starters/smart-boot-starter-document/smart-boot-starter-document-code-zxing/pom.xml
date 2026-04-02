@@ -8,7 +8,6 @@
         <version>5.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>smart-boot-starter-document-code-zxing</artifactId>
-    <version>5.0.0-SNAPSHOT</version>
     <name>smart-boot-starter-document-code-zxing</name>
     <description>jod starter</description>
 
@@ -19,6 +18,11 @@
         <dependency>
             <groupId>com.smart</groupId>
             <artifactId>smart-document-code-zxing</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-boot-document-code-zxing</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

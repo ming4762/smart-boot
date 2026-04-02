@@ -8,7 +8,6 @@
         <version>5.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>smart-auth-cache-redis</artifactId>
-    <version>5.0.0-SNAPSHOT</version>
     <name>smart-auth-cache-redis</name>
     <description>redis认证缓存</description>
 

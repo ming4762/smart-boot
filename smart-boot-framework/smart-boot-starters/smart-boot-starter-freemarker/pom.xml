@@ -8,7 +8,6 @@
         <version>5.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>smart-boot-starter-freemarker</artifactId>
-    <version>5.0.0-SNAPSHOT</version>
     <name>smart-boot-starter-freemarker</name>
     <description>freemarker启动器</description>
 
@@ -24,6 +23,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-freemarker</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-boot-freemarker</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

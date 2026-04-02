@@ -8,7 +8,6 @@
         <version>5.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>smart-boot-framework</artifactId>
-    <version>5.0.0-SNAPSHOT</version>
     <name>smart-boot-framework</name>
     <description>自动配置框架</description>
     <packaging>pom</packaging>

@@ -8,7 +8,6 @@
         <version>5.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>smart-boot-starter-auth-jwt</artifactId>
-    <version>5.0.0-SNAPSHOT</version>
     <name>smart-boot-starter-auth-jwt</name>
     <description>jwt认证扩展</description>
 
@@ -19,6 +18,11 @@
         <dependency>
             <groupId>com.smart</groupId>
             <artifactId>smart-auth-extensions-jwt</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-boot-auth-jwt</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

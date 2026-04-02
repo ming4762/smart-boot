@@ -8,7 +8,6 @@
         <version>5.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>smart-boot-starter-auth-wechat</artifactId>
-    <version>5.0.0-SNAPSHOT</version>
     <name>smart-boot-starter-auth-wechat</name>
     <description>wechat认证扩展</description>
 
@@ -29,6 +28,11 @@
         <dependency>
             <groupId>com.smart</groupId>
             <artifactId>smart-boot-starter-rocketmq</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-boot-auth-wechat</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

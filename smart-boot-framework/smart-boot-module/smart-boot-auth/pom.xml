@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.smart</groupId>
+        <artifactId>smart-boot-module</artifactId>
+        <version>5.0.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>smart-boot-auth</artifactId>
+    <name>smart-boot-auth</name>
+    <description>smart-boot-auth</description>
+    <packaging>pom</packaging>
+
+    <properties>
+    </properties>
+
+    <modules>
+        <module>smart-boot-auth-aksk</module>
+        <module>smart-boot-auth-cache-guava</module>
+        <module>smart-boot-auth-cache-redis</module>
+        <module>smart-boot-auth-common</module>
+        <module>smart-boot-auth-dingtalk</module>
+        <module>smart-boot-auth-domain</module>
+        <module>smart-boot-auth-jwt</module>
+        <module>smart-boot-auth-oauth2</module>
+        <module>smart-boot-auth-sms</module>
+        <module>smart-boot-auth-web</module>
+        <module>smart-boot-auth-wechat</module>
+    </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+
+</project>

@@ -8,7 +8,6 @@
         <version>5.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>smart-boot-starter-license-server</artifactId>
-    <version>5.0.0-SNAPSHOT</version>
     <name>smart-boot-starter-license-server</name>
     <description>license server starter</description>
 
@@ -19,6 +18,11 @@
         <dependency>
             <groupId>com.smart</groupId>
             <artifactId>smart-license-server</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-boot-license-server</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
