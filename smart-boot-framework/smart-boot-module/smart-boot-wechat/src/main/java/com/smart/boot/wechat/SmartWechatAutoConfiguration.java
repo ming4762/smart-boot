@@ -1,7 +1,5 @@
 package com.smart.boot.wechat;
 
-import com.smart.boot.guava.GuavaCacheAutoConfiguration;
-import com.smart.boot.redis.SmartRedisAutoConfiguration;
 import com.smart.framework.commons.core.cache.CacheService;
 import com.smart.framework.extension.wechat.config.DefaultSmartWechatConfigStorageCreatorImpl;
 import com.smart.framework.extension.wechat.config.SmartWechatConfigStorageCreator;
@@ -21,7 +19,7 @@ import org.springframework.context.annotation.Import;
  */
 @EnableConfigurationProperties(SmartWechatProperties.class)
 @Import({SmartWechatMpAutoconfiguration.class, SmartWechatMpAutoconfiguration.class})
-@AutoConfigureAfter({ SmartRedisAutoConfiguration.class, GuavaCacheAutoConfiguration.class })
+@AutoConfigureAfter(name = { "com.smart.boot.redis.SmartRedisAutoConfiguration", "com.smart.boot.guava.GuavaCacheAutoConfiguration" })
 @ConditionalOnClass(SmartWechatConfigStorageCreator.class)
 public class SmartWechatAutoConfiguration {
 

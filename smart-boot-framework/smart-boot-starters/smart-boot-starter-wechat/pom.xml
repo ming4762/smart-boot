@@ -8,7 +8,6 @@
         <version>5.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>smart-boot-starter-wechat</artifactId>
-    <version>5.0.0-SNAPSHOT</version>
     <name>smart-boot-starter-wechat</name>
     <description>wechat starter</description>
 
@@ -19,6 +18,11 @@
         <dependency>
             <groupId>com.smart</groupId>
             <artifactId>smart-extensions-wechat</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.smart</groupId>
+            <artifactId>smart-boot-wechat</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
